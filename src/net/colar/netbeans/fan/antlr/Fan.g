@@ -30,39 +30,38 @@ MULTI_COMMENT
 
 grammar Fan;
 options {memoize=true;backtrack=true;}
-header  {package net.colar.netbeans.fan.antlr;}
 
 // ########################## TOKENS
 // Define tokens for keywords used in the grammar, so they can be referenced.
 tokens
 {
-KW_BREAK		='break';
+KW_BREAK	='break';
 KW_CONTINUE	='continue';
 KW_FOR		='for';
 KW_IF		='if';
 KW_RETURN	='return';
 KW_SWITCH	='switch';
-KW_THROW		='throw ';
-KW_WHILE		='while';
+KW_THROW	='throw ';
+KW_WHILE	='while';
 KW_TRY		='try';
 KW_CASE		='case';
 KW_DEFAULT	='default';
-KW_CATCH		='catch';
+KW_CATCH	='catch';
 KW_FINALLY	='finally';
-KW_USING		='using';
+KW_USING	='using';
 KW_AS		='as';
 KW_RD_ONLY	='readonly';
-KW_CONST		='const';
+KW_CONST	='const';
 KW_STATIC	='static';
 KW_NATIVE	='native';
 KW_VOLATILE	='volatile';
 KW_OVERRIDE	='override';
 KW_VIRTUAL	='virtual';
-KW_FINAL		='final';
+KW_FINAL	='final';
 KW_VOID		='void';
-KW_CLASS		='class';
+KW_CLASS	='class';
 KW_ENUM		='enum';
-KW_MIXIN		='mixin';
+KW_MIXIN	='mixin';
 KW_ABSTRACT	='abstract';
 KW_PRIVATE	='private';
 KW_PROTECTED	='protected';
@@ -71,16 +70,17 @@ KW_INTERNAL	='internal';
 KW_NEW		='new';
 KW_ONCE		='once';
 KW_THIS		='this';
-KW_SUPER		='super';
+KW_SUPER	='super';
 KW_ELSE		='else';
 KW_IS		='is';
-KW_ISNOT		='isnot';
+KW_ISNOT	='isnot';
 KW_NULL		='null';
 KW_IT		='it';
 KW_TRUE		='true';
-KW_FALSE		='false';
+KW_FALSE	='false';
 }
 
+@header  {package net.colar.netbeans.fan.antlr;}
 // ########################## code.
 // A little bit of code necessary to deal with the Linebreaks which are usually neaningless but not always
 // They can mean "end of statement" for some statements.
@@ -103,7 +103,7 @@ KW_FALSE		='false';
 			// Always allowing comma as end of line might be a bit too "loose"
 			// it's neeed for itBlocks Add feature
 			// maybe i shoul match only when in an itBlock ?
-			if(input.get(index).getType() == COMMA)
+			if(input.get(index).getType() == SP_COMMA)
 				return true;
 			// if next token is a BRACKET_R, that counts as a newline
 			if(input.get(index).getType() == BRACKET_R)

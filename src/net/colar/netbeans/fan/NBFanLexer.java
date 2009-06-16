@@ -25,12 +25,12 @@ public class NBFanLexer implements Lexer{
     {
 	lexer=new FanLexer();
 	tokens = new CommonTokenStream(lexer);
-        TokenFactory fact=new TokenFactory(this);
+        //TokenFactory fact=new TokenFactory(this);
     }
 
     public Token nextToken()
     {
-	tokens.
+	//tokens.
 	throw new UnsupportedOperationException("Not supported yet.");
     }
 

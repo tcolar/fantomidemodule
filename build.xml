@@ -7,7 +7,8 @@
     <import file="nbproject/build-impl.xml"/>
 
 
-	<property name="classpath" value="build/classes;lib/antlr-runtime-3.1.3.jar;lib/antlrworks-1.2.3.jar"/>
+	<property name="classpath" value="../Fan_antlr/lib/antlrworks-1.2.3.jar"/>
+
 	<target name="test" depends="compile" description="Test parser on files in 'test' folder.">
 		<java classname="Test" classpath="${classpath}" args="test/"/>
 	</target>
@@ -18,6 +19,6 @@
 
 	<target name="compile-grammar" description="Recompile the antlr grammar (Fan.g) into lexer/parser.">
 		<java jvmargs="-Xmx1200m" classpath="${classpath}" classname="org.antlr.Tool"
-			args="src/net/colar/netbeans/fan/antlr/Fan.g -o src/net/colar/netbeans/fan/antlr/ -Xconversiontimeout 95000 -report"/>
+			args="src/net/colar/netbeans/fan/antlr/Fan.g -Xconversiontimeout 95000 -report"/>
 	</target>
 </project>

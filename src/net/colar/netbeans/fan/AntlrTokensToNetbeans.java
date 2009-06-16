@@ -15,7 +15,7 @@ import java.io.PrintWriter;
  */
 public class AntlrTokensToNetbeans {
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
 	if(args.length<3)
 	{
@@ -31,7 +31,11 @@ public class AntlrTokensToNetbeans {
 	String pack=args[2];
 
 	PrintWriter pw=new PrintWriter(new File(javaFile));
-	writeHeader(pw,pack);
+	int index=0;
+	if(javaFile.indexOf(File.separator)>0)
+	    index=javaFile.lastIndexOf(File.separator);
+	String className=javaFile.substring(index, javaFile.lastIndexOf(".java"));
+	writeHeader(pw,pack,className);
 	writeTokens(pw,tokenFile);
 	writeTrailer(pw);
 	pw.close();
@@ -66,7 +70,7 @@ public class AntlrTokensToNetbeans {
 	if(f.exists())
 	{
 	    pw.println("    //Generated from ANTLR tokens: "+tokenFile+"\n");
-
+	    //FanTokenID token=new FanTokenID(name, ordinal, category);
 	}
 	else
 	{
