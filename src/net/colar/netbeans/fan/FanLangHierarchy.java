@@ -26,13 +26,13 @@ public class FanLangHierarchy extends LanguageHierarchy{
     @Override
     protected Collection createTokenIds()
     {
-	throw new UnsupportedOperationException("Not supported yet.");
+	NBFanLexer.
     }
 
     @Override
     protected Lexer createLexer(LexerRestartInfo arg0)
     {
-	throw new UnsupportedOperationException("Not supported yet.");
+	return new NBFanLexer();
     }
 
     @Override
@@ -41,11 +41,11 @@ public class FanLangHierarchy extends LanguageHierarchy{
 	return FAN_MIME_TYPE;
     }
 
-    @Override
+    /*@Override
     protected Map createTokenCategories()
     {
 	throw new UnsupportedOperationException("Not supported yet.");
-    }
+    }*/
 
     @Override
     protected LanguageEmbedding embedding(Token arg0, LanguagePath arg1, InputAttributes arg2)
