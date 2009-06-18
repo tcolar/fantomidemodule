@@ -30,7 +30,7 @@ public class NBFanLexer implements Lexer{
 	for(int i=0; i!=tokenNames.length; i++)
 	{
 	    String name=tokenNames[i];
-	    FanTokenID token=new FanTokenID(name, id, category);
+	    FanTokenID token=new FanTokenID(name, id, "String");
 	    id++;
 	}
     }

@@ -26,7 +26,7 @@ public class FanLangHierarchy extends LanguageHierarchy{
     @Override
     protected Collection createTokenIds()
     {
-	NBFanLexer.
+	return NBFanLexer.getTokenIds();
     }
 
     @Override
