@@ -7,7 +7,7 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.antlr</code-name-base>
+                    <code-name-base>org.antlr.runtime</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

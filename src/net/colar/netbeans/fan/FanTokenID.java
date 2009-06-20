@@ -15,6 +15,7 @@ public class FanTokenID implements TokenId{
     private final String name;
     private final String category;
     private final int ordinal;
+    private String fixedText;
 
     public FanTokenID(String name, int ordinal, String category)
     {
@@ -38,4 +39,15 @@ public class FanTokenID implements TokenId{
 	return category;
     }
 
+    public void setFixedText(String text)
+    {
+	fixedText=text;
+    }
+
+    public String getFixedText()
+    {
+	return fixedText;
+    }
+
+   
 }

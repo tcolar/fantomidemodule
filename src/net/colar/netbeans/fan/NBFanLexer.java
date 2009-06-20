@@ -6,6 +6,7 @@
 package net.colar.netbeans.fan;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Vector;
 import net.colar.netbeans.fan.antlr.FanLexer;
 import org.antlr.runtime.CommonTokenStream;
@@ -20,24 +21,24 @@ public class NBFanLexer implements Lexer{
 
     private FanLexer lexer=null;
     private CommonTokenStream tokens=null;
-    private static Vector tokenIds=new Vector();
+    private static HashMap tokenIds=new HashMap();
 
     static
     {
 	FanLexer referenceLexer=new FanLexer();
 	String[] tokenNames=referenceLexer.getTokenNames();
-	int id=1;
 	for(int i=0; i!=tokenNames.length; i++)
 	{
 	    String name=tokenNames[i];
-	    FanTokenID token=new FanTokenID(name, id, "String");
-	    id++;
+	    //referenceLexer.get
+	    //FanTokenID token=new FanTokenID(name, id, "String");
+	    //tokenIds.put(new Integer(id),token);
 	}
     }
 
     public static Collection getTokenIds()
     {
-	return tokenIds;
+	return tokenIds.values();
     }
 
     public NBFanLexer()
@@ -49,18 +50,21 @@ public class NBFanLexer implements Lexer{
 
     public Token nextToken()
     {
-	//tokens.
-	throw new UnsupportedOperationException("Not supported yet.");
+	org.antlr.runtime.Token antToken=lexer.nextToken();
+	Integer id=new Integer(antToken.getType());
+	return (Token)tokenIds.get(id);
     }
 
     public Object state()
     {
-	throw new UnsupportedOperationException("Not supported yet.");
+	return new Integer(1);
     }
 
     public void release()
     {
-	throw new UnsupportedOperationException("Not supported yet.");
+	lexer=null;
+	tokens=null;
+	//tokenIds=new Vector();
     }
 
 }
