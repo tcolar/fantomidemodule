@@ -1,4 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
 <filesystem>
+    <folder name="Services">
+	<folder name="MIMEResolver">
+	    <file name="fan.xml" url="fanResolver.xml"/>
+	</folder>
+    </folder>
+
+    <folder name="Editors">
+	<folder name="text">
+	    <folder name="x-fan">
+		<file name="language.instance">
+		    <attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.FanTokenID.language"/>
+		    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+		</file>
+
+	    </folder>
+	</folder>
+	<folder name="FontsColors">
+	    <folder name="NetBeans">
+		<folder name="Defaults">
+		    <file name="coloring.xml" url="textColors.xml"/>
+		</folder>
+	    </folder>
+	</folder>
+    </folder>
+
+    <folder name="CslPlugins">
+	<folder name="text">
+	    <folder name="x-fan">
+		<file name="language.instance">
+		    <attr name="instanceClass" stringvalue="net.colar.netbeans.fan.FanLanguage"/>
+		</file>
+	    </folder>
+	</folder>
+    </folder>
+
 </filesystem>
+

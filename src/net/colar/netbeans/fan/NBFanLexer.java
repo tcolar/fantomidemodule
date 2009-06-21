@@ -6,8 +6,7 @@
 package net.colar.netbeans.fan;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.Hashtable;
 import net.colar.netbeans.fan.antlr.FanLexer;
 import org.antlr.runtime.CommonTokenStream;
 import org.netbeans.api.lexer.Token;
@@ -21,50 +20,42 @@ public class NBFanLexer implements Lexer{
 
     private FanLexer lexer=null;
     private CommonTokenStream tokens=null;
-    private static HashMap tokenIds=new HashMap();
+    private static Hashtable tokenIds=FanTokens.getTokens();
 
-    static
-    {
-	FanLexer referenceLexer=new FanLexer();
-	String[] tokenNames=referenceLexer.getTokenNames();
-	for(int i=0; i!=tokenNames.length; i++)
-	{
-	    String name=tokenNames[i];
-	    //referenceLexer.get
-	    //FanTokenID token=new FanTokenID(name, id, "String");
-	    //tokenIds.put(new Integer(id),token);
-	}
-    }
 
     public static Collection getTokenIds()
     {
+		System.err.println("~~~Fan - gettokenids  nbfanlexer");
+
 	return tokenIds.values();
     }
 
     public NBFanLexer()
     {
+		System.err.println("~~~Fan - init nbfanlexer");
+
 	lexer=new FanLexer();
-	tokens = new CommonTokenStream(lexer);
-        //TokenFactory fact=new TokenFactory(this);
+	//tokens = new CommonTokenStream(lexer);
     }
 
     public Token nextToken()
     {
-	org.antlr.runtime.Token antToken=lexer.nextToken();
-	Integer id=new Integer(antToken.getType());
+	//tokens.
+	org.antlr.runtime.Token antlrToken=lexer.nextToken();
+	Integer id=new Integer(antlrToken.getType());
+	System.err.println("~~~Fan nexttoken:"+id);
 	return (Token)tokenIds.get(id);
     }
 
     public Object state()
     {
-	return new Integer(1);
+	return null;
     }
 
     public void release()
     {
 	lexer=null;
 	tokens=null;
-	//tokenIds=new Vector();
     }
 
 }
