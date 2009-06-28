@@ -41,11 +41,20 @@ public class NBFanLexer implements Lexer<FanTokenID> {
 	org.antlr.runtime.Token antlrToken = lexer.nextToken();
 	Integer id = new Integer(antlrToken.getType());
 	System.err.println("~~~Fan nexttoken:" + id);
-	FanTokenID tk=tokenIds.get(id);
-	if(tk.getFixedText()!=null)
-	    return info.tokenFactory().getFlyweightToken(tk, tk.getFixedText());
-	else
-	    return info.tokenFactory().createToken(tk);
+	FanTokenID tk = tokenIds.get(id);
+	Token result = null;
+	if (tk != null) {
+	    result = null;
+
+	    if (tk.getFixedText() != null) {
+		result = info.tokenFactory().getFlyweightToken(tk, tk.getFixedText());
+	    } else {
+		result = info.tokenFactory().createToken(tk);
+	    }
+	}
+	if(result!=null)
+	    System.err.println("Token id: " + result.text() + " / "+result.isFlyweight()+" / "+result.id()+ " / "+tk.name());
+	return result;
     }
 
     public Object state() {

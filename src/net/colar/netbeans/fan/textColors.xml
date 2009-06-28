@@ -6,11 +6,11 @@
     <fontcolor default="comment" name="comment"/>
     <fontcolor default="error" name="error"/>
     <fontcolor default="number" name="number"/>
-    <!--<fontcolor default="identifier" name="identifier"/>-->
-    <fontcolor foreColor="ff006f00" name="DSL">
+    <fontcolor foreColor="006f00" name="DOC"/>
+    <fontcolor foreColor="0066ff" name="comparator"/>
+    <fontcolor foreColor="ff0066" name="assignment"/>
+    <fontcolor foreColor="ff006f" name="DSL">
 	<font style="bold"/>
     </fontcolor>
-    <fontcolor default="comment" name="comment"/>
-    <fontcolor default="string" name="string"/>
-   <!-- <fontcolor name="Var" default="field" foreColor="009B00"/>-->
-</fontscolors>
+    <fontcolor default="string" name="STR"/>
+ </fontscolors>

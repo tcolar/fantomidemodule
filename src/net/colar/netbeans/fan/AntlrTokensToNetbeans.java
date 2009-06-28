@@ -22,12 +22,16 @@ public class AntlrTokensToNetbeans
     private static Hashtable getCategories()
     {
 	Hashtable<String,String> cats = new Hashtable<String,String>();
-	cats.put("LINE_COMMENTS", "comment");
-	cats.put("EXEC_COMMENTS", "comment");
+	cats.put("LINE_COMMENT", "comment");
+	cats.put("EXEC_COMMENT", "comment");
+	cats.put("MULTI_COMMENT", "comment");
 	cats.put("NUMBER", "number");
 	cats.put("KW_", "keyword");
 	cats.put("OP_", "operator");
 	cats.put("SP_", "separator");
+	cats.put("CP_", "comparator");
+	cats.put("AS_", "assignment");
+	cats.put("STR", "string");
 	return cats;
     }
 
