@@ -48,6 +48,7 @@ public class FanTokenID implements TokenId {
     public String getFixedText() {
 	return fixedText;
     }
+    
     private static final Language<FanTokenID> language = new LanguageHierarchy<FanTokenID>() {
 
 	@Override
@@ -64,9 +65,9 @@ public class FanTokenID implements TokenId {
 	}
 
 	@Override
-	protected Lexer<FanTokenID> createLexer(LexerRestartInfo<FanTokenID> arg0) {
+	protected Lexer<FanTokenID> createLexer(LexerRestartInfo<FanTokenID> info) {
 		System.err.println("~~~Fan - create lexer()");
-	    return new NBFanLexer();
+	    return new NBFanLexer(info);
 	}
     }.language();
 

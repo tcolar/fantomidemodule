@@ -21,7 +21,7 @@ public class AntlrTokensToNetbeans
 
     private static Hashtable getCategories()
     {
-	Hashtable cats = new Hashtable();
+	Hashtable<String,String> cats = new Hashtable<String,String>();
 	cats.put("LINE_COMMENTS", "comment");
 	cats.put("EXEC_COMMENTS", "comment");
 	cats.put("NUMBER", "number");

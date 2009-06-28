@@ -1,0 +1,11 @@
+sudo apt-get install ant ant-optional
+hg clone http://hg.netbeans.org/release67
+cd release67
+export ANT_OPTS="-Xmx512m"
+ant -Dpermit.jdk6.builds=true   ~30mn
+
+cd csl.api
+ant -Dpermit.jdk6.builds=true   ~30mn
+
+cp ./nbbuild/nbantext.jar ../NetBeansProjects/Fan/ext/
+cp ./csl-api/anttask/build/cslanttask.jar /home/tcolar/NetBeansProjects/Fan/ext/

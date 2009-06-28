@@ -6,14 +6,13 @@
 package net.colar.netbeans.fan;
 
 import org.netbeans.api.lexer.Language;
-import org.netbeans.api.lexer.TokenId;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 
 
 /**
  * * @author thibautc
  */
-public class FanLanguage<T extends TokenId> extends DefaultLanguageConfig
+public class FanLanguage extends DefaultLanguageConfig
 {
     public FanLanguage()
     {
