@@ -16,20 +16,23 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
  *
  * @author thibautc
  */
-public class NBFanLexer implements Lexer<FanTokenID> {
+public class NBFanLexer implements Lexer<FanTokenID>
+{
 
     private FanLexer lexer = null;
     private CommonTokenStream tokens = null;
     private static Hashtable<Integer, FanTokenID> tokenIds = FanTokens.getTokens();
     private LexerRestartInfo<FanTokenID> info;
 
-    public static Collection<FanTokenID> getTokenIds() {
+    public static Collection<FanTokenID> getTokenIds()
+    {
 	System.err.println("~~~Fan - gettokenids  nbfanlexer");
 
 	return tokenIds.values();
     }
 
-    public NBFanLexer(LexerRestartInfo<FanTokenID> info) {
+    public NBFanLexer(LexerRestartInfo<FanTokenID> info)
+    {
 	this.info = info;
 	System.err.println("~~~Fan - init nbfanlexer");
 	NetbeansAntlrStream lexerInputStream = new NetbeansAntlrStream(info.input(), "FanLexer");
@@ -37,31 +40,39 @@ public class NBFanLexer implements Lexer<FanTokenID> {
 	//tokens = new CommonTokenStream(lexer);
     }
 
-    public Token<FanTokenID> nextToken() {
+    public Token<FanTokenID> nextToken()
+    {
 	org.antlr.runtime.Token antlrToken = lexer.nextToken();
 	Integer id = new Integer(antlrToken.getType());
 	System.err.println("~~~Fan nexttoken:" + id);
 	FanTokenID tk = tokenIds.get(id);
 	Token<FanTokenID> result = null;
-	if (tk != null) {
+	if (tk != null)
+	{
 	    result = null;
 
-	    if (tk.getFixedText() != null) {
+	    if (tk.getFixedText() != null)
+	    {
 		result = info.tokenFactory().getFlyweightToken(tk, tk.getFixedText());
-	    } else {
+	    } else
+	    {
 		result = info.tokenFactory().createToken(tk);
 	    }
 	}
-	if(result!=null)
-	    System.err.println("Token id: " + result.text() + " / "+result.isFlyweight()+" / "+result.id()+ " / "+tk.name());
+	if (result != null)
+	{
+	    System.err.println("Token id: " + result.text() + " / " + result.isFlyweight() + " / " + result.id() + " / " + tk.name());
+	}
 	return result;
     }
 
-    public Object state() {
+    public Object state()
+    {
 	return null;
     }
 
-    public void release() {
+    public void release()
+    {
 	lexer = null;
 	tokens = null;
     }
