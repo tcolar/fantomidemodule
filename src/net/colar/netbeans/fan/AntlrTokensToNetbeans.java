@@ -72,7 +72,7 @@ public class AntlrTokensToNetbeans
 	pw.println("");
 	pw.println("public class " + className + "{");
 	pw.println("");
-	pw.println("private static Hashtable tokens=new Hashtable();");
+	pw.println("private static Hashtable<Integer, TokenID> tokens=new Hashtable<Integer, TokenID>();");
 	pw.println("");
 	pw.println("static{ // initializes tokens");
     }
@@ -81,7 +81,7 @@ public class AntlrTokensToNetbeans
     {
 	pw.println("	}");
 	pw.println("");
-	pw.println("	public static Hashtable getTokens() {return tokens; }");
+	pw.println("	public static Hashtable<Integer, TokenID> getTokens() {return tokens; }");
 	pw.println("");
 	pw.println("}");
     }
