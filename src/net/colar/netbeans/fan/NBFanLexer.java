@@ -7,8 +7,10 @@ package net.colar.netbeans.fan;
 import java.util.Collection;
 import java.util.Hashtable;
 import net.colar.netbeans.fan.antlr.FanLexer;
-import org.antlr.runtime.CommonTokenStream;
+import net.colar.netbeans.fan.antlr.FanStates;
+import org.antlr.runtime.CommonToken;
 import org.netbeans.api.lexer.Token;
+import org.netbeans.lib.lexer.TokenHierarchyOperation;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
@@ -20,9 +22,10 @@ public class NBFanLexer implements Lexer<FanTokenID>
 {
 
     private FanLexer lexer = null;
-    private CommonTokenStream tokens = null;
+    //private CommonTokenStream tokens = null;
     private static Hashtable<Integer, FanTokenID> tokenIds = FanTokens.getTokens();
     private LexerRestartInfo<FanTokenID> info;
+    private CommonToken curToken;
 
     public static Collection<FanTokenID> getTokenIds()
     {
@@ -42,9 +45,14 @@ public class NBFanLexer implements Lexer<FanTokenID>
 
     public Token<FanTokenID> nextToken()
     {
-	org.antlr.runtime.Token antlrToken = lexer.nextToken();
-	Integer id = new Integer(antlrToken.getType());
-	System.err.println("~~~Fan nexttoken:" + id);
+	try
+	{
+	    curToken = (CommonToken) lexer.nextToken();
+	} catch (Exception e)
+	{
+	    recoverError(lexer, curToken);
+	}
+	Integer id = new Integer(curToken.getType());
 	FanTokenID tk = tokenIds.get(id);
 	Token<FanTokenID> result = null;
 	if (tk != null)
@@ -61,19 +69,39 @@ public class NBFanLexer implements Lexer<FanTokenID>
 	}
 	if (result != null)
 	{
-	    System.err.println("Token id: " + result.text() + " / " + result.isFlyweight() + " / " + result.id() + " / " + tk.name());
+	    System.err.println(tk.name() + (result.isFlyweight() ? "(FlyWeight)" : "") + " : " + curToken.getText());
 	}
 	return result;
     }
 
     public Object state()
     {
-	return null;
+	return lexer.getState();
     }
 
     public void release()
     {
 	lexer = null;
-	tokens = null;
+	//tokens = null;
+    }
+
+    private void recoverError(FanLexer lexer, CommonToken curToken)
+    {
+	    // try to revover from imcomplete tokens
+	    int incomplete;
+	    int state = lexer.getState();
+	    switch (state)
+	    {
+		case FanStates.INCOMPLETE_DSL:
+		    incomplete = FanLexer.INCOMPLETE_DSL;
+		    break;
+
+		default:
+		    throw new IllegalStateException(); // unhandled case
+
+	    }
+	    lexer.clearState();
+
+	    curToken.setType(incomplete);
     }
 }

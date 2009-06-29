@@ -80,8 +80,18 @@ KW_TRUE		='true';
 KW_FALSE	='false';
 }
 
-@header  {package net.colar.netbeans.fan.antlr;}
 // ########################## code.
+
+@header		{package net.colar.netbeans.fan.antlr;}
+@lexer::header	{package net.colar.netbeans.fan.antlr;}
+
+@lexer::members {
+	    private int mystate=FanStates.NORMAL;
+
+	    public int getState(){return mystate;}
+	    public void clearState(){mystate=FanStates.NORMAL;}
+}
+
 // A little bit of code necessary to deal with the Linebreaks which are usually neaningless but not always
 // They can mean "end of statement" for some statements.
 @members{
@@ -386,7 +396,8 @@ LINE_COMMENT	: '//' (~('\n'))* {$channel=HIDDEN;};
 EXEC_COMMENT	: '#!' (~('\n'))* {$channel=HIDDEN;};
 MULTI_COMMENT	: ( '/*' ( options {greedy=false;} : . )* '*/'){$channel=HIDDEN;};
 
-DSL		:'<|' ( options {greedy=false;} : . )* '|>';
+DSL		:'<|' {mystate=FanStates.INCOMPLETE_DSL;} ( options {greedy=false;} : . )* '|>' {mystate=FanStates.NORMAL;};
+fragment INCOMPLETE_DSL	:   '<|';
 CHAR		:'\'' (('\\' .) | ('\\u' (DIGIT | HEXLETTER) (DIGIT | HEXLETTER)
 			(DIGIT | HEXLETTER) (DIGIT | HEXLETTER)) | .)? '\''; //Letter possibly bacquoted or unicode char
 //RAWSTR		: 'r"' ~('"')* '"'; // obsolteted

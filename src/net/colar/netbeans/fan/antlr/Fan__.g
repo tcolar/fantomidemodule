@@ -1,5 +1,13 @@
 lexer grammar Fan;
 
+@members {
+	    private int mystate=FanStates.NORMAL;
+
+	    public int getState(){return mystate;}
+	    public void clearState(){mystate=FanStates.NORMAL;}
+}
+@header {package net.colar.netbeans.fan.antlr;}
+
 KW_BREAK : 'break' ;
 KW_CONTINUE : 'continue' ;
 KW_FOR : 'for' ;
@@ -44,38 +52,40 @@ KW_IT : 'it' ;
 KW_TRUE : 'true' ;
 KW_FALSE : 'false' ;
 
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 382
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 392
 LB		: (('\r\n') | '\n')+ {$channel=HIDDEN;};
 // Other ignored data: whitespaces, comments
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 384
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 394
 WS  		:  (' '|'\t') {$channel=HIDDEN;}; // whitespace
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 385
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 395
 LINE_COMMENT	: '//' (~('\n'))* {$channel=HIDDEN;};
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 386
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 396
 EXEC_COMMENT	: '#!' (~('\n'))* {$channel=HIDDEN;};
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 387
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 397
 MULTI_COMMENT	: ( '/*' ( options {greedy=false;} : . )* '*/'){$channel=HIDDEN;};
 
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 389
-DSL		:'<|' ( options {greedy=false;} : . )* '|>';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 390
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 399
+DSL		:'<|' {mystate=FanStates.INCOMPLETE_DSL;} ( options {greedy=false;} : . )* '|>' {mystate=FanStates.NORMAL;};
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 400
+fragment INCOMPLETE_DSL	:   '<|';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 401
 CHAR		:'\'' (('\\' .) | ('\\u' (DIGIT | HEXLETTER) (DIGIT | HEXLETTER)
 			(DIGIT | HEXLETTER) (DIGIT | HEXLETTER)) | .)? '\''; //Letter possibly bacquoted or unicode char
 //RAWSTR		: 'r"' ~('"')* '"'; // obsolteted
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 393
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 404
 QUOTSTR		: '"""' ( options {greedy=false;} : . )* '"""';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 394
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 405
 STR		: ( '"' ( ('\\\\') | ('\\"') | ~('"') )* '"');// accept strings incl. \"
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 395
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 406
 URI		: ( '`' ( ('\\\\') | ('\\`') | ~('`') )* '`');
 
 // ######## Start NOT Hidden items ####
 // TODO: probably should use \r?\n  ... but that seem to cause issues when testing in antlrworks -> why ?
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 399
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 410
 DOC	 	:   '**' ( options {greedy=false;} : . )* '\n' ; // ~ javadoc (fandoc)
 
 // Fan language keywords
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 402
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 413
 KEYWORD		: ('abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' |
 		'class' | 'const' | 'continue' | 'default' | 'do' | 'else' | 'enum' | 'false' |
  		'final' | 'finally' | 'for' | 'foreach' | 'if' | 'internal' | 'is' | 'isnot' |
@@ -86,130 +96,130 @@ KEYWORD		: ('abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' |
 
 
 // Symbols
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 412
-CP_EQUALITY	:'===' | '!==' | '==' | '!=';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 413
-CP_COMPARATORS	:'<=>' | '<=' | '<' | '>=' | '>';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 414
-AS_ASSIGN_OP	:'*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 415
-LIST_TYPE	:'[]';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 416
-OP_SAFEDYN_CALL	:'?->';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 417
-OP_ARROW	:'->';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 418
-OP_SAFE_CALL	:'?.';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 419
-OP_RANG_EXCL_OLD:'...';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 420
-OP_RANGE_EXCL	:'..<';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 421
-OP_RANGE	:'..';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 422
-OP_ELVIS	:'?:';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 423
-SP_COLCOL	:'::';
+CP_EQUALITY	:'===' | '!==' | '==' | '!=';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 424
-BRACKET_L	:'{';
+CP_COMPARATORS	:'<=>' | '<=' | '<' | '>=' | '>';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 425
-BRACKET_R	:'}';
+AS_ASSIGN_OP	:'*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 426
-SQ_BRACKET_L	:'[';
+LIST_TYPE	:'[]';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 427
-SQ_BRACKET_R	:']';
+OP_SAFEDYN_CALL	:'?->';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 428
-PAR_L		:'(';
+OP_ARROW	:'->';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 429
-PAR_R		:')';
+OP_SAFE_CALL	:'?.';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 430
-SP_COLON	:':';
+OP_RANG_EXCL_OLD:'...';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 431
-SP_SEMI		:';';
+OP_RANGE_EXCL	:'..<';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 432
-SP_COMMA	:',';
+OP_RANGE	:'..';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 433
-SP_PIPE		:'|';
+OP_ELVIS	:'?:';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 434
-AS_INIT_VAL	:':=';
+SP_COLCOL	:'::';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 435
-SP_QMARK	:'?';
+BRACKET_L	:'{';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 436
-AT		:'@';
+BRACKET_R	:'}';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 437
-OP_POUND	:'#';
+SQ_BRACKET_L	:'[';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 438
-OP_CURRY	:'&';
+SQ_BRACKET_R	:']';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 439
-AS_EQUAL	:'=';
+PAR_L		:'(';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 440
-OP_BITOR	:'^';
+PAR_R		:')';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 441
-UNDERSCORE	:'_';
+SP_COLON	:':';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 442
-OP_AND		:'&&';
+SP_SEMI		:';';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 443
-OP_OR		:'||';
+SP_COMMA	:',';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 444
-DOT		:'.';
+SP_PIPE		:'|';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 445
-OP_2PLUS	:'++';
+AS_INIT_VAL	:':=';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 446
-OP_2MINUS	:'--';
+SP_QMARK	:'?';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 447
-OP_MINUS	:'-';
+AT		:'@';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 448
-OP_PLUS		:'+';
+OP_POUND	:'#';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 449
-OP_LSHIFT	:'<<';
+OP_CURRY	:'&';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 450
-OP_RSHIFT	:'>>';
+AS_EQUAL	:'=';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 451
-OP_MULTI	:'*';
+OP_BITOR	:'^';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 452
-OP_DIV		:'/';
+UNDERSCORE	:'_';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 453
-OP_MOD		:'%';
+OP_AND		:'&&';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 454
-OP_BANG		:'!';
+OP_OR		:'||';
 // $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 455
+DOT		:'.';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 456
+OP_2PLUS	:'++';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 457
+OP_2MINUS	:'--';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 458
+OP_MINUS	:'-';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 459
+OP_PLUS		:'+';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 460
+OP_LSHIFT	:'<<';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 461
+OP_RSHIFT	:'>>';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 462
+OP_MULTI	:'*';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 463
+OP_DIV		:'/';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 464
+OP_MOD		:'%';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 465
+OP_BANG		:'!';
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 466
 OP_TILDA	:'~';
 
 // Numbers / Letters matching
 // Apparently fan allows syntax like var=var-1 so we can't 'eat' the - as part as the number (lexer) since it could be a minus operand
 
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 460
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 471
 fragment HEX_HEADER	: 	'0x' | '0X';
 
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 462
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 473
 NUMBER			: 	((HEXNB)=>HEXNB | (DECIMAL)=>DECIMAL | FRACTIONAL);
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 463
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 474
 fragment HEXNB		:	HEXHEADER (UNDERSCORE* (DIGIT | HEXLETTER))+;
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 464
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 475
 fragment DECIMAL	:	DIGIT (UNDERSCORE* DIGIT)* ((FRACTION)=>FRACTION)? 
 					((EXPONENT)=>EXPONENT)? NBTYPE?;
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 466
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 477
 fragment FRACTIONAL	:	FRACTION EXPONENT? NBTYPE?;
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 467
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 478
 fragment FRACTION	:	DOT DIGIT (UNDERSCORE* DIGIT)*;
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 468
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 479
 fragment EXPONENT	:	('e'|'E') ('+' | OP_MINUS)? DIGIT (UNDERSCORE* DIGIT)*;
 // d,f are for float or decimal
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 470
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 481
 fragment NBTYPE		:	'F' | 'f' | 'D' | ('d' 'ay'?) | 'ms' | 'ns' | 
 					'sec' | 'min' | 'hr';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 472
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 483
 fragment HEXLETTER	: 	'a'|'b'|'c'|'d'|'e'|'f'|'A'|'B'|'C'|'D'|'E'|'F';
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 473
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 484
 fragment HEXHEADER	: 	'0x' | '0X';
 
 // any other "word" is an "ID"
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 476
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 487
 ID			: (UNDERSCORE* LETTER) ( LETTER | DIGIT | UNDERSCORE )*;
 
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 478
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 489
 fragment LETTER		: ('a'..'z' | 'A'..'Z');
-// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 479
+// $ANTLR src "src/net/colar/netbeans/fan/antlr/Fan.g" 490
 fragment DIGIT		: '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9';
 
 

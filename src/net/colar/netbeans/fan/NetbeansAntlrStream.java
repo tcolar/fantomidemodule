@@ -35,8 +35,16 @@ public class NetbeansAntlrStream implements CharStream {
 	this.name = name;
     }
 
+    /**
+     * Note: i'm ignoring start/stop, just returning text of current token
+     * This fucntion is called by token.getText() and is useful fro debugging.
+     * So i just return the current token text.
+     * @param start
+     * @param stop
+     * @return
+     */
     public String substring(int start, int stop) {
-	throw new UnsupportedOperationException("Not supported yet.");
+	return input.readText().toString();
     }
 
     public int LT(int i) {
@@ -68,11 +76,6 @@ public class NetbeansAntlrStream implements CharStream {
 	    line++;
 	    charPositionInLine = 0;
 	}
-
-	//skip the EOF
-//        if (LA(1) == EOF) {
-//            input.read();
-//        }
     }
 
     public int LA(int i) {
