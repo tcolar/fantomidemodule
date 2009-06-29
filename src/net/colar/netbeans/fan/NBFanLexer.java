@@ -42,7 +42,7 @@ public class NBFanLexer implements Lexer<FanTokenID> {
 	Integer id = new Integer(antlrToken.getType());
 	System.err.println("~~~Fan nexttoken:" + id);
 	FanTokenID tk = tokenIds.get(id);
-	Token result = null;
+	Token<FanTokenID> result = null;
 	if (tk != null) {
 	    result = null;
 

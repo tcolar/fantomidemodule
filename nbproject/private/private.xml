@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/FanLanguage.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/FanLangHierarchy.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/NBFanLexer.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/build.xml</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/antlr/FanLexer.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/antlr/Fan.g</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/FanTokenID.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/antlr/Fan.tokens</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/AntlrTokensToNetbeans.java</file>
-    </open-files>
 </project-private>

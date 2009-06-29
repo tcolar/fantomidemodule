@@ -72,7 +72,7 @@ public class AntlrTokensToNetbeans
 	pw.println("");
 	pw.println("public class " + className + "{");
 	pw.println("");
-	pw.println("private static Hashtable<Integer, TokenID> tokens=new Hashtable<Integer, TokenID>();");
+	pw.println("private static Hashtable<Integer, FanTokenID> tokens=new Hashtable<Integer, FanTokenID>();");
 	pw.println("");
 	pw.println("static{ // initializes tokens");
     }
@@ -81,7 +81,7 @@ public class AntlrTokensToNetbeans
     {
 	pw.println("	}");
 	pw.println("");
-	pw.println("	public static Hashtable<Integer, TokenID> getTokens() {return tokens; }");
+	pw.println("	public static Hashtable<Integer, FanTokenID> getTokens() {return tokens; }");
 	pw.println("");
 	pw.println("}");
     }
@@ -129,7 +129,7 @@ public class AntlrTokensToNetbeans
 		    {
 			// fixed text value
 			String text = s.substring(1, index - 1);
-			pw.println("	token=(FanTokenID)tokens.get(new Integer(" + id + "));");
+			pw.println("	token=tokens.get(new Integer(" + id + "));");
 			pw.println("	token.setFixedText(\"" + text + "\");");
 			pw.println("	tokens.put(new Integer(" + id + "), token);");
 		    }
