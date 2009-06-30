@@ -78,6 +78,9 @@ KW_NULL		='null';
 KW_IT		='it';
 KW_TRUE		='true';
 KW_FALSE	='false';
+
+INCOMPLETE_DSL;
+INCOMPLETE_STRING;
 }
 
 // ########################## code.
@@ -396,8 +399,9 @@ LINE_COMMENT	: '//' (~('\n'))* {$channel=HIDDEN;};
 EXEC_COMMENT	: '#!' (~('\n'))* {$channel=HIDDEN;};
 MULTI_COMMENT	: ( '/*' ( options {greedy=false;} : . )* '*/'){$channel=HIDDEN;};
 
-DSL		:'<|' {mystate=FanStates.INCOMPLETE_DSL;} ( options {greedy=false;} : . )* '|>' {mystate=FanStates.NORMAL;};
-fragment INCOMPLETE_DSL	:   '<|';
+DSL		:'<|' ( options {greedy=false;} : . )* '|>' ;
+
+
 CHAR		:'\'' (('\\' .) | ('\\u' (DIGIT | HEXLETTER) (DIGIT | HEXLETTER)
 			(DIGIT | HEXLETTER) (DIGIT | HEXLETTER)) | .)? '\''; //Letter possibly bacquoted or unicode char
 //RAWSTR		: 'r"' ~('"')* '"'; // obsolteted
@@ -489,7 +493,8 @@ ID			: (UNDERSCORE* LETTER) ( LETTER | DIGIT | UNDERSCORE )*;
 fragment LETTER		: ('a'..'z' | 'A'..'Z');
 fragment DIGIT		: '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9';
 
-
+// catch all
+INCOMPLETE		: .;
 
 // ################################### end ##############################
 
