@@ -78,22 +78,12 @@ KW_NULL		='null';
 KW_IT		='it';
 KW_TRUE		='true';
 KW_FALSE	='false';
-
-INCOMPLETE_DSL;
-INCOMPLETE_STRING;
 }
 
 // ########################## code.
 
 @header		{package net.colar.netbeans.fan.antlr;}
 @lexer::header	{package net.colar.netbeans.fan.antlr;}
-
-@lexer::members {
-	    private int mystate=FanStates.NORMAL;
-
-	    public int getState(){return mystate;}
-	    public void clearState(){mystate=FanStates.NORMAL;}
-}
 
 // A little bit of code necessary to deal with the Linebreaks which are usually neaningless but not always
 // They can mean "end of statement" for some statements.
@@ -397,17 +387,17 @@ LB		: (('\r\n') | '\n')+ {$channel=HIDDEN;};
 WS  		:  (' '|'\t') {$channel=HIDDEN;}; // whitespace
 LINE_COMMENT	: '//' (~('\n'))* {$channel=HIDDEN;};
 EXEC_COMMENT	: '#!' (~('\n'))* {$channel=HIDDEN;};
-MULTI_COMMENT	: ( '/*' ( options {greedy=false;} : . )* '*/'){$channel=HIDDEN;};
+MULTI_COMMENT	: '/*' ( options {greedy=false;} : . )* ('*/'){$channel=HIDDEN;};
 
-DSL		:'<|' ( options {greedy=false;} : . )* '|>' ;
-
+DSL		:'<|' ( options {greedy=false;} : . )* ('|>') ;
 
 CHAR		:'\'' (('\\' .) | ('\\u' (DIGIT | HEXLETTER) (DIGIT | HEXLETTER)
 			(DIGIT | HEXLETTER) (DIGIT | HEXLETTER)) | .)? '\''; //Letter possibly bacquoted or unicode char
 //RAWSTR		: 'r"' ~('"')* '"'; // obsolteted
 QUOTSTR		: '"""' ( options {greedy=false;} : . )* '"""';
-STR		: ( '"' ( ('\\\\') | ('\\"') | ~('"') )* '"');// accept strings incl. \"
-URI		: ( '`' ( ('\\\\') | ('\\`') | ~('`') )* '`');
+STR		: INCOMPLETE_STR '"';// accept strings incl. \"
+INCOMPLETE_STR	: '"' ( ('\\\\') | ('\\"') | ~('"') )*;// accept strings incl. \"
+URI		: '`' ( ('\\\\') | ('\\`') | ~('`') )* '`';
 
 // ######## Start NOT Hidden items ####
 // TODO: probably should use \r?\n  ... but that seem to cause issues when testing in antlrworks -> why ?
@@ -494,7 +484,8 @@ fragment LETTER		: ('a'..'z' | 'A'..'Z');
 fragment DIGIT		: '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9';
 
 // catch all
-INCOMPLETE		: .;
+INCOMPLETE_		: .;
 
 // ################################### end ##############################
 
+b2

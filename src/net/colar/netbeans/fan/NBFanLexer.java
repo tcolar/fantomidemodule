@@ -42,10 +42,10 @@ public class NBFanLexer implements Lexer<FanTokenID>
     {
          curToken = (CommonToken) lexer.nextToken();
 
-	if(curToken.getType()==-1)
+	/*if(curToken.getType()==-1)
 	{
 	    dealWithUnclosedToken(lexer, curToken);
-	}
+	}*/
 
 	Integer id = new Integer(curToken.getType());
 	FanTokenID tk = tokenIds.get(id);
@@ -72,7 +72,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 
     public Object state()
     {
-	return lexer.getState();
+	return null;//lexer.getState();
     }
 
     public void release()
@@ -81,7 +81,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 	//tokens = null;
     }
 
-    private void dealWithUnclosedToken(FanLexer lexer, CommonToken curToken)
+    /*private void dealWithUnclosedToken(FanLexer lexer, CommonToken curToken)
     {
 	    // try to revover from imcomplete tokens
 	    int state = lexer.getState();
@@ -95,5 +95,5 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		    break;
 	    }
 	    lexer.clearState();
-    }
+    }*/
 }

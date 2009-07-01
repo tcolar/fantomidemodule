@@ -27,13 +27,15 @@ public class AntlrTokensToNetbeans
 	cats.put("MULTI_COMMENT", "comment");
 	cats.put("NUMBER", "number");
 	cats.put("CHAR", "character");
-	cats.put("INCOMPLETE", "error");
+	cats.put("INCOMPLETE_", "error");
 	cats.put("KW_", "keyword");
 	cats.put("OP_", "operator");
 	cats.put("SP_", "separator");
 	cats.put("CP_", "comparator");
 	cats.put("AS_", "assignment");
 	cats.put("STR", "string");
+	cats.put("QUOTSTR", "string");
+	cats.put("URI", "string");
 	return cats;
     }
 
@@ -52,7 +54,9 @@ public class AntlrTokensToNetbeans
 	String javaFile = args[1];
 	String pack = args[2];
 
-	PrintWriter pw = new PrintWriter(new File(javaFile));
+	File f=new File(javaFile);
+	f.delete();
+	PrintWriter pw = new PrintWriter(f);
 	int index = 0;
 	if (javaFile.indexOf(File.separator) > 0)
 	{
@@ -127,6 +131,7 @@ public class AntlrTokensToNetbeans
 			}
 			pw.println("	token=new FanTokenID(\"" + keyword + "\", " + id + ", \"" + cat + "\");");
 			pw.println("	tokens.put(new Integer(" + id + "),token);");
+			System.out.println(id+ " "+keyword+" "+cat);
 		    } else
 		    {
 			// fixed text value
