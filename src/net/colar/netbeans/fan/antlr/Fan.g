@@ -78,12 +78,25 @@ KW_NULL		='null';
 KW_IT		='it';
 KW_TRUE		='true';
 KW_FALSE	='false';
+
+// "Fake" token types used for incomplete lexer items (like unclosed string)
+INC_STR;
+INC_URI;
+INC_COMMENT;
+INC_DSL;
 }
 
 // ########################## code.
 
 @header		{package net.colar.netbeans.fan.antlr;}
 @lexer::header	{package net.colar.netbeans.fan.antlr;}
+
+@lexer::members{
+	//typeOverride
+	int too=-1;
+	public int getTypeOverride() {return too;}
+	public void clearTypeOverride() {too=-1;}
+}
 
 // A little bit of code necessary to deal with the Linebreaks which are usually neaningless but not always
 // They can mean "end of statement" for some statements.
@@ -387,16 +400,19 @@ LB		: (('\r\n') | '\n')+ {$channel=HIDDEN;};
 WS  		:  (' '|'\t') {$channel=HIDDEN;}; // whitespace
 LINE_COMMENT	: '//' (~('\n'))* {$channel=HIDDEN;};
 EXEC_COMMENT	: '#!' (~('\n'))* {$channel=HIDDEN;};
-MULTI_COMMENT	: '/*' ( options {greedy=false;} : . )* ('*/'){$channel=HIDDEN;};
-
-DSL		:'<|' ( options {greedy=false;} : . )* ('|>') ;
+MULTI_COMMENT	: '/*' ((COMPL_ML_COMMENT)=>COMPL_ML_COMMENT | ~'\n'* {too=INC_COMMENT;}){$channel=HIDDEN;};
+fragment
+COMPL_ML_COMMENT: (options{greedy=false;}:.)* '*/';
+// need to use a predicate for incomplete SDSL detection to work right.
+DSL		:'<|' ((COMPL_DSL)=>COMPL_DSL | ~'\n'* {too=INC_DSL;});
+fragment
+COMPL_DSL	: (options{greedy=false;}:.)* '|>';
 
 CHAR		:'\'' (('\\' .) | ('\\u' (DIGIT | HEXLETTER) (DIGIT | HEXLETTER)
 			(DIGIT | HEXLETTER) (DIGIT | HEXLETTER)) | .)? '\''; //Letter possibly bacquoted or unicode char
 //RAWSTR		: 'r"' ~('"')* '"'; // obsolteted
 QUOTSTR		: '"""' ( options {greedy=false;} : . )* '"""';
-STR		: INCOMPLETE_STR '"';// accept strings incl. \"
-INCOMPLETE_STR	: '"' ( ('\\\\') | ('\\"') | ~('"') )*;// accept strings incl. \"
+STR		: '"' ('\\\\' | '\\"' | ~'"')* '"';// accept strings incl. \"
 URI		: '`' ( ('\\\\') | ('\\`') | ~('`') )* '`';
 
 // ######## Start NOT Hidden items ####
@@ -484,8 +500,6 @@ fragment LETTER		: ('a'..'z' | 'A'..'Z');
 fragment DIGIT		: '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9';
 
 // catch all
-INCOMPLETE_		: .;
+INC_UNKNOWN_ITEM	: .;
 
 // ################################### end ##############################
-
-b2

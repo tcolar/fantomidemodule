@@ -27,7 +27,7 @@ public class AntlrTokensToNetbeans
 	cats.put("MULTI_COMMENT", "comment");
 	cats.put("NUMBER", "number");
 	cats.put("CHAR", "character");
-	cats.put("INCOMPLETE_", "error");
+	cats.put("INC_", "error"); //incomplete
 	cats.put("KW_", "keyword");
 	cats.put("OP_", "operator");
 	cats.put("SP_", "separator");

@@ -42,10 +42,11 @@ public class NBFanLexer implements Lexer<FanTokenID>
     {
          curToken = (CommonToken) lexer.nextToken();
 
-	/*if(curToken.getType()==-1)
+	if(lexer.getTypeOverride()!=-1)
 	{
-	    dealWithUnclosedToken(lexer, curToken);
-	}*/
+	    curToken.setType(lexer.getTypeOverride());
+	    lexer.clearTypeOverride();
+	}
 
 	Integer id = new Integer(curToken.getType());
 	FanTokenID tk = tokenIds.get(id);
