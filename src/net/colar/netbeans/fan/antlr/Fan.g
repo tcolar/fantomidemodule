@@ -400,10 +400,14 @@ LB		: (('\r\n') | '\n')+ {$channel=HIDDEN;};
 WS  		:  (' '|'\t') {$channel=HIDDEN;}; // whitespace
 LINE_COMMENT	: '//' (~('\n'))* {$channel=HIDDEN;};
 EXEC_COMMENT	: '#!' (~('\n'))* {$channel=HIDDEN;};
+
+// need to use a predicate for incomplete item detection to work right.
+// backtracking in lexer wiithout predicate doesn't seem to happen right, with greedy=false.
+// if incomplete we match till end of line since most likely just started new comment
 MULTI_COMMENT	: '/*' ((COMPL_ML_COMMENT)=>COMPL_ML_COMMENT | ~'\n'* {too=INC_COMMENT;}){$channel=HIDDEN;};
 fragment
 COMPL_ML_COMMENT: (options{greedy=false;}:.)* '*/';
-// need to use a predicate for incomplete SDSL detection to work right.
+
 DSL		:'<|' ((COMPL_DSL)=>COMPL_DSL | ~'\n'* {too=INC_DSL;});
 fragment
 COMPL_DSL	: (options{greedy=false;}:.)* '|>';
