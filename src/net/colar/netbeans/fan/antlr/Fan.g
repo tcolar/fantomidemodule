@@ -414,10 +414,16 @@ COMPL_DSL	: (options{greedy=false;}:.)* '|>';
 
 CHAR		:'\'' (('\\' .) | ('\\u' (DIGIT | HEXLETTER) (DIGIT | HEXLETTER)
 			(DIGIT | HEXLETTER) (DIGIT | HEXLETTER)) | .)? '\''; //Letter possibly bacquoted or unicode char
-//RAWSTR		: 'r"' ~('"')* '"'; // obsolteted
-QUOTSTR		: '"""' ( options {greedy=false;} : . )* '"""';
-STR		: '"' ('\\\\' | '\\"' | ~'"')* '"';// accept strings incl. \"
-URI		: '`' ( ('\\\\') | ('\\`') | ~('`') )* '`';
+//RAWSTR		: 'r"' ~('"')* '"'; // obsoteted
+QUOTSTR		: '"""' ((COMPL_QSTR)=>COMPL_QSTR | ~'\n'* {too=INC_STR;});
+fragment
+COMPL_QSTR	: (options{greedy=false;}:.)* '"""';
+STR		: '"' ((COMPL_STR)=>COMPL_STR | ~'\n'* {too=INC_STR;});// accept strings incl. \"
+fragment
+COMPL_STR	: ('\\\\' | '\\"' | ~'"')* '"';
+URI		: '`'  ((COMPL_URI)=>COMPL_URI | ~'\n'* {too=INC_URI;});
+fragment
+COMPL_URI	: (('\\\\') | ('\\`') | ~('`') )* '`';
 
 // ######## Start NOT Hidden items ####
 // TODO: probably should use \r?\n  ... but that seem to cause issues when testing in antlrworks -> why ?

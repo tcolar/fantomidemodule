@@ -1,4 +1,4 @@
-// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-07-03 00:09:02
+// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-07-03 09:56:06
 package net.colar.netbeans.fan.antlr;
 
 import org.antlr.runtime.*;
@@ -9,20 +9,20 @@ import java.util.Map;
 import java.util.HashMap;
 public class FanParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "KW_BREAK", "KW_CONTINUE", "KW_FOR", "KW_IF", "KW_RETURN", "KW_SWITCH", "KW_THROW", "KW_WHILE", "KW_TRY", "KW_CASE", "KW_DEFAULT", "KW_CATCH", "KW_FINALLY", "KW_USING", "KW_AS", "KW_RD_ONLY", "KW_CONST", "KW_STATIC", "KW_NATIVE", "KW_VOLATILE", "KW_OVERRIDE", "KW_VIRTUAL", "KW_FINAL", "KW_VOID", "KW_CLASS", "KW_ENUM", "KW_MIXIN", "KW_ABSTRACT", "KW_PRIVATE", "KW_PROTECTED", "KW_PUBLIC", "KW_INTERNAL", "KW_NEW", "KW_ONCE", "KW_THIS", "KW_SUPER", "KW_ELSE", "KW_IS", "KW_ISNOT", "KW_NULL", "KW_IT", "KW_TRUE", "KW_FALSE", "INC_STR", "INC_URI", "INC_COMMENT", "INC_DSL", "SP_COLCOL", "DOT", "SQ_BRACKET_L", "SQ_BRACKET_R", "BRACKET_L", "BRACKET_R", "SP_COLON", "SP_COMMA", "PAR_L", "PAR_R", "SP_QMARK", "LIST_TYPE", "SP_PIPE", "OP_ARROW", "AS_INIT_VAL", "SP_SEMI", "AS_EQUAL", "AS_ASSIGN_OP", "OP_OR", "OP_AND", "CP_EQUALITY", "CP_COMPARATORS", "OP_ELVIS", "OP_RANG_EXCL_OLD", "OP_RANGE_EXCL", "OP_RANGE", "OP_BITOR", "OP_CURRY", "OP_LSHIFT", "OP_RSHIFT", "OP_PLUS", "OP_MINUS", "OP_MULTI", "OP_DIV", "OP_MOD", "OP_BANG", "OP_2PLUS", "OP_2MINUS", "OP_TILDA", "DSL", "OP_SAFE_CALL", "OP_SAFEDYN_CALL", "AT", "ID", "QUOTSTR", "STR", "URI", "CHAR", "OP_POUND", "DOC", "NUMBER", "LB", "WS", "LINE_COMMENT", "EXEC_COMMENT", "COMPL_ML_COMMENT", "MULTI_COMMENT", "COMPL_DSL", "DIGIT", "HEXLETTER", "KEYWORD", "UNDERSCORE", "HEX_HEADER", "HEXNB", "DECIMAL", "FRACTIONAL", "HEXHEADER", "FRACTION", "EXPONENT", "NBTYPE", "LETTER", "INC_UNKNOWN_ITEM"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "KW_BREAK", "KW_CONTINUE", "KW_FOR", "KW_IF", "KW_RETURN", "KW_SWITCH", "KW_THROW", "KW_WHILE", "KW_TRY", "KW_CASE", "KW_DEFAULT", "KW_CATCH", "KW_FINALLY", "KW_USING", "KW_AS", "KW_RD_ONLY", "KW_CONST", "KW_STATIC", "KW_NATIVE", "KW_VOLATILE", "KW_OVERRIDE", "KW_VIRTUAL", "KW_FINAL", "KW_VOID", "KW_CLASS", "KW_ENUM", "KW_MIXIN", "KW_ABSTRACT", "KW_PRIVATE", "KW_PROTECTED", "KW_PUBLIC", "KW_INTERNAL", "KW_NEW", "KW_ONCE", "KW_THIS", "KW_SUPER", "KW_ELSE", "KW_IS", "KW_ISNOT", "KW_NULL", "KW_IT", "KW_TRUE", "KW_FALSE", "INC_STR", "INC_URI", "INC_COMMENT", "INC_DSL", "SP_COLCOL", "DOT", "SQ_BRACKET_L", "SQ_BRACKET_R", "BRACKET_L", "BRACKET_R", "SP_COLON", "SP_COMMA", "PAR_L", "PAR_R", "SP_QMARK", "LIST_TYPE", "SP_PIPE", "OP_ARROW", "AS_INIT_VAL", "SP_SEMI", "AS_EQUAL", "AS_ASSIGN_OP", "OP_OR", "OP_AND", "CP_EQUALITY", "CP_COMPARATORS", "OP_ELVIS", "OP_RANG_EXCL_OLD", "OP_RANGE_EXCL", "OP_RANGE", "OP_BITOR", "OP_CURRY", "OP_LSHIFT", "OP_RSHIFT", "OP_PLUS", "OP_MINUS", "OP_MULTI", "OP_DIV", "OP_MOD", "OP_BANG", "OP_2PLUS", "OP_2MINUS", "OP_TILDA", "DSL", "OP_SAFE_CALL", "OP_SAFEDYN_CALL", "AT", "ID", "QUOTSTR", "STR", "URI", "CHAR", "OP_POUND", "DOC", "NUMBER", "LB", "WS", "LINE_COMMENT", "EXEC_COMMENT", "COMPL_ML_COMMENT", "MULTI_COMMENT", "COMPL_DSL", "DIGIT", "HEXLETTER", "COMPL_QSTR", "COMPL_STR", "COMPL_URI", "KEYWORD", "UNDERSCORE", "HEX_HEADER", "HEXNB", "DECIMAL", "FRACTIONAL", "HEXHEADER", "FRACTION", "EXPONENT", "NBTYPE", "LETTER", "INC_UNKNOWN_ITEM"
     };
-    public static final int EXPONENT=119;
+    public static final int EXPONENT=122;
     public static final int DSL=90;
     public static final int KW_NATIVE=22;
     public static final int OP_AND=70;
-    public static final int LETTER=121;
-    public static final int HEXNB=114;
+    public static final int LETTER=124;
+    public static final int HEXNB=117;
     public static final int CHAR=98;
     public static final int KW_DEFAULT=14;
     public static final int OP_2PLUS=87;
     public static final int KW_ONCE=37;
     public static final int SP_SEMI=66;
-    public static final int INC_UNKNOWN_ITEM=122;
+    public static final int INC_UNKNOWN_ITEM=125;
     public static final int EOF=-1;
     public static final int KW_PUBLIC=34;
     public static final int KW_ISNOT=42;
@@ -38,14 +38,14 @@ public class FanParser extends Parser {
     public static final int OP_BANG=86;
     public static final int PAR_L=59;
     public static final int OP_MULTI=83;
-    public static final int KEYWORD=111;
+    public static final int KEYWORD=114;
     public static final int KW_PROTECTED=33;
     public static final int LINE_COMMENT=104;
     public static final int CP_COMPARATORS=72;
     public static final int NUMBER=101;
     public static final int KW_CATCH=15;
     public static final int AS_EQUAL=67;
-    public static final int UNDERSCORE=112;
+    public static final int UNDERSCORE=115;
     public static final int OP_DIV=84;
     public static final int SP_COMMA=58;
     public static final int URI=97;
@@ -56,10 +56,10 @@ public class FanParser extends Parser {
     public static final int KW_STATIC=21;
     public static final int INC_COMMENT=49;
     public static final int SP_QMARK=61;
-    public static final int HEXHEADER=117;
+    public static final int HEXHEADER=120;
     public static final int AS_INIT_VAL=65;
     public static final int COMPL_DSL=108;
-    public static final int NBTYPE=120;
+    public static final int NBTYPE=123;
     public static final int KW_SUPER=39;
     public static final int OP_2MINUS=88;
     public static final int KW_ELSE=40;
@@ -81,11 +81,13 @@ public class FanParser extends Parser {
     public static final int STR=96;
     public static final int SP_PIPE=63;
     public static final int OP_RANGE_EXCL=75;
+    public static final int COMPL_QSTR=111;
     public static final int KW_VIRTUAL=25;
     public static final int OP_TILDA=89;
     public static final int CP_EQUALITY=71;
     public static final int KW_FOR=6;
     public static final int KW_WHILE=11;
+    public static final int COMPL_URI=113;
     public static final int OP_RANGE=76;
     public static final int KW_RETURN=8;
     public static final int INC_DSL=50;
@@ -107,18 +109,18 @@ public class FanParser extends Parser {
     public static final int KW_CONTINUE=5;
     public static final int KW_PRIVATE=32;
     public static final int KW_ENUM=29;
-    public static final int HEX_HEADER=113;
+    public static final int HEX_HEADER=116;
     public static final int OP_SAFEDYN_CALL=92;
     public static final int KW_VOLATILE=23;
     public static final int KW_CASE=13;
     public static final int LIST_TYPE=62;
-    public static final int FRACTIONAL=116;
+    public static final int FRACTIONAL=119;
     public static final int OP_LSHIFT=79;
     public static final int EXEC_COMMENT=105;
     public static final int KW_MIXIN=30;
     public static final int OP_ARROW=64;
     public static final int KW_VOID=27;
-    public static final int DECIMAL=115;
+    public static final int DECIMAL=118;
     public static final int INC_URI=48;
     public static final int KW_CLASS=28;
     public static final int AS_ASSIGN_OP=68;
@@ -126,10 +128,11 @@ public class FanParser extends Parser {
     public static final int INC_STR=47;
     public static final int KW_AS=18;
     public static final int OP_SAFE_CALL=91;
+    public static final int COMPL_STR=112;
     public static final int LB=102;
     public static final int KW_USING=17;
     public static final int KW_NULL=43;
-    public static final int FRACTION=118;
+    public static final int FRACTION=121;
     public static final int SP_COLCOL=51;
 
     // delegates
@@ -14673,7 +14676,7 @@ public class FanParser extends Parser {
                         int index93_11 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( ((synpred137_Fan()||(synpred137_Fan()&&(notAfterEol())))) ) {s = 52;}
+                        if ( (((synpred137_Fan()&&(notAfterEol()))||synpred137_Fan())) ) {s = 52;}
 
                         else if ( (true) ) {s = 1;}
 
@@ -16200,7 +16203,7 @@ public class FanParser extends Parser {
                         s = -1;
                         if ( ((synpred180_Fan()&&(notAfterEol()))) ) {s = 74;}
 
-                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
+                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
 
                          
                         input.seek(index117_48);
