@@ -7,6 +7,7 @@ package net.colar.netbeans.fan;
 
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
+import org.netbeans.modules.parsing.spi.Parser;
 
 
 /**
@@ -38,6 +39,11 @@ public class FanLanguage extends DefaultLanguageConfig
     {
 	System.err.println("~~~Fan - getprefext.");
 	return "fan";
+    }
+
+    @Override
+    public Parser getParser() {
+	return new NBFanParser();
     }
 
 }
