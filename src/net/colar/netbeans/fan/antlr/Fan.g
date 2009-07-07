@@ -179,6 +179,20 @@ INC_DSL;
 		input.rewind(start);
 		return result;
     	}
+
+    /* Error Handling */
+    FanParserResult parsingResult=null;
+    public FanParserResult parse(FanParserResult parsingResult) throws RecognitionException
+    {
+	this.parsingResult=parsingResult;
+	prog();
+	return this.parsingResult;
+    }
+    @Override
+    public void reportError(RecognitionException e)
+    {
+    	    parsingResult.addAntlrError(e);
+    }
 }
 
 //###################### GRAMMAR RULES ##########################################################

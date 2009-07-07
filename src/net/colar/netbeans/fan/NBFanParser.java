@@ -10,7 +10,6 @@ import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
@@ -23,6 +22,7 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
  */
 public class NBFanParser extends Parser{
 
+    FanParserResult result;
 
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
@@ -30,19 +30,20 @@ public class NBFanParser extends Parser{
 	CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 	FanParser parser=new FanParser(tokens);
+	result=new FanParserResult(snapshot);
 	try
 	{
-	   parser.prog();
+	   result=parser.parse(result);
 	}
-	catch(RecognitionException re)
+	catch(Exception e)
 	{
-	    throw new ParseException("Parsing failed.",re);
+	    throw new ParseException("Parser Exception.",e);
 	}
     }
 
     @Override
     public Result getResult(Task task) throws ParseException {
-	return null;//throw new UnsupportedOperationException("Not supported yet.");
+	return result;
     }
 
     @Override
