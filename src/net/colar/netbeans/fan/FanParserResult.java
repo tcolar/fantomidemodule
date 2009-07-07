@@ -37,11 +37,12 @@ public class FanParserResult extends ParserResult {
 
     @Override
     protected void invalidate() {
+	// what should this do ?
     }
 
     public void addAntlrError(RecognitionException e)
     {
-	CommonToken token=(CommonToken)e.token;
+	CommonToken token =(CommonToken)e.token;
 	String key="NBFanParser("+sourceName+")";
 	String desc=e.toString();
 	int start=token.getStartIndex();
