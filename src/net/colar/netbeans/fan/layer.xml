@@ -34,6 +34,9 @@
 		<file name="language.instance">
 		    <attr name="instanceClass" stringvalue="net.colar.netbeans.fan.FanLanguage"/>
 		</file>
+		<file name="structure.instance">
+                    <attr name="instanceClass" stringvalue="net.colar.netbeans.fan.structure.FanStructureAnalyzer"/>
+                </file>
 	    </folder>
 	</folder>
     </folder>

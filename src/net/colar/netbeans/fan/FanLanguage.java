@@ -5,7 +5,9 @@
 
 package net.colar.netbeans.fan;
 
+import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.parsing.spi.Parser;
 
@@ -18,7 +20,7 @@ public class FanLanguage extends DefaultLanguageConfig
     public FanLanguage()
     {
 	super();
-	System.err.println("~~~Fan - init FanLanguage");
+	System.err.println("Fan - init FanLanguage");
     }
 
 
@@ -30,14 +32,12 @@ public class FanLanguage extends DefaultLanguageConfig
 
     @Override
     public Language getLexerLanguage() {
-	System.err.println("~~~Fan - getlexerlang.");
 	return FanTokenID.language();
     }
 
     @Override
     public String getPreferredExtension()
     {
-	System.err.println("~~~Fan - getprefext.");
 	return "fan";
     }
 
@@ -46,4 +46,15 @@ public class FanLanguage extends DefaultLanguageConfig
 	return new NBFanParser();
     }
 
+    @Override
+    public boolean hasStructureScanner()
+    {
+	return true;
+    }
+
+    @Override
+    public StructureScanner getStructureScanner()
+    {
+	return new FanStructureAnalyzer();
+    }
 }

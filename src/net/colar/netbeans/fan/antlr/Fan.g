@@ -29,7 +29,7 @@ MULTI_COMMENT
 */
 
 grammar Fan;
-options {memoize=true;backtrack=true;}
+options {output=AST;memoize=true;backtrack=true;}
 
 // ########################## TOKENS
 // Define tokens for keywords used in the grammar, so they can be referenced.
@@ -84,6 +84,10 @@ INC_STR;
 INC_URI;
 INC_COMMENT;
 INC_DSL;
+
+// AST elements
+AST_CLASS;
+//AST_METHOD;
 }
 
 // ########################## code.
@@ -189,7 +193,9 @@ import net.colar.netbeans.fan.FanParserResult;
     public FanParserResult parse(FanParserResult parsingResult) throws RecognitionException
     {
 	this.parsingResult=parsingResult;
-	prog();
+	// Parse from grammar root and save the result
+	ParserRuleReturnScope result=prog();
+	this.parsingResult.setAntlrScope(result);
 	return this.parsingResult;
     }
     @Override
@@ -220,7 +226,7 @@ ffi 		:	sq_bracketL id sq_bracketR;
 typeDef 	:	docs facet* ((classFlags* KW_CLASS)=>classDef |
 			(protection? KW_ENUM)=>enumDef | mixinDef);
 classDef 	@init {paraphrase.push("Class definition");} @after{paraphrase.pop();}
-		:  	classHeader classBody;
+		:  	classHeader classBody -> ^(AST_CLASS classHeader classBody);
 classHeader	:	docs facet* classFlags* KW_CLASS id inheritance?;
 classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
 classBody 	:	bracketL slotDef* bracketR;
@@ -438,16 +444,16 @@ bracketR
 		:	BRACKET_R;
 sq_bracketL
 @init {paraphrase.push("[");} @after{paraphrase.pop();}
-		:	BRACKET_R;
+		:	SQ_BRACKET_L;
 sq_bracketR
 @init {paraphrase.push("]");} @after{paraphrase.pop();}
-		:	BRACKET_R;
+		:	SQ_BRACKET_R;
 parL
 @init {paraphrase.push("(");} @after{paraphrase.pop();}
-		:	BRACKET_L;
+		:	PAR_L;
 parR
 @init {paraphrase.push(")");} @after{paraphrase.pop();}
-		:	BRACKET_L;
+		:	PAR_R;
 
 
 // ####################### LEXER items ################################################################

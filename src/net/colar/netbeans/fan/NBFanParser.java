@@ -10,6 +10,10 @@ import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.Token;
+import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.CommonTreeAdaptor;
+import org.antlr.runtime.tree.TreeAdaptor;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
@@ -30,6 +34,8 @@ public class NBFanParser extends Parser{
 	CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 	FanParser parser=new FanParser(tokens);
+        parser.setTreeAdaptor(FAN_TREE_ADAPTOR);
+
 	result=new FanParserResult(snapshot);
 	try
 	{
@@ -39,6 +45,9 @@ public class NBFanParser extends Parser{
 	{
 	    throw new ParseException("Parser Exception.",e);
 	}
+
+	// AST stuff
+	//result.dumpTree();
     }
 
     @Override
@@ -61,4 +70,15 @@ public class NBFanParser extends Parser{
 	//throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Static ANTLR tree adaptor.
+     */
+    static final TreeAdaptor FAN_TREE_ADAPTOR = new CommonTreeAdaptor()
+    {
+	@Override
+	public Object create(Token payload)
+	{
+		return new CommonTree(payload);
+	}
+    };
 }

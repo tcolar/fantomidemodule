@@ -53,27 +53,21 @@ public class FanTokenID implements TokenId {
 
 	@Override
 	protected String mimeType() {
-	    		System.err.println("~~~Fan - getmimetype.");
 	    return FAN_MIME_TYPE;
 	}
 
 	@Override
 	protected Collection<FanTokenID> createTokenIds() {
-	    		System.err.println("~~~Fan - create tokens.");
-
 	    return NBFanLexer.getTokenIds();
 	}
 
 	@Override
 	protected Lexer<FanTokenID> createLexer(LexerRestartInfo<FanTokenID> info) {
-		System.err.println("~~~Fan - create lexer()");
 	    return new NBFanLexer(info);
 	}
     }.language();
 
     public static Language<FanTokenID> language() {
-		System.err.println("~~~Fan - getlangaug().");
-
 	return language;
     }
 }

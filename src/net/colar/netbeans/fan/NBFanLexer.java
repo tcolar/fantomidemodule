@@ -4,6 +4,7 @@
  */
 package net.colar.netbeans.fan;
 
+import net.colar.netbeans.fan.antlr.NetbeansAntlrStream;
 import java.util.Collection;
 import java.util.Hashtable;
 import net.colar.netbeans.fan.antlr.FanLexer;
@@ -64,10 +65,10 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		result = info.tokenFactory().createToken(tk);
 	    }
 	}
-	if (result != null)
+	/*if (result != null)
 	{
 	    System.err.println(tk.name() + (result.isFlyweight() ? "(FlyWeight)" : "") + " : " + curToken.getText());
-	}
+	}*/
 	return result;
     }
 
