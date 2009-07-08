@@ -28,7 +28,7 @@ import org.netbeans.modules.parsing.api.Snapshot;
 
 /**
  *
- * @author tcolar
+ * @author  tcolar
  */
 public class FanParserResult extends ParserResult
 {
