@@ -100,7 +100,6 @@ import net.colar.netbeans.fan.FanParserResult;
 	int too=-1;
 	public int getTypeOverride() {return too;}
 	public void clearTypeOverride() {too=-1;}
-        Stack<String> paraphrase = new Stack<String>();
 }
 
 // A little bit of code necessary to deal with the Linebreaks which are usually neaningless but not always
@@ -216,7 +215,7 @@ usingType
 		:	KW_USING podSpec SP_COLCOL id eos;
 usingAs		:	KW_USING podSpec SP_COLCOL id KW_AS id eos;
 podSpec		:	ffi? id (DOT id)*;
-ffi 		:	SQ_BRACKET_L id SQ_BRACKET_R;
+ffi 		:	sq_bracketL id sq_bracketR;
 // refactored
 typeDef 	:	docs facet* ((classFlags* KW_CLASS)=>classDef |
 			(protection? KW_ENUM)=>enumDef | mixinDef);
@@ -224,20 +223,20 @@ classDef 	@init {paraphrase.push("Class definition");} @after{paraphrase.pop();}
 		:  	classHeader classBody;
 classHeader	:	docs facet* classFlags* KW_CLASS id inheritance?;
 classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
-classBody 	:	BRACKET_L slotDef* bracketR;
+classBody 	:	bracketL slotDef* bracketR;
 protection	:	KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL;
 mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
 		:	mixinHeader mixinBody;
 mixinHeader	:	docs facet* mixinFlags* KW_MIXIN id inheritance?;
 mixinFlags	:	protection | KW_CONST | KW_STATIC | KW_FINAL;
-mixinBody	:	BRACKET_L slotDef* bracketR;
+mixinBody	:	bracketL slotDef* bracketR;
 enumDef		@init {paraphrase.push("Enumeration definition");} @after{paraphrase.pop();}
 		:	enumHeader enumBody;
 enumHeader	:   	docs facet* protection? KW_ENUM id inheritance?;
-enumBody	:	BRACKET_L enumValDefs slotDef* bracketR ;
+enumBody	:	bracketL enumValDefs slotDef* bracketR ;
 inheritance 	:	SP_COLON typeList;
 enumValDefs 	:	enumValDef (SP_COMMA  enumValDef)* eos;
-enumValDef 	:	docs id (PAR_L args? PAR_R)?;
+enumValDef 	:	docs id (parL args? parR)?;
 typeList	:  	type (SP_COMMA type)*;
 
 type	        :  	typeRoot  SP_QMARK? (LIST_TYPE SP_QMARK?)* ;
@@ -245,8 +244,8 @@ nonMapType	:	funcType | simpleType;
 typeRoot	:	mapType | nonMapType;
 simpleType     	:  	id (SP_COLCOL id)?;
 // this was left recursive -> changed into tail recursive
-mapType		:	SQ_BRACKET_L? nonMapType SP_QMARK? (LIST_TYPE SP_QMARK?)*
-				({notAfterEol()}? SP_COLON {notAfterEol()}? type)+ SQ_BRACKET_R?;
+mapType		:	sq_bracketL? nonMapType SP_QMARK? (LIST_TYPE SP_QMARK?)*
+				({notAfterEol()}? SP_COLON {notAfterEol()}? type)+ sq_bracketR?;
 funcType 	:	SP_PIPE (SP_COMMA | (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType)) SP_PIPE;
 assignedType	:	OP_ARROW type;
 formals 	:  	formal (SP_COMMA formal)*;
@@ -254,11 +253,11 @@ formal		:	formalFull | formalTypeOnly | formalInferred;
 formalFull      :	type id;
 formalTypeOnly  :  	type;
 formalInferred  :  	id;
-slotDef 	:	((KW_STATIC BRACKET_L)=> staticBlock|
+slotDef 	:	((KW_STATIC bracketL)=> staticBlock|
 				(docs facet*
 					(
 						(ctorFlags* KW_NEW)=>ctorDef |
-						(methodFlags* (type | KW_VOID) id PAR_L)=>methodDef |
+						(methodFlags* (type | KW_VOID) id parL)=>methodDef |
 						fieldDef
 					)
 				)
@@ -266,31 +265,31 @@ slotDef 	:	((KW_STATIC BRACKET_L)=> staticBlock|
 fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
 		:	docs facet* fieldFlags typeId (AS_INIT_VAL expr)?
 				(
-				(BRACKET_L (protection? (getter | setter) SP_SEMI? block?)+ bracketR)
+				(bracketL (protection? (getter | setter) SP_SEMI? block?)+ bracketR)
 				| eos);
 
 typeId		:	((type id)=>typeAndId | id);
 typeAndId	:	type id;
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
 methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
-		:	docs facet* methodFlags* (type | KW_VOID) id PAR_L params PAR_R methodBody;
+		:	docs facet* methodFlags* (type | KW_VOID) id parL params parR methodBody;
 methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE |
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;
 param 		:	type id (AS_INIT_VAL expr)?;
 methodBody	:	('{' stmt* bracketR) | eos;
 ctorDef		@init {paraphrase.push("Constructor definition");} @after{paraphrase.pop();}
-		:	docs facet* ctorFlags* KW_NEW id PAR_L params PAR_R ((SP_COLON)=>ctorChain)? methodBody;
+		:	docs facet* ctorFlags* KW_NEW id parL params parR ((SP_COLON)=>ctorChain)? methodBody;
 ctorFlags	:	protection;
 ctorChain	:	SP_COLON (ctorChainThis | ctorChainSuper);
 
-ctorChainThis	:	KW_THIS DOT id PAR_L args? PAR_R;
-ctorChainSuper	:	KW_SUPER (DOT id)? PAR_L args? PAR_R;
+ctorChainThis	:	KW_THIS DOT id parL args? parR;
+ctorChainSuper	:	KW_SUPER (DOT id)? parL args? parR;
 
 staticBlock	:	KW_STATIC block;
 block 		@init {paraphrase.push("Block");} @after{paraphrase.pop();}
-		:	((BRACKET_L)=>multiStmt | stmt);
-multiStmt	:	BRACKET_L  stmt* bracketR;
+		:	((bracketL)=>multiStmt | stmt);
+multiStmt	:	bracketL  stmt* bracketR;
 stmt
 @init {paraphrase.push("Statement");} @after{paraphrase.pop();}
 		:	(g_if | g_for | g_while | g_break |
@@ -304,26 +303,26 @@ so I prepand "g_" to those if needed.
 */
 g_break		:	KW_BREAK eos;
 g_continue	:	KW_CONTINUE eos;
-g_for		:	KW_FOR PAR_L forInit? SP_SEMI expr? SP_SEMI expr? PAR_R  block;
-g_if		:	KW_IF PAR_L expr PAR_R block
+g_for		:	KW_FOR parL forInit? SP_SEMI expr? SP_SEMI expr? parR  block;
+g_if		:	KW_IF parL expr parR block
 				(KW_ELSE block)?;
 g_return	:	KW_RETURN (eos | expr eos);
-g_switch	:	KW_SWITCH PAR_L expr PAR_R BRACKET_L (g_case)* (g_default)? bracketR;
+g_switch	:	KW_SWITCH parL expr parR bracketL (g_case)* (g_default)? bracketR;
 g_throw		:	KW_THROW expr eos;
-g_while		:	KW_WHILE PAR_L expr PAR_R block;
-g_try		:	KW_TRY ((BRACKET_L)=>try_long | stmt*) ((KW_CATCH)=>g_catch)* ((KW_FINALLY)=>g_finally)?;
-try_long	:	BRACKET_L stmt* bracketR;
+g_while		:	KW_WHILE parL expr parR block;
+g_try		:	KW_TRY ((bracketL)=>try_long | stmt*) ((KW_CATCH)=>g_catch)* ((KW_FINALLY)=>g_finally)?;
+try_long	:	bracketL stmt* bracketR;
 exprStmt	:	expr eos;
 localDef	:	typeId (AS_INIT_VAL expr)? eos;
 forInit 	:	forInitDef | expr;
 forInitDef	:	typeId (AS_INIT_VAL expr)?;
 // catch is a reserved antlr keyword
-g_catch		:	KW_CATCH catchDef? ((BRACKET_L)=>catch_long | stmt*);
-catch_long	:	BRACKET_L stmt* bracketR;
-catchDef 	:	PAR_L type id PAR_R;
+g_catch		:	KW_CATCH catchDef? ((bracketL)=>catch_long | stmt*);
+catch_long	:	bracketL stmt* bracketR;
+catchDef 	:	parL type id parR;
 // finally is a reserved antlr keyword
-g_finally	:	KW_FINALLY ((BRACKET_L)=>finally_long | stmt*);
-finally_long	:	BRACKET_L stmt* bracketR;
+g_finally	:	KW_FINALLY ((bracketL)=>finally_long | stmt*);
+finally_long	:	bracketL stmt* bracketR;
 g_case		:	KW_CASE expr SP_COLON stmt*;
 g_default	:	KW_DEFAULT SP_COLON stmt*;
 
@@ -355,9 +354,9 @@ addAppend	:	(OP_PLUS | OP_MINUS) parenExpr;
 multExpr 	:	parenExpr ((OP_MULTI | OP_DIV | OP_MOD) parenExpr)* ;
 parenExpr 	:	castExpr | groupedExpr | unaryExpr;
 // par_l on newline = end of expression
-castExpr 	:	{notAfterEol()}? PAR_L type PAR_R parenExpr;
+castExpr 	:	{notAfterEol()}? parL type parR parenExpr;
 // if PAR_l starts after newLine, this is a different exression
-groupedExpr 	:	PAR_L expr PAR_R termChain*;
+groupedExpr 	:	parL expr parR termChain*;
 unaryExpr 	:	prefixExpr | postfixExpr | termExpr;
 prefixExpr 	:	(OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS) parenExpr ;
 postfixExpr 	:	termExpr (OP_2PLUS | OP_2MINUS) ;
@@ -374,16 +373,16 @@ termChain 	:	dotCall | dynCall | safeDotCall | safeDynCall |
 dsl	        :	simpleType DSL;
 
 // itBlocks can have a COMMA after statements, which means to call it.add(expr).
-itBlock 	:	BRACKET_L (stmt SP_COMMA? SP_SEMI?)* bracketR;
+itBlock 	:	bracketL (stmt SP_COMMA? SP_SEMI?)* bracketR;
 dotCall 	:	DOT idExpr;
 dynCall 	:	OP_ARROW idExpr;
 safeDotCall 	:	OP_SAFE_CALL idExpr;
 safeDynCall	:	OP_SAFEDYN_CALL idExpr;
-indexExpr 	:	{notAfterEol()}? SQ_BRACKET_L expr SQ_BRACKET_R;
+indexExpr 	:	{notAfterEol()}? sq_bracketL expr sq_bracketR;
 // eos = end of expression
-callOp		:	{notAfterEol()}? PAR_L args?  PAR_R closure*;
+callOp		:	{notAfterEol()}? parL args?  parR closure*;
 closure 	@init {paraphrase.push("Closure");} @after{paraphrase.pop();}
-		:  	funcType BRACKET_L stmt* bracketR;
+		:  	funcType bracketL stmt* bracketR;
 // this can be either a local def(toto.value) or a call(toto.getValue or toto.getValue(<params>)) + opt. closure
 idExpr 		:	idExprReq | id;
 // Same but without matching ID by itself (this would prevent termbase from checking literals).
@@ -393,7 +392,7 @@ field		:	AT ID;
  // require params or/and closure, otherwise it's just and ID (this would prevent termbase from checking literals)
 call		:	id ((callParams closure) | callParams | closure);
 
-callParams	:	{notAfterEol()}? PAR_L args? PAR_R;
+callParams	:	{notAfterEol()}? parL args? parR;
 args 		:	expr (SP_COMMA  expr)*;
 
 literal 	:	KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | QUOTSTR | STR | URI |
@@ -402,21 +401,18 @@ literal 	:	KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | QUOTSTR |
 typeLiteral	:  	type {notAfterEol()}? OP_POUND;
 slotLiteral	:  	type? OP_POUND {notAfterEol()}? id;
 namedSuper 	:	simpleType DOT KW_SUPER;
-list 		:	(type {notAfterEol()}?)? SQ_BRACKET_L listItems SQ_BRACKET_R;
+list 		:	(type {notAfterEol()}?)? sq_bracketL listItems sq_bracketR;
 listItems 	:	(expr (SP_COMMA expr )* SP_COMMA?) | SP_COMMA;
-map 		:	(mapType {notAfterEol()}?)? SQ_BRACKET_L mapItems SQ_BRACKET_R;
+map 		:	(mapType {notAfterEol()}?)? sq_bracketL mapItems sq_bracketR;
 mapItems 	:	(mapPair (SP_COMMA mapPair)* SP_COMMA?) | SP_COLON;
 mapPair		:	expr SP_COLON expr;
-simple		:	type PAR_L expr PAR_R;
+simple		:	type parL expr parR;
 
 docs		:	DOC*;
 
 number		: 	OP_MINUS? NUMBER;
 facet		:	AT id (AS_EQUAL expr)?;
 
-bracketR
-@init {paraphrase.push("}");} @after{paraphrase.pop();}
-		:	BRACKET_R;
 // endOfLine: semicolumn, or look for newLine
 eos
 @init {paraphrase.push("Semicolumn or LineBreak");} @after{paraphrase.pop();}
@@ -432,6 +428,27 @@ Not sure that's the best way to o this, but it's the best i could come up with t
  */
 getter			: t=ID {t.getText().equals("get")}?;
 setter			: t=ID {t.getText().equals("set")}?;
+
+// For bettr error reporting
+bracketL
+@init {paraphrase.push("{");} @after{paraphrase.pop();}
+		:	BRACKET_L;
+bracketR
+@init {paraphrase.push("}");} @after{paraphrase.pop();}
+		:	BRACKET_R;
+sq_bracketL
+@init {paraphrase.push("[");} @after{paraphrase.pop();}
+		:	BRACKET_R;
+sq_bracketR
+@init {paraphrase.push("]");} @after{paraphrase.pop();}
+		:	BRACKET_R;
+parL
+@init {paraphrase.push("(");} @after{paraphrase.pop();}
+		:	BRACKET_L;
+parR
+@init {paraphrase.push(")");} @after{paraphrase.pop();}
+		:	BRACKET_L;
+
 
 // ####################### LEXER items ################################################################
 

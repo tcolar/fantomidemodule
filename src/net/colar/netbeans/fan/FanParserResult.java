@@ -55,7 +55,7 @@ public class FanParserResult extends ParserResult {
 	if(! paraphrase.isEmpty())
 	    location=paraphrase.peek();
 	Enumeration el=paraphrase.elements();
-	String trace="";
+	//String trace="";
 	/*int cpt=0;
 	while(el.hasMoreElements())
 	{
@@ -70,7 +70,7 @@ public class FanParserResult extends ParserResult {
 	int end= token.getStopIndex();
 	String loc=location!=null?location:e.token.getText();
 
-	// trying to make some nicer erro messages.
+	// trying to build some nicer error messages.
 	if(e instanceof MissingTokenException)
 	{//tested
 	    MissingTokenException ee=(MissingTokenException)e;
