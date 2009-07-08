@@ -126,7 +126,7 @@ import net.colar.netbeans.fan.FanParserResult;
 			// maybe i shoul match only when in an itBlock ?
 			if(input.get(index).getType() == SP_COMMA)
 				return true;
-			// if next token is a BRACKET_R, that counts as a newline
+			// if next token is a '}', that counts as a newline
 			if(input.get(index).getType() == BRACKET_R)
 				return true;
 		}
@@ -196,10 +196,7 @@ import net.colar.netbeans.fan.FanParserResult;
     @Override
     public void reportError(RecognitionException e)
     {
-	    String location=null;
-	    if(!paraphrase.isEmpty())
-		location=(String)paraphrase.peek();
-	    parsingResult.addAntlrError(e,location);
+	    parsingResult.addAntlrError(e,paraphrase);
     }
     
     Stack<String> paraphrase = new Stack<String>();
@@ -211,7 +208,8 @@ import net.colar.netbeans.fan.FanParserResult;
 
 // allow extra "docs" at the end of file, as seen in some files (last slot commented out)
 prog		: 	 using* typeDef* docs EOF;
-using		:	(usingPod | usingType | usingAs);
+using		@init {paraphrase.push("Using statements");} @after{paraphrase.pop();}
+		:	(usingPod | usingType | usingAs);
 usingPod
 		:	KW_USING podSpec eos ;
 usingType
@@ -222,18 +220,21 @@ ffi 		:	SQ_BRACKET_L id SQ_BRACKET_R;
 // refactored
 typeDef 	:	docs facet* ((classFlags* KW_CLASS)=>classDef |
 			(protection? KW_ENUM)=>enumDef | mixinDef);
-classDef 	:  	classHeader classBody;
+classDef 	@init {paraphrase.push("Class definition");} @after{paraphrase.pop();}
+		:  	classHeader classBody;
 classHeader	:	docs facet* classFlags* KW_CLASS id inheritance?;
 classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
-classBody 	:	BRACKET_L slotDef* BRACKET_R;
+classBody 	:	BRACKET_L slotDef* bracketR;
 protection	:	KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL;
-mixinDef	:	mixinHeader mixinBody;
+mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
+		:	mixinHeader mixinBody;
 mixinHeader	:	docs facet* mixinFlags* KW_MIXIN id inheritance?;
 mixinFlags	:	protection | KW_CONST | KW_STATIC | KW_FINAL;
-mixinBody	:	BRACKET_L slotDef* BRACKET_R;
-enumDef		:	enumHeader enumBody;
+mixinBody	:	BRACKET_L slotDef* bracketR;
+enumDef		@init {paraphrase.push("Enumeration definition");} @after{paraphrase.pop();}
+		:	enumHeader enumBody;
 enumHeader	:   	docs facet* protection? KW_ENUM id inheritance?;
-enumBody	:	BRACKET_L enumValDefs slotDef* BRACKET_R ;
+enumBody	:	BRACKET_L enumValDefs slotDef* bracketR ;
 inheritance 	:	SP_COLON typeList;
 enumValDefs 	:	enumValDef (SP_COMMA  enumValDef)* eos;
 enumValDef 	:	docs id (PAR_L args? PAR_R)?;
@@ -262,21 +263,24 @@ slotDef 	:	((KW_STATIC BRACKET_L)=> staticBlock|
 					)
 				)
 			);
-fieldDef	:	docs facet* fieldFlags typeId (AS_INIT_VAL expr)?
+fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
+		:	docs facet* fieldFlags typeId (AS_INIT_VAL expr)?
 				(
-				(BRACKET_L (protection? (getter | setter) SP_SEMI? block?)+ BRACKET_R)
+				(BRACKET_L (protection? (getter | setter) SP_SEMI? block?)+ bracketR)
 				| eos);
 
 typeId		:	((type id)=>typeAndId | id);
 typeAndId	:	type id;
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
-methodDef	:	docs facet* methodFlags* (type | KW_VOID) id PAR_L params PAR_R methodBody;
+methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
+		:	docs facet* methodFlags* (type | KW_VOID) id PAR_L params PAR_R methodBody;
 methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE |
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;
 param 		:	type id (AS_INIT_VAL expr)?;
-methodBody	:	('{' stmt* '}') | eos;
-ctorDef		:	docs facet* ctorFlags* KW_NEW id PAR_L params PAR_R ((SP_COLON)=>ctorChain)? methodBody;
+methodBody	:	('{' stmt* bracketR) | eos;
+ctorDef		@init {paraphrase.push("Constructor definition");} @after{paraphrase.pop();}
+		:	docs facet* ctorFlags* KW_NEW id PAR_L params PAR_R ((SP_COLON)=>ctorChain)? methodBody;
 ctorFlags	:	protection;
 ctorChain	:	SP_COLON (ctorChainThis | ctorChainSuper);
 
@@ -284,8 +288,9 @@ ctorChainThis	:	KW_THIS DOT id PAR_L args? PAR_R;
 ctorChainSuper	:	KW_SUPER (DOT id)? PAR_L args? PAR_R;
 
 staticBlock	:	KW_STATIC block;
-block 		:	((BRACKET_L)=>multiStmt | stmt);
-multiStmt	:	BRACKET_L  stmt* BRACKET_R;
+block 		@init {paraphrase.push("Block");} @after{paraphrase.pop();}
+		:	((BRACKET_L)=>multiStmt | stmt);
+multiStmt	:	BRACKET_L  stmt* bracketR;
 stmt
 @init {paraphrase.push("Statement");} @after{paraphrase.pop();}
 		:	(g_if | g_for | g_while | g_break |
@@ -303,22 +308,22 @@ g_for		:	KW_FOR PAR_L forInit? SP_SEMI expr? SP_SEMI expr? PAR_R  block;
 g_if		:	KW_IF PAR_L expr PAR_R block
 				(KW_ELSE block)?;
 g_return	:	KW_RETURN (eos | expr eos);
-g_switch	:	KW_SWITCH PAR_L expr PAR_R BRACKET_L (g_case)* (g_default)? BRACKET_R;
+g_switch	:	KW_SWITCH PAR_L expr PAR_R BRACKET_L (g_case)* (g_default)? bracketR;
 g_throw		:	KW_THROW expr eos;
 g_while		:	KW_WHILE PAR_L expr PAR_R block;
 g_try		:	KW_TRY ((BRACKET_L)=>try_long | stmt*) ((KW_CATCH)=>g_catch)* ((KW_FINALLY)=>g_finally)?;
-try_long	:	BRACKET_L stmt* BRACKET_R;
+try_long	:	BRACKET_L stmt* bracketR;
 exprStmt	:	expr eos;
 localDef	:	typeId (AS_INIT_VAL expr)? eos;
 forInit 	:	forInitDef | expr;
 forInitDef	:	typeId (AS_INIT_VAL expr)?;
 // catch is a reserved antlr keyword
 g_catch		:	KW_CATCH catchDef? ((BRACKET_L)=>catch_long | stmt*);
-catch_long	:	BRACKET_L stmt* BRACKET_R;
+catch_long	:	BRACKET_L stmt* bracketR;
 catchDef 	:	PAR_L type id PAR_R;
 // finally is a reserved antlr keyword
 g_finally	:	KW_FINALLY ((BRACKET_L)=>finally_long | stmt*);
-finally_long	:	BRACKET_L stmt* BRACKET_R;
+finally_long	:	BRACKET_L stmt* bracketR;
 g_case		:	KW_CASE expr SP_COLON stmt*;
 g_default	:	KW_DEFAULT SP_COLON stmt*;
 
@@ -369,7 +374,7 @@ termChain 	:	dotCall | dynCall | safeDotCall | safeDynCall |
 dsl	        :	simpleType DSL;
 
 // itBlocks can have a COMMA after statements, which means to call it.add(expr).
-itBlock 	:	BRACKET_L (stmt SP_COMMA? SP_SEMI?)* BRACKET_R;
+itBlock 	:	BRACKET_L (stmt SP_COMMA? SP_SEMI?)* bracketR;
 dotCall 	:	DOT idExpr;
 dynCall 	:	OP_ARROW idExpr;
 safeDotCall 	:	OP_SAFE_CALL idExpr;
@@ -377,7 +382,8 @@ safeDynCall	:	OP_SAFEDYN_CALL idExpr;
 indexExpr 	:	{notAfterEol()}? SQ_BRACKET_L expr SQ_BRACKET_R;
 // eos = end of expression
 callOp		:	{notAfterEol()}? PAR_L args?  PAR_R closure*;
-closure 	:  	funcType BRACKET_L stmt* BRACKET_R;
+closure 	@init {paraphrase.push("Closure");} @after{paraphrase.pop();}
+		:  	funcType BRACKET_L stmt* bracketR;
 // this can be either a local def(toto.value) or a call(toto.getValue or toto.getValue(<params>)) + opt. closure
 idExpr 		:	idExprReq | id;
 // Same but without matching ID by itself (this would prevent termbase from checking literals).
@@ -408,9 +414,12 @@ docs		:	DOC*;
 number		: 	OP_MINUS? NUMBER;
 facet		:	AT id (AS_EQUAL expr)?;
 
+bracketR
+@init {paraphrase.push("}");} @after{paraphrase.pop();}
+		:	BRACKET_R;
 // endOfLine: semicolumn, or look for newLine
 eos
-@init {paraphrase.push(": or LineBreak");} @after{paraphrase.pop();}
+@init {paraphrase.push("Semicolumn or LineBreak");} @after{paraphrase.pop();}
 		:	SP_SEMI | {lookupNL()}?;
 
 id
