@@ -196,7 +196,10 @@ import net.colar.netbeans.fan.FanParserResult;
     @Override
     public void reportError(RecognitionException e)
     {
-    	    parsingResult.addAntlrError(e);
+	    String location=null;
+	    if(!paraphrase.isEmpty())
+		location=(String)paraphrase.peek();
+	    parsingResult.addAntlrError(e,location);
     }
     
     Stack<String> paraphrase = new Stack<String>();
@@ -272,7 +275,7 @@ methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | 
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;
 param 		:	type id (AS_INIT_VAL expr)?;
-methodBody	:	(BRACKET_L stmt* BRACKET_R) | eos;
+methodBody	:	('{' stmt* '}') | eos;
 ctorDef		:	docs facet* ctorFlags* KW_NEW id PAR_L params PAR_R ((SP_COLON)=>ctorChain)? methodBody;
 ctorFlags	:	protection;
 ctorChain	:	SP_COLON (ctorChainThis | ctorChainSuper);
@@ -470,137 +473,50 @@ KEYWORD		: ('abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' |
 
 
 // Symbols
-CP_EQUALITY
-@init {paraphrase.push("Equality Comparator");} @after{paraphrase.pop();}
-		:'===' | '!==' | '==' | '!=';
-CP_COMPARATORS
-@init {paraphrase.push("Comparator");} @after{paraphrase.pop();}		:'<=>' | '<=' | '<' | '>=' | '>';
-AS_ASSIGN_OP
-@init {paraphrase.push("Assigmnet Operator");} @after{paraphrase.pop();}
-		:'*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=';
-LIST_TYPE
-@init {paraphrase.push("[]");} @after{paraphrase.pop();}
-		:'[]';
-OP_SAFEDYN_CALL
-@init {paraphrase.push("?->");} @after{paraphrase.pop();}
-		:'?->';
-OP_ARROW
-@init {paraphrase.push("->");} @after{paraphrase.pop();}
-		:'->';
-OP_SAFE_CALL
-@init {paraphrase.push("?.");} @after{paraphrase.pop();}
-		:'?.';
-OP_RANG_EXCL_OLD
-@init {paraphrase.push("...");} @after{paraphrase.pop();}
-		:'...';
-OP_RANGE_EXCL
-@init {paraphrase.push("..<");} @after{paraphrase.pop();}
-		:'..<';
-OP_RANGE
-@init {paraphrase.push("..");} @after{paraphrase.pop();}
-		:'..';
-OP_ELVIS
-@init {paraphrase.push("?:");} @after{paraphrase.pop();}
-		:'?:';
-SP_COLCOL
-@init {paraphrase.push("::");} @after{paraphrase.pop();}
-		:'::';
-BRACKET_L
-@init {paraphrase.push("{");} @after{paraphrase.pop();}
-		:'{';
-BRACKET_R
-@init {paraphrase.push("}");} @after{paraphrase.pop();}
-		:'}';
-SQ_BRACKET_L
-@init {paraphrase.push("[");} @after{paraphrase.pop();}
-		:'[';
-SQ_BRACKET_R
-@init {paraphrase.push("]");} @after{paraphrase.pop();}
-		:']';
-PAR_L
-@init {paraphrase.push("(");} @after{paraphrase.pop();}
-		:'(';
-PAR_R
-@init {paraphrase.push(")");} @after{paraphrase.pop();}
-		:')';
-SP_COLON
-@init {paraphrase.push(":");} @after{paraphrase.pop();}
-		:':';
-SP_SEMI
-@init {paraphrase.push(";");} @after{paraphrase.pop();}
-		:';';
-SP_COMMA
-@init {paraphrase.push(",");} @after{paraphrase.pop();}
-		:',';
-SP_PIPE
-@init {paraphrase.push("|");} @after{paraphrase.pop();}
-		:'|';
-AS_INIT_VAL
-@init {paraphrase.push(":=");} @after{paraphrase.pop();}
-		:':=';
-SP_QMARK
-@init {paraphrase.push("?");} @after{paraphrase.pop();}
-		:'?';
-AT
-@init {paraphrase.push("@");} @after{paraphrase.pop();}
-		:'@';
-OP_POUND
-@init {paraphrase.push("#");} @after{paraphrase.pop();}
-		:'#';
-OP_CURRY
-@init {paraphrase.push("&");} @after{paraphrase.pop();}
-		:'&';
-AS_EQUAL
-@init {paraphrase.push("=");} @after{paraphrase.pop();}
-		:'=';
-OP_BITOR
-@init {paraphrase.push("^");} @after{paraphrase.pop();}
-		:'^';
-UNDERSCORE
-@init {paraphrase.push("_");} @after{paraphrase.pop();}
-		:'_';
-OP_AND
-@init {paraphrase.push("&&");} @after{paraphrase.pop();}
-		:'&&';
-OP_OR
-@init {paraphrase.push("||");} @after{paraphrase.pop();}
-		:'||';
-DOT
-@init {paraphrase.push(".");} @after{paraphrase.pop();}
-		:'.';
-OP_2PLUS
-@init {paraphrase.push("++");} @after{paraphrase.pop();}
-		:'++';
-OP_2MINUS
-@init {paraphrase.push("--");} @after{paraphrase.pop();}
-		:'--';
-OP_MINUS
-@init {paraphrase.push("-");} @after{paraphrase.pop();}
-		:'-';
-OP_PLUS
-@init {paraphrase.push("+");} @after{paraphrase.pop();}
-		:'+';
-OP_LSHIFT
-@init {paraphrase.push("<<");} @after{paraphrase.pop();}
-		:'<<';
-OP_RSHIFT
-@init {paraphrase.push(">>");} @after{paraphrase.pop();}
-		:'>>';
-OP_MULTI
-@init {paraphrase.push("*");} @after{paraphrase.pop();}
-		:'*';
-OP_DIV
-@init {paraphrase.push("/");} @after{paraphrase.pop();}
-		:'/';
-OP_MOD
-@init {paraphrase.push("\%");} @after{paraphrase.pop();}
-		:'%';
-OP_BANG
-@init {paraphrase.push("!");} @after{paraphrase.pop();}
-		:'!';
-OP_TILDA
-@init {paraphrase.push("~");} @after{paraphrase.pop();}
-		:'~';
+CP_EQUALITY	:'===' | '!==' | '==' | '!=';
+CP_COMPARATORS  :'<=' | '>=' | '<=>' | '<' | '>';
+AS_ASSIGN_OP	:'*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=';
+LIST_TYPE	:'[]';
+OP_SAFEDYN_CALL	:'?->';
+OP_ARROW	:'->';
+OP_SAFE_CALL	:'?.';
+OP_RANG_EXCL_OLD:'...';
+OP_RANGE_EXCL	:'..<';
+OP_RANGE	:'..';
+OP_ELVIS	:'?:';
+SP_COLCOL	:'::';
+BRACKET_L	:'{';
+BRACKET_R	:'}';
+SQ_BRACKET_L	:'[';
+SQ_BRACKET_R	:']';
+PAR_L		:'(';
+PAR_R		:')';
+SP_COLON	:':';
+SP_SEMI		:';';
+SP_COMMA	:',';
+SP_PIPE		:'|';
+AS_INIT_VAL	:':=';
+SP_QMARK	:'?';
+AT		:'@';
+OP_POUND	:'#';
+OP_CURRY	:'&';
+AS_EQUAL	:'=';
+OP_BITOR	:'^';
+UNDERSCORE	:'_';
+OP_AND		:'&&';
+OP_OR		:'||';
+DOT		:'.';
+OP_2PLUS	:'++';
+OP_2MINUS	:'--';
+OP_MINUS	:'-';
+OP_PLUS		:'+';
+OP_LSHIFT	:'<<';
+OP_RSHIFT	:'>>';
+OP_MULTI	:'*';
+OP_DIV		:'/';
+OP_MOD		:'%';
+OP_BANG		:'!';
+OP_TILDA	:'~';
 
 // Numbers / Letters matching
 // Apparently fan allows syntax like var=var-1 so we can't 'eat' the - as part as the number (lexer) since it could be a minus operand
@@ -621,16 +537,12 @@ fragment HEXLETTER	: 	'a'|'b'|'c'|'d'|'e'|'f'|'A'|'B'|'C'|'D'|'E'|'F';
 fragment HEXHEADER	: 	'0x' | '0X';
 
 // any other "word" is an "ID"
-ID
-@init {paraphrase.push("Identifier");} @after{paraphrase.pop();}
-			: (UNDERSCORE* LETTER) ( LETTER | DIGIT | UNDERSCORE )*;
+ID			: (UNDERSCORE* LETTER) ( LETTER | DIGIT | UNDERSCORE )*;
 
 fragment LETTER		: ('a'..'z' | 'A'..'Z');
 fragment DIGIT		: '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9';
 
 // catch all
-INC_UNKNOWN_ITEM
-@init {paraphrase.push("Unknown Item");} @after{paraphrase.pop();}
-			: .;
+INC_UNKNOWN_ITEM	: .;
 
 // ################################### end ##############################
