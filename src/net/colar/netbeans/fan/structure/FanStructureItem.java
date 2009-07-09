@@ -4,10 +4,12 @@
  */
 package net.colar.netbeans.fan.structure;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
-import javax.swing.text.Document;
+import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -21,69 +23,87 @@ import org.netbeans.modules.csl.spi.ParserResult;
  */
 public class FanStructureItem implements StructureItem
 {
-    private final ParserResult info=null;
-    private final Document doc=null;
+    private final CommonTree node;
+    private final ParserResult result;
+    private final FanElementHandle handle;
+    private String name;
+    private List<StructureItem> items=new ArrayList<StructureItem>();
 
-    /*private FanStructureItem(AstElement node, ParserResult info)
+    public FanStructureItem(CommonTree node, ElementKind kind, ParserResult result)
     {
 	this.node = node;
-	this.kind = node.getKind();
-	this.info = info;
-	this.doc = info.getSnapshot().getSource().getDocument(false);
-    }*/
+	//this.kind = node.getKind();
+	this.result = result;
+	this.handle=new FanElementHandle(kind, (CommonToken)node.getToken(), result);
+	//TODO: modifiers
+	this.name=node.getText();
+    }
 
     public String getName()
     {
-	return null;
+	return name;
     }
 
     public String getSortText()
     {
-	return null;
+	return getName();
     }
 
     public String getHtml(HtmlFormatter arg0)
     {
-	return null;
+	return getName();
     }
 
     public ElementHandle getElementHandle()
     {
-	return null;
+	return handle;
     }
 
     public ElementKind getKind()
     {
-	return null;
+	return handle.getKind();
     }
 
     public Set<Modifier> getModifiers()
     {
-	return null;
+	return handle.getModifiers();
     }
 
     public boolean isLeaf()
     {
-	return false;
+	return node.getChildCount()==0;
     }
 
     public List<? extends StructureItem> getNestedItems()
     {
-	return null;
+	//TODO
+	return items;
     }
 
     public long getPosition()
     {
-	return -1;
+	return node.getTokenStartIndex();
     }
 
     public long getEndPosition()
     {
-	return -1;
+	return node.getTokenStopIndex();
     }
 
     public ImageIcon getCustomIcon()
     {
 	return null;
     }
+
+    void setName(String text) {
+	name=text;
+    }
+
+    void addModifier(Modifier modifier) {
+	getModifiers().add(modifier);
+    }
+
+    void setNestedItems(List<StructureItem> subList) {
+	items=subList;
+   }
 }

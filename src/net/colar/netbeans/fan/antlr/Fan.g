@@ -87,7 +87,9 @@ INC_DSL;
 
 // AST elements
 AST_CLASS;
-//AST_METHOD;
+AST_ID;
+AST_MODIFIER;
+AST_METHOD;
 }
 
 // ########################## code.
@@ -226,9 +228,12 @@ ffi 		:	sq_bracketL id sq_bracketR;
 typeDef 	:	docs facet* ((classFlags* KW_CLASS)=>classDef |
 			(protection? KW_ENUM)=>enumDef | mixinDef);
 classDef 	@init {paraphrase.push("Class definition");} @after{paraphrase.pop();}
-		:  	classHeader classBody -> ^(AST_CLASS classHeader classBody);
-classHeader	:	docs facet* classFlags* KW_CLASS id inheritance?;
-classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
+		:  	classHeader classBody
+		    -> ^(AST_CLASS classHeader classBody);
+classHeader	:	docs facet* classFlags* KW_CLASS id inheritance?
+		    -> ^(AST_ID id);
+classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC
+		    -> ^(AST_MODIFIER);
 classBody 	:	bracketL slotDef* bracketR;
 protection	:	KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL;
 mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
@@ -278,7 +283,8 @@ typeId		:	((type id)=>typeAndId | id);
 typeAndId	:	type id;
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
 methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
-		:	docs facet* methodFlags* (type | KW_VOID) id parL params parR methodBody;
+		:	docs facet* methodFlags* (type | KW_VOID) id parL params parR methodBody
+		    -> ^(AST_METHOD id);
 methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE |
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;
