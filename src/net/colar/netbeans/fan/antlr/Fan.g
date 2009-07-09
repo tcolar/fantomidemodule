@@ -90,6 +90,9 @@ AST_CLASS;
 AST_ID;
 AST_MODIFIER;
 AST_METHOD;
+AST_INHERITANCE;
+AST_RETURN;
+AST_PARAMS;
 }
 
 // ########################## code.
@@ -230,10 +233,9 @@ typeDef 	:	docs facet* ((classFlags* KW_CLASS)=>classDef |
 classDef 	@init {paraphrase.push("Class definition");} @after{paraphrase.pop();}
 		:  	classHeader classBody
 		    -> ^(AST_CLASS classHeader classBody);
-classHeader	:	docs facet* classFlags* KW_CLASS id inheritance?
-		    -> ^(AST_ID id);
-classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC
-		    -> ^(AST_MODIFIER);
+classHeader	:	docs facet* m=classFlags* KW_CLASS cname=id inheritance?
+			-> ^(AST_ID $cname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
+classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
 classBody 	:	bracketL slotDef* bracketR;
 protection	:	KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL;
 mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
@@ -246,6 +248,7 @@ enumDef		@init {paraphrase.push("Enumeration definition");} @after{paraphrase.po
 enumHeader	:   	docs facet* protection? KW_ENUM id inheritance?;
 enumBody	:	bracketL enumValDefs slotDef* bracketR ;
 inheritance 	:	SP_COLON typeList;
+	//	    -> ^(AST_INHERITANCE typeList);
 enumValDefs 	:	enumValDef (SP_COMMA  enumValDef)* eos;
 enumValDef 	:	docs id (parL args? parR)?;
 typeList	:  	type (SP_COMMA type)*;
@@ -283,8 +286,8 @@ typeId		:	((type id)=>typeAndId | id);
 typeAndId	:	type id;
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
 methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
-		:	docs facet* methodFlags* (type | KW_VOID) id parL params parR methodBody
-		    -> ^(AST_METHOD id);
+		:	docs facet* m=methodFlags* type /*| KW_VOID*/ mname=id parL params parR methodBody
+		    -> ^(AST_METHOD ^(AST_ID $mname) ^(AST_RETURN type) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)*);
 methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE |
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;

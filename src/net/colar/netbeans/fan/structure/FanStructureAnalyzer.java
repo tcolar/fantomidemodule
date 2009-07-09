@@ -11,6 +11,7 @@ import java.util.Map;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.Tree;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -22,14 +23,16 @@ import org.netbeans.modules.csl.spi.ParserResult;
  *
  * @author thibautc
  */
-public class FanStructureAnalyzer implements StructureScanner {
+public class FanStructureAnalyzer implements StructureScanner
+{
 
-    public List<StructureItem> scan(ParserResult result) {
+    public List<StructureItem> scan(ParserResult result)
+    {
 	FanParserResult fanResult = (FanParserResult) result;
 	CommonTree ast = fanResult.getTree();
 
 	List<StructureItem> list = new ArrayList<StructureItem>();
-String trace="";
+	String trace = "";
 	scanTree(list, ast, result, trace);
 
 	return list;
@@ -41,58 +44,108 @@ String trace="";
      * @param list
      * @param node
      */
-    public void scanTree(List<StructureItem> list, CommonTree node, ParserResult result, String trace) {
-	if (node != null) {
+    public void scanTree(List<StructureItem> list, CommonTree node, ParserResult result, String trace)
+    {
+	if (node != null)
+	{
 	    FanStructureItem item = null;
 
-	    trace+="->"+node.getText();
+	    trace += "->" + node.getText();
 	    System.err.println("NODE: " + trace);//"+node.toStringTree());
-	    if (node.getType() == FanParser.AST_CLASS) {
+	    if (node.getType() == FanParser.AST_CLASS)
+	    {
 		item = new FanStructureItem(node, ElementKind.CLASS, result);
-		item.setName("class");
-	    }
-	    else if (node.getType() == FanParser.AST_METHOD) {
+		String name = getSubChildTextByType(node, FanParser.AST_ID, 0);
+		String inheritance = getSubChildTextByType(node, FanParser.AST_INHERITANCE, 1);
+		item.setName(name);
+		String html=name;
+		if(inheritance.length()>0)
+		    html+= " : <font color='#aaaaaa'>" + inheritance + "</font>";
+		item.setHtml(html);
+	    } else if (node.getType() == FanParser.AST_METHOD)
+	    {
 		item = new FanStructureItem(node, ElementKind.METHOD, result);
-		item.setName("method");
+		String returnType = getSubChildTextByType(node, FanParser.AST_RETURN, 0);
+		if(returnType.equalsIgnoreCase("void"))
+		    returnType="";
+		String name = getSubChildTextByType(node, FanParser.AST_ID, 0);
+		String params = getSubChildTextByType(node, FanParser.AST_PARAMS, 0);
+		String modif1 = getSubChildTextByType(node, FanParser.AST_MODIFIER, 0);
+		if(modif1.equals("private"))
+		{
+		    item.addModifier(Modifier.PRIVATE);
+		}
+		item.setName(name);
+		String html=name+"(<font color='#aaaaaa'>" + params + "</font>)";
+		if(returnType.length()>0)
+		    html+=" : <font color='#aaaaaa'>" + returnType + "</font>";
+		item.setHtml(html);
 	    }
-	    for (int i = 0; i < node.getChildCount(); i++) {
+	    List<StructureItem> subList = new ArrayList<StructureItem>();
+	    for (int i = 0; i < node.getChildCount(); i++)
+	    {
 		CommonTree subNode = (CommonTree) node.getChild(i);
-		/*if (subNode.getType() == FanParser.AST_ID) {
-		    item.setName(subNode.getChild(0).getText());
-		} else if (subNode.getType() == FanParser.AST_MODIFIER) {
-		    //TODO
-		    item.addModifier(Modifier.PRIVATE);
-		}else if (subNode.getType() == FanParser.AST_METHOD) {
-		    //TODO
-		    item.addModifier(Modifier.PRIVATE);
-		} else*/
-		if(node.isNil())
+		// For the ROOT node, we had directly to list, not sublist
+		if (node.isNil())
 		{
-		    scanTree(list, subNode, result, trace);		    
-		}else
+		    scanTree(list, subNode, result, trace);
+		} else
 		{
-		List<StructureItem> subList=new ArrayList<StructureItem>();
-		scanTree(subList, subNode, result, trace);
-		if(item!=null)
+		    scanTree(subList, subNode, result, trace);
+		}
+		if (item != null && !subList.isEmpty())
+		{
 		    item.setNestedItems(subList);
 		}
 	    }
 
-	    if (item != null) {
-		System.err.println("Adding to list "+item.getName()+" "+trace);
+	    if (item != null)
+	    {
+		System.err.println("Adding to list " + item.getName() + " " + trace);
 		list.add(item);
 	    }
 	}
     }
 
-    public Map<String, List<OffsetRange>> folds(ParserResult result) {
+    public Map<String, List<OffsetRange>> folds(ParserResult result)
+    {
 	FanParserResult fanResult = (FanParserResult) result;
 	Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
 	//TODO
 	return folds;
     }
 
-    public Configuration getConfiguration() {
+    public Configuration getConfiguration()
+    {
 	return null;
+    }
+
+    private String getChildTextByType(CommonTree node, int itemIndex)
+    {
+	String text = "";
+	if (node != null)
+	{
+	    Tree node2 = node.getChild(itemIndex);
+	    if (node2 != null)
+	    {
+		text = node2.getText();
+		if (text == null)
+		{
+		    text = "";
+		}
+	    }
+	}
+	return text;
+    }
+
+    private String getSubChildTextByType(CommonTree node, int astType, int itemIndex)
+    {
+	String text = "";
+	if (node != null)
+	{
+	    CommonTree node2 = (CommonTree)node.getFirstChildWithType(astType);
+	    text = getChildTextByType(node2, itemIndex);
+	}
+	return text;
     }
 }
