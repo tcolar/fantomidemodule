@@ -1,4 +1,4 @@
-// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-07-09 16:15:19
+// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-07-10 13:25:04
 package net.colar.netbeans.fan.antlr;
 import net.colar.netbeans.fan.FanParserResult;
 
@@ -10,136 +10,141 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 public class FanLexer extends Lexer {
-    public static final int EXPONENT=129;
-    public static final int DSL=91;
-    public static final int OP_AND=71;
+    public static final int EXPONENT=134;
+    public static final int DSL=96;
+    public static final int OP_AND=76;
     public static final int KW_NATIVE=22;
-    public static final int AST_PARAMS=57;
-    public static final int LETTER=131;
-    public static final int HEXNB=124;
-    public static final int CHAR=99;
+    public static final int AST_PARAMS=61;
+    public static final int LETTER=136;
+    public static final int HEXNB=129;
+    public static final int CHAR=104;
+    public static final int OP_2PLUS=93;
     public static final int KW_DEFAULT=14;
-    public static final int OP_2PLUS=88;
     public static final int KW_ONCE=37;
-    public static final int SP_SEMI=67;
-    public static final int INC_UNKNOWN_ITEM=132;
+    public static final int SP_SEMI=72;
+    public static final int INC_UNKNOWN_ITEM=137;
+    public static final int AST_MIXIN=53;
     public static final int EOF=-1;
     public static final int KW_PUBLIC=34;
     public static final int KW_ISNOT=42;
-    public static final int OP_MOD=86;
-    public static final int OP_MINUS=83;
-    public static final int PAR_R=108;
+    public static final int OP_MOD=91;
+    public static final int OP_MINUS=88;
+    public static final int PAR_R=113;
     public static final int KW_NEW=36;
     public static final int KW_BREAK=4;
     public static final int KW_SWITCH=9;
-    public static final int OP_RANG_EXCL_OLD=75;
+    public static final int OP_RANG_EXCL_OLD=80;
     public static final int AST_CLASS=51;
-    public static final int OP_BITOR=78;
-    public static final int QUOTSTR=96;
-    public static final int OP_BANG=87;
-    public static final int PAR_L=107;
-    public static final int OP_MULTI=84;
+    public static final int OP_BITOR=83;
+    public static final int AST_TYPE=62;
+    public static final int QUOTSTR=101;
+    public static final int OP_BANG=92;
+    public static final int PAR_L=112;
+    public static final int OP_MULTI=89;
     public static final int KW_PROTECTED=33;
-    public static final int KEYWORD=121;
-    public static final int LINE_COMMENT=111;
-    public static final int CP_COMPARATORS=73;
-    public static final int AS_EQUAL=68;
+    public static final int KEYWORD=126;
+    public static final int LINE_COMMENT=116;
+    public static final int CP_COMPARATORS=78;
+    public static final int AS_EQUAL=73;
     public static final int KW_CATCH=15;
-    public static final int NUMBER=102;
-    public static final int UNDERSCORE=122;
-    public static final int OP_DIV=85;
-    public static final int SP_COMMA=61;
-    public static final int URI=98;
+    public static final int NUMBER=107;
+    public static final int UNDERSCORE=127;
+    public static final int OP_DIV=90;
+    public static final int SP_COMMA=66;
+    public static final int URI=103;
     public static final int KW_FINALLY=16;
-    public static final int WS=110;
+    public static final int WS=115;
     public static final int KW_THROW=10;
-    public static final int OP_POUND=100;
+    public static final int OP_POUND=105;
     public static final int KW_STATIC=21;
     public static final int INC_COMMENT=49;
     public static final int AST_METHOD=54;
-    public static final int SP_QMARK=62;
-    public static final int AST_ID=52;
-    public static final int HEXHEADER=127;
-    public static final int AS_INIT_VAL=66;
-    public static final int COMPL_DSL=115;
-    public static final int NBTYPE=130;
+    public static final int AST_ENUM=52;
+    public static final int SP_QMARK=67;
+    public static final int AST_ID=58;
+    public static final int HEXHEADER=132;
+    public static final int AS_INIT_VAL=71;
+    public static final int COMPL_DSL=120;
+    public static final int NBTYPE=135;
     public static final int KW_SUPER=39;
-    public static final int OP_2MINUS=89;
+    public static final int OP_2MINUS=94;
     public static final int KW_ELSE=40;
-    public static final int OP_RSHIFT=81;
-    public static final int OP_OR=70;
-    public static final int AST_MODIFIER=53;
-    public static final int DOC=101;
+    public static final int OP_RSHIFT=86;
+    public static final int OP_OR=75;
+    public static final int AST_MODIFIER=59;
+    public static final int DOC=106;
     public static final int KW_OVERRIDE=24;
+    public static final int AST_FIELD=56;
     public static final int KW_ABSTRACT=31;
-    public static final int MULTI_COMMENT=114;
+    public static final int MULTI_COMMENT=119;
     public static final int KW_CONST=20;
-    public static final int COMPL_ML_COMMENT=113;
-    public static final int OP_ELVIS=74;
-    public static final int BRACKET_R=104;
+    public static final int COMPL_ML_COMMENT=118;
+    public static final int OP_ELVIS=79;
+    public static final int BRACKET_R=109;
     public static final int KW_TRUE=45;
-    public static final int ID=95;
-    public static final int SP_COLON=60;
-    public static final int BRACKET_L=103;
-    public static final int AT=94;
-    public static final int STR=97;
-    public static final int SP_PIPE=64;
-    public static final int OP_RANGE_EXCL=76;
-    public static final int COMPL_QSTR=118;
+    public static final int ID=100;
+    public static final int SP_COLON=65;
+    public static final int AST_CONSTRUCTOR_CHAIN=57;
+    public static final int BRACKET_L=108;
+    public static final int AT=99;
+    public static final int STR=102;
+    public static final int SP_PIPE=69;
+    public static final int OP_RANGE_EXCL=81;
+    public static final int COMPL_QSTR=123;
+    public static final int OP_TILDA=95;
     public static final int KW_VIRTUAL=25;
-    public static final int OP_TILDA=90;
-    public static final int CP_EQUALITY=72;
+    public static final int CP_EQUALITY=77;
     public static final int KW_FOR=6;
     public static final int KW_WHILE=11;
-    public static final int COMPL_URI=120;
-    public static final int OP_RANGE=77;
+    public static final int COMPL_URI=125;
+    public static final int OP_RANGE=82;
     public static final int KW_RETURN=8;
     public static final int INC_DSL=50;
-    public static final int SQ_BRACKET_R=106;
-    public static final int AST_RETURN=56;
+    public static final int SQ_BRACKET_R=111;
     public static final int KW_IS=41;
     public static final int KW_TRY=12;
-    public static final int DIGIT=116;
+    public static final int DIGIT=121;
     public static final int KW_IT=44;
-    public static final int DOT=59;
+    public static final int DOT=64;
     public static final int KW_IF=7;
     public static final int KW_THIS=38;
-    public static final int OP_CURRY=79;
-    public static final int SQ_BRACKET_L=105;
-    public static final int OP_PLUS=82;
+    public static final int OP_CURRY=84;
+    public static final int SQ_BRACKET_L=110;
+    public static final int OP_PLUS=87;
     public static final int KW_FALSE=46;
     public static final int KW_FINAL=26;
     public static final int KW_INTERNAL=35;
     public static final int KW_CONTINUE=5;
-    public static final int HEXLETTER=117;
+    public static final int HEXLETTER=122;
     public static final int KW_PRIVATE=32;
     public static final int KW_ENUM=29;
-    public static final int HEX_HEADER=123;
-    public static final int OP_SAFEDYN_CALL=93;
-    public static final int LIST_TYPE=63;
+    public static final int HEX_HEADER=128;
+    public static final int OP_SAFEDYN_CALL=98;
+    public static final int LIST_TYPE=68;
     public static final int KW_CASE=13;
     public static final int KW_VOLATILE=23;
-    public static final int OP_LSHIFT=80;
-    public static final int FRACTIONAL=126;
-    public static final int EXEC_COMMENT=112;
+    public static final int OP_LSHIFT=85;
+    public static final int FRACTIONAL=131;
+    public static final int EXEC_COMMENT=117;
     public static final int KW_MIXIN=30;
-    public static final int OP_ARROW=65;
+    public static final int OP_ARROW=70;
     public static final int KW_VOID=27;
     public static final int INC_URI=48;
-    public static final int DECIMAL=125;
+    public static final int DECIMAL=130;
     public static final int KW_CLASS=28;
-    public static final int AS_ASSIGN_OP=69;
+    public static final int AS_ASSIGN_OP=74;
+    public static final int AST_CONSTRUCTOR=55;
     public static final int INC_STR=47;
     public static final int KW_RD_ONLY=19;
     public static final int KW_AS=18;
-    public static final int OP_SAFE_CALL=92;
-    public static final int LB=109;
-    public static final int COMPL_STR=119;
+    public static final int OP_SAFE_CALL=97;
+    public static final int LB=114;
+    public static final int COMPL_STR=124;
     public static final int KW_USING=17;
     public static final int KW_NULL=43;
-    public static final int FRACTION=128;
-    public static final int AST_INHERITANCE=55;
-    public static final int SP_COLCOL=58;
+    public static final int FRACTION=133;
+    public static final int AST_INHERITANCE=60;
+    public static final int SP_COLCOL=63;
 
     	//typeOverride
     	int too=-1;
@@ -1068,10 +1073,10 @@ public class FanLexer extends Lexer {
         try {
             int _type = LB;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:472:5: ( ( ( '\\r\\n' ) | '\\n' )+ )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:472:7: ( ( '\\r\\n' ) | '\\n' )+
+            // src/net/colar/netbeans/fan/antlr/Fan.g:485:5: ( ( ( '\\r\\n' ) | '\\n' )+ )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:485:7: ( ( '\\r\\n' ) | '\\n' )+
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:472:7: ( ( '\\r\\n' ) | '\\n' )+
+            // src/net/colar/netbeans/fan/antlr/Fan.g:485:7: ( ( '\\r\\n' ) | '\\n' )+
             int cnt1=0;
             loop1:
             do {
@@ -1088,10 +1093,10 @@ public class FanLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:472:8: ( '\\r\\n' )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:485:8: ( '\\r\\n' )
             	    {
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:472:8: ( '\\r\\n' )
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:472:9: '\\r\\n'
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:485:8: ( '\\r\\n' )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:485:9: '\\r\\n'
             	    {
             	    match("\r\n"); if (state.failed) return ;
 
@@ -1102,7 +1107,7 @@ public class FanLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:472:19: '\\n'
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:485:19: '\\n'
             	    {
             	    match('\n'); if (state.failed) return ;
 
@@ -1138,8 +1143,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:474:7: ( ( ' ' | '\\t' ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:474:10: ( ' ' | '\\t' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:487:7: ( ( ' ' | '\\t' ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:487:10: ( ' ' | '\\t' )
             {
             if ( input.LA(1)=='\t'||input.LA(1)==' ' ) {
                 input.consume();
@@ -1170,12 +1175,12 @@ public class FanLexer extends Lexer {
         try {
             int _type = LINE_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:475:14: ( '//' (~ ( '\\n' ) )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:475:16: '//' (~ ( '\\n' ) )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:488:14: ( '//' (~ ( '\\n' ) )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:488:16: '//' (~ ( '\\n' ) )*
             {
             match("//"); if (state.failed) return ;
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:475:21: (~ ( '\\n' ) )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:488:21: (~ ( '\\n' ) )*
             loop2:
             do {
                 int alt2=2;
@@ -1188,7 +1193,7 @@ public class FanLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:475:22: ~ ( '\\n' )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:488:22: ~ ( '\\n' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -1228,12 +1233,12 @@ public class FanLexer extends Lexer {
         try {
             int _type = EXEC_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:476:14: ( '#!' (~ ( '\\n' ) )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:476:16: '#!' (~ ( '\\n' ) )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:489:14: ( '#!' (~ ( '\\n' ) )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:489:16: '#!' (~ ( '\\n' ) )*
             {
             match("#!"); if (state.failed) return ;
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:476:21: (~ ( '\\n' ) )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:489:21: (~ ( '\\n' ) )*
             loop3:
             do {
                 int alt3=2;
@@ -1246,7 +1251,7 @@ public class FanLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:476:22: ~ ( '\\n' )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:489:22: ~ ( '\\n' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -1286,26 +1291,26 @@ public class FanLexer extends Lexer {
         try {
             int _type = MULTI_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:481:15: ( '/*' ( ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT | (~ '\\n' )* ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:481:17: '/*' ( ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:494:15: ( '/*' ( ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT | (~ '\\n' )* ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:494:17: '/*' ( ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT | (~ '\\n' )* )
             {
             match("/*"); if (state.failed) return ;
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:481:22: ( ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:494:22: ( ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT | (~ '\\n' )* )
             int alt5=2;
             alt5 = dfa5.predict(input);
             switch (alt5) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:481:23: ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:494:23: ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT
                     {
                     mCOMPL_ML_COMMENT(); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:481:62: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:494:62: (~ '\\n' )*
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:481:62: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:494:62: (~ '\\n' )*
                     loop4:
                     do {
                         int alt4=2;
@@ -1318,7 +1323,7 @@ public class FanLexer extends Lexer {
 
                         switch (alt4) {
                     	case 1 :
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:481:62: ~ '\\n'
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:494:62: ~ '\\n'
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -1365,10 +1370,10 @@ public class FanLexer extends Lexer {
     // $ANTLR start "COMPL_ML_COMMENT"
     public final void mCOMPL_ML_COMMENT() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:483:17: ( ( options {greedy=false; } : . )* '*/' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:483:19: ( options {greedy=false; } : . )* '*/'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:496:17: ( ( options {greedy=false; } : . )* '*/' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:496:19: ( options {greedy=false; } : . )* '*/'
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:483:19: ( options {greedy=false; } : . )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:496:19: ( options {greedy=false; } : . )*
             loop6:
             do {
                 int alt6=2;
@@ -1393,7 +1398,7 @@ public class FanLexer extends Lexer {
 
                 switch (alt6) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:483:43: .
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:496:43: .
             	    {
             	    matchAny(); if (state.failed) return ;
 
@@ -1421,26 +1426,26 @@ public class FanLexer extends Lexer {
         try {
             int _type = DSL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:485:6: ( '<|' ( ( COMPL_DSL )=> COMPL_DSL | (~ '\\n' )* ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:485:7: '<|' ( ( COMPL_DSL )=> COMPL_DSL | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:498:6: ( '<|' ( ( COMPL_DSL )=> COMPL_DSL | (~ '\\n' )* ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:498:7: '<|' ( ( COMPL_DSL )=> COMPL_DSL | (~ '\\n' )* )
             {
             match("<|"); if (state.failed) return ;
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:485:12: ( ( COMPL_DSL )=> COMPL_DSL | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:498:12: ( ( COMPL_DSL )=> COMPL_DSL | (~ '\\n' )* )
             int alt8=2;
             alt8 = dfa8.predict(input);
             switch (alt8) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:485:13: ( COMPL_DSL )=> COMPL_DSL
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:498:13: ( COMPL_DSL )=> COMPL_DSL
                     {
                     mCOMPL_DSL(); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:485:38: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:498:38: (~ '\\n' )*
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:485:38: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:498:38: (~ '\\n' )*
                     loop7:
                     do {
                         int alt7=2;
@@ -1453,7 +1458,7 @@ public class FanLexer extends Lexer {
 
                         switch (alt7) {
                     	case 1 :
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:485:38: ~ '\\n'
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:498:38: ~ '\\n'
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -1497,10 +1502,10 @@ public class FanLexer extends Lexer {
     // $ANTLR start "COMPL_DSL"
     public final void mCOMPL_DSL() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:487:11: ( ( options {greedy=false; } : . )* '|>' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:487:13: ( options {greedy=false; } : . )* '|>'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:500:11: ( ( options {greedy=false; } : . )* '|>' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:500:13: ( options {greedy=false; } : . )* '|>'
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:487:13: ( options {greedy=false; } : . )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:500:13: ( options {greedy=false; } : . )*
             loop9:
             do {
                 int alt9=2;
@@ -1525,7 +1530,7 @@ public class FanLexer extends Lexer {
 
                 switch (alt9) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:487:37: .
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:500:37: .
             	    {
             	    matchAny(); if (state.failed) return ;
 
@@ -1553,11 +1558,11 @@ public class FanLexer extends Lexer {
         try {
             int _type = CHAR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:489:7: ( '\\'' ( ( '\\\\' . ) | ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ) | . )? '\\'' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:489:8: '\\'' ( ( '\\\\' . ) | ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ) | . )? '\\''
+            // src/net/colar/netbeans/fan/antlr/Fan.g:502:7: ( '\\'' ( ( '\\\\' . ) | ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ) | . )? '\\'' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:502:8: '\\'' ( ( '\\\\' . ) | ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ) | . )? '\\''
             {
             match('\''); if (state.failed) return ;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:489:13: ( ( '\\\\' . ) | ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ) | . )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:502:13: ( ( '\\\\' . ) | ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ) | . )?
             int alt10=4;
             int LA10_0 = input.LA(1);
 
@@ -1597,10 +1602,10 @@ public class FanLexer extends Lexer {
             }
             switch (alt10) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:489:14: ( '\\\\' . )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:502:14: ( '\\\\' . )
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:489:14: ( '\\\\' . )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:489:15: '\\\\' .
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:502:14: ( '\\\\' . )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:502:15: '\\\\' .
                     {
                     match('\\'); if (state.failed) return ;
                     matchAny(); if (state.failed) return ;
@@ -1611,10 +1616,10 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:489:25: ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:502:25: ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) )
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:489:25: ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:489:26: '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:502:25: ( '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:502:26: '\\\\u' ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER ) ( DIGIT | HEXLETTER )
                     {
                     match("\\u"); if (state.failed) return ;
 
@@ -1665,7 +1670,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:490:47: .
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:503:47: .
                     {
                     matchAny(); if (state.failed) return ;
 
@@ -1691,26 +1696,26 @@ public class FanLexer extends Lexer {
         try {
             int _type = QUOTSTR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:492:10: ( '\"\"\"' ( ( COMPL_QSTR )=> COMPL_QSTR | (~ '\\n' )* ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:492:12: '\"\"\"' ( ( COMPL_QSTR )=> COMPL_QSTR | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:505:10: ( '\"\"\"' ( ( COMPL_QSTR )=> COMPL_QSTR | (~ '\\n' )* ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:505:12: '\"\"\"' ( ( COMPL_QSTR )=> COMPL_QSTR | (~ '\\n' )* )
             {
             match("\"\"\""); if (state.failed) return ;
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:492:18: ( ( COMPL_QSTR )=> COMPL_QSTR | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:505:18: ( ( COMPL_QSTR )=> COMPL_QSTR | (~ '\\n' )* )
             int alt12=2;
             alt12 = dfa12.predict(input);
             switch (alt12) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:492:19: ( COMPL_QSTR )=> COMPL_QSTR
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:505:19: ( COMPL_QSTR )=> COMPL_QSTR
                     {
                     mCOMPL_QSTR(); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:492:46: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:505:46: (~ '\\n' )*
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:492:46: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:505:46: (~ '\\n' )*
                     loop11:
                     do {
                         int alt11=2;
@@ -1723,7 +1728,7 @@ public class FanLexer extends Lexer {
 
                         switch (alt11) {
                     	case 1 :
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:492:46: ~ '\\n'
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:505:46: ~ '\\n'
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -1767,10 +1772,10 @@ public class FanLexer extends Lexer {
     // $ANTLR start "COMPL_QSTR"
     public final void mCOMPL_QSTR() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:494:12: ( ( options {greedy=false; } : . )* '\"\"\"' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:494:14: ( options {greedy=false; } : . )* '\"\"\"'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:507:12: ( ( options {greedy=false; } : . )* '\"\"\"' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:507:14: ( options {greedy=false; } : . )* '\"\"\"'
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:494:14: ( options {greedy=false; } : . )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:507:14: ( options {greedy=false; } : . )*
             loop13:
             do {
                 int alt13=2;
@@ -1804,7 +1809,7 @@ public class FanLexer extends Lexer {
 
                 switch (alt13) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:494:38: .
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:507:38: .
             	    {
             	    matchAny(); if (state.failed) return ;
 
@@ -1832,25 +1837,25 @@ public class FanLexer extends Lexer {
         try {
             int _type = STR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:495:6: ( '\"' ( ( COMPL_STR )=> COMPL_STR | (~ '\\n' )* ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:495:8: '\"' ( ( COMPL_STR )=> COMPL_STR | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:508:6: ( '\"' ( ( COMPL_STR )=> COMPL_STR | (~ '\\n' )* ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:508:8: '\"' ( ( COMPL_STR )=> COMPL_STR | (~ '\\n' )* )
             {
             match('\"'); if (state.failed) return ;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:495:12: ( ( COMPL_STR )=> COMPL_STR | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:508:12: ( ( COMPL_STR )=> COMPL_STR | (~ '\\n' )* )
             int alt15=2;
             alt15 = dfa15.predict(input);
             switch (alt15) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:495:13: ( COMPL_STR )=> COMPL_STR
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:13: ( COMPL_STR )=> COMPL_STR
                     {
                     mCOMPL_STR(); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:495:38: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:38: (~ '\\n' )*
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:495:38: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:38: (~ '\\n' )*
                     loop14:
                     do {
                         int alt14=2;
@@ -1863,7 +1868,7 @@ public class FanLexer extends Lexer {
 
                         switch (alt14) {
                     	case 1 :
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:495:38: ~ '\\n'
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:508:38: ~ '\\n'
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -1907,10 +1912,10 @@ public class FanLexer extends Lexer {
     // $ANTLR start "COMPL_STR"
     public final void mCOMPL_STR() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:497:11: ( ( '\\\\\\\\' | '\\\\\"' | ~ '\"' )* '\"' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:497:13: ( '\\\\\\\\' | '\\\\\"' | ~ '\"' )* '\"'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:510:11: ( ( '\\\\\\\\' | '\\\\\"' | ~ '\"' )* '\"' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:510:13: ( '\\\\\\\\' | '\\\\\"' | ~ '\"' )* '\"'
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:497:13: ( '\\\\\\\\' | '\\\\\"' | ~ '\"' )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:510:13: ( '\\\\\\\\' | '\\\\\"' | ~ '\"' )*
             loop16:
             do {
                 int alt16=4;
@@ -1947,7 +1952,7 @@ public class FanLexer extends Lexer {
 
                 switch (alt16) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:497:14: '\\\\\\\\'
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:510:14: '\\\\\\\\'
             	    {
             	    match("\\\\"); if (state.failed) return ;
 
@@ -1955,7 +1960,7 @@ public class FanLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:497:23: '\\\\\"'
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:510:23: '\\\\\"'
             	    {
             	    match("\\\""); if (state.failed) return ;
 
@@ -1963,7 +1968,7 @@ public class FanLexer extends Lexer {
             	    }
             	    break;
             	case 3 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:497:31: ~ '\"'
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:510:31: ~ '\"'
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -1999,25 +2004,25 @@ public class FanLexer extends Lexer {
         try {
             int _type = URI;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:498:6: ( '`' ( ( COMPL_URI )=> COMPL_URI | (~ '\\n' )* ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:498:8: '`' ( ( COMPL_URI )=> COMPL_URI | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:511:6: ( '`' ( ( COMPL_URI )=> COMPL_URI | (~ '\\n' )* ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:511:8: '`' ( ( COMPL_URI )=> COMPL_URI | (~ '\\n' )* )
             {
             match('`'); if (state.failed) return ;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:498:13: ( ( COMPL_URI )=> COMPL_URI | (~ '\\n' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:511:13: ( ( COMPL_URI )=> COMPL_URI | (~ '\\n' )* )
             int alt18=2;
             alt18 = dfa18.predict(input);
             switch (alt18) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:498:14: ( COMPL_URI )=> COMPL_URI
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:14: ( COMPL_URI )=> COMPL_URI
                     {
                     mCOMPL_URI(); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:498:39: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:39: (~ '\\n' )*
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:498:39: (~ '\\n' )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:39: (~ '\\n' )*
                     loop17:
                     do {
                         int alt17=2;
@@ -2030,7 +2035,7 @@ public class FanLexer extends Lexer {
 
                         switch (alt17) {
                     	case 1 :
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:498:39: ~ '\\n'
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:511:39: ~ '\\n'
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -2074,10 +2079,10 @@ public class FanLexer extends Lexer {
     // $ANTLR start "COMPL_URI"
     public final void mCOMPL_URI() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:500:11: ( ( ( '\\\\\\\\' ) | ( '\\\\`' ) | ~ ( '`' ) )* '`' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:500:13: ( ( '\\\\\\\\' ) | ( '\\\\`' ) | ~ ( '`' ) )* '`'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:513:11: ( ( ( '\\\\\\\\' ) | ( '\\\\`' ) | ~ ( '`' ) )* '`' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:513:13: ( ( '\\\\\\\\' ) | ( '\\\\`' ) | ~ ( '`' ) )* '`'
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:500:13: ( ( '\\\\\\\\' ) | ( '\\\\`' ) | ~ ( '`' ) )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:513:13: ( ( '\\\\\\\\' ) | ( '\\\\`' ) | ~ ( '`' ) )*
             loop19:
             do {
                 int alt19=4;
@@ -2114,10 +2119,10 @@ public class FanLexer extends Lexer {
 
                 switch (alt19) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:500:14: ( '\\\\\\\\' )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:513:14: ( '\\\\\\\\' )
             	    {
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:500:14: ( '\\\\\\\\' )
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:500:15: '\\\\\\\\'
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:513:14: ( '\\\\\\\\' )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:513:15: '\\\\\\\\'
             	    {
             	    match("\\\\"); if (state.failed) return ;
 
@@ -2128,10 +2133,10 @@ public class FanLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:500:25: ( '\\\\`' )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:513:25: ( '\\\\`' )
             	    {
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:500:25: ( '\\\\`' )
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:500:26: '\\\\`'
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:513:25: ( '\\\\`' )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:513:26: '\\\\`'
             	    {
             	    match("\\`"); if (state.failed) return ;
 
@@ -2142,7 +2147,7 @@ public class FanLexer extends Lexer {
             	    }
             	    break;
             	case 3 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:500:35: ~ ( '`' )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:513:35: ~ ( '`' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='_')||(input.LA(1)>='a' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2178,12 +2183,12 @@ public class FanLexer extends Lexer {
         try {
             int _type = DOC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:504:7: ( '**' ( options {greedy=false; } : . )* '\\n' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:504:11: '**' ( options {greedy=false; } : . )* '\\n'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:517:7: ( '**' ( options {greedy=false; } : . )* '\\n' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:517:11: '**' ( options {greedy=false; } : . )* '\\n'
             {
             match("**"); if (state.failed) return ;
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:504:16: ( options {greedy=false; } : . )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:517:16: ( options {greedy=false; } : . )*
             loop20:
             do {
                 int alt20=2;
@@ -2199,7 +2204,7 @@ public class FanLexer extends Lexer {
 
                 switch (alt20) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:504:44: .
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:517:44: .
             	    {
             	    matchAny(); if (state.failed) return ;
 
@@ -2228,15 +2233,15 @@ public class FanLexer extends Lexer {
         try {
             int _type = KEYWORD;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:507:10: ( ( 'abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'default' | 'do' | 'else' | 'enum' | 'false' | 'final' | 'finally' | 'for' | 'foreach' | 'if' | 'internal' | 'is' | 'isnot' | 'mixin' | 'native' | 'new' | 'null' | 'once' | 'override' | 'private' | 'protected' | 'public' | 'readonly' | 'return' | 'static' | 'super' | 'switch' | 'this' | 'throw' | 'true' | 'try' | 'using' | 'virtual' | 'volatile' | 'void' | 'while' ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:507:12: ( 'abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'default' | 'do' | 'else' | 'enum' | 'false' | 'final' | 'finally' | 'for' | 'foreach' | 'if' | 'internal' | 'is' | 'isnot' | 'mixin' | 'native' | 'new' | 'null' | 'once' | 'override' | 'private' | 'protected' | 'public' | 'readonly' | 'return' | 'static' | 'super' | 'switch' | 'this' | 'throw' | 'true' | 'try' | 'using' | 'virtual' | 'volatile' | 'void' | 'while' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:520:10: ( ( 'abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'default' | 'do' | 'else' | 'enum' | 'false' | 'final' | 'finally' | 'for' | 'foreach' | 'if' | 'internal' | 'is' | 'isnot' | 'mixin' | 'native' | 'new' | 'null' | 'once' | 'override' | 'private' | 'protected' | 'public' | 'readonly' | 'return' | 'static' | 'super' | 'switch' | 'this' | 'throw' | 'true' | 'try' | 'using' | 'virtual' | 'volatile' | 'void' | 'while' ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:520:12: ( 'abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'default' | 'do' | 'else' | 'enum' | 'false' | 'final' | 'finally' | 'for' | 'foreach' | 'if' | 'internal' | 'is' | 'isnot' | 'mixin' | 'native' | 'new' | 'null' | 'once' | 'override' | 'private' | 'protected' | 'public' | 'readonly' | 'return' | 'static' | 'super' | 'switch' | 'this' | 'throw' | 'true' | 'try' | 'using' | 'virtual' | 'volatile' | 'void' | 'while' )
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:507:12: ( 'abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'default' | 'do' | 'else' | 'enum' | 'false' | 'final' | 'finally' | 'for' | 'foreach' | 'if' | 'internal' | 'is' | 'isnot' | 'mixin' | 'native' | 'new' | 'null' | 'once' | 'override' | 'private' | 'protected' | 'public' | 'readonly' | 'return' | 'static' | 'super' | 'switch' | 'this' | 'throw' | 'true' | 'try' | 'using' | 'virtual' | 'volatile' | 'void' | 'while' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:520:12: ( 'abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'default' | 'do' | 'else' | 'enum' | 'false' | 'final' | 'finally' | 'for' | 'foreach' | 'if' | 'internal' | 'is' | 'isnot' | 'mixin' | 'native' | 'new' | 'null' | 'once' | 'override' | 'private' | 'protected' | 'public' | 'readonly' | 'return' | 'static' | 'super' | 'switch' | 'this' | 'throw' | 'true' | 'try' | 'using' | 'virtual' | 'volatile' | 'void' | 'while' )
             int alt21=45;
             alt21 = dfa21.predict(input);
             switch (alt21) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:507:13: 'abstract'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:520:13: 'abstract'
                     {
                     match("abstract"); if (state.failed) return ;
 
@@ -2244,7 +2249,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:507:26: 'as'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:520:26: 'as'
                     {
                     match("as"); if (state.failed) return ;
 
@@ -2252,7 +2257,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:507:33: 'assert'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:520:33: 'assert'
                     {
                     match("assert"); if (state.failed) return ;
 
@@ -2260,7 +2265,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:507:44: 'break'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:520:44: 'break'
                     {
                     match("break"); if (state.failed) return ;
 
@@ -2268,7 +2273,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:507:54: 'case'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:520:54: 'case'
                     {
                     match("case"); if (state.failed) return ;
 
@@ -2276,7 +2281,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 6 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:507:63: 'catch'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:520:63: 'catch'
                     {
                     match("catch"); if (state.failed) return ;
 
@@ -2284,7 +2289,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 7 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:3: 'class'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:521:3: 'class'
                     {
                     match("class"); if (state.failed) return ;
 
@@ -2292,7 +2297,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 8 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:13: 'const'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:521:13: 'const'
                     {
                     match("const"); if (state.failed) return ;
 
@@ -2300,7 +2305,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 9 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:23: 'continue'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:521:23: 'continue'
                     {
                     match("continue"); if (state.failed) return ;
 
@@ -2308,7 +2313,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 10 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:36: 'default'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:521:36: 'default'
                     {
                     match("default"); if (state.failed) return ;
 
@@ -2316,7 +2321,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 11 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:48: 'do'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:521:48: 'do'
                     {
                     match("do"); if (state.failed) return ;
 
@@ -2324,7 +2329,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 12 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:55: 'else'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:521:55: 'else'
                     {
                     match("else"); if (state.failed) return ;
 
@@ -2332,7 +2337,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 13 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:64: 'enum'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:521:64: 'enum'
                     {
                     match("enum"); if (state.failed) return ;
 
@@ -2340,7 +2345,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 14 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:508:73: 'false'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:521:73: 'false'
                     {
                     match("false"); if (state.failed) return ;
 
@@ -2348,7 +2353,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 15 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:509:4: 'final'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:522:4: 'final'
                     {
                     match("final"); if (state.failed) return ;
 
@@ -2356,7 +2361,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 16 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:509:14: 'finally'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:522:14: 'finally'
                     {
                     match("finally"); if (state.failed) return ;
 
@@ -2364,7 +2369,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 17 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:509:26: 'for'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:522:26: 'for'
                     {
                     match("for"); if (state.failed) return ;
 
@@ -2372,7 +2377,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 18 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:509:34: 'foreach'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:522:34: 'foreach'
                     {
                     match("foreach"); if (state.failed) return ;
 
@@ -2380,7 +2385,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 19 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:509:46: 'if'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:522:46: 'if'
                     {
                     match("if"); if (state.failed) return ;
 
@@ -2388,7 +2393,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 20 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:509:53: 'internal'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:522:53: 'internal'
                     {
                     match("internal"); if (state.failed) return ;
 
@@ -2396,7 +2401,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 21 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:509:66: 'is'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:522:66: 'is'
                     {
                     match("is"); if (state.failed) return ;
 
@@ -2404,7 +2409,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 22 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:509:73: 'isnot'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:522:73: 'isnot'
                     {
                     match("isnot"); if (state.failed) return ;
 
@@ -2412,7 +2417,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 23 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:510:4: 'mixin'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:523:4: 'mixin'
                     {
                     match("mixin"); if (state.failed) return ;
 
@@ -2420,7 +2425,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 24 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:510:14: 'native'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:523:14: 'native'
                     {
                     match("native"); if (state.failed) return ;
 
@@ -2428,7 +2433,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 25 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:510:25: 'new'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:523:25: 'new'
                     {
                     match("new"); if (state.failed) return ;
 
@@ -2436,7 +2441,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 26 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:510:33: 'null'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:523:33: 'null'
                     {
                     match("null"); if (state.failed) return ;
 
@@ -2444,7 +2449,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 27 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:510:42: 'once'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:523:42: 'once'
                     {
                     match("once"); if (state.failed) return ;
 
@@ -2452,7 +2457,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 28 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:510:51: 'override'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:523:51: 'override'
                     {
                     match("override"); if (state.failed) return ;
 
@@ -2460,7 +2465,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 29 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:510:64: 'private'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:523:64: 'private'
                     {
                     match("private"); if (state.failed) return ;
 
@@ -2468,7 +2473,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 30 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:4: 'protected'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:524:4: 'protected'
                     {
                     match("protected"); if (state.failed) return ;
 
@@ -2476,7 +2481,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 31 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:18: 'public'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:524:18: 'public'
                     {
                     match("public"); if (state.failed) return ;
 
@@ -2484,7 +2489,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 32 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:29: 'readonly'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:524:29: 'readonly'
                     {
                     match("readonly"); if (state.failed) return ;
 
@@ -2492,7 +2497,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 33 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:42: 'return'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:524:42: 'return'
                     {
                     match("return"); if (state.failed) return ;
 
@@ -2500,7 +2505,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 34 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:53: 'static'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:524:53: 'static'
                     {
                     match("static"); if (state.failed) return ;
 
@@ -2508,7 +2513,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 35 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:64: 'super'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:524:64: 'super'
                     {
                     match("super"); if (state.failed) return ;
 
@@ -2516,7 +2521,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 36 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:511:74: 'switch'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:524:74: 'switch'
                     {
                     match("switch"); if (state.failed) return ;
 
@@ -2524,7 +2529,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 37 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:512:3: 'this'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:525:3: 'this'
                     {
                     match("this"); if (state.failed) return ;
 
@@ -2532,7 +2537,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 38 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:512:12: 'throw'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:525:12: 'throw'
                     {
                     match("throw"); if (state.failed) return ;
 
@@ -2540,7 +2545,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 39 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:512:22: 'true'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:525:22: 'true'
                     {
                     match("true"); if (state.failed) return ;
 
@@ -2548,7 +2553,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 40 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:512:31: 'try'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:525:31: 'try'
                     {
                     match("try"); if (state.failed) return ;
 
@@ -2556,7 +2561,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 41 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:512:39: 'using'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:525:39: 'using'
                     {
                     match("using"); if (state.failed) return ;
 
@@ -2564,7 +2569,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 42 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:512:49: 'virtual'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:525:49: 'virtual'
                     {
                     match("virtual"); if (state.failed) return ;
 
@@ -2572,7 +2577,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 43 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:512:61: 'volatile'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:525:61: 'volatile'
                     {
                     match("volatile"); if (state.failed) return ;
 
@@ -2580,7 +2585,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 44 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:512:74: 'void'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:525:74: 'void'
                     {
                     match("void"); if (state.failed) return ;
 
@@ -2588,7 +2593,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 45 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:513:3: 'while'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:526:3: 'while'
                     {
                     match("while"); if (state.failed) return ;
 
@@ -2614,7 +2619,7 @@ public class FanLexer extends Lexer {
         try {
             int _type = CP_EQUALITY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:517:13: ( '===' | '!==' | '==' | '!=' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:530:13: ( '===' | '!==' | '==' | '!=' )
             int alt22=4;
             int LA22_0 = input.LA(1);
 
@@ -2667,7 +2672,7 @@ public class FanLexer extends Lexer {
             }
             switch (alt22) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:517:14: '==='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:530:14: '==='
                     {
                     match("==="); if (state.failed) return ;
 
@@ -2675,7 +2680,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:517:22: '!=='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:530:22: '!=='
                     {
                     match("!=="); if (state.failed) return ;
 
@@ -2683,7 +2688,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:517:30: '=='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:530:30: '=='
                     {
                     match("=="); if (state.failed) return ;
 
@@ -2691,7 +2696,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:517:37: '!='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:530:37: '!='
                     {
                     match("!="); if (state.failed) return ;
 
@@ -2713,7 +2718,7 @@ public class FanLexer extends Lexer {
         try {
             int _type = CP_COMPARATORS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:518:17: ( '<=' | '>=' | '<=>' | '<' | '>' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:531:17: ( '<=' | '>=' | '<=>' | '<' | '>' )
             int alt23=5;
             int LA23_0 = input.LA(1);
 
@@ -2750,7 +2755,7 @@ public class FanLexer extends Lexer {
             }
             switch (alt23) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:518:18: '<='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:531:18: '<='
                     {
                     match("<="); if (state.failed) return ;
 
@@ -2758,7 +2763,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:518:25: '>='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:531:25: '>='
                     {
                     match(">="); if (state.failed) return ;
 
@@ -2766,7 +2771,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:518:32: '<=>'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:531:32: '<=>'
                     {
                     match("<=>"); if (state.failed) return ;
 
@@ -2774,14 +2779,14 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:518:40: '<'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:531:40: '<'
                     {
                     match('<'); if (state.failed) return ;
 
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:518:46: '>'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:531:46: '>'
                     {
                     match('>'); if (state.failed) return ;
 
@@ -2802,7 +2807,7 @@ public class FanLexer extends Lexer {
         try {
             int _type = AS_ASSIGN_OP;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:519:14: ( '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:532:14: ( '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' )
             int alt24=10;
             switch ( input.LA(1) ) {
             case '*':
@@ -2865,7 +2870,7 @@ public class FanLexer extends Lexer {
 
             switch (alt24) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:15: '*='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:15: '*='
                     {
                     match("*="); if (state.failed) return ;
 
@@ -2873,7 +2878,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:22: '/='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:22: '/='
                     {
                     match("/="); if (state.failed) return ;
 
@@ -2881,7 +2886,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:29: '%='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:29: '%='
                     {
                     match("%="); if (state.failed) return ;
 
@@ -2889,7 +2894,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:36: '+='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:36: '+='
                     {
                     match("+="); if (state.failed) return ;
 
@@ -2897,7 +2902,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:43: '-='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:43: '-='
                     {
                     match("-="); if (state.failed) return ;
 
@@ -2905,7 +2910,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 6 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:50: '<<='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:50: '<<='
                     {
                     match("<<="); if (state.failed) return ;
 
@@ -2913,7 +2918,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 7 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:58: '>>='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:58: '>>='
                     {
                     match(">>="); if (state.failed) return ;
 
@@ -2921,7 +2926,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 8 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:66: '&='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:66: '&='
                     {
                     match("&="); if (state.failed) return ;
 
@@ -2929,7 +2934,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 9 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:73: '^='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:73: '^='
                     {
                     match("^="); if (state.failed) return ;
 
@@ -2937,7 +2942,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 10 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:519:80: '|='
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:532:80: '|='
                     {
                     match("|="); if (state.failed) return ;
 
@@ -2959,8 +2964,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = LIST_TYPE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:520:11: ( '[]' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:520:12: '[]'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:533:11: ( '[]' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:533:12: '[]'
             {
             match("[]"); if (state.failed) return ;
 
@@ -2980,8 +2985,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_SAFEDYN_CALL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:521:17: ( '?->' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:521:18: '?->'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:534:17: ( '?->' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:534:18: '?->'
             {
             match("?->"); if (state.failed) return ;
 
@@ -3001,8 +3006,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_ARROW;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:522:10: ( '->' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:522:11: '->'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:535:10: ( '->' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:535:11: '->'
             {
             match("->"); if (state.failed) return ;
 
@@ -3022,8 +3027,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_SAFE_CALL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:523:14: ( '?.' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:523:15: '?.'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:536:14: ( '?.' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:536:15: '?.'
             {
             match("?."); if (state.failed) return ;
 
@@ -3043,8 +3048,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_RANG_EXCL_OLD;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:524:17: ( '...' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:524:18: '...'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:537:17: ( '...' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:537:18: '...'
             {
             match("..."); if (state.failed) return ;
 
@@ -3064,8 +3069,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_RANGE_EXCL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:525:15: ( '..<' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:525:16: '..<'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:538:15: ( '..<' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:538:16: '..<'
             {
             match("..<"); if (state.failed) return ;
 
@@ -3085,8 +3090,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_RANGE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:526:10: ( '..' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:526:11: '..'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:539:10: ( '..' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:539:11: '..'
             {
             match(".."); if (state.failed) return ;
 
@@ -3106,8 +3111,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_ELVIS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:527:10: ( '?:' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:527:11: '?:'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:540:10: ( '?:' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:540:11: '?:'
             {
             match("?:"); if (state.failed) return ;
 
@@ -3127,8 +3132,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = SP_COLCOL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:528:11: ( '::' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:528:12: '::'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:541:11: ( '::' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:541:12: '::'
             {
             match("::"); if (state.failed) return ;
 
@@ -3148,8 +3153,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = BRACKET_L;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:529:11: ( '{' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:529:12: '{'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:542:11: ( '{' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:542:12: '{'
             {
             match('{'); if (state.failed) return ;
 
@@ -3168,8 +3173,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = BRACKET_R;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:530:11: ( '}' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:530:12: '}'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:543:11: ( '}' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:543:12: '}'
             {
             match('}'); if (state.failed) return ;
 
@@ -3188,8 +3193,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = SQ_BRACKET_L;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:531:14: ( '[' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:531:15: '['
+            // src/net/colar/netbeans/fan/antlr/Fan.g:544:14: ( '[' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:544:15: '['
             {
             match('['); if (state.failed) return ;
 
@@ -3208,8 +3213,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = SQ_BRACKET_R;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:532:14: ( ']' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:532:15: ']'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:545:14: ( ']' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:545:15: ']'
             {
             match(']'); if (state.failed) return ;
 
@@ -3228,8 +3233,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = PAR_L;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:533:8: ( '(' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:533:9: '('
+            // src/net/colar/netbeans/fan/antlr/Fan.g:546:8: ( '(' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:546:9: '('
             {
             match('('); if (state.failed) return ;
 
@@ -3248,8 +3253,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = PAR_R;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:534:8: ( ')' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:534:9: ')'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:547:8: ( ')' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:547:9: ')'
             {
             match(')'); if (state.failed) return ;
 
@@ -3268,8 +3273,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = SP_COLON;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:535:10: ( ':' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:535:11: ':'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:548:10: ( ':' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:548:11: ':'
             {
             match(':'); if (state.failed) return ;
 
@@ -3288,8 +3293,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = SP_SEMI;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:536:10: ( ';' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:536:11: ';'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:549:10: ( ';' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:549:11: ';'
             {
             match(';'); if (state.failed) return ;
 
@@ -3308,8 +3313,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = SP_COMMA;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:537:10: ( ',' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:537:11: ','
+            // src/net/colar/netbeans/fan/antlr/Fan.g:550:10: ( ',' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:550:11: ','
             {
             match(','); if (state.failed) return ;
 
@@ -3328,8 +3333,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = SP_PIPE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:538:10: ( '|' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:538:11: '|'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:551:10: ( '|' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:551:11: '|'
             {
             match('|'); if (state.failed) return ;
 
@@ -3348,8 +3353,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = AS_INIT_VAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:539:13: ( ':=' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:539:14: ':='
+            // src/net/colar/netbeans/fan/antlr/Fan.g:552:13: ( ':=' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:552:14: ':='
             {
             match(":="); if (state.failed) return ;
 
@@ -3369,8 +3374,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = SP_QMARK;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:540:10: ( '?' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:540:11: '?'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:553:10: ( '?' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:553:11: '?'
             {
             match('?'); if (state.failed) return ;
 
@@ -3389,8 +3394,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = AT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:541:5: ( '@' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:541:6: '@'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:554:5: ( '@' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:554:6: '@'
             {
             match('@'); if (state.failed) return ;
 
@@ -3409,8 +3414,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_POUND;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:542:10: ( '#' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:542:11: '#'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:555:10: ( '#' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:555:11: '#'
             {
             match('#'); if (state.failed) return ;
 
@@ -3429,8 +3434,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_CURRY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:543:10: ( '&' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:543:11: '&'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:556:10: ( '&' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:556:11: '&'
             {
             match('&'); if (state.failed) return ;
 
@@ -3449,8 +3454,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = AS_EQUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:544:10: ( '=' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:544:11: '='
+            // src/net/colar/netbeans/fan/antlr/Fan.g:557:10: ( '=' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:557:11: '='
             {
             match('='); if (state.failed) return ;
 
@@ -3469,8 +3474,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_BITOR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:545:10: ( '^' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:545:11: '^'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:558:10: ( '^' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:558:11: '^'
             {
             match('^'); if (state.failed) return ;
 
@@ -3489,8 +3494,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = UNDERSCORE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:546:12: ( '_' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:546:13: '_'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:559:12: ( '_' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:559:13: '_'
             {
             match('_'); if (state.failed) return ;
 
@@ -3509,8 +3514,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_AND;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:547:9: ( '&&' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:547:10: '&&'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:560:9: ( '&&' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:560:10: '&&'
             {
             match("&&"); if (state.failed) return ;
 
@@ -3530,8 +3535,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_OR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:548:8: ( '||' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:548:9: '||'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:561:8: ( '||' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:561:9: '||'
             {
             match("||"); if (state.failed) return ;
 
@@ -3551,8 +3556,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = DOT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:549:6: ( '.' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:549:7: '.'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:562:6: ( '.' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:562:7: '.'
             {
             match('.'); if (state.failed) return ;
 
@@ -3571,8 +3576,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_2PLUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:550:10: ( '++' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:550:11: '++'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:563:10: ( '++' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:563:11: '++'
             {
             match("++"); if (state.failed) return ;
 
@@ -3592,8 +3597,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_2MINUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:551:11: ( '--' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:551:12: '--'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:564:11: ( '--' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:564:12: '--'
             {
             match("--"); if (state.failed) return ;
 
@@ -3613,8 +3618,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_MINUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:552:10: ( '-' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:552:11: '-'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:565:10: ( '-' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:565:11: '-'
             {
             match('-'); if (state.failed) return ;
 
@@ -3633,8 +3638,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_PLUS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:553:10: ( '+' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:553:11: '+'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:566:10: ( '+' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:566:11: '+'
             {
             match('+'); if (state.failed) return ;
 
@@ -3653,8 +3658,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_LSHIFT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:554:11: ( '<<' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:554:12: '<<'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:567:11: ( '<<' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:567:12: '<<'
             {
             match("<<"); if (state.failed) return ;
 
@@ -3674,8 +3679,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_RSHIFT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:555:11: ( '>>' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:555:12: '>>'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:568:11: ( '>>' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:568:12: '>>'
             {
             match(">>"); if (state.failed) return ;
 
@@ -3695,8 +3700,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_MULTI;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:556:10: ( '*' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:556:11: '*'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:569:10: ( '*' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:569:11: '*'
             {
             match('*'); if (state.failed) return ;
 
@@ -3715,8 +3720,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_DIV;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:557:9: ( '/' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:557:10: '/'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:570:9: ( '/' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:570:10: '/'
             {
             match('/'); if (state.failed) return ;
 
@@ -3735,8 +3740,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_MOD;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:558:9: ( '%' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:558:10: '%'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:571:9: ( '%' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:571:10: '%'
             {
             match('%'); if (state.failed) return ;
 
@@ -3755,8 +3760,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_BANG;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:559:10: ( '!' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:559:11: '!'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:572:10: ( '!' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:572:11: '!'
             {
             match('!'); if (state.failed) return ;
 
@@ -3775,8 +3780,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = OP_TILDA;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:560:10: ( '~' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:560:11: '~'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:573:10: ( '~' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:573:11: '~'
             {
             match('~'); if (state.failed) return ;
 
@@ -3793,7 +3798,7 @@ public class FanLexer extends Lexer {
     // $ANTLR start "HEX_HEADER"
     public final void mHEX_HEADER() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:565:21: ( '0x' | '0X' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:578:21: ( '0x' | '0X' )
             int alt25=2;
             int LA25_0 = input.LA(1);
 
@@ -3823,7 +3828,7 @@ public class FanLexer extends Lexer {
             }
             switch (alt25) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:565:24: '0x'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:578:24: '0x'
                     {
                     match("0x"); if (state.failed) return ;
 
@@ -3831,7 +3836,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:565:31: '0X'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:578:31: '0X'
                     {
                     match("0X"); if (state.failed) return ;
 
@@ -3851,29 +3856,29 @@ public class FanLexer extends Lexer {
         try {
             int _type = NUMBER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:567:10: ( ( ( HEXNB )=> HEXNB | ( DECIMAL )=> DECIMAL | FRACTIONAL ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:567:13: ( ( HEXNB )=> HEXNB | ( DECIMAL )=> DECIMAL | FRACTIONAL )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:580:10: ( ( ( HEXNB )=> HEXNB | ( DECIMAL )=> DECIMAL | FRACTIONAL ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:580:13: ( ( HEXNB )=> HEXNB | ( DECIMAL )=> DECIMAL | FRACTIONAL )
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:567:13: ( ( HEXNB )=> HEXNB | ( DECIMAL )=> DECIMAL | FRACTIONAL )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:580:13: ( ( HEXNB )=> HEXNB | ( DECIMAL )=> DECIMAL | FRACTIONAL )
             int alt26=3;
             alt26 = dfa26.predict(input);
             switch (alt26) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:567:14: ( HEXNB )=> HEXNB
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:580:14: ( HEXNB )=> HEXNB
                     {
                     mHEXNB(); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:567:31: ( DECIMAL )=> DECIMAL
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:580:31: ( DECIMAL )=> DECIMAL
                     {
                     mDECIMAL(); if (state.failed) return ;
 
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:567:52: FRACTIONAL
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:580:52: FRACTIONAL
                     {
                     mFRACTIONAL(); if (state.failed) return ;
 
@@ -3896,11 +3901,11 @@ public class FanLexer extends Lexer {
     // $ANTLR start "HEXNB"
     public final void mHEXNB() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:568:17: ( HEXHEADER ( ( UNDERSCORE )* ( DIGIT | HEXLETTER ) )+ )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:568:19: HEXHEADER ( ( UNDERSCORE )* ( DIGIT | HEXLETTER ) )+
+            // src/net/colar/netbeans/fan/antlr/Fan.g:581:17: ( HEXHEADER ( ( UNDERSCORE )* ( DIGIT | HEXLETTER ) )+ )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:581:19: HEXHEADER ( ( UNDERSCORE )* ( DIGIT | HEXLETTER ) )+
             {
             mHEXHEADER(); if (state.failed) return ;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:568:29: ( ( UNDERSCORE )* ( DIGIT | HEXLETTER ) )+
+            // src/net/colar/netbeans/fan/antlr/Fan.g:581:29: ( ( UNDERSCORE )* ( DIGIT | HEXLETTER ) )+
             int cnt28=0;
             loop28:
             do {
@@ -3914,9 +3919,9 @@ public class FanLexer extends Lexer {
 
                 switch (alt28) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:568:30: ( UNDERSCORE )* ( DIGIT | HEXLETTER )
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:581:30: ( UNDERSCORE )* ( DIGIT | HEXLETTER )
             	    {
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:568:30: ( UNDERSCORE )*
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:581:30: ( UNDERSCORE )*
             	    loop27:
             	    do {
             	        int alt27=2;
@@ -3929,7 +3934,7 @@ public class FanLexer extends Lexer {
 
             	        switch (alt27) {
             	    	case 1 :
-            	    	    // src/net/colar/netbeans/fan/antlr/Fan.g:568:30: UNDERSCORE
+            	    	    // src/net/colar/netbeans/fan/antlr/Fan.g:581:30: UNDERSCORE
             	    	    {
             	    	    mUNDERSCORE(); if (state.failed) return ;
 
@@ -3977,11 +3982,11 @@ public class FanLexer extends Lexer {
     // $ANTLR start "DECIMAL"
     public final void mDECIMAL() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:569:18: ( DIGIT ( ( UNDERSCORE )* DIGIT )* ( ( FRACTION )=> FRACTION )? ( ( EXPONENT )=> EXPONENT )? ( NBTYPE )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:569:20: DIGIT ( ( UNDERSCORE )* DIGIT )* ( ( FRACTION )=> FRACTION )? ( ( EXPONENT )=> EXPONENT )? ( NBTYPE )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:582:18: ( DIGIT ( ( UNDERSCORE )* DIGIT )* ( ( FRACTION )=> FRACTION )? ( ( EXPONENT )=> EXPONENT )? ( NBTYPE )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:582:20: DIGIT ( ( UNDERSCORE )* DIGIT )* ( ( FRACTION )=> FRACTION )? ( ( EXPONENT )=> EXPONENT )? ( NBTYPE )?
             {
             mDIGIT(); if (state.failed) return ;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:569:26: ( ( UNDERSCORE )* DIGIT )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:582:26: ( ( UNDERSCORE )* DIGIT )*
             loop30:
             do {
                 int alt30=2;
@@ -3994,9 +3999,9 @@ public class FanLexer extends Lexer {
 
                 switch (alt30) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:569:27: ( UNDERSCORE )* DIGIT
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:582:27: ( UNDERSCORE )* DIGIT
             	    {
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:569:27: ( UNDERSCORE )*
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:582:27: ( UNDERSCORE )*
             	    loop29:
             	    do {
             	        int alt29=2;
@@ -4009,7 +4014,7 @@ public class FanLexer extends Lexer {
 
             	        switch (alt29) {
             	    	case 1 :
-            	    	    // src/net/colar/netbeans/fan/antlr/Fan.g:569:27: UNDERSCORE
+            	    	    // src/net/colar/netbeans/fan/antlr/Fan.g:582:27: UNDERSCORE
             	    	    {
             	    	    mUNDERSCORE(); if (state.failed) return ;
 
@@ -4031,7 +4036,7 @@ public class FanLexer extends Lexer {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:569:47: ( ( FRACTION )=> FRACTION )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:582:47: ( ( FRACTION )=> FRACTION )?
             int alt31=2;
             int LA31_0 = input.LA(1);
 
@@ -4040,7 +4045,7 @@ public class FanLexer extends Lexer {
             }
             switch (alt31) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:569:48: ( FRACTION )=> FRACTION
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:582:48: ( FRACTION )=> FRACTION
                     {
                     mFRACTION(); if (state.failed) return ;
 
@@ -4049,7 +4054,7 @@ public class FanLexer extends Lexer {
 
             }
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:570:6: ( ( EXPONENT )=> EXPONENT )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:583:6: ( ( EXPONENT )=> EXPONENT )?
             int alt32=2;
             int LA32_0 = input.LA(1);
 
@@ -4058,7 +4063,7 @@ public class FanLexer extends Lexer {
             }
             switch (alt32) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:570:7: ( EXPONENT )=> EXPONENT
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:583:7: ( EXPONENT )=> EXPONENT
                     {
                     mEXPONENT(); if (state.failed) return ;
 
@@ -4067,7 +4072,7 @@ public class FanLexer extends Lexer {
 
             }
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:570:30: ( NBTYPE )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:583:30: ( NBTYPE )?
             int alt33=2;
             int LA33_0 = input.LA(1);
 
@@ -4076,7 +4081,7 @@ public class FanLexer extends Lexer {
             }
             switch (alt33) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:570:30: NBTYPE
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:583:30: NBTYPE
                     {
                     mNBTYPE(); if (state.failed) return ;
 
@@ -4097,11 +4102,11 @@ public class FanLexer extends Lexer {
     // $ANTLR start "FRACTIONAL"
     public final void mFRACTIONAL() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:571:21: ( FRACTION ( EXPONENT )? ( NBTYPE )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:571:23: FRACTION ( EXPONENT )? ( NBTYPE )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:584:21: ( FRACTION ( EXPONENT )? ( NBTYPE )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:584:23: FRACTION ( EXPONENT )? ( NBTYPE )?
             {
             mFRACTION(); if (state.failed) return ;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:571:32: ( EXPONENT )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:584:32: ( EXPONENT )?
             int alt34=2;
             int LA34_0 = input.LA(1);
 
@@ -4110,7 +4115,7 @@ public class FanLexer extends Lexer {
             }
             switch (alt34) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:571:32: EXPONENT
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:584:32: EXPONENT
                     {
                     mEXPONENT(); if (state.failed) return ;
 
@@ -4119,7 +4124,7 @@ public class FanLexer extends Lexer {
 
             }
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:571:42: ( NBTYPE )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:584:42: ( NBTYPE )?
             int alt35=2;
             int LA35_0 = input.LA(1);
 
@@ -4128,7 +4133,7 @@ public class FanLexer extends Lexer {
             }
             switch (alt35) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:571:42: NBTYPE
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:584:42: NBTYPE
                     {
                     mNBTYPE(); if (state.failed) return ;
 
@@ -4149,12 +4154,12 @@ public class FanLexer extends Lexer {
     // $ANTLR start "FRACTION"
     public final void mFRACTION() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:572:19: ( DOT DIGIT ( ( UNDERSCORE )* DIGIT )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:572:21: DOT DIGIT ( ( UNDERSCORE )* DIGIT )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:585:19: ( DOT DIGIT ( ( UNDERSCORE )* DIGIT )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:585:21: DOT DIGIT ( ( UNDERSCORE )* DIGIT )*
             {
             mDOT(); if (state.failed) return ;
             mDIGIT(); if (state.failed) return ;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:572:31: ( ( UNDERSCORE )* DIGIT )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:585:31: ( ( UNDERSCORE )* DIGIT )*
             loop37:
             do {
                 int alt37=2;
@@ -4167,9 +4172,9 @@ public class FanLexer extends Lexer {
 
                 switch (alt37) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:572:32: ( UNDERSCORE )* DIGIT
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:585:32: ( UNDERSCORE )* DIGIT
             	    {
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:572:32: ( UNDERSCORE )*
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:585:32: ( UNDERSCORE )*
             	    loop36:
             	    do {
             	        int alt36=2;
@@ -4182,7 +4187,7 @@ public class FanLexer extends Lexer {
 
             	        switch (alt36) {
             	    	case 1 :
-            	    	    // src/net/colar/netbeans/fan/antlr/Fan.g:572:32: UNDERSCORE
+            	    	    // src/net/colar/netbeans/fan/antlr/Fan.g:585:32: UNDERSCORE
             	    	    {
             	    	    mUNDERSCORE(); if (state.failed) return ;
 
@@ -4216,8 +4221,8 @@ public class FanLexer extends Lexer {
     // $ANTLR start "EXPONENT"
     public final void mEXPONENT() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:573:19: ( ( 'e' | 'E' ) ( '+' | OP_MINUS )? DIGIT ( ( UNDERSCORE )* DIGIT )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:573:21: ( 'e' | 'E' ) ( '+' | OP_MINUS )? DIGIT ( ( UNDERSCORE )* DIGIT )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:586:19: ( ( 'e' | 'E' ) ( '+' | OP_MINUS )? DIGIT ( ( UNDERSCORE )* DIGIT )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:586:21: ( 'e' | 'E' ) ( '+' | OP_MINUS )? DIGIT ( ( UNDERSCORE )* DIGIT )*
             {
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                 input.consume();
@@ -4229,7 +4234,7 @@ public class FanLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:573:31: ( '+' | OP_MINUS )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:586:31: ( '+' | OP_MINUS )?
             int alt38=2;
             int LA38_0 = input.LA(1);
 
@@ -4257,7 +4262,7 @@ public class FanLexer extends Lexer {
             }
 
             mDIGIT(); if (state.failed) return ;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:573:55: ( ( UNDERSCORE )* DIGIT )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:586:55: ( ( UNDERSCORE )* DIGIT )*
             loop40:
             do {
                 int alt40=2;
@@ -4270,9 +4275,9 @@ public class FanLexer extends Lexer {
 
                 switch (alt40) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:573:56: ( UNDERSCORE )* DIGIT
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:586:56: ( UNDERSCORE )* DIGIT
             	    {
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:573:56: ( UNDERSCORE )*
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:586:56: ( UNDERSCORE )*
             	    loop39:
             	    do {
             	        int alt39=2;
@@ -4285,7 +4290,7 @@ public class FanLexer extends Lexer {
 
             	        switch (alt39) {
             	    	case 1 :
-            	    	    // src/net/colar/netbeans/fan/antlr/Fan.g:573:56: UNDERSCORE
+            	    	    // src/net/colar/netbeans/fan/antlr/Fan.g:586:56: UNDERSCORE
             	    	    {
             	    	    mUNDERSCORE(); if (state.failed) return ;
 
@@ -4319,39 +4324,39 @@ public class FanLexer extends Lexer {
     // $ANTLR start "NBTYPE"
     public final void mNBTYPE() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:575:18: ( 'F' | 'f' | 'D' | ( 'd' ( 'ay' )? ) | 'ms' | 'ns' | 'sec' | 'min' | 'hr' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:588:18: ( 'F' | 'f' | 'D' | ( 'd' ( 'ay' )? ) | 'ms' | 'ns' | 'sec' | 'min' | 'hr' )
             int alt42=9;
             alt42 = dfa42.predict(input);
             switch (alt42) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:575:20: 'F'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:588:20: 'F'
                     {
                     match('F'); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:575:26: 'f'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:588:26: 'f'
                     {
                     match('f'); if (state.failed) return ;
 
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:575:32: 'D'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:588:32: 'D'
                     {
                     match('D'); if (state.failed) return ;
 
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:575:38: ( 'd' ( 'ay' )? )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:588:38: ( 'd' ( 'ay' )? )
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:575:38: ( 'd' ( 'ay' )? )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:575:39: 'd' ( 'ay' )?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:588:38: ( 'd' ( 'ay' )? )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:588:39: 'd' ( 'ay' )?
                     {
                     match('d'); if (state.failed) return ;
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:575:43: ( 'ay' )?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:588:43: ( 'ay' )?
                     int alt41=2;
                     int LA41_0 = input.LA(1);
 
@@ -4360,7 +4365,7 @@ public class FanLexer extends Lexer {
                     }
                     switch (alt41) {
                         case 1 :
-                            // src/net/colar/netbeans/fan/antlr/Fan.g:575:43: 'ay'
+                            // src/net/colar/netbeans/fan/antlr/Fan.g:588:43: 'ay'
                             {
                             match("ay"); if (state.failed) return ;
 
@@ -4377,7 +4382,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:575:52: 'ms'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:588:52: 'ms'
                     {
                     match("ms"); if (state.failed) return ;
 
@@ -4385,7 +4390,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 6 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:575:59: 'ns'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:588:59: 'ns'
                     {
                     match("ns"); if (state.failed) return ;
 
@@ -4393,7 +4398,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 7 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:576:6: 'sec'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:589:6: 'sec'
                     {
                     match("sec"); if (state.failed) return ;
 
@@ -4401,7 +4406,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 8 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:576:14: 'min'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:589:14: 'min'
                     {
                     match("min"); if (state.failed) return ;
 
@@ -4409,7 +4414,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 9 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:576:22: 'hr'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:589:22: 'hr'
                     {
                     match("hr"); if (state.failed) return ;
 
@@ -4427,7 +4432,7 @@ public class FanLexer extends Lexer {
     // $ANTLR start "HEXLETTER"
     public final void mHEXLETTER() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:577:20: ( 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:590:20: ( 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' )
             // src/net/colar/netbeans/fan/antlr/Fan.g:
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='F')||(input.LA(1)>='a' && input.LA(1)<='f') ) {
@@ -4452,7 +4457,7 @@ public class FanLexer extends Lexer {
     // $ANTLR start "HEXHEADER"
     public final void mHEXHEADER() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:578:20: ( '0x' | '0X' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:591:20: ( '0x' | '0X' )
             int alt43=2;
             int LA43_0 = input.LA(1);
 
@@ -4482,7 +4487,7 @@ public class FanLexer extends Lexer {
             }
             switch (alt43) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:578:23: '0x'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:591:23: '0x'
                     {
                     match("0x"); if (state.failed) return ;
 
@@ -4490,7 +4495,7 @@ public class FanLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:578:30: '0X'
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:591:30: '0X'
                     {
                     match("0X"); if (state.failed) return ;
 
@@ -4510,13 +4515,13 @@ public class FanLexer extends Lexer {
         try {
             int _type = ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:581:6: ( ( ( UNDERSCORE )* LETTER ) ( LETTER | DIGIT | UNDERSCORE )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:581:8: ( ( UNDERSCORE )* LETTER ) ( LETTER | DIGIT | UNDERSCORE )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:594:6: ( ( ( UNDERSCORE )* LETTER ) ( LETTER | DIGIT | UNDERSCORE )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:594:8: ( ( UNDERSCORE )* LETTER ) ( LETTER | DIGIT | UNDERSCORE )*
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:581:8: ( ( UNDERSCORE )* LETTER )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:581:9: ( UNDERSCORE )* LETTER
+            // src/net/colar/netbeans/fan/antlr/Fan.g:594:8: ( ( UNDERSCORE )* LETTER )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:594:9: ( UNDERSCORE )* LETTER
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:581:9: ( UNDERSCORE )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:594:9: ( UNDERSCORE )*
             loop44:
             do {
                 int alt44=2;
@@ -4529,7 +4534,7 @@ public class FanLexer extends Lexer {
 
                 switch (alt44) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:581:9: UNDERSCORE
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:594:9: UNDERSCORE
             	    {
             	    mUNDERSCORE(); if (state.failed) return ;
 
@@ -4545,7 +4550,7 @@ public class FanLexer extends Lexer {
 
             }
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:581:29: ( LETTER | DIGIT | UNDERSCORE )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:594:29: ( LETTER | DIGIT | UNDERSCORE )*
             loop45:
             do {
                 int alt45=2;
@@ -4593,8 +4598,8 @@ public class FanLexer extends Lexer {
     // $ANTLR start "LETTER"
     public final void mLETTER() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:583:18: ( ( 'a' .. 'z' | 'A' .. 'Z' ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:583:20: ( 'a' .. 'z' | 'A' .. 'Z' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:596:18: ( ( 'a' .. 'z' | 'A' .. 'Z' ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:596:20: ( 'a' .. 'z' | 'A' .. 'Z' )
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -4618,7 +4623,7 @@ public class FanLexer extends Lexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:584:17: ( '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:597:17: ( '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' )
             // src/net/colar/netbeans/fan/antlr/Fan.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9') ) {
@@ -4645,8 +4650,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = INC_UNKNOWN_ITEM;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:587:18: ( . )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:587:20: .
+            // src/net/colar/netbeans/fan/antlr/Fan.g:600:18: ( . )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:600:20: .
             {
             matchAny(); if (state.failed) return ;
 
@@ -5386,8 +5391,8 @@ public class FanLexer extends Lexer {
 
     // $ANTLR start synpred1_Fan
     public final void synpred1_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:481:23: ( COMPL_ML_COMMENT )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:481:24: COMPL_ML_COMMENT
+        // src/net/colar/netbeans/fan/antlr/Fan.g:494:23: ( COMPL_ML_COMMENT )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:494:24: COMPL_ML_COMMENT
         {
         mCOMPL_ML_COMMENT(); if (state.failed) return ;
 
@@ -5397,8 +5402,8 @@ public class FanLexer extends Lexer {
 
     // $ANTLR start synpred2_Fan
     public final void synpred2_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:485:13: ( COMPL_DSL )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:485:14: COMPL_DSL
+        // src/net/colar/netbeans/fan/antlr/Fan.g:498:13: ( COMPL_DSL )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:498:14: COMPL_DSL
         {
         mCOMPL_DSL(); if (state.failed) return ;
 
@@ -5408,8 +5413,8 @@ public class FanLexer extends Lexer {
 
     // $ANTLR start synpred3_Fan
     public final void synpred3_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:492:19: ( COMPL_QSTR )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:492:20: COMPL_QSTR
+        // src/net/colar/netbeans/fan/antlr/Fan.g:505:19: ( COMPL_QSTR )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:505:20: COMPL_QSTR
         {
         mCOMPL_QSTR(); if (state.failed) return ;
 
@@ -5419,8 +5424,8 @@ public class FanLexer extends Lexer {
 
     // $ANTLR start synpred4_Fan
     public final void synpred4_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:495:13: ( COMPL_STR )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:495:14: COMPL_STR
+        // src/net/colar/netbeans/fan/antlr/Fan.g:508:13: ( COMPL_STR )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:508:14: COMPL_STR
         {
         mCOMPL_STR(); if (state.failed) return ;
 
@@ -5430,8 +5435,8 @@ public class FanLexer extends Lexer {
 
     // $ANTLR start synpred5_Fan
     public final void synpred5_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:498:14: ( COMPL_URI )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:498:15: COMPL_URI
+        // src/net/colar/netbeans/fan/antlr/Fan.g:511:14: ( COMPL_URI )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:511:15: COMPL_URI
         {
         mCOMPL_URI(); if (state.failed) return ;
 
@@ -5441,8 +5446,8 @@ public class FanLexer extends Lexer {
 
     // $ANTLR start synpred6_Fan
     public final void synpred6_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:567:14: ( HEXNB )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:567:15: HEXNB
+        // src/net/colar/netbeans/fan/antlr/Fan.g:580:14: ( HEXNB )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:580:15: HEXNB
         {
         mHEXNB(); if (state.failed) return ;
 
@@ -5452,8 +5457,8 @@ public class FanLexer extends Lexer {
 
     // $ANTLR start synpred7_Fan
     public final void synpred7_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:567:31: ( DECIMAL )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:567:32: DECIMAL
+        // src/net/colar/netbeans/fan/antlr/Fan.g:580:31: ( DECIMAL )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:580:32: DECIMAL
         {
         mDECIMAL(); if (state.failed) return ;
 
@@ -5463,8 +5468,8 @@ public class FanLexer extends Lexer {
 
     // $ANTLR start synpred8_Fan
     public final void synpred8_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:569:48: ( FRACTION )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:569:49: FRACTION
+        // src/net/colar/netbeans/fan/antlr/Fan.g:582:48: ( FRACTION )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:582:49: FRACTION
         {
         mFRACTION(); if (state.failed) return ;
 
@@ -5474,8 +5479,8 @@ public class FanLexer extends Lexer {
 
     // $ANTLR start synpred9_Fan
     public final void synpred9_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:570:7: ( EXPONENT )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:570:8: EXPONENT
+        // src/net/colar/netbeans/fan/antlr/Fan.g:583:7: ( EXPONENT )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:583:8: EXPONENT
         {
         mEXPONENT(); if (state.failed) return ;
 
@@ -5671,7 +5676,7 @@ public class FanLexer extends Lexer {
             this.transition = DFA5_transition;
         }
         public String getDescription() {
-            return "481:22: ( ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT | (~ '\\n' )* )";
+            return "494:22: ( ( COMPL_ML_COMMENT )=> COMPL_ML_COMMENT | (~ '\\n' )* )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -5810,7 +5815,7 @@ public class FanLexer extends Lexer {
             this.transition = DFA8_transition;
         }
         public String getDescription() {
-            return "485:12: ( ( COMPL_DSL )=> COMPL_DSL | (~ '\\n' )* )";
+            return "498:12: ( ( COMPL_DSL )=> COMPL_DSL | (~ '\\n' )* )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -5950,7 +5955,7 @@ public class FanLexer extends Lexer {
             this.transition = DFA12_transition;
         }
         public String getDescription() {
-            return "492:18: ( ( COMPL_QSTR )=> COMPL_QSTR | (~ '\\n' )* )";
+            return "505:18: ( ( COMPL_QSTR )=> COMPL_QSTR | (~ '\\n' )* )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -6108,7 +6113,7 @@ public class FanLexer extends Lexer {
             this.transition = DFA15_transition;
         }
         public String getDescription() {
-            return "495:12: ( ( COMPL_STR )=> COMPL_STR | (~ '\\n' )* )";
+            return "508:12: ( ( COMPL_STR )=> COMPL_STR | (~ '\\n' )* )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -6289,7 +6294,7 @@ public class FanLexer extends Lexer {
             this.transition = DFA18_transition;
         }
         public String getDescription() {
-            return "498:13: ( ( COMPL_URI )=> COMPL_URI | (~ '\\n' )* )";
+            return "511:13: ( ( COMPL_URI )=> COMPL_URI | (~ '\\n' )* )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -6551,7 +6556,7 @@ public class FanLexer extends Lexer {
             this.transition = DFA21_transition;
         }
         public String getDescription() {
-            return "507:12: ( 'abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'default' | 'do' | 'else' | 'enum' | 'false' | 'final' | 'finally' | 'for' | 'foreach' | 'if' | 'internal' | 'is' | 'isnot' | 'mixin' | 'native' | 'new' | 'null' | 'once' | 'override' | 'private' | 'protected' | 'public' | 'readonly' | 'return' | 'static' | 'super' | 'switch' | 'this' | 'throw' | 'true' | 'try' | 'using' | 'virtual' | 'volatile' | 'void' | 'while' )";
+            return "520:12: ( 'abstract' | 'as' | 'assert' | 'break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'default' | 'do' | 'else' | 'enum' | 'false' | 'final' | 'finally' | 'for' | 'foreach' | 'if' | 'internal' | 'is' | 'isnot' | 'mixin' | 'native' | 'new' | 'null' | 'once' | 'override' | 'private' | 'protected' | 'public' | 'readonly' | 'return' | 'static' | 'super' | 'switch' | 'this' | 'throw' | 'true' | 'try' | 'using' | 'virtual' | 'volatile' | 'void' | 'while' )";
         }
     }
     static final String DFA26_eotS =
@@ -6620,7 +6625,7 @@ public class FanLexer extends Lexer {
             this.transition = DFA26_transition;
         }
         public String getDescription() {
-            return "567:13: ( ( HEXNB )=> HEXNB | ( DECIMAL )=> DECIMAL | FRACTIONAL )";
+            return "580:13: ( ( HEXNB )=> HEXNB | ( DECIMAL )=> DECIMAL | FRACTIONAL )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -6749,7 +6754,7 @@ public class FanLexer extends Lexer {
             this.transition = DFA42_transition;
         }
         public String getDescription() {
-            return "575:10: fragment NBTYPE : ( 'F' | 'f' | 'D' | ( 'd' ( 'ay' )? ) | 'ms' | 'ns' | 'sec' | 'min' | 'hr' );";
+            return "588:10: fragment NBTYPE : ( 'F' | 'f' | 'D' | ( 'd' ( 'ay' )? ) | 'ms' | 'ns' | 'sec' | 'min' | 'hr' );";
         }
     }
     static final String DFA46_eotS =

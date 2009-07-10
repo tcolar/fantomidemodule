@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTree;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -28,9 +31,8 @@ public class FanStructureItem implements StructureItem
     private final FanElementHandle handle;
     private String name;
     private List<StructureItem> items=new ArrayList<StructureItem>();
-    private final int start;
-    private final int stop;
     private String html;
+    private TokenHierarchy tokenHierarchy;
 
     public FanStructureItem(CommonTree node, ElementKind kind, ParserResult result)
     {
@@ -40,9 +42,8 @@ public class FanStructureItem implements StructureItem
 	this.handle=new FanElementHandle(kind, (CommonToken)node.getToken(), result);
 	//TODO: modifiers
 	this.name=node.getText();
-	start=node.getLine();
-	stop=start;//((CommonToken)node.getToken()).getStopIndex();
-	System.err.println(name+" ["+start+"-"+stop+"]");
+	this.tokenHierarchy=result.getSnapshot().getTokenHierarchy();
+	System.err.println(name+" ["+getPosition()+"-"+getEndPosition()+"]");
     }
 
     public String getName()
@@ -82,18 +83,17 @@ public class FanStructureItem implements StructureItem
 
     public List<? extends StructureItem> getNestedItems()
     {
-	//TODO
 	return items;
     }
 
     public long getPosition()
     {
-	return start;
+	return node.getTokenStartIndex();
     }
 
     public long getEndPosition()
     {
-	return stop;
+	return node.getTokenStopIndex();
     }
 
     public ImageIcon getCustomIcon()

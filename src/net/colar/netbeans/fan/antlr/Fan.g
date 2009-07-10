@@ -87,12 +87,18 @@ INC_DSL;
 
 // AST elements
 AST_CLASS;
+AST_ENUM;
+AST_MIXIN;
+AST_METHOD;
+AST_CONSTRUCTOR;
+AST_FIELD;
+AST_CONSTRUCTOR_CHAIN;
+// generic items
 AST_ID;
 AST_MODIFIER;
-AST_METHOD;
 AST_INHERITANCE;
-AST_RETURN;
 AST_PARAMS;
+AST_TYPE;
 }
 
 // ########################## code.
@@ -239,13 +245,17 @@ classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
 classBody 	:	bracketL slotDef* bracketR;
 protection	:	KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL;
 mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
-		:	mixinHeader mixinBody;
-mixinHeader	:	docs facet* mixinFlags* KW_MIXIN id inheritance?;
+		:	mixinHeader mixinBody
+		    -> ^(AST_MIXIN mixinHeader mixinBody);
+mixinHeader	:	docs facet* m=mixinFlags* KW_MIXIN mname=id inheritance?
+			-> ^(AST_ID $mname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 mixinFlags	:	protection | KW_CONST | KW_STATIC | KW_FINAL;
 mixinBody	:	bracketL slotDef* bracketR;
 enumDef		@init {paraphrase.push("Enumeration definition");} @after{paraphrase.pop();}
-		:	enumHeader enumBody;
-enumHeader	:   	docs facet* protection? KW_ENUM id inheritance?;
+		:	enumHeader enumBody
+		    -> ^(AST_ENUM enumHeader enumBody);
+enumHeader	:   	docs facet* m=protection? KW_ENUM ename=id inheritance?
+			-> ^(AST_ID $ename) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 enumBody	:	bracketL enumValDefs slotDef* bracketR ;
 inheritance 	:	SP_COLON typeList;
 	//	    -> ^(AST_INHERITANCE typeList);
@@ -277,24 +287,27 @@ slotDef 	:	((KW_STATIC bracketL)=> staticBlock|
 				)
 			);
 fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
-		:	docs facet* fieldFlags typeId (AS_INIT_VAL expr)?
+		:	docs facet* m=fieldFlags typeId (AS_INIT_VAL expr)?
 				(
 				(bracketL (protection? (getter | setter) SP_SEMI? block?)+ bracketR)
-				| eos);
-
-typeId		:	((type id)=>typeAndId | id);
-typeAndId	:	type id;
+				| eos)
+			-> ^(AST_FIELD typeId ^(AST_MODIFIER $m)*);
+typeId		:	((type id)=>typeAndId | fname=id);
+			//-> ^(AST_ID $fname)?;
+typeAndId	:	type id
+			-> ^(AST_ID id) ^(AST_TYPE type);
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
 methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
-		:	docs facet* m=methodFlags* type /*| KW_VOID*/ mname=id parL params parR methodBody
-		    -> ^(AST_METHOD ^(AST_ID $mname) ^(AST_RETURN type) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)*);
+		:	docs facet* m=methodFlags* returnType=type /*| KW_VOID*/ mname=id parL params parR methodBody
+		    -> ^(AST_METHOD ^(AST_ID $mname) ^(AST_TYPE $returnType) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)*);
 methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE |
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;
 param 		:	type id (AS_INIT_VAL expr)?;
 methodBody	:	('{' stmt* bracketR) | eos;
 ctorDef		@init {paraphrase.push("Constructor definition");} @after{paraphrase.pop();}
-		:	docs facet* ctorFlags* KW_NEW id parL params parR ((SP_COLON)=>ctorChain)? methodBody;
+		:	docs facet* m=ctorFlags* KW_NEW cname=id parL params parR cchain=((SP_COLON)=>ctorChain)? methodBody
+		    -> ^(AST_CONSTRUCTOR ^(AST_ID $cname) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)* ^(AST_CONSTRUCTOR_CHAIN $cchain)*);
 ctorFlags	:	protection;
 ctorChain	:	SP_COLON (ctorChainThis | ctorChainSuper);
 

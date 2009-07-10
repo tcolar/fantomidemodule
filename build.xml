@@ -24,7 +24,7 @@
 		<java classname="Test" classpath="${classpath}" args="test_failing/"/>
 	</target>
 
-	<target name="compile-grammar" description="Recompile the antlr grammar (Fan.g) into lexer/parser." depends="netbeans">
+	<target name="compile-grammar" description="Recompile the antlr grammar (Fan.g) into lexer/parser." >
 		<java jvmargs="-Xmx1200m" classpath="${classpath}" classname="org.antlr.Tool"
 			args="src/net/colar/netbeans/fan/antlr/Fan.g -Xconversiontimeout 95000 -report"/>
 	</target>
