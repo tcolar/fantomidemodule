@@ -8,7 +8,6 @@ import net.colar.netbeans.fan.antlr.NetbeansAntlrStream;
 import java.util.Collection;
 import java.util.Hashtable;
 import net.colar.netbeans.fan.antlr.FanLexer;
-import net.colar.netbeans.fan.antlr.FanStates;
 import org.antlr.runtime.CommonToken;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.Lexer;
@@ -69,6 +68,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 	{
 	    System.err.println(tk.name() + (result.isFlyweight() ? "(FlyWeight)" : "") + " : " + curToken.getText());
 	}*/
+	System.err.println("Token: "+curToken.getType()+" ["+curToken.getStartIndex()+" "+curToken.getStopIndex()+"]\n    : "+curToken.getText());
 	return result;
     }
 

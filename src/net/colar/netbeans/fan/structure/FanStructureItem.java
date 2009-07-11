@@ -43,6 +43,7 @@ public class FanStructureItem implements StructureItem
 	//TODO: modifiers
 	this.name=node.getText();
 	this.tokenHierarchy=result.getSnapshot().getTokenHierarchy();
+	//tokenHierarchy.
 	System.err.println(name+" ["+getPosition()+"-"+getEndPosition()+"]");
     }
 

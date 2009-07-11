@@ -1,4 +1,8 @@
 lexer grammar Fan;
+options {
+  tokenVocab=Fan;
+
+}
 
 @members {
 	//typeOverride

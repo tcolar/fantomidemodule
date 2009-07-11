@@ -1,4 +1,4 @@
-// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-07-10 13:25:04
+// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-07-10 20:13:31
 package net.colar.netbeans.fan.antlr;
 import net.colar.netbeans.fan.FanParserResult;
 
@@ -170,8 +170,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_BREAK;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:13:10: ( 'break' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:13:12: 'break'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:17:10: ( 'break' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:17:12: 'break'
             {
             match("break"); if (state.failed) return ;
 
@@ -191,8 +191,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_CONTINUE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:14:13: ( 'continue' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:14:15: 'continue'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:18:13: ( 'continue' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:18:15: 'continue'
             {
             match("continue"); if (state.failed) return ;
 
@@ -212,8 +212,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_FOR;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:15:8: ( 'for' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:15:10: 'for'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:19:8: ( 'for' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:19:10: 'for'
             {
             match("for"); if (state.failed) return ;
 
@@ -233,8 +233,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_IF;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:16:7: ( 'if' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:16:9: 'if'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:20:7: ( 'if' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:20:9: 'if'
             {
             match("if"); if (state.failed) return ;
 
@@ -254,8 +254,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_RETURN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:17:11: ( 'return' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:17:13: 'return'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:21:11: ( 'return' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:21:13: 'return'
             {
             match("return"); if (state.failed) return ;
 
@@ -275,8 +275,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_SWITCH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:18:11: ( 'switch' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:18:13: 'switch'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:22:11: ( 'switch' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:22:13: 'switch'
             {
             match("switch"); if (state.failed) return ;
 
@@ -296,8 +296,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_THROW;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:19:10: ( 'throw ' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:19:12: 'throw '
+            // src/net/colar/netbeans/fan/antlr/Fan.g:23:10: ( 'throw ' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:23:12: 'throw '
             {
             match("throw "); if (state.failed) return ;
 
@@ -317,8 +317,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_WHILE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:20:10: ( 'while' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:20:12: 'while'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:24:10: ( 'while' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:24:12: 'while'
             {
             match("while"); if (state.failed) return ;
 
@@ -338,8 +338,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_TRY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:21:8: ( 'try' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:21:10: 'try'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:25:8: ( 'try' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:25:10: 'try'
             {
             match("try"); if (state.failed) return ;
 
@@ -359,8 +359,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_CASE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:22:9: ( 'case' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:22:11: 'case'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:26:9: ( 'case' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:26:11: 'case'
             {
             match("case"); if (state.failed) return ;
 
@@ -380,8 +380,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_DEFAULT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:23:12: ( 'default' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:23:14: 'default'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:27:12: ( 'default' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:27:14: 'default'
             {
             match("default"); if (state.failed) return ;
 
@@ -401,8 +401,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_CATCH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:24:10: ( 'catch' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:24:12: 'catch'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:28:10: ( 'catch' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:28:12: 'catch'
             {
             match("catch"); if (state.failed) return ;
 
@@ -422,8 +422,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_FINALLY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:25:12: ( 'finally' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:25:14: 'finally'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:29:12: ( 'finally' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:29:14: 'finally'
             {
             match("finally"); if (state.failed) return ;
 
@@ -443,8 +443,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_USING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:26:10: ( 'using' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:26:12: 'using'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:30:10: ( 'using' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:30:12: 'using'
             {
             match("using"); if (state.failed) return ;
 
@@ -464,8 +464,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_AS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:27:7: ( 'as' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:27:9: 'as'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:31:7: ( 'as' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:31:9: 'as'
             {
             match("as"); if (state.failed) return ;
 
@@ -485,8 +485,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_RD_ONLY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:28:12: ( 'readonly' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:28:14: 'readonly'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:32:12: ( 'readonly' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:32:14: 'readonly'
             {
             match("readonly"); if (state.failed) return ;
 
@@ -506,8 +506,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_CONST;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:29:10: ( 'const' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:29:12: 'const'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:33:10: ( 'const' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:33:12: 'const'
             {
             match("const"); if (state.failed) return ;
 
@@ -527,8 +527,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_STATIC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:30:11: ( 'static' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:30:13: 'static'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:34:11: ( 'static' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:34:13: 'static'
             {
             match("static"); if (state.failed) return ;
 
@@ -548,8 +548,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_NATIVE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:31:11: ( 'native' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:31:13: 'native'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:35:11: ( 'native' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:35:13: 'native'
             {
             match("native"); if (state.failed) return ;
 
@@ -569,8 +569,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_VOLATILE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:32:13: ( 'volatile' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:32:15: 'volatile'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:36:13: ( 'volatile' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:36:15: 'volatile'
             {
             match("volatile"); if (state.failed) return ;
 
@@ -590,8 +590,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_OVERRIDE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:33:13: ( 'override' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:33:15: 'override'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:37:13: ( 'override' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:37:15: 'override'
             {
             match("override"); if (state.failed) return ;
 
@@ -611,8 +611,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_VIRTUAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:34:12: ( 'virtual' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:34:14: 'virtual'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:38:12: ( 'virtual' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:38:14: 'virtual'
             {
             match("virtual"); if (state.failed) return ;
 
@@ -632,8 +632,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_FINAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:35:10: ( 'final' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:35:12: 'final'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:39:10: ( 'final' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:39:12: 'final'
             {
             match("final"); if (state.failed) return ;
 
@@ -653,8 +653,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_VOID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:36:9: ( 'void' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:36:11: 'void'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:40:9: ( 'void' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:40:11: 'void'
             {
             match("void"); if (state.failed) return ;
 
@@ -674,8 +674,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_CLASS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:37:10: ( 'class' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:37:12: 'class'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:41:10: ( 'class' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:41:12: 'class'
             {
             match("class"); if (state.failed) return ;
 
@@ -695,8 +695,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_ENUM;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:38:9: ( 'enum' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:38:11: 'enum'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:42:9: ( 'enum' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:42:11: 'enum'
             {
             match("enum"); if (state.failed) return ;
 
@@ -716,8 +716,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_MIXIN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:39:10: ( 'mixin' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:39:12: 'mixin'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:43:10: ( 'mixin' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:43:12: 'mixin'
             {
             match("mixin"); if (state.failed) return ;
 
@@ -737,8 +737,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_ABSTRACT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:40:13: ( 'abstract' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:40:15: 'abstract'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:44:13: ( 'abstract' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:44:15: 'abstract'
             {
             match("abstract"); if (state.failed) return ;
 
@@ -758,8 +758,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_PRIVATE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:41:12: ( 'private' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:41:14: 'private'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:45:12: ( 'private' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:45:14: 'private'
             {
             match("private"); if (state.failed) return ;
 
@@ -779,8 +779,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_PROTECTED;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:42:14: ( 'protected' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:42:16: 'protected'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:46:14: ( 'protected' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:46:16: 'protected'
             {
             match("protected"); if (state.failed) return ;
 
@@ -800,8 +800,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_PUBLIC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:43:11: ( 'public' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:43:13: 'public'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:47:11: ( 'public' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:47:13: 'public'
             {
             match("public"); if (state.failed) return ;
 
@@ -821,8 +821,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_INTERNAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:44:13: ( 'internal' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:44:15: 'internal'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:48:13: ( 'internal' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:48:15: 'internal'
             {
             match("internal"); if (state.failed) return ;
 
@@ -842,8 +842,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_NEW;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:45:8: ( 'new' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:45:10: 'new'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:49:8: ( 'new' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:49:10: 'new'
             {
             match("new"); if (state.failed) return ;
 
@@ -863,8 +863,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_ONCE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:46:9: ( 'once' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:46:11: 'once'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:50:9: ( 'once' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:50:11: 'once'
             {
             match("once"); if (state.failed) return ;
 
@@ -884,8 +884,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_THIS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:47:9: ( 'this' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:47:11: 'this'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:51:9: ( 'this' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:51:11: 'this'
             {
             match("this"); if (state.failed) return ;
 
@@ -905,8 +905,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_SUPER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:48:10: ( 'super' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:48:12: 'super'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:52:10: ( 'super' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:52:12: 'super'
             {
             match("super"); if (state.failed) return ;
 
@@ -926,8 +926,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_ELSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:49:9: ( 'else' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:49:11: 'else'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:53:9: ( 'else' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:53:11: 'else'
             {
             match("else"); if (state.failed) return ;
 
@@ -947,8 +947,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_IS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:50:7: ( 'is' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:50:9: 'is'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:54:7: ( 'is' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:54:9: 'is'
             {
             match("is"); if (state.failed) return ;
 
@@ -968,8 +968,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_ISNOT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:51:10: ( 'isnot' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:51:12: 'isnot'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:55:10: ( 'isnot' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:55:12: 'isnot'
             {
             match("isnot"); if (state.failed) return ;
 
@@ -989,8 +989,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_NULL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:52:9: ( 'null' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:52:11: 'null'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:56:9: ( 'null' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:56:11: 'null'
             {
             match("null"); if (state.failed) return ;
 
@@ -1010,8 +1010,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_IT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:53:7: ( 'it' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:53:9: 'it'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:57:7: ( 'it' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:57:9: 'it'
             {
             match("it"); if (state.failed) return ;
 
@@ -1031,8 +1031,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_TRUE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:54:9: ( 'true' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:54:11: 'true'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:58:9: ( 'true' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:58:11: 'true'
             {
             match("true"); if (state.failed) return ;
 
@@ -1052,8 +1052,8 @@ public class FanLexer extends Lexer {
         try {
             int _type = KW_FALSE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/net/colar/netbeans/fan/antlr/Fan.g:55:10: ( 'false' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:55:12: 'false'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:59:10: ( 'false' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:59:12: 'false'
             {
             match("false"); if (state.failed) return ;
 
