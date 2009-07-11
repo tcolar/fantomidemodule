@@ -16,6 +16,7 @@ import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.csl.api.Modifier;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.ParserResult;
 
@@ -40,14 +41,18 @@ public class FanStructureItem implements StructureItem
 	this.node = node;
 	//this.kind = node.getKind();
 	this.result = result;
-	this.handle=new FanElementHandle(kind, (CommonToken)node.getToken(), result);
 	//TODO: modifiers
 	this.name=node.getText();
+	// node gives up index of 1st and last token part of this struct. item
+	// then we finx those tokens by index in tokenStream (from lexer)
+	// from that we can find start and end location of struct. text in source file.
 	CommonTokenStream tokenStream=((FanParserResult)result).getTokenStream();
 	CommonToken startToken=(CommonToken)tokenStream.get(node.getTokenStartIndex());
 	CommonToken endToken=(CommonToken)tokenStream.get(node.getTokenStopIndex());
 	this.start=startToken.getStartIndex();
 	this.stop=endToken.getStopIndex();
+	OffsetRange range=new OffsetRange(start, stop);
+	this.handle=new FanElementHandle(kind, (CommonToken)node.getToken(), result, range);
 	System.err.println(name+" ["+start+"-"+stop+"]");
     }
 

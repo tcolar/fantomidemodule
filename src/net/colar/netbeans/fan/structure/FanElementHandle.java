@@ -28,13 +28,13 @@ public class FanElementHandle implements ElementHandle{
     private OffsetRange offsetRange;
     private Set<Modifier> modifiers=new HashSet<Modifier>();
 
-    public FanElementHandle(ElementKind kind, CommonToken token, ParserResult result)
+    public FanElementHandle(ElementKind kind, CommonToken token, ParserResult result, OffsetRange range)
     {
 	this.token=token;
 	this.result=result;
 	this.source=result.getSnapshot().getSource();
 	this.kind=kind;
-	this.offsetRange=new OffsetRange(token.getStartIndex(), token.getStopIndex());
+	this.offsetRange=range;
     }
 
     public FileObject getFileObject() {
@@ -70,7 +70,7 @@ public class FanElementHandle implements ElementHandle{
 	return false;//TODO
     }
 
-    public OffsetRange getOffsetRange(ParserResult arg0) {
+    public OffsetRange getOffsetRange(ParserResult result) {
 	return offsetRange;
     }
 
