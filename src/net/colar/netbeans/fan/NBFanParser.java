@@ -36,7 +36,7 @@ public class NBFanParser extends Parser{
 	FanParser parser=new FanParser(tokens);
         parser.setTreeAdaptor(FAN_TREE_ADAPTOR);
 
-	result=new FanParserResult(snapshot);
+	result=new FanParserResult(snapshot, tokens);
 	try
 	{
 	   result=parser.parse(result);

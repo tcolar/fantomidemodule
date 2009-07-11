@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
+import net.colar.netbeans.fan.FanParserResult;
 import org.antlr.runtime.CommonToken;
-import org.antlr.runtime.Token;
+import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
-import org.netbeans.api.lexer.TokenHierarchy;
-import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -32,7 +31,9 @@ public class FanStructureItem implements StructureItem
     private String name;
     private List<StructureItem> items=new ArrayList<StructureItem>();
     private String html;
-    private TokenHierarchy tokenHierarchy;
+    private final int start;
+    private final int stop;
+    
 
     public FanStructureItem(CommonTree node, ElementKind kind, ParserResult result)
     {
@@ -42,9 +43,12 @@ public class FanStructureItem implements StructureItem
 	this.handle=new FanElementHandle(kind, (CommonToken)node.getToken(), result);
 	//TODO: modifiers
 	this.name=node.getText();
-	this.tokenHierarchy=result.getSnapshot().getTokenHierarchy();
-	//tokenHierarchy.
-	System.err.println(name+" ["+getPosition()+"-"+getEndPosition()+"]");
+	CommonTokenStream tokenStream=((FanParserResult)result).getTokenStream();
+	CommonToken startToken=(CommonToken)tokenStream.get(node.getTokenStartIndex());
+	CommonToken endToken=(CommonToken)tokenStream.get(node.getTokenStopIndex());
+	this.start=startToken.getStartIndex();
+	this.stop=endToken.getStopIndex();
+	System.err.println(name+" ["+start+"-"+stop+"]");
     }
 
     public String getName()
@@ -89,12 +93,12 @@ public class FanStructureItem implements StructureItem
 
     public long getPosition()
     {
-	return node.getTokenStartIndex();
+	return start;
     }
 
     public long getEndPosition()
     {
-	return node.getTokenStopIndex();
+	return stop;
     }
 
     public ImageIcon getCustomIcon()

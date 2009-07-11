@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.EarlyExitException;
 import org.antlr.runtime.FailedPredicateException;
 import org.antlr.runtime.MismatchedRangeException;
@@ -36,11 +37,13 @@ public class FanParserResult extends ParserResult
     List<Error> errors = new Vector<Error>();
     private final String sourceName;
     private ParserRuleReturnScope antlrScope = null;
+    private CommonTokenStream tokenStream;
 
-    public FanParserResult(Snapshot snapshot)
+    public FanParserResult(Snapshot snapshot, CommonTokenStream tokenStream)
     {
 	super(snapshot);
 	this.sourceName = snapshot.getSource().getFileObject().getName();
+	this.tokenStream=tokenStream;
     }
 
     /**
@@ -169,5 +172,9 @@ public class FanParserResult extends ParserResult
 	}
     }
 
+    public CommonTokenStream getTokenStream() {
+	return tokenStream;
+    }
 
+    
 }
