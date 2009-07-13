@@ -64,11 +64,8 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		result = info.tokenFactory().createToken(tk);
 	    }
 	}
-	/*if (result != null)
-	{
-	    System.err.println(tk.name() + (result.isFlyweight() ? "(FlyWeight)" : "") + " : " + curToken.getText());
-	}*/
-	System.err.println("Token: "+curToken.getType()+" ["+curToken.getStartIndex()+" "+curToken.getStopIndex()+"]\n    : "+curToken.getText());
+
+	//System.err.println("Token: "+curToken.getType()+" ["+curToken.getStartIndex()+" "+curToken.getStopIndex()+"]\n    : "+curToken.getText());
 	return result;
     }
 

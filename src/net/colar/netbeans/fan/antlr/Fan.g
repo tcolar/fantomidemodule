@@ -93,6 +93,8 @@ AST_METHOD;
 AST_CONSTRUCTOR;
 AST_FIELD;
 AST_CONSTRUCTOR_CHAIN;
+AST_CODE_BLOCK;
+AST_DOCS;
 // generic items
 AST_ID;
 AST_MODIFIER;
@@ -242,7 +244,7 @@ classDef 	@init {paraphrase.push("Class definition");} @after{paraphrase.pop();}
 classHeader	:	docs facet* m=classFlags* KW_CLASS cname=id inheritance?
 			-> ^(AST_ID $cname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
-classBody 	:	bracketL slotDef* bracketR;
+classBody 	:	(bracketL slotDef* bracketR)  -> ^(AST_CODE_BLOCK bracketL slotDef* bracketR);
 protection	:	KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL;
 mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
 		:	mixinHeader mixinBody
@@ -250,13 +252,13 @@ mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
 mixinHeader	:	docs facet* m=mixinFlags* KW_MIXIN mname=id inheritance?
 			-> ^(AST_ID $mname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 mixinFlags	:	protection | KW_CONST | KW_STATIC | KW_FINAL;
-mixinBody	:	bracketL slotDef* bracketR;
+mixinBody	:	bracketL slotDef* bracketR  -> ^(AST_CODE_BLOCK bracketL slotDef* bracketR);
 enumDef		@init {paraphrase.push("Enumeration definition");} @after{paraphrase.pop();}
 		:	enumHeader enumBody
 		    -> ^(AST_ENUM enumHeader enumBody);
 enumHeader	:   	docs facet* m=protection? KW_ENUM ename=id inheritance?
 			-> ^(AST_ID $ename) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
-enumBody	:	bracketL enumValDefs slotDef* bracketR ;
+enumBody	:	bracketL enumValDefs slotDef* bracketR   -> ^(AST_CODE_BLOCK bracketL enumValDefs slotDef* bracketR);
 inheritance 	:	SP_COLON typeList;
 	//	    -> ^(AST_INHERITANCE typeList);
 enumValDefs 	:	enumValDef (SP_COMMA  enumValDef)* eos;
@@ -299,15 +301,15 @@ typeAndId	:	type id
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
 methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
 		:	docs facet* m=methodFlags* returnType=type /*| KW_VOID*/ mname=id parL params parR methodBody
-		    -> ^(AST_METHOD ^(AST_ID $mname) ^(AST_TYPE $returnType) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)*);
+		    -> ^(AST_METHOD  ^(AST_ID $mname) ^(AST_TYPE $returnType) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)*);
 methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE |
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;
 param 		:	type id (AS_INIT_VAL expr)?;
-methodBody	:	('{' stmt* bracketR) | eos;
+methodBody	:	((multiStmt)=>multiStmt | eos);
 ctorDef		@init {paraphrase.push("Constructor definition");} @after{paraphrase.pop();}
 		:	docs facet* m=ctorFlags* KW_NEW cname=id parL params parR cchain=((SP_COLON)=>ctorChain)? methodBody
-		    -> ^(AST_CONSTRUCTOR ^(AST_ID $cname) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)* ^(AST_CONSTRUCTOR_CHAIN $cchain)*);
+		    -> ^(AST_CONSTRUCTOR ^(AST_ID $cname) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)* ^(AST_CONSTRUCTOR_CHAIN $cchain)* methodBody?);
 ctorFlags	:	protection;
 ctorChain	:	SP_COLON (ctorChainThis | ctorChainSuper);
 
@@ -317,13 +319,14 @@ ctorChainSuper	:	KW_SUPER (DOT id)? parL args? parR;
 staticBlock	:	KW_STATIC block;
 block 		@init {paraphrase.push("Block");} @after{paraphrase.pop();}
 		:	((bracketL)=>multiStmt | stmt);
-multiStmt	:	bracketL  stmt* bracketR;
+multiStmt	:	bracketL s=(stmt*) bracketR -> ^(AST_CODE_BLOCK bracketL $s? bracketR);
 stmt
 @init {paraphrase.push("Statement");} @after{paraphrase.pop();}
 		:	(g_if | g_for | g_while | g_break |
 			g_continue | g_return | g_switch |
 			g_throw | g_try | exprStmt | localDef );
-
+// list of tstements without brackets (try/catch/finaly if/esle)
+stmtList	: s=(stmt*) -> ^(AST_CODE_BLOCK $s?);
 /* NOTE: Can't use java keywords as grammar ID's
 Because the name (ex: break) will be used as a function name in the generated java code
 which if it's a java keyword is gonna be invalid java code.
@@ -338,19 +341,19 @@ g_return	:	KW_RETURN (eos | expr eos);
 g_switch	:	KW_SWITCH parL expr parR bracketL (g_case)* (g_default)? bracketR;
 g_throw		:	KW_THROW expr eos;
 g_while		:	KW_WHILE parL expr parR block;
-g_try		:	KW_TRY ((bracketL)=>try_long | stmt*) ((KW_CATCH)=>g_catch)* ((KW_FINALLY)=>g_finally)?;
-try_long	:	bracketL stmt* bracketR;
+g_try		:	KW_TRY ((bracketL)=>try_long | stmtList) ((KW_CATCH)=>g_catch)* ((KW_FINALLY)=>g_finally)?;
+try_long	:	multiStmt;
 exprStmt	:	expr eos;
 localDef	:	typeId (AS_INIT_VAL expr)? eos;
 forInit 	:	forInitDef | expr;
 forInitDef	:	typeId (AS_INIT_VAL expr)?;
 // catch is a reserved antlr keyword
-g_catch		:	KW_CATCH catchDef? ((bracketL)=>catch_long | stmt*);
-catch_long	:	bracketL stmt* bracketR;
+g_catch		:	KW_CATCH catchDef? ((bracketL)=>catch_long | stmtList);
+catch_long	:	multiStmt;
 catchDef 	:	parL type id parR;
 // finally is a reserved antlr keyword
-g_finally	:	KW_FINALLY ((bracketL)=>finally_long | stmt*);
-finally_long	:	bracketL stmt* bracketR;
+g_finally	:	KW_FINALLY ((bracketL)=>finally_long | stmtList);
+finally_long	:	multiStmt;
 g_case		:	KW_CASE expr SP_COLON stmt*;
 g_default	:	KW_DEFAULT SP_COLON stmt*;
 
@@ -410,7 +413,7 @@ indexExpr 	:	{notAfterEol()}? sq_bracketL expr sq_bracketR;
 // eos = end of expression
 callOp		:	{notAfterEol()}? parL args?  parR closure*;
 closure 	@init {paraphrase.push("Closure");} @after{paraphrase.pop();}
-		:  	funcType bracketL stmt* bracketR;
+		:  	funcType multiStmt;
 // this can be either a local def(toto.value) or a call(toto.getValue or toto.getValue(<params>)) + opt. closure
 idExpr 		:	idExprReq | id;
 // Same but without matching ID by itself (this would prevent termbase from checking literals).
@@ -436,7 +439,7 @@ mapItems 	:	(mapPair (SP_COMMA mapPair)* SP_COMMA?) | SP_COLON;
 mapPair		:	expr SP_COLON expr;
 simple		:	type parL expr parR;
 
-docs		:	DOC*;
+docs		:	d=(DOC*) -> ^(AST_DOCS $d?);
 
 number		: 	OP_MINUS? NUMBER;
 facet		:	AT id (AS_EQUAL expr)?;

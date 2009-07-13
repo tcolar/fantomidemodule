@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
+import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.Modifier;
@@ -25,6 +27,13 @@ import org.netbeans.modules.csl.spi.ParserResult;
  */
 public class FanStructureAnalyzer implements StructureScanner
 {
+//http://hg.netbeans.org/main/file/24d72d2643e1/csl.api/src/org/netbeans/modules/csl/editor/fold/GsfFoldManager.java
+
+    public static final String CODE_FOLDS = "codeblocks";
+    public static final String DOC_FOLDS = "comments";
+    public static final String COMMENT_FOLDS = "comments";
+    public static final String IMPORT_FOLDS = "imports";
+
     public List<StructureItem> scan(ParserResult result)
     {
 	FanParserResult fanResult = (FanParserResult) result;
@@ -50,7 +59,7 @@ public class FanStructureAnalyzer implements StructureScanner
 	    FanStructureItem item = null;
 
 	    trace += "->" + node.getText();
-	    System.err.println("NODE[ "+node.getTokenStartIndex()+" "+node.getTokenStopIndex()+"] : " + trace);//"+node.toStringTree());
+	    System.err.println("NODE[ " + node.getTokenStartIndex() + " " + node.getTokenStopIndex() + "] : " + trace);//"+node.toStringTree());
 	    switch (node.getType())
 	    {
 		case FanParser.AST_FIELD:
@@ -85,7 +94,7 @@ public class FanStructureAnalyzer implements StructureScanner
 
 		case FanParser.AST_METHOD:
 		case FanParser.AST_CONSTRUCTOR:
-		    ElementKind kind=node.getType()==FanParser.AST_METHOD?ElementKind.METHOD:ElementKind.CONSTRUCTOR;
+		    ElementKind kind = node.getType() == FanParser.AST_METHOD ? ElementKind.METHOD : ElementKind.CONSTRUCTOR;
 
 		    item = new FanStructureItem(node, kind, result);
 		    String returnType = getSubChildTextByType(node, FanParser.AST_TYPE, -1);
@@ -103,29 +112,28 @@ public class FanStructureAnalyzer implements StructureScanner
 		    if (returnType.length() > 0)
 		    {
 			html += " : <font color='#aaaaaa'>" + returnType + "</font>";
-		    }
-		    else if (constChain.length() > 0)
+		    } else if (constChain.length() > 0)
 		    {
 			html += " : <font color='#aaaaaa'>" + returnType + "</font>";
 		    }
 		    item.setHtml(html);
 		    break;
 	    }
-	    List<StructureItem> subList = new ArrayList<StructureItem>();
 	    for (int i = 0; i < node.getChildCount(); i++)
 	    {
 		CommonTree subNode = (CommonTree) node.getChild(i);
 		// For the ROOT node, we had directly to list, not sublist
-		if (node.isNil())
+		if (node.isNil() || item == null)
 		{
 		    scanTree(list, subNode, result, trace);
 		} else
 		{
+		    List<StructureItem> subList = new ArrayList<StructureItem>();
 		    scanTree(subList, subNode, result, trace);
-		}
-		if (item != null && !subList.isEmpty())
-		{
-		    item.setNestedItems(subList);
+		    if (item != null && !subList.isEmpty())
+		    {
+			item.setNestedItems(subList);
+		    }
 		}
 	    }
 
@@ -139,9 +147,12 @@ public class FanStructureAnalyzer implements StructureScanner
 
     public Map<String, List<OffsetRange>> folds(ParserResult result)
     {
+	CommonTokenStream tokenStream = ((FanParserResult) result).getTokenStream();
+
 	FanParserResult fanResult = (FanParserResult) result;
 	Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
-	//TODO
+	CommonTree ast = fanResult.getTree();
+	addFolds(tokenStream, folds, ast);
 	return folds;
     }
 
@@ -165,12 +176,14 @@ public class FanStructureAnalyzer implements StructureScanner
 	    } else
 	    {
 		Iterator children = node.getChildren().iterator();
-		while(children.hasNext())
+		while (children.hasNext())
 		{
-		    CommonTree node3=(CommonTree)children.next();
-		    if(text.length()>0)
-			text+=" ";
-		    text+=node3.getText();
+		    CommonTree node3 = (CommonTree) children.next();
+		    if (text.length() > 0)
+		    {
+			text += " ";
+		    }
+		    text += node3.getText();
 		}
 	    }
 	}
@@ -194,22 +207,67 @@ public class FanStructureAnalyzer implements StructureScanner
 
     private void handleModifiers(FanStructureItem item, String modif)
     {
-	if (modif.indexOf("private")!=-1)
+	if (modif.indexOf("private") != -1)
 	{
 	    item.addModifier(Modifier.PRIVATE);
-	}
-	else if (modif.indexOf("protected")!=-1)
+	} else if (modif.indexOf("protected") != -1)
 	{
 	    item.addModifier(Modifier.PROTECTED);
-	}
-	else if (modif.indexOf("public")!=-1)
+	} else if (modif.indexOf("public") != -1)
 	{
 	    item.addModifier(Modifier.PUBLIC);
 	}
-	if (modif.indexOf("static")!=-1)
+	if (modif.indexOf("static") != -1)
 	{
 	    item.addModifier(Modifier.STATIC);
 	}
     }
 
+    private void addFolds(CommonTokenStream tokenStream, Map<String, List<OffsetRange>> folds, CommonTree node)
+    {
+	if (node != null)
+	{
+	    boolean foldable = false;
+	    String type = CODE_FOLDS;
+	    switch (node.getType())
+	    {
+		case FanParser.AST_DOCS:
+		    type = DOC_FOLDS;
+		    foldable=true;
+		    break;
+		case FanParser.AST_CODE_BLOCK:
+		    type = CODE_FOLDS;
+		    foldable=true;
+		    break;
+	    }
+
+	    if (foldable)
+	    {
+		CommonToken startToken = (CommonToken) tokenStream.get(node.getTokenStartIndex());
+		CommonToken endToken = (CommonToken) tokenStream.get(node.getTokenStopIndex());
+		int start = startToken.getStartIndex();
+		// range is sxclusive, so adding 1
+		int end = endToken.getStopIndex() + 1;
+		// don't add unless at least 1 long (ex: class with def alone)
+		if (start >= 0 && end >= 0 && end > start)
+		{
+		    OffsetRange range = new OffsetRange(start, end);
+		    List<OffsetRange> fold = folds.get(type);
+		    if (fold == null)
+		    {
+			fold = new ArrayList<OffsetRange>();
+			folds.put(type, fold);
+		    }
+		    fold.add(range);
+		}
+
+		// recurse into children
+		for (int i = 0; i < node.getChildCount(); i++)
+		{
+		    CommonTree subNode = (CommonTree) node.getChild(i);
+		    addFolds(tokenStream, folds, subNode);
+		}
+	    }
+	}
+    }
 }

@@ -51,9 +51,9 @@ public class FanStructureItem implements StructureItem
 	CommonToken endToken=(CommonToken)tokenStream.get(node.getTokenStopIndex());
 	this.start=startToken.getStartIndex();
 	this.stop=endToken.getStopIndex();
+	System.err.println(name+" ["+start+"-"+stop+"]");
 	OffsetRange range=new OffsetRange(start, stop);
 	this.handle=new FanElementHandle(kind, (CommonToken)node.getToken(), result, range);
-	System.err.println(name+" ["+start+"-"+stop+"]");
     }
 
     public String getName()
