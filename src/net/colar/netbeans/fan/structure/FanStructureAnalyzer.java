@@ -46,6 +46,17 @@ public class FanStructureAnalyzer implements StructureScanner
 	return list;
     }
 
+    public Map<String, List<OffsetRange>> folds(ParserResult result)
+    {
+	CommonTokenStream tokenStream = ((FanParserResult) result).getTokenStream();
+
+	FanParserResult fanResult = (FanParserResult) result;
+	Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
+	CommonTree ast = fanResult.getTree();
+	addFolds(tokenStream, folds, ast);
+	return folds;
+    }
+
     /**
      * Scan down the tree for structure items, and add them to the tree if necesary
      * Recursive.
@@ -145,17 +156,6 @@ public class FanStructureAnalyzer implements StructureScanner
 	}
     }
 
-    public Map<String, List<OffsetRange>> folds(ParserResult result)
-    {
-	CommonTokenStream tokenStream = ((FanParserResult) result).getTokenStream();
-
-	FanParserResult fanResult = (FanParserResult) result;
-	Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
-	CommonTree ast = fanResult.getTree();
-	addFolds(tokenStream, folds, ast);
-	return folds;
-    }
-
     public Configuration getConfiguration()
     {
 	return null;
@@ -229,19 +229,23 @@ public class FanStructureAnalyzer implements StructureScanner
 	{
 	    boolean foldable = false;
 	    String type = CODE_FOLDS;
+	    //System.err.println("** " + node.getText());
 	    switch (node.getType())
 	    {
-		case FanParser.AST_DOCS:
-		    type = DOC_FOLDS;
-		    foldable=true;
-		    break;
 		case FanParser.AST_CODE_BLOCK:
 		    type = CODE_FOLDS;
-		    foldable=true;
+		    foldable = true;
+		    break;
+		case FanParser.AST_DOCS:
+		//TODO: comments folding (in hidden channel)
+		//TODO: also imports (using)
+		//case FanParser.MULTI_COMMENT:
+		    type = DOC_FOLDS;
+		    foldable = true;
 		    break;
 	    }
 
-	    if (foldable)
+	    if (foldable && node.getTokenStartIndex()!=-1 && node.getTokenStopIndex()!=-1)
 	    {
 		CommonToken startToken = (CommonToken) tokenStream.get(node.getTokenStartIndex());
 		CommonToken endToken = (CommonToken) tokenStream.get(node.getTokenStopIndex());
@@ -260,14 +264,14 @@ public class FanStructureAnalyzer implements StructureScanner
 		    }
 		    fold.add(range);
 		}
-
-		// recurse into children
-		for (int i = 0; i < node.getChildCount(); i++)
-		{
-		    CommonTree subNode = (CommonTree) node.getChild(i);
-		    addFolds(tokenStream, folds, subNode);
-		}
 	    }
+	    // recurse into children
+	    for (int i = 0; i < node.getChildCount(); i++)
+	    {
+		CommonTree subNode = (CommonTree) node.getChild(i);
+		addFolds(tokenStream, folds, subNode);
+	    }
+
 	}
     }
 }
