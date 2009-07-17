@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
 <filesystem>
+    <folder name="Loaders">
+	<folder name="text">
+	    <folder name="x-fan">
+		<folder name="Actions">
+		    <file name="net-colar-netbeans-fan-project-SetMainFileAction.instance">
+			<attr name="position" intvalue="150"/>
+		    </file>
+		</folder>
+	    </folder>
+	</folder>
+    </folder>
+
     <folder name="Services">
 	<folder name="MIMEResolver">
 	    <file name="fan.xml" url="fanResolver.xml">
-	    <attr name="position" intvalue="1007"/>
+		<attr name="position" intvalue="1007"/>
 	    </file>
 	</folder>
     </folder>
@@ -16,7 +28,9 @@
 		    <attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.FanTokenID.language"/>
 		    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
 		</file>
-
+		<folder name="popup">
+		    <file name="netc-colar-netbeans-fan-project-SetMainFileAction.instance"/>
+		</folder>
 	    </folder>
 	</folder>
 	<folder name="FontsColors">
@@ -35,11 +49,25 @@
 		    <attr name="instanceClass" stringvalue="net.colar.netbeans.fan.FanLanguage"/>
 		</file>
 		<file name="structure.instance">
-                    <attr name="instanceClass" stringvalue="net.colar.netbeans.fan.structure.FanStructureAnalyzer"/>
-                </file>
+		    <attr name="instanceClass" stringvalue="net.colar.netbeans.fan.structure.FanStructureAnalyzer"/>
+		</file>
 	    </folder>
 	</folder>
     </folder>
 
+    <folder name="Templates">
+	<folder name="Project">
+	    <folder name="Fan Project">
+		<!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
+		<attr name="position" intvalue="937"/>
+		<file name="Standard Fan Project">
+		    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
+		    <!--<attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.project.WizardIt.createIterator"/>-->
+		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanProjectDescription.html"/>
+		    <attr name="template" boolvalue="true"/>
+		</file>
+	    </folder>
+	</folder>
+    </folder>
 </filesystem>
 
