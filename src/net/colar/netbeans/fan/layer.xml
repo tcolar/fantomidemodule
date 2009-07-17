@@ -62,8 +62,15 @@
 		<attr name="position" intvalue="937"/>
 		<file name="Standard Fan Project">
 		    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
-		    <!--<attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.project.WizardIt.createIterator"/>-->
+		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.project.wizzard.ProjectWizzard.instance()"/>
 		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanProjectDescription.html"/>
+		    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
+		    <attr name="template" boolvalue="true"/>
+		</file>
+		<file name="Fan POD">
+		    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
+		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.project.wizzard.ModuleWizzard.instance()"/>
+		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanPodDescription.html"/>
 		    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		    <attr name="template" boolvalue="true"/>
 		</file>
