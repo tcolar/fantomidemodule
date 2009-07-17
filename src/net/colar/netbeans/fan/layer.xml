@@ -56,6 +56,31 @@
     </folder>
 
     <folder name="Templates">
+	<folder name="Fan">
+	    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.myorg.additionalfiletemplates.Bundle"/>-->
+	    <file name="EmptyFile.fan" url="templates/EmptyFile.html">
+		<attr name="template" boolvalue="true"/>
+		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
+		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/EmptyFile.html"/>
+                <!--Use this line only if your template makes use of the FreeMarker template language:-->
+		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+	    </file>
+	    <file name="Class.fan" url="templates/Class.html">
+		<attr name="template" boolvalue="true"/>
+		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
+		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/ClassDesc.html"/>
+                <!--Use this line only if your template makes use of the FreeMarker template language:-->
+		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+	    </file>
+	    <file name="MainClass.fan" url="templates/MainClass.html">
+		<attr name="template" boolvalue="true"/>
+		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
+		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/MainClassDesc.html"/>
+                <!--Use this line only if your template makes use of the FreeMarker template language:-->
+		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+	    </file>
+	</folder>
+	
 	<folder name="Project">
 	    <folder name="Fan Project">
 		<!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
@@ -80,4 +105,3 @@
 	</folder>
     </folder>
 </filesystem>
-
