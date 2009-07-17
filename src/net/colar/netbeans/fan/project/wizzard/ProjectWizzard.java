@@ -184,7 +184,7 @@ public class ProjectWizzard implements WizardDescriptor.InstantiatingIterator, C
 
     public void stateChanged(ChangeEvent arg0)
     {
-	wiz.setValid(((ProjectInfoPanelPanel) panels[0]).isValid());
+	wiz.setValid(((ProjectPanel) panels[0]).isValid());
 	fire();
     }
 
@@ -205,7 +205,7 @@ public class ProjectWizzard implements WizardDescriptor.InstantiatingIterator, C
     {
 	return new WizardDescriptor.Panel[]
 		{
-		    new ProjectInfoPanelPanel(),
+		    new ProjectPanel(),
 		};
     }
 
@@ -238,7 +238,7 @@ public class ProjectWizzard implements WizardDescriptor.InstantiatingIterator, C
 	public void run() throws IOException
 	{
 	    String mainFileName = codeName + ".xml";
-	    FileObject projDir = dir.createFolder("dbproject"); //NOI18N
+	    FileObject projDir = dir.createFolder("fanproject"); //NOI18N
 	    FileObject metadata = projDir.createData("project", "properties"); //NOI18N
 
 	    FileObject mainFile = dir.createData(mainFileName);
@@ -287,6 +287,7 @@ public class ProjectWizzard implements WizardDescriptor.InstantiatingIterator, C
 	    {
 		String header;
 		String content;
+		//TODO
 		//pw.println(header);
 		//pw.println(content);
 	    } finally
