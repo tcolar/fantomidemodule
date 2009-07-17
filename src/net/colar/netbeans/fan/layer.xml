@@ -64,8 +64,11 @@
 		    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
 		    <!--<attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.project.WizardIt.createIterator"/>-->
 		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanProjectDescription.html"/>
+		    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		    <attr name="template" boolvalue="true"/>
 		</file>
+		<!-- Allow Fan files to show up in Java projects as well. -->
+               <!--<attr name="templateCategory" stringvalue="fan,java-classes"/>-->
 	    </folder>
 	</folder>
     </folder>
