@@ -58,34 +58,27 @@
     <folder name="Templates">
 	<folder name="Fan">
 	    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.myorg.additionalfiletemplates.Bundle"/>-->
-	    <file name="EmptyFile.fan" url="templates/EmptyFile.html">
+	    <file name="EmptyFanFile.fan" url="templates/EmptyFile.html">
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
-		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/EmptyFile.html"/>
+		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/EmptyFileDesc.html"/>
                 <!--Use this line only if your template makes use of the FreeMarker template language:-->
 		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 	    </file>
-	    <file name="Class.fan" url="templates/Class.html">
+	    <file name="FanClass.fan" url="templates/Class.html">
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/ClassDesc.html"/>
                 <!--Use this line only if your template makes use of the FreeMarker template language:-->
 		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 	    </file>
-	    <file name="MainClass.fan" url="templates/MainClass.html">
+	    <file name="FanMainClass.fan" url="templates/MainClass.html">
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/MainClassDesc.html"/>
                 <!--Use this line only if your template makes use of the FreeMarker template language:-->
 		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 	    </file>
-	    <file name="fan">
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-                <attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.FanProjectWizardIterator"/>
-                <attr name="template" boolvalue="true"/>
-                <attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/wizard/fan.html"/>
-            </file>
         </folder>
 	
 	<folder name="Project">
