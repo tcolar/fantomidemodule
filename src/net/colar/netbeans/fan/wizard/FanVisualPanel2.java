@@ -49,6 +49,7 @@ public final class FanVisualPanel2 extends JPanel {
 
         podField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel2.class, "FanVisualPanel2.podField.text")); // NOI18N
 
+        folderField.setEditable(false);
         folderField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel2.class, "FanVisualPanel2.folderField.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

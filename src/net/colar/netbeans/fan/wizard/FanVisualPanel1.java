@@ -49,6 +49,7 @@ public final class FanVisualPanel1 extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(folderLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.folderLabel.text")); // NOI18N
 
+        mainCheckbox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(mainCheckbox, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.mainCheckbox.text")); // NOI18N
         mainCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -56,6 +57,7 @@ public final class FanVisualPanel1 extends JPanel {
             }
         });
 
+        podCheckbox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(podCheckbox, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podCheckbox.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(podLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podLabel.text")); // NOI18N
@@ -64,12 +66,14 @@ public final class FanVisualPanel1 extends JPanel {
 
         locationField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.locationField.text")); // NOI18N
 
+        folderField.setEditable(false);
         folderField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.folderField.text")); // NOI18N
 
         podField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podField.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(podFolderLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podFolderLabel.text")); // NOI18N
 
+        podFolderField.setEditable(false);
         podFolderField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podFolderField.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.browseButton.text")); // NOI18N
