@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.colar.netbeans.fan.project.wizzard;
+package net.colar.netbeans.fan.project.wizard;
 
 import java.awt.Component;
 import java.io.File;

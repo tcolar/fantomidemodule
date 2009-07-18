@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.colar.netbeans.fan.project.wizzard;
+package net.colar.netbeans.fan.project.wizard;
 import java.io.IOException;
 import java.util.Set;
 import javax.swing.event.ChangeEvent;
