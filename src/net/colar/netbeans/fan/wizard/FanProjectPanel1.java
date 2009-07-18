@@ -7,10 +7,10 @@ package net.colar.netbeans.fan.wizard;
 
 import javax.swing.JPanel;
 
-public final class FanVisualPanel1 extends JPanel {
+public final class FanProjectPanel1 extends JPanel {
 
     /** Creates new form FanVisualPanel1 */
-    public FanVisualPanel1() {
+    public FanProjectPanel1() {
         initComponents();
     }
 
@@ -43,14 +43,14 @@ public final class FanVisualPanel1 extends JPanel {
         podFolderField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
 
-        org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.nameLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.nameLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(locationLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.locationLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(locationLabel, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.locationLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(folderLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.folderLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(folderLabel, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.folderLabel.text")); // NOI18N
 
         mainCheckbox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(mainCheckbox, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.mainCheckbox.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(mainCheckbox, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.mainCheckbox.text")); // NOI18N
         mainCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mainCheckboxActionPerformed(evt);
@@ -58,25 +58,25 @@ public final class FanVisualPanel1 extends JPanel {
         });
 
         podCheckbox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(podCheckbox, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podCheckbox.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(podCheckbox, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.podCheckbox.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(podLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(podLabel, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.podLabel.text")); // NOI18N
 
-        nameField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.nameField.text")); // NOI18N
+        nameField.setText(org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.nameField.text")); // NOI18N
 
-        locationField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.locationField.text")); // NOI18N
+        locationField.setText(org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.locationField.text")); // NOI18N
 
         folderField.setEditable(false);
-        folderField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.folderField.text")); // NOI18N
+        folderField.setText(org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.folderField.text")); // NOI18N
 
-        podField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podField.text")); // NOI18N
+        podField.setText(org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.podField.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(podFolderLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podFolderLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(podFolderLabel, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.podFolderLabel.text")); // NOI18N
 
         podFolderField.setEditable(false);
-        podFolderField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.podFolderField.text")); // NOI18N
+        podFolderField.setText(org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.podFolderField.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(FanVisualPanel1.class, "FanVisualPanel1.browseButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.browseButton.text")); // NOI18N
         browseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 browseButtonActionPerformed(evt);

@@ -82,7 +82,7 @@
 	    <file name="fan">
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-                <attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.FanWizardIterator"/>
+                <attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.FanProjectWizardIterator"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/wizard/fan.html"/>
             </file>
@@ -92,16 +92,16 @@
 	    <folder name="Fan Project">
 		<!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
 		<attr name="position" intvalue="937"/>
-		<file name="Standard Fan Project">
+		<file name="Fan Project">
 		    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
-		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.wizard.FanWizardIterator.instance"/>
+		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.wizard.FanProjectWizardIterator.instance"/>
 		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanProjectDescription.html"/>
 		    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		    <attr name="template" boolvalue="true"/>
 		</file>
-		<file name="Fan POD">
+		<file name="Fan Pod">
 		    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
-		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.project.wizard.PodWizzard.instance"/>
+		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.wizard.FanPodWizardIterator.instance"/>
 		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanPodDescription.html"/>
 		    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		    <attr name="template" boolvalue="true"/>

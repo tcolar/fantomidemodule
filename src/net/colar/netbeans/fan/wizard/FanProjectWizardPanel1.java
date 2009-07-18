@@ -9,7 +9,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class FanWizardPanel2 implements WizardDescriptor.Panel
+public class FanProjectWizardPanel1 implements WizardDescriptor.Panel
 {
 
     /**
@@ -26,7 +26,7 @@ public class FanWizardPanel2 implements WizardDescriptor.Panel
     {
 	if (component == null)
 	{
-	    component = new FanVisualPanel2();
+	    component = new FanProjectPanel1();
 	}
 	return component;
     }

@@ -7,10 +7,10 @@ package net.colar.netbeans.fan.wizard;
 
 import javax.swing.JPanel;
 
-public final class FanVisualPanel2 extends JPanel {
+public final class FanPodPanel1 extends JPanel {
 
     /** Creates new form FanVisualPanel2 */
-    public FanVisualPanel2() {
+    public FanPodPanel1() {
         initComponents();
     }
 
@@ -34,11 +34,11 @@ public final class FanVisualPanel2 extends JPanel {
         podField = new javax.swing.JTextField();
         folderField = new javax.swing.JTextField();
 
-        org.openide.awt.Mnemonics.setLocalizedText(projectLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel2.class, "FanVisualPanel2.projectLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(projectLabel, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.projectLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(podLabel, org.openide.util.NbBundle.getMessage(FanVisualPanel2.class, "FanVisualPanel2.podLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(podLabel, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.podLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FanVisualPanel2.class, "FanVisualPanel2.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.jLabel1.text")); // NOI18N
 
         projectCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         projectCombo.addActionListener(new java.awt.event.ActionListener() {
@@ -47,10 +47,10 @@ public final class FanVisualPanel2 extends JPanel {
             }
         });
 
-        podField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel2.class, "FanVisualPanel2.podField.text")); // NOI18N
+        podField.setText(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.podField.text")); // NOI18N
 
         folderField.setEditable(false);
-        folderField.setText(org.openide.util.NbBundle.getMessage(FanVisualPanel2.class, "FanVisualPanel2.folderField.text")); // NOI18N
+        folderField.setText(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.folderField.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
