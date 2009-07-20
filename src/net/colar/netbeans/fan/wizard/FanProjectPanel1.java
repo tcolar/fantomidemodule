@@ -2,23 +2,48 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.colar.netbeans.fan.wizard;
 
+import java.io.File;
+import java.util.regex.Pattern;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
-public final class FanProjectPanel1 extends JPanel {
+public final class FanProjectPanel1 extends JPanel
+{
 
-    /** Creates new form FanVisualPanel1 */
-    public FanProjectPanel1() {
-        initComponents();
+    private final String dir;
+    private static final String DEFAULT_PRJ = "FanPrj1";
+    private static final String DEFAULT_POD = "default";
+    private final JFileChooser chooser;
+    private final Pattern VALID_NAME=Pattern.compile("[ a-zA-Z0-9_-]+");
+    private FanProjectWizardPanel1 parent;
+
+    public FanProjectPanel1(FanProjectWizardPanel1 parent, String dir)
+    {
+	super();
+	this.parent=parent;
+	initComponents();
+	nameField.setText(DEFAULT_PRJ);
+	this.dir = dir;
+	locationField.setText(dir);
+	String loc = dir + (dir.endsWith(File.separator) ? "" : "/") + DEFAULT_PRJ;
+	folderField.setText(loc);
+	nameField.setText("");
+	podField.setText(DEFAULT_POD);
+	podFolderField.setText(dir + File.separator + DEFAULT_POD);
+	chooser = new JFileChooser();
+	chooser.setMultiSelectionEnabled(false);
+	chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	chooser.setApproveButtonText("Select");
     }
 
     @Override
-    public String getName() {
-        return "New Fan Project";
+    public String getName()
+    {
+	return "New Fan Project";
     }
-
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -42,6 +67,7 @@ public final class FanProjectPanel1 extends JPanel {
         podFolderLabel = new javax.swing.JLabel();
         podFolderField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
+        errorLabel = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.nameLabel.text")); // NOI18N
 
@@ -63,13 +89,47 @@ public final class FanProjectPanel1 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(podLabel, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.podLabel.text")); // NOI18N
 
         nameField.setText(org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.nameField.text")); // NOI18N
+        nameField.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                nameFieldCaretUpdate(evt);
+            }
+        });
+        nameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                nameFieldKeyReleased(evt);
+            }
+        });
 
         locationField.setText(org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.locationField.text")); // NOI18N
+        locationField.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+                locationFieldCaretPositionChanged(evt);
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
+        locationField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                locationFieldKeyReleased(evt);
+            }
+        });
 
         folderField.setEditable(false);
         folderField.setText(org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.folderField.text")); // NOI18N
 
         podField.setText(org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.podField.text")); // NOI18N
+        podField.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+                podFieldCaretPositionChanged(evt);
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
+        podField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                podFieldKeyReleased(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(podFolderLabel, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.podFolderLabel.text")); // NOI18N
 
@@ -83,6 +143,10 @@ public final class FanProjectPanel1 extends JPanel {
             }
         });
 
+        errorLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        org.openide.awt.Mnemonics.setLocalizedText(errorLabel, org.openide.util.NbBundle.getMessage(FanProjectPanel1.class, "FanProjectPanel1.errorLabel.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -90,6 +154,7 @@ public final class FanProjectPanel1 extends JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
                     .addComponent(mainCheckbox)
                     .addComponent(podCheckbox)
@@ -147,7 +212,8 @@ public final class FanProjectPanel1 extends JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(podFolderLabel)
                     .addComponent(podFolderField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(errorLabel))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -169,16 +235,51 @@ public final class FanProjectPanel1 extends JPanel {
 
     private void mainCheckboxActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_mainCheckboxActionPerformed
     {//GEN-HEADEREND:event_mainCheckboxActionPerformed
-	// TODO add your handling code here:
     }//GEN-LAST:event_mainCheckboxActionPerformed
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_browseButtonActionPerformed
     {//GEN-HEADEREND:event_browseButtonActionPerformed
-	// TODO add your handling code here:
+	int val = chooser.showDialog(this, "Select");
+	if (val == JFileChooser.APPROVE_OPTION)
+	{
+	    locationField.setText(chooser.getSelectedFile().getPath());
+	    updateFolder();
+	}
     }//GEN-LAST:event_browseButtonActionPerformed
+
+    private void nameFieldCaretUpdate(javax.swing.event.CaretEvent evt)//GEN-FIRST:event_nameFieldCaretUpdate
+    {//GEN-HEADEREND:event_nameFieldCaretUpdate
+    }//GEN-LAST:event_nameFieldCaretUpdate
+
+    private void locationFieldCaretPositionChanged(java.awt.event.InputMethodEvent evt)//GEN-FIRST:event_locationFieldCaretPositionChanged
+    {//GEN-HEADEREND:event_locationFieldCaretPositionChanged
+    }//GEN-LAST:event_locationFieldCaretPositionChanged
+
+    private void podFieldCaretPositionChanged(java.awt.event.InputMethodEvent evt)//GEN-FIRST:event_podFieldCaretPositionChanged
+    {//GEN-HEADEREND:event_podFieldCaretPositionChanged
+    }//GEN-LAST:event_podFieldCaretPositionChanged
+
+    private void nameFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_nameFieldKeyReleased
+    {//GEN-HEADEREND:event_nameFieldKeyReleased
+	// TODO add your handling code here:
+	updateFolder();
+    }//GEN-LAST:event_nameFieldKeyReleased
+
+    private void locationFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_locationFieldKeyReleased
+    {//GEN-HEADEREND:event_locationFieldKeyReleased
+	// TODO add your handling code here:
+	updateFolder();
+    }//GEN-LAST:event_locationFieldKeyReleased
+
+    private void podFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_podFieldKeyReleased
+    {//GEN-HEADEREND:event_podFieldKeyReleased
+	// TODO add your handling code here:
+	updateFolder();
+    }//GEN-LAST:event_podFieldKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
+    private javax.swing.JLabel errorLabel;
     private javax.swing.JTextField folderField;
     private javax.swing.JLabel folderLabel;
     private javax.swing.JPanel jPanel1;
@@ -194,5 +295,82 @@ public final class FanProjectPanel1 extends JPanel {
     private javax.swing.JLabel podFolderLabel;
     private javax.swing.JLabel podLabel;
     // End of variables declaration//GEN-END:variables
+
+    // custom
+    public boolean isValid()
+    {
+	if (folderField == null)
+	{
+	    return false;
+	}
+	String loc = locationField.getText();
+	String folder=folderField.getText();
+	String err = "";
+	if (loc == null || loc.length() < 1)
+	{
+	    err = "Please choose a location.";
+	} else
+	{
+	    File locF = new File(loc);
+	    if (!locF.exists() || !locF.isDirectory() || !locF.canWrite())
+	    {
+		err = "Location must be an existing, writable directory.";
+	    } else
+	    {
+		String name = nameField.getText();
+		if (!checkName(name))
+		{
+		    err = "Please enter a valid project name.";
+		} else if (new File(folder).exists())
+		{
+		    err = "This folder already exists.";
+		}
+		else if(podCheckbox.isSelected())
+		{
+		    if(!checkName(podField.getText()))
+			err="Pod name contains invalid characters";
+		}
+	    }
+	}
+	errorLabel.setText(err);
+	return err.length() == 0;
+    }
+
+    private void updateFolder()
+    {
+	String dir=locationField.getText();
+	dir+=(dir.endsWith(File.separator)?"":File.separator)+nameField.getText();
+	String podDir=dir+File.separator+podField.getText();
+	folderField.setText(dir);
+	podFolderField.setText(podDir);
+	//isValid()	parent.fireChangeEvent();
+    }
+
+    private boolean checkName(String text)
+    {
+	return VALID_NAME.matcher(text).matches();
+    }
+
+    String getProjectFolder()
+    {
+	return folderField.getText();
+    }
+
+    String getProjectName()
+    {
+	return nameField.getText();
+    }
+
+    String getPodName()
+    {
+	if(!podCheckbox.isSelected())
+	    return null;
+	return podField.getText();
+    }
+
+    String getPodFolder()
+    {
+	return podFolderField.getText();
+    }
 }
 

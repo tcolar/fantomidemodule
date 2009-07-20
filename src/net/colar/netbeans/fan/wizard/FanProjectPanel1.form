@@ -41,6 +41,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="errorLabel" alignment="0" pref="352" max="32767" attributes="0"/>
                       <Component id="jSeparator1" alignment="1" pref="352" max="32767" attributes="0"/>
                       <Component id="mainCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="podCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -113,7 +114,8 @@
                       <Component id="podFolderLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="podFolderField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="12" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="errorLabel" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -174,6 +176,10 @@
               <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPanel1.nameField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="nameFieldCaretUpdate"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nameFieldKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="locationField">
           <Properties>
@@ -181,6 +187,10 @@
               <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPanel1.locationField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="caretPositionChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="locationFieldCaretPositionChanged"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="locationFieldKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="folderField">
           <Properties>
@@ -196,6 +206,10 @@
               <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPanel1.podField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="caretPositionChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="podFieldCaretPositionChanged"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="podFieldKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="podFolderLabel">
           <Properties>
@@ -221,6 +235,19 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browseButtonActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="errorLabel">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="DejaVu Sans" size="13" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" red="ff" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPanel1.errorLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
