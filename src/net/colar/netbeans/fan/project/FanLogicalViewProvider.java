@@ -4,72 +4,82 @@
  */
 package net.colar.netbeans.fan.project;
 
+import java.awt.Image;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
-import org.openide.ErrorManager;
-import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
+import org.netbeans.spi.project.ui.support.CommonProjectActions;
+import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
+import org.openide.util.Mutex.Action;
 
 /**
  *
  * @author thibautc
  */
-public class FanLogicalViewProvider implements LogicalViewProvider
+public class FanLogicalViewProvider /*implements LogicalViewProvider*/
 {
-
+/*
     private final FanProject project;
-    private Node nd;
 
-    /** Creates a new instance of FanLogicalView */
-    public FanLogicalViewProvider(FanProject project)
-    {
-	this.project = project;
+    public FanLogicalViewP(FanProject project) {
+        this.project = project;
     }
 
-    void notifyChange()
-    {
-	if (nd instanceof FanLogicalView)
-	{
-	    ((FanLogicalView) nd).notifyMainNameChanged();
-	}
+    @Override
+    public Node createLogicalView() {
+        return new RootNode(project);
     }
 
-    public Node createLogicalView()
-    {
-	if (nd == null)
-	{
-	    try
-	    {
-		nd = new FanLogicalView(project);
-	    } catch (DataObjectNotFoundException donfe)
-	    {
-		ErrorManager.getDefault().notify(donfe);
-		nd = new AbstractNode(Children.LEAF);
-		nd.setDisplayName(donfe.getMessage());
-	    }
-	}
-	return nd;
+    private static final class RootNode extends AbstractNode {
+
+        public static final String DEMO_PROJECT_ICON_PATH =
+                "org/netbeans/demo/project/icon.png";
+
+        public static final String REGISTERED_NODE_LOCATION =
+                "Projects/org-netbeans-demo-project-DemoProject/Nodes";
+
+        final DemoProject project;
+
+        public RootNode(DemoProject project) {
+            super(NodeFactorySupport.createCompositeChildren
+                    (project, REGISTERED_NODE_LOCATION));
+            this.project = project;
+            setIconBaseWithExtension(DEMO_PROJECT_ICON_PATH);
+        }
+
+        @Override
+        public Action[] getActions(boolean arg0) {
+            Action[] nodeActions = new Action[7];
+            nodeActions[0] = CommonProjectActions.newFileAction();
+            nodeActions[1] = CommonProjectActions.copyProjectAction();
+            nodeActions[2] = CommonProjectActions.deleteProjectAction();
+            nodeActions[5] = CommonProjectActions.setAsMainProjectAction();
+            nodeActions[6] = CommonProjectActions.closeProjectAction();
+            return nodeActions;
+        }
+
+        @Override
+        public Image getIcon(int type) {
+            return ImageUtilities.loadImage(DEMO_PROJECT_ICON_PATH);
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            return getIcon(type);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return project.getProjectDirectory().getName();
+        }
     }
 
-    public Node findPath(Node root, Object target)
-    {
-	System.err.println("GOT A " + target + " of " + target.getClass());
-	DataObject ob = target instanceof DataObject ? (DataObject) target : null;
-
-	if (ob != null)
-	{
-	    Node[] n = root.getChildren().getNodes(true);
-	    for (int i = 0; i < n.length; i++)
-	    {
-		if (n[i].getCookie(DataObject.class) == ob)
-		{
-		    return n[i];
-		}
-	    }
-	}
-	return null;
+    @Override
+    public Node findPath(Node root, Object target) {
+        //leave unimplemented for now
+        return null;
     }
+*/
 }
 

@@ -12,9 +12,6 @@ package net.colar.netbeans.fan.project;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
 import java.util.Properties;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -24,11 +21,8 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
-import org.openide.ErrorManager;
-import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
@@ -49,7 +43,7 @@ public class FanProject implements Project, ProjectInformation, ActionProvider
 	lkp = Lookups.fixed(new Object[]
 		{
 		    this,
-		    new FanLogicalViewProvider(this),
+		    new FanLogicalView(this),
 		    state,
 		    props,
 		});
