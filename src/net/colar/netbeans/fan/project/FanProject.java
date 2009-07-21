@@ -39,7 +39,7 @@ public class FanProject implements Project, ProjectInformation, ActionProvider
     private final FileObject dir;
     private final Lookup lkp;
     private static final String MAIN_FILE_KEY = "main.file";
-    private static final String PROJECT_DIR = "fanproject";
+    private static final String PROJECT_DIR = "nbproject";
     final RequestProcessor rp;
     final Properties props = new Properties();
 
@@ -245,7 +245,7 @@ public class FanProject implements Project, ProjectInformation, ActionProvider
 		    ob.equals(getMainFile());
 	}*/
     }
-
+/*
     void loadProperties(Properties props) throws IOException
     {
 	FileObject ob = dir.getFileObject(PROJECT_DIR);
@@ -297,7 +297,7 @@ public class FanProject implements Project, ProjectInformation, ActionProvider
     {
 	saveProperties(props);
     }
-
+*/
     static boolean isProject(FileObject projectDirectory)
     {
 	return projectDirectory.getFileObject(PROJECT_DIR) != null;
