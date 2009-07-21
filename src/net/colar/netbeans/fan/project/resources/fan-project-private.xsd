@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.netbeans.org/ns/fan-project-private/1"
+            xmlns="http://www.netbeans.org/ns/fan-project-private/1"
+            elementFormDefault="qualified">
+    <xsd:element name="data"/>
+</xsd:schema>
