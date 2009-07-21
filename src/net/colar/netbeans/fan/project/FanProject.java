@@ -306,8 +306,8 @@ public class FanProject implements Project, ProjectInformation, ActionProvider
     {
 	return new Action[]
 		{
-		    new GA(COMMAND_BUILD),
-		    new GA(COMMAND_CLEAN),
+		    new GA("build"),
+		    new GA("clean"),
 		};
     }
 
@@ -319,7 +319,7 @@ public class FanProject implements Project, ProjectInformation, ActionProvider
 	public GA(String key)
 	{
 	    this.key = key;
-	    putValue(NAME, NbBundle.getMessage(FanProject.class, key));
+	    putValue(NAME, key);
 	}
 
 	public boolean isEnabled()
