@@ -53,7 +53,7 @@ public class FanProject implements Project, ProjectInformation, ActionProvider
 		    state,
 		    props,
 		});
-	if (dir.getFileObject(PROJECT_DIR) != null)
+	/*if (dir.getFileObject(PROJECT_DIR) != null)
 	{
 	    try
 	    {
@@ -63,6 +63,7 @@ public class FanProject implements Project, ProjectInformation, ActionProvider
 		ErrorManager.getDefault().notify(ex);
 	    }
 	}
+	*/
 	rp = new RequestProcessor("Resolver thread for " + dir.getName() + " Fan Project", Thread.MIN_PRIORITY,
 		true);
     }
