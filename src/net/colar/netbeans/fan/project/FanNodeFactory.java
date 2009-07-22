@@ -34,19 +34,19 @@ public class FanNodeFactory implements NodeFactory
     @Override
     public NodeList createNodes(Project prj)
     {
-	FanNode nd = getNode(prj,prj.getProjectDirectory());
+	FanNode nd = (FanNode)getNode(prj,prj.getProjectDirectory());
 	nd.enhance();
 	return NodeFactorySupport.fixedNodeList(nd);
     }
 
-    private FanNode getNode(Project project, FileObject dir)
+    public Node getNode(Project project, FileObject dir)
     {
 	System.err.println(dir.getPath());
 	FileObject[] children = dir.getChildren();
 	FanNode[] nodes = new FanNode[children.length];
 	for (int i = 0; i != children.length; i++)
 	{
-	    nodes[i] = getNode(project, children[i]);
+	    nodes[i] = (FanNode)getNode(project, children[i]);
 	}
 	Children childs = Children.LEAF;
 	if (nodes.length > 0)
@@ -133,7 +133,7 @@ public class FanNodeFactory implements NodeFactory
 	    {
 		actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Project", null));
 	    }
-	    if(getChildren().getNodesCount()!=0)
+	    else if(getChildren().getNodesCount()!=0)
 	    {
 		actions.add(CommonProjectActions.newFileAction());
 	    }

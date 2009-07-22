@@ -21,6 +21,7 @@ public class FanLogicalView implements LogicalViewProvider
 
     public FanLogicalView(FanProject project)
     {
+	super();
 	this.project = project;
     }
 
@@ -34,9 +35,7 @@ public class FanLogicalView implements LogicalViewProvider
     @Override
     public Node findPath(Node root, Object target)
     {
-	//leave unimplemented for now
 	return null;
     }
-
 }
 
