@@ -7,13 +7,17 @@ package net.colar.netbeans.fan.project;
 import java.util.Vector;
 import javax.swing.Action;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.netbeans.spi.project.ui.support.NodeList;
+import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.Node;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -30,18 +34,19 @@ public class FanNodeFactory implements NodeFactory
     @Override
     public NodeList createNodes(Project prj)
     {
-	AbstractNode nd = getNode(prj.getProjectDirectory());
+	FanNode nd = getNode(prj,prj.getProjectDirectory());
+	nd.enhance();
 	return NodeFactorySupport.fixedNodeList(nd);
     }
 
-    private FanNode getNode(FileObject dir)
+    private FanNode getNode(Project project, FileObject dir)
     {
 	System.err.println(dir.getPath());
 	FileObject[] children = dir.getChildren();
 	FanNode[] nodes = new FanNode[children.length];
 	for (int i = 0; i != children.length; i++)
 	{
-	    nodes[i] = getNode(children[i]);
+	    nodes[i] = getNode(project, children[i]);
 	}
 	Children childs = Children.LEAF;
 	if (nodes.length > 0)
@@ -49,7 +54,7 @@ public class FanNodeFactory implements NodeFactory
 	    childs = new Children.Array();
 	    childs.add(nodes);
 	}
-	FanNode nd = new FanNode(dir, childs);
+	FanNode nd = new FanNode(project, dir, childs);
 	return nd;
 
     }
@@ -59,13 +64,22 @@ public class FanNodeFactory implements NodeFactory
 	boolean isPod=false;
 	boolean isRoot=false;
 	boolean isRunnable=false;
+	private final FileObject dir;
 
-	public FanNode(FileObject dir, Children children)
+	public FanNode(Project project, FileObject dir, Children children)
 	{
-	    super(children);
+	    super(children,Lookups.singleton(project));
+	    this.dir=dir;
 	    setDisplayName(dir.getNameExt());
+	}
+
+	private void enhance()
+	{
 	    doIcon(dir);
-	    //isRoot=getParentNode()==null;
+	    Children children=getChildren();
+	    Node[] nodes=children.getNodes();
+	    for(int i=0;i!=nodes.length;i++)
+		((FanNode)nodes[i]).enhance();
 	}
 
 	private void doIcon(FileObject dir)
@@ -76,8 +90,8 @@ public class FanNodeFactory implements NodeFactory
 		if (dir.getNameExt().equalsIgnoreCase("build.fan"))
 		{
 		    setIconBaseWithExtension("net/colar/netbeans/fan/project/resources/fanBuild.png");
-		    //((FanNode) getParentNode()).setIconBaseWithExtension("net/colar/netbeans/fan/fan.png");
-		    //((FanNode) getParentNode()).isPod=true;
+		    ((FanNode) getParentNode()).setIconBaseWithExtension("net/colar/netbeans/fan/fan.png");
+		    ((FanNode) getParentNode()).isPod=true;
 		} else if (dir.getExt().equalsIgnoreCase("fan"))
 		{
 		    setIconBaseWithExtension("net/colar/netbeans/fan/project/resources/fanFile.png");
@@ -105,24 +119,26 @@ public class FanNodeFactory implements NodeFactory
 	}
 
 	@Override
-	public Action[] getActions(boolean arg0)
+	public Action[] getActions(boolean popup)
 	{
 	    Vector<Action> actions=new Vector();
 	    if(isRoot)
-	    {
-		CommonProjectActions.setAsMainProjectAction();
-		CommonProjectActions.deleteProjectAction();
-		CommonProjectActions.closeProjectAction();
+	    {		
+		actions.add(CommonProjectActions.copyProjectAction());
+		actions.add(CommonProjectActions.deleteProjectAction());
+		actions.add(CommonProjectActions.closeProjectAction());
+		actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Project", null));
 	    }
-	    if(!isRoot && isPod)
+	    else if(isPod)
 	    {
+		actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Project", null));
 	    }
-	    if(! isLeaf())
+	    if(getChildren().getNodesCount()!=0)
 	    {
-		CommonProjectActions.newFileAction();
+		actions.add(CommonProjectActions.newFileAction());
 	    }
 
-	    return (Action[])actions.toArray();
+	    return actions.toArray(new Action[0]);
 	}
     }
 }

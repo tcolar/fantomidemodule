@@ -28,6 +28,7 @@ public class FanLogicalView implements LogicalViewProvider
     public Node createLogicalView()
     {
 	return NodeFactorySupport.createCompositeChildren(project, REGISTERED_NODE_LOCATION).getNodeAt(0);
+	//return new RootNode(project);
     }
 
     @Override
@@ -36,5 +37,6 @@ public class FanLogicalView implements LogicalViewProvider
 	//leave unimplemented for now
 	return null;
     }
+
 }
 
