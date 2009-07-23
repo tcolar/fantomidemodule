@@ -110,7 +110,7 @@ public class FanProject implements Project, ProjectInformation
 	    ActionProvider.COMMAND_COPY,
 	    ActionProvider.COMMAND_BUILD,
 	    ActionProvider.COMMAND_CLEAN,
-	/*ActionProvider.COMMAND_RUN,
+	ActionProvider.COMMAND_RUN,/*
 	ActionProvider.COMMAND_RUN_SINGLE,
 	ActionProvider.COMMAND_TEST,
 	ActionProvider.COMMAND_COPY,
