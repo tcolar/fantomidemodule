@@ -37,6 +37,6 @@ public final class FanProjectFactory implements ProjectFactory
 
     public void saveProject(Project project) throws IOException, ClassCastException
     {
-	throw new UnsupportedOperationException("Not supported yet.");
+	//throw new UnsupportedOperationException("Not supported yet.");
     }
 }

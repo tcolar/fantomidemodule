@@ -122,18 +122,18 @@ public class FanNodeFactory implements NodeFactory
 	public Action[] getActions(boolean popup)
 	{
 	    Vector<Action> actions=new Vector();
-	    if(isRoot)
+	    if(isRoot || isPod)
 	    {		
 		actions.add(CommonProjectActions.copyProjectAction());
 		actions.add(CommonProjectActions.deleteProjectAction());
 		actions.add(CommonProjectActions.closeProjectAction());
 		actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Project", null));
 	    }
-	    else if(isPod)
+	    if(isPod)
 	    {
-		actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Project", null));
+		//
 	    }
-	    else if(getChildren().getNodesCount()!=0)
+	    if(getChildren().getNodesCount()!=0)
 	    {
 		actions.add(CommonProjectActions.newFileAction());
 	    }

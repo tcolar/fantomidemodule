@@ -9,23 +9,17 @@ package net.colar.netbeans.fan.project;
  * http://hg.netbeans.org/main/contrib/file/e3f63eeb0f1f/docbook.project/src/org/netbeans/modules/docbook/project/DbProject.java
  * @author thibautc
  */
-import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.util.Properties;
-import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import net.colar.netbeans.fan.platform.FanExecutor;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
-import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
-import org.netbeans.spi.project.ui.support.NodeFactorySupport;
-import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.openide.filesystems.FileObject;
-import org.openide.nodes.AbstractNode;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
@@ -36,8 +30,7 @@ public class FanProject implements Project, ProjectInformation
 
     private final FileObject dir;
     private final Lookup lkp;
-    private static final String MAIN_FILE_KEY = "main.file";
-    private static final String PROJECT_DIR = "nbproject";
+//    private static final String PROJECT_DIR = "nbproject";
     final RequestProcessor rp;
     final Properties props = new Properties();
 
@@ -98,7 +91,8 @@ public class FanProject implements Project, ProjectInformation
 
     static boolean isProject(FileObject projectDirectory)
     {
-	return projectDirectory.getFileObject(PROJECT_DIR) != null;
+	//return projectDirectory.getFileObject(PROJECT_DIR) != null;
+	return projectDirectory.getFileObject(FanProjectFactory.FAN_BUILD_FILE)!=null;
     }
 
     private final class FanActionProvider implements ActionProvider
@@ -132,14 +126,13 @@ public class FanProject implements Project, ProjectInformation
 	    {
 		DefaultProjectOperations.performDefaultDeleteOperation(FanProject.this);
 	    }
-	    if (string.equals(ActionProvider.COMMAND_COPY))
+	    else if (string.equals(ActionProvider.COMMAND_COPY))
 	    {
 		DefaultProjectOperations.performDefaultCopyOperation(FanProject.this);
 	    }
-	    //Here we find the Ant script and call the target we need!
-	    if (string.equals(ActionProvider.COMMAND_BUILD))
+	    else if (string.equals(ActionProvider.COMMAND_RUN))
 	    {
-		//todo
+		new FanExecutor().runFanScript(null);
 	    }
 	}
 
