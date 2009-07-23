@@ -264,9 +264,9 @@ public class FanExecution {
     private LineConvertorFactory lineConvertorFactory(List<LineConvertor> convertors) {
         LineConvertor[] convertorArray = convertors.toArray(new LineConvertor[convertors.size()]);
         if (addStandardConvertors) {
-            return PythonLineConvertorFactory.withStandardConvertors(fileLocator, convertorArray);
+            return FanLineFactory.withStandardConvertors(fileLocator, convertorArray);
         }
-        return PythonLineConvertorFactory.create(fileLocator, convertorArray);
+        return FanLineFactory.create(fileLocator, convertorArray);
     }
 
 
@@ -296,7 +296,7 @@ public class FanExecution {
         descriptor = descriptor.frontWindow(showWindow);
     }
 
-    private final PythonOutputProcessor outProcessor = new PythonOutputProcessor();
+    private final FanOutputProcessor outProcessor = new FanOutputProcessor();
     /**
      * Attach a Processor to collect the output of the running process
      */
