@@ -4,11 +4,8 @@
  */
 package net.colar.netbeans.fan.project;
 
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
-import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 
 /**
