@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.colar.netbeans.fan.antlr.actions;
+package net.colar.netbeans.fan.actions;
 
 import javax.swing.JOptionPane;
 import net.colar.netbeans.fan.project.FanProject;

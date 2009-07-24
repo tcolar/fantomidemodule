@@ -4,8 +4,11 @@
  */
 package net.colar.netbeans.fan.project;
 
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
+import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 
 /**
@@ -29,7 +32,6 @@ public class FanLogicalView implements LogicalViewProvider
     public Node createLogicalView()
     {
 	return NodeFactorySupport.createCompositeChildren(project, REGISTERED_NODE_LOCATION).getNodeAt(0);
-	//return new RootNode(project);
     }
 
     @Override

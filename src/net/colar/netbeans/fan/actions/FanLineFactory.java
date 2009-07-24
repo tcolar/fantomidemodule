@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.colar.netbeans.fan.antlr.actions;
+package net.colar.netbeans.fan.actions;
 
 import java.util.ArrayList;
 import java.util.List;

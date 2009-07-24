@@ -10,15 +10,19 @@ package net.colar.netbeans.fan.project;
  * @author thibautc
  */
 import java.beans.PropertyChangeListener;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import net.colar.netbeans.fan.platform.FanExecutor;
+import net.colar.netbeans.fan.actions.Command;
+import net.colar.netbeans.fan.actions.RunFanFile;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
-import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
+import org.openide.LifecycleManager;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
@@ -41,7 +45,7 @@ public class FanProject implements Project, ProjectInformation
 		{
 		    this,
 		    new FanLogicalView(this),
-		    new FanActionProvider(),
+		    new FanActionProvider(this),
 		    state,
 		    props,
 		});
@@ -92,56 +96,75 @@ public class FanProject implements Project, ProjectInformation
     static boolean isProject(FileObject projectDirectory)
     {
 	//return projectDirectory.getFileObject(PROJECT_DIR) != null;
-	return projectDirectory.getFileObject(FanProjectFactory.FAN_BUILD_FILE)!=null;
+	return projectDirectory.getFileObject(FanProjectFactory.FAN_BUILD_FILE) != null;
     }
 
     private final class FanActionProvider implements ActionProvider
     {
 
-	private String[] supported = new String[]
+	FanProject project;
+	private final Map<String, Command> commands;
+
+	public FanActionProvider(FanProject project)
 	{
-	    ActionProvider.COMMAND_DELETE,
-	    ActionProvider.COMMAND_COPY,
-	    ActionProvider.COMMAND_BUILD,
-	    ActionProvider.COMMAND_CLEAN,
-	ActionProvider.COMMAND_RUN,/*
-	ActionProvider.COMMAND_RUN_SINGLE,
-	ActionProvider.COMMAND_TEST,
-	ActionProvider.COMMAND_COPY,
-	ActionProvider.COMMAND_DELETE,
-	ActionProvider.COMMAND_MOVE,
-	ActionProvider.COMMAND_RENAME,*/
-	};
+	    commands = new LinkedHashMap<String, Command>();
+	    Command[] commandArray = new Command[]
+	    {
+		new RunFanFile(project, false),
+	    };
+	    for (Command command : commandArray)
+	    {
+		commands.put(command.getCommandId(), command);
+	    }
+	}
 
 	@Override
 	public String[] getSupportedActions()
 	{
-	    return supported;
+	    final Set<String> names = commands.keySet();
+	    return names.toArray(new String[names.size()]);
 	}
 
 	@Override
-	public void invokeAction(String string, Lookup lookup) throws IllegalArgumentException
+	public void invokeAction(final String commandName, final Lookup context) throws IllegalArgumentException
 	{
-	    if (string.equals(ActionProvider.COMMAND_DELETE))
+	    final Command command = findCommand(commandName);
+	    assert command != null;
+	    if (command.saveRequired())
 	    {
-		DefaultProjectOperations.performDefaultDeleteOperation(FanProject.this);
+		LifecycleManager.getDefault().saveAll();
 	    }
-	    else if (string.equals(ActionProvider.COMMAND_COPY))
+	    if (!command.asyncCallRequired())
 	    {
-		DefaultProjectOperations.performDefaultCopyOperation(FanProject.this);
-	    }
-	    else if (string.equals(ActionProvider.COMMAND_RUN))
+		command.invokeAction(context);
+	    } else
 	    {
-		new FanExecutor().runFanScript(null);
+		RequestProcessor.getDefault().post(new Runnable()
+		{
+
+		    public void run()
+		    {
+			command.invokeAction(context);
+		    }
+		});
 	    }
 	}
 
 	@Override
-	public boolean isActionEnabled(String command, Lookup lookup) throws IllegalArgumentException
+	public boolean isActionEnabled(String commandName, Lookup context) throws IllegalArgumentException
 	{
 	    return true;
+	    /*
+	    final Command command = findCommand(commandName);
+	    assert command != null;
+	    return command.isActionEnabled(context);
+	    */
+	}
+
+	private Command findCommand(final String commandName)
+	{
+	    assert commandName != null;
+	    return commands.get(commandName);
 	}
     }
-
- 
 }

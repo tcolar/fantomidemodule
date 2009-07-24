@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.colar.netbeans.fan.antlr.actions;
+package net.colar.netbeans.fan.actions;
 
 import java.io.IOException;
 import org.netbeans.api.extexecution.input.InputProcessor;
