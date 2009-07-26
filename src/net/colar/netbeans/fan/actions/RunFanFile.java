@@ -15,10 +15,12 @@ import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 
-public class RunFanFile extends Command
+/**
+ * Run a single fan file (.fan, .fwt)
+ * @author tcolar
+ */
+public class RunFanFile extends FanAction
 {
-    //PythonPlatformManager manager = PythonPlatformManager.getInstance();
-
     protected boolean isTest;
 
     public RunFanFile(FanProject project, boolean isTest)
@@ -37,11 +39,6 @@ public class RunFanFile extends Command
     public void invokeAction(Lookup context) throws IllegalArgumentException
     {
 	Node[] activatedNodes = getSelectedNodes();
-	/*
-	 * The node has my Fannode in it, which has file path
-	 * but can't get to it(private)
-	 * Have to do some layered context bs .. but that's not working either
-	*/
 	FilterNode nd=(FilterNode)activatedNodes[0];
 	FileObject file = (FileObject)nd.getValue("FanFile");
 	if (file.getMIMEType().equals(FanTokenID.FAN_MIME_TYPE))
@@ -49,66 +46,12 @@ public class RunFanFile extends Command
 	    String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
 	    String script = FileUtil.toFile(file).getAbsolutePath();
 
-	    final FanProject pyProject = getProject();
-
-	    //String target = FileUtil.getRelativePath(getRoot(project.getSourceRoots().getRoots(),file), file);
-            /*if (isTest || file.getName().endsWith("_test")) { // NOI18N
-
-	    // See if this looks like a test file; if not, see if we can find its corresponding
-	    // test
-	    boolean isTestFile = (file.getName().endsWith("_test"));
-	    if (!isTestFile) {
-	    for (FileObject testRoot : pyProject.getTestSourceRootFiles()) {
-	    if (FileUtil.isParentOf(testRoot, file)) {
-	    isTestFile = true;
-	    break;
-	    }
-	    }
-	    }
-	    if (!isTestFile) {
-	    // Try to find the matching test
-	    LocationResult result = new GotoTest().findTest(file, -1);
-	    if (result != null && result.getFileObject() != null) {
-	    file = result.getFileObject();
-	    }
-	    }
-
-	    // Run test normally - don't pop up browser
-	    TestRunner testRunner = PythonActionProvider.getTestRunner(TestRunner.TestType.PY_UNIT);
-	    if (testRunner != null) {
-	    testRunner.getInstance().runTest(file, false);
-	    return;
-	    }
-	    }
-	     */
 	    FanExecution fanExec = new FanExecution();
 	    fanExec.setDisplayName(file.getName());
 	    fanExec.setWorkingDirectory(path);
 	    fanExec.setCommand(FanPlatform.getInstance().getFanBinaryPath());
 	    fanExec.setCommandArgs(script);
-	    /*if(PythonOptions.getInstance().getPromptForArgs()){
-	    String args =  JOptionPane.showInputDialog("Enter the args for this script.", "");
-	    pyexec.setScriptArgs(args);
 
-	    }*/
-	    /*final PythonPlatform platform = checkProjectPythonPlatform(pyProject);
-	    if ( platform == null )
-	    return ; // invalid platform user has been warn in check so safe to return
-	    pyexec.setCommand(platform.getInterpreterCommand());
-	    pyexec.setScript(script);
-	    pyexec.setCommandArgs(platform.getInterpreterArgs());
-	    pyexec.setPath(PythonPlatform.buildPath(super.buildPythonPath(platform, pyProject)));
-	    pyexec.setJavaPath(PythonPlatform.buildPath(super.buildJavaPath(platform, pyProject)));
-	    pyexec.setShowControls(true);
-	    pyexec.setShowInput(true);
-	    pyexec.setShowWindow(true);
-	    pyexec.addStandardRecognizers();
-
-	    PythonCoverageProvider coverageProvider = PythonCoverageProvider.get(pyProject);
-	    if (coverageProvider != null && coverageProvider.isEnabled()) {
-	    pyexec = coverageProvider.wrapWithCoverage(pyexec);
-	    }
-	     */
 	    fanExec.run();
 	}
     }
@@ -116,7 +59,7 @@ public class RunFanFile extends Command
     @Override
     public boolean isActionEnabled(Lookup context) throws IllegalArgumentException
     {
-	boolean results = false; //super.enable(activatedNodes);
+	boolean results = false;
 	Node[] activatedNodes = getSelectedNodes();
 	System.err.println("Active nodes: "+activatedNodes.length);
 	if (activatedNodes != null && activatedNodes.length > 0)

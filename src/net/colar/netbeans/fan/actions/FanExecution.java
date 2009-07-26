@@ -24,9 +24,7 @@ import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
 import org.openide.util.Exceptions;
 
 /**
- *
- * @author Allan Davis
- * @author Jean-Yves
+ * Mostly copied from python module
  */
 public class FanExecution {
     // execution commands
@@ -58,21 +56,12 @@ public class FanExecution {
             .frontWindow(true).controllable(true).inputVisible(true)
                 .showProgress(true).showSuspended(true);
 
-    //private InputOutput io;
-
     /**
      * Execute the process described by this object
      * @return a Future object that provides the status of the running process
      */
     public synchronized Future<Integer> run(){
         try {
-            // Setup process Information
-
-
-            // Setup Descriptor Information
-            //descriptor = buildDescriptor();
-            //process.
-            //build Service
             ExecutionService service =
                     ExecutionService.newService(
                     buildProcess(),
@@ -93,14 +82,10 @@ public class FanExecution {
         ExternalProcessBuilder processBuilder =
                     new ExternalProcessBuilder(command);
             processBuilder = processBuilder.workingDirectory(new File(workingDirectory));
-            // @@@Jean-Yves check for empty arguments as well as null
             if ( (commandArgs != null) && ( commandArgs.trim().length() > 0 )  )
                processBuilder = processBuilder.addArgument(commandArgs);
 	    
-System.err.println("Command: "+command+" "+commandArgs);
-
             processBuilder = processBuilder.redirectErrorStream(redirect);
-
             return processBuilder;
     }
 

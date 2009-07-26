@@ -13,9 +13,11 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 
 /**
- *
+ * Node Factory: creates teh nodes for a project
  * @author thibautc
  */
+
+// This annotation will register this factory with Netbeans
 @NodeFactory.Registration(projectType = "net-colar-netbeans-fan-project-FanProject", position = 200)
 public class FanNodeFactory implements NodeFactory
 {
@@ -28,13 +30,18 @@ public class FanNodeFactory implements NodeFactory
     public NodeList createNodes(Project prj)
     {
 	FanNode nd = (FanNode)getNode(prj,prj.getProjectDirectory());
-	nd.enhance();
+	FanNode.enhanceNodeTree(nd);
 	return NodeFactorySupport.fixedNodeList(nd);
     }
 
+    /**
+     * Get a node and it's subnodes (through recursion)
+     * @param project
+     * @param dir
+     * @return
+     */
     public Node getNode(Project project, FileObject dir)
     {
-	System.err.println(dir.getPath());
 	FileObject[] children = dir.getChildren();
 	FanNode[] nodes = new FanNode[children.length];
 	for (int i = 0; i != children.length; i++)

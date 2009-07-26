@@ -16,7 +16,7 @@ import java.util.Properties;
 import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import net.colar.netbeans.fan.actions.Command;
+import net.colar.netbeans.fan.actions.FanAction;
 import net.colar.netbeans.fan.actions.RunFanFile;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -24,9 +24,9 @@ import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.LifecycleManager;
 import org.openide.filesystems.FileObject;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
 public class FanProject implements Project, ProjectInformation
@@ -34,7 +34,6 @@ public class FanProject implements Project, ProjectInformation
 
     private final FileObject dir;
     private final Lookup lkp;
-//    private static final String PROJECT_DIR = "nbproject";
     final RequestProcessor rp;
     final Properties props = new Properties();
 
@@ -75,9 +74,7 @@ public class FanProject implements Project, ProjectInformation
 
     public Icon getIcon()
     {
-	return new ImageIcon(
-		Utilities.loadImage(
-		"net/colar/netbeans/fan/fan.png"));
+	return new ImageIcon(ImageUtilities.loadImage("net/colar/netbeans/fan/fan.png"));
     }
 
     public Project getProject()
@@ -95,7 +92,7 @@ public class FanProject implements Project, ProjectInformation
 
     static boolean isProject(FileObject projectDirectory)
     {
-	//return projectDirectory.getFileObject(PROJECT_DIR) != null;
+	//TODO: is this enough ?
 	return projectDirectory.getFileObject(FanProjectFactory.FAN_BUILD_FILE) != null;
     }
 
@@ -103,16 +100,16 @@ public class FanProject implements Project, ProjectInformation
     {
 
 	FanProject project;
-	private final Map<String, Command> commands;
+	private final Map<String, FanAction> commands;
 
 	public FanActionProvider(FanProject project)
 	{
-	    commands = new LinkedHashMap<String, Command>();
-	    Command[] commandArray = new Command[]
+	    commands = new LinkedHashMap<String, FanAction>();
+	    FanAction[] commandArray = new FanAction[]
 	    {
 		new RunFanFile(project, false),
 	    };
-	    for (Command command : commandArray)
+	    for (FanAction command : commandArray)
 	    {
 		commands.put(command.getCommandId(), command);
 	    }
@@ -128,7 +125,7 @@ public class FanProject implements Project, ProjectInformation
 	@Override
 	public void invokeAction(final String commandName, final Lookup context) throws IllegalArgumentException
 	{
-	    final Command command = findCommand(commandName);
+	    final FanAction command = findCommand(commandName);
 	    assert command != null;
 	    if (command.saveRequired())
 	    {
@@ -153,6 +150,7 @@ public class FanProject implements Project, ProjectInformation
 	@Override
 	public boolean isActionEnabled(String commandName, Lookup context) throws IllegalArgumentException
 	{
+	    //TODO: enhance this as needed
 	    return true;
 	    /*
 	    final Command command = findCommand(commandName);
@@ -161,7 +159,7 @@ public class FanProject implements Project, ProjectInformation
 	    */
 	}
 
-	private Command findCommand(final String commandName)
+	private FanAction findCommand(final String commandName)
 	{
 	    assert commandName != null;
 	    return commands.get(commandName);

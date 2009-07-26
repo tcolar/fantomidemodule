@@ -14,9 +14,7 @@ import org.netbeans.api.extexecution.print.LineConvertors;
 import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
 
 /**
- * Python LineConvertorFactory - based on the Ruby one by Erno Mononen
- *
- * @author Erno Mononen
+ * Copied from python module
  */
 public final class FanLineFactory implements LineConvertorFactory {
     // See the traceback module for details

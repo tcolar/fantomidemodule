@@ -17,12 +17,14 @@ import org.openide.nodes.Node;
 import org.openide.util.lookup.Lookups;
 
 /**
- *
+ * Fan project Nodes (used within logical view)
  * @author tcolar
  */
 public class FanNode extends AbstractNode
 {
 
+    public static final String ATTR_NODE_FILEOBJECT = "NODE_FILEOBJECT";
+    //TODO: are those vars working ?
     boolean isPod = false;
     boolean isRoot = false;
     boolean isRunnable = false;
@@ -30,21 +32,28 @@ public class FanNode extends AbstractNode
 
     public FanNode(Project project, FileObject file, Children children)
     {
-	super(children,Lookups.singleton(project));
-	setValue("FanFile", file);
+	super(children, Lookups.singleton(project));
 	this.file = file;
 	setDisplayName(file.getNameExt());
+	// Set this attribute so we can access it from a Filenode
+	// which will wrap this Node but not give acces to it directly
+	// (Has to go through attributes)
+	setValue(ATTR_NODE_FILEOBJECT, file);
     }
 
-    
-    protected void enhance()
+    /**
+     * Recursively enhance this node and subnodes
+     * Usually called on root node
+     * Mostly set icon according to file type
+     */
+    protected static void enhanceNodeTree(FanNode rootNode)
     {
-	doIcon(file);
-	Children children = getChildren();
+	rootNode.doIcon(rootNode.file);
+	Children children = rootNode.getChildren();
 	Node[] nodes = children.getNodes();
 	for (int i = 0; i != nodes.length; i++)
 	{
-	    ((FanNode) nodes[i]).enhance();
+	    enhanceNodeTree((FanNode) nodes[i]);
 	}
     }
 
@@ -98,7 +107,7 @@ public class FanNode extends AbstractNode
 	if (isPod)
 	{
 	    //
-	    }
+	}
 	if (getChildren().getNodesCount() != 0)
 	{
 	    actions.add(CommonProjectActions.newFileAction());
@@ -108,11 +117,6 @@ public class FanNode extends AbstractNode
 	}
 
 	return actions.toArray(new Action[0]);
-    }
-
-    public FileObject getFile()
-    {
-	return file;
     }
 
 }

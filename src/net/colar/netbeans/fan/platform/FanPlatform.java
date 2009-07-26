@@ -15,7 +15,7 @@ public class FanPlatform
 {
     private static FanPlatform instance=new FanPlatform();
 
-    //TODO: hardcoded !
+    //TODO: hardcoded - Need global Fan prefs.
     private final String FAN_HOME="/home/tcolar/fan/";
     private final boolean IS_WIN=System.getProperty("os.name").toLowerCase().indexOf("windows")!=-1;
 

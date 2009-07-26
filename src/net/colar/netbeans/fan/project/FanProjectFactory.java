@@ -11,19 +11,17 @@ import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
 
 /**
- *
+ * Factory fro Fan projects
+ * Will be invoked when NB recognizes a NB project
  * @author tcolar
  */
+
+//This annotation will register this factory with NB
 @org.openide.util.lookup.ServiceProvider(service = org.netbeans.spi.project.ProjectFactory.class, position = 661)
 public final class FanProjectFactory implements ProjectFactory
 {
 
-    public static final String FAN_BUILD_FILE = "build.fan"; // NOI18N
-
-    // not called manually(uses the class annotation)
-    public FanProjectFactory()
-    {
-    }
+    public static final String FAN_BUILD_FILE = "build.fan";
 
     public boolean isProject(FileObject projectDirectory)
     {
@@ -37,6 +35,7 @@ public final class FanProjectFactory implements ProjectFactory
 
     public void saveProject(Project project) throws IOException, ClassCastException
     {
+	//TODO: what do we need to do here ??
 	//throw new UnsupportedOperationException("Not supported yet.");
     }
 }

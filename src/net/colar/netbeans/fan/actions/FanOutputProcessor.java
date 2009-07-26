@@ -7,6 +7,10 @@ package net.colar.netbeans.fan.actions;
 import java.io.IOException;
 import org.netbeans.api.extexecution.input.InputProcessor;
 
+/**
+ * Copied from Python module
+ * @author tcolar
+ */
 public class FanOutputProcessor implements InputProcessor
 {
 
@@ -19,7 +23,6 @@ public class FanOutputProcessor implements InputProcessor
 
     public void reset() throws IOException
     {
-	//builder = new StringBuilder();
     }
 
     public void close() throws IOException

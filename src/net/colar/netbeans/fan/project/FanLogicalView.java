@@ -9,7 +9,7 @@ import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.openide.nodes.Node;
 
 /**
- *
+ * Logical view for Fan project
  * @author thibautc
  */
 public class FanLogicalView implements LogicalViewProvider
@@ -34,6 +34,7 @@ public class FanLogicalView implements LogicalViewProvider
     @Override
     public Node findPath(Node root, Object target)
     {
+	// Not impl.
 	return null;
     }
 }
