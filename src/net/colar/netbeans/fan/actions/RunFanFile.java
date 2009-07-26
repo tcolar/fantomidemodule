@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.actions;
 
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.platform.FanPlatform;
+import net.colar.netbeans.fan.project.FanNode;
 import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
@@ -40,7 +41,7 @@ public class RunFanFile extends FanAction
     {
 	Node[] activatedNodes = getSelectedNodes();
 	FilterNode nd=(FilterNode)activatedNodes[0];
-	FileObject file = (FileObject)nd.getValue("FanFile");
+	FileObject file = (FileObject)nd.getValue(FanNode.ATTR_NODE_FILEOBJECT);
 	if (file.getMIMEType().equals(FanTokenID.FAN_MIME_TYPE))
 	{
 	    String path = FileUtil.toFile(file.getParent()).getAbsolutePath();

@@ -7,6 +7,8 @@ package net.colar.netbeans.fan.wizard;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
+import net.colar.netbeans.fan.platform.FanPlatform;
+import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -24,14 +26,16 @@ public class FanGlobalSettingsController extends OptionsPanelController
 
     public void update()
     {
-	//TODO:
+	panel.setFanHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME));
 	changed();
     }
 
     public void applyChanges()
     {
-	//TODO: 
-	System.err.println("would be saving fan home");
+	String home=panel.getFanHome();
+	FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, home);
+	// reread the plaform settings
+	FanPlatform.getInstance(false).readSettings();
 	changed = false;
     }
 

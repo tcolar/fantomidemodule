@@ -86,7 +86,9 @@ public class FanExecution {
             processBuilder = processBuilder.workingDirectory(new File(workingDirectory));
             if ( (commandArgs != null) && ( commandArgs.trim().length() > 0 )  )
                processBuilder = processBuilder.addArgument(commandArgs);
-	    
+
+	    System.err.println("will execute: "+command+" "+commandArgs);
+
             processBuilder = processBuilder.redirectErrorStream(redirect);
             return processBuilder;
     }

@@ -46,6 +46,7 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
         homeLabel = new javax.swing.JLabel();
         homeBrowse = new javax.swing.JButton();
         homeField = new javax.swing.JTextField();
+        errorLabel = new javax.swing.JLabel();
 
         homeLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.homeLabel.text")); // NOI18N
 
@@ -63,17 +64,24 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
             }
         });
 
+        errorLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        errorLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.errorLabel.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(homeLabel)
-                .addGap(18, 18, 18)
-                .addComponent(homeField, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(homeBrowse)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(homeLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(homeField, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(homeBrowse)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -84,7 +92,9 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
                     .addComponent(homeLabel)
                     .addComponent(homeBrowse)
                     .addComponent(homeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(259, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
+                .addComponent(errorLabel)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -104,6 +114,7 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
     }//GEN-LAST:event_homeFieldKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel errorLabel;
     private javax.swing.JButton homeBrowse;
     private javax.swing.JTextField homeField;
     private javax.swing.JLabel homeLabel;
@@ -111,6 +122,23 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 
     public boolean valid()
     {
-	return FanPlatform.checkFanHome(homeField.getText());
+	boolean valid=FanPlatform.checkFanHome(homeField.getText());
+	if(!valid)
+	    errorLabel.setText("Fan Home is invalid!");
+	else
+	    errorLabel.setText("");
+	return valid;
+    }
+
+    void setFanHome(String home)
+    {
+	if(home==null)
+	    home="";
+	homeField.setText(home);
+    }
+
+    String getFanHome()
+    {
+	return homeField.getText();
     }
 }
