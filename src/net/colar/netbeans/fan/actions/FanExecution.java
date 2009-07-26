@@ -81,6 +81,8 @@ public class FanExecution {
     public ExternalProcessBuilder buildProcess() throws IOException{
         ExternalProcessBuilder processBuilder =
                     new ExternalProcessBuilder(command);
+	if(workingDirectory==null)
+	    workingDirectory=new File(".").getAbsolutePath();
             processBuilder = processBuilder.workingDirectory(new File(workingDirectory));
             if ( (commandArgs != null) && ( commandArgs.trim().length() > 0 )  )
                processBuilder = processBuilder.addArgument(commandArgs);

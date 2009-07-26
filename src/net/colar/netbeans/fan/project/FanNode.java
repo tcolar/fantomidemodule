@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.project;
 
 import java.util.Vector;
 import javax.swing.Action;
+import net.colar.netbeans.fan.actions.RunFanShellAction;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -103,10 +104,9 @@ public class FanNode extends AbstractNode
 	    actions.add(CommonProjectActions.deleteProjectAction());
 	    actions.add(CommonProjectActions.closeProjectAction());
 	    actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Project", null));
-	}
-	if (isPod)
-	{
-	    //
+	    actions.add(null);
+	    actions.add(ProjectSensitiveActions.projectCommandAction(RunFanShellAction.COMMAND_RUN_FAN_SHELL, "Start Fan Shell", null));
+	    actions.add(null);
 	}
 	if (getChildren().getNodesCount() != 0)
 	{

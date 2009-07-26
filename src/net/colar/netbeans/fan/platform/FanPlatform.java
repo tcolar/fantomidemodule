@@ -20,6 +20,7 @@ public class FanPlatform
     private final boolean IS_WIN=System.getProperty("os.name").toLowerCase().indexOf("windows")!=-1;
 
     private final String FAN_BIN=FAN_HOME+"bin"+File.separator+(IS_WIN?"fan.exe":"fan");
+    private final String FANSH_BIN=FAN_HOME+"bin"+File.separator+(IS_WIN?"fansh.exe":"fansh");
 
     public static FanPlatform getInstance()
     {
@@ -29,5 +30,10 @@ public class FanPlatform
     public String getFanBinaryPath()
     {
 	return FAN_BIN;
+    }
+
+    public String getFanShellBinaryPath()
+    {
+	return FANSH_BIN;
     }
 }

@@ -18,6 +18,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import net.colar.netbeans.fan.actions.FanAction;
 import net.colar.netbeans.fan.actions.RunFanFile;
+import net.colar.netbeans.fan.actions.RunFanShellAction;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ActionProvider;
@@ -108,6 +109,7 @@ public class FanProject implements Project, ProjectInformation
 	    FanAction[] commandArray = new FanAction[]
 	    {
 		new RunFanFile(project, false),
+		new RunFanShellAction(project),
 	    };
 	    for (FanAction command : commandArray)
 	    {
