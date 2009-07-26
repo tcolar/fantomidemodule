@@ -10,7 +10,6 @@ package net.colar.netbeans.fan.project;
  * @author thibautc
  */
 import java.beans.PropertyChangeListener;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -25,7 +24,6 @@ import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.LifecycleManager;
-import org.openide.actions.OpenAction;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -122,8 +120,7 @@ public class FanProject implements Project, ProjectInformation
 	@Override
 	public String[] getSupportedActions()
 	{
-	    HashSet<String> names = new HashSet(commands.keySet());
-	    //names.add(OpenAction.NAME);
+	    final Set<String> names = commands.keySet();
 	    return names.toArray(new String[names.size()]);
 	}
 

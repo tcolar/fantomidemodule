@@ -56,4 +56,5 @@ public abstract class FanAction
 	JOptionPane.showMessageDialog(null, message, "Python Launch Error", JOptionPane.ERROR_MESSAGE);
 
     }
+
 }
