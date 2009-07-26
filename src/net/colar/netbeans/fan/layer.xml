@@ -55,6 +55,14 @@
 	</folder>
     </folder>
 
+    <folder name="OptionsDialog">
+	<folder name="Advanced">
+	    <file name="FanOptions.instance">
+		<attr name="instanceClass" stringvalue="net.colar.netbeans.fan.wizard.FanGlobalSettings"/>
+	    </file>
+	</folder>
+    </folder>
+
     <folder name="Templates">
 	<folder name="Fan">
 	    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.myorg.additionalfiletemplates.Bundle"/>-->
@@ -79,7 +87,7 @@
                 <!--Use this line only if your template makes use of the FreeMarker template language:-->
 		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 	    </file>
-        </folder>
+	</folder>
 	
 	<folder name="Project">
 	    <folder name="Fan Project">
