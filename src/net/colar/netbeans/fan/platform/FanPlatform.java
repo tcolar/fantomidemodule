@@ -15,6 +15,20 @@ public class FanPlatform
 {
     private static FanPlatform instance=new FanPlatform();
 
+    public static boolean checkFanHome(String path)
+    {
+	if(path!=null)
+	{
+	    File f=new File(path);
+	    if(f.exists() && f.isDirectory())
+	    {
+		File exe=new File(path+File.separator+"bin","fan");
+		return exe.exists() && exe.isFile() && exe.canExecute();
+	    }
+	}
+	return false;
+    }
+
     //TODO: hardcoded - Need global Fan prefs.
     private final String FAN_HOME="/home/tcolar/fan/";
     private final boolean IS_WIN=System.getProperty("os.name").toLowerCase().indexOf("windows")!=-1;
