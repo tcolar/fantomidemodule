@@ -5,9 +5,6 @@
 	<folder name="text">
 	    <folder name="x-fan">
 		<folder name="Actions">
-		    <file name="net-colar-netbeans-fan-project-SetMainFileAction.instance">
-			<attr name="position" intvalue="150"/>
-		    </file>
 		</folder>
 	    </folder>
 	</folder>
@@ -28,9 +25,6 @@
 		    <attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.FanTokenID.language"/>
 		    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
 		</file>
-		<folder name="popup">
-		    <file name="netc-colar-netbeans-fan-project-SetMainFileAction.instance"/>
-		</folder>
 	    </folder>
 	</folder>
 	<folder name="FontsColors">

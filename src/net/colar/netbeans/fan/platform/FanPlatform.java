@@ -14,9 +14,7 @@ public class FanPlatform
 {
 
     private final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
-
     private static FanPlatform instance = new FanPlatform();
-
     private String fanHome;
     private String fanBin;
     private String fanshBin;
@@ -28,11 +26,13 @@ public class FanPlatform
 
     public void readSettings()
     {
-	fanHome=FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME);
-	if(!fanHome.endsWith(File.separator))
-	    fanHome+=File.separator;
-	if(fanHome!=null)
+	fanHome = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME);
+	if (fanHome != null)
 	{
+	    if (!fanHome.endsWith(File.separator))
+	    {
+		fanHome += File.separator;
+	    }
 	    fanBin = fanHome + "bin" + File.separator + (IS_WIN ? "fan.exe" : "fan");
 	    fanshBin = fanHome + "bin" + File.separator + (IS_WIN ? "fansh.exe" : "fansh");
 	}
@@ -59,7 +59,7 @@ public class FanPlatform
 
     public static FanPlatform getInstance(boolean checkNull)
     {
-	if(instance.fanHome==null)
+	if (checkNull && instance.fanHome == null)
 	{
 	    //TODO: handle this cleanly (warning dialog)
 	    throw new RuntimeException("Fan Home is undefined, update Netbeans options!");

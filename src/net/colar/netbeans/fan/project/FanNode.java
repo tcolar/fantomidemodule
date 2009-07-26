@@ -4,6 +4,8 @@
  */
 package net.colar.netbeans.fan.project;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.Action;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
@@ -16,6 +18,8 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.lookup.Lookups;
+import org.openide.actions.*;
+import org.openide.util.actions.SystemAction;
 
 /**
  * Fan project Nodes (used within logical view)
@@ -98,25 +102,53 @@ public class FanNode extends AbstractNode
     public Action[] getActions(boolean popup)
     {
 	Vector<Action> actions = new Vector();
+
 	if (isRoot || isPod)
 	{
-	    actions.add(CommonProjectActions.copyProjectAction());
-	    actions.add(CommonProjectActions.deleteProjectAction());
-	    actions.add(CommonProjectActions.closeProjectAction());
-	    actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Project", null));
+	    // project level actions
+	    actions.add(CommonProjectActions.newFileAction());
 	    actions.add(null);
 	    actions.add(ProjectSensitiveActions.projectCommandAction(RunFanShellAction.COMMAND_RUN_FAN_SHELL, "Start Fan Shell", null));
 	    actions.add(null);
-	}
-	if (getChildren().getNodesCount() != 0)
-	{
-	    actions.add(CommonProjectActions.newFileAction());
+	    //actions.add(CommonProjectActions.copyProjectAction());
+	    actions.add(CommonProjectActions.deleteProjectAction());
+	    actions.add(CommonProjectActions.closeProjectAction());
+    	    actions.add(SystemAction.get(PasteAction.class));
+
+	    actions.add(null);
+	    actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build", null));
+	    // TODO: rename ?
+	    // TODO: run (build.fan)
+	    // TODO: debug
 	} else
 	{
-	    actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Run Fan file", null));
+	    // Folder actions
+	    if (getChildren().getNodesCount() != 0)
+	    {
+		actions.add(CommonProjectActions.newFileAction());
+		actions.add(SystemAction.get(FindAction.class));
+		actions.add(SystemAction.get(PasteAction.class));
+	    } else
+	    // item actions
+	    {
+		actions.add(SystemAction.get(OpenAction.class));
+		actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Run Fan file", null));
+	    }
+
+	    actions.add(null);
+	    actions.add(SystemAction.get(CopyAction.class));
+	    actions.add(SystemAction.get(CutAction.class));
+	    actions.add(SystemAction.get(DeleteAction.class));
+	    actions.add(null);
+	    actions.add(SystemAction.get(RenameAction.class));
 	}
+
+	// standard actions
+        actions.add(null);
+	Action[] stdActions = super.getActions(popup);
+	List list = Arrays.asList(stdActions);
+	actions.addAll(list);
 
 	return actions.toArray(new Action[0]);
     }
-
 }
