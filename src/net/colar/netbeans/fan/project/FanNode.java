@@ -30,11 +30,13 @@ public class FanNode extends AbstractNode
 
     public FanNode(Project project, FileObject file, Children children)
     {
-	super(children, Lookups.singleton(project));
+	super(children,Lookups.singleton(project));
+	setValue("FanFile", file);
 	this.file = file;
 	setDisplayName(file.getNameExt());
     }
 
+    
     protected void enhance()
     {
 	doIcon(file);
@@ -112,4 +114,5 @@ public class FanNode extends AbstractNode
     {
 	return file;
     }
+
 }

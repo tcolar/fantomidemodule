@@ -5,12 +5,13 @@
 package net.colar.netbeans.fan.actions;
 
 import net.colar.netbeans.fan.FanTokenID;
-import net.colar.netbeans.fan.project.FanNode;
+import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 
@@ -41,8 +42,8 @@ public class RunFanFile extends Command
 	 * but can't get to it(private)
 	 * Have to do some layered context bs .. but that's not working either
 	*/
-	DataObject gdo = activatedNodes[0].getLookup().lookup(DataObject.class);
-	FileObject file = gdo.getPrimaryFile();
+	FilterNode nd=(FilterNode)activatedNodes[0];
+	FileObject file = (FileObject)nd.getValue("FanFile");
 	if (file.getMIMEType().equals(FanTokenID.FAN_MIME_TYPE))
 	{
 	    String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
@@ -80,9 +81,11 @@ public class RunFanFile extends Command
 	    }
 	    }
 	     */
-	    FanExecution pyexec = new FanExecution();
-	    pyexec.setDisplayName(gdo.getName());
-	    pyexec.setWorkingDirectory(path);
+	    FanExecution fanExec = new FanExecution();
+	    fanExec.setDisplayName(file.getName());
+	    fanExec.setWorkingDirectory(path);
+	    fanExec.setCommand(FanPlatform.getInstance().getFanBinaryPath());
+	    fanExec.setCommandArgs(script);
 	    /*if(PythonOptions.getInstance().getPromptForArgs()){
 	    String args =  JOptionPane.showInputDialog("Enter the args for this script.", "");
 	    pyexec.setScriptArgs(args);
@@ -106,7 +109,7 @@ public class RunFanFile extends Command
 	    pyexec = coverageProvider.wrapWithCoverage(pyexec);
 	    }
 	     */
-	    pyexec.run();
+	    fanExec.run();
 	}
     }
 
@@ -115,7 +118,7 @@ public class RunFanFile extends Command
     {
 	boolean results = false; //super.enable(activatedNodes);
 	Node[] activatedNodes = getSelectedNodes();
-	System.err.println("Actie nodes: "+activatedNodes.length);
+	System.err.println("Active nodes: "+activatedNodes.length);
 	if (activatedNodes != null && activatedNodes.length > 0)
 	{
 	System.err.println("lookups : "+activatedNodes[0].getLookup().toString());

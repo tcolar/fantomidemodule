@@ -33,15 +33,9 @@ public class FanExecution {
     private String command;
     private String workingDirectory;
     private String commandArgs;
-    private String path;
-    private String javapath;
-    private String script;
-    private String scriptArgs;
+    //private String path;
     private String displayName;
     private boolean redirect;
-    private String wrapperCommand;
-    private String[] wrapperArgs;
-    private String[] wrapperEnv;
     private List<LineConvertor> outConvertors = new ArrayList<LineConvertor>();
     private List<LineConvertor> errConvertors = new ArrayList<LineConvertor>();
     private InputProcessorFactory outProcessorFactory;
@@ -102,46 +96,10 @@ public class FanExecution {
             // @@@Jean-Yves check for empty arguments as well as null
             if ( (commandArgs != null) && ( commandArgs.trim().length() > 0 )  )
                processBuilder = processBuilder.addArgument(commandArgs);
+	    
+System.err.println("Command: "+command+" "+commandArgs);
 
-            if (wrapperCommand != null) {
-                processBuilder = processBuilder.addArgument(wrapperCommand);
-                if (wrapperArgs != null && wrapperArgs.length > 0) {
-                    for (String arg : wrapperArgs) {
-                        processBuilder = processBuilder.addArgument(arg);
-                    }
-                }
-                if (wrapperEnv != null && wrapperEnv.length > 0) {
-                    for (String env : wrapperEnv) {
-                        int index = env.indexOf('=');
-                        assert index != -1;
-                        processBuilder = processBuilder.addEnvironmentVariable(env.substring(0, index), env.substring(index+1));
-                    }
-                }
-            }
-
-            if(script != null)
-                processBuilder = processBuilder.addArgument(script);
-            if(scriptArgs != null) {
-               // @@@jean-Yves populate arguments one by one in order to get
-               // a natural python tuple on python side
-               String args[] = org.openide.util.Utilities.parseParameters(scriptArgs) ;
-               for ( int ii = 0 ; ii < args.length ; ii++)
-                 processBuilder = processBuilder.addArgument( args[ii] )  ;
-            }
             processBuilder = processBuilder.redirectErrorStream(redirect);
-            if(path != null){
-                if(command.toLowerCase().contains("jython")){
-//                    String commandPath = "-Dpython.path=" + path;
-//                    processBuilder = processBuilder.addArgument(commandPath);
-                     processBuilder =
-                            processBuilder.addEnvironmentVariable("JYTHONPATH", path);
-                     processBuilder =
-                            processBuilder.addEnvironmentVariable("CLASSPATH", javapath);
-                }else{
-                    processBuilder =
-                            processBuilder.addEnvironmentVariable("PYTHONPATH", path);
-                }
-            }
 
             return processBuilder;
     }
@@ -166,38 +124,6 @@ public class FanExecution {
         this.commandArgs = commandArgs;
     }
 
-    public synchronized String getPath() {
-        return path;
-    }
-
-    public synchronized void setJavaPath(String javapath) {
-        this.javapath = javapath;
-    }
-
-    public synchronized String getJavaPath() {
-        return javapath;
-    }
-
-    public synchronized void setPath(String path) {
-        this.path = path;
-    }
-
-    public synchronized String getScript() {
-        return script;
-    }
-
-    public synchronized void setScript(String script) {
-        this.script = script;
-    }
-
-    public synchronized String getScriptArgs() {
-        return scriptArgs;
-    }
-
-    public synchronized void setScriptArgs(String scriptArgs) {
-        this.scriptArgs = scriptArgs;
-    }
-
     public synchronized String getWorkingDirectory() {
         return workingDirectory;
     }
@@ -212,12 +138,6 @@ public class FanExecution {
 
     public synchronized void setDisplayName(String displayName) {
         this.displayName = displayName;
-    }
-
-    public synchronized void setWrapperCommand(String wrapperCommand, String[] wrapperArgs, String[] wrapperEnv) {
-        this.wrapperCommand = wrapperCommand;
-        this.wrapperArgs = wrapperArgs;
-        this.wrapperEnv = wrapperEnv;
     }
 
     public synchronized void setShowControls(boolean showControls) {
