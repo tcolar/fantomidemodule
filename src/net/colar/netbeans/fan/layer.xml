@@ -58,7 +58,7 @@
     <folder name="OptionsDialog">
 	<folder name="Advanced">
 	    <file name="FanOptions.instance">
-		<attr name="instanceClass" stringvalue="net.colar.netbeans.fan.wizard.FanGlobalSettings"/>
+		<attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.wizard.FanGlobalSettings.getInstance"/>
 	    </file>
 	</folder>
     </folder>

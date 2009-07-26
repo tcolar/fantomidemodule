@@ -21,10 +21,12 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 {
 
     private final JFileChooser chooser;
+    private final FanGlobalSettingsController controller;
 
     /** Creates new form FanGlobalSettingsPanel */
-    public FanGlobalSettingsPanel()
+    public FanGlobalSettingsPanel(FanGlobalSettingsController ctrl)
     {
+	controller=ctrl;
 	initComponents();
 	chooser = new JFileChooser();
 	chooser.setMultiSelectionEnabled(false);
@@ -55,6 +57,11 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
         });
 
         homeField.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.homeField.text")); // NOI18N
+        homeField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                homeFieldKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -87,9 +94,15 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 	if (val == JFileChooser.APPROVE_OPTION)
 	{
 	    homeField.setText(chooser.getSelectedFile().getPath());
+	    controller.changed();
 	}
-
     }//GEN-LAST:event_homeBrowseActionPerformed
+
+    private void homeFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_homeFieldKeyReleased
+    {//GEN-HEADEREND:event_homeFieldKeyReleased
+	controller.changed();
+    }//GEN-LAST:event_homeFieldKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton homeBrowse;
     private javax.swing.JTextField homeField;

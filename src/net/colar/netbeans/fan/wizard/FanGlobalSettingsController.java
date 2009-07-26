@@ -24,13 +24,13 @@ public class FanGlobalSettingsController extends OptionsPanelController
 
     public void update()
     {
-	//TODO: getPanel().load();
-	changed = false;
+	//TODO:
+	changed();
     }
 
     public void applyChanges()
     {
-	//TODO: getPanel().store();
+	//TODO: 
 	System.err.println("would be saving fan home");
 	changed = false;
     }
@@ -74,7 +74,7 @@ public class FanGlobalSettingsController extends OptionsPanelController
     {
 	if (panel == null)
 	{
-	    panel = new FanGlobalSettingsPanel();
+	    panel = new FanGlobalSettingsPanel(this);
 	}
 	return panel;
     }
