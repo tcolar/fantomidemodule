@@ -4,6 +4,7 @@
  */
 package net.colar.netbeans.fan.project;
 
+import java.awt.Image;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -14,18 +15,20 @@ import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.openide.filesystems.FileObject;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.lookup.Lookups;
 import org.openide.actions.*;
+import org.openide.nodes.FilterNode;
+import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.actions.SystemAction;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  * Fan project Nodes (used within logical view)
  * @author tcolar
  */
-public class FanNode extends AbstractNode
+public class FanNode extends FilterNode
 {
 
     public static final String ATTR_NODE_FILEOBJECT = "NODE_FILEOBJECT";
@@ -33,70 +36,62 @@ public class FanNode extends AbstractNode
     boolean isPod = false;
     boolean isRoot = false;
     boolean isRunnable = false;
-    private final FileObject file;
+    Project project;
+    //FileObject file;
+    //private String icon;
 
-    public FanNode(Project project, FileObject file, Children children)
+    public FanNode(Project project, Node originalNode, FileObject file)
     {
-	super(children, Lookups.singleton(project));
-	this.file = file;
-	setDisplayName(file.getNameExt());
-	// Set this attribute so we can access it from a Filenode
-	// which will wrap this Node but not give acces to it directly
-	// (Has to go through attributes)
-	setValue(ATTR_NODE_FILEOBJECT, file);
+	super(originalNode, new FilterNode.Children(originalNode),
+		//The projects system wants the project in the Node's lookup.
+		//NewAction and friends want the original Node's lookup.
+		//Make a merge of both:
+		new ProxyLookup(new Lookup[]
+		{
+		    Lookups.singleton(project),
+		    originalNode.getLookup()
+		}));
+	this.project = project;
+	//this.file=file;
+	//setDisplayName(file.getNameExt());
+	//doIcon(file);
     }
 
-    /**
-     * Recursively enhance this node and subnodes
-     * Usually called on root node
-     * Mostly set icon according to file type
-     */
-    protected static void enhanceNodeTree(FanNode rootNode)
-    {
-	rootNode.doIcon(rootNode.file);
-	Children children = rootNode.getChildren();
-	Node[] nodes = children.getNodes();
-	for (int i = 0; i != nodes.length; i++)
-	{
-	    enhanceNodeTree((FanNode) nodes[i]);
-	}
-    }
-
-    private void doIcon(FileObject dir)
+    /*private void doIcon(FileObject dir)
     {
 	// Deal with icon
 	if (!dir.isFolder())
 	{
 	    if (dir.getNameExt().equalsIgnoreCase("build.fan"))
 	    {
-		setIconBaseWithExtension("net/colar/netbeans/fan/project/resources/fanBuild.png");
-		((FanNode) getParentNode()).setIconBaseWithExtension("net/colar/netbeans/fan/fan.png");
+		setIcon("net/colar/netbeans/fan/project/resources/fanBuild.png");
+		((FanNode) getParentNode()).setIcon("net/colar/netbeans/fan/fan.png");
 		((FanNode) getParentNode()).isPod = true;
 	    } else if (dir.getExt().equalsIgnoreCase("fan"))
 	    {
-		setIconBaseWithExtension("net/colar/netbeans/fan/project/resources/fanFile.png");
+		setIcon("net/colar/netbeans/fan/project/resources/fanFile.png");
 	    } else if (dir.getExt().equalsIgnoreCase("fwt"))
 	    {
-		setIconBaseWithExtension("net/colar/netbeans/fan/project/resources/fanFwt.png");
+		setIcon("net/colar/netbeans/fan/project/resources/fanFwt.png");
 	    }
 
 	} else
 	{
 	    if (dir.getName().equalsIgnoreCase("fan"))
 	    {
-		setIconBaseWithExtension("net/colar/netbeans/fan/project/resources/folderFan.png");
+		setIcon("net/colar/netbeans/fan/project/resources/folderFan.png");
 	    } else if (dir.getName().equalsIgnoreCase("java"))
 	    {
-		setIconBaseWithExtension("net/colar/netbeans/fan/project/resources/folderJava.png");
+		setIcon("net/colar/netbeans/fan/project/resources/folderJava.png");
 	    } else if (dir.getName().equalsIgnoreCase("test"))
 	    {
-		setIconBaseWithExtension("net/colar/netbeans/fan/project/resources/folderTest.png");
+		setIcon("net/colar/netbeans/fan/project/resources/folderTest.png");
 	    } else
 	    {
-		setIconBaseWithExtension("net/colar/netbeans/fan/project/resources/folder.png");
+		setIcon("net/colar/netbeans/fan/project/resources/folder.png");
 	    }
 	}
-    }
+    }*/
 
     @Override
     public Action[] getActions(boolean popup)
@@ -113,7 +108,7 @@ public class FanNode extends AbstractNode
 	    //actions.add(CommonProjectActions.copyProjectAction());
 	    actions.add(CommonProjectActions.deleteProjectAction());
 	    actions.add(CommonProjectActions.closeProjectAction());
-    	    actions.add(SystemAction.get(PasteAction.class));
+	    actions.add(SystemAction.get(PasteAction.class));
 
 	    actions.add(null);
 	    actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build", null));
@@ -144,11 +139,18 @@ public class FanNode extends AbstractNode
 	}
 
 	// standard actions
-        actions.add(null);
+	actions.add(null);
 	Action[] stdActions = super.getActions(popup);
 	List list = Arrays.asList(stdActions);
 	actions.addAll(list);
 
 	return actions.toArray(new Action[0]);
     }
+
+    @Override
+    public Image getIcon(int arg0)
+    {
+	return ImageUtilities.loadImage("net/colar/netbeans/fan/fan.png");
+    }
+
 }

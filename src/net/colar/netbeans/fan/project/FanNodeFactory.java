@@ -4,21 +4,13 @@
  */
 package net.colar.netbeans.fan.project;
 
-import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ui.support.NodeFactory;
-import org.netbeans.spi.project.ui.support.NodeFactorySupport;
-import org.netbeans.spi.project.ui.support.NodeList;
-import org.openide.filesystems.FileObject;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
-
 /**
  * Node Factory: creates teh nodes for a project
  * @author thibautc
  */
 
 // This annotation will register this factory with Netbeans
-@NodeFactory.Registration(projectType = "net-colar-netbeans-fan-project-FanProject", position = 200)
+/*@NodeFactory.Registration(projectType = "net-colar-netbeans-fan-project-FanProject", position = 200)
 public class FanNodeFactory implements NodeFactory
 {
 
@@ -34,12 +26,6 @@ public class FanNodeFactory implements NodeFactory
 	return NodeFactorySupport.fixedNodeList(nd);
     }
 
-    /**
-     * Get a node and it's subnodes (through recursion)
-     * @param project
-     * @param dir
-     * @return
-     */
     public Node getNode(Project project, FileObject dir)
     {
 	FileObject[] children = dir.getChildren();
@@ -60,6 +46,20 @@ public class FanNodeFactory implements NodeFactory
     }
 
 }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
  *            final List<Action> actions = new ArrayList<Action>();
             actions.add(CommonProjectActions.newFileAction());

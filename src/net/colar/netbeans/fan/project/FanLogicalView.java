@@ -5,8 +5,13 @@
 package net.colar.netbeans.fan.project;
 
 import org.netbeans.spi.project.ui.LogicalViewProvider;
-import org.netbeans.spi.project.ui.support.NodeFactorySupport;
+import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.FilterNode.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 
 /**
  * Logical view for Fan project
@@ -21,14 +26,36 @@ public class FanLogicalView implements LogicalViewProvider
 
     public FanLogicalView(FanProject project)
     {
-	super();
 	this.project = project;
     }
 
     @Override
     public Node createLogicalView()
     {
-	return NodeFactorySupport.createCompositeChildren(project, REGISTERED_NODE_LOCATION).getNodeAt(0);
+	try
+	{
+
+	    //Get the scenes directory, creating it if deleted:
+	    FileObject dir = project.getProjectDirectory();
+
+	    //Get the DataObject that represents it:
+	    DataObject dobj = DataObject.find(dir);
+
+	    //Get its default node: we'll wrap our node around it to change the
+	    //display name, icon, etc:
+	    Node originalObj = dobj.getNodeDelegate();
+
+	    //This FilterNode will be our project node:
+	    return new FanNode(project, originalObj, dir);
+
+	} catch (DataObjectNotFoundException donfe)
+	{
+	    Exceptions.printStackTrace(donfe);
+	    //Fallback: the directory couldn't be created -
+	    //read-only filesystem or something evil happened:
+	    return new AbstractNode(Children.LEAF);
+	}
+//	return NodeFactorySupport.createCompositeChildren(project, REGISTERED_NODE_LOCATION).getNodeAt(0);
     }
 
     @Override

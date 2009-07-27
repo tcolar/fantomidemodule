@@ -11,7 +11,7 @@ import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
 
 /**
- * Factory fro Fan projects
+ * Factory for Fan projects
  * Will be invoked when NB recognizes a NB project
  * @author tcolar
  */
