@@ -35,7 +35,7 @@ public class FanNode extends FilterNode
     //TODO: are those vars working ?
     boolean isPod = false;
     boolean isRoot = false;
-    boolean isRunnable = false;
+    //boolean isRunnable = false;
     private final FileObject file;
     private String icon;
 
@@ -46,7 +46,47 @@ public class FanNode extends FilterNode
 		    Lookups.singleton(project),
 		    originalNode.getLookup()
 		}));
+	System.err.println("Children: "+children);
+	if (children!=null)
+	    System.err.println("Children count: "+children.getNodesCount());
 	this.file = file;
+	// customize the node
+	if (file.isFolder())
+	{
+	    //Allow child folders of the scenes/ dir
+	    if (getChildren().findChild("build.fan") != null)
+	    {
+		isPod = true;
+	    }
+	    if (getName().equalsIgnoreCase("fan"))
+	    {
+		setIcon("net/colar/netbeans/fan/project/resources/folderFan.png");
+	    } else if (file.getName().equalsIgnoreCase("java"))
+	    {
+		setIcon("net/colar/netbeans/fan/project/resources/folderJava.png");
+	    } else if (file.getName().equalsIgnoreCase("test"))
+	    {
+		setIcon("net/colar/netbeans/fan/project/resources/folderTest.png");
+	    } else
+	    {
+		setIcon("net/colar/netbeans/fan/project/resources/folder.png");
+	    }
+	} else
+	{
+	    if (file.getNameExt().equalsIgnoreCase("build.fan"))
+	    {
+		setIcon("net/colar/netbeans/fan/project/resources/fanBuild.png");
+	    } else if (file.getExt().equalsIgnoreCase("fan"))
+	    {
+		setIcon("net/colar/netbeans/fan/project/resources/fanFile.png");
+	    } else if (file.getExt().equalsIgnoreCase("fwt"))
+	    {
+		setIcon("net/colar/netbeans/fan/project/resources/fanFwt.png");
+	    }
+	    //TODO: check if runnable
+	    }
+	System.out.println("Node: " + file.getPath() + " " + (isRoot ? "project" : "") + (isPod ? "pod" : ""));
+
     }
 
     @Override
@@ -114,7 +154,7 @@ public class FanNode extends FilterNode
     {
 	return getIcon(arg0);
     }
-    
+
     protected void setIcon(String ic)
     {
 	icon = ic;
