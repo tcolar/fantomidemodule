@@ -109,6 +109,12 @@ public class FanNode extends FilterNode
 	return ImageUtilities.loadImage(icon);
     }
 
+    @Override
+    public Image getOpenedIcon(int arg0)
+    {
+	return getIcon(arg0);
+    }
+    
     protected void setIcon(String ic)
     {
 	icon = ic;
