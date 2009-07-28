@@ -36,62 +36,18 @@ public class FanNode extends FilterNode
     boolean isPod = false;
     boolean isRoot = false;
     boolean isRunnable = false;
-    Project project;
-    //FileObject file;
-    //private String icon;
+    private final FileObject file;
+    private String icon;
 
-    public FanNode(Project project, Node originalNode, FileObject file)
+    public FanNode(Project project, Node originalNode, FanNodeChildren children, FileObject file)
     {
-	super(originalNode, new FilterNode.Children(originalNode),
-		//The projects system wants the project in the Node's lookup.
-		//NewAction and friends want the original Node's lookup.
-		//Make a merge of both:
-		new ProxyLookup(new Lookup[]
+	super(originalNode, children, new ProxyLookup(new Lookup[]
 		{
 		    Lookups.singleton(project),
 		    originalNode.getLookup()
 		}));
-	this.project = project;
-	//this.file=file;
-	//setDisplayName(file.getNameExt());
-	//doIcon(file);
+	this.file = file;
     }
-
-    /*private void doIcon(FileObject dir)
-    {
-	// Deal with icon
-	if (!dir.isFolder())
-	{
-	    if (dir.getNameExt().equalsIgnoreCase("build.fan"))
-	    {
-		setIcon("net/colar/netbeans/fan/project/resources/fanBuild.png");
-		((FanNode) getParentNode()).setIcon("net/colar/netbeans/fan/fan.png");
-		((FanNode) getParentNode()).isPod = true;
-	    } else if (dir.getExt().equalsIgnoreCase("fan"))
-	    {
-		setIcon("net/colar/netbeans/fan/project/resources/fanFile.png");
-	    } else if (dir.getExt().equalsIgnoreCase("fwt"))
-	    {
-		setIcon("net/colar/netbeans/fan/project/resources/fanFwt.png");
-	    }
-
-	} else
-	{
-	    if (dir.getName().equalsIgnoreCase("fan"))
-	    {
-		setIcon("net/colar/netbeans/fan/project/resources/folderFan.png");
-	    } else if (dir.getName().equalsIgnoreCase("java"))
-	    {
-		setIcon("net/colar/netbeans/fan/project/resources/folderJava.png");
-	    } else if (dir.getName().equalsIgnoreCase("test"))
-	    {
-		setIcon("net/colar/netbeans/fan/project/resources/folderTest.png");
-	    } else
-	    {
-		setIcon("net/colar/netbeans/fan/project/resources/folder.png");
-	    }
-	}
-    }*/
 
     @Override
     public Action[] getActions(boolean popup)
@@ -150,7 +106,12 @@ public class FanNode extends FilterNode
     @Override
     public Image getIcon(int arg0)
     {
-	return ImageUtilities.loadImage("net/colar/netbeans/fan/fan.png");
+	return ImageUtilities.loadImage(icon);
+    }
+
+    protected void setIcon(String ic)
+    {
+	icon = ic;
     }
 
 }

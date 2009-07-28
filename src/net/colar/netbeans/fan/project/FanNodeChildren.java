@@ -1,0 +1,88 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package net.colar.netbeans.fan.project;
+
+import org.netbeans.api.project.Project;
+import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataFolder;
+import org.openide.loaders.DataObject;
+import org.openide.nodes.Children;
+import org.openide.nodes.FilterNode;
+import org.openide.nodes.Node;
+
+/**
+ *
+ * @author tcolar
+ */
+public class FanNodeChildren extends FilterNode.Children
+{
+
+    private final Project project;
+
+    FanNodeChildren(Project project, Node projectNode)
+    {
+	super(projectNode);
+	this.project = project;
+    }
+
+    @Override
+    protected Node[] createNodes(Node object)
+    {
+	Node origChild = (Node) object;
+	DataObject dob = (DataObject) origChild.getLookup().lookup(DataObject.class);
+
+	if (dob != null)
+	{
+	    FileObject fob = dob.getPrimaryFile();
+	    Node[] nds = new Node[1];
+	    FanNodeChildren children=new FanNodeChildren(project, origChild);
+	    if(children.getNodesCount()==0)
+		//otherwise it shows files as expandable(!leaf)
+		children=null;
+	    FanNode nd = new FanNode(project,
+		    origChild,
+		    children,
+		    fob);
+	    if (dob instanceof DataFolder)
+	    {
+		//Allow child folders of the scenes/ dir
+		if (nd.getChildren().findChild("build.fan") != null)
+		{
+		    nd.isPod = true;
+		}
+		if (fob.getName().equalsIgnoreCase("fan"))
+		{
+		    nd.setIcon("net/colar/netbeans/fan/project/resources/folderFan.png");
+		} else if (fob.getName().equalsIgnoreCase("java"))
+		{
+		    nd.setIcon("net/colar/netbeans/fan/project/resources/folderJava.png");
+		} else if (fob.getName().equalsIgnoreCase("test"))
+		{
+		    nd.setIcon("net/colar/netbeans/fan/project/resources/folderTest.png");
+		} else
+		{
+		    nd.setIcon("net/colar/netbeans/fan/project/resources/folder.png");
+		}
+	    } else
+	    {
+		if (fob.getNameExt().equalsIgnoreCase("build.fan"))
+		{
+		    nd.setIcon("net/colar/netbeans/fan/project/resources/fanBuild.png");
+		} else if (fob.getExt().equalsIgnoreCase("fan"))
+		{
+		    nd.setIcon("net/colar/netbeans/fan/project/resources/fanFile.png");
+		} else if (fob.getExt().equalsIgnoreCase("fwt"))
+		{
+		    nd.setIcon("net/colar/netbeans/fan/project/resources/fanFwt.png");
+		}
+		//TODO: check if runnable
+	    }
+	    nds[0] = nd;
+	    return nds;
+	}
+	//Don't create any nodes for non-povray files
+	return new Node[0];
+    }
+}

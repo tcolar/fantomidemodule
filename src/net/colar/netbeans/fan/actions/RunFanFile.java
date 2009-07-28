@@ -22,6 +22,7 @@ import org.openide.util.Lookup;
  */
 public class RunFanFile extends FanAction
 {
+
     protected boolean isTest;
 
     public RunFanFile(FanProject project, boolean isTest)
@@ -40,9 +41,13 @@ public class RunFanFile extends FanAction
     public void invokeAction(Lookup context) throws IllegalArgumentException
     {
 	Node[] activatedNodes = getSelectedNodes();
-	FilterNode nd=(FilterNode)activatedNodes[0];
-	FileObject file = (FileObject)nd.getValue(FanNode.ATTR_NODE_FILEOBJECT);
-	if (file.getMIMEType().equals(FanTokenID.FAN_MIME_TYPE))
+	FileObject file = null;
+	DataObject gdo = activatedNodes[0].getLookup().lookup(DataObject.class);
+	if (gdo != null && gdo.getPrimaryFile() != null)
+	{
+	    file = gdo.getPrimaryFile();
+	}
+	if (file != null && file.getMIMEType().equals(FanTokenID.FAN_MIME_TYPE))
 	{
 	    String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
 	    String script = FileUtil.toFile(file).getAbsolutePath();
@@ -62,10 +67,8 @@ public class RunFanFile extends FanAction
     {
 	boolean results = false;
 	Node[] activatedNodes = getSelectedNodes();
-	System.err.println("Active nodes: "+activatedNodes.length);
 	if (activatedNodes != null && activatedNodes.length > 0)
 	{
-	System.err.println("lookups : "+activatedNodes[0].getLookup().toString());
 	    DataObject gdo = activatedNodes[0].getLookup().lookup(DataObject.class);
 	    if (gdo != null && gdo.getPrimaryFile() != null)
 	    {

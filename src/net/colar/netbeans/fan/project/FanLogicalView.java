@@ -46,7 +46,7 @@ public class FanLogicalView implements LogicalViewProvider
 	    Node originalObj = dobj.getNodeDelegate();
 
 	    //This FilterNode will be our project node:
-	    return new FanNode(project, originalObj, dir);
+	    return new FanProjectNode(project, originalObj, dir);
 
 	} catch (DataObjectNotFoundException donfe)
 	{
