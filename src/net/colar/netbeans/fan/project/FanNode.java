@@ -35,7 +35,7 @@ public class FanNode extends FilterNode
     //TODO: are those vars working ?
     boolean isPod = false;
     boolean isRoot = false;
-    //boolean isRunnable = false;
+    boolean isRunnable = false;
     private final FileObject file;
     private String icon;
     private String desc;
@@ -62,22 +62,22 @@ public class FanNode extends FilterNode
 	    } else if (getName().equalsIgnoreCase("fan"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/folderFan.png");
-		desc="<b>Fan Sources</b>";
+		desc = "<b>Fan Sources</b>";
 	    } else if (file.getName().equalsIgnoreCase("java"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/folderJava.png");
-		desc="<b>Java Sources</b>";
+		desc = "<b>Java Sources</b>";
 	    } else if (file.getName().equalsIgnoreCase("test"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/folderTest.png");
-		desc="<b>Unit Tests</b>";
+		desc = "<b>Unit Tests</b>";
 	    }
 	} else
 	{
 	    if (file.getNameExt().equalsIgnoreCase("build.fan"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/fanBuild.png");
-		desc="<b>build.fan</b>";
+		desc = "<b>build.fan</b>";
 	    } else if (file.getExt().equalsIgnoreCase("fan"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/fanFile.png");
@@ -85,9 +85,13 @@ public class FanNode extends FilterNode
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/fanFwt.png");
 	    }
-	    //TODO: check if runnable
+	    if (file.getExt().equalsIgnoreCase("fan"))
+	    {
+		//TODO: check if runnable
+		isRunnable = true;
 	    }
-	//System.out.println("Node: " + file.getPath() + " " + (isRoot ? "project" : "") + (isPod ? "pod" : ""));
+	}
+	System.out.println("Node: " + file.getPath() + " " + (isRoot ? "project" : "") + (isPod ? "pod" : "")+(isRunnable ? "runnable" : ""));
     }
 
     @Override
@@ -124,7 +128,8 @@ public class FanNode extends FilterNode
 	    // item actions
 	    {
 		actions.add(SystemAction.get(OpenAction.class));
-		actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Run Fan file", null));
+		if(isRunnable)
+		    actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Run Fan file", null));
 	    }
 
 	    actions.add(null);
@@ -168,10 +173,10 @@ public class FanNode extends FilterNode
     @Override
     public String getHtmlDisplayName()
     {
-	if (desc==null)
+	if (desc == null)
+	{
 	    return super.getHtmlDisplayName();
+	}
 	return desc;
     }
-
-
 }
