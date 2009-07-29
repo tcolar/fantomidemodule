@@ -16,7 +16,7 @@ public final class FanPodPanel1 extends JPanel
     private static final String DEFAULT_PRJ = "FanPrj1";
     private static final String DEFAULT_POD = "default";
     private final JFileChooser chooser;
-    private final Pattern VALID_NAME=Pattern.compile("[ a-zA-Z0-9_-]+");
+    public final static Pattern VALID_NAME=Pattern.compile("[ a-zA-Z0-9_-]+");
     private FanPodWizardPanel1 parent;
 
     public FanPodPanel1(FanPodWizardPanel1 parent, String dir)

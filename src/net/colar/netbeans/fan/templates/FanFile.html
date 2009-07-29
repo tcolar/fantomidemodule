@@ -10,8 +10,10 @@
 **
 ** ${name}
 **
+<#if doClass>
 class ${name}
 {
+    <#if doMain>
     **
     ** Main method
     **
@@ -19,4 +21,16 @@ class ${name}
     {
         // TODO
     }
+    </#if>
 }
+<#elseif doMixin>
+mixin ${name}
+{
+    // TODO
+}
+<#elseif doEnum>
+enum ${name}
+{
+    // TODO
+}
+</#if>

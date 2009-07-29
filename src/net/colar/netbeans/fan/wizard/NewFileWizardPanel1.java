@@ -5,6 +5,10 @@
 package net.colar.netbeans.fan.wizard;
 
 import java.awt.Component;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
@@ -17,6 +21,13 @@ public class NewFileWizardPanel1 implements WizardDescriptor.Panel
      * component from this class, just use getComponent().
      */
     private Component component;
+    private final String dir;
+
+    public NewFileWizardPanel1(String folder)
+    {
+	super();
+	this.dir = folder;
+    }
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -26,7 +37,7 @@ public class NewFileWizardPanel1 implements WizardDescriptor.Panel
     {
 	if (component == null)
 	{
-	    component = new NewFileVisualPanel1();
+	    component = new NewFileVisualPanel1(this, dir);
 	}
 	return component;
     }
@@ -49,37 +60,37 @@ public class NewFileWizardPanel1 implements WizardDescriptor.Panel
 	// fireChangeEvent();
 	// and uncomment the complicated stuff below.
     }
+    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
 
     public final void addChangeListener(ChangeListener l)
     {
+	synchronized (listeners)
+	{
+	    listeners.add(l);
+	}
     }
 
     public final void removeChangeListener(ChangeListener l)
     {
+	synchronized (listeners)
+	{
+	    listeners.remove(l);
+	}
     }
-    /*
-    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
-    public final void addChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.add(l);
+
+    protected final void fireChangeEvent()
+    {
+	Iterator<ChangeListener> it;
+	synchronized (listeners)
+	{
+	    it = new HashSet<ChangeListener>(listeners).iterator();
+	}
+	ChangeEvent ev = new ChangeEvent(this);
+	while (it.hasNext())
+	{
+	    it.next().stateChanged(ev);
+	}
     }
-    }
-    public final void removeChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.remove(l);
-    }
-    }
-    protected final void fireChangeEvent() {
-    Iterator<ChangeListener> it;
-    synchronized (listeners) {
-    it = new HashSet<ChangeListener>(listeners).iterator();
-    }
-    ChangeEvent ev = new ChangeEvent(this);
-    while (it.hasNext()) {
-    it.next().stateChanged(ev);
-    }
-    }
-     */
 
     // You can use a settings object to keep track of state. Normally the
     // settings object will be the WizardDescriptor, so you can use
@@ -91,6 +102,26 @@ public class NewFileWizardPanel1 implements WizardDescriptor.Panel
 
     public void storeSettings(Object settings)
     {
+    }
+
+    private NewFileVisualPanel1 getPanel()
+    {
+	return (NewFileVisualPanel1) getComponent();
+    }
+
+    String getFile()
+    {
+	return getPanel().getFile();
+    }
+
+    int getComboChoice()
+    {
+	return getPanel().getComboChoice();
+    }
+
+    String getName()
+    {
+	return getPanel().getFileName();
     }
 }
 

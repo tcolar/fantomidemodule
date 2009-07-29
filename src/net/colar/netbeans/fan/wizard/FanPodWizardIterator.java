@@ -6,20 +6,16 @@ package net.colar.netbeans.fan.wizard;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.Repository;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 
