@@ -35,7 +35,6 @@ public class FanNodeChildren extends FilterNode.Children
 	if (dob != null)
 	{
 	    FileObject fob = dob.getPrimaryFile();
-	    System.err.println("Creating nodes for: "+fob.getPath());
 	    Node[] nds = new Node[1];
 	    Children children=FilterNode.Children.LEAF;
 	    if(fob.isFolder())

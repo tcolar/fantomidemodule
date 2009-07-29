@@ -5,6 +5,10 @@
 package net.colar.netbeans.fan.wizard;
 
 import java.awt.Component;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
@@ -17,6 +21,13 @@ public class FanPodWizardPanel1 implements WizardDescriptor.Panel
      * component from this class, just use getComponent().
      */
     private Component component;
+    private final String dir;
+
+    FanPodWizardPanel1(String folder)
+    {
+	super();
+	this.dir = folder;
+    }
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -26,7 +37,7 @@ public class FanPodWizardPanel1 implements WizardDescriptor.Panel
     {
 	if (component == null)
 	{
-	    component = new FanPodPanel1();
+	    component = new FanPodPanel1(this, dir);
 	}
 	return component;
     }
@@ -41,45 +52,44 @@ public class FanPodWizardPanel1 implements WizardDescriptor.Panel
 
     public boolean isValid()
     {
-	// If it is always OK to press Next or Finish, then:
-	return true;
-	// If it depends on some condition (form filled out...), then:
-	// return someCondition();
-	// and when this condition changes (last form field filled in...) then:
-	// fireChangeEvent();
-	// and uncomment the complicated stuff below.
+	if (component == null)
+	{
+	    return false;
+	}
+	return ((FanPodPanel1) component).isValid();
     }
+
+    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
 
     public final void addChangeListener(ChangeListener l)
     {
+	synchronized (listeners)
+	{
+	    listeners.add(l);
+	}
     }
 
     public final void removeChangeListener(ChangeListener l)
     {
+	synchronized (listeners)
+	{
+	    listeners.remove(l);
+	}
     }
-    /*
-    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
-    public final void addChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.add(l);
+
+    protected final void fireChangeEvent()
+    {
+	Iterator<ChangeListener> it;
+	synchronized (listeners)
+	{
+	    it = new HashSet<ChangeListener>(listeners).iterator();
+	}
+	ChangeEvent ev = new ChangeEvent(this);
+	while (it.hasNext())
+	{
+	    it.next().stateChanged(ev);
+	}
     }
-    }
-    public final void removeChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.remove(l);
-    }
-    }
-    protected final void fireChangeEvent() {
-    Iterator<ChangeListener> it;
-    synchronized (listeners) {
-    it = new HashSet<ChangeListener>(listeners).iterator();
-    }
-    ChangeEvent ev = new ChangeEvent(this);
-    while (it.hasNext()) {
-    it.next().stateChanged(ev);
-    }
-    }
-     */
 
     // You can use a settings object to keep track of state. Normally the
     // settings object will be the WizardDescriptor, so you can use
@@ -92,5 +102,36 @@ public class FanPodWizardPanel1 implements WizardDescriptor.Panel
     public void storeSettings(Object settings)
     {
     }
+
+    private FanPodPanel1 getPanel()
+    {
+	return (FanPodPanel1) getComponent();
+    }
+
+    String getProjectName()
+    {
+	return getPanel().getProjectName();
+    }
+
+    String getPodName()
+    {
+	return getPanel().getPodName();
+    }
+
+    String getProjectFolder()
+    {
+	return getPanel().getProjectFolder();
+    }
+
+    String getPodDesc()
+    {
+	return getPanel().getPodDesc();
+    }
+
+    boolean getCreateBuildFile()
+    {
+	return getPanel().getCreateBuildFile();
+    }
+
 }
 

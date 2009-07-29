@@ -114,8 +114,9 @@
 
     <folder name="Templates">
 	<folder name="Fan">
-	    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.myorg.additionalfiletemplates.Bundle"/>-->
+	    <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 	    <file name="EmptyFanFile.fan" url="templates/EmptyFile.html">
+		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/EmptyFileDesc.html"/>
@@ -123,6 +124,7 @@
 		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 	    </file>
 	    <file name="FanClass.fan" url="templates/Class.html">
+		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/ClassDesc.html"/>
@@ -130,6 +132,7 @@
 		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 	    </file>
 	    <file name="FanMainClass.fan" url="templates/MainClass.html">
+		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/MainClassDesc.html"/>
@@ -142,16 +145,8 @@
 	    <folder name="Fan Project">
 		<!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
 		<attr name="position" intvalue="937"/>
-		<file name="Fan Project">
-		    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
-		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.wizard.FanProjectWizardIterator.instance"/>
-		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanProjectDescription.html"/>
-		    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
-		    <attr name="template" boolvalue="true"/>
-		</file>
 		<file name="Fan Pod">
 		    <!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
-		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.wizard.FanPodWizardIterator.instance"/>
 		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanPodDescription.html"/>
 		    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		    <attr name="template" boolvalue="true"/>

@@ -38,6 +38,7 @@ public class FanNode extends FilterNode
     //boolean isRunnable = false;
     private final FileObject file;
     private String icon;
+    private String desc;
 
     public FanNode(Project project, Node originalNode, org.openide.nodes.Children children, FileObject file)
     {
@@ -61,18 +62,22 @@ public class FanNode extends FilterNode
 	    } else if (getName().equalsIgnoreCase("fan"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/folderFan.png");
+		desc="<b>Fan Sources</b>";
 	    } else if (file.getName().equalsIgnoreCase("java"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/folderJava.png");
+		desc="<b>Java Sources</b>";
 	    } else if (file.getName().equalsIgnoreCase("test"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/folderTest.png");
+		desc="<b>Unit Tests</b>";
 	    }
 	} else
 	{
 	    if (file.getNameExt().equalsIgnoreCase("build.fan"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/fanBuild.png");
+		desc="<b>build.fan</b>";
 	    } else if (file.getExt().equalsIgnoreCase("fan"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/fanFile.png");
@@ -82,8 +87,7 @@ public class FanNode extends FilterNode
 	    }
 	    //TODO: check if runnable
 	    }
-	System.out.println("Node: " + file.getPath() + " " + (isRoot ? "project" : "") + (isPod ? "pod" : ""));
-
+	//System.out.println("Node: " + file.getPath() + " " + (isRoot ? "project" : "") + (isPod ? "pod" : ""));
     }
 
     @Override
@@ -160,4 +164,14 @@ public class FanNode extends FilterNode
     {
 	icon = ic;
     }
+
+    @Override
+    public String getHtmlDisplayName()
+    {
+	if (desc==null)
+	    return super.getHtmlDisplayName();
+	return desc;
+    }
+
+
 }
