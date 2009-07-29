@@ -30,7 +30,7 @@ public final class FanPodPanel1 extends JPanel
 	String loc = dir + (dir.endsWith(File.separator) ? "" : "/") + DEFAULT_PRJ;
 	folderField.setText(loc);
 	nameField.setText("");
-	podDescField.setText(DEFAULT_POD);
+	podDescField.setText("");
 	chooser = new JFileChooser();
 	chooser.setMultiSelectionEnabled(false);
 	chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -222,7 +222,8 @@ public final class FanPodPanel1 extends JPanel
 
     private void nameFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_nameFieldKeyReleased
     {//GEN-HEADEREND:event_nameFieldKeyReleased
-	// TODO add your handling code here:
+	String name=nameField.getText();
+	podDescField.setText(name);
 	updateFolder();
     }//GEN-LAST:event_nameFieldKeyReleased
 
@@ -298,7 +299,8 @@ public final class FanPodPanel1 extends JPanel
 	String dir=locationField.getText();
 	dir+=(dir.endsWith(File.separator)?"":File.separator)+nameField.getText();
 	folderField.setText(dir);
-	//isValid()	parent.fireChangeEvent();
+	// will recheck that it's valid
+	parent.fireChangeEvent();
     }
 
     private boolean checkName(String text)
