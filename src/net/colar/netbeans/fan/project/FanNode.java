@@ -39,26 +39,26 @@ public class FanNode extends FilterNode
     private final FileObject file;
     private String icon;
 
-    public FanNode(Project project, Node originalNode, FanNodeChildren children, FileObject file)
+    public FanNode(Project project, Node originalNode, org.openide.nodes.Children children, FileObject file)
     {
 	super(originalNode, children, new ProxyLookup(new Lookup[]
 		{
 		    Lookups.singleton(project),
 		    originalNode.getLookup()
 		}));
-	System.err.println("Children: "+children);
-	if (children!=null)
-	    System.err.println("Children count: "+children.getNodesCount());
 	this.file = file;
 	// customize the node
 	if (file.isFolder())
 	{
 	    //Allow child folders of the scenes/ dir
-	    if (getChildren().findChild("build.fan") != null)
+	    if (file.getFileObject("build.fan") != null)
 	    {
 		isPod = true;
 	    }
-	    if (getName().equalsIgnoreCase("fan"))
+	    if (isPod)
+	    {
+		setIcon("net/colar/netbeans/fan/fan.png");
+	    } else if (getName().equalsIgnoreCase("fan"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/folderFan.png");
 	    } else if (file.getName().equalsIgnoreCase("java"))
@@ -159,5 +159,4 @@ public class FanNode extends FilterNode
     {
 	icon = ic;
     }
-
 }

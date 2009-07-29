@@ -6,8 +6,8 @@ package net.colar.netbeans.fan.project;
 
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 
@@ -37,7 +37,9 @@ public class FanNodeChildren extends FilterNode.Children
 	    FileObject fob = dob.getPrimaryFile();
 	    System.err.println("Creating nodes for: "+fob.getPath());
 	    Node[] nds = new Node[1];
-	    FanNodeChildren children=new FanNodeChildren(project, origChild);
+	    Children children=FilterNode.Children.LEAF;
+	    if(fob.isFolder())
+		children=new FanNodeChildren(project, origChild);
 	    FanNode nd = new FanNode(project,
 		    origChild,
 		    children,
