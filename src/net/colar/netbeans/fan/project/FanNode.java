@@ -67,9 +67,6 @@ public class FanNode extends FilterNode
 	    } else if (file.getName().equalsIgnoreCase("test"))
 	    {
 		setIcon("net/colar/netbeans/fan/project/resources/folderTest.png");
-	    } else
-	    {
-		setIcon("net/colar/netbeans/fan/project/resources/folder.png");
 	    }
 	} else
 	{
@@ -146,6 +143,10 @@ public class FanNode extends FilterNode
     @Override
     public Image getIcon(int arg0)
     {
+	if (icon == null)
+	{
+	    return super.getIcon(arg0);
+	}
 	return ImageUtilities.loadImage(icon);
     }
 
