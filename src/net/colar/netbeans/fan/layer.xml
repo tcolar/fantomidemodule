@@ -113,29 +113,14 @@
     </folder>
 
     <folder name="Templates">
-	<folder name="Fan">
+        <folder name="Fan">
 	    <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-	    <file name="EmptyFanFile.fan" url="templates/EmptyFile.html">
+	    <file name="FanFile.fan" url="templates/FanFile.html">
 		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
-		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/EmptyFileDesc.html"/>
-                <!--Use this line only if your template makes use of the FreeMarker template language:-->
-		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-	    </file>
-	    <file name="FanClass.fan" url="templates/Class.html">
-		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-		<attr name="template" boolvalue="true"/>
-		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
-		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/ClassDesc.html"/>
-                <!--Use this line only if your template makes use of the FreeMarker template language:-->
-		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
-	    </file>
-	    <file name="FanMainClass.fan" url="templates/MainClass.html">
-		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-		<attr name="template" boolvalue="true"/>
-		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
-		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/MainClassDesc.html"/>
+		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/FanFileDesc.html"/>
+                <attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.NewFileWizardIterator"/>
                 <!--Use this line only if your template makes use of the FreeMarker template language:-->
 		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 	    </file>
