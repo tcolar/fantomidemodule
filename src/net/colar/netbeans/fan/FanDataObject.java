@@ -37,4 +37,5 @@ public class FanDataObject extends MultiDataObject
     {
 	return getCookieSet().getLookup();
     }
+    
 }

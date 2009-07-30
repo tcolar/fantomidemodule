@@ -13,9 +13,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.templates.TemplateUtils;
 import net.colar.netbeans.fan.templates.TemplateView;
-import net.jot.logger.JOTLogger;
 import net.jot.web.views.JOTLightweightView;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -80,7 +80,7 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 	String name = panel.getName();
 	int combo = panel.getComboChoice();
 
-	File newFile=FileUtil.normalizeFile(new File(file));
+	File newFile = FileUtil.normalizeFile(new File(file));
 
 	// create file folder
 	File folder = newFile.getParentFile();
@@ -108,10 +108,11 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 	}
 	FileObject template = Templates.getTemplate(wizard);
 
-	String templateText=template.asText();
+	String templateText = template.asText();
 
-	JOTLogger.initIfNecessary(TemplateUtils.LOG_FILE.getAbsolutePath(), new String[0], "");
 	TemplateUtils.createFromTemplate(view, templateText, newFile);
+
+	FanUtilities.openFileInEditor(newFile);
 
 	return Collections.singleton(newFile);
     }
