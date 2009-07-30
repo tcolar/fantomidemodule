@@ -113,30 +113,29 @@
     </folder>
 
     <folder name="Templates">
-        <folder name="Fan">
+	<folder name="Fan">
 	    <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-	    <file name="FanFile" url="templates/FanFile.html">
-                <!--Use this line only if your template makes use of the FreeMarker template language:-->
-		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+	    <file name="FanFile" url="nbresloc:/net/colar/netbeans/fan/templates/FanFile.html">
+		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/FanFileDesc.html"/>
-                <attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.NewFileWizardIterator"/>
+		<attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.NewFileWizardIterator"/>
+                <!--Use this line only if your template makes use of the FreeMarker template language:-->
 	    </file>
 	</folder>
 	
 	<folder name="Project">
 	    <folder name="Fan Project">
-		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+		<!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
 		<attr name="position" intvalue="937"/>
-		<file name="Fan Pod" url="templates/build.html">
-		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+		<file name="FanPod" url="nbresloc:/net/colar/netbeans/fan/templates/build.html">
+		    <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.wizard.FanPodWizardIterator.instance"/>
 		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanPodDescription.html"/>
 		    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		    <attr name="template" boolvalue="true"/>
-	    	    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 		</file>
 	    </folder>
 	</folder>

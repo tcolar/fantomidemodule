@@ -1,7 +1,5 @@
-<#assign licenseFirst = "//">
-<#assign licensePrefix = "//">
-<#assign licenseLast = "//">
-<#include "../Licenses/license-${project.license}.txt">
+// TO_DO: import project.license
+
 //
 // History:
 //   ${date}  ${user}  Creation
@@ -10,10 +8,10 @@
 **
 ** ${name}
 **
-<#if doClass>
+<jot:if eval="doClass">
 class ${name}
 {
-    <#if doMain>
+    <jot:if eval="doMain">
     **
     ** Main method
     **
@@ -21,16 +19,18 @@ class ${name}
     {
         // TODO
     }
-    </#if>
+    </jot:if>
 }
-<#elseif doMixin>
+</jot:if>
+<jot:if eval="doMixin">
 mixin ${name}
 {
     // TODO
 }
-<#elseif doEnum>
+</jot:if>
+<jot:if eval="doEnum">
 enum ${name}
 {
     // TODO
 }
-</#if>
+</jot:if>
