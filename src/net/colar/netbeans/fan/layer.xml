@@ -116,13 +116,13 @@
         <folder name="Fan">
 	    <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 	    <file name="FanFile" url="templates/FanFile.html">
+                <!--Use this line only if your template makes use of the FreeMarker template language:-->
+		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/FanFileDesc.html"/>
                 <attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.NewFileWizardIterator"/>
-                <!--Use this line only if your template makes use of the FreeMarker template language:-->
-		<attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
 	    </file>
 	</folder>
 	
