@@ -7,20 +7,18 @@ package net.colar.netbeans.fan.wizard;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
-import java.lang.String;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
-import net.colar.netbeans.fan.templates.TemplateUtils;
-import net.colar.netbeans.fan.templates.TemplateView;
-import net.jot.logger.JOTLogger;
-import net.jot.web.views.JOTLightweightView;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataFolder;
+import org.openide.loaders.DataObject;
 
 public final class NewFileWizardIterator implements WizardDescriptor.InstantiatingIterator
 {
@@ -80,40 +78,45 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 	String name = panel.getName();
 	int combo = panel.getComboChoice();
 
-	File newFile=FileUtil.normalizeFile(new File(file));
+	String fileName = new File(file).getName();
 
 	// create file folder
-	File folder = newFile.getParentFile();
+	File folder = FileUtil.normalizeFile(new File(file).getParentFile());
 	folder.mkdirs();
-
+	FileObject folderFo = FileUtil.toFileObject(folder);
 
 	//create file
-	JOTLightweightView view = new TemplateView(name);
+	DataFolder df = DataFolder.findFolder(folderFo);
 
+	HashMap hashMap = new HashMap();
+	hashMap.put("name", name);
+	hashMap.put("doClass", Boolean.FALSE);
+	hashMap.put("doMain", Boolean.FALSE);
+	hashMap.put("doMixin", Boolean.FALSE);
+	hashMap.put("doEnum", Boolean.FALSE);
 	switch (combo)
 	{
 	    case 0: // class
-		view.addVariable("doClass", Boolean.TRUE);
+		hashMap.put("doClass", Boolean.TRUE);
 		break;
 	    case 1: // class with main
-		view.addVariable("doClass", Boolean.TRUE);
-		view.addVariable("doMain", Boolean.TRUE);
+		hashMap.put("doClass", Boolean.TRUE);
+		hashMap.put("doMain", Boolean.TRUE);
 		break;
 	    case 2: //mixin
-		view.addVariable("doMixin", Boolean.TRUE);
+		hashMap.put("doMixin", Boolean.TRUE);
 		break;
 	    case 3:// enum
-		view.addVariable("doEnum", Boolean.TRUE);
+		hashMap.put("doEnum", Boolean.TRUE);
 		break;
 	}
 	FileObject template = Templates.getTemplate(wizard);
+	DataObject dTemplate = DataObject.find(template);
+	DataObject dobj = dTemplate.createFromTemplate(df, fileName, hashMap);
 
-	String templateText=template.asText();
+	FileObject fileFo = dobj.getPrimaryFile();
 
-	JOTLogger.initIfNecessary(TemplateUtils.LOG_FILE.getAbsolutePath(), new String[0], "");
-	TemplateUtils.createFromTemplate(view, templateText, newFile);
-
-	return Collections.singleton(newFile);
+	return Collections.singleton(fileFo);
     }
 
     public NewFileWizardPanel1 getPanel()
