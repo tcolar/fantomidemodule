@@ -115,7 +115,7 @@
     <folder name="Templates">
         <folder name="Fan">
 	    <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-	    <file name="Fan File" url="templates/FanFile.html">
+	    <file name="FanFile" url="templates/FanFile.html">
 		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 		<attr name="template" boolvalue="true"/>
 		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
