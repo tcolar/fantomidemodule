@@ -11,7 +11,7 @@ import net.jot.web.view.JOTViewParser;
 import net.jot.web.views.JOTLightweightView;
 
 /**
- * Alternative to using fremarker which has 50MB!! of dependencies in NB
+ * Alternative to using fremarker which has lotsf dependencies in NB and wouldn't parse the files for some reason.
  * @author thibautc
  */
 public class TemplateUtils
