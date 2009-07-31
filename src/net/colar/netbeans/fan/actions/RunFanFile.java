@@ -6,13 +6,11 @@ package net.colar.netbeans.fan.actions;
 
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.platform.FanPlatform;
-import net.colar.netbeans.fan.project.FanNode;
 import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 
