@@ -34,8 +34,6 @@ public class FanLogicalView implements LogicalViewProvider
     {
 	try
 	{
-
-	    //Get the scenes directory, creating it if deleted:
 	    FileObject dir = project.getProjectDirectory();
 
 	    //Get the DataObject that represents it:

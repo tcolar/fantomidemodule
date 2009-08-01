@@ -5,8 +5,10 @@
 
 package net.colar.netbeans.fan;
 
+import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
 import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.parsing.spi.Parser;
@@ -57,4 +59,11 @@ public class FanLanguage extends DefaultLanguageConfig
     {
 	return new FanStructureAnalyzer();
     }
+
+    @Override
+    public KeystrokeHandler getKeystrokeHandler()
+    {
+	return new FanKeyStrokeHandler();
+    }
+
 }
