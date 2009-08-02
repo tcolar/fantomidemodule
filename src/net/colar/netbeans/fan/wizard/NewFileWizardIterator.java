@@ -88,8 +88,11 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 
 
 	//create file
-	JOTLightweightView view = new TemplateView(name);
+	FileObject template = Templates.getTemplate(wizard);
+	FileObject rootDir=template.getParent().getParent();
 
+	JOTLightweightView view = new TemplateView(rootDir ,name);
+	
 	switch (combo)
 	{
 	    case 0: // class
@@ -106,7 +109,6 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 		view.addVariable("doEnum", Boolean.TRUE);
 		break;
 	}
-	FileObject template = Templates.getTemplate(wizard);
 
 	String templateText = template.asText();
 

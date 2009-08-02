@@ -81,12 +81,13 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 	FileObject buildFo = null;
 	if (createBuildFile)
 	{
-	    JOTLightweightView view = new TemplateView(podName);
+	    FileObject template = Templates.getTemplate(wizard);
+
+	    JOTLightweightView view = new TemplateView(template,podName);
+	    
 	    view.addVariable("desc", podDesc);
 
 	    File buildFile = new File(pf, "build.fan");
-
-	    FileObject template = Templates.getTemplate(wizard);
 
 	    String templateText = template.asText();
 

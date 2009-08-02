@@ -126,7 +126,10 @@
 	    </file>
 	</folder>
 	
-	<folder name="Project">
+	<folder name="Licenses">
+            <file name="FanDefaultLicense.txt" url="nbresloc:/net/colar/netbeans/fan/FanDefaultLicense.txt"/>
+        </folder>
+        <folder name="Project">
 	    <folder name="Fan Project">
 		<!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
 		<attr name="position" intvalue="937"/>
