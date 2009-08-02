@@ -132,6 +132,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
     public boolean afterCharInserted(Document document, int caretOffset, JTextComponent target, char car) throws BadLocationException
     {
+	// doing all in beforeCharInserted for now.
 	return false;
     }
 
@@ -151,30 +152,34 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
     public int beforeBreak(Document document, int caretOffset, JTextComponent target) throws BadLocationException
     {
-	// if withing doc -> insert the **
-	// or withon /* */  same
-	//indentation ?
+	// TODO if withing doc -> insert the ** on next line ?
+	// TODO indentation ?
 	return -1;
     }
 
     public OffsetRange findMatching(Document document, int caretOffset)
     {
+	// not impl yet.
 	return OffsetRange.NONE;
     }
 
     public List<OffsetRange> findLogicalRanges(ParserResult arg0, int arg1)
     {
+	// not impl yet.
+	// TODO: logical view/parser results can provide this ?
 	return Collections.emptyList();
     }
 
     public int getNextWordOffset(Document arg0, int arg1, boolean arg2)
     {
+	// not impl yet.
 	return -1;
     }
 
-    // Non interface methods
+    // TODO: unused, use that after checking if this option works
     public boolean isInsertMatchingEnabled(BaseDocument doc)
     {
+	// Default: true
 	EditorOptions options = EditorOptions.get(FanTokenID.FAN_MIME_TYPE);
 	if (options != null)
 	{
