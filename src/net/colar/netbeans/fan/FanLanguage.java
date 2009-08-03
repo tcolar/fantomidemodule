@@ -15,7 +15,7 @@ import org.netbeans.modules.parsing.spi.Parser;
 
 
 /**
- * Primamry Fan language definition
+ * Primary Fan language definition
  * Provides "hooks" into various language support implementation
  * * @author thibautc
  */

@@ -127,7 +127,9 @@
 	</folder>
 	
 	<folder name="Licenses">
-            <file name="FanDefaultLicense.txt" url="nbresloc:/net/colar/netbeans/fan/FanDefaultLicense.txt"/>
+            <file name="FanDefaultLicense.txt" url="nbresloc:/net/colar/netbeans/fan/FanDefaultLicense.txt">
+		    <attr name="template" boolvalue="true"/>
+	    </file>
         </folder>
         <folder name="Project">
 	    <folder name="Fan Project">

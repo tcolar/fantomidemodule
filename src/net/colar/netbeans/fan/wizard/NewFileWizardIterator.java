@@ -93,10 +93,9 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 
 	//create file
 	FileObject template = Templates.getTemplate(wizard);
-	FileObject rootDir=template.getParent().getParent();
 
-	JOTLightweightView view = new TemplateView(rootDir ,name);
-	
+	JOTLightweightView view = new TemplateView(template, name);
+
 	switch (combo)
 	{
 	    case 0: // class

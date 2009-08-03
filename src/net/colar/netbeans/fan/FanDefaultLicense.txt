@@ -1,2 +1,2 @@
 // To change this License template, choose Tools / Templates
-// and edit/save Fan:FanDefaultLicense.txt.
+// and edit Licenses / FanDefaultLicense.txt

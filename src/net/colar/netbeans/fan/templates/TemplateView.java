@@ -2,9 +2,9 @@ package net.colar.netbeans.fan.templates;
 
 import java.text.DateFormat;
 import java.util.Date;
+import net.colar.netbeans.fan.FanUtilities;
 import net.jot.web.views.JOTLightweightView;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  * Custom view for tJOT templates used in netbeans.
@@ -13,11 +13,11 @@ import org.openide.filesystems.FileUtil;
 public class TemplateView extends JOTLightweightView
 {
 
-    private final FileObject root;
+    private final FileObject file;
 
-    public TemplateView(FileObject rootFile, String name)
+    public TemplateView(FileObject file, String name)
     {
-	this.root = rootFile;
+	this.file = file;
 	Date d = new Date();
 	addVariable("name", name);
 	addVariable("date", DateFormat.getDateInstance().format(d));
@@ -26,23 +26,23 @@ public class TemplateView extends JOTLightweightView
     }
 
     /**
-     * Support for including subtemplates
+     * Support for including subtemplates (NOT parsed)
      * Standard jot:include is not supported in LightweightViews
-     * And NB doesn't use standrad files, but FileObjects
+     * Also NB doesn't use standard files, but FileObjects
      * @param path
      * @return
      */
-    public String includeTemplate(String path)
+    public String includeFile(String path)
     {
-	// TODO: not working
 	String result = "";
-	FileObject tpl = root.getFileObject("Licenses").getFileObject(path);
+	FanUtilities.dumpFileObject(file);
 	try
 	{
-	    result = tpl.asText();
+	    FileObject include = FanUtilities.getRelativeFileObject(file, path);
+	    result = include.asText();
 	} catch (Exception e)
 	{
-	    result="// Include failed for:"+path+"->"+e.toString();
+	    result = "// Include failed for:" + path + "->" + e.toString();
 	}
 	return result;
     }
