@@ -4,6 +4,7 @@
  */
 package net.colar.netbeans.fan.actions;
 
+import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
@@ -45,7 +46,7 @@ public class RunFanFile extends FanAction
 	{
 	    file = gdo.getPrimaryFile();
 	}
-	if (file != null && file.getMIMEType().equals(FanTokenID.FAN_MIME_TYPE))
+	if (file != null && file.getMIMEType().equals(FanLanguage.FAN_MIME_TYPE))
 	{
 	    String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
 	    String script = FileUtil.toFile(file).getAbsolutePath();
@@ -71,7 +72,7 @@ public class RunFanFile extends FanAction
 	    if (gdo != null && gdo.getPrimaryFile() != null)
 	    {
 		results = gdo.getPrimaryFile().getMIMEType().equals(
-			FanTokenID.FAN_MIME_TYPE);
+			FanLanguage.FAN_MIME_TYPE);
 	    }
 	}
 	return results;

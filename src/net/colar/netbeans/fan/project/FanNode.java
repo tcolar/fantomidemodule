@@ -25,7 +25,7 @@ import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
- * Fan project Nodes (used within logical view)
+ * Fan project individual Node (used within logical view)
  * @author tcolar
  */
 public class FanNode extends FilterNode
@@ -51,7 +51,7 @@ public class FanNode extends FilterNode
 	// customize the node
 	if (file.isFolder())
 	{
-	    //Allow child folders of the scenes/ dir
+	    //Customize interesting nodes according to folder/file type.
 	    if (file.getFileObject("build.fan") != null)
 	    {
 		isPod = true;
@@ -87,13 +87,18 @@ public class FanNode extends FilterNode
 	    }
 	    if (file.getExt().equalsIgnoreCase("fan"))
 	    {
-		//TODO: check if runnable
+		//TODO: check if runnable (main method / script / build.fan)
 		isRunnable = true;
 	    }
 	}
 	System.out.println("Node: " + file.getPath() + " " + (isRoot ? "project" : "") + (isPod ? "pod" : "")+(isRunnable ? "runnable" : ""));
     }
 
+    /**
+     * Return list of actions available for this node.
+     * @param popup
+     * @return
+     */
     @Override
     public Action[] getActions(boolean popup)
     {

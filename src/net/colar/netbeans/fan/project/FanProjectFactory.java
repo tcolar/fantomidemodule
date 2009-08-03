@@ -12,10 +12,10 @@ import org.openide.filesystems.FileObject;
 
 /**
  * Factory for Fan projects
- * Will be invoked when NB recognizes a NB project
+ * Will be invoked by NB (using the annotation)
+ * Will create FanProject instances when a Fan project is found
  * @author tcolar
  */
-
 //This annotation will register this factory with NB
 @org.openide.util.lookup.ServiceProvider(service = org.netbeans.spi.project.ProjectFactory.class, position = 661)
 public final class FanProjectFactory implements ProjectFactory

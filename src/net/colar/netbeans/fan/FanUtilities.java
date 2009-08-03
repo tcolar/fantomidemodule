@@ -13,11 +13,16 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 
 /**
- *
+ * Generic utilities
  * @author thibautc
  */
 public class FanUtilities {
 
+    /**
+     * Opens the given file in the editor.
+     * @param newFile
+     * @throws DataObjectNotFoundException
+     */
     public static void openFileInEditor(File newFile) throws DataObjectNotFoundException
     {
 	FileObject fob=FileUtil.toFileObject(newFile);

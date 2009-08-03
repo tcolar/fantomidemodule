@@ -3,19 +3,16 @@
  * and open the template in the editor.
  */
 
-/*
- * FanGlobalSettingsPanel.java
- *
- * Created on 25-Jul-2009, 10:22:10 PM
- */
 package net.colar.netbeans.fan.wizard;
 
 import javax.swing.JFileChooser;
 import net.colar.netbeans.fan.platform.FanPlatform;
 
-/**
+/*
+ * Panel for Fan options.
+ * Generated using panel maker / wizard in netbeans.
  *
- * @author tcolar
+ * @author thibautc
  */
 public class FanGlobalSettingsPanel extends javax.swing.JPanel
 {

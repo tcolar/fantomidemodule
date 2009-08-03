@@ -10,12 +10,16 @@ import org.antlr.runtime.CharStream;
 import org.netbeans.spi.lexer.LexerInput;
 
 /**
- *
+ * Mostly copied from online newsgroup / antlr source
+ * Provides a Charstream impl to be sued by the lexer.
+ * This wraps the lexer data as a charstream.
  * @author tcolar
  */
-public class NetbeansAntlrStream implements CharStream {
+public class NetbeansAntlrStream implements CharStream
+{
 
-    private class CharStreamState {
+    private class CharStreamState
+    {
 
 	int index;
 	int line;
@@ -30,7 +34,8 @@ public class NetbeansAntlrStream implements CharStream {
     private int markDepth = 0;
     private int lastMarker;
 
-    public NetbeansAntlrStream(LexerInput input, String name) {
+    public NetbeansAntlrStream(LexerInput input, String name)
+    {
 	this.input = input;
 	this.name = name;
     }
@@ -43,48 +48,59 @@ public class NetbeansAntlrStream implements CharStream {
      * @param stop
      * @return
      */
-    public String substring(int start, int stop) {
+    public String substring(int start, int stop)
+    {
 	return input.readText().toString();
     }
 
-    public int LT(int i) {
+    public int LT(int i)
+    {
 	return LA(i);
     }
 
-    public int getLine() {
+    public int getLine()
+    {
 	return line;
     }
 
-    public void setLine(int line) {
+    public void setLine(int line)
+    {
 	this.line = line;
     }
 
-    public void setCharPositionInLine(int pos) {
+    public void setCharPositionInLine(int pos)
+    {
 	this.charPositionInLine = pos;
     }
 
-    public int getCharPositionInLine() {
+    public int getCharPositionInLine()
+    {
 	return charPositionInLine;
     }
 
-    public void consume() {
+    public void consume()
+    {
 	int c = input.read();
 	index++;
 	charPositionInLine++;
 
-	if (c == '\n') {
+	if (c == '\n')
+	{
 	    line++;
 	    charPositionInLine = 0;
 	}
     }
 
-    public int LA(int i) {
-	if (i == 0) {
+    public int LA(int i)
+    {
+	if (i == 0)
+	{
 	    return 0; // undefined
 	}
 
 	int c = 0;
-	for (int j = 0; j < i; j++) {
+	for (int j = 0; j < i; j++)
+	{
 	    c = read();
 	}
 	backup(i);
@@ -96,17 +112,21 @@ public class NetbeansAntlrStream implements CharStream {
      * @author Terence Parr
      * @source org.antlr.runtime.ANTLRStringStream.java
      */
-    public int mark() {
-	if (markers == null) {
+    public int mark()
+    {
+	if (markers == null)
+	{
 	    markers = new ArrayList<CharStreamState>();
 	    markers.add(null); // depth 0 means no backtracking, leave blank
 	}
 	markDepth++;
 	CharStreamState state = null;
-	if (markDepth >= markers.size()) {
+	if (markDepth >= markers.size())
+	{
 	    state = new CharStreamState();
 	    markers.add(state);
-	} else {
+	} else
+	{
 	    state = markers.get(markDepth);
 	}
 	state.index = index;
@@ -117,11 +137,13 @@ public class NetbeansAntlrStream implements CharStream {
 	return markDepth;
     }
 
-    public void rewind() {
+    public void rewind()
+    {
 	rewind(lastMarker);
     }
 
-    public void rewind(int marker) {
+    public void rewind(int marker)
+    {
 	CharStreamState state = markers.get(marker);
 	// restore stream state
 	seek(state.index);
@@ -130,48 +152,58 @@ public class NetbeansAntlrStream implements CharStream {
 	release(marker);
     }
 
-    public void release(int marker) {
+    public void release(int marker)
+    {
 	// unwind any other markers made after m and release m
 	markDepth = marker;
 	// release this marker
 	markDepth--;
     }
 
-    public void seek(int index) {
-	if (index < this.index) {
+    public void seek(int index)
+    {
+	if (index < this.index)
+	{
 	    backup(this.index - index);
 	    this.index = index; // just jump; don't update stream state (line, ...)
 	    return;
 	}
 
 	// seek forward, consume until p hits index
-	while (this.index < index) {
+	while (this.index < index)
+	{
 	    consume();
 	}
     }
 
-    public int index() {
+    public int index()
+    {
 	return index;
     }
 
-    public int size() {
+    public int size()
+    {
 	return -1; //unknown...
     }
 
-    public String getSourceName() {
+    public String getSourceName()
+    {
 	return name;
     }
 
-    private int read() {
+    private int read()
+    {
 	int result = input.read();
-	if (result == LexerInput.EOF) {
+	if (result == LexerInput.EOF)
+	{
 	    result = CharStream.EOF;
 	}
 
 	return result;
     }
 
-    private void backup(int count) {
+    private void backup(int count)
+    {
 	input.backup(count);
     }
 }

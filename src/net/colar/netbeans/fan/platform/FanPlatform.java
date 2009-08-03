@@ -7,7 +7,8 @@ package net.colar.netbeans.fan.platform;
 import java.io.File;
 
 /**
- *
+ * Provides acces to "plaform" settings
+ * For exampel FAN_HOME etc...
  * @author thibautc
  */
 public class FanPlatform

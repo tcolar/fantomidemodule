@@ -21,7 +21,8 @@ import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 
 /**
- *
+ * Parser impl.
+ * Bridges NB parser with ANTLR parser
  * @author tcolar
  */
 public class NBFanParser extends Parser{
@@ -46,7 +47,6 @@ public class NBFanParser extends Parser{
 	    throw new ParseException("Parser Exception.",e);
 	}
 
-	// AST stuff
 	//result.dumpTree();
     }
 

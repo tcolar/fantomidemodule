@@ -12,62 +12,77 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
 /**
- *
+ * Represent a TokenID as found in the lexer tokenstream
  * @author thibautc
  */
-public class FanTokenID implements TokenId {
+public class FanTokenID implements TokenId
+{
 
-    public static final String FAN_MIME_TYPE = "text/x-fan";
     private final String name;
     private final String category;
     private final int ordinal;
     private String fixedText;
 
-    public FanTokenID(String name, int ordinal, String category) {
+    public FanTokenID(String name, int ordinal, String category)
+    {
 	this.name = name;
 	this.ordinal = ordinal;
 	this.category = category;
     }
 
-    public String name() {
+    public String name()
+    {
 	return name;
     }
 
-    public int ordinal() {
+    public int ordinal()
+    {
 	return ordinal;
     }
 
-    public String primaryCategory() {
+    public String primaryCategory()
+    {
 	return category;
     }
 
-    public void setFixedText(String text) {
+    public void setFixedText(String text)
+    {
 	fixedText = text;
     }
 
-    public String getFixedText() {
+    public String getFixedText()
+    {
 	return fixedText;
     }
-    
-    private static final Language<FanTokenID> language = new LanguageHierarchy<FanTokenID>() {
+
+    /**
+     * Basic language hierarchy impl.
+     * (Static init block)
+     */
+    private static final Language<FanTokenID> language = new LanguageHierarchy<FanTokenID>()
+    {
 
 	@Override
-	protected String mimeType() {
-	    return FAN_MIME_TYPE;
+	protected String mimeType()
+	{
+	    return FanLanguage.FAN_MIME_TYPE;
 	}
 
 	@Override
-	protected Collection<FanTokenID> createTokenIds() {
+	protected Collection<FanTokenID> createTokenIds()
+	{
 	    return NBFanLexer.getTokenIds();
 	}
 
 	@Override
-	protected Lexer<FanTokenID> createLexer(LexerRestartInfo<FanTokenID> info) {
+	protected Lexer<FanTokenID> createLexer(LexerRestartInfo<FanTokenID> info)
+	{
 	    return new NBFanLexer(info);
 	}
     }.language();
 
-    public static Language<FanTokenID> language() {
+    public static Language<FanTokenID> language()
+    {
 	return language;
     }
 }

@@ -12,7 +12,8 @@ import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 
 /**
- *
+ * Children Nodes of FanNode
+ * Nothing too special here, just lookup the children
  * @author tcolar
  */
 public class FanNodeChildren extends FilterNode.Children

@@ -10,7 +10,7 @@ import org.netbeans.spi.options.AdvancedOption;
 import org.netbeans.spi.options.OptionsPanelController;
 
 /**
- *
+ * AdvancedOption panel provider fro Fan
  * @author tcolar
  */
 public class FanGlobalSettings extends AdvancedOption

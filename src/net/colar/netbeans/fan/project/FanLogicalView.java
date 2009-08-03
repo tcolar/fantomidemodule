@@ -15,6 +15,8 @@ import org.openide.util.Exceptions;
 
 /**
  * Logical view for Fan project
+ * Logical View provides the nodeTree for displaying project files tree in "project" tab of netbeans
+ * So we can show/hide and group files ina  logical way.
  * @author thibautc
  */
 public class FanLogicalView implements LogicalViewProvider
@@ -53,7 +55,6 @@ public class FanLogicalView implements LogicalViewProvider
 	    //read-only filesystem or something evil happened:
 	    return new AbstractNode(Children.LEAF);
 	}
-//	return NodeFactorySupport.createCompositeChildren(project, REGISTERED_NODE_LOCATION).getNodeAt(0);
     }
 
     @Override

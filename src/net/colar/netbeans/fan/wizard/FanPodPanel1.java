@@ -9,6 +9,11 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
+/*
+ * New Fan project/pod wizard panel
+ *
+ * @author thibautc
+ */
 public final class FanPodPanel1 extends JPanel
 {
 

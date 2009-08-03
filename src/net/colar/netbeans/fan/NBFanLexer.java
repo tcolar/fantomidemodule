@@ -14,7 +14,8 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
 /**
- *
+ * Lexer implementation
+ * Bridges NB lexer with Antlr lexer.
  * @author thibautc
  */
 public class NBFanLexer implements Lexer<FanTokenID>
@@ -71,7 +72,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 
     public Object state()
     {
-	return null;//lexer.getState();
+	return null;
     }
 
     public void release()
@@ -80,19 +81,4 @@ public class NBFanLexer implements Lexer<FanTokenID>
 	//tokens = null;
     }
 
-    /*private void dealWithUnclosedToken(FanLexer lexer, CommonToken curToken)
-    {
-	    // try to revover from imcomplete tokens
-	    int state = lexer.getState();
-	    switch (state)
-	    {
-		case FanStates.INCOMPLETE_DSL:
-		    System.err.println("Unclosed token: "+curToken.getText());
-
-		    curToken.setType(FanLexer.INCOMPLETE_DSL);
-		    //lexer.consumeUntil(lexer.getCharStream(), -1);
-		    break;
-	    }
-	    lexer.clearState();
-    }*/
 }

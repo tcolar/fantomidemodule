@@ -4,11 +4,6 @@
  */
 package net.colar.netbeans.fan.project;
 
-/**
- * Inspired/copied from Docbook project
- * http://hg.netbeans.org/main/contrib/file/e3f63eeb0f1f/docbook.project/src/org/netbeans/modules/docbook/project/DbProject.java
- * @author thibautc
- */
 import java.beans.PropertyChangeListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,6 +25,13 @@ import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
+/**
+* Inspired/copied from Docbook project
+* Fan Project implementation
+* Provides detection of fan project(folder with build.fan)
+* Provides actions list(Actionprovider innerclass) allowed to be run on project item (run/debug etc...)
+* @author thibautc
+*/
 public class FanProject implements Project, ProjectInformation
 {
 
@@ -97,6 +99,10 @@ public class FanProject implements Project, ProjectInformation
 	return projectDirectory.getFileObject(FanProjectFactory.FAN_BUILD_FILE) != null;
     }
 
+    /**
+     * ActionProvider impl.
+     * Provides supported actions for project.
+     */
     private final class FanActionProvider implements ActionProvider
     {
 

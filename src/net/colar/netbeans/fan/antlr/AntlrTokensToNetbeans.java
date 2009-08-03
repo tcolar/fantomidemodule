@@ -14,11 +14,15 @@ import java.util.Hashtable;
 /**
  * Takes the Antlr generated token list,
  * and create a java file from them, containing TokenID's
+ * This is then used by the lexer/parser impl.
  * @author thibautc
  */
 public class AntlrTokensToNetbeans
 {
-
+    /**
+     * Set some categories for the tokens (for color highlighting)
+     * @return
+     */
     private static Hashtable getCategories()
     {
 	Hashtable<String,String> cats = new Hashtable<String,String>();

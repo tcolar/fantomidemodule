@@ -14,7 +14,7 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Controller for Fan options panel.
  * @author tcolar
  */
 public class FanGlobalSettingsController extends OptionsPanelController

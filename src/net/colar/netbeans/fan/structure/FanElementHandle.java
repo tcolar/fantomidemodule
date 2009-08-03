@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.colar.netbeans.fan.structure;
 
 import java.util.HashSet;
@@ -17,61 +16,71 @@ import org.netbeans.modules.parsing.api.Source;
 import org.openide.filesystems.FileObject;
 
 /**
- *
+ * Element Handle impl.
+ * Used by structureAnalyzer
  * @author tcolar
  */
-public class FanElementHandle implements ElementHandle{
+public class FanElementHandle implements ElementHandle
+{
+
     private final ParserResult result;
     private final Source source;
     private final CommonToken token;
     private ElementKind kind;
     private OffsetRange offsetRange;
-    private Set<Modifier> modifiers=new HashSet<Modifier>();
+    private Set<Modifier> modifiers = new HashSet<Modifier>();
 
     public FanElementHandle(ElementKind kind, CommonToken token, ParserResult result, OffsetRange range)
     {
-	this.token=token;
-	this.result=result;
-	this.source=result.getSnapshot().getSource();
-	this.kind=kind;
-	this.offsetRange=range;
+	this.token = token;
+	this.result = result;
+	this.source = result.getSnapshot().getSource();
+	this.kind = kind;
+	this.offsetRange = range;
     }
 
-    public FileObject getFileObject() {
+    public FileObject getFileObject()
+    {
 	return source.getFileObject();
     }
 
-    public String getMimeType() {
+    public String getMimeType()
+    {
 	return source.getMimeType();
     }
 
-    public String getName() {
+    public String getName()
+    {
 	return token.getText();
     }
 
-    public String getIn() {
+    public String getIn()
+    {
 	return "";
     }
 
-    public ElementKind getKind() {
+    public ElementKind getKind()
+    {
 	return kind;
     }
 
-    public Set<Modifier> getModifiers() {
+    public Set<Modifier> getModifiers()
+    {
 	return modifiers;
     }
 
     public void setModifiers(Set<Modifier> modifiers)
     {
-	this.modifiers=modifiers;
+	this.modifiers = modifiers;
     }
 
-    public boolean signatureEquals(ElementHandle arg0) {
+    public boolean signatureEquals(ElementHandle arg0)
+    {
 	return false;//TODO
     }
 
-    public OffsetRange getOffsetRange(ParserResult result) {
+    public OffsetRange getOffsetRange(ParserResult result)
+    {
 	return offsetRange;
     }
-
 }

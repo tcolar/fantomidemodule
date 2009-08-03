@@ -22,6 +22,10 @@ import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
+/**
+ * Iterator for new Fan file wizard
+ * @author thibautc
+ */
 public final class NewFileWizardIterator implements WizardDescriptor.InstantiatingIterator
 {
 

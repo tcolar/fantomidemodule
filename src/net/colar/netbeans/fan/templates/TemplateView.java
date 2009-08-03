@@ -7,7 +7,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 /**
- *
+ * Custom view for tJOT templates used in netbeans.
  * @author thibautc
  */
 public class TemplateView extends JOTLightweightView
@@ -25,8 +25,16 @@ public class TemplateView extends JOTLightweightView
 	addVariable("user", System.getProperty("user.name"));
     }
 
+    /**
+     * Support for including subtemplates
+     * Standard jot:include is not supported in LightweightViews
+     * And NB doesn't use standrad files, but FileObjects
+     * @param path
+     * @return
+     */
     public String includeTemplate(String path)
     {
+	// TODO: not working
 	String result = "";
 	FileObject tpl = root.getFileObject("Licenses").getFileObject(path);
 	try

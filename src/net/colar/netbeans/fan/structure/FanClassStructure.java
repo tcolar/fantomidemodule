@@ -10,7 +10,7 @@ import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.spi.ParserResult;
 
 /**
- *
+ * Class structure item.
  * @author tcolar
  */
 public class FanClassStructure extends FanStructureItem
@@ -18,7 +18,5 @@ public class FanClassStructure extends FanStructureItem
     public FanClassStructure(CommonTree node, ParserResult result)
     {
 	super(node, ElementKind.CLASS, result);
-	//TODO
-	//name="";
     }
 }

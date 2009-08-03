@@ -22,12 +22,15 @@ import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.ParserResult;
 
 /**
- *
+ * StructureScanner impl.
+ * Generates a structure tree from the source (~AST), used for Navigator window (class,enum,mixin,field...)
+ * Also provides code folding support.
+ * 
+ * See: http://hg.netbeans.org/main/file/24d72d2643e1/csl.api/src/org/netbeans/modules/csl/editor/fold/GsfFoldManager.java
  * @author thibautc
  */
 public class FanStructureAnalyzer implements StructureScanner
 {
-//http://hg.netbeans.org/main/file/24d72d2643e1/csl.api/src/org/netbeans/modules/csl/editor/fold/GsfFoldManager.java
 
     public static final String CODE_FOLDS = "codeblocks";
     public static final String DOC_FOLDS = "comments";
@@ -136,6 +139,7 @@ public class FanStructureAnalyzer implements StructureScanner
 		// For the ROOT node, we had directly to list, not sublist
 		if (node.isNil() || item == null)
 		{
+		    //recurse into children
 		    scanTree(list, subNode, result, trace);
 		} else
 		{
@@ -238,7 +242,7 @@ public class FanStructureAnalyzer implements StructureScanner
 		    break;
 		case FanParser.AST_DOCS:
 		//TODO: comments folding (in hidden channel)
-		//TODO: also imports (using)
+		//TODO: also imports folding (using)
 		//case FanParser.MULTI_COMMENT:
 		    type = DOC_FOLDS;
 		    foldable = true;

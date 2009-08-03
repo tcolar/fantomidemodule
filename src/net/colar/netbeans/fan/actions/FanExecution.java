@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.colar.netbeans.fan.actions;
 
 import java.io.File;
@@ -25,9 +24,13 @@ import org.openide.util.Exceptions;
 
 /**
  * Mostly copied from python module
+ * Provides shell for running external commands
+ * @author thibautc
  */
-public class FanExecution {
+public class FanExecution
+{
     // execution commands
+
     private String command;
     private String workingDirectory;
     private String commandArgs;
@@ -43,212 +46,254 @@ public class FanExecution {
     private boolean lineBased;
     private Runnable postExecutionHook;
 
-    public FanExecution() {
-
+    public FanExecution()
+    {
     }
 
-    public ExecutionDescriptor toExecutionDescriptor() {
-        return descriptor;
+    public ExecutionDescriptor toExecutionDescriptor()
+    {
+	return descriptor;
     }
-
     //internal process control
-    private ExecutionDescriptor descriptor = new ExecutionDescriptor()
-            .frontWindow(true).controllable(true).inputVisible(true)
-                .showProgress(true).showSuspended(true);
+    private ExecutionDescriptor descriptor = new ExecutionDescriptor().frontWindow(true).controllable(true).inputVisible(true).showProgress(true).showSuspended(true);
 
     /**
      * Execute the process described by this object
      * @return a Future object that provides the status of the running process
      */
-    public synchronized Future<Integer> run(){
-        try {
-            ExecutionService service =
-                    ExecutionService.newService(
-                    buildProcess(),
-                    descriptor, displayName);
-            //io = descriptor.getInputOutput();
-            // Start Service
-           return service.run();
-            //io = InputOutputManager.getInputOutput(displayName, true, path).getInputOutput();
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
-            return null;
-        }
+    public synchronized Future<Integer> run()
+    {
+	try
+	{
+	    ExecutionService service =
+		    ExecutionService.newService(
+		    buildProcess(),
+		    descriptor, displayName);
+	    //io = descriptor.getInputOutput();
+	    // Start Service
+	    return service.run();
+	    //io = InputOutputManager.getInputOutput(displayName, true, path).getInputOutput();
+	} catch (Exception ex)
+	{
+	    Exceptions.printStackTrace(ex);
+	    return null;
+	}
 
     }
 
+    public ExternalProcessBuilder buildProcess() throws IOException
+    {
+	ExternalProcessBuilder processBuilder =
+		new ExternalProcessBuilder(command);
+	if (workingDirectory == null)
+	{
+	    workingDirectory = new File(".").getAbsolutePath();
+	}
+	processBuilder = processBuilder.workingDirectory(new File(workingDirectory));
+	if ((commandArgs != null) && (commandArgs.trim().length() > 0))
+	{
+	    processBuilder = processBuilder.addArgument(commandArgs);
+	}
 
-    public ExternalProcessBuilder buildProcess() throws IOException{
-        ExternalProcessBuilder processBuilder =
-                    new ExternalProcessBuilder(command);
-	if(workingDirectory==null)
-	    workingDirectory=new File(".").getAbsolutePath();
-            processBuilder = processBuilder.workingDirectory(new File(workingDirectory));
-            if ( (commandArgs != null) && ( commandArgs.trim().length() > 0 )  )
-               processBuilder = processBuilder.addArgument(commandArgs);
+	System.err.println("will execute: " + command + " " + commandArgs);
 
-	    System.err.println("will execute: "+command+" "+commandArgs);
-
-            processBuilder = processBuilder.redirectErrorStream(redirect);
-            return processBuilder;
+	processBuilder = processBuilder.redirectErrorStream(redirect);
+	return processBuilder;
     }
 
-    private ExecutionDescriptor buildDescriptor(){
+    private ExecutionDescriptor buildDescriptor()
+    {
 
-            return descriptor;
-    }
-    public synchronized String getCommand() {
-        return command;
+	return descriptor;
     }
 
-    public synchronized void setCommand(String command) {
-        this.command = command;
+    public synchronized String getCommand()
+    {
+	return command;
     }
 
-    public synchronized String getCommandArgs() {
-        return commandArgs;
+    public synchronized void setCommand(String command)
+    {
+	this.command = command;
     }
 
-    public synchronized void setCommandArgs(String commandArgs) {
-        this.commandArgs = commandArgs;
+    public synchronized String getCommandArgs()
+    {
+	return commandArgs;
     }
 
-    public synchronized String getWorkingDirectory() {
-        return workingDirectory;
+    public synchronized void setCommandArgs(String commandArgs)
+    {
+	this.commandArgs = commandArgs;
     }
 
-    public synchronized void setWorkingDirectory(String workingDirectory) {
-        this.workingDirectory = workingDirectory;
+    public synchronized String getWorkingDirectory()
+    {
+	return workingDirectory;
     }
 
-    public synchronized String getDisplayName() {
-        return displayName;
+    public synchronized void setWorkingDirectory(String workingDirectory)
+    {
+	this.workingDirectory = workingDirectory;
     }
 
-    public synchronized void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public synchronized String getDisplayName()
+    {
+	return displayName;
     }
 
-    public synchronized void setShowControls(boolean showControls) {
-       descriptor = descriptor.controllable(showControls);
+    public synchronized void setDisplayName(String displayName)
+    {
+	this.displayName = displayName;
     }
 
-    public FanExecution addOutConvertor(LineConvertor convertor) {
-        this.outConvertors.add(convertor);
-        descriptor = descriptor.outConvertorFactory(lineConvertorFactory(outConvertors));
-        return this;
+    public synchronized void setShowControls(boolean showControls)
+    {
+	descriptor = descriptor.controllable(showControls);
     }
 
-    public FanExecution addErrConvertor(LineConvertor convertor) {
-        this.errConvertors.add(convertor);
-        descriptor = descriptor.errConvertorFactory(lineConvertorFactory(errConvertors));
-        return this;
+    public FanExecution addOutConvertor(LineConvertor convertor)
+    {
+	this.outConvertors.add(convertor);
+	descriptor = descriptor.outConvertorFactory(lineConvertorFactory(outConvertors));
+	return this;
     }
 
-    public synchronized void addStandardRecognizers() {
-        this.addStandardConvertors = true;
-        descriptor = descriptor.outConvertorFactory(lineConvertorFactory(outConvertors));
-        descriptor = descriptor.errConvertorFactory(lineConvertorFactory(errConvertors));
+    public FanExecution addErrConvertor(LineConvertor convertor)
+    {
+	this.errConvertors.add(convertor);
+	descriptor = descriptor.errConvertorFactory(lineConvertorFactory(errConvertors));
+	return this;
     }
 
-    public void setErrProcessorFactory(InputProcessorFactory errProcessorFactory) {
-        this.errProcessorFactory = errProcessorFactory;
-        descriptor = descriptor.errProcessorFactory(errProcessorFactory);
+    public synchronized void addStandardRecognizers()
+    {
+	this.addStandardConvertors = true;
+	descriptor = descriptor.outConvertorFactory(lineConvertorFactory(outConvertors));
+	descriptor = descriptor.errConvertorFactory(lineConvertorFactory(errConvertors));
     }
 
-    public void setOutProcessorFactory(InputProcessorFactory outProcessorFactory) {
-        this.outProcessorFactory = outProcessorFactory;
-        descriptor = descriptor.outProcessorFactory(outProcessorFactory);
+    public void setErrProcessorFactory(InputProcessorFactory errProcessorFactory)
+    {
+	this.errProcessorFactory = errProcessorFactory;
+	descriptor = descriptor.errProcessorFactory(errProcessorFactory);
     }
 
-    public FanExecution lineBased(boolean lineBased) {
-        this.lineBased = lineBased;
-        if (lineBased) {
-            descriptor = descriptor.errLineBased(lineBased).outLineBased(lineBased);
-        }
-
-        return this;
+    public void setOutProcessorFactory(InputProcessorFactory outProcessorFactory)
+    {
+	this.outProcessorFactory = outProcessorFactory;
+	descriptor = descriptor.outProcessorFactory(outProcessorFactory);
     }
 
-    private LineConvertorFactory lineConvertorFactory(List<LineConvertor> convertors) {
-        LineConvertor[] convertorArray = convertors.toArray(new LineConvertor[convertors.size()]);
-        if (addStandardConvertors) {
-            return FanLineFactory.withStandardConvertors(fileLocator, convertorArray);
-        }
-        return FanLineFactory.create(fileLocator, convertorArray);
+    public FanExecution lineBased(boolean lineBased)
+    {
+	this.lineBased = lineBased;
+	if (lineBased)
+	{
+	    descriptor = descriptor.errLineBased(lineBased).outLineBased(lineBased);
+	}
+
+	return this;
     }
 
-
-    public synchronized void setShowInput(boolean showInput) {
-        descriptor = descriptor.inputVisible(showInput);
+    private LineConvertorFactory lineConvertorFactory(List<LineConvertor> convertors)
+    {
+	LineConvertor[] convertorArray = convertors.toArray(new LineConvertor[convertors.size()]);
+	if (addStandardConvertors)
+	{
+	    return FanLineFactory.withStandardConvertors(fileLocator, convertorArray);
+	}
+	return FanLineFactory.create(fileLocator, convertorArray);
     }
 
-    public synchronized void setRedirectError(boolean redirect){
-        this.redirect = redirect;
+    public synchronized void setShowInput(boolean showInput)
+    {
+	descriptor = descriptor.inputVisible(showInput);
     }
 
-    public synchronized void setShowProgress(boolean showProgress) {
-        descriptor = descriptor.showProgress(showProgress);
+    public synchronized void setRedirectError(boolean redirect)
+    {
+	this.redirect = redirect;
     }
+
+    public synchronized void setShowProgress(boolean showProgress)
+    {
+	descriptor = descriptor.showProgress(showProgress);
+    }
+
     /**
      * Can the process be suppended
      * @param showSuspended boolean to set the status
      */
-    public synchronized void setShowSuspended(boolean showSuspended) {
-        descriptor = descriptor.showSuspended(showSuspended);
+    public synchronized void setShowSuspended(boolean showSuspended)
+    {
+	descriptor = descriptor.showSuspended(showSuspended);
     }
+
     /**
      * Show the window of the running process
      * @param showWindow display the windown or not?
      */
-    public synchronized void setShowWindow(boolean showWindow) {
-        descriptor = descriptor.frontWindow(showWindow);
+    public synchronized void setShowWindow(boolean showWindow)
+    {
+	descriptor = descriptor.frontWindow(showWindow);
     }
-
     private final FanOutputProcessor outProcessor = new FanOutputProcessor();
+
     /**
      * Attach a Processor to collect the output of the running process
      */
-    public void attachOutputProcessor(){
-        descriptor = descriptor.outProcessorFactory(new ExecutionDescriptor.InputProcessorFactory() {
+    public void attachOutputProcessor()
+    {
+	descriptor = descriptor.outProcessorFactory(new ExecutionDescriptor.InputProcessorFactory()
+	{
 
-            public InputProcessor newInputProcessor() {
-                return outProcessor;
-            }
+	    public InputProcessor newInputProcessor()
+	    {
+		return outProcessor;
+	    }
 
-            public InputProcessor newInputProcessor(InputProcessor defaultProcessor) {
-                return outProcessor;
-            }
-        });
+	    public InputProcessor newInputProcessor(InputProcessor defaultProcessor)
+	    {
+		return outProcessor;
+	    }
+	});
     }
 
-    public void setPostExecutionHook(Runnable runnable) {
-        postExecutionHook = runnable;
-        descriptor = descriptor.postExecution(runnable);
+    public void setPostExecutionHook(Runnable runnable)
+    {
+	postExecutionHook = runnable;
+	descriptor = descriptor.postExecution(runnable);
     }
 
-    public Runnable getPostExecutionHook() {
-        return postExecutionHook;
+    public Runnable getPostExecutionHook()
+    {
+	return postExecutionHook;
     }
 
     /**
      * Retive the output form the running process
      * @return a string reader for the process
      */
-    public Reader getOutput(){
-        return new StringReader(outProcessor.getData());
+    public Reader getOutput()
+    {
+	return new StringReader(outProcessor.getData());
     }
+
     /**
      * Attach input processor to the running process
      */
-    public void attachInputProcessor(){
-        //descriptor = descriptor.
+    public void attachInputProcessor()
+    {
+	//descriptor = descriptor.
     }
+
     /**
      * Writes data to the running process
      * @return StringWirter
      */
-    public Writer getInput(){
-        return null;
+    public Writer getInput()
+    {
+	return null;
     }
 }

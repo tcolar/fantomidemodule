@@ -10,7 +10,7 @@ import net.colar.netbeans.fan.project.FanProject;
 import org.openide.util.Lookup;
 
 /**
- * Run the Fan interactive shell.
+ * Runs the Fan interactive shell.
  * @author tcolar
  */
 public class RunFanShellAction extends FanAction

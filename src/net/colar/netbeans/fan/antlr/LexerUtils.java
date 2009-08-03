@@ -11,7 +11,8 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 
 /**
- *
+ * Utilities for lexer
+ * For example helps finding the Token at a given position in the text ddocument.
  * @author tcolar
  */
 public class LexerUtils

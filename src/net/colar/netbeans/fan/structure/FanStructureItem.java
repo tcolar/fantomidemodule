@@ -21,7 +21,8 @@ import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.ParserResult;
 
 /**
- *
+ * Implementation of a  StructureItem
+ * Represents an item(ex: class) as found by the structureanalyzer
  * @author thibautc
  */
 public class FanStructureItem implements StructureItem

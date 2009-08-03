@@ -16,6 +16,10 @@ import org.openide.nodes.Children;
 import org.openide.util.Lookup;
 import org.openide.text.DataEditorSupport;
 
+/**
+ * Standard data object
+ * @author thibautc
+ */
 public class FanDataObject extends MultiDataObject
 {
 

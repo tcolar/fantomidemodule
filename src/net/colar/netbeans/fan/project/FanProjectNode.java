@@ -9,7 +9,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 
 /**
- *
+ * Project (master) node.
  * @author tcolar
  */
 public class FanProjectNode extends FanNode

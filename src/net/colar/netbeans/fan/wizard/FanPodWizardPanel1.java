@@ -13,6 +13,10 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
+/**
+ * Panel for new Fan file wizard
+ * @author thibautc
+ */
 public class FanPodWizardPanel1 implements WizardDescriptor.Panel
 {
 

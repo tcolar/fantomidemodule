@@ -11,11 +11,13 @@ import net.jot.web.view.JOTViewParser;
 import net.jot.web.views.JOTLightweightView;
 
 /**
- * Alternative to using fremarker which has lotsf dependencies in NB and wouldn't parse the files for some reason.
+ * Provide acces to JavaOnTrack templating API
+ * Alternative to using fremarker which has large dependencies in NB and wouldn't parse the files for some reason.
  * @author thibautc
  */
 public class TemplateUtils
 {
+    // JOT needs a logger setup.
     public static File LOG_FILE;
     static
     {
@@ -29,7 +31,7 @@ public class TemplateUtils
 
 
     /**
-     * Parsed a jot template
+     * Create a file using a template and a view.
      * @param view
      * @param template
      * @param destFile

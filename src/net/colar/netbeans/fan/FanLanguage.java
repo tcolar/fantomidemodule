@@ -15,10 +15,15 @@ import org.netbeans.modules.parsing.spi.Parser;
 
 
 /**
+ * Primamry Fan language definition
+ * Provides "hooks" into various language support implementation
  * * @author thibautc
  */
 public class FanLanguage extends DefaultLanguageConfig
 {
+    // Fan mime Type (used all over)
+    public static final String FAN_MIME_TYPE = "text/x-fan";
+
     public FanLanguage()
     {
 	super();

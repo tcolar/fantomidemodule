@@ -9,6 +9,7 @@ import org.netbeans.api.extexecution.input.InputProcessor;
 
 /**
  * Copied from Python module
+ * Receives output from external process
  * @author tcolar
  */
 public class FanOutputProcessor implements InputProcessor

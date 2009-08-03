@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.LexerUtils;
@@ -20,7 +21,9 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.editor.BaseDocument;
 
 /**
- * 
+ * Impl. of keystrokeHandler
+ * Provides support for closing bracket/quote insertion and the likes
+ * Also deals with trying to guess/insert proper indentation.
  * @author tcolar
  */
 public class FanKeyStrokeHandler implements KeystrokeHandler
@@ -83,7 +86,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	    return false;
 	}
 
-	// Add closing item/brace when opening entered
+	// Automatically add closing item/brace when opening one entered
 	switch (car)
 	{
 	    case '{':
@@ -117,6 +120,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		}
 		break;
 	}
+	// do the insertiuon job
 	if (toInsert.length() > 0)
 	{
 	    doc.insertString(caretOffset, toInsert, null);
@@ -138,7 +142,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
     public boolean charBackspaced(Document document, int caretOffset, JTextComponent target, char car) throws BadLocationException
     {
-	// If we just auto-added chars in beforeCharInserted()
+	// If we just auto-added chars in beforeCharInserted() and the user press backspace right away,
 	// we remove them now.
 	if (lastAdditions > 0)
 	{
@@ -180,7 +184,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
     public boolean isInsertMatchingEnabled(BaseDocument doc)
     {
 	// Default: true
-	EditorOptions options = EditorOptions.get(FanTokenID.FAN_MIME_TYPE);
+	EditorOptions options = EditorOptions.get(FanLanguage.FAN_MIME_TYPE);
 	if (options != null)
 	{
 	    return options.getMatchBrackets();
