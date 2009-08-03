@@ -7,6 +7,7 @@ package net.colar.netbeans.fan.handlers;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanLanguage;
@@ -14,11 +15,13 @@ import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.LexerUtils;
 import org.netbeans.api.lexer.Token;
+import org.netbeans.editor.BaseDocument;
+import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.EditorOptions;
 import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.editor.indent.api.IndentUtils;
 
 /**
  * Impl. of keystrokeHandler
@@ -156,9 +159,60 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
     public int beforeBreak(Document document, int caretOffset, JTextComponent target) throws BadLocationException
     {
-	// TODO if withing doc -> insert the ** on next line ?
-	// TODO indentation ?
-	return -1;
+	//String NL =/*Character.LINE_SEPARATOR*/ "\n";
+	int tabSize=IndentUtils.tabSize(document);
+	Caret caret = target.getCaret();
+	BaseDocument doc = (BaseDocument) document;
+
+	int lineBegin = Utilities.getRowStart(doc, caretOffset);
+	int lineEnd = Utilities.getRowEnd(doc, caretOffset);
+
+	int above = Utilities.getPositionAbove(target, caretOffset, 0);
+	int prevLineBegin = Utilities.getRowStart(doc, above);
+	int prevLineEnd = Utilities.getRowEnd(doc, above);
+
+	String line = null;
+	String prevLine = null;
+	if (lineBegin > -1 && lineEnd > lineBegin)
+	{
+	    line = doc.getText(lineBegin, lineEnd - lineBegin);
+	}
+	if (prevLineBegin > -1 && prevLineEnd > prevLineBegin)
+	{
+	    prevLine = doc.getText(prevLineBegin, prevLineEnd - prevLineBegin);
+	}
+
+	String lineHead = doc.getText(lineBegin, caretOffset - lineBegin);
+	String lineTail = doc.getText(caretOffset, lineEnd - caretOffset);
+
+	// standard indent (same as the line we pressed return on)
+	int indent = 0;
+	if (lineBegin > 0)
+	{
+	    indent = IndentUtils.lineIndent(document, lineBegin);
+	}
+
+	String insert = "";
+	String trimmedLine = line.trim();
+	if (line != null)
+	{
+	    // If within doc -> insert the ** on next line
+	    // insert only if the prev doc line is not empty("**") - except for first one (empty ok)
+	    boolean isFirstDocLine = prevLine == null || !prevLine.trim().startsWith("**");
+	    if (trimmedLine.startsWith("**") && (isFirstDocLine || trimmedLine.length() > 3))
+	    {
+		insert = "** ";
+	    } else if (lineHead.trim().endsWith("{"))
+	    {
+		indent+=tabSize;
+	    }
+	}
+
+	// Do the insertion.
+	String indentStr = IndentUtils.createIndentString(document, indent);
+	doc.insertString(caretOffset, indentStr + insert, null);
+	caret.setDot(caretOffset);
+	return caretOffset + indentStr.length() + insert.length() + 1;
     }
 
     public OffsetRange findMatching(Document document, int caretOffset)
