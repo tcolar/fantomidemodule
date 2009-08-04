@@ -15,6 +15,8 @@ import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.LexerUtils;
 import org.netbeans.api.lexer.Token;
+import org.netbeans.api.lexer.TokenId;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.EditorOptions;
@@ -34,11 +36,17 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
     private int lastAdditions;
 
+    @Override
     public boolean beforeCharInserted(Document document, int caretOffset, JTextComponent target, char car) throws BadLocationException
     {
+	BaseDocument doc = (BaseDocument) document;
+	if (!isInsertMatchingEnabled(doc))
+	{
+	    return false;
+	}
+
 	lastAdditions = 0;
 	boolean modified = false;
-	BaseDocument doc = (BaseDocument) document;
 	String toInsert = "";
 	String prev = null;
 	if (caretOffset > 0)
@@ -54,14 +62,13 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		(car == '`' && token.id().ordinal() == FanLexer.INC_URI) ||
 		(car == '\'' && token.id().ordinal() == FanLexer.CHAR) ||
 		(car == '`' && token.id().ordinal() == FanLexer.INC_URI) ||
-		(car == '`' && token.id().ordinal() == FanLexer.URI) ||
-		(car == '}' && lastUnclosedToken(caretOffset)=='{') ||
-		(car == ')' && lastUnclosedToken(caretOffset)=='(') ||
-		(car == '[' && lastUnclosedToken(caretOffset)==']')
-		)
+		(car == '`' && token.id().ordinal() == FanLexer.URI)/* ||
+		(car == '}' && lastUnclosedToken(caretOffset) == '{') ||
+		(car == ')' && lastUnclosedToken(caretOffset) == '(') ||
+		(car == '[' && lastUnclosedToken(caretOffset) == ']')*/)
 	{
 	    // just skip the existing same characters
-	    target.getCaret().setDot(caretOffset + 1);	    
+	    target.getCaret().setDot(caretOffset + 1);
 	    return true;
 	}
 
@@ -128,7 +135,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		}
 		break;
 	}
-	// do the insertiuon job
+	// do the insertion job
 	if (toInsert.length() > 0)
 	{
 	    doc.insertString(caretOffset, toInsert, null);
@@ -142,30 +149,37 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	return modified;
     }
 
+    @Override
     public boolean afterCharInserted(Document document, int caretOffset, JTextComponent target, char car) throws BadLocationException
     {
 	// doing all in beforeCharInserted for now.
 	return false;
     }
 
+    @Override
     public boolean charBackspaced(Document document, int caretOffset, JTextComponent target, char car) throws BadLocationException
     {
+	BaseDocument doc = (BaseDocument) document;
+	if (!isInsertMatchingEnabled(doc))
+	{
+	    return false;
+	}
+
 	// If we just auto-added chars in beforeCharInserted() and the user press backspace right away,
 	// we remove them now.
 	if (lastAdditions > 0)
 	{
-	    BaseDocument doc = (BaseDocument) document;
 	    doc.remove(caretOffset, lastAdditions);
-	    //target.getCaret().setDot(caretOffset - 1);
 	    return true;
 	}
 	return false;
     }
 
+    @Override
     public int beforeBreak(Document document, int caretOffset, JTextComponent target) throws BadLocationException
     {
 	String NL =/*Character.LINE_SEPARATOR*/ "\n";
-	int indentSize=IndentUtils.indentLevelSize(document);
+	int indentSize = IndentUtils.indentLevelSize(document);
 	Caret caret = target.getCaret();
 	BaseDocument doc = (BaseDocument) document;
 
@@ -197,25 +211,25 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	    indent = IndentUtils.lineIndent(document, lineBegin);
 	}
 
-	int dotOffset=0;
+	int dotOffset = 0;
 	String insert = "";
 	String trimmedLine = line.trim();
 	if (line != null)
 	{
 	    // If within doc -> insert the ** on next line
-	    // insert only if the prev doc line is not empty("**") - except for first one (empty ok)
+	    // insert only if the current doc line is not empty("**") - except for first one (empty ok)
 	    boolean isFirstDocLine = prevLine == null || !prevLine.trim().startsWith("**");
 	    if (trimmedLine.startsWith("**") && (isFirstDocLine || trimmedLine.length() > 3))
 	    {
 		insert = "** ";
 	    } else if (lineHead.trim().endsWith("{"))
 	    {
-		if(lineTail.trim().startsWith("}"))
+		if (lineTail.trim().startsWith("}"))
 		{
-		    insert=NL;
-		    dotOffset=-1;
+		    insert = NL;
+		    dotOffset = -1;
 		}
-		indent+=indentSize;
+		indent += indentSize;
 	    }
 	}
 
@@ -226,12 +240,71 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	return caretOffset + indentStr.length() + insert.length() + 1 + dotOffset;
     }
 
+    /**
+     * Helps finding mathcing opening/closing items (ex: {})
+     * @param document
+     * @param caretOffset
+     * @return
+     */
+    @Override
     public OffsetRange findMatching(Document document, int caretOffset)
     {
-	// not impl yet.
+	TokenSequence ts = LexerUtils.getFanTokenSequence(document);
+	int searchOffset=2; // start after rightToken
+
+	// Prefer matching the token to the right of caret
+	Token token = LexerUtils.getFanTokenAt(document, caretOffset + 1);
+	if (token == null)
+	{
+	    // if rightToken is null, use left token
+	    token = LexerUtils.getFanTokenAt(document, caretOffset);
+	    searchOffset=1; // start after leftToken
+	} else
+	{
+	    System.err.println("Right token: "+token.id().name());
+	    int ord = token.id().ordinal();
+	    // if rightToken is not 'matcheable', use left token
+	    if (ord != FanLexer.PAR_L && ord != FanLexer.PAR_R &&
+		    ord != FanLexer.SQ_BRACKET_L && ord != FanLexer.SQ_BRACKET_R &&
+		    ord != FanLexer.BRACKET_L && ord != FanLexer.BRACKET_R)
+	    {
+		token = LexerUtils.getFanTokenAt(document, caretOffset);
+		searchOffset=1; // start after leftToken
+	    }
+	}
+
+	if (token != null)
+	{
+	    int ord = token.id().ordinal();
+	    //Ok, now try to find the matching token
+	    switch (ord)
+	    {
+		case FanLexer.PAR_L:
+		    ts.move(caretOffset+searchOffset);// start after opening char
+		    return LexerUtils.findRangeFromOpening(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
+		case FanLexer.PAR_R:
+		    ts.move(caretOffset+searchOffset-1);// start before opening char (since going backward)
+		    return LexerUtils.findRangeFromClosing(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
+		case FanLexer.BRACKET_L:
+		    ts.move(caretOffset+searchOffset);
+		    return LexerUtils.findRangeFromOpening(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
+		case FanLexer.BRACKET_R:
+		    ts.move(caretOffset+searchOffset-1);
+		    return LexerUtils.findRangeFromClosing(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
+		case FanLexer.SQ_BRACKET_L:
+		    ts.move(caretOffset+searchOffset);
+		    return LexerUtils.findRangeFromOpening(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
+		case FanLexer.SQ_BRACKET_R:
+		    ts.move(caretOffset+searchOffset-1);
+		    return LexerUtils.findRangeFromClosing(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
+	    }
+
+	}
+	//default - no match
 	return OffsetRange.NONE;
     }
 
+    @Override
     public List<OffsetRange> findLogicalRanges(ParserResult arg0, int arg1)
     {
 	// not impl yet.
@@ -239,13 +312,13 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	return Collections.emptyList();
     }
 
+    @Override
     public int getNextWordOffset(Document arg0, int arg1, boolean arg2)
     {
 	// not impl yet.
 	return -1;
     }
 
-    // TODO: unused, use that after checking if this option works
     public boolean isInsertMatchingEnabled(BaseDocument doc)
     {
 	// Default: true
@@ -262,6 +335,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
     // within this ident level ?
     private char lastUnclosedToken(int caretOffset)
     {
+	//TODO
 	throw new UnsupportedOperationException("Not yet implemented");
     }
 }

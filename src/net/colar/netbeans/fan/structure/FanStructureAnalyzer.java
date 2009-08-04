@@ -72,8 +72,8 @@ public class FanStructureAnalyzer implements StructureScanner
 	{
 	    FanStructureItem item = null;
 
-	    trace += "->" + node.getText();
-	    System.err.println("NODE[ " + node.getTokenStartIndex() + " " + node.getTokenStopIndex() + "] : " + trace);//"+node.toStringTree());
+	    //trace += "->" + node.getText();
+	    //System.err.println("NODE[ " + node.getTokenStartIndex() + " " + node.getTokenStopIndex() + "] : " + trace);//"+node.toStringTree());
 	    switch (node.getType())
 	    {
 		case FanParser.AST_FIELD:
@@ -154,7 +154,7 @@ public class FanStructureAnalyzer implements StructureScanner
 
 	    if (item != null)
 	    {
-		System.err.println("Adding to list " + item.getName() + " " + trace);
+		//System.err.println("Adding to list " + item.getName() + " " + trace);
 		list.add(item);
 	    }
 	}
