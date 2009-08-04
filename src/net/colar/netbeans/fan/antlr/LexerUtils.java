@@ -84,7 +84,7 @@ public class LexerUtils
     }
 
     /**
-     * Looking for matching(balanced) opeing/closing token
+     * Looking for matching(balanced) opening/closing token
      * @param doc
      * @param ts
      * @param openingID

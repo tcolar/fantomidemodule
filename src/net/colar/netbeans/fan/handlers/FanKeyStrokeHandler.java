@@ -56,22 +56,26 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	Token<? extends FanTokenID> token = LexerUtils.getFanTokenAt(document, caretOffset);
 
 	// If User types closing item we closed automaticaly, skip it
-	if ((car == '"' && token.id().ordinal() == FanLexer.INC_STR) ||
-		(car == '"' && token.id().ordinal() == FanLexer.STR) ||
-		(car == '"' && token.id().ordinal() == FanLexer.QUOTSTR) ||
-		(car == '`' && token.id().ordinal() == FanLexer.INC_URI) ||
-		(car == '\'' && token.id().ordinal() == FanLexer.CHAR) ||
-		(car == '`' && token.id().ordinal() == FanLexer.INC_URI) ||
-		(car == '`' && token.id().ordinal() == FanLexer.URI)/* ||
-		(car == '}' && lastUnclosedToken(caretOffset) == '{') ||
-		(car == ')' && lastUnclosedToken(caretOffset) == '(') ||
-		(car == '[' && lastUnclosedToken(caretOffset) == ']')*/)
+	if (token != null)
 	{
-	    // just skip the existing same characters
-	    target.getCaret().setDot(caretOffset + 1);
-	    return true;
+	    int ord = token.id().ordinal();
+	    if ((car == '"' && ord == FanLexer.INC_STR) ||
+		    (car == '"' && ord == FanLexer.STR) ||
+		    (car == '"' && ord == FanLexer.QUOTSTR) ||
+		    (car == '`' && ord == FanLexer.INC_URI) ||
+		    (car == '\'' && ord == FanLexer.CHAR) ||
+		    (car == '`' && ord == FanLexer.INC_URI) ||
+		    (car == '`' && ord == FanLexer.URI) ||
+		    (car == ']' && ord == FanLexer.SQ_BRACKET_R) ||
+		    (car == ')' && ord == FanLexer.PAR_R) ||
+		    (car == '}' && ord == FanLexer.BRACKET_R)
+		    )
+	    {
+		// just skip the existing same characters
+		target.getCaret().setDot(caretOffset + 1);
+		return true;
+	    }
 	}
-
 	// Same but dual characters
 	if ((car == '/' && prev.equals("*") && token.id().ordinal() == FanLexer.MULTI_COMMENT) ||
 		(car == '>' && prev.equals("|") && token.id().ordinal() == FanLexer.DSL))
@@ -250,7 +254,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
     public OffsetRange findMatching(Document document, int caretOffset)
     {
 	TokenSequence ts = LexerUtils.getFanTokenSequence(document);
-	int searchOffset=2; // start after rightToken
+	int searchOffset = 2; // start after rightToken
 
 	// Prefer matching the token to the right of caret
 	Token token = LexerUtils.getFanTokenAt(document, caretOffset + 1);
@@ -258,10 +262,9 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	{
 	    // if rightToken is null, use left token
 	    token = LexerUtils.getFanTokenAt(document, caretOffset);
-	    searchOffset=1; // start after leftToken
+	    searchOffset = 1; // start after leftToken
 	} else
 	{
-	    System.err.println("Right token: "+token.id().name());
 	    int ord = token.id().ordinal();
 	    // if rightToken is not 'matcheable', use left token
 	    if (ord != FanLexer.PAR_L && ord != FanLexer.PAR_R &&
@@ -269,7 +272,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		    ord != FanLexer.BRACKET_L && ord != FanLexer.BRACKET_R)
 	    {
 		token = LexerUtils.getFanTokenAt(document, caretOffset);
-		searchOffset=1; // start after leftToken
+		searchOffset = 1; // start after leftToken
 	    }
 	}
 
@@ -280,22 +283,22 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	    switch (ord)
 	    {
 		case FanLexer.PAR_L:
-		    ts.move(caretOffset+searchOffset);// start after opening char
+		    ts.move(caretOffset + searchOffset);// start after opening char
 		    return LexerUtils.findRangeFromOpening(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
 		case FanLexer.PAR_R:
-		    ts.move(caretOffset+searchOffset-1);// start before opening char (since going backward)
+		    ts.move(caretOffset + searchOffset - 1);// start before opening char (since going backward)
 		    return LexerUtils.findRangeFromClosing(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
 		case FanLexer.BRACKET_L:
-		    ts.move(caretOffset+searchOffset);
+		    ts.move(caretOffset + searchOffset);
 		    return LexerUtils.findRangeFromOpening(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
 		case FanLexer.BRACKET_R:
-		    ts.move(caretOffset+searchOffset-1);
+		    ts.move(caretOffset + searchOffset - 1);
 		    return LexerUtils.findRangeFromClosing(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
 		case FanLexer.SQ_BRACKET_L:
-		    ts.move(caretOffset+searchOffset);
+		    ts.move(caretOffset + searchOffset);
 		    return LexerUtils.findRangeFromOpening(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
 		case FanLexer.SQ_BRACKET_R:
-		    ts.move(caretOffset+searchOffset-1);
+		    ts.move(caretOffset + searchOffset - 1);
 		    return LexerUtils.findRangeFromClosing(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
 	    }
 
@@ -308,17 +311,22 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
     public List<OffsetRange> findLogicalRanges(ParserResult arg0, int arg1)
     {
 	// not impl yet.
-	// TODO: logical view/parser results can provide this ?
+	// what is this used for ?   - provide using FanStructureAnalyzer ??
 	return Collections.emptyList();
     }
 
     @Override
     public int getNextWordOffset(Document arg0, int arg1, boolean arg2)
     {
-	// not impl yet.
+	// not impl, default will be fine.
 	return -1;
     }
 
+    /**
+     * wether brcaket matching is turned on
+     * @param doc
+     * @return
+     */
     public boolean isInsertMatchingEnabled(BaseDocument doc)
     {
 	// Default: true
