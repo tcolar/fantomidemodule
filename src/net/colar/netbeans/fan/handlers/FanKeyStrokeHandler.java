@@ -54,12 +54,17 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		(car == '`' && token.id().ordinal() == FanLexer.INC_URI) ||
 		(car == '\'' && token.id().ordinal() == FanLexer.CHAR) ||
 		(car == '`' && token.id().ordinal() == FanLexer.INC_URI) ||
-		(car == '`' && token.id().ordinal() == FanLexer.URI))
+		(car == '`' && token.id().ordinal() == FanLexer.URI) ||
+		(car == '}' && lastUnclosedToken(caretOffset)=='{') ||
+		(car == ')' && lastUnclosedToken(caretOffset)=='(') ||
+		(car == '[' && lastUnclosedToken(caretOffset)==']')
+		)
 	{
-	    // just skip the existing same chracters
-	    target.getCaret().setDot(caretOffset + 1);
+	    // just skip the existing same characters
+	    target.getCaret().setDot(caretOffset + 1);	    
 	    return true;
 	}
+
 	// Same but dual characters
 	if ((car == '/' && prev.equals("*") && token.id().ordinal() == FanLexer.MULTI_COMMENT) ||
 		(car == '>' && prev.equals("|") && token.id().ordinal() == FanLexer.DSL))
@@ -159,8 +164,8 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
     public int beforeBreak(Document document, int caretOffset, JTextComponent target) throws BadLocationException
     {
-	//String NL =/*Character.LINE_SEPARATOR*/ "\n";
-	int tabSize=IndentUtils.tabSize(document);
+	String NL =/*Character.LINE_SEPARATOR*/ "\n";
+	int indentSize=IndentUtils.indentLevelSize(document);
 	Caret caret = target.getCaret();
 	BaseDocument doc = (BaseDocument) document;
 
@@ -192,6 +197,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	    indent = IndentUtils.lineIndent(document, lineBegin);
 	}
 
+	int dotOffset=0;
 	String insert = "";
 	String trimmedLine = line.trim();
 	if (line != null)
@@ -204,7 +210,12 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		insert = "** ";
 	    } else if (lineHead.trim().endsWith("{"))
 	    {
-		indent+=tabSize;
+		if(lineTail.trim().startsWith("}"))
+		{
+		    insert=NL;
+		    dotOffset=-1;
+		}
+		indent+=indentSize;
 	    }
 	}
 
@@ -212,7 +223,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	String indentStr = IndentUtils.createIndentString(document, indent);
 	doc.insertString(caretOffset, indentStr + insert, null);
 	caret.setDot(caretOffset);
-	return caretOffset + indentStr.length() + insert.length() + 1;
+	return caretOffset + indentStr.length() + insert.length() + 1 + dotOffset;
     }
 
     public OffsetRange findMatching(Document document, int caretOffset)
@@ -244,5 +255,13 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	    return options.getMatchBrackets();
 	}
 	return true;
+    }
+
+    // Look backward in tokenstream for first unclosed char
+    // either { [ or (
+    // within this ident level ?
+    private char lastUnclosedToken(int caretOffset)
+    {
+	throw new UnsupportedOperationException("Not yet implemented");
     }
 }
