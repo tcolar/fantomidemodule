@@ -33,9 +33,29 @@ import org.netbeans.modules.editor.indent.api.IndentUtils;
  */
 public class FanKeyStrokeHandler implements KeystrokeHandler
 {
-	//Note .*?  = match anything NON-greedily
-	private static Pattern IF_1LINER=Pattern.compile("^\\s*if\\s*\\(.*?\\)[^{]*");
-
+	/* Array of special patterns that we like to indent the line after
+	 * if/else/while/for/try/finaly/catch without blocks({})
+	 * Switch items (case / default) 
+	 * Note .*?  = match anything NON-greedily
+	 */
+	private static Pattern[] INDENT_PATTERNS = {
+			// single line if
+			Pattern.compile("^\\s*if\\s*\\(.*?\\)[^{]*$"),
+			// single line else
+			Pattern.compile("^\\s*else\\s*(if\\s*\\(.*?\\))?[^{]*$"),
+			// switch: case / default
+			Pattern.compile("^\\s*case\\s*[^:]*:\\s*$"),
+			Pattern.compile("^\\s*default\\s*:\\s*$"),
+			// try catch finaly
+			Pattern.compile("^\\s*try\\s*$"),
+			Pattern.compile("^\\s*finaly\\s*$"),
+			Pattern.compile("^\\s*catch(\\(.*?\\))?\\s*$"),
+			// while
+			Pattern.compile("^\\s*while\\s*\\(.*?\\)[^{]*$"),
+			// for
+			Pattern.compile("^\\s*for\\s*\\(.*?\\)[^{]*$"),
+	};
+	
 	private int lastAdditions;
 
 	@Override
@@ -236,11 +256,9 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 					dotOffset = -1;
 				}
 				indent += indentSize;
-			}else if(IF_1LINER.matcher(lineHead).matches())
+			}else
 			{
-				// if statement, not followed by {
-				System.err.print("One liner If");
-				indent += indentSize;
+				indent+=indentSize * getSpecialIndentSize(lineHead);
 			}
 
 		}
@@ -355,4 +373,11 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
+	private int getSpecialIndentSize(String lineText)
+	{
+		for(int i=0; i!=INDENT_PATTERNS.length; i++)
+			if(INDENT_PATTERNS[i].matcher(lineText).matches())
+				return 1;
+		return 0;
+	}
 }
