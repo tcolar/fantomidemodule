@@ -71,18 +71,20 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		Pattern.compile("^\\s*case\\s*[^:]*:\\s*"),
 		Pattern.compile("^\\s*default\\s*:\\s*"),
 	};
-	private int lastAdditions;
+	// keep track of last auto-insertion (closing brackets)
+	// so if user backspace right away we remove that as well.
+	private int lastInsertStart;
+	private int lastInsertSize;
 
 	@Override
 	public boolean beforeCharInserted(Document document, int caretOffset, JTextComponent target, char car) throws BadLocationException
 	{
-		// TODO: typinf a """ is difficult ...
+		lastInsertSize = 0;
 		BaseDocument doc = (BaseDocument) document;
 		if (!isInsertMatchingEnabled(doc))
 		{
 			return false;
 		}
-		lastAdditions = 0;
 
 		String toInsert = "";
 		String prev = null;
@@ -190,7 +192,8 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			target.getCaret().setDot(caretOffset);
 			if (toInsert.length() > 0)
 			{
-				lastAdditions = toInsert.length() - 1;
+				lastInsertStart=caretOffset;
+				lastInsertSize = toInsert.length();
 			}
 		}
 		return false;
@@ -265,12 +268,11 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			return false;
 		}
 
-		// If we just auto-added chars in beforeCharInserted() and the user press backspace right away,
-		// we remove them now.
-		if (lastAdditions > 0)
+		// If we just auto-added chars in beforeCharInserted() and the user
+		// press backspace right away(no moving), we remove them now.
+		if (lastInsertSize > 0 && caretOffset==lastInsertStart)
 		{
-			doc.remove(caretOffset, lastAdditions);
-			return true;
+			doc.remove(caretOffset, lastInsertSize);
 		}
 
 		return false;
@@ -279,10 +281,13 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	@Override
 	public int beforeBreak(Document document, int caretOffset, JTextComponent target) throws BadLocationException
 	{
+		int offset=caretOffset==0?0:caretOffset-1;
+		// Get token BEFORE line break
+		Token tk = LexerUtils.getFanTokenAt(document, offset);
 		//If within DSL, STR, URI don't indent anyhting as they can be multiline
-		Token tk = LexerUtils.getFanTokenAt(document, caretOffset);
 		if (tk != null)
 		{
+			System.out.println("token:"+tk.id().name());
 			int ord = tk.id().ordinal();
 			if (ord == FanLexer.DSL |
 					ord == FanLexer.INC_DSL |
