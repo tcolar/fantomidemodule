@@ -71,7 +71,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		Pattern.compile("^\\s*case\\s*[^:]*:\\s*"),
 		Pattern.compile("^\\s*default\\s*:\\s*"),
 	};
-	// keep track of last auto-insertion (closing brackets)
+	// keep track of last auto-insertion (ie: closing brackets)
 	// so if user backspace right away we remove that as well.
 	private int lastInsertStart;
 	private int lastInsertSize;
@@ -79,7 +79,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	@Override
 	public boolean beforeCharInserted(Document document, int caretOffset, JTextComponent target, char car) throws BadLocationException
 	{
-		lastInsertSize = 0;
+		lastInsertSize = 0; //reset at each keypressed
 		BaseDocument doc = (BaseDocument) document;
 		if (!isInsertMatchingEnabled(doc))
 		{
@@ -87,24 +87,30 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		}
 
 		String toInsert = "";
-		String prev = null;
+		char prev = ' ';
 		if (caretOffset > 0)
 		{
-			prev = doc.getText(caretOffset - 1, 1);
+			prev = doc.getText(caretOffset - 1, 1).charAt(0);
+		}
+		char next = ' ';
+		if (caretOffset < doc.getLength()-1)
+		{
+			next = doc.getText(caretOffset, 1).charAt(0);
 		}
 		Token<? extends FanTokenID> token = LexerUtils.getFanTokenAt(document, caretOffset);
 
-		// If User types closing item we closed automaticaly, skip it
+		// If User types "over" closing item we closed automaticaly, skip it
 		if (token != null)
 		{
 			int ord = token.id().ordinal();
-			if ((car == '"' && ord == FanLexer.INC_STR) ||
-					(car == '"' && ord == FanLexer.STR) ||
-					(car == '"' && ord == FanLexer.QUOTSTR) ||
-					(car == '`' && ord == FanLexer.INC_URI) ||
-					(car == '\'' && ord == FanLexer.CHAR) ||
-					(car == '`' && ord == FanLexer.INC_URI) ||
-					(car == '`' && ord == FanLexer.URI) ||
+			//For str,uri : if backquoted -> don't skip
+			System.out.println("prev: "+prev);
+			System.out.println("next: "+next);
+			if ((car == '"' && ord == FanLexer.INC_STR && next=='"' && prev!='\\') ||
+					(car == '"' && ord == FanLexer.STR && next=='"' && prev!='\\') ||
+					(car == '`' && ord == FanLexer.URI && next=='`' && prev!='\\') ||
+					(car == '`' && ord == FanLexer.INC_URI && next=='`' && prev!='\\') ||
+					(car == '\'' && ord == FanLexer.CHAR && next=='\'') ||
 					(car == ']' && ord == FanLexer.SQ_BRACKET_R) ||
 					(car == ')' && ord == FanLexer.PAR_R) ||
 					(car == '}' && ord == FanLexer.BRACKET_R))
@@ -115,8 +121,8 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			}
 		}
 		// Same but dual characters
-		if ((car == '/' && prev.equals("*") && token.id().ordinal() == FanLexer.MULTI_COMMENT) ||
-				(car == '>' && prev.equals("|") && token.id().ordinal() == FanLexer.DSL))
+		if ((car == '/' && prev=='*' && token.id().ordinal() == FanLexer.MULTI_COMMENT) ||
+				(car == '>' && prev=='|' && token.id().ordinal() == FanLexer.DSL))
 		{
 			// remove previous char and then skip existing one
 			doc.remove(caretOffset - 1, 1);
@@ -173,13 +179,13 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 				break;
 			// dual characters
 			case '|':
-				if (prev.equals("<"))
+				if (prev=='<')
 				{
 					toInsert = "|>";
 				}
 				break;
 			case '*':
-				if (prev.equals("/"))
+				if (prev=='/')
 				{
 					toInsert = "*/";
 				}
@@ -281,20 +287,22 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	@Override
 	public int beforeBreak(Document document, int caretOffset, JTextComponent target) throws BadLocationException
 	{
+		Token tkNext = LexerUtils.getFanTokenAt(document, caretOffset);
 		int offset=caretOffset==0?0:caretOffset-1;
 		// Get token BEFORE line break
 		Token tk = LexerUtils.getFanTokenAt(document, offset);
-		//If within DSL, STR, URI don't indent anyhting as they can be multiline
-		if (tk != null)
+		//If within DSL, STR, URI don't indent anything as they can be multiline
+		// unless they are complete (next token is !=)
+		if (tkNext!=null && tk != null)
 		{
-			System.out.println("token:"+tk.id().name());
 			int ord = tk.id().ordinal();
-			if (ord == FanLexer.DSL |
+			int ord2 = tkNext.id().ordinal();
+			if (	(ord == FanLexer.DSL && ord2==ord)|
+					(ord == FanLexer.STR && ord2==ord) |
+					(ord == FanLexer.QUOTSTR && ord2==ord) |
+					(ord == FanLexer.URI && ord2==ord) |
 					ord == FanLexer.INC_DSL |
 					ord == FanLexer.INC_STR |
-					ord == FanLexer.STR |
-					ord == FanLexer.QUOTSTR |
-					ord == FanLexer.URI |
 					ord == FanLexer.INC_URI)
 			{
 				return -1;
