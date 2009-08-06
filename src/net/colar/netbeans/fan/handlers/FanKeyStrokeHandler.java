@@ -160,8 +160,16 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 				toInsert = "'";
 				break;
 			case '"':
+				// If third quote in row(""") then don't close (quoted string)
+				if(caretOffset>2)
+				{
+					String prev2=doc.getText(caretOffset-2, 2);
+					if(prev2.equals("\"\""))
+						break;
+				}
 				toInsert = "\"";
 				break;
+			// dual characters
 			case '|':
 				if (prev.equals("<"))
 				{
