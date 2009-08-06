@@ -76,6 +76,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	@Override
 	public boolean beforeCharInserted(Document document, int caretOffset, JTextComponent target, char car) throws BadLocationException
 	{
+		// TODO: typinf a """ is difficult ...
 		BaseDocument doc = (BaseDocument) document;
 		if (!isInsertMatchingEnabled(doc))
 		{
@@ -270,6 +271,24 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	@Override
 	public int beforeBreak(Document document, int caretOffset, JTextComponent target) throws BadLocationException
 	{
+		//If within DSL, STR, URI don't indent anyhting as they can be multiline
+		Token tk = LexerUtils.getFanTokenAt(document, caretOffset);
+		if (tk != null)
+		{
+			int ord = tk.id().ordinal();
+			if (ord == FanLexer.DSL |
+					ord == FanLexer.INC_DSL |
+					ord == FanLexer.INC_STR |
+					ord == FanLexer.STR |
+					ord == FanLexer.QUOTSTR |
+					ord == FanLexer.URI |
+					ord == FanLexer.INC_URI)
+			{
+				return -1;
+			}
+		}
+
+		// Deal with indentation
 		String NL =/*Character.LINE_SEPARATOR*/ "\n";
 		int indentSize = IndentUtils.indentLevelSize(document);
 		Caret caret = target.getCaret();
@@ -439,15 +458,6 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		}
 
 		return true;
-	}
-
-// Look backward in tokenstream for first unclosed char
-// either { [ or (
-// within this ident level ?
-	private char lastUnclosedToken(int caretOffset)
-	{
-		//TODO
-		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
 	/**
