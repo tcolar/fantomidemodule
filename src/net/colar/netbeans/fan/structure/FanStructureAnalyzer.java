@@ -165,7 +165,7 @@ public class FanStructureAnalyzer implements StructureScanner
 	return null;
     }
 
-    private String getChildTextByType(CommonTree node, int itemIndex)
+    public static String getChildTextByType(CommonTree node, int itemIndex)
     {
 	String text = "";
 	if (node != null)
@@ -198,7 +198,7 @@ public class FanStructureAnalyzer implements StructureScanner
 	return text;
     }
 
-    private String getSubChildTextByType(CommonTree node, int astType, int itemIndex)
+    public static String getSubChildTextByType(CommonTree node, int astType, int itemIndex)
     {
 	String text = "";
 	if (node != null)

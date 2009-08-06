@@ -1,13 +1,30 @@
-sudo apt-get install ant ant-optional
-hg clone http://hg.netbeans.org/release67
-cd release67
-export ANT_OPTS="-Xmx512m"
-ant -Dpermit.jdk6.builds=true   ~30mn
 
-cd csl.api
-ant -Dpermit.jdk6.builds=true   ~30mn
+TODO:
+- Semantic analysis
+    -step 1: highlighting (2)
+    -step 2: uses/misuses (4)
+    -step 3: with inheritance ? (5) - prob. need indexer
+- Indexer
+    -Platform with source/libs managment (4)
+	-sourcemangement: local
+	-sourcemangement: fan (fan_home)
+	-sourcemangement: java ?
+- Code completion
+    -Local:3
+    -Remote:5
+- Occurence finder (2)
+- Pretty formatting (4)
+- Rename / Refactor
+    -Local: 2
+    -Remote: 4
+- Go to definition
+    -Local:2
+    -Remote:3
+- Fix imports
+    - Fan (3)
+    - Java (5)
+- Fix proposals
+    - Impl missing methods (abstracts/virtual etc..)
+    - Create method/class/mixin ...
 
-cp ./nbbuild/nbantext.jar ../NetBeansProjects/Fan/ext/
-cp ./csl-api/anttask/build/cslanttask.jar /home/tcolar/NetBeansProjects/Fan/ext/
-
-( options {greedy=false;} : . )* together + bactrack=true = trouble
+    

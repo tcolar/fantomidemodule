@@ -183,4 +183,11 @@ public class FanParserResult extends ParserResult
     {
 	return tokenStream;
     }
+
+    public ParserRuleReturnScope getAntlrScope()
+    {
+	return antlrScope;
+    }
+
+    
 }

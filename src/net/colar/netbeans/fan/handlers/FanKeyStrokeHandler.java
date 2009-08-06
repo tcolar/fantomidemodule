@@ -104,8 +104,8 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		{
 			int ord = token.id().ordinal();
 			//For str,uri : if backquoted -> don't skip
-			System.out.println("prev: "+prev);
-			System.out.println("next: "+next);
+			//System.out.println("prev: "+prev);
+			//System.out.println("next: "+next);
 			if ((car == '"' && ord == FanLexer.INC_STR && next=='"' && prev!='\\') ||
 					(car == '"' && ord == FanLexer.STR && next=='"' && prev!='\\') ||
 					(car == '`' && ord == FanLexer.URI && next=='`' && prev!='\\') ||
@@ -346,10 +346,9 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
 		int dotOffset = 0;
 		String insert = "";
-		String trimmedLine = line.trim();
 		if (line != null)
 		{
-			System.err.println("Head: " + lineHead);
+			String trimmedLine = line.trim();
 			// If within doc -> insert the ** on next line
 			// insert only if the current doc line is not empty("**") - except for first one (empty ok)
 			boolean isFirstDocLine = prevLine == null || !prevLine.trim().startsWith("**");

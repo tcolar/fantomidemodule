@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.antlr.LexerUtils;
 import org.antlr.runtime.CommonToken;
-import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
@@ -33,8 +33,8 @@ public class FanStructureItem implements StructureItem
     private String name;
     private List<StructureItem> items=new ArrayList<StructureItem>();
     private String html;
-    private final int start;
-    private final int stop;
+    private int start=0;
+    private int stop=0;
     
 
     public FanStructureItem(CommonTree node, ElementKind kind, ParserResult result)
@@ -47,13 +47,9 @@ public class FanStructureItem implements StructureItem
 	// node gives up index of 1st and last token part of this struct. item
 	// then we finx those tokens by index in tokenStream (from lexer)
 	// from that we can find start and end location of struct. text in source file.
-	CommonTokenStream tokenStream=((FanParserResult)result).getTokenStream();
-	CommonToken startToken=(CommonToken)tokenStream.get(node.getTokenStartIndex());
-	CommonToken endToken=(CommonToken)tokenStream.get(node.getTokenStopIndex());
-	this.start=startToken.getStartIndex();
-	this.stop=endToken.getStopIndex();
-	System.err.println(name+" ["+start+"-"+stop+"]");
-	OffsetRange range=new OffsetRange(start, stop);
+	OffsetRange range=LexerUtils.getNodeRange((FanParserResult)result, node);
+	start=range.getStart();
+	stop=range.getEnd();
 	this.handle=new FanElementHandle(kind, (CommonToken)node.getToken(), result, range);
     }
 

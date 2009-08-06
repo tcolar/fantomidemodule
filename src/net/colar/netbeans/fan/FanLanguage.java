@@ -6,9 +6,11 @@
 package net.colar.netbeans.fan;
 
 import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
+import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.KeystrokeHandler;
+import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.parsing.spi.Parser;
@@ -29,7 +31,6 @@ public class FanLanguage extends DefaultLanguageConfig
 	super();
 	System.err.println("Fan - init FanLanguage");
     }
-
 
     @Override
     public String getDisplayName()
@@ -69,6 +70,12 @@ public class FanLanguage extends DefaultLanguageConfig
     public KeystrokeHandler getKeystrokeHandler()
     {
 	return new FanKeyStrokeHandler();
+    }
+
+    @Override
+    public SemanticAnalyzer getSemanticAnalyzer()
+    {
+	return new FanSemanticAnalyzer();
     }
 
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
 
 <fontscolors>
+    <!--lexer-->
     <fontcolor default="keyword" name="keyword"/>
     <fontcolor default="separator" name="separator"/>
     <fontcolor default="comment" name="comment"/>
@@ -14,4 +15,28 @@
 	<font style="bold"/>
     </fontcolor>
     <fontcolor default="string" name="STR"/>
+
+    <!-- semantic (parser)-->
+    <fontcolor name="mod-parameter">
+	<font style="bold"/>
+    </fontcolor>
+    <fontcolor name="mod-method" underline="000000">
+    	<font style="bold"/>
+    </fontcolor>
+    <fontcolor name="mod-global" underline="000000"/>
+    <fontcolor name="mod-constructor" foreColor="550000" underline="550000">
+	<font style="bold"/>
+    </fontcolor>
+    <fontcolor name="mod-class" underline="000000">
+	<font style="bold"/>
+    </fontcolor>
+    <fontcolor name="mod-static">
+	<font style="italic"/>
+    </fontcolor>
+    <!-- custom1 is for 'override' -->
+    <fontcolor name="mod-custom1" foreColor="550055"/>
+    <!-- not used yet-->
+    <fontcolor name="mod-deprecated" strikeThrough="404040"/>
+    <fontcolor name="mod-unused" waveUnderlined="999999"/>
+    <fontcolor name="mod-field" foreColor="005500"/>
  </fontscolors>

@@ -294,8 +294,9 @@ fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
 				(bracketL (protection? (getter | setter) SP_SEMI? block?)+ bracketR)
 				| eos)
 			-> ^(AST_FIELD typeId ^(AST_MODIFIER $m)*);
-typeId		:	((type id)=>typeAndId | fname=id);
-			//-> ^(AST_ID $fname)?;
+typeId		:	((type id)=>typeAndId | fieldId);
+fieldId		:	id
+			-> ^(AST_ID id);
 typeAndId	:	type id
 			-> ^(AST_ID id) ^(AST_TYPE type);
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
