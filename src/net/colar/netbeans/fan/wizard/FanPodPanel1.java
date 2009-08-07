@@ -318,16 +318,9 @@ public final class FanPodPanel1 extends JPanel
 	return folderField.getText();
     }
 
-    String getProjectName()
-    {
-	return nameField.getText();
-    }
-
     String getPodName()
     {
-	if(!buildFileCheckbox.isSelected())
-	    return null;
-	return podDescField.getText();
+	return nameField.getText();
     }
 
     String getPodDesc()

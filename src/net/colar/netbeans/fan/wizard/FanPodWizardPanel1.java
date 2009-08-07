@@ -112,11 +112,6 @@ public class FanPodWizardPanel1 implements WizardDescriptor.Panel
 	return (FanPodPanel1) getComponent();
     }
 
-    String getProjectName()
-    {
-	return getPanel().getProjectName();
-    }
-
     String getPodName()
     {
 	return getPanel().getPodName();
