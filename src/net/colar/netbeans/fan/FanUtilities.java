@@ -51,7 +51,7 @@ public class FanUtilities
      */
     public static FileObject getRelativeFileObject(final FileObject fo, String relativePath)
     {
-	StringTokenizer st = new StringTokenizer(relativePath.replaceAll("\\","/"), "/");
+	StringTokenizer st = new StringTokenizer(relativePath.replaceAll("\\\\","/"), "/");
 	// If fo is a  file, we start from the parent folder
 	FileObject curFile= fo.isFolder()?fo:fo.getParent();
 	// folow the relative path to try and find the requested file
