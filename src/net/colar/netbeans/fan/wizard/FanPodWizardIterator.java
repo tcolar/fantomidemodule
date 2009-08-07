@@ -10,6 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.event.ChangeListener;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.templates.TemplateUtils;
 import net.colar.netbeans.fan.templates.TemplateView;
 import net.jot.logger.JOTLogger;
@@ -80,27 +81,35 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 	FileObject fanFo = FileUtil.toFileObject(fan);
 	FileObject testFo = FileUtil.toFileObject(test);
 	FileObject buildFo = null;
+	FileObject podFo = null;
 	if (createBuildFile)
 	{
-	    FileObject template = Templates.getTemplate(wizard);
+	    FileObject buildTemplate = Templates.getTemplate(wizard);
+	    FileObject podTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../../Fan/pod.html");
 
-	    JOTLightweightView view = new TemplateView(template,podName);
+	    JOTLightweightView view = new TemplateView(buildTemplate,podName);
 	    
 	    view.addVariable("desc", podDesc);
 
 	    File buildFile = new File(pf, "build.fan");
+	    File podFile = new File(pf, "pod.fan");
 
-	    String templateText = template.asText();
+	    String buildText = buildTemplate.asText();
+	    String podText = podTemplate.asText();
 
 	    JOTLogger.initIfNecessary(TemplateUtils.LOG_FILE.getAbsolutePath(), new String[0], "");
-	    TemplateUtils.createFromTemplate(view, templateText, buildFile);
+	    // create build.fan and pod.fan
+	    TemplateUtils.createFromTemplate(view, buildText, buildFile);
+    	    TemplateUtils.createFromTemplate(view, podText, podFile);
 
 	    buildFo = FileUtil.toFileObject(buildFile);
+	    podFo = FileUtil.toFileObject(podFile);
 	}
 
 	// Look for nested projects to open as well:
 	LinkedHashSet resultSet = new LinkedHashSet();
 	resultSet.add(pfFo);
+	resultSet.add(podFo);
 	resultSet.add(fanFo);
 	resultSet.add(testFo);
 	if (buildFo != null)

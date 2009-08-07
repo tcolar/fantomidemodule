@@ -225,7 +225,7 @@ import net.colar.netbeans.fan.FanParserResult;
 // "Prog" Is the grammar starting point
 
 // allow extra "docs" at the end of file, as seen in some files (last slot commented out)
-prog		: 	 using* typeDef* docs EOF;
+prog		: 	 using* (podDef | typeDef*) docs EOF;
 using		@init {paraphrase.push("Using statements");} @after{paraphrase.pop();}
 		:	(usingPod | usingType | usingAs);
 usingPod
@@ -235,6 +235,12 @@ usingType
 usingAs		:	KW_USING podSpec SP_COLCOL id KW_AS id eos;
 podSpec		:	ffi? id (DOT id)*;
 ffi 		:	sq_bracketL id sq_bracketR;
+// pod support
+podDef		:	podHeader BRACKET_L symbolDef* BRACKET_R;
+podHeader	:	docs facet* 'pod' id;
+symbolDef	:	symbolFlag* typeId AS_INIT_VAL expr eos;
+symbolFlag	:	'virtual';
+
 // refactored
 typeDef 	:	docs facet* ((classFlags* KW_CLASS)=>classDef |
 			(protection? KW_ENUM)=>enumDef | mixinDef);
@@ -419,8 +425,8 @@ closure 	@init {paraphrase.push("Closure");} @after{paraphrase.pop();}
 idExpr 		:	idExprReq | id;
 // Same but without matching ID by itself (this would prevent termbase from checking literals).
 idExprReq	:	field | call;
-// require 'AT' otherwise it's just and ID (this would prevent termbase from checking literals)
-field		:	AT ID;
+// require '*' otherwise it's just and ID (this would prevent termbase from checking literals)
+field		:	OP_MULTI ID; // changed from @ to *
  // require params or/and closure, otherwise it's just and ID (this would prevent termbase from checking literals)
 call		:	id ((callParams closure) | callParams | closure);
 

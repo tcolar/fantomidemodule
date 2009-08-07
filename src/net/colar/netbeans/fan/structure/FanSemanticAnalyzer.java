@@ -80,7 +80,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	    {
 		par = node.getParent().getText();
 	    }
-	    System.out.println("Node: .... "+par+" -> "+node.getText());
+	    //System.out.println("Node: .... "+par+" -> "+node.getText());
 	    switch (node.getType())
 	    {
 		case FanParser.AST_CLASS:

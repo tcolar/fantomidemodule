@@ -91,7 +91,7 @@ public class FanNode extends FilterNode
 		isRunnable = true;
 	    }
 	}
-	System.out.println("Node: " + file.getPath() + " " + (isRoot ? "project" : "") + (isPod ? "pod" : "")+(isRunnable ? "runnable" : ""));
+	//System.out.println("Node: " + file.getPath() + " " + (isRoot ? "project" : "") + (isPod ? "pod" : "")+(isRunnable ? "runnable" : ""));
     }
 
     /**
