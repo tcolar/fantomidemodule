@@ -22,7 +22,7 @@ public final class NewFileVisualPanel1 extends JPanel
 	initComponents();
 	nameField.setText("");
 	folderField.setText(dir);
-	String loc = dir + (dir.endsWith(File.separator) ? "" : "/");
+	String loc = dir + (dir.endsWith(File.separator) ? "" : File.separator);
 	fileField.setText(loc);
 	chooser = new JFileChooser();
 	chooser.setMultiSelectionEnabled(false);

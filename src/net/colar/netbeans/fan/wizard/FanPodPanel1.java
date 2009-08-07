@@ -32,7 +32,7 @@ public final class FanPodPanel1 extends JPanel
 	nameField.setText(DEFAULT_PRJ);
 	this.dir = dir;
 	locationField.setText(dir);
-	String loc = dir + (dir.endsWith(File.separator) ? "" : "/") + DEFAULT_PRJ;
+	String loc = dir + (dir.endsWith(File.separator) ? "" : File.separator) + DEFAULT_PRJ;
 	folderField.setText(loc);
 	nameField.setText("");
 	podDescField.setText("");
