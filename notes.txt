@@ -1,8 +1,12 @@
 DONE: highlight variables in strings $dvds ${}
 have "run single" method only on runnable class main / scripts
 
+Fixed $ in pod names
+
 Have "build" "run" and "build & run" on Pod(project?) itself
-... and hook to main netbeans Run button
+... and hook to main netbeans RIt's also possible to create a quick Fan script - basically a .fan file with a class with a main method.
+It's also possible to create a quick Fan script - basically a .fan file with a class with a main method.
+un button
 
 typing a triple quote string is messed up again
 
@@ -13,7 +17,7 @@ repos ?
 
 TODO:
 - Semantic analysis
-    -step 1: highlighting (2)
+    - DONE step 1: highlighting (2)
     -step 2: uses/misuses (4)
     -step 3: with inheritance ? (5) - prob. need indexer
 - Indexer
@@ -22,8 +26,10 @@ TODO:
 	-sourcemangement: fan (fan_home)
 	-sourcemangement: java ?
 - Code completion
+	-Std libraries(fan): 2
     -Local:3
     -Remote:5
+	-Fandoc / Javadoc in compl. window
 - Occurence finder (2)
 - Pretty formatting (4)
 - Rename / Refactor
@@ -39,4 +45,28 @@ TODO:
     - Impl missing methods (abstracts/virtual etc..)
     - Create method/class/mixin ...
 
-    
+
+### Cheat Sheet
+methods / constructors
+symbols 
+facets 
+
+
+compile to js
+deployment
+repos
+serialization
+concurrency
+actors
+naming
+urisapce
+typedb
+logging
+localization
+DSL
+
+web ?
+
+tools ?  fant fanp bootstrap  flux
+
+

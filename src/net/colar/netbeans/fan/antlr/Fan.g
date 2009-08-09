@@ -233,7 +233,8 @@ usingPod
 		:	KW_USING podSpec eos ;
 usingType
 		:	KW_USING podSpec SP_COLCOL id eos;
-usingAs		:	KW_USING podSpec SP_COLCOL id KW_AS id eos;
+// pod id can have a $ in it(java ffi) but then "as" is required
+usingAs		:	KW_USING podSpec SP_COLCOL id ('$' id)* KW_AS id eos;
 podSpec		:	ffi? id (DOT id)*;
 ffi 		:	sq_bracketL id sq_bracketR;
 // pod support

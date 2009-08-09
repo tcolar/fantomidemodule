@@ -97,6 +97,8 @@ static{ // initializes tokens
 	tokens.put(new Integer(72),token);
 	token=new FanTokenID("T__141", 141, "");
 	tokens.put(new Integer(141),token);
+	token=new FanTokenID("T__142", 142, "");
+	tokens.put(new Integer(142),token);
 	token=new FanTokenID("URI", 105, "string");
 	tokens.put(new Integer(105),token);
 	token=new FanTokenID("KW_FINALLY", 16, "keyword");
@@ -334,9 +336,9 @@ static{ // initializes tokens
 	token=tokens.get(new Integer(6));
 	token.setFixedText("for");
 	tokens.put(new Integer(6), token);
-	token=tokens.get(new Integer(141));
+	token=tokens.get(new Integer(142));
 	token.setFixedText("pod");
-	tokens.put(new Integer(141), token);
+	tokens.put(new Integer(142), token);
 	token=tokens.get(new Integer(42));
 	token.setFixedText("isnot");
 	tokens.put(new Integer(42), token);
@@ -352,6 +354,9 @@ static{ // initializes tokens
 	token=tokens.get(new Integer(39));
 	token.setFixedText("super");
 	tokens.put(new Integer(39), token);
+	token=tokens.get(new Integer(141));
+	token.setFixedText("$");
+	tokens.put(new Integer(141), token);
 	token=tokens.get(new Integer(13));
 	token.setFixedText("case");
 	tokens.put(new Integer(13), token);
