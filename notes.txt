@@ -1,3 +1,15 @@
+highlight variables in strings $dvds ${}
+have "run single" method only on runnable class main / scripts
+
+Have "build" "run" and "build & run" on Pod(project?) itself
+... and hook to main netbeans Run button
+
+typing a triple quote string is messed up again
+
+create Main class with main() in it when creating pod ?
+Make "pod main" configurable in pod properties
+
+repos ?
 
 TODO:
 - Semantic analysis

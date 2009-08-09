@@ -35,6 +35,10 @@
     </fontcolor>
     <!-- custom1 is for 'override' -->
     <fontcolor name="mod-custom1" foreColor="550055"/>
+	<!-- custom2 is string interpolation vars -->
+    <fontcolor name="mod-custom2">
+		<font style="bold"/>
+    </fontcolor>
     <!-- not used yet-->
     <fontcolor name="mod-deprecated" strikeThrough="404040"/>
     <fontcolor name="mod-unused" waveUnderlined="999999"/>

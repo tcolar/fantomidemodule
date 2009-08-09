@@ -95,6 +95,7 @@ AST_FIELD;
 AST_CONSTRUCTOR_CHAIN;
 AST_CODE_BLOCK;
 AST_DOCS;
+AST_STR;
 // generic items
 AST_ID;
 AST_MODIFIER;
@@ -299,7 +300,7 @@ fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
 				(
 				(bracketL (protection? (getter | setter) SP_SEMI? block?)+ bracketR)
 				| eos)
-			-> ^(AST_FIELD typeId ^(AST_MODIFIER $m)*);
+			-> ^(AST_FIELD typeId ^(AST_MODIFIER $m)* expr?);
 typeId		:	((type id)=>typeAndId | fieldId);
 fieldId		:	id
 			-> ^(AST_ID id);
@@ -433,9 +434,11 @@ call		:	id ((callParams closure) | callParams | closure);
 callParams	:	{notAfterEol()}? parL args? parR;
 args 		:	expr (SP_COMMA  expr)*;
 
-literal 	:	KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | QUOTSTR | STR | URI |
+literal 	:	KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | URI |
 			number | CHAR | namedSuper |
 			slotLiteral | typeLiteral | list | map | simple;
+strs		:	(qs=QUOTSTR | s=STR)
+				-> ^(AST_STR $s)? ^(AST_STR $qs)?;
 typeLiteral	:  	type {notAfterEol()}? OP_POUND;
 slotLiteral	:  	type? OP_POUND {notAfterEol()}? id;
 namedSuper 	:	simpleType DOT KW_SUPER;
