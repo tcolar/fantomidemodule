@@ -104,8 +104,10 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		{
 			int ord = token.id().ordinal();
 			//For str,uri : if backquoted -> don't skip
-			System.out.println("prev: "+prev);
-			System.out.println("next: "+next);
+			//System.out.println("prev: "+prev);
+			//System.out.println("next: "+next);
+			//System.out.println("car: "+car);
+			//System.out.println("tk: "+token.id().name());
 			if ((car == '"' && ord == FanLexer.INC_STR && next=='"' && prev!='\\') ||
 					(car == '"' && ord == FanLexer.STR && next=='"' && prev!='\\') ||
 					(car == '`' && ord == FanLexer.URI && next=='`' && prev!='\\') ||

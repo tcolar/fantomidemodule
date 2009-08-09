@@ -84,7 +84,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			{
 				par = node.getParent().getText();
 			}
-			System.out.println("Node: .... "+par+" -> "+node.getText());
+			//System.out.println("Node: .... "+par+" -> "+node.getText());
 			switch (node.getType())
 			{
 				case FanParser.AST_STR:
@@ -180,14 +180,12 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			CommonTree textNode = (CommonTree) node.getChild(0);
 			OffsetRange strRange = LexerUtils.getContentNodeRange((FanParserResult) result, node);
 			String str=textNode.getText();
-			System.out.println("str: "+str);
 			Matcher matcher=INTERPOLATION.matcher(str);
 			while(matcher.find())
 			{
 				int start = strRange.getStart() + matcher.start();
 				int end = strRange.getStart() + matcher.end();
 				OffsetRange range = new OffsetRange(start, end);
-				System.out.println(range);
 				newHighlights.put(range, ColoringAttributes.CUSTOM2_SET);
 			}
 	}

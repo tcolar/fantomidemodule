@@ -1,4 +1,4 @@
-highlight variables in strings $dvds ${}
+DONE: highlight variables in strings $dvds ${}
 have "run single" method only on runnable class main / scripts
 
 Have "build" "run" and "build & run" on Pod(project?) itself
