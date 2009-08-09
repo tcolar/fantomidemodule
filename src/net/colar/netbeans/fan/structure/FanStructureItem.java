@@ -27,101 +27,104 @@ import org.netbeans.modules.csl.spi.ParserResult;
  */
 public class FanStructureItem implements StructureItem
 {
-    private final CommonTree node;
-    private final ParserResult result;
-    private final FanElementHandle handle;
-    private String name;
-    private List<StructureItem> items=new ArrayList<StructureItem>();
-    private String html;
-    private int start=0;
-    private int stop=0;
-    
 
-    public FanStructureItem(CommonTree node, ElementKind kind, ParserResult result)
-    {
-	this.node = node;
-	//this.kind = node.getKind();
-	this.result = result;
-	//TODO: modifiers
-	this.name=node.getText();
-	// node gives up index of 1st and last token part of this struct. item
-	// then we finx those tokens by index in tokenStream (from lexer)
-	// from that we can find start and end location of struct. text in source file.
-	OffsetRange range=LexerUtils.getNodeRange((FanParserResult)result, node);
-	start=range.getStart();
-	stop=range.getEnd();
-	this.handle=new FanElementHandle(kind, (CommonToken)node.getToken(), result, range);
-    }
+	private final CommonTree node;
+	private final ParserResult result;
+	private final FanElementHandle handle;
+	private String name;
+	private List<StructureItem> items = new ArrayList<StructureItem>();
+	private String html;
+	private int start = 0;
+	private int stop = 0;
 
-    public String getName()
-    {
-	return name;
-    }
+	public FanStructureItem(CommonTree node, ElementKind kind, ParserResult result)
+	{
+		this.node = node;
+		//this.kind = node.getKind();
+		this.result = result;
+		//TODO: modifiers
+		this.name = node.getText();
+		// node gives up index of 1st and last token part of this struct. item
+		// then we finx those tokens by index in tokenStream (from lexer)
+		// from that we can find start and end location of struct. text in source file.
+		OffsetRange range = LexerUtils.getNodeRange((FanParserResult) result, node);
+		start = range.getStart();
+		stop = range.getEnd();
+		this.handle = new FanElementHandle(kind, (CommonToken) node.getToken(), result, range);
+	}
 
-    public String getSortText()
-    {
-	return getName();
-    }
+	public String getName()
+	{
+		return name;
+	}
 
-    public String getHtml(HtmlFormatter arg0)
-    {
-	return html!=null?html:getName();
-    }
+	public String getSortText()
+	{
+		return getName();
+	}
 
-    public ElementHandle getElementHandle()
-    {
-	return handle;
-    }
+	public String getHtml(HtmlFormatter arg0)
+	{
+		return html != null ? html : getName();
+	}
 
-    public ElementKind getKind()
-    {
-	return handle.getKind();
-    }
+	public ElementHandle getElementHandle()
+	{
+		return handle;
+	}
 
-    public Set<Modifier> getModifiers()
-    {
-	return handle.getModifiers();
-    }
+	public ElementKind getKind()
+	{
+		return handle.getKind();
+	}
 
-    public boolean isLeaf()
-    {
-	return items.isEmpty();
-    }
+	public Set<Modifier> getModifiers()
+	{
+		return handle.getModifiers();
+	}
 
-    public List<? extends StructureItem> getNestedItems()
-    {
-	return items;
-    }
+	public boolean isLeaf()
+	{
+		return items.isEmpty();
+	}
 
-    public long getPosition()
-    {
-	return start;
-    }
+	public List<? extends StructureItem> getNestedItems()
+	{
+		return items;
+	}
 
-    public long getEndPosition()
-    {
-	return stop;
-    }
+	public long getPosition()
+	{
+		return start;
+	}
 
-    public ImageIcon getCustomIcon()
-    {
-	return null;
-    }
+	public long getEndPosition()
+	{
+		return stop;
+	}
 
-    void setName(String text) {
-	name=text;
-    }
+	public ImageIcon getCustomIcon()
+	{
+		return null;
+	}
 
-    void addModifier(Modifier modifier) {
-	getModifiers().add(modifier);
-    }
+	void setName(String text)
+	{
+		name = text;
+	}
 
-    void setNestedItems(List<StructureItem> subList) {
-	items=subList;
-   }
+	void addModifier(Modifier modifier)
+	{
+		getModifiers().add(modifier);
+	}
 
-    void setHtml(String string)
-    {
-	html=string;
-    }
+	void setNestedItems(List<StructureItem> subList)
+	{
+		items = subList;
+	}
+
+	void setHtml(String string)
+	{
+		html = string;
+	}
 }
