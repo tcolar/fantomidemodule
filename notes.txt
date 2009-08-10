@@ -1,20 +1,18 @@
-DONE: Highlight variables in strings $dvds ${}
+    *  Highlight variables in interpolated stringss $var MISSING_VALUE !
 
-Have "run single" method only on runnable class main / scripts
+    * Change grammar to Allow $ in pod names (for java FFI)
 
-Done: Allow $ in pod names (for java FFI)
+    * Allow "run single" action only on runnable class main / scripts & build.fan
 
-Have "build" "run" and "build & run" on Pod(project?) itself
-... and hook to main netbeans RIt's also possible to create a quick Fan script - basically a .fan file with a class with a main method.
-It's also possible to create a quick Fan script - basically a .fan file with a class with a main method.
-un button
+    * Have "build" "run" and "build & run" actions Pod itself as it works best, then hook up into NB "Run Mian Prj" button.
 
-create Main class with main() in it when creating pod ?
-Make "pod main" configurable in pod properties
+    * Create Main class with main() in it when creating pod (optional, default) as it's easier for beginners.
 
-Research/Fix bug where new files dont show in files/projects
+    * Add a "Main method" configurable field on pod props (defaults to podname:Main.main)
 
-Fix bug where navigator closes/re-opens constantly.
+    * Research/Fix bug where new files don't show for a while (1 mn+) in files/projects ... only on some computers!
+
+    * Research/Fix bug where navigator collapses after clicking an item in it.
 
 TODO:
 - Semantic analysis
