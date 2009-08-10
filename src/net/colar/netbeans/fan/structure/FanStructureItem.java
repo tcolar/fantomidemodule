@@ -36,11 +36,12 @@ public class FanStructureItem implements StructureItem
 	private String html;
 	private int start = 0;
 	private int stop = 0;
+	private ElementKind kind;
 
 	public FanStructureItem(CommonTree node, ElementKind kind, ParserResult result)
 	{
 		this.node = node;
-		//this.kind = node.getKind();
+		this.kind = kind;
 		this.result = result;
 		//TODO: modifiers
 		this.name = node.getText();
@@ -133,5 +134,35 @@ public class FanStructureItem implements StructureItem
 	void setHtml(String string)
 	{
 		html = string;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int hash = 7;
+
+		hash = (29 * hash) + ((this.getName() != null) ? this.getName().hashCode() : 0);
+		hash = (29 * hash) + (kind != null ? this.kind.hashCode() : 0);
+
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		final FanStructureItem other = (FanStructureItem) obj;
+		if (this.kind != other.kind || !this.getName().equals(other.getName()))
+		{
+			return false;
+		}
+		return true;
 	}
 }

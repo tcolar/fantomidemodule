@@ -55,8 +55,8 @@ public class TemplateUtils
 		}
 		try
 		{
-			System.err.println("parsed: " + parsedFile);
-			System.err.println("writing to: " + destFile.getPath());
+			//System.err.println("parsed: " + parsedFile);
+			//System.err.println("writing to: " + destFile.getPath());
 			PrintWriter pw = new PrintWriter(destFile);
 			pw.print(parsedFile);
 			pw.close();

@@ -52,7 +52,7 @@ public class FanStructureAnalyzer implements StructureScanner
 		}
 		catch (Exception e)
 		{
-			// if there is an error here, we don't want to propagate to the user
+			// if there is an error here, we don't want to propagate to the user, should log though
 			e.printStackTrace();
 		}
 		return list;
@@ -262,7 +262,6 @@ public class FanStructureAnalyzer implements StructureScanner
 				CommonToken startToken = (CommonToken) tokenStream.get(node.getTokenStartIndex());
 				CommonToken endToken = (CommonToken) tokenStream.get(node.getTokenStopIndex());
 				int start = startToken.getStartIndex();
-				// range is sxclusive, so adding 1
 				int end = endToken.getStopIndex() + 1;
 				// don't add unless at least 1 long (ex: class with def alone)
 				if (start >= 0 && end >= 0 && end > start)
