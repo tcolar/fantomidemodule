@@ -45,27 +45,5 @@ TODO:
     - Create method/class/mixin ...
 
 
-### Cheat Sheet
-methods / constructors
-symbols 
-facets 
-
-
-compile to js
-deployment
-repos
-serialization
-concurrency
-actors
-naming
-urisapce
-typedb
-logging
-localization
-DSL
-
-web ?
-
-tools ?  fant fanp bootstrap  flux
 
 
