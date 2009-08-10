@@ -147,6 +147,12 @@ public class FanStructureItem implements StructureItem
 		return hash;
 	}
 
+	/**
+	 * Note: If this is not implemented(together with hashcode), the navigator does not work quite right
+	 * In particular it "collapses/folds down" when dbl-clicking an item
+	 * @param obj
+	 * @return
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
