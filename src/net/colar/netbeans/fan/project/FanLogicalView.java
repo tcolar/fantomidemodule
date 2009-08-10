@@ -22,46 +22,47 @@ import org.openide.util.Exceptions;
 public class FanLogicalView implements LogicalViewProvider
 {
 
-    public static final String REGISTERED_NODE_LOCATION =
-	    "Projects/net-colar-netbeans-fan-project-FanProject/Nodes";
-    private final FanProject project;
+	public static final String REGISTERED_NODE_LOCATION =
+			"Projects/net-colar-netbeans-fan-project-FanProject/Nodes";
+	private final FanProject project;
 
-    public FanLogicalView(FanProject project)
-    {
-	this.project = project;
-    }
-
-    @Override
-    public Node createLogicalView()
-    {
-	try
+	public FanLogicalView(FanProject project)
 	{
-	    FileObject dir = project.getProjectDirectory();
-
-	    //Get the DataObject that represents it:
-	    DataObject dobj = DataObject.find(dir);
-
-	    //Get its default node: we'll wrap our node around it to change the
-	    //display name, icon, etc:
-	    Node originalObj = dobj.getNodeDelegate();
-
-	    //This FilterNode will be our project node:
-	    return new FanProjectNode(project, originalObj, dir);
-
-	} catch (DataObjectNotFoundException donfe)
-	{
-	    Exceptions.printStackTrace(donfe);
-	    //Fallback: the directory couldn't be created -
-	    //read-only filesystem or something evil happened:
-	    return new AbstractNode(Children.LEAF);
+		this.project = project;
 	}
-    }
 
-    @Override
-    public Node findPath(Node root, Object target)
-    {
-	// Not impl.
-	return null;
-    }
+	@Override
+	public Node createLogicalView()
+	{
+		try
+		{
+			FileObject dir = project.getProjectDirectory();
+
+			//Get the DataObject that represents it:
+			DataObject dobj = DataObject.find(dir);
+
+			//Get its default node: we'll wrap our node around it to change the
+			//display name, icon, etc:
+			Node originalObj = dobj.getNodeDelegate();
+
+			//This FilterNode will be our project node:
+			return new FanProjectNode(project, originalObj, dir);
+
+		} catch (DataObjectNotFoundException donfe)
+		{
+			Exceptions.printStackTrace(donfe);
+			//Fallback: the directory couldn't be created -
+			//read-only filesystem or something evil happened:
+			return new AbstractNode(Children.LEAF);
+		}
+	}
+
+	@Override
+	public Node findPath(Node root, Object target)
+	{
+		// Not impl.
+		return null;
+	}
+
 }
 

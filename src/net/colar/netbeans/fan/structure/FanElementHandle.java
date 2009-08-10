@@ -23,64 +23,64 @@ import org.openide.filesystems.FileObject;
 public class FanElementHandle implements ElementHandle
 {
 
-    private final ParserResult result;
-    private final Source source;
-    private final CommonToken token;
-    private ElementKind kind;
-    private OffsetRange offsetRange;
-    private Set<Modifier> modifiers = new HashSet<Modifier>();
+	private final ParserResult result;
+	private final Source source;
+	private final CommonToken token;
+	private ElementKind kind;
+	private OffsetRange offsetRange;
+	private Set<Modifier> modifiers = new HashSet<Modifier>();
 
-    public FanElementHandle(ElementKind kind, CommonToken token, ParserResult result, OffsetRange range)
-    {
-	this.token = token;
-	this.result = result;
-	this.source = result.getSnapshot().getSource();
-	this.kind = kind;
-	this.offsetRange = range;
-    }
+	public FanElementHandle(ElementKind kind, CommonToken token, ParserResult result, OffsetRange range)
+	{
+		this.token = token;
+		this.result = result;
+		this.source = result.getSnapshot().getSource();
+		this.kind = kind;
+		this.offsetRange = range;
+	}
 
-    public FileObject getFileObject()
-    {
-	return source.getFileObject();
-    }
+	public FileObject getFileObject()
+	{
+		return source.getFileObject();
+	}
 
-    public String getMimeType()
-    {
-	return source.getMimeType();
-    }
+	public String getMimeType()
+	{
+		return source.getMimeType();
+	}
 
-    public String getName()
-    {
-	return token.getText();
-    }
+	public String getName()
+	{
+		return token.getText();
+	}
 
-    public String getIn()
-    {
-	return "";
-    }
+	public String getIn()
+	{
+		return "";
+	}
 
-    public ElementKind getKind()
-    {
-	return kind;
-    }
+	public ElementKind getKind()
+	{
+		return kind;
+	}
 
-    public Set<Modifier> getModifiers()
-    {
-	return modifiers;
-    }
+	public Set<Modifier> getModifiers()
+	{
+		return modifiers;
+	}
 
-    public void setModifiers(Set<Modifier> modifiers)
-    {
-	this.modifiers = modifiers;
-    }
+	public void setModifiers(Set<Modifier> modifiers)
+	{
+		this.modifiers = modifiers;
+	}
 
-    public boolean signatureEquals(ElementHandle arg0)
-    {
-	return false;//TODO
-    }
+	public boolean signatureEquals(ElementHandle arg0)
+	{
+		return false;//TODO
+	}
 
-    public OffsetRange getOffsetRange(ParserResult result)
-    {
-	return offsetRange;
-    }
+	public OffsetRange getOffsetRange(ParserResult result)
+	{
+		return offsetRange;
+	}
 }

@@ -63,31 +63,37 @@ public class FanStructureItem implements StructureItem
 		return getName();
 	}
 
+	@Override
 	public String getHtml(HtmlFormatter arg0)
 	{
 		return html != null ? html : getName();
 	}
 
+	@Override
 	public ElementHandle getElementHandle()
 	{
 		return handle;
 	}
 
+	@Override
 	public ElementKind getKind()
 	{
 		return handle.getKind();
 	}
 
+	@Override
 	public Set<Modifier> getModifiers()
 	{
 		return handle.getModifiers();
 	}
 
+	@Override
 	public boolean isLeaf()
 	{
 		return items.isEmpty();
 	}
 
+	@Override
 	public List<? extends StructureItem> getNestedItems()
 	{
 		return items;
@@ -103,6 +109,7 @@ public class FanStructureItem implements StructureItem
 		return stop;
 	}
 
+	@Override
 	public ImageIcon getCustomIcon()
 	{
 		return null;
