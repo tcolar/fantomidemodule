@@ -38,6 +38,7 @@ public class FanStructureAnalyzer implements StructureScanner
 	public static final String COMMENT_FOLDS = "comments";
 	public static final String IMPORT_FOLDS = "imports";
 
+	@Override
 	public List<StructureItem> scan(ParserResult result)
 	{
 		List<StructureItem> list = new ArrayList<StructureItem>();
@@ -57,6 +58,7 @@ public class FanStructureAnalyzer implements StructureScanner
 		return list;
 	}
 
+	@Override
 	public Map<String, List<OffsetRange>> folds(ParserResult result)
 	{
 		CommonTokenStream tokenStream = ((FanParserResult) result).getTokenStream();
@@ -79,7 +81,6 @@ public class FanStructureAnalyzer implements StructureScanner
 		if (node != null && result != null)
 		{
 			FanStructureItem item = null;
-
 			trace += "->" + node.getText();
 			System.err.println("NODE[ " + node.getTokenStartIndex() + " " + node.getTokenStopIndex() + "] : " + trace);//"+node.toStringTree());
 			switch (node.getType())
@@ -286,4 +287,5 @@ public class FanStructureAnalyzer implements StructureScanner
 
 		}
 	}
+	
 }
