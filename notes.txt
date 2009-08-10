@@ -1,19 +1,20 @@
-DONE: highlight variables in strings $dvds ${}
-have "run single" method only on runnable class main / scripts
+DONE: Highlight variables in strings $dvds ${}
 
-Fixed $ in pod names
+Have "run single" method only on runnable class main / scripts
+
+Done: Allow $ in pod names (for java FFI)
 
 Have "build" "run" and "build & run" on Pod(project?) itself
 ... and hook to main netbeans RIt's also possible to create a quick Fan script - basically a .fan file with a class with a main method.
 It's also possible to create a quick Fan script - basically a .fan file with a class with a main method.
 un button
 
-typing a triple quote string is messed up again
-
 create Main class with main() in it when creating pod ?
 Make "pod main" configurable in pod properties
 
-repos ?
+Research/Fix bug where new files dont show in files/projects
+
+Fix bug where navigator closes/re-opens constantly.
 
 TODO:
 - Semantic analysis
