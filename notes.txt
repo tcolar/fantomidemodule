@@ -14,6 +14,8 @@
 
     * Research/Fix bug where navigator collapses after clicking an item in it.
 
+   * Run tests actions (fan build.xml test)
+
 TODO:
 - Semantic analysis
     - DONE step 1: highlighting (2)
