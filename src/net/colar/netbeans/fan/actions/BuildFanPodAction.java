@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan.actions;
 
 import net.colar.netbeans.fan.project.FanProject;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
 
 /**
@@ -13,8 +14,6 @@ import org.openide.util.Lookup;
  */
 public class BuildFanPodAction extends FanAction
 {
-	public static final String COMMAND_BUILD_FAN_POD = "COMMAND_BUILD_FAN_POD";
-
 	public BuildFanPodAction(FanProject project)
 	{
 		super(project);
@@ -23,7 +22,7 @@ public class BuildFanPodAction extends FanAction
 	@Override
 	public String getCommandId()
 	{
-		return COMMAND_BUILD_FAN_POD;
+		return ActionProvider.COMMAND_BUILD;
 	}
 
 	@Override

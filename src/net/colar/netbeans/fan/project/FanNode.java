@@ -117,7 +117,7 @@ public class FanNode extends FilterNode
 		{
 			// project level actions
 			actions.add(ProjectSensitiveActions.projectCommandAction(BuildAndRunFanPodAction.COMMAND_BUILD_RUN_FAN_POD, "Build & Run Pod", null));
-			actions.add(ProjectSensitiveActions.projectCommandAction(BuildFanPodAction.COMMAND_BUILD_FAN_POD, "Build Pod", null));
+			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Pod", null));
 			actions.add(ProjectSensitiveActions.projectCommandAction(RunFanPodAction.COMMAND_RUN_FAN_POD, "Run Pod", null));
 			actions.add(null);
 			actions.add(ProjectSensitiveActions.projectCommandAction(RunFanShellAction.COMMAND_RUN_FAN_SHELL, "Start Fan Shell", null));

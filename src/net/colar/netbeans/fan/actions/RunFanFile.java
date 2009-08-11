@@ -32,6 +32,7 @@ public class RunFanFile extends FanAction
 	@Override
 	public String getCommandId()
 	{
+		// std run single command
 		return ActionProvider.COMMAND_RUN_SINGLE;
 	}
 

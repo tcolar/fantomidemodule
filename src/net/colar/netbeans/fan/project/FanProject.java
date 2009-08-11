@@ -13,10 +13,13 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
 import net.colar.netbeans.fan.actions.BuildFanPodAction;
+import net.colar.netbeans.fan.actions.CleanAndBuildFanPodAction;
+import net.colar.netbeans.fan.actions.CleanFanPodAction;
 import net.colar.netbeans.fan.actions.FanAction;
 import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
+import net.colar.netbeans.fan.actions.TestFanPodAction;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ActionProvider;
@@ -117,11 +120,14 @@ public class FanProject implements Project, ProjectInformation
 			commands = new LinkedHashMap<String, FanAction>();
 			FanAction[] commandArray = new FanAction[]
 			{
-				new RunFanFile(project, false),
-				new RunFanShellAction(project),
-				new BuildFanPodAction(project),
 				new RunFanPodAction(project),
 				new BuildAndRunFanPodAction(project),
+				new TestFanPodAction(project),
+				new BuildFanPodAction(project),
+				new CleanFanPodAction(project),
+				new CleanAndBuildFanPodAction(project),
+				new RunFanFile(project, false),
+				new RunFanShellAction(project),
 			};
 			for (FanAction command : commandArray)
 			{

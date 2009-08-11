@@ -1,153 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
 <filesystem>
-    <folder name="Loaders">
-	<folder name="text">
-	    <folder name="x-fan">
-		<folder name="Actions">
-		    <file name="org-openide-actions-CopyAction.instance">
-			<attr name="position" intvalue="400"/>
-		    </file>
-		    <file name="org-openide-actions-CutAction.instance">
-			<attr name="position" intvalue="300"/>
-		    </file>
-		    <file name="org-openide-actions-DeleteAction.instance">
-			<attr name="position" intvalue="600"/>
-		    </file>
-		    <file name="org-openide-actions-FileSystemAction.instance">
-			<attr name="position" intvalue="1100"/>
-		    </file>
-		    <file name="org-openide-actions-OpenAction.instance">
-			<attr name="position" intvalue="100"/>
-		    </file>
-		    <file name="org-openide-actions-PropertiesAction.instance">
-			<attr name="position" intvalue="1400"/>
-		    </file>
-		    <file name="org-openide-actions-RenameAction.instance">
-			<attr name="position" intvalue="700"/>
-		    </file>
-		    <file name="org-openide-actions-SaveAsTemplateAction.instance">
-			<attr name="position" intvalue="900"/>
-		    </file>
-		    <file name="org-openide-actions-ToolsAction.instance">
-			<attr name="position" intvalue="1300"/>
-		    </file>
-		    <file name="sep-1.instance">
-			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-			<attr name="position" intvalue="200"/>
-		    </file>
-		    <file name="sep-2.instance">
-			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-			<attr name="position" intvalue="500"/>
-		    </file>
-		    <file name="sep-3.instance">
-			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-			<attr name="position" intvalue="800"/>
-		    </file>
-		    <file name="sep-4.instance">
-			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-			<attr name="position" intvalue="1000"/>
-		    </file>
-		    <file name="sep-5.instance">
-			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-			<attr name="position" intvalue="1200"/>
-		    </file>
+	<folder name="Loaders">
+		<folder name="text">
+			<folder name="x-fan">
+				<folder name="Actions">
+					<file name="org-openide-actions-CopyAction.instance">
+						<attr name="position" intvalue="400"/>
+					</file>
+					<file name="org-openide-actions-CutAction.instance">
+						<attr name="position" intvalue="300"/>
+					</file>
+					<file name="org-openide-actions-DeleteAction.instance">
+						<attr name="position" intvalue="600"/>
+					</file>
+					<file name="org-openide-actions-FileSystemAction.instance">
+						<attr name="position" intvalue="1100"/>
+					</file>
+					<file name="org-openide-actions-OpenAction.instance">
+						<attr name="position" intvalue="100"/>
+					</file>
+					<file name="org-openide-actions-PropertiesAction.instance">
+						<attr name="position" intvalue="1400"/>
+					</file>
+					<file name="org-openide-actions-RenameAction.instance">
+						<attr name="position" intvalue="700"/>
+					</file>
+					<file name="org-openide-actions-SaveAsTemplateAction.instance">
+						<attr name="position" intvalue="900"/>
+					</file>
+					<file name="org-openide-actions-ToolsAction.instance">
+						<attr name="position" intvalue="1300"/>
+					</file>
+					<file name="sep-1.instance">
+						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+						<attr name="position" intvalue="200"/>
+					</file>
+					<file name="sep-2.instance">
+						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+						<attr name="position" intvalue="500"/>
+					</file>
+					<file name="sep-3.instance">
+						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+						<attr name="position" intvalue="800"/>
+					</file>
+					<file name="sep-4.instance">
+						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+						<attr name="position" intvalue="1000"/>
+					</file>
+					<file name="sep-5.instance">
+						<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+						<attr name="position" intvalue="1200"/>
+					</file>
+				</folder>
+				<folder name="Factories">
+					<file name="DummyDataLoader.instance">
+						<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/project/resources/fanFile.png"/>
+						<attr name="dataObjectClass" stringvalue="net.colar.netbeans.fan.FanDataObject"/>
+						<attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
+						<attr name="mimeType" stringvalue="text/x-fan"/>
+					</file>
+				</folder>
+			</folder>
 		</folder>
-		<folder name="Factories">
-		    <file name="DummyDataLoader.instance">
-			<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/project/resources/fanFile.png"/>
-			<attr name="dataObjectClass" stringvalue="net.colar.netbeans.fan.FanDataObject"/>
-			<attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
-			<attr name="mimeType" stringvalue="text/x-fan"/>
-		    </file>
+	</folder>
+
+	<folder name="Services">
+		<folder name="MIMEResolver">
+			<file name="fan.xml" url="fanResolver.xml">
+				<attr name="position" intvalue="1007"/>
+			</file>
 		</folder>
-	    </folder>
 	</folder>
-    </folder>
 
-    <folder name="Services">
-	<folder name="MIMEResolver">
-	    <file name="fan.xml" url="fanResolver.xml">
-		<attr name="position" intvalue="1007"/>
-	    </file>
-	</folder>
-    </folder>
-
-    <folder name="Editors">
-	<folder name="text">
-	    <folder name="x-fan">
-		<file name="language.instance">
-		    <attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.FanTokenID.language"/>
-		    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
-		</file>
-	    </folder>
-	</folder>
-	<folder name="FontsColors">
-	    <folder name="NetBeans">
-		<folder name="Defaults">
-		    <file name="coloring.xml" url="textColors.xml"/>
+	<folder name="Editors">
+		<folder name="text">
+			<folder name="x-fan">
+				<file name="language.instance">
+					<attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.FanTokenID.language"/>
+					<attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+				</file>
+			</folder>
 		</folder>
-	    </folder>
+		<folder name="FontsColors">
+			<folder name="NetBeans">
+				<folder name="Defaults">
+					<file name="coloring.xml" url="textColors.xml"/>
+				</folder>
+			</folder>
+		</folder>
 	</folder>
-    </folder>
 
-    <folder name="CslPlugins">
-	<folder name="text">
-	    <folder name="x-fan">
-		<file name="language.instance">
-		    <attr name="instanceClass" stringvalue="net.colar.netbeans.fan.FanLanguage"/>
-		</file>
-		<file name="structure.instance">
-		    <attr name="instanceClass" stringvalue="net.colar.netbeans.fan.structure.FanStructureAnalyzer"/>
-		</file>
-	    </folder>
+	<folder name="CslPlugins">
+		<folder name="text">
+			<folder name="x-fan">
+				<file name="language.instance">
+					<attr name="instanceClass" stringvalue="net.colar.netbeans.fan.FanLanguage"/>
+				</file>
+				<file name="structure.instance">
+					<attr name="instanceClass" stringvalue="net.colar.netbeans.fan.structure.FanStructureAnalyzer"/>
+				</file>
+			</folder>
+		</folder>
 	</folder>
-    </folder>
 
-    <folder name="OptionsDialog">
-	<folder name="Advanced">
-	    <file name="FanOptions.instance">
-		<attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.wizard.FanGlobalSettings.getInstance"/>
-	    </file>
+	<folder name="OptionsDialog">
+		<folder name="Advanced">
+			<file name="FanOptions.instance">
+				<attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.wizard.FanGlobalSettings.getInstance"/>
+			</file>
+		</folder>
 	</folder>
-    </folder>
 
-    <folder name="Templates">
-	<folder name="Fan">
-	    <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-	    <file name="FanFile" url="nbresloc:/net/colar/netbeans/fan/templates/FanFile.html">
-		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-		<attr name="template" boolvalue="true"/>
-		<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-		<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
-		<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/FanFileDesc.html"/>
-		<attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.NewFileWizardIterator"/>
+	<folder name="Templates">
+		<folder name="Fan">
+			<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+			<file name="FanFile" url="nbresloc:/net/colar/netbeans/fan/templates/FanFile.html">
+				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+				<attr name="template" boolvalue="true"/>
+				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+				<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
+				<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/FanFileDesc.html"/>
+				<attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.NewFileWizardIterator"/>
                 <!--Use this line only if your template makes use of the FreeMarker template language:-->
-	    </file>
-	</folder>
+			</file>
+		</folder>
 	
-	<folder name="Licenses">
-            <file name="FanDefaultLicense.txt" url="nbresloc:/net/colar/netbeans/fan/FanDefaultLicense.txt">
-		    <attr name="template" boolvalue="true"/>
-	    </file>
-        </folder>
-        <folder name="Project">
-	    <folder name="Fan Project">
+		<folder name="Licenses">
+			<file name="FanDefaultLicense.txt" url="nbresloc:/net/colar/netbeans/fan/FanDefaultLicense.txt">
+				<attr name="template" boolvalue="true"/>
+			</file>
+		</folder>
+		<folder name="Project">
+			<folder name="Fan Project">
 		<!--<attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.docbook.project.Bundle"/>-->
-		<attr name="position" intvalue="937"/>
-		<file name="FanPod" url="nbresloc:/net/colar/netbeans/fan/templates/build.html">
-		    <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-		    <attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.wizard.FanPodWizardIterator.instance"/>
-		    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanPodDescription.html"/>
-		    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
-		    <attr name="template" boolvalue="true"/>
-		</file>
-	    </folder>
+				<attr name="position" intvalue="937"/>
+				<file name="FanPod" url="nbresloc:/net/colar/netbeans/fan/templates/build.html">
+					<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+					<attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.wizard.FanPodWizardIterator.instance"/>
+					<attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewFanPodDescription.html"/>
+					<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
+					<attr name="template" boolvalue="true"/>
+				</file>
+			</folder>
+		</folder>
 	</folder>
-    </folder>
     <!-- Other custom resources used by Fan plugin-->
-    <folder name="Fan">
-	<file name="pod.html" url="nbresloc:/net/colar/netbeans/fan/templates/pod.html"/>
-    </folder>
+	<folder name="Fan">
+		<file name="pod.html" url="nbresloc:/net/colar/netbeans/fan/templates/pod.html"/>
+	</folder>
 
 </filesystem>
