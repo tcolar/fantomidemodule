@@ -14,8 +14,9 @@
 
     * Research/Fix bug where navigator collapses after clicking an item in it.
 
-   * Run test action (fan build.xml test)
-		and doc action etc.. other actions defined in BuildPod.fan (clean, native...)
+   * Run test action (fan build.xml test) (submenu ??)
+		and doc,clean actions etc.. other actions defined in BuildPod.fan (clean, native...)
+     and change run on build.xml to allow free text entry user actions ?
 
 TODO:
 - Semantic analysis
