@@ -162,7 +162,7 @@ public class FanStructureAnalyzer implements StructureScanner
 
 			if (item != null)
 			{
-				System.err.println("Adding to item list " + item.getName() + " " + trace);
+				//System.err.println("Adding to item list " + item.getName() + " " + trace);
 				list.add(item);
 			}
 		}

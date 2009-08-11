@@ -2,22 +2,21 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package net.colar.netbeans.fan.actions;
 
-import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
 import org.openide.util.Lookup;
 
 /**
- * Runs the Fan interactive shell.
+ *
  * @author tcolar
  */
-public class RunFanShellAction extends FanAction
+public class RunFanPodAction extends FanAction
 {
+	public static final String COMMAND_RUN_FAN_POD = "COMMAND_RUN_FAN_POD";
 
-	public static final String COMMAND_RUN_FAN_SHELL = "COMMAND_RUN_FAN_SHELL";
-
-	public RunFanShellAction(FanProject project)
+	public RunFanPodAction(FanProject project)
 	{
 		super(project);
 	}
@@ -25,18 +24,13 @@ public class RunFanShellAction extends FanAction
 	@Override
 	public String getCommandId()
 	{
-		return COMMAND_RUN_FAN_SHELL;
+		return COMMAND_RUN_FAN_POD;
 	}
 
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		FanExecution fanExec = new FanExecution();
-		fanExec.setDisplayName("Fan Shell (fansh)");
-		//fanExec.setWorkingDirectory(path);
-		fanExec.setCommand(FanPlatform.getInstance().getFanShellBinaryPath());
-
-		fanExec.run();
+		runPodAction(context);
 	}
 
 	@Override

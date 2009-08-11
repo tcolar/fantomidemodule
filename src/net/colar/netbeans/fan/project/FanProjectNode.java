@@ -15,11 +15,13 @@ import org.openide.nodes.Node;
 public class FanProjectNode extends FanNode
 {
 
-    public FanProjectNode(Project project, Node originalNode, FileObject file)
-    {
-	super(project, originalNode, new FanNodeChildren(project, originalNode), file);
-	setIcon("net/colar/netbeans/fan/fan.png");
-	isRoot=true;
-    }
+	public FanProjectNode(Project project, Node originalNode, FileObject file)
+	{
+		super(project, originalNode, new FanNodeChildren(project, originalNode), file);
+		setIcon("net/colar/netbeans/fan/fan.png");
+		isRoot = true;
+	}
+
+
 }
 

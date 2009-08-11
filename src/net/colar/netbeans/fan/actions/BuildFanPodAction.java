@@ -4,20 +4,18 @@
  */
 package net.colar.netbeans.fan.actions;
 
-import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
 import org.openide.util.Lookup;
 
 /**
- * Runs the Fan interactive shell.
+ *
  * @author tcolar
  */
-public class RunFanShellAction extends FanAction
+public class BuildFanPodAction extends FanAction
 {
+	public static final String COMMAND_BUILD_FAN_POD = "COMMAND_BUILD_FAN_POD";
 
-	public static final String COMMAND_RUN_FAN_SHELL = "COMMAND_RUN_FAN_SHELL";
-
-	public RunFanShellAction(FanProject project)
+	public BuildFanPodAction(FanProject project)
 	{
 		super(project);
 	}
@@ -25,18 +23,13 @@ public class RunFanShellAction extends FanAction
 	@Override
 	public String getCommandId()
 	{
-		return COMMAND_RUN_FAN_SHELL;
+		return COMMAND_BUILD_FAN_POD;
 	}
 
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		FanExecution fanExec = new FanExecution();
-		fanExec.setDisplayName("Fan Shell (fansh)");
-		//fanExec.setWorkingDirectory(path);
-		fanExec.setCommand(FanPlatform.getInstance().getFanShellBinaryPath());
-
-		fanExec.run();
+		buildPodAction(context);
 	}
 
 	@Override
