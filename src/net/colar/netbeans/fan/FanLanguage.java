@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.colar.netbeans.fan;
 
 import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
@@ -15,7 +14,6 @@ import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.parsing.spi.Parser;
 
-
 /**
  * Primary Fan language definition
  * Provides "hooks" into various language support implementation
@@ -23,59 +21,61 @@ import org.netbeans.modules.parsing.spi.Parser;
  */
 public class FanLanguage extends DefaultLanguageConfig
 {
-    // Fan mime Type (used all over)
-    public static final String FAN_MIME_TYPE = "text/x-fan";
+	// Fan mime Type (used all over)
 
-    public FanLanguage()
-    {
-	super();
-	System.err.println("Fan - init FanLanguage");
-    }
+	public static final String FAN_MIME_TYPE = "text/x-fan";
 
-    @Override
-    public String getDisplayName()
-    {
-	return "Fan";
-    }
+	public FanLanguage()
+	{
+		super();
+		System.err.println("Fan - init FanLanguage");
+	}
 
-    @Override
-    public Language getLexerLanguage() {
-	return FanTokenID.language();
-    }
+	@Override
+	public String getDisplayName()
+	{
+		return "Fan";
+	}
 
-    @Override
-    public String getPreferredExtension()
-    {
-	return "fan";
-    }
+	@Override
+	public Language getLexerLanguage()
+	{
+		return FanTokenID.language();
+	}
 
-    @Override
-    public Parser getParser() {
-	return new NBFanParser();
-    }
+	@Override
+	public String getPreferredExtension()
+	{
+		return "fan";
+	}
 
-    @Override
-    public boolean hasStructureScanner()
-    {
-	return true;
-    }
+	@Override
+	public Parser getParser()
+	{
+		return new NBFanParser();
+	}
 
-    @Override
-    public StructureScanner getStructureScanner()
-    {
-	return new FanStructureAnalyzer();
-    }
+	@Override
+	public boolean hasStructureScanner()
+	{
+		return true;
+	}
 
-    @Override
-    public KeystrokeHandler getKeystrokeHandler()
-    {
-	return new FanKeyStrokeHandler();
-    }
+	@Override
+	public StructureScanner getStructureScanner()
+	{
+		return new FanStructureAnalyzer();
+	}
 
-    @Override
-    public SemanticAnalyzer getSemanticAnalyzer()
-    {
-	return new FanSemanticAnalyzer();
-    }
+	@Override
+	public KeystrokeHandler getKeystrokeHandler()
+	{
+		return new FanKeyStrokeHandler();
+	}
 
+	@Override
+	public SemanticAnalyzer getSemanticAnalyzer()
+	{
+		return new FanSemanticAnalyzer();
+	}
 }

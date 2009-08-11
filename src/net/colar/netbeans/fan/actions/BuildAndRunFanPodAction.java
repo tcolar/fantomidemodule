@@ -31,6 +31,7 @@ public class BuildAndRunFanPodAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
+		//TODO: only build if files changed
 		Future future = buildPodAction(context);
 		Object result=null;
 		try

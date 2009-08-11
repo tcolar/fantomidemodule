@@ -116,24 +116,19 @@ public class FanNode extends FilterNode
 		if (isRoot || isPod)
 		{
 			// project level actions
-			actions.add(CommonProjectActions.newFileAction());
-			actions.add(null);
 			actions.add(ProjectSensitiveActions.projectCommandAction(BuildAndRunFanPodAction.COMMAND_BUILD_RUN_FAN_POD, "Build & Run Pod", null));
 			actions.add(ProjectSensitiveActions.projectCommandAction(BuildFanPodAction.COMMAND_BUILD_FAN_POD, "Build Pod", null));
 			actions.add(ProjectSensitiveActions.projectCommandAction(RunFanPodAction.COMMAND_RUN_FAN_POD, "Run Pod", null));
 			actions.add(null);
 			actions.add(ProjectSensitiveActions.projectCommandAction(RunFanShellAction.COMMAND_RUN_FAN_SHELL, "Start Fan Shell", null));
 			actions.add(null);
-			//actions.add(CommonProjectActions.copyProjectAction());
-			actions.add(CommonProjectActions.deleteProjectAction());
+			actions.add(CommonProjectActions.setAsMainProjectAction());
+			actions.add(null);
 			actions.add(CommonProjectActions.closeProjectAction());
 			actions.add(SystemAction.get(PasteAction.class));
-
 			actions.add(null);
-			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build", null));
 			// TODO: rename ?
-			// TODO: run (build.fan)
-			// TODO: debug
+			// TODO: test / debug
 		} else
 		{
 			// Folder actions
