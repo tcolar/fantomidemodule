@@ -14,7 +14,8 @@
 
     * Research/Fix bug where navigator collapses after clicking an item in it.
 
-   * Run tests actions (fan build.xml test)
+   * Run test action (fan build.xml test)
+		and doc action etc.. other actions defined in BuildPod.fan (clean, native...)
 
 TODO:
 - Semantic analysis
