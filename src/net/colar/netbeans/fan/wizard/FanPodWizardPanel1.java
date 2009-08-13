@@ -20,117 +20,120 @@ import org.openide.util.HelpCtx;
 public class FanPodWizardPanel1 implements WizardDescriptor.Panel
 {
 
-    /**
-     * The visual component that displays this panel. If you need to access the
-     * component from this class, just use getComponent().
-     */
-    private Component component;
-    private final String dir;
+	/**
+	 * The visual component that displays this panel. If you need to access the
+	 * component from this class, just use getComponent().
+	 */
+	private Component component;
+	private final String dir;
 
-    FanPodWizardPanel1(String folder)
-    {
-	super();
-	this.dir = folder;
-    }
-
-    // Get the visual component for the panel. In this template, the component
-    // is kept separate. This can be more efficient: if the wizard is created
-    // but never displayed, or not all panels are displayed, it is better to
-    // create only those which really need to be visible.
-    public Component getComponent()
-    {
-	if (component == null)
+	FanPodWizardPanel1(String folder)
 	{
-	    component = new FanPodPanel1(this, dir);
+		super();
+		this.dir = folder;
 	}
-	return component;
-    }
 
-    public HelpCtx getHelp()
-    {
-	// Show no Help button for this panel:
-	return HelpCtx.DEFAULT_HELP;
-	// If you have context help:
-	// return new HelpCtx(SampleWizardPanel1.class);
-    }
-
-    public boolean isValid()
-    {
-	if (component == null)
+	// Get the visual component for the panel. In this template, the component
+	// is kept separate. This can be more efficient: if the wizard is created
+	// but never displayed, or not all panels are displayed, it is better to
+	// create only those which really need to be visible.
+	public Component getComponent()
 	{
-	    return false;
+		if (component == null)
+		{
+			component = new FanPodPanel1(this, dir);
+		}
+		return component;
 	}
-	return ((FanPodPanel1) component).isValid();
-    }
 
-    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
-
-    public final void addChangeListener(ChangeListener l)
-    {
-	synchronized (listeners)
+	public HelpCtx getHelp()
 	{
-	    listeners.add(l);
+		// Show no Help button for this panel:
+		return HelpCtx.DEFAULT_HELP;
+		// If you have context help:
+		// return new HelpCtx(SampleWizardPanel1.class);
 	}
-    }
 
-    public final void removeChangeListener(ChangeListener l)
-    {
-	synchronized (listeners)
+	public boolean isValid()
 	{
-	    listeners.remove(l);
+		if (component == null)
+		{
+			return false;
+		}
+		return ((FanPodPanel1) component).isValid();
 	}
-    }
+	private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
 
-    protected final void fireChangeEvent()
-    {
-	Iterator<ChangeListener> it;
-	synchronized (listeners)
+	public final void addChangeListener(ChangeListener l)
 	{
-	    it = new HashSet<ChangeListener>(listeners).iterator();
+		synchronized (listeners)
+		{
+			listeners.add(l);
+		}
 	}
-	ChangeEvent ev = new ChangeEvent(this);
-	while (it.hasNext())
+
+	public final void removeChangeListener(ChangeListener l)
 	{
-	    it.next().stateChanged(ev);
+		synchronized (listeners)
+		{
+			listeners.remove(l);
+		}
 	}
-    }
 
-    // You can use a settings object to keep track of state. Normally the
-    // settings object will be the WizardDescriptor, so you can use
-    // WizardDescriptor.getProperty & putProperty to store information entered
-    // by the user.
-    public void readSettings(Object settings)
-    {
-    }
+	protected final void fireChangeEvent()
+	{
+		Iterator<ChangeListener> it;
+		synchronized (listeners)
+		{
+			it = new HashSet<ChangeListener>(listeners).iterator();
+		}
+		ChangeEvent ev = new ChangeEvent(this);
+		while (it.hasNext())
+		{
+			it.next().stateChanged(ev);
+		}
+	}
 
-    public void storeSettings(Object settings)
-    {
-    }
+	// You can use a settings object to keep track of state. Normally the
+	// settings object will be the WizardDescriptor, so you can use
+	// WizardDescriptor.getProperty & putProperty to store information entered
+	// by the user.
+	public void readSettings(Object settings)
+	{
+	}
 
-    private FanPodPanel1 getPanel()
-    {
-	return (FanPodPanel1) getComponent();
-    }
+	public void storeSettings(Object settings)
+	{
+	}
 
-    String getPodName()
-    {
-	return getPanel().getPodName();
-    }
+	private FanPodPanel1 getPanel()
+	{
+		return (FanPodPanel1) getComponent();
+	}
 
-    String getProjectFolder()
-    {
-	return getPanel().getProjectFolder();
-    }
+	String getPodName()
+	{
+		return getPanel().getPodName();
+	}
 
-    String getPodDesc()
-    {
-	return getPanel().getPodDesc();
-    }
+	String getProjectFolder()
+	{
+		return getPanel().getProjectFolder();
+	}
 
-    boolean getCreateBuildFile()
-    {
-	return getPanel().getCreateBuildFile();
-    }
+	String getPodDesc()
+	{
+		return getPanel().getPodDesc();
+	}
 
+	boolean getCreateBuildFile()
+	{
+		return getPanel().getCreateBuildFile();
+	}
+
+	String getMainClassName()
+	{
+		return getPanel().getMainClassName();
+	}
 }
 

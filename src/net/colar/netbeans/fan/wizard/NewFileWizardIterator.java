@@ -42,9 +42,9 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 		{
 			String folder = Templates.getTargetFolder(wizard).getPath();
 			panels = new WizardDescriptor.Panel[]
-					{
-						new NewFileWizardPanel1(folder)
-					};
+				{
+					new NewFileWizardPanel1(folder)
+				};
 			String[] steps = createSteps();
 			for (int i = 0; i < panels.length; i++)
 			{

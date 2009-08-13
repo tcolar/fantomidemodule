@@ -4,7 +4,11 @@
  */
 package net.colar.netbeans.fan.project;
 
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.Action;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 
@@ -21,7 +25,6 @@ public class FanProjectNode extends FanNode
 		setIcon("net/colar/netbeans/fan/fan.png");
 		isRoot = true;
 	}
-
 
 }
 

@@ -5,14 +5,10 @@
 package net.colar.netbeans.fan.project;
 
 import java.awt.Image;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import javax.swing.Action;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
-import net.colar.netbeans.fan.actions.BuildFanPodAction;
-import net.colar.netbeans.fan.actions.CleanFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
 import org.netbeans.api.project.Project;
@@ -35,8 +31,8 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public class FanNode extends FilterNode
 {
-	public static final Pattern MAIN_METHOD=Pattern.compile("Void\\s+main\\([^)]*\\)\\s*\\{");
 
+	public static final Pattern MAIN_METHOD = Pattern.compile("Void\\s+main\\([^)]*\\)\\s*\\{");
 	public static final String ATTR_NODE_FILEOBJECT = "NODE_FILEOBJECT";
 	//TODO: are those vars working ?
 	boolean isPod = false;
@@ -45,14 +41,15 @@ public class FanNode extends FilterNode
 	private final FileObject file;
 	private String icon;
 	private String desc;
+	private Vector<Action> actions;
 
 	public FanNode(Project project, Node originalNode, org.openide.nodes.Children children, FileObject file)
 	{
 		super(originalNode, children, new ProxyLookup(new Lookup[]
-				{
-					Lookups.singleton(project),
-					originalNode.getLookup()
-				}));
+			{
+				Lookups.singleton(project),
+				originalNode.getLookup()
+			}));
 		this.file = file;
 		// customize the node
 		if (file.isFolder())
@@ -112,60 +109,66 @@ public class FanNode extends FilterNode
 	@Override
 	public Action[] getActions(boolean popup)
 	{
-		Vector<Action> actions = new Vector();
+		actions = new Vector();
 
 		if (isRoot || isPod)
 		{
 			// project level actions
-			actions.add(ProjectSensitiveActions.projectCommandAction(BuildAndRunFanPodAction.COMMAND_BUILD_RUN_FAN_POD, "Build & Run Pod", null));
-			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Pod", null));
-			actions.add(ProjectSensitiveActions.projectCommandAction(RunFanPodAction.COMMAND_RUN_FAN_POD, "Run Pod", null));
-			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_CLEAN, "Clean Pod", null));
-			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_REBUILD, "Clean & Build Pod", null));
-			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_TEST, "Test Pod", null));
-			actions.add(null);
-			actions.add(ProjectSensitiveActions.projectCommandAction(RunFanShellAction.COMMAND_RUN_FAN_SHELL, "Start Fan Shell", null));
-			actions.add(null);
-			actions.add(CommonProjectActions.setAsMainProjectAction());
-			actions.add(null);
-			actions.add(CommonProjectActions.closeProjectAction());
-			actions.add(SystemAction.get(PasteAction.class));
-			actions.add(null);
-
-			// TODO: rename ?
-			// TODO: test / debug
+			putAction(CommonProjectActions.newFileAction());
+			putAction(null);
+			putAction(ProjectSensitiveActions.projectCommandAction(BuildAndRunFanPodAction.COMMAND_BUILD_RUN_FAN_POD, "Build & Run Pod", null));
+			putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Pod", null));
+			putAction(ProjectSensitiveActions.projectCommandAction(RunFanPodAction.COMMAND_RUN_FAN_POD, "Run Pod", null));
+			putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_CLEAN, "Clean Pod", null));
+			putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_REBUILD, "Clean & Build Pod", null));
+			putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_TEST, "Test Pod", null));
+			putAction(null);
+			putAction(ProjectSensitiveActions.projectCommandAction(RunFanShellAction.COMMAND_RUN_FAN_SHELL, "Start Fan Shell", null));
+			putAction(null);
+			putAction(SystemAction.get(FindAction.class));
+			putAction(SystemAction.get(PasteAction.class));
+			putAction(CommonProjectActions.renameProjectAction());
+			putAction(CommonProjectActions.deleteProjectAction());
+			putAction(null);
+			putAction(CommonProjectActions.setAsMainProjectAction());
+			putAction(CommonProjectActions.closeProjectAction());
 		} else
 		{
 			// Folder actions
 			if (getChildren().getNodesCount() != 0)
 			{
-				actions.add(CommonProjectActions.newFileAction());
-				actions.add(SystemAction.get(FindAction.class));
-				actions.add(SystemAction.get(PasteAction.class));
+				putAction(CommonProjectActions.newFileAction());
+				putAction(SystemAction.get(FindAction.class));
+				putAction(null);
+				putAction(SystemAction.get(PasteAction.class));
 			} else
 			// item actions
 			{
-				actions.add(SystemAction.get(OpenAction.class));
+				putAction(SystemAction.get(OpenAction.class));
 				if (isRunnable)
 				{
-					actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Run Fan script", null));
+					putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Run Fan script", null));
+					putAction(null);
 				}
 			}
 
-			actions.add(null);
-			actions.add(SystemAction.get(CopyAction.class));
-			actions.add(SystemAction.get(CutAction.class));
-			actions.add(SystemAction.get(DeleteAction.class));
-			actions.add(null);
-			actions.add(SystemAction.get(RenameAction.class));
+			putAction(SystemAction.get(CopyAction.class));
+			putAction(SystemAction.get(CutAction.class));
+			putAction(SystemAction.get(DeleteAction.class));
+			putAction(null);
+			putAction(SystemAction.get(RenameAction.class));
 		}
 
-		// standard actions
-		actions.add(null);
-		Action[] stdActions = super.getActions(popup);
-		List list = Arrays.asList(stdActions);
-		actions.addAll(list);
+		// add OTHER standard actions
+		putAction(null);
+		putAction(SystemAction.get(ToolsAction.class));
+		putAction(SystemAction.get(FileSystemAction.class));
 
+		if (isRoot || isPod)
+		{ // put props last always
+			putAction(null);
+			putAction(CommonProjectActions.customizeProjectAction());
+		}
 		return actions.toArray(new Action[0]);
 	}
 
@@ -202,12 +205,19 @@ public class FanNode extends FilterNode
 
 	private boolean isRunnable(FileObject file)
 	{
-		boolean result=false;
+		boolean result = false;
 		try
 		{
 			// look for main method
-			result=MAIN_METHOD.matcher(file.asText()).find();
-		}catch(Exception e){}
+			result = MAIN_METHOD.matcher(file.asText()).find();
+		} catch (Exception e)
+		{
+		}
 		return result;
+	}
+
+	private void putAction(Action action)
+	{
+		actions.add(action);
 	}
 }
