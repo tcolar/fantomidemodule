@@ -1,11 +1,3 @@
-    * Create Main class with main() in it when creating pod (optional, default) as it's easier for beginners.
-
-    * Add a "Main method" configurable field on pod props (defaults to podname:Main.main)
-    * Also make configurable "run button" bui,d target (default: run)
-
-   * Run test action (fan build.xml test) (submenu ??)
-		and doc,clean actions etc.. other actions defined in BuildPod.fan (clean, native...)
-     and change run on build.xml to allow free text entry user actions ?
 
 TODO:
 - Semantic analysis

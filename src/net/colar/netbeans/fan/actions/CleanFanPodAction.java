@@ -5,7 +5,6 @@
 
 package net.colar.netbeans.fan.actions;
 
-import java.util.concurrent.Future;
 import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;

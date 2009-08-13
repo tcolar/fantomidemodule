@@ -11,6 +11,7 @@ import java.io.StringReader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.Future;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory;
@@ -33,7 +34,7 @@ public class FanExecution
 
 	private String command;
 	private String workingDirectory;
-	private String commandArgs;
+	private Vector<String> commandArgs=new Vector();
 	//private String path;
 	private String displayName;
 	private boolean redirect;
@@ -90,12 +91,19 @@ public class FanExecution
 			workingDirectory = new File(".").getAbsolutePath();
 		}
 		processBuilder = processBuilder.workingDirectory(new File(workingDirectory));
-		if ((commandArgs != null) && (commandArgs.trim().length() > 0))
+		String cmdStr="[";
+		for(int i=0; i!=commandArgs.size(); i++)
 		{
-			processBuilder = processBuilder.addArgument(commandArgs);
+			String arg=commandArgs.get(i);
+			if (arg != null && arg.trim().length() > 0)
+			{
+				processBuilder = processBuilder.addArgument(arg);
+			}
+			cmdStr+=arg+", ";
 		}
+		cmdStr+="]";
 
-		System.err.println("will execute: " + command + " " + commandArgs);
+		System.err.println("will execute: " + command + " " + cmdStr +" from: "+workingDirectory);
 
 		processBuilder = processBuilder.redirectErrorStream(redirect);
 		return processBuilder;
@@ -117,14 +125,15 @@ public class FanExecution
 		this.command = command;
 	}
 
-	public synchronized String getCommandArgs()
+	public synchronized Vector<String> getCommandArgs()
 	{
 		return commandArgs;
 	}
 
-	public synchronized void setCommandArgs(String commandArgs)
+	public synchronized void addCommandArg(String arg)
 	{
-		this.commandArgs = commandArgs;
+		if(arg!=null && arg.length()>0)
+			commandArgs.add(arg);
 	}
 
 	public synchronized String getWorkingDirectory()

@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import javax.swing.Action;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
 import net.colar.netbeans.fan.actions.BuildFanPodAction;
+import net.colar.netbeans.fan.actions.CleanFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
 import org.netbeans.api.project.Project;
@@ -119,6 +120,9 @@ public class FanNode extends FilterNode
 			actions.add(ProjectSensitiveActions.projectCommandAction(BuildAndRunFanPodAction.COMMAND_BUILD_RUN_FAN_POD, "Build & Run Pod", null));
 			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Pod", null));
 			actions.add(ProjectSensitiveActions.projectCommandAction(RunFanPodAction.COMMAND_RUN_FAN_POD, "Run Pod", null));
+			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_CLEAN, "Clean Pod", null));
+			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_REBUILD, "Clean & Build Pod", null));
+			actions.add(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_TEST, "Test Pod", null));
 			actions.add(null);
 			actions.add(ProjectSensitiveActions.projectCommandAction(RunFanShellAction.COMMAND_RUN_FAN_SHELL, "Start Fan Shell", null));
 			actions.add(null);
@@ -127,6 +131,7 @@ public class FanNode extends FilterNode
 			actions.add(CommonProjectActions.closeProjectAction());
 			actions.add(SystemAction.get(PasteAction.class));
 			actions.add(null);
+
 			// TODO: rename ?
 			// TODO: test / debug
 		} else

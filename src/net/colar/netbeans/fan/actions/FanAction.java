@@ -8,6 +8,8 @@ import java.util.concurrent.Future;
 import javax.swing.JOptionPane;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -88,24 +90,18 @@ public abstract class FanAction
 
 	protected Future runPodAction(Lookup lookup)
 	{
-		Node[] activatedNodes = getSelectedNodes();
-		FileObject file = null;
-		DataObject gdo = activatedNodes[0].getLookup().lookup(DataObject.class);
-		if (gdo != null && gdo.getPrimaryFile() != null)
-		{
-			file = gdo.getPrimaryFile();
-		}
+		FileObject file=findTargetProject(lookup);
 		if (file != null)
 		{
 			String podName = file.getName();
 			String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
 			//TODO: make main method configurable
-			String script = podName + "::" + "Main" + "." + "main";
+			String target = podName + "::" + "Main" + "." + "main";
 			FanExecution fanExec = new FanExecution();
 			fanExec.setDisplayName(file.getName());
 			fanExec.setWorkingDirectory(path);
 			fanExec.setCommand(FanPlatform.getInstance().getFanBinaryPath());
-			fanExec.setCommandArgs(script);
+			fanExec.addCommandArg(target);
 			return fanExec.run();
 		}
 		return null;
@@ -113,28 +109,52 @@ public abstract class FanAction
 
 	private Future buildAction(Lookup lookup, String target)
 	{
-		Node[] activatedNodes = getSelectedNodes();
-		FileObject file = null;
-		DataObject gdo = activatedNodes[0].getLookup().lookup(DataObject.class);
-		if (gdo != null && gdo.getPrimaryFile() != null)
-		{
-			file = gdo.getPrimaryFile();
-		}
+		FileObject file=findTargetProject(lookup);
 		if (file != null)
 		{
 			FileObject buildFile = file.getFileObject("build.fan");
 			if (buildFile != null)
 			{
 				String path = FileUtil.toFile(file).getAbsolutePath();
-				String script = "build.fan "+target;
 				FanExecution fanExec = new FanExecution();
 				fanExec.setDisplayName(file.getName());
 				fanExec.setWorkingDirectory(path);
 				fanExec.setCommand(FanPlatform.getInstance().getFanBinaryPath());
-				fanExec.setCommandArgs(script);
+				fanExec.addCommandArg("build.fan");
+				fanExec.addCommandArg(target);
 				return fanExec.run();
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * TODO If the user "selects" a project node it will run that one rather
+	 * than the 'actual' main project (when running main project)\
+	 * But to avoid that i would have to setup separate actions for running a project from contextual menu
+	 * vs running it from "run main project" button .... which seems a bit silly.
+	 * @param lookup
+	 * @return
+	 */
+	private FileObject findTargetProject(Lookup lookup)
+	{
+		FileObject file = null;
+		Node[] activatedNodes = getSelectedNodes();
+		if (activatedNodes != null && activatedNodes.length > 0)
+		{
+			DataObject gdo = activatedNodes[0].getLookup().lookup(DataObject.class);
+			if (gdo != null && gdo.getPrimaryFile() != null)
+			{
+				file = gdo.getPrimaryFile();
+			}
+		}
+		if(file==null)
+		{
+			// use "main project", if fan project
+			Project prj=OpenProjects.getDefault().getMainProject();
+			if(FanProject.isProject(prj.getProjectDirectory()))
+				file = OpenProjects.getDefault().getMainProject().getProjectDirectory();
+		}
+		return file;
 	}
 }

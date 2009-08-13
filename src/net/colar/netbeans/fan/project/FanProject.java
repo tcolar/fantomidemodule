@@ -99,7 +99,7 @@ public class FanProject implements Project, ProjectInformation
 	{
 	}
 
-	static boolean isProject(FileObject projectDirectory)
+	public static boolean isProject(FileObject projectDirectory)
 	{
 		//TODO: is this enough ?
 		return projectDirectory.getFileObject(FanProjectFactory.FAN_BUILD_FILE) != null;
