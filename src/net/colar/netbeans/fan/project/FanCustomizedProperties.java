@@ -28,6 +28,7 @@ public class FanCustomizedProperties implements CustomizerProvider
 	private ProjectCustomizer.CategoryComponentProvider panelProvider;
 	private final FanProject project;
 	private Category[] categories;
+	Map panels = new HashMap();
 
 	public FanCustomizedProperties(FanProject project)
 	{
@@ -41,13 +42,21 @@ public class FanCustomizedProperties implements CustomizerProvider
 			"Pod Settings",
 			null,
 			null);
+		// ! panel order used in actionPerformed !
 		categories = new Category[]
 		{
 			settings,
 		};
-		Map panels = new HashMap();
 
-		panels.put(settings, new FanProjectPropertiesPanel());
+		FanProjectProperties props=project.getLookup().lookup(FanProjectProperties.class);
+		FanProjectPropertiesPanel settingsPanel=new FanProjectPropertiesPanel();
+		if(props!=null)
+		{
+			settingsPanel.setMainMethod(props.getMainMethod());
+			settingsPanel.setBuildTarget(props.getBuildTarget());
+		}
+		
+		panels.put(settings, settingsPanel);
 
 		panelProvider = new PanelProvider(panels);
 	}
@@ -96,7 +105,17 @@ public class FanCustomizedProperties implements CustomizerProvider
 
 		public void actionPerformed(ActionEvent e)
 		{
-			// Close and dispose the dialog
+			if(e.getActionCommand().equals("OK"))
+			{
+				FanProjectProperties props=project.getLookup().lookup(FanProjectProperties.class);
+				if(props != null)
+				{
+					FanProjectPropertiesPanel settingsPanel=(FanProjectPropertiesPanel)panels.get(categories[0]);
+					props.setMainMethod(settingsPanel.getMainMethod());
+					props.setBuildTarget(settingsPanel.getBuildTarget());
+					props.save();
+				}
+			}
 		}
 
 		public void windowClosed(WindowEvent e)
@@ -105,7 +124,6 @@ public class FanCustomizedProperties implements CustomizerProvider
 
 		public void windowClosing(WindowEvent e)
 		{
-			// Close and dispose the dialog
 		}
 	}
 }

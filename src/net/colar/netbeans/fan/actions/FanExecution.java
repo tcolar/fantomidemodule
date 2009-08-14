@@ -88,7 +88,7 @@ public class FanExecution
 				new ExternalProcessBuilder(command);
 		if (workingDirectory == null)
 		{
-			workingDirectory = new File(".").getAbsolutePath();
+			workingDirectory = new File(System.getProperty("user.home")).getAbsolutePath();
 		}
 		processBuilder = processBuilder.workingDirectory(new File(workingDirectory));
 		String cmdStr="[";

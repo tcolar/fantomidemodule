@@ -143,6 +143,11 @@ public final class FanPodPanel1 extends JPanel
         org.openide.awt.Mnemonics.setLocalizedText(mainClassLabel, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.mainClassLabel.text_1")); // NOI18N
 
         mainClassField.setText(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.mainClassField.text")); // NOI18N
+        mainClassField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                mainClassFieldKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -159,7 +164,7 @@ public final class FanPodPanel1 extends JPanel
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(mainClassCheckbox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
                     .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,15 +266,19 @@ public final class FanPodPanel1 extends JPanel
 
     private void locationFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_locationFieldKeyReleased
     {//GEN-HEADEREND:event_locationFieldKeyReleased
-		// TODO add your handling code here:
 		updateFolder();
     }//GEN-LAST:event_locationFieldKeyReleased
 
     private void podDescFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_podDescFieldKeyReleased
     {//GEN-HEADEREND:event_podDescFieldKeyReleased
-		// TODO add your handling code here:
 		updateFolder();
     }//GEN-LAST:event_podDescFieldKeyReleased
+
+	private void mainClassFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_mainClassFieldKeyReleased
+	{//GEN-HEADEREND:event_mainClassFieldKeyReleased
+		updateFolder();
+	}//GEN-LAST:event_mainClassFieldKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JCheckBox buildFileCheckbox;
@@ -327,7 +336,7 @@ public final class FanPodPanel1 extends JPanel
 			}
 			if (mainClassCheckbox.isSelected())
 			{
-				if (!checkName(mainClassCheckbox.getText()))
+				if (!checkName(mainClassField.getText()))
 				{
 					err = "Main class name is invalid";
 				}

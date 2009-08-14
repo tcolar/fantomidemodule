@@ -6,11 +6,13 @@ package net.colar.netbeans.fan.wizard;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.event.ChangeListener;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.project.FanProjectProperties;
 import net.colar.netbeans.fan.templates.TemplateUtils;
 import net.colar.netbeans.fan.templates.TemplateView;
 import net.jot.logger.JOTLogger;
@@ -130,6 +132,12 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 			//open it in editor
 			TemplateUtils.createFromTemplate(view, templateText, mainFile);
 			FanUtilities.openFileInEditor(mainFile);
+			// save main class in props
+			File props=new File(pf.getAbsolutePath()+File.separator+FanProjectProperties.PROJ_PROPS_PATH);
+			props.getParentFile().mkdirs();
+			Hashtable<String, String> map=new Hashtable<String, String>();
+			map.put(FanProjectProperties.MAIN_METHOD, name+".main");
+			FanProjectProperties.createFromScratch(map, props);
 		}
 
 		File parent = pf.getParentFile();

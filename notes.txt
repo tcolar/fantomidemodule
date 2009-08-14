@@ -1,4 +1,6 @@
 
+Run : option to run with parameters ?
+
 TODO:
 - Semantic analysis
     - DONE step 1: highlighting (2)

@@ -50,7 +50,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="mainClassCheckbox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jSeparator1" pref="197" max="32767" attributes="0"/>
+                          <Component id="jSeparator1" pref="89" max="32767" attributes="0"/>
                       </Group>
                       <Component id="errorLabel" alignment="0" pref="352" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
@@ -244,6 +244,9 @@
               <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanPodPanel1.mainClassField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="mainClassFieldKeyReleased"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

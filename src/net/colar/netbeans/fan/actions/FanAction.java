@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 import javax.swing.JOptionPane;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
+import net.colar.netbeans.fan.project.FanProjectProperties;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.openide.filesystems.FileObject;
@@ -90,13 +91,18 @@ public abstract class FanAction
 
 	protected Future runPodAction(Lookup lookup)
 	{
-		FileObject file=findTargetProject(lookup);
+		FileObject file = findTargetProject(lookup);
 		if (file != null)
 		{
 			String podName = file.getName();
 			String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
-			//TODO: make main method configurable
-			String target = podName + "::" + "Main" + "." + "main";
+			// see if user specified custom main method
+			String target = podName + "::" + FanProjectProperties.getProperties(project).getMainMethod();
+			if (target == null || target.length()==0)
+			{
+				// otherwise use default
+				target = podName + "::" + "Main" + "." + "main";
+			}
 			FanExecution fanExec = new FanExecution();
 			fanExec.setDisplayName(file.getName());
 			fanExec.setWorkingDirectory(path);
@@ -109,7 +115,16 @@ public abstract class FanAction
 
 	private Future buildAction(Lookup lookup, String target)
 	{
-		FileObject file=findTargetProject(lookup);
+		// if default target "", see what user chose in props;
+		if (target.equals(""))
+		{
+			String newTarget = FanProjectProperties.getProperties(project).getBuildTarget();
+			if (newTarget != null)
+			{
+				target = newTarget;
+			}
+		}
+		FileObject file = findTargetProject(lookup);
 		if (file != null)
 		{
 			FileObject buildFile = file.getFileObject("build.fan");
@@ -148,12 +163,14 @@ public abstract class FanAction
 				file = gdo.getPrimaryFile();
 			}
 		}
-		if(file==null)
+		if (file == null)
 		{
 			// use "main project", if fan project
-			Project prj=OpenProjects.getDefault().getMainProject();
-			if(FanProject.isProject(prj.getProjectDirectory()))
+			Project prj = OpenProjects.getDefault().getMainProject();
+			if (FanProject.isProject(prj.getProjectDirectory()))
+			{
 				file = OpenProjects.getDefault().getMainProject().getProjectDirectory();
+			}
 		}
 		return file;
 	}

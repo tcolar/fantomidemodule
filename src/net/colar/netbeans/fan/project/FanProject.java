@@ -41,6 +41,7 @@ public class FanProject implements Project, ProjectInformation
 				new FanLogicalView(this),
 				new FanProjectActionProvider(this),
 				new FanCustomizedProperties(this),
+				new FanProjectProperties(this),
 				state,
 				props,
 			});
