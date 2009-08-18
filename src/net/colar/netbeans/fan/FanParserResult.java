@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
+import javax.swing.text.Document;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.EarlyExitException;
@@ -189,5 +190,12 @@ public class FanParserResult extends ParserResult
 	return antlrScope;
     }
 
-    
+	/**
+	 * Shotcut method for getSnapshot().getSource().getDocument(true);
+	 * @return
+	 */
+    public Document getDocument()
+	{
+		return getSnapshot().getSource().getDocument(true);
+	}
 }

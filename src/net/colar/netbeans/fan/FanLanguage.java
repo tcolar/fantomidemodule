@@ -4,10 +4,12 @@
  */
 package net.colar.netbeans.fan;
 
+import net.colar.netbeans.fan.completion.FanCompletionHandler;
 import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
 import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
@@ -78,4 +80,11 @@ public class FanLanguage extends DefaultLanguageConfig
 	{
 		return new FanSemanticAnalyzer();
 	}
+
+	@Override
+	public CodeCompletionHandler getCompletionHandler()
+	{
+		return new FanCompletionHandler();
+	}
+
 }

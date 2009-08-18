@@ -4,6 +4,8 @@
  */
 package net.colar.netbeans.fan.antlr;
 
+import java.util.Iterator;
+import java.util.List;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanTokenID;
@@ -188,5 +190,53 @@ public class LexerUtils
 			}
 		}
 		return range;
+	}
+
+	/**
+	 * Finds the closest(smallest) AST node at given lexerIndex (position in source doc.)
+	 * Returns root node if no better macth found.
+	 */
+	public static CommonTree findASTNodeAt(FanParserResult pResult, int lexerIndex)
+	{
+		return findASTNodeAt(pResult, pResult.getTree(), lexerIndex);
+	}
+
+	/**
+	 * Finds the closest(smallest) AST node at given lexerIndex (position in source doc.)
+	 * recursive
+	 * @param pResult
+	 * @param node
+	 * @param lexerIndex
+	 * @return
+	 */
+	private static CommonTree findASTNodeAt(FanParserResult pResult, CommonTree node, int lexerIndex)
+	{
+		CommonTree result = node;
+		List<CommonTree> children = node.getChildren();
+		if (children != null)
+		{
+			Iterator<CommonTree> it = children.iterator();
+			while (it.hasNext())
+			{
+				CommonTree subNode = it.next();
+				if(subNode.getTokenStartIndex()==-1 || subNode.getTokenStartIndex()==-1)
+					// incomplete token return the parent
+					continue;
+
+				CommonTokenStream tokenStream = pResult.getTokenStream();
+				int start= ((CommonToken)tokenStream.get(subNode.getTokenStartIndex())).getStartIndex();
+				int stop = ((CommonToken)tokenStream.get(subNode.getTokenStopIndex())).getStopIndex();
+				// <= >= ??
+				if (start <= lexerIndex && stop >= lexerIndex)
+				{
+					CommonTree newResult = findASTNodeAt(pResult, subNode, lexerIndex);
+					if (newResult != null)
+					{
+						result = newResult;
+					}
+				}
+			}
+		}
+		return result;
 	}
 }

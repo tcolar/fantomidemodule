@@ -79,12 +79,12 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	{
 		if (node != null && !cancelled)
 		{
-			String par = null;
+			/*String par = null;
 			if (node.getParent() != null)
 			{
 				par = node.getParent().getText();
 			}
-			//System.out.println("Node: .... "+par+" -> "+node.getText());
+			System.out.println("Node: .... "+par+" -> "+node.getText());*/
 			switch (node.getType())
 			{
 				case FanParser.AST_STR:
