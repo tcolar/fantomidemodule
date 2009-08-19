@@ -16,12 +16,11 @@
 
 	<property name="classpath" value="build/classes;../Fan_antlr/lib/antlrworks-1.2.3.jar"/>
 
-	<target name="test" depends="compile" description="Test parser on files in 'test' folder.">
-		<java classname="Test" classpath="${classpath}" args="test/"/>
+	<target name="test" depends="compile" description="Test parser on files in 'test_failing' folder">
+		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="../../fan/src/"/>
 	</target>
-
-	<target name="test-failing" depends="compile" description="Test parser on files in 'test_failing' folder">
-		<java classname="Test" classpath="${classpath}" args="test_failing/"/>
+	<target name="test-light" depends="compile" description="Test parser on files in 'test_failing' folder">
+		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="test"/>
 	</target>
 
 	<target name="compile-grammar" description="Recompile the antlr grammar (Fan.g) into lexer/parser." >

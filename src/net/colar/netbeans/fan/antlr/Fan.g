@@ -123,6 +123,7 @@ import net.colar.netbeans.fan.FanParserResult;
 // A little bit of code necessary to deal with the Linebreaks which are usually neaningless but not always
 // They can mean "end of statement" for some statements.
 @members{
+		public boolean nbErrors=false;
 	/*
        		Thibaut. C
        		 This looks for a linebreak/newline, which are usually ignored (hidden channel)
@@ -215,7 +216,10 @@ import net.colar.netbeans.fan.FanParserResult;
     @Override
     public void reportError(RecognitionException e)
     {
-	    parsingResult.addAntlrError(e,paraphrase);
+		if(! nbErrors)
+			e.printStackTrace();
+		else
+			parsingResult.addAntlrError(e,paraphrase);
     }
     
     Stack<String> paraphrase = new Stack<String>();
@@ -240,7 +244,7 @@ ffi 		:	sq_bracketL id sq_bracketR;
 // pod support
 podDef		:	podHeader BRACKET_L symbolDef* BRACKET_R;
 podHeader	:	docs facet* 'pod' id;
-symbolDef	:	symbolFlag* typeId AS_INIT_VAL expr eos;
+symbolDef	:	docs facet* symbolFlag* typeId AS_INIT_VAL expr eos;
 symbolFlag	:	'virtual';
 
 // refactored
@@ -304,9 +308,9 @@ fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
 			-> ^(AST_FIELD typeId ^(AST_MODIFIER $m)* expr?);
 typeId		:	((type id)=>typeAndId | fieldId);
 fieldId		:	id
-			-> ^(AST_ID id);
+			   -> ^(AST_ID id);
 typeAndId	:	type id
-			-> ^(AST_ID id) ^(AST_TYPE type);
+			   -> ^(AST_ID id) ^(AST_TYPE type);
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
 methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
 		:	docs facet* m=methodFlags* returnType=type /*| KW_VOID*/ mname=id parL params parR methodBody
@@ -437,11 +441,12 @@ args 		:	expr (SP_COMMA  expr)*;
 
 literal 	:	KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | URI |
 			number | CHAR | namedSuper |
-			slotLiteral | typeLiteral | list | map | simple;
+			slotLiteral | typeLiteral | list | map | symbLiteral | simple;
 strs		:	(qs=QUOTSTR | s=STR)
 				-> ^(AST_STR $s)? ^(AST_STR $qs)?;
 typeLiteral	:  	type {notAfterEol()}? OP_POUND;
 slotLiteral	:  	type? OP_POUND {notAfterEol()}? id;
+symbLiteral :   AT (id SP_COLON SP_COLON)? id;
 namedSuper 	:	simpleType DOT KW_SUPER;
 list 		:	(type {notAfterEol()}?)? sq_bracketL listItems sq_bracketR;
 listItems 	:	(expr (SP_COMMA expr )* SP_COMMA?) | SP_COMMA;

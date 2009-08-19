@@ -35,166 +35,166 @@ import org.netbeans.modules.parsing.api.Snapshot;
 public class FanParserResult extends ParserResult
 {
 
-    List<Error> errors = new Vector<Error>();
-    private final String sourceName;
-    private ParserRuleReturnScope antlrScope = null;
-    private CommonTokenStream tokenStream;
+	List<Error> errors = new Vector<Error>();
+	private final String sourceName;
+	private ParserRuleReturnScope antlrScope = null;
+	private CommonTokenStream tokenStream;
 
-    public FanParserResult(Snapshot snapshot, CommonTokenStream tokenStream)
-    {
-	super(snapshot);
-	this.sourceName = snapshot.getSource().getFileObject().getName();
-	this.tokenStream = tokenStream;
-    }
-
-    /**
-     * Parser will callback this to fill-in ANTLR results
-     * @param scope
-     */
-    public void setAntlrScope(ParserRuleReturnScope scope)
-    {
-	this.antlrScope = scope;
-    }
-
-    @Override
-    public List<? extends Error> getDiagnostics()
-    {
-	return errors;
-    }
-
-    @Override
-    protected void invalidate()
-    {
-	// what should this do ?
-    }
-
-    /**
-     * Add an antlr error to the error list
-     * Try to give a more useful error message to the user.
-     * @param e
-     * @param paraphrase
-     */
-    public void addAntlrError(RecognitionException e, Stack<String> paraphrase)
-    {
-	String location = null;
-	if (!paraphrase.isEmpty())
+	public FanParserResult(Snapshot snapshot, CommonTokenStream tokenStream)
 	{
-	    location = paraphrase.peek();
+		super(snapshot);
+		this.sourceName = snapshot.getSource().getFileObject().getName();
+		this.tokenStream = tokenStream;
 	}
-	Enumeration el = paraphrase.elements();
-	//String trace="";
+
+	/**
+	 * Parser will callback this to fill-in ANTLR results
+	 * @param scope
+	 */
+	public void setAntlrScope(ParserRuleReturnScope scope)
+	{
+		this.antlrScope = scope;
+	}
+
+	@Override
+	public List<? extends Error> getDiagnostics()
+	{
+		return errors;
+	}
+
+	@Override
+	protected void invalidate()
+	{
+		// what should this do ?
+	}
+
+	/**
+	 * Add an antlr error to the error list
+	 * Try to give a more useful error message to the user.
+	 * @param e
+	 * @param paraphrase
+	 */
+	public void addAntlrError(RecognitionException e, Stack<String> paraphrase)
+	{
+		String location = null;
+		if (!paraphrase.isEmpty())
+		{
+			location = paraphrase.peek();
+		}
+		Enumeration el = paraphrase.elements();
+		//String trace="";
 	/*int cpt=0;
-	while(el.hasMoreElements())
-	{
-	trace+=el.nextElement()+" ->";
-	cpt++;
-	if(cpt%4==0) trace+="\n";
-	}*/
-	CommonToken token = (CommonToken) e.token;
-	String key = "NBFanParser(" + sourceName + ")";
-	String desc = "";
-	int start = token.getStartIndex();
-	int end = token.getStopIndex();
-	String loc = location != null ? location : e.token.getText();
+		while(el.hasMoreElements())
+		{
+		trace+=el.nextElement()+" ->";
+		cpt++;
+		if(cpt%4==0) trace+="\n";
+		}*/
+		CommonToken token = (CommonToken) e.token;
+		String key = "NBFanParser(" + sourceName + ")";
+		String desc = "";
+		int start = token.getStartIndex();
+		int end = token.getStopIndex();
+		String loc = location != null ? location : e.token.getText();
 
-	// trying to build some nicer error messages.
-	if (e instanceof MissingTokenException)
-	{//tested
-	    MissingTokenException ee = (MissingTokenException) e;
-	    Object inserted = ee.inserted;
-	    if (inserted != null && inserted instanceof Token)
-	    {
-		Token tk = (Token) inserted;
-		desc = "Was expecting :'" + loc + "', but got '" + token.getText() + "' instead." + "\n" + desc;
-	    }
-	} else if (e instanceof FailedPredicateException)
-	{ // tested
-	    desc = "Expecting: '" + loc + "' but found: '" + token.getText() + "' instead.";
-	} else if (e instanceof MismatchedTokenException)
-	{// tested
-	    desc = "Mismatch, looking for: '" + loc + "' but found: '" + token.getText() + "'";
-	} else if (e instanceof EarlyExitException)
-	{//tested
-	    desc = "Missing required item(s) after: " + loc;
-	} else if (e instanceof MismatchedRangeException)
-	{
-	    MismatchedRangeException ee = (MismatchedRangeException) e;
-	    desc = "Unexpected token range-> " + e.getUnexpectedType() + " should be within [" + ee.a + "-" + ee.b + "] at: " + e.token.getText();
-	} else if (e instanceof NoViableAltException)
-	{//tested
-	    desc = "Unexpected token: '" + token.getText() + "'";
-	    ;
-	} else if (e instanceof UnwantedTokenException)
-	{// tested
-	    desc = "Unwanted token: '" + token.getText() + "' before '" + loc + "'";
+		// trying to build some nicer error messages.
+		if (e instanceof MissingTokenException)
+		{//tested
+			MissingTokenException ee = (MissingTokenException) e;
+			Object inserted = ee.inserted;
+			if (inserted != null && inserted instanceof Token)
+			{
+				Token tk = (Token) inserted;
+				desc = "Was expecting :'" + loc + "', but got '" + token.getText() + "' instead." + "\n" + desc;
+			}
+		} else if (e instanceof FailedPredicateException)
+		{ // tested
+			desc = "Expecting: '" + loc + "' but found: '" + token.getText() + "' instead.";
+		} else if (e instanceof MismatchedTokenException)
+		{// tested
+			desc = "Mismatch, looking for: '" + loc + "' but found: '" + token.getText() + "'";
+		} else if (e instanceof EarlyExitException)
+		{//tested
+			desc = "Missing required item(s) after: " + loc;
+		} else if (e instanceof MismatchedRangeException)
+		{
+			MismatchedRangeException ee = (MismatchedRangeException) e;
+			desc = "Unexpected token range-> " + e.getUnexpectedType() + " should be within [" + ee.a + "-" + ee.b + "] at: " + e.token.getText();
+		} else if (e instanceof NoViableAltException)
+		{//tested
+			desc = "Unexpected token: '" + token.getText() + "'";
+			;
+		} else if (e instanceof UnwantedTokenException)
+		{// tested
+			desc = "Unwanted token: '" + token.getText() + "' before '" + loc + "'";
+		}
+		//desc+="\n"+trace;
+		desc += "\n" + e.toString();
+		Error error = DefaultError.createDefaultError(key, desc, "Syntax Error", null, start, end, e.approximateLineInfo, Severity.ERROR);
+		//System.err.println("Adding parsing error: " + key + "| Syntax Error | " + desc + " | " + start + " | " + end + " | " + e.line + " |" + token);
+		//e.printStackTrace();
+		errors.add(error);
 	}
-	//desc+="\n"+trace;
-	desc += "\n" + e.toString();
-	Error error = DefaultError.createDefaultError(key, desc, "Syntax Error", null, start, end, e.approximateLineInfo, Severity.ERROR);
-	//System.err.println("Adding parsing error: " + key + "| Syntax Error | " + desc + " | " + start + " | " + end + " | " + e.line + " |" + token);
-	//e.printStackTrace();
-	errors.add(error);
-    }
 
-    /**
-     * Return ANTLR AST tree generated by this parsing
-     * @return
-     */
-    public CommonTree getTree()
-    {
-	if (antlrScope == null)
+	/**
+	 * Return ANTLR AST tree generated by this parsing
+	 * @return
+	 */
+	public CommonTree getTree()
 	{
-	    return null;
+		if (antlrScope == null)
+		{
+			return null;
+		}
+		return (CommonTree) antlrScope.getTree();
 	}
-	return (CommonTree) antlrScope.getTree();
-    }
 
-    /**
-     * Dump AST tree generated by ANTLR to console (to debug)
-     */
-    public void dumpTree()
-    {
-	System.err.println("-------------------Start AST Tree dump-----------------------");
-	CommonTree tree = getTree();
-	if (tree != null)
+	/**
+	 * Dump AST tree generated by ANTLR to console (to debug)
+	 */
+	public void dumpTree()
 	{
-	    dumpTree(tree, 0);
+		System.err.println("-------------------Start AST Tree dump-----------------------");
+		CommonTree tree = getTree();
+		if (tree != null)
+		{
+			dumpTree(tree, 0);
+		}
+		System.err.println("-------------------End AST Tree dump-----------------------");
 	}
-	System.err.println("-------------------End AST Tree dump-----------------------");
-    }
 
-    private void dumpTree(CommonTree t, int indent)
-    {
-	if (t != null)
+	private void dumpTree(CommonTree t, int indent)
 	{
-	    StringBuffer sb = new StringBuffer(indent);
-	    for (int i = 0; i < indent; i++)
-	    {
-		sb = sb.append("  ");
-	    }
-	    for (int i = 0; i < t.getChildCount(); i++)
-	    {
-		System.err.println(sb.toString() + t.getChild(i).toString());
-		dumpTree((CommonTree) t.getChild(i), indent + 1);
-	    }
+		if (t != null)
+		{
+			StringBuffer sb = new StringBuffer(indent);
+			for (int i = 0; i < indent; i++)
+			{
+				sb = sb.append("  ");
+			}
+			for (int i = 0; i < t.getChildCount(); i++)
+			{
+				System.err.println(sb.toString() + t.getChild(i).toString());
+				dumpTree((CommonTree) t.getChild(i), indent + 1);
+			}
+		}
 	}
-    }
 
-    public CommonTokenStream getTokenStream()
-    {
-	return tokenStream;
-    }
+	public CommonTokenStream getTokenStream()
+	{
+		return tokenStream;
+	}
 
-    public ParserRuleReturnScope getAntlrScope()
-    {
-	return antlrScope;
-    }
+	public ParserRuleReturnScope getAntlrScope()
+	{
+		return antlrScope;
+	}
 
 	/**
 	 * Shotcut method for getSnapshot().getSource().getDocument(true);
 	 * @return
 	 */
-    public Document getDocument()
+	public Document getDocument()
 	{
 		return getSnapshot().getSource().getDocument(true);
 	}

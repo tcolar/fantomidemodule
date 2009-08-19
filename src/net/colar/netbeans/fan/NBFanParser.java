@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.colar.netbeans.fan;
 
 import javax.swing.event.ChangeListener;
@@ -25,60 +24,66 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
  * Bridges NB parser with ANTLR parser
  * @author tcolar
  */
-public class NBFanParser extends Parser{
+public class NBFanParser extends Parser
+{
 
-    FanParserResult result;
+	FanParserResult result;
 
-    @Override
-    public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
-	FanLexer lexer = new FanLexer(new ANTLRStringStream(snapshot.getText().toString()));
-	CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-	FanParser parser=new FanParser(tokens);
-        parser.setTreeAdaptor(FAN_TREE_ADAPTOR);
-
-	result=new FanParserResult(snapshot, tokens);
-	try
-	{
-	   result=parser.parse(result);
-	}
-	catch(Exception e)
-	{
-	    throw new ParseException("Parser Exception.",e);
-	}
-
-	//result.dumpTree();
-    }
-
-    @Override
-    public Result getResult(Task task) throws ParseException {
-	return result;
-    }
-
-    @Override
-    public void cancel() {
-	//throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void addChangeListener(ChangeListener changeListener) {
-	//throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void removeChangeListener(ChangeListener changeListener) {
-	//throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * Static ANTLR tree adaptor.
-     */
-    static final TreeAdaptor FAN_TREE_ADAPTOR = new CommonTreeAdaptor()
-    {
 	@Override
-	public Object create(Token payload)
+	public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException
 	{
-		return new CommonTree(payload);
+		FanLexer lexer = new FanLexer(new ANTLRStringStream(snapshot.getText().toString()));
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+		FanParser parser = new FanParser(tokens);
+		parser.nbErrors=true;
+		parser.setTreeAdaptor(FAN_TREE_ADAPTOR);
+
+		result = new FanParserResult(snapshot, tokens);
+		try
+		{
+			result = parser.parse(result);
+		} catch (Exception e)
+		{
+			throw new ParseException("Parser Exception.", e);
+		}
+
+		//result.dumpTree();
 	}
-    };
+
+	@Override
+	public Result getResult(Task task) throws ParseException
+	{
+		return result;
+	}
+
+	@Override
+	public void cancel()
+	{
+		//throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public void addChangeListener(ChangeListener changeListener)
+	{
+		//throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public void removeChangeListener(ChangeListener changeListener)
+	{
+		//throw new UnsupportedOperationException("Not supported yet.");
+	}
+	/**
+	 * Static ANTLR tree adaptor.
+	 */
+	static final TreeAdaptor FAN_TREE_ADAPTOR = new CommonTreeAdaptor()
+	{
+
+		@Override
+		public Object create(Token payload)
+		{
+			return new CommonTree(payload);
+		}
+	};
 }

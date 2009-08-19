@@ -83,8 +83,8 @@ static{ // initializes tokens
 	tokens.put(new Integer(119),token);
 	token=new FanTokenID("CP_COMPARATORS", 83, "comparator");
 	tokens.put(new Integer(83),token);
-	token=new FanTokenID("NUMBER", 111, "number");
-	tokens.put(new Integer(111),token);
+	token=new FanTokenID("NUMBER", 112, "number");
+	tokens.put(new Integer(112),token);
 	token=new FanTokenID("KW_CATCH", 15, "keyword");
 	tokens.put(new Integer(15),token);
 	token=new FanTokenID("AS_EQUAL", 78, "assignment");
@@ -141,8 +141,8 @@ static{ // initializes tokens
 	tokens.put(new Integer(80),token);
 	token=new FanTokenID("AST_MODIFIER", 62, "");
 	tokens.put(new Integer(62),token);
-	token=new FanTokenID("DOC", 110, "");
-	tokens.put(new Integer(110),token);
+	token=new FanTokenID("DOC", 111, "");
+	tokens.put(new Integer(111),token);
 	token=new FanTokenID("KW_OVERRIDE", 24, "keyword");
 	tokens.put(new Integer(24),token);
 	token=new FanTokenID("AST_FIELD", 56, "");
@@ -173,8 +173,8 @@ static{ // initializes tokens
 	tokens.put(new Integer(57),token);
 	token=new FanTokenID("BRACKET_L", 68, "");
 	tokens.put(new Integer(68),token);
-	token=new FanTokenID("AT", 112, "");
-	tokens.put(new Integer(112),token);
+	token=new FanTokenID("AT", 110, "");
+	tokens.put(new Integer(110),token);
 	token=new FanTokenID("STR", 108, "string");
 	tokens.put(new Integer(108),token);
 	token=new FanTokenID("SP_PIPE", 75, "separator");

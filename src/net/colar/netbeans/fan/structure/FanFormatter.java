@@ -15,6 +15,7 @@ import org.netbeans.modules.editor.indent.spi.Context;
  */
 public class FanFormatter implements Formatter
 {
+	//TODO: implement PrettyFormatter
     @Override
     public boolean needsParserResult()
     {

@@ -24,7 +24,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
  */
 public class LexerUtils
 {
-
+	
 	/**
 	 * Return the Actual token at the given caret position in the document.
 	 * @param doc
@@ -238,5 +238,73 @@ public class LexerUtils
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Return the offset of the beginiing of this line (after a LineBreak or beginning of file)
+	 * @param seq
+	 * @param offset
+	 * @param semiIsNL Wether a ; is considered a beginning of line
+	 * @return
+	 */
+	public static int getLineBeginOffset(TokenSequence seq, int offset, boolean semiIsNL)
+	{
+		seq.move(offset);
+		while(seq.movePrevious())
+		{
+			int tokenType=seq.token().id().ordinal();
+			if(tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
+				break;
+		}
+		int result = seq.offset();
+		// put it back where it was.
+		seq.move(offset);
+		return result;
+	}
+
+	/**
+	 * Move to next non whitespace token
+	 * @param seq
+	 * @param fromOfset starting offset
+	 * @param maxOffset look no further than this
+	 * @return true if non WS token found before maxOffset
+	 */
+	public static boolean moveToNextNonWSToken(TokenSequence seq, int fromOfset, int maxOffset)
+	{
+		seq.move(fromOfset);
+		while(seq.moveNext() && seq.offset()<=maxOffset)
+		{
+			int tokenType=seq.token().id().ordinal();
+			if( ! matchType(tokenType, FanGrammarHelper.WS_TOKENS))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Move to next non significant token (ie: non whitespace / comments/ doc token)
+	 * @param seq
+	 * @param fromOfset starting offset
+	 * @param maxOffset look no further than this
+	 * @return true if non significant token found before maxOffset
+	 */
+	public static boolean moveToNextSignificantToken(TokenSequence seq, int fromOfset, int maxOffset)
+	{
+		seq.move(fromOfset);
+		while(seq.moveNext() && seq.offset()<=maxOffset)
+		{
+			int tokenType=seq.token().id().ordinal();
+			if( ! matchType(tokenType, FanGrammarHelper.INSIGNIFICANT_TOKENS))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean matchType(int type, int[] array)
+	{
+		for(int i=0; i!=array.length; i++)
+			if(array[i]==type)
+				return true;
+		return false;
 	}
 }

@@ -7,14 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.FanTokenID;
-import net.colar.netbeans.fan.antlr.LexerUtils;
-import org.antlr.runtime.tree.CommonTree;
-import org.netbeans.api.lexer.Token;
-import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -39,37 +32,19 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public CodeCompletionResult complete(CodeCompletionContext context)
 	{
-		FanParserResult result = (FanParserResult) context.getParserResult();
-		int offset = context.getCaretOffset();
-		String prefix = context.getPrefix();
-		if (prefix == null)
+		FanCompletionContext cpl = new FanCompletionContext(context);
+		ArrayList<CompletionProposal> proposals = new ArrayList();
+		int anchor = context.getCaretOffset();
+
+		switch (cpl.getCompletionType())
 		{
-			prefix = "";
+			case ROOT_LEVEL:
+				proposeRootItems(proposals, anchor);
+				break;
+			case IMPORT:
+				proposeImports(proposals, anchor);
+				break;
 		}
-		QueryType type = context.getQueryType();// what's this ?
-		boolean caseSensitive = context.isCaseSensitive();
-		boolean prefixMatch = context.isPrefixMatch(); // ?
-		Document doc = result.getSnapshot().getSource().getDocument(true);
-		TokenSequence ts = LexerUtils.getFanTokenSequence(doc);
-		CommonTree tree = result.getTree();
-
-		ArrayList<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
-
-		CommonTree node = LexerUtils.findASTNodeAt(result, offset);
-		if (node.isNil())
-		{
-			proposeRootItems(proposals, offset - prefix.length());
-		}
-
-		
-		ts.move(offset);
-		for (int i = 0; i != -5; i--)
-		{
-		ts.movePrevious();
-		Token<? extends FanTokenID> tk = ts.token();
-		System.err.println("Compl prev token: " + i + " : " + tk.id().name());
-		}
-
 
 		DefaultCompletionResult completionResult = new DefaultCompletionResult(proposals, false);
 		return completionResult;
@@ -125,14 +100,12 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposeRootItems(ArrayList<CompletionProposal> proposals, int anchor)
 	{
-		if (!proposeImports(proposals, anchor))
+		for (String item : ROOT_ITEMS)
 		{
-			for (String item : ROOT_ITEMS)
-			{
-				proposals.add(new FanKeywordProposal(item, anchor));
-			}
+			proposals.add(new FanKeywordProposal(item, anchor));
 		}
 	}
+
 	/**
 	 * Complete imports (using)
 	 * If not in an import do nothing and return false
@@ -145,12 +118,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param anchor
 	 * @return
 	 */
-	private boolean proposeImports(ArrayList<CompletionProposal> proposals, int anchor)
+	private void proposeImports(ArrayList<CompletionProposal> proposals, int anchor)
 	{
-		/**if(l)
-		boolean ignoreWs=true;
-		LexerUtilities.matchLineWith()
-		if(line.matches())*/
-		return false;
+		proposals.add(new FanKeywordProposal("Sys", anchor));
 	}
 }
