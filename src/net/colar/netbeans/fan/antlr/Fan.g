@@ -243,7 +243,7 @@ podSpec		:	ffi? id (DOT id)*;
 ffi 		:	sq_bracketL id sq_bracketR;
 // pod support
 podDef		:	podHeader BRACKET_L symbolDef* BRACKET_R;
-podHeader	:	docs facet* 'pod' id;
+podHeader	:	docs facet* pod id;
 symbolDef	:	docs facet* symbolFlag* typeId AS_INIT_VAL expr eos;
 symbolFlag	:	'virtual';
 
@@ -475,6 +475,7 @@ Not sure that's the best way to o this, but it's the best i could come up with t
  */
 getter			: t=ID {t.getText().equals("get")}?;
 setter			: t=ID {t.getText().equals("set")}?;
+pod				: t=ID {t.getText().equals("pod")}?;
 
 // For bettr error reporting
 bracketL

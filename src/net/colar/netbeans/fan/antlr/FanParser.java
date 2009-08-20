@@ -1,4 +1,4 @@
-// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-08-19 16:28:02
+// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-08-19 21:10:29
 package net.colar.netbeans.fan.antlr;
 import net.colar.netbeans.fan.FanParserResult;
 
@@ -14,7 +14,7 @@ import org.antlr.runtime.tree.*;
 
 public class FanParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "KW_BREAK", "KW_CONTINUE", "KW_FOR", "KW_IF", "KW_RETURN", "KW_SWITCH", "KW_THROW", "KW_WHILE", "KW_TRY", "KW_CASE", "KW_DEFAULT", "KW_CATCH", "KW_FINALLY", "KW_USING", "KW_AS", "KW_RD_ONLY", "KW_CONST", "KW_STATIC", "KW_NATIVE", "KW_VOLATILE", "KW_OVERRIDE", "KW_VIRTUAL", "KW_FINAL", "KW_VOID", "KW_CLASS", "KW_ENUM", "KW_MIXIN", "KW_ABSTRACT", "KW_PRIVATE", "KW_PROTECTED", "KW_PUBLIC", "KW_INTERNAL", "KW_NEW", "KW_ONCE", "KW_THIS", "KW_SUPER", "KW_ELSE", "KW_IS", "KW_ISNOT", "KW_NULL", "KW_IT", "KW_TRUE", "KW_FALSE", "INC_STR", "INC_URI", "INC_COMMENT", "INC_DSL", "AST_CLASS", "AST_ENUM", "AST_MIXIN", "AST_METHOD", "AST_CONSTRUCTOR", "AST_FIELD", "AST_CONSTRUCTOR_CHAIN", "AST_CODE_BLOCK", "AST_DOCS", "AST_STR", "AST_ID", "AST_MODIFIER", "AST_INHERITANCE", "AST_PARAMS", "AST_TYPE", "SP_COLCOL", "DOT", "BRACKET_L", "BRACKET_R", "AS_INIT_VAL", "SP_COLON", "SP_COMMA", "SP_QMARK", "LIST_TYPE", "SP_PIPE", "OP_ARROW", "SP_SEMI", "AS_EQUAL", "AS_ASSIGN_OP", "OP_OR", "OP_AND", "CP_EQUALITY", "CP_COMPARATORS", "OP_ELVIS", "OP_RANG_EXCL_OLD", "OP_RANGE_EXCL", "OP_RANGE", "OP_BITOR", "OP_CURRY", "OP_LSHIFT", "OP_RSHIFT", "OP_PLUS", "OP_MINUS", "OP_MULTI", "OP_DIV", "OP_MOD", "OP_BANG", "OP_2PLUS", "OP_2MINUS", "OP_TILDA", "DSL", "OP_SAFE_CALL", "OP_SAFEDYN_CALL", "ID", "URI", "CHAR", "QUOTSTR", "STR", "OP_POUND", "AT", "DOC", "NUMBER", "SQ_BRACKET_L", "SQ_BRACKET_R", "PAR_L", "PAR_R", "LB", "WS", "LINE_COMMENT", "EXEC_COMMENT", "COMPL_ML_COMMENT", "MULTI_COMMENT", "COMPL_DSL", "DIGIT", "HEXLETTER", "COMPL_QSTR", "COMPL_STR", "COMPL_URI", "KEYWORD", "UNDERSCORE", "HEX_HEADER", "HEXNB", "DECIMAL", "FRACTIONAL", "HEXHEADER", "FRACTION", "EXPONENT", "NBTYPE", "LETTER", "INC_UNKNOWN_ITEM", "'$'", "'pod'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "KW_BREAK", "KW_CONTINUE", "KW_FOR", "KW_IF", "KW_RETURN", "KW_SWITCH", "KW_THROW", "KW_WHILE", "KW_TRY", "KW_CASE", "KW_DEFAULT", "KW_CATCH", "KW_FINALLY", "KW_USING", "KW_AS", "KW_RD_ONLY", "KW_CONST", "KW_STATIC", "KW_NATIVE", "KW_VOLATILE", "KW_OVERRIDE", "KW_VIRTUAL", "KW_FINAL", "KW_VOID", "KW_CLASS", "KW_ENUM", "KW_MIXIN", "KW_ABSTRACT", "KW_PRIVATE", "KW_PROTECTED", "KW_PUBLIC", "KW_INTERNAL", "KW_NEW", "KW_ONCE", "KW_THIS", "KW_SUPER", "KW_ELSE", "KW_IS", "KW_ISNOT", "KW_NULL", "KW_IT", "KW_TRUE", "KW_FALSE", "INC_STR", "INC_URI", "INC_COMMENT", "INC_DSL", "AST_CLASS", "AST_ENUM", "AST_MIXIN", "AST_METHOD", "AST_CONSTRUCTOR", "AST_FIELD", "AST_CONSTRUCTOR_CHAIN", "AST_CODE_BLOCK", "AST_DOCS", "AST_STR", "AST_ID", "AST_MODIFIER", "AST_INHERITANCE", "AST_PARAMS", "AST_TYPE", "SP_COLCOL", "DOT", "BRACKET_L", "BRACKET_R", "AS_INIT_VAL", "SP_COLON", "SP_COMMA", "SP_QMARK", "LIST_TYPE", "SP_PIPE", "OP_ARROW", "SP_SEMI", "AS_EQUAL", "AS_ASSIGN_OP", "OP_OR", "OP_AND", "CP_EQUALITY", "CP_COMPARATORS", "OP_ELVIS", "OP_RANG_EXCL_OLD", "OP_RANGE_EXCL", "OP_RANGE", "OP_BITOR", "OP_CURRY", "OP_LSHIFT", "OP_RSHIFT", "OP_PLUS", "OP_MINUS", "OP_MULTI", "OP_DIV", "OP_MOD", "OP_BANG", "OP_2PLUS", "OP_2MINUS", "OP_TILDA", "DSL", "OP_SAFE_CALL", "OP_SAFEDYN_CALL", "ID", "URI", "CHAR", "QUOTSTR", "STR", "OP_POUND", "AT", "DOC", "NUMBER", "SQ_BRACKET_L", "SQ_BRACKET_R", "PAR_L", "PAR_R", "LB", "WS", "LINE_COMMENT", "EXEC_COMMENT", "COMPL_ML_COMMENT", "MULTI_COMMENT", "COMPL_DSL", "DIGIT", "HEXLETTER", "COMPL_QSTR", "COMPL_STR", "COMPL_URI", "KEYWORD", "UNDERSCORE", "HEX_HEADER", "HEXNB", "DECIMAL", "FRACTIONAL", "HEXHEADER", "FRACTION", "EXPONENT", "NBTYPE", "LETTER", "INC_UNKNOWN_ITEM", "'$'"
     };
     public static final int EXPONENT=137;
     public static final int DSL=101;
@@ -59,7 +59,6 @@ public class FanParser extends Parser {
     public static final int OP_DIV=95;
     public static final int SP_COMMA=72;
     public static final int T__141=141;
-    public static final int T__142=142;
     public static final int URI=105;
     public static final int KW_FINALLY=16;
     public static final int WS=118;
@@ -166,7 +165,7 @@ public class FanParser extends Parser {
         }
         public FanParser(TokenStream input, RecognizerSharedState state) {
             super(input, state);
-            this.state.ruleMemo = new HashMap[391+1];
+            this.state.ruleMemo = new HashMap[392+1];
              
              
         }
@@ -1058,7 +1057,7 @@ public class FanParser extends Parser {
                 int alt8=2;
                 int LA8_0 = input.LA(1);
 
-                if ( (LA8_0==EOF||(LA8_0>=KW_RD_ONLY && LA8_0<=KW_FINAL)||(LA8_0>=KW_CLASS && LA8_0<=KW_ONCE)||LA8_0==SP_PIPE||LA8_0==ID||(LA8_0>=AT && LA8_0<=DOC)||LA8_0==SQ_BRACKET_L||LA8_0==142) ) {
+                if ( (LA8_0==EOF||(LA8_0>=KW_RD_ONLY && LA8_0<=KW_FINAL)||(LA8_0>=KW_CLASS && LA8_0<=KW_ONCE)||LA8_0==SP_PIPE||LA8_0==ID||(LA8_0>=AT && LA8_0<=DOC)||LA8_0==SQ_BRACKET_L) ) {
                     alt8=1;
                 }
 
@@ -1117,27 +1116,27 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "podHeader"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:246:1: podHeader : docs ( facet )* 'pod' id ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:246:1: podHeader : docs ( facet )* pod id ;
     public final FanParser.podHeader_return podHeader() throws RecognitionException {
         FanParser.podHeader_return retval = new FanParser.podHeader_return();
         retval.start = input.LT(1);
         int podHeader_StartIndex = input.index();
         Object root_0 = null;
 
-        Token string_literal39=null;
         FanParser.docs_return docs37 = null;
 
         FanParser.facet_return facet38 = null;
 
+        FanParser.pod_return pod39 = null;
+
         FanParser.id_return id40 = null;
 
 
-        Object string_literal39_tree=null;
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 9) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:246:11: ( docs ( facet )* 'pod' id )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:246:13: docs ( facet )* 'pod' id
+            // src/net/colar/netbeans/fan/antlr/Fan.g:246:11: ( docs ( facet )* pod id )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:246:13: docs ( facet )* pod id
             {
             root_0 = (Object)adaptor.nil();
 
@@ -1177,11 +1176,12 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            string_literal39=(Token)match(input,142,FOLLOW_142_in_podHeader570); if (state.failed) return retval;
-            if ( state.backtracking==0 ) {
-            string_literal39_tree = (Object)adaptor.create(string_literal39);
-            adaptor.addChild(root_0, string_literal39_tree);
-            }
+            pushFollow(FOLLOW_pod_in_podHeader570);
+            pod39=pod();
+
+            state._fsp--;
+            if (state.failed) return retval;
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, pod39.getTree());
             pushFollow(FOLLOW_id_in_podHeader572);
             id40=id();
 
@@ -1793,7 +1793,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: inheritance, cname, m
+            // elements: cname, m, inheritance
             // token labels: 
             // rule labels: retval, m, cname
             // token list labels: 
@@ -2264,7 +2264,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: mixinHeader, mixinBody
+            // elements: mixinBody, mixinHeader
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -2743,7 +2743,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketR, bracketL, slotDef
+            // elements: bracketL, slotDef, bracketR
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -3185,7 +3185,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketR, enumValDefs, slotDef, bracketL
+            // elements: bracketL, slotDef, bracketR, enumValDefs
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -5494,7 +5494,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: m, expr, typeId
+            // elements: m, typeId, expr
             // token labels: 
             // rule labels: retval, m
             // token list labels: 
@@ -6223,7 +6223,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: mname, params, m, returnType, methodBody
+            // elements: params, mname, methodBody, m, returnType
             // token labels: 
             // rule labels: mname, retval, m, returnType
             // token list labels: 
@@ -7027,7 +7027,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: cchain, cname, m, params, methodBody
+            // elements: cchain, cname, methodBody, params, m
             // token labels: cchain
             // rule labels: retval, m, cname
             // token list labels: 
@@ -7770,7 +7770,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketL, s, bracketR
+            // elements: bracketR, bracketL, s
             // token labels: s
             // rule labels: retval
             // token list labels: 
@@ -10783,7 +10783,7 @@ public class FanParser extends Parser {
             if ( (LA102_0==KW_AS||(LA102_0>=KW_IS && LA102_0<=KW_ISNOT)) ) {
                 alt102=1;
             }
-            else if ( (LA102_0==EOF||(LA102_0>=KW_BREAK && LA102_0<=KW_USING)||(LA102_0>=KW_RD_ONLY && LA102_0<=KW_FINAL)||(LA102_0>=KW_CLASS && LA102_0<=KW_ELSE)||(LA102_0>=KW_NULL && LA102_0<=KW_FALSE)||(LA102_0>=BRACKET_L && LA102_0<=BRACKET_R)||(LA102_0>=SP_COLON && LA102_0<=SP_QMARK)||LA102_0==SP_PIPE||(LA102_0>=SP_SEMI && LA102_0<=CP_COMPARATORS)||LA102_0==OP_CURRY||(LA102_0>=OP_PLUS && LA102_0<=OP_MULTI)||(LA102_0>=OP_BANG && LA102_0<=OP_TILDA)||(LA102_0>=ID && LA102_0<=PAR_R)||LA102_0==142) ) {
+            else if ( (LA102_0==EOF||(LA102_0>=KW_BREAK && LA102_0<=KW_USING)||(LA102_0>=KW_RD_ONLY && LA102_0<=KW_FINAL)||(LA102_0>=KW_CLASS && LA102_0<=KW_ELSE)||(LA102_0>=KW_NULL && LA102_0<=KW_FALSE)||(LA102_0>=BRACKET_L && LA102_0<=BRACKET_R)||(LA102_0>=SP_COLON && LA102_0<=SP_QMARK)||LA102_0==SP_PIPE||(LA102_0>=SP_SEMI && LA102_0<=CP_COMPARATORS)||LA102_0==OP_CURRY||(LA102_0>=OP_PLUS && LA102_0<=OP_MULTI)||(LA102_0>=OP_BANG && LA102_0<=OP_TILDA)||(LA102_0>=ID && LA102_0<=PAR_R)) ) {
                 alt102=2;
             }
             else {
@@ -16092,7 +16092,7 @@ public class FanParser extends Parser {
                     throw nvae;
                 }
             }
-            else if ( (LA145_0==EOF||(LA145_0>=KW_BREAK && LA145_0<=KW_USING)||(LA145_0>=KW_RD_ONLY && LA145_0<=KW_FINAL)||(LA145_0>=KW_CLASS && LA145_0<=KW_ELSE)||(LA145_0>=KW_NULL && LA145_0<=KW_FALSE)||LA145_0==BRACKET_R||LA145_0==SP_COMMA||LA145_0==SP_PIPE||LA145_0==OP_CURRY||(LA145_0>=OP_PLUS && LA145_0<=OP_MULTI)||(LA145_0>=OP_BANG && LA145_0<=OP_TILDA)||(LA145_0>=ID && LA145_0<=SQ_BRACKET_L)||LA145_0==PAR_L||LA145_0==142) ) {
+            else if ( (LA145_0==EOF||(LA145_0>=KW_BREAK && LA145_0<=KW_USING)||(LA145_0>=KW_RD_ONLY && LA145_0<=KW_FINAL)||(LA145_0>=KW_CLASS && LA145_0<=KW_ELSE)||(LA145_0>=KW_NULL && LA145_0<=KW_FALSE)||LA145_0==BRACKET_R||LA145_0==SP_COMMA||LA145_0==SP_PIPE||LA145_0==OP_CURRY||(LA145_0>=OP_PLUS && LA145_0<=OP_MULTI)||(LA145_0>=OP_BANG && LA145_0<=OP_TILDA)||(LA145_0>=ID && LA145_0<=SQ_BRACKET_L)||LA145_0==PAR_L) ) {
                 alt145=2;
             }
             else {
@@ -16325,13 +16325,70 @@ public class FanParser extends Parser {
     }
     // $ANTLR end "setter"
 
+    public static class pod_return extends ParserRuleReturnScope {
+        Object tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "pod"
+    // src/net/colar/netbeans/fan/antlr/Fan.g:478:1: pod : t= ID {...}?;
+    public final FanParser.pod_return pod() throws RecognitionException {
+        FanParser.pod_return retval = new FanParser.pod_return();
+        retval.start = input.LT(1);
+        int pod_StartIndex = input.index();
+        Object root_0 = null;
+
+        Token t=null;
+
+        Object t_tree=null;
+
+        try {
+            if ( state.backtracking>0 && alreadyParsedRule(input, 148) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:478:8: (t= ID {...}?)
+            // src/net/colar/netbeans/fan/antlr/Fan.g:478:10: t= ID {...}?
+            {
+            root_0 = (Object)adaptor.nil();
+
+            t=(Token)match(input,ID,FOLLOW_ID_in_pod3798); if (state.failed) return retval;
+            if ( state.backtracking==0 ) {
+            t_tree = (Object)adaptor.create(t);
+            adaptor.addChild(root_0, t_tree);
+            }
+            if ( !((t.getText().equals("pod"))) ) {
+                if (state.backtracking>0) {state.failed=true; return retval;}
+                throw new FailedPredicateException(input, "pod", "t.getText().equals(\"pod\")");
+            }
+
+            }
+
+            retval.stop = input.LT(-1);
+
+            if ( state.backtracking==0 ) {
+
+            retval.tree = (Object)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+            }
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (Object)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+            if ( state.backtracking>0 ) { memoize(input, 148, pod_StartIndex); }
+        }
+        return retval;
+    }
+    // $ANTLR end "pod"
+
     public static class bracketL_return extends ParserRuleReturnScope {
         Object tree;
         public Object getTree() { return tree; }
     };
 
     // $ANTLR start "bracketL"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:480:1: bracketL : BRACKET_L ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:481:1: bracketL : BRACKET_L ;
     public final FanParser.bracketL_return bracketL() throws RecognitionException {
         FanParser.bracketL_return retval = new FanParser.bracketL_return();
         retval.start = input.LT(1);
@@ -16344,13 +16401,13 @@ public class FanParser extends Parser {
 
         paraphrase.push("{");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 148) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:482:3: ( BRACKET_L )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:482:5: BRACKET_L
+            if ( state.backtracking>0 && alreadyParsedRule(input, 149) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:483:3: ( BRACKET_L )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:483:5: BRACKET_L
             {
             root_0 = (Object)adaptor.nil();
 
-            BRACKET_L521=(Token)match(input,BRACKET_L,FOLLOW_BRACKET_L_in_bracketL3806); if (state.failed) return retval;
+            BRACKET_L521=(Token)match(input,BRACKET_L,FOLLOW_BRACKET_L_in_bracketL3820); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             BRACKET_L521_tree = (Object)adaptor.create(BRACKET_L521);
             adaptor.addChild(root_0, BRACKET_L521_tree);
@@ -16376,7 +16433,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 148, bracketL_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 149, bracketL_StartIndex); }
         }
         return retval;
     }
@@ -16388,7 +16445,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "bracketR"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:483:1: bracketR : BRACKET_R ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:484:1: bracketR : BRACKET_R ;
     public final FanParser.bracketR_return bracketR() throws RecognitionException {
         FanParser.bracketR_return retval = new FanParser.bracketR_return();
         retval.start = input.LT(1);
@@ -16401,13 +16458,13 @@ public class FanParser extends Parser {
 
         paraphrase.push("}");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 149) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:485:3: ( BRACKET_R )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:485:5: BRACKET_R
+            if ( state.backtracking>0 && alreadyParsedRule(input, 150) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:486:3: ( BRACKET_R )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:486:5: BRACKET_R
             {
             root_0 = (Object)adaptor.nil();
 
-            BRACKET_R522=(Token)match(input,BRACKET_R,FOLLOW_BRACKET_R_in_bracketR3824); if (state.failed) return retval;
+            BRACKET_R522=(Token)match(input,BRACKET_R,FOLLOW_BRACKET_R_in_bracketR3838); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             BRACKET_R522_tree = (Object)adaptor.create(BRACKET_R522);
             adaptor.addChild(root_0, BRACKET_R522_tree);
@@ -16433,7 +16490,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 149, bracketR_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 150, bracketR_StartIndex); }
         }
         return retval;
     }
@@ -16445,7 +16502,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "sq_bracketL"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:486:1: sq_bracketL : SQ_BRACKET_L ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:487:1: sq_bracketL : SQ_BRACKET_L ;
     public final FanParser.sq_bracketL_return sq_bracketL() throws RecognitionException {
         FanParser.sq_bracketL_return retval = new FanParser.sq_bracketL_return();
         retval.start = input.LT(1);
@@ -16458,13 +16515,13 @@ public class FanParser extends Parser {
 
         paraphrase.push("[");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 150) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:488:3: ( SQ_BRACKET_L )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:488:5: SQ_BRACKET_L
+            if ( state.backtracking>0 && alreadyParsedRule(input, 151) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:489:3: ( SQ_BRACKET_L )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:489:5: SQ_BRACKET_L
             {
             root_0 = (Object)adaptor.nil();
 
-            SQ_BRACKET_L523=(Token)match(input,SQ_BRACKET_L,FOLLOW_SQ_BRACKET_L_in_sq_bracketL3842); if (state.failed) return retval;
+            SQ_BRACKET_L523=(Token)match(input,SQ_BRACKET_L,FOLLOW_SQ_BRACKET_L_in_sq_bracketL3856); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SQ_BRACKET_L523_tree = (Object)adaptor.create(SQ_BRACKET_L523);
             adaptor.addChild(root_0, SQ_BRACKET_L523_tree);
@@ -16490,7 +16547,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 150, sq_bracketL_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 151, sq_bracketL_StartIndex); }
         }
         return retval;
     }
@@ -16502,7 +16559,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "sq_bracketR"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:489:1: sq_bracketR : SQ_BRACKET_R ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:490:1: sq_bracketR : SQ_BRACKET_R ;
     public final FanParser.sq_bracketR_return sq_bracketR() throws RecognitionException {
         FanParser.sq_bracketR_return retval = new FanParser.sq_bracketR_return();
         retval.start = input.LT(1);
@@ -16515,13 +16572,13 @@ public class FanParser extends Parser {
 
         paraphrase.push("]");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 151) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:491:3: ( SQ_BRACKET_R )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:491:5: SQ_BRACKET_R
+            if ( state.backtracking>0 && alreadyParsedRule(input, 152) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:492:3: ( SQ_BRACKET_R )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:492:5: SQ_BRACKET_R
             {
             root_0 = (Object)adaptor.nil();
 
-            SQ_BRACKET_R524=(Token)match(input,SQ_BRACKET_R,FOLLOW_SQ_BRACKET_R_in_sq_bracketR3860); if (state.failed) return retval;
+            SQ_BRACKET_R524=(Token)match(input,SQ_BRACKET_R,FOLLOW_SQ_BRACKET_R_in_sq_bracketR3874); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SQ_BRACKET_R524_tree = (Object)adaptor.create(SQ_BRACKET_R524);
             adaptor.addChild(root_0, SQ_BRACKET_R524_tree);
@@ -16547,7 +16604,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 151, sq_bracketR_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 152, sq_bracketR_StartIndex); }
         }
         return retval;
     }
@@ -16559,7 +16616,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "parL"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:492:1: parL : PAR_L ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:493:1: parL : PAR_L ;
     public final FanParser.parL_return parL() throws RecognitionException {
         FanParser.parL_return retval = new FanParser.parL_return();
         retval.start = input.LT(1);
@@ -16572,13 +16629,13 @@ public class FanParser extends Parser {
 
         paraphrase.push("(");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 152) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:494:3: ( PAR_L )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:494:5: PAR_L
+            if ( state.backtracking>0 && alreadyParsedRule(input, 153) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:495:3: ( PAR_L )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:495:5: PAR_L
             {
             root_0 = (Object)adaptor.nil();
 
-            PAR_L525=(Token)match(input,PAR_L,FOLLOW_PAR_L_in_parL3878); if (state.failed) return retval;
+            PAR_L525=(Token)match(input,PAR_L,FOLLOW_PAR_L_in_parL3892); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             PAR_L525_tree = (Object)adaptor.create(PAR_L525);
             adaptor.addChild(root_0, PAR_L525_tree);
@@ -16604,7 +16661,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 152, parL_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 153, parL_StartIndex); }
         }
         return retval;
     }
@@ -16616,7 +16673,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "parR"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:495:1: parR : PAR_R ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:496:1: parR : PAR_R ;
     public final FanParser.parR_return parR() throws RecognitionException {
         FanParser.parR_return retval = new FanParser.parR_return();
         retval.start = input.LT(1);
@@ -16629,13 +16686,13 @@ public class FanParser extends Parser {
 
         paraphrase.push(")");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 153) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:497:3: ( PAR_R )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:497:5: PAR_R
+            if ( state.backtracking>0 && alreadyParsedRule(input, 154) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:498:3: ( PAR_R )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:498:5: PAR_R
             {
             root_0 = (Object)adaptor.nil();
 
-            PAR_R526=(Token)match(input,PAR_R,FOLLOW_PAR_R_in_parR3896); if (state.failed) return retval;
+            PAR_R526=(Token)match(input,PAR_R,FOLLOW_PAR_R_in_parR3910); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             PAR_R526_tree = (Object)adaptor.create(PAR_R526);
             adaptor.addChild(root_0, PAR_R526_tree);
@@ -16661,7 +16718,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 153, parR_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 154, parR_StartIndex); }
         }
         return retval;
     }
@@ -18833,13 +18890,13 @@ public class FanParser extends Parser {
     static final String DFA3_minS =
         "\1\24\2\0\12\uffff";
     static final String DFA3_maxS =
-        "\1\u008e\2\0\12\uffff";
+        "\1\157\2\0\12\uffff";
     static final String DFA3_acceptS =
         "\3\uffff\1\1\1\2\10\uffff";
     static final String DFA3_specialS =
         "\1\uffff\1\0\1\1\12\uffff}>";
     static final String[] DFA3_transitionS = {
-            "\2\4\4\uffff\1\4\1\uffff\10\4\112\uffff\1\2\1\1\36\uffff\1\3",
+            "\2\4\4\uffff\1\4\1\uffff\10\4\104\uffff\1\3\5\uffff\1\2\1\1",
             "\1\uffff",
             "\1\uffff",
             "",
@@ -18983,30 +19040,31 @@ public class FanParser extends Parser {
     static final String DFA4_eotS =
         "\15\uffff";
     static final String DFA4_eofS =
-        "\3\uffff\1\7\5\uffff\1\7\1\14\2\uffff";
+        "\3\uffff\1\6\5\uffff\1\6\1\13\2\uffff";
     static final String DFA4_minS =
-        "\1\21\2\150\1\21\1\162\2\150\1\uffff\1\150\2\21\2\uffff";
+        "\1\21\2\150\1\21\1\162\1\150\1\uffff\2\150\2\21\2\uffff";
     static final String DFA4_maxS =
-        "\1\21\1\161\1\150\1\u008e\1\162\2\150\1\uffff\1\150\2\u008e\2\uffff";
+        "\1\21\1\161\1\150\1\157\1\162\1\150\1\uffff\2\150\1\157\1\u008d"+
+        "\2\uffff";
     static final String DFA4_acceptS =
-        "\7\uffff\1\1\3\uffff\1\3\1\2";
+        "\6\uffff\1\1\4\uffff\1\2\1\3";
     static final String DFA4_specialS =
         "\15\uffff}>";
     static final String[] DFA4_transitionS = {
             "\1\1",
             "\1\3\10\uffff\1\2",
             "\1\4",
-            "\1\7\2\uffff\2\7\4\uffff\1\7\1\uffff\10\7\36\uffff\1\6\1\5"+
-            "\11\uffff\1\7\40\uffff\2\7\36\uffff\1\7",
+            "\1\6\2\uffff\2\6\4\uffff\1\6\1\uffff\10\6\36\uffff\1\7\1\5"+
+            "\11\uffff\1\6\32\uffff\1\6\5\uffff\2\6",
             "\1\10",
             "\1\11",
-            "\1\12",
             "",
+            "\1\12",
             "\1\3",
-            "\1\7\2\uffff\2\7\4\uffff\1\7\1\uffff\10\7\36\uffff\1\6\1\5"+
-            "\11\uffff\1\7\40\uffff\2\7\36\uffff\1\7",
-            "\1\14\1\13\1\uffff\2\14\4\uffff\1\14\1\uffff\10\14\51\uffff"+
-            "\1\14\40\uffff\2\14\35\uffff\1\13\1\14",
+            "\1\6\2\uffff\2\6\4\uffff\1\6\1\uffff\10\6\36\uffff\1\7\1\5"+
+            "\11\uffff\1\6\32\uffff\1\6\5\uffff\2\6",
+            "\1\13\1\14\1\uffff\2\13\4\uffff\1\13\1\uffff\10\13\51\uffff"+
+            "\1\13\32\uffff\1\13\5\uffff\2\13\35\uffff\1\14",
             "",
             ""
     };
@@ -19653,7 +19711,7 @@ public class FanParser extends Parser {
     static final String DFA59_acceptS =
         "\1\uffff\2\1\1\uffff\1\2\1\uffff\4\1";
     static final String DFA59_specialS =
-        "\1\2\2\uffff\1\0\1\uffff\1\1\4\uffff}>";
+        "\1\0\2\uffff\1\1\1\uffff\1\2\4\uffff}>";
     static final String[] DFA59_transitionS = {
             "\1\2\34\uffff\1\3\10\uffff\1\1",
             "",
@@ -19706,6 +19764,23 @@ public class FanParser extends Parser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA59_0 = input.LA(1);
+
+                         
+                        int index59_0 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA59_0==SQ_BRACKET_L) && (synpred78_Fan())) {s = 1;}
+
+                        else if ( (LA59_0==SP_PIPE) && (synpred78_Fan())) {s = 2;}
+
+                        else if ( (LA59_0==ID) ) {s = 3;}
+
+                         
+                        input.seek(index59_0);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
                         int LA59_3 = input.LA(1);
 
                          
@@ -19728,7 +19803,7 @@ public class FanParser extends Parser {
                         input.seek(index59_3);
                         if ( s>=0 ) return s;
                         break;
-                    case 1 : 
+                    case 2 : 
                         int LA59_5 = input.LA(1);
 
                          
@@ -19741,23 +19816,6 @@ public class FanParser extends Parser {
 
                          
                         input.seek(index59_5);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA59_0 = input.LA(1);
-
-                         
-                        int index59_0 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA59_0==SQ_BRACKET_L) && (synpred78_Fan())) {s = 1;}
-
-                        else if ( (LA59_0==SP_PIPE) && (synpred78_Fan())) {s = 2;}
-
-                        else if ( (LA59_0==ID) ) {s = 3;}
-
-                         
-                        input.seek(index59_0);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -20217,7 +20275,7 @@ public class FanParser extends Parser {
                         int index78_32 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( ((synpred122_Fan()||(synpred122_Fan()&&(notAfterEol())))) ) {s = 52;}
+                        if ( (((synpred122_Fan()&&(notAfterEol()))||synpred122_Fan())) ) {s = 52;}
 
                         else if ( (true) ) {s = 1;}
 
@@ -20634,7 +20692,7 @@ public class FanParser extends Parser {
                         int index83_31 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( ((((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||(synpred127_Fan()&&(lookupNL()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol())))) ) {s = 1;}
+                        if ( ((((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||(synpred127_Fan()&&(lookupNL())))) ) {s = 1;}
 
                         else if ( (true) ) {s = 52;}
 
@@ -21133,21 +21191,21 @@ public class FanParser extends Parser {
         }
     }
     static final String DFA108_eotS =
-        "\106\uffff";
+        "\105\uffff";
     static final String DFA108_eofS =
-        "\1\1\105\uffff";
+        "\1\1\104\uffff";
     static final String DFA108_minS =
-        "\1\4\17\uffff\1\0\65\uffff";
+        "\1\4\17\uffff\1\0\64\uffff";
     static final String DFA108_maxS =
-        "\1\u008e\17\uffff\1\0\65\uffff";
+        "\1\164\17\uffff\1\0\64\uffff";
     static final String DFA108_acceptS =
-        "\1\uffff\1\2\103\uffff\1\1";
+        "\1\uffff\1\2\102\uffff\1\1";
     static final String DFA108_specialS =
-        "\20\uffff\1\0\65\uffff}>";
+        "\20\uffff\1\0\64\uffff}>";
     static final String[] DFA108_transitionS = {
             "\15\1\1\uffff\11\1\1\uffff\23\1\25\uffff\2\1\1\uffff\3\1\1\uffff"+
-            "\1\20\1\uffff\13\1\1\105\1\1\2\uffff\3\1\2\uffff\4\1\3\uffff"+
-            "\15\1\31\uffff\1\1",
+            "\1\20\1\uffff\13\1\1\104\1\1\2\uffff\3\1\2\uffff\4\1\3\uffff"+
+            "\15\1",
             "",
             "",
             "",
@@ -21164,7 +21222,6 @@ public class FanParser extends Parser {
             "",
             "",
             "\1\uffff",
-            "",
             "",
             "",
             "",
@@ -21262,7 +21319,7 @@ public class FanParser extends Parser {
                         int index108_16 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred158_Fan()) ) {s = 69;}
+                        if ( (synpred158_Fan()) ) {s = 68;}
 
                         else if ( (true) ) {s = 1;}
 
@@ -21279,21 +21336,20 @@ public class FanParser extends Parser {
         }
     }
     static final String DFA109_eotS =
-        "\110\uffff";
+        "\107\uffff";
     static final String DFA109_eofS =
-        "\1\1\107\uffff";
+        "\1\1\106\uffff";
     static final String DFA109_minS =
-        "\1\4\67\uffff\1\0\17\uffff";
+        "\1\4\67\uffff\1\0\16\uffff";
     static final String DFA109_maxS =
-        "\1\u008e\67\uffff\1\0\17\uffff";
+        "\1\164\67\uffff\1\0\16\uffff";
     static final String DFA109_acceptS =
-        "\1\uffff\1\2\105\uffff\1\1";
+        "\1\uffff\1\2\104\uffff\1\1";
     static final String DFA109_specialS =
-        "\70\uffff\1\0\17\uffff}>";
+        "\70\uffff\1\0\16\uffff}>";
     static final String[] DFA109_transitionS = {
             "\15\1\1\uffff\11\1\1\uffff\23\1\25\uffff\2\1\1\uffff\3\1\1\uffff"+
-            "\1\1\1\uffff\14\1\1\70\2\uffff\3\1\2\uffff\4\1\3\uffff\15\1"+
-            "\31\uffff\1\1",
+            "\1\1\1\uffff\14\1\1\70\2\uffff\3\1\2\uffff\4\1\3\uffff\15\1",
             "",
             "",
             "",
@@ -21350,7 +21406,6 @@ public class FanParser extends Parser {
             "",
             "",
             "\1\uffff",
-            "",
             "",
             "",
             "",
@@ -21410,7 +21465,7 @@ public class FanParser extends Parser {
                         int index109_56 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred159_Fan()) ) {s = 71;}
+                        if ( (synpred159_Fan()) ) {s = 70;}
 
                         else if ( ((lookupNL())) ) {s = 1;}
 
@@ -21427,21 +21482,20 @@ public class FanParser extends Parser {
         }
     }
     static final String DFA111_eotS =
-        "\112\uffff";
+        "\111\uffff";
     static final String DFA111_eofS =
-        "\1\1\111\uffff";
+        "\1\1\110\uffff";
     static final String DFA111_minS =
-        "\1\4\56\uffff\1\0\12\uffff\1\0\17\uffff";
+        "\1\4\56\uffff\1\0\12\uffff\1\0\16\uffff";
     static final String DFA111_maxS =
-        "\1\u008e\56\uffff\1\0\12\uffff\1\0\17\uffff";
+        "\1\164\56\uffff\1\0\12\uffff\1\0\16\uffff";
     static final String DFA111_acceptS =
-        "\1\uffff\1\2\107\uffff\1\1";
+        "\1\uffff\1\2\106\uffff\1\1";
     static final String DFA111_specialS =
-        "\57\uffff\1\0\12\uffff\1\1\17\uffff}>";
+        "\57\uffff\1\0\12\uffff\1\1\16\uffff}>";
     static final String[] DFA111_transitionS = {
             "\15\1\1\uffff\11\1\1\uffff\23\1\25\uffff\2\1\1\uffff\3\1\1\uffff"+
-            "\1\1\1\uffff\17\1\1\72\1\57\1\1\2\uffff\4\1\3\uffff\15\1\31"+
-            "\uffff\1\1",
+            "\1\1\1\uffff\17\1\1\72\1\57\1\1\2\uffff\4\1\3\uffff\15\1",
             "",
             "",
             "",
@@ -21500,7 +21554,6 @@ public class FanParser extends Parser {
             "",
             "",
             "\1\uffff",
-            "",
             "",
             "",
             "",
@@ -21560,7 +21613,7 @@ public class FanParser extends Parser {
                         int index111_47 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred163_Fan()) ) {s = 73;}
+                        if ( (synpred163_Fan()) ) {s = 72;}
 
                         else if ( ((lookupNL())) ) {s = 1;}
 
@@ -21575,7 +21628,7 @@ public class FanParser extends Parser {
                         int index111_58 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred163_Fan()) ) {s = 73;}
+                        if ( (synpred163_Fan()) ) {s = 72;}
 
                         else if ( ((lookupNL())) ) {s = 1;}
 
@@ -21690,21 +21743,21 @@ public class FanParser extends Parser {
         }
     }
     static final String DFA114_eotS =
-        "\116\uffff";
+        "\115\uffff";
     static final String DFA114_eofS =
-        "\1\1\115\uffff";
+        "\1\1\114\uffff";
     static final String DFA114_minS =
-        "\1\4\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\35\uffff";
+        "\1\4\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\34\uffff";
     static final String DFA114_maxS =
-        "\1\u008e\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\35\uffff";
+        "\1\164\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\34\uffff";
     static final String DFA114_acceptS =
-        "\1\uffff\1\2\110\uffff\1\1\3\uffff";
+        "\1\uffff\1\2\107\uffff\1\1\3\uffff";
     static final String DFA114_specialS =
-        "\25\uffff\1\0\2\uffff\1\1\27\uffff\1\2\35\uffff}>";
+        "\25\uffff\1\0\2\uffff\1\1\27\uffff\1\2\34\uffff}>";
     static final String[] DFA114_transitionS = {
-            "\15\1\1\uffff\11\1\1\uffff\23\1\24\uffff\1\112\1\30\1\1\1\uffff"+
-            "\3\1\1\uffff\1\1\1\112\30\1\1\uffff\2\112\11\1\1\25\1\1\1\60"+
-            "\1\1\31\uffff\1\1",
+            "\15\1\1\uffff\11\1\1\uffff\23\1\24\uffff\1\111\1\30\1\1\1\uffff"+
+            "\3\1\1\uffff\1\1\1\111\30\1\1\uffff\2\111\11\1\1\25\1\1\1\60"+
+            "\1\1",
             "",
             "",
             "",
@@ -21753,7 +21806,6 @@ public class FanParser extends Parser {
             "",
             "",
             "\1\uffff",
-            "",
             "",
             "",
             "",
@@ -21827,7 +21879,7 @@ public class FanParser extends Parser {
                         int index114_21 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( ((synpred170_Fan()&&(notAfterEol()))) ) {s = 74;}
+                        if ( ((synpred170_Fan()&&(notAfterEol()))) ) {s = 73;}
 
                         else if ( (true) ) {s = 1;}
 
@@ -21842,7 +21894,7 @@ public class FanParser extends Parser {
                         int index114_24 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred170_Fan()) ) {s = 74;}
+                        if ( (synpred170_Fan()) ) {s = 73;}
 
                         else if ( (true) ) {s = 1;}
 
@@ -21857,7 +21909,7 @@ public class FanParser extends Parser {
                         int index114_48 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( ((synpred170_Fan()&&(notAfterEol()))) ) {s = 74;}
+                        if ( ((synpred170_Fan()&&(notAfterEol()))) ) {s = 73;}
 
                         else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
 
@@ -22230,21 +22282,21 @@ public class FanParser extends Parser {
         }
     }
     static final String DFA116_eotS =
-        "\117\uffff";
+        "\116\uffff";
     static final String DFA116_eofS =
-        "\1\1\116\uffff";
+        "\1\1\115\uffff";
     static final String DFA116_minS =
-        "\1\4\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\36\uffff";
+        "\1\4\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\35\uffff";
     static final String DFA116_maxS =
-        "\1\u008e\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\36\uffff";
+        "\1\164\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\35\uffff";
     static final String DFA116_acceptS =
-        "\1\uffff\1\2\111\uffff\1\1\3\uffff";
+        "\1\uffff\1\2\110\uffff\1\1\3\uffff";
     static final String DFA116_specialS =
-        "\25\uffff\1\0\2\uffff\1\1\27\uffff\1\2\36\uffff}>";
+        "\25\uffff\1\0\2\uffff\1\1\27\uffff\1\2\35\uffff}>";
     static final String[] DFA116_transitionS = {
-            "\15\1\1\uffff\11\1\1\uffff\23\1\24\uffff\1\113\1\30\1\1\1\uffff"+
-            "\3\1\1\uffff\1\1\1\113\30\1\1\uffff\2\113\11\1\1\25\1\1\1\60"+
-            "\1\1\31\uffff\1\1",
+            "\15\1\1\uffff\11\1\1\uffff\23\1\24\uffff\1\112\1\30\1\1\1\uffff"+
+            "\3\1\1\uffff\1\1\1\112\30\1\1\uffff\2\112\11\1\1\25\1\1\1\60"+
+            "\1\1",
             "",
             "",
             "",
@@ -22293,7 +22345,6 @@ public class FanParser extends Parser {
             "",
             "",
             "\1\uffff",
-            "",
             "",
             "",
             "",
@@ -22368,7 +22419,7 @@ public class FanParser extends Parser {
                         int index116_21 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( ((synpred180_Fan()&&(notAfterEol()))) ) {s = 75;}
+                        if ( ((synpred180_Fan()&&(notAfterEol()))) ) {s = 74;}
 
                         else if ( (true) ) {s = 1;}
 
@@ -22383,7 +22434,7 @@ public class FanParser extends Parser {
                         int index116_24 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred180_Fan()) ) {s = 75;}
+                        if ( (synpred180_Fan()) ) {s = 74;}
 
                         else if ( (true) ) {s = 1;}
 
@@ -22398,9 +22449,9 @@ public class FanParser extends Parser {
                         int index116_48 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( ((synpred180_Fan()&&(notAfterEol()))) ) {s = 75;}
+                        if ( ((synpred180_Fan()&&(notAfterEol()))) ) {s = 74;}
 
-                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL()))) ) {s = 1;}
+                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
 
                          
                         input.seek(index116_48);
@@ -22700,27 +22751,26 @@ public class FanParser extends Parser {
         }
     }
     static final String DFA124_eotS =
-        "\120\uffff";
+        "\117\uffff";
     static final String DFA124_eofS =
-        "\1\1\117\uffff";
+        "\1\1\116\uffff";
     static final String DFA124_minS =
-        "\1\4\5\uffff\1\0\111\uffff";
+        "\1\4\5\uffff\1\0\110\uffff";
     static final String DFA124_maxS =
-        "\1\u008e\5\uffff\1\0\111\uffff";
+        "\1\164\5\uffff\1\0\110\uffff";
     static final String DFA124_acceptS =
-        "\1\uffff\1\2\115\uffff\1\1";
+        "\1\uffff\1\2\114\uffff\1\1";
     static final String DFA124_specialS =
-        "\6\uffff\1\0\111\uffff}>";
+        "\6\uffff\1\0\110\uffff}>";
     static final String[] DFA124_transitionS = {
             "\15\1\1\uffff\11\1\1\uffff\23\1\24\uffff\3\1\1\uffff\3\1\1\uffff"+
-            "\1\6\31\1\1\uffff\17\1\31\uffff\1\1",
+            "\1\6\31\1\1\uffff\17\1",
             "",
             "",
             "",
             "",
             "",
             "\1\uffff",
-            "",
             "",
             "",
             "",
@@ -22838,7 +22888,7 @@ public class FanParser extends Parser {
                         int index124_6 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred201_Fan()) ) {s = 79;}
+                        if ( (synpred201_Fan()) ) {s = 78;}
 
                         else if ( (true) ) {s = 1;}
 
@@ -23005,7 +23055,7 @@ public class FanParser extends Parser {
     }
  
 
-    public static final BitSet FOLLOW_using_in_prog409 = new BitSet(new long[]{0x0000000FF4320000L,0x0000C00000000000L,0x0000000000004000L});
+    public static final BitSet FOLLOW_using_in_prog409 = new BitSet(new long[]{0x0000000FF4320000L,0x0000C10000000000L});
     public static final BitSet FOLLOW_podDef_in_prog413 = new BitSet(new long[]{0x0000000000000000L,0x0000800000000000L});
     public static final BitSet FOLLOW_typeDef_in_prog417 = new BitSet(new long[]{0x0000000FF4300000L,0x0000C00000000000L});
     public static final BitSet FOLLOW_docs_in_prog421 = new BitSet(new long[]{0x0000000000000000L});
@@ -23041,9 +23091,9 @@ public class FanParser extends Parser {
     public static final BitSet FOLLOW_BRACKET_L_in_podDef553 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000820L});
     public static final BitSet FOLLOW_symbolDef_in_podDef555 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000820L});
     public static final BitSet FOLLOW_BRACKET_R_in_podDef558 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_podHeader565 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L,0x0000000000004000L});
-    public static final BitSet FOLLOW_facet_in_podHeader567 = new BitSet(new long[]{0x0000000000000000L,0x0000400000000000L,0x0000000000004000L});
-    public static final BitSet FOLLOW_142_in_podHeader570 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
+    public static final BitSet FOLLOW_docs_in_podHeader565 = new BitSet(new long[]{0x0000000000000000L,0x0000C10000000000L});
+    public static final BitSet FOLLOW_facet_in_podHeader567 = new BitSet(new long[]{0x0000000000000000L,0x0000C10000000000L});
+    public static final BitSet FOLLOW_pod_in_podHeader570 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
     public static final BitSet FOLLOW_id_in_podHeader572 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_docs_in_symbolDef579 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000800L});
     public static final BitSet FOLLOW_facet_in_symbolDef581 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000800L});
@@ -23541,12 +23591,13 @@ public class FanParser extends Parser {
     public static final BitSet FOLLOW_ID_in_id3758 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ID_in_getter3771 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ID_in_setter3784 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BRACKET_L_in_bracketL3806 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BRACKET_R_in_bracketR3824 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SQ_BRACKET_L_in_sq_bracketL3842 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SQ_BRACKET_R_in_sq_bracketR3860 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PAR_L_in_parL3878 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PAR_R_in_parR3896 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_pod3798 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_BRACKET_L_in_bracketL3820 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_BRACKET_R_in_bracketR3838 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SQ_BRACKET_L_in_sq_bracketL3856 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SQ_BRACKET_R_in_sq_bracketR3874 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_PAR_L_in_parL3892 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_PAR_R_in_parR3910 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_podDef_in_synpred2_Fan413 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_facet_in_synpred13_Fan612 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_classFlags_in_synpred15_Fan617 = new BitSet(new long[]{0x0000000F94300000L});

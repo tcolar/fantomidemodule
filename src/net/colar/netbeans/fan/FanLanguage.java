@@ -81,10 +81,10 @@ public class FanLanguage extends DefaultLanguageConfig
 		return new FanSemanticAnalyzer();
 	}
 
-	@Override
+	/*@Override
 	public CodeCompletionHandler getCompletionHandler()
 	{
 		return new FanCompletionHandler();
-	}
+	}*/
 
 }
