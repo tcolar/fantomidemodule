@@ -86,5 +86,4 @@ public class FanLanguage extends DefaultLanguageConfig
 	{
 		return new FanCompletionHandler();
 	}*/
-
 }
