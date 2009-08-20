@@ -1,4 +1,4 @@
-// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-08-19 21:10:29
+// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-08-19 22:03:55
 package net.colar.netbeans.fan.antlr;
 import net.colar.netbeans.fan.FanParserResult;
 
@@ -277,7 +277,7 @@ public class FanParser extends Parser {
         public void reportError(RecognitionException e)
         {
     		if(! nbErrors)
-    			e.printStackTrace();
+    			throw(new RuntimeException("Parser Exception",e));
     		else
     			parsingResult.addAntlrError(e,paraphrase);
         }
@@ -1602,7 +1602,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: classBody, classHeader
+            // elements: classHeader, classBody
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -1793,7 +1793,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: cname, m, inheritance
+            // elements: inheritance, cname, m
             // token labels: 
             // rule labels: retval, m, cname
             // token list labels: 
@@ -2107,7 +2107,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketL, bracketR, slotDef
+            // elements: slotDef, bracketR, bracketL
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -2264,7 +2264,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: mixinBody, mixinHeader
+            // elements: mixinHeader, mixinBody
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -2455,7 +2455,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: mname, m, inheritance
+            // elements: mname, inheritance, m
             // token labels: 
             // rule labels: mname, retval, m
             // token list labels: 
@@ -2743,7 +2743,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketL, slotDef, bracketR
+            // elements: slotDef, bracketR, bracketL
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -3024,7 +3024,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: m, ename, inheritance
+            // elements: inheritance, ename, m
             // token labels: 
             // rule labels: retval, ename, m
             // token list labels: 
@@ -3185,7 +3185,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketL, slotDef, bracketR, enumValDefs
+            // elements: bracketL, enumValDefs, bracketR, slotDef
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -5494,7 +5494,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: m, typeId, expr
+            // elements: expr, m, typeId
             // token labels: 
             // rule labels: retval, m
             // token list labels: 
@@ -5768,7 +5768,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: type, id
+            // elements: id, type
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -6223,7 +6223,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: params, mname, methodBody, m, returnType
+            // elements: m, returnType, mname, params, methodBody
             // token labels: 
             // rule labels: mname, retval, m, returnType
             // token list labels: 
@@ -7027,7 +7027,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: cchain, cname, methodBody, params, m
+            // elements: params, cname, m, methodBody, cchain
             // token labels: cchain
             // rule labels: retval, m, cname
             // token list labels: 
@@ -7770,7 +7770,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketR, bracketL, s
+            // elements: s, bracketL, bracketR
             // token labels: s
             // rule labels: retval
             // token list labels: 
@@ -20692,7 +20692,7 @@ public class FanParser extends Parser {
                         int index83_31 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( ((((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||(synpred127_Fan()&&(lookupNL())))) ) {s = 1;}
+                        if ( ((((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||(synpred127_Fan()&&(lookupNL()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol())))) ) {s = 1;}
 
                         else if ( (true) ) {s = 52;}
 

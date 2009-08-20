@@ -64,18 +64,13 @@ public class FanParserTest
 
 				try
 				{
-					System.out.println("Parsing : " + f.getPath());
+					//System.out.println("Parsing : " + f.getPath());
 					g.prog();
 				}
-				catch (RecognitionException e)
+				catch (RuntimeException e)
 				{
-					System.out.println("Recognition errors in: " + f.getPath());
-					e.printStackTrace();
-				}
-				catch (Exception e)
-				{
-					System.out.println("Parsing exception in: " + f.getPath());
-					e.printStackTrace();
+					System.err.println("Parsing failed for: " + f.getPath());
+					//e.getCause().printStackTrace();
 				}
 			}
 			Thread.sleep(50);

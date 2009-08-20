@@ -217,7 +217,7 @@ import net.colar.netbeans.fan.FanParserResult;
     public void reportError(RecognitionException e)
     {
 		if(! nbErrors)
-			e.printStackTrace();
+			throw(new RuntimeException("Parser Exception",e));
 		else
 			parsingResult.addAntlrError(e,paraphrase);
     }
