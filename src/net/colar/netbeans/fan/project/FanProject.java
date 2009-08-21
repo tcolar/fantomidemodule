@@ -6,11 +6,16 @@ package net.colar.netbeans.fan.project;
 
 import java.beans.PropertyChangeListener;
 import java.util.Properties;
+import java.util.logging.LogManager;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import net.colar.netbeans.fan.project.path.FanClassPathProvider;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ProjectState;
+import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -26,7 +31,6 @@ import org.openide.util.lookup.Lookups;
  */
 public class FanProject implements Project, ProjectInformation
 {
-
 	private final FileObject dir;
 	private final Lookup lkp;
 	final RequestProcessor rp;
@@ -34,6 +38,12 @@ public class FanProject implements Project, ProjectInformation
 
 	public FanProject(FileObject dir, ProjectState state)
 	{
+		//TODO: remove this
+		System.setProperty("org.netbeans.modules.debugger.jpda.breakpoints.level", "100");
+		try{
+			LogManager.getLogManager().readConfiguration();
+		}catch(Exception e){}
+
 		this.dir = dir;
 		lkp = Lookups.fixed(new Object[]
 			{
@@ -42,6 +52,8 @@ public class FanProject implements Project, ProjectInformation
 				new FanProjectActionProvider(this),
 				new FanCustomizedProperties(this),
 				new FanProjectProperties(this),
+				new FanClassPathProvider(this),
+				new ProjectOpenedHookImpl(),
 				state,
 				props,
 			});
@@ -93,4 +105,19 @@ public class FanProject implements Project, ProjectInformation
 		return projectDirectory.getFileObject(FanProjectFactory.FAN_BUILD_FILE) != null;
 	}
 
+	private final class ProjectOpenedHookImpl extends ProjectOpenedHook
+	{
+		protected void projectOpened()
+		{
+			FanClassPathProvider cpProvider = lkp.lookup(FanClassPathProvider.class);
+			//GlobalPathRegistry.getDefault().register(PATH_BOOT, cpProvider.getProjectClassPaths(PATH_BOOT));
+			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, cpProvider.getProjectClassPaths(ClassPath.SOURCE));
+		}
+
+		protected void projectClosed()
+		{
+			FanClassPathProvider cpProvider = lkp.lookup(FanClassPathProvider.class);
+			GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, cpProvider.getProjectClassPaths(ClassPath.SOURCE));
+		}
+	}
 }

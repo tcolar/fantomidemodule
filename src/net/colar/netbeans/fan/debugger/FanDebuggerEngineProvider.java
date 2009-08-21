@@ -12,7 +12,7 @@ import org.netbeans.spi.debugger.DebuggerEngineProvider;
  * Gets registered with Annotation
  * @author thibautc
  */
-@DebuggerEngineProvider.Registration // register as debugger engine provider
+@DebuggerEngineProvider.Registration // TODO: doesn't work
 public class FanDebuggerEngineProvider extends DebuggerEngineProvider 
 {
 	static{System.err.println("### Registering: "+FanDebuggerEngineProvider.class.getName());}

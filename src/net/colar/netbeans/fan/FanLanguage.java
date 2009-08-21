@@ -4,12 +4,14 @@
  */
 package net.colar.netbeans.fan;
 
-import net.colar.netbeans.fan.completion.FanCompletionHandler;
+import java.util.Collections;
+import java.util.Set;
 import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
+import net.colar.netbeans.fan.project.FanProject;
 import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.lexer.Language;
-import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
@@ -24,7 +26,6 @@ import org.netbeans.modules.parsing.spi.Parser;
 public class FanLanguage extends DefaultLanguageConfig
 {
 	// Fan mime Type (used all over)
-
 	public static final String FAN_MIME_TYPE = "text/x-fan";
 
 	public FanLanguage()
@@ -81,9 +82,22 @@ public class FanLanguage extends DefaultLanguageConfig
 		return new FanSemanticAnalyzer();
 	}
 
+	@Override
+	public Set<String> getBinaryLibraryPathIds()
+	{
+		return Collections.singleton(ClassPath.BOOT);
+	}
+
+	@Override
+	public Set<String> getSourcePathIds()
+	{
+		return Collections.singleton(ClassPath.SOURCE);
+	}
+
 	/*@Override
 	public CodeCompletionHandler getCompletionHandler()
 	{
 		return new FanCompletionHandler();
 	}*/
+
 }

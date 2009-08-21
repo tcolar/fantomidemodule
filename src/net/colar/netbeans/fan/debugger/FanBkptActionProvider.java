@@ -25,7 +25,7 @@ import org.openide.util.WeakListeners;
  * Gets registered by annotation
  * @author thibautc
  */
-@ActionsProvider.Registration()
+//@ActionsProvider.Registration() //TODO: doesn't work ?
 public class FanBkptActionProvider extends ActionsProviderSupport implements PropertyChangeListener
 {
 	static{System.err.println("### Registering: "+FanBkptActionProvider.class.getName());}
