@@ -18,6 +18,7 @@ import net.colar.netbeans.fan.templates.TemplateView;
 import net.jot.logger.JOTLogger;
 import net.jot.web.views.JOTLightweightView;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
+import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -45,9 +46,9 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		if (panels == null)
 		{
 			panels = new WizardDescriptor.Panel[]
-				{
-					new FanPodWizardPanel1(System.getProperty("user.dir")),
-				};
+					{
+						new FanPodWizardPanel1(System.getProperty("user.dir")),
+					};
 		}
 		return panels;
 	}
@@ -85,6 +86,31 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		FileObject buildFo = null;
 		FileObject podFo = null;
 		FileObject buildTemplate = Templates.getTemplate(wizard);
+
+		// Create main class
+		if (panel.getMainClassName() != null)
+		{
+			String name = panel.getMainClassName();
+			File mainFile = new File(fan, name + ".fan");
+			JOTLightweightView view = new TemplateView(buildTemplate, name);
+			view.addVariable("doClass", Boolean.TRUE);
+			view.addVariable("doMain", Boolean.TRUE);
+			FileObject newTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../Fan/FanFile");
+			String templateText = newTemplate.asText();
+			//open it in editor
+			TemplateUtils.createFromTemplate(view, templateText, mainFile);
+			FanUtilities.openFileInEditor(mainFile);
+			// save main class in props
+			File props = new File(pf.getAbsolutePath() + File.separator + FanProjectProperties.PROJ_PROPS_PATH);
+			props.getParentFile().mkdirs();
+			Hashtable<String, String> map = new Hashtable<String, String>();
+			map.put(FanProjectProperties.MAIN_METHOD, name + ".main");
+			FanProjectProperties.createFromScratch(map, props);
+		}
+
+
+		// Create the build file LAST, because as soon as that is created,
+		// NB will find the projects, so we want everything(props) to be ready by then
 		if (createBuildFile)
 		{
 			FileObject podTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../../Fan/pod.html");
@@ -101,8 +127,8 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 
 			JOTLogger.initIfNecessary(TemplateUtils.LOG_FILE.getAbsolutePath(), new String[0], "");
 			// create build.fan and pod.fan
-			TemplateUtils.createFromTemplate(view, buildText, buildFile);
 			TemplateUtils.createFromTemplate(view, podText, podFile);
+			TemplateUtils.createFromTemplate(view, buildText, buildFile);
 
 			buildFo = FileUtil.toFileObject(buildFile);
 			podFo = FileUtil.toFileObject(podFile);
@@ -117,27 +143,6 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		if (buildFo != null)
 		{
 			resultSet.add(buildFo);
-		}
-
-		// Create main class
-		if(panel.getMainClassName()!=null)
-		{
-			String name=panel.getMainClassName();
-			File mainFile=new File(fan, name+".fan");
-			JOTLightweightView view = new TemplateView(buildTemplate, name);
-			view.addVariable("doClass", Boolean.TRUE);
-			view.addVariable("doMain", Boolean.TRUE);
-			FileObject newTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../Fan/FanFile");
-			String templateText = newTemplate.asText();
-			//open it in editor
-			TemplateUtils.createFromTemplate(view, templateText, mainFile);
-			FanUtilities.openFileInEditor(mainFile);
-			// save main class in props
-			File props=new File(pf.getAbsolutePath()+File.separator+FanProjectProperties.PROJ_PROPS_PATH);
-			props.getParentFile().mkdirs();
-			Hashtable<String, String> map=new Hashtable<String, String>();
-			map.put(FanProjectProperties.MAIN_METHOD, name+".main");
-			FanProjectProperties.createFromScratch(map, props);
 		}
 
 		File parent = pf.getParentFile();
@@ -234,7 +239,7 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 
 		String[] res = new String[(beforeSteps.length - 1) + panels.length];
 		for (int i = 0; i <
-			res.length; i++)
+				res.length; i++)
 		{
 			if (i < (beforeSteps.length - 1))
 			{

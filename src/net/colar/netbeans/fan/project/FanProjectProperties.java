@@ -19,6 +19,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
+import org.openide.util.lookup.Lookups;
 
 /**
  * Properties for Fan Pod/Project
@@ -172,6 +173,8 @@ public class FanProjectProperties
 		{
 			e.printStackTrace();
 		}
+		//FanProjectProperties curProps=project.getLookup().lookup(FanProjectProperties.class);
+
 	}
 
 	// listener for props file changes
