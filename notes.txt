@@ -1,9 +1,19 @@
+========== Currently Being worked on============================================
+  - [DONE] Fix Bug in license mport for Fan File template
+  - [DONE] Fix Bug where main class name is not update in project props on pod creation.
+  - [STARTED] Start working on completion for standard fan libs.
+  - [STARTED] Start working on basic debugging.
+  - Add sub-menu to build.fan for running actions: doc,clean and others defined in BuildPod.fan (clean, native...)
+  - Also have a "custom" option with text entry dialog to run user actions
+  - Cleanup hard-coded strings (actions/menus etc...)
+  - Change fan_home checks so that it hints to the problem if not executable(fan.exe on windows)
+  - Fix few parser issues (ternary expr?)
+  - Check on this [[http://wiki.netbeans.org/PluginPortalQualityCriteria]] and submit to NB plugin portal.
 
-Run : option to run with parameters ?
+========= Long term Goals ======================================================
 
-TODO:
 - Semantic analysis
-    - DONE step 1: highlighting (2)
+    - [DONE] step 1: highlighting (2)
     -step 2: uses/misuses (4)
     -step 3: with inheritance ? (5) - prob. need indexer
 - Indexer
