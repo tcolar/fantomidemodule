@@ -15,6 +15,8 @@ import org.netbeans.spi.debugger.DebuggerEngineProvider;
 @DebuggerEngineProvider.Registration // register as debugger engine provider
 public class FanDebuggerEngineProvider extends DebuggerEngineProvider 
 {
+	static{System.err.println("### Registering: "+FanDebuggerEngineProvider.class.getName());}
+
 	public static final String ID="FanDebuggerEngine";
 	public static final String[] langs = new String[] {"fan"};
 	private Destructor destructor;

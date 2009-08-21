@@ -110,7 +110,7 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 
 
 		// Create the build file LAST, because as soon as that is created,
-		// NB will find the projects, so we want everything(props) to be ready by then
+		// NB will recognize this as a project, so we want everything(props) to be ready by then
 		if (createBuildFile)
 		{
 			FileObject podTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../../Fan/pod.html");
