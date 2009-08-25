@@ -83,6 +83,13 @@ public class FanPlatform
 		return fanshBin;
 	}
 
+	/**
+	 * Get the Fan "platform"/distro classpaths
+	 * IE: Fan sources
+	 * Fan libs ?
+	 * etc....
+	 * @return
+	 */
 	public ClassPath[] getClassPaths()
 	{
 		//TODO: sync this ?

@@ -112,7 +112,7 @@ public class FanProject implements Project, ProjectInformation
 	{
 		protected void projectOpened()
 		{
-			//TODO: register thsi folder, or the parent ???
+			//TODO: register this folder, or the parent ???
 			FanClassPathProvider cpProvider = lkp.lookup(FanClassPathProvider.class);
 			//GlobalPathRegistry.getDefault().register(PATH_BOOT, cpProvider.getProjectClassPaths(PATH_BOOT));
 			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, cpProvider.getProjectClassPaths(ClassPath.SOURCE));
