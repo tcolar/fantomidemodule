@@ -20,6 +20,8 @@ public class FanBkptHelper
 	public static LineBreakpoint createFanBp(String url, int lineNb)
 	{
 		//TODO: finish this, all harcoded
+		//TODO: fan.podname.classname
+		//TODO: main method code -> fan.podname.Classname$main$0.class?
 		LineBreakpoint bp = LineBreakpoint.create(url, lineNb);
 		bp.setStratum("Fan");
 		bp.setHidden(false);
