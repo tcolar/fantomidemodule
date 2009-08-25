@@ -86,7 +86,7 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 			}
 		}
 		// If we get here, it's a new bkpt, so create it.
-		LineBreakpoint bp = FanBkptHelper.createFanBp(url, lineNb);
+		LineBreakpoint bp = FanDebugHelper.createFanBp(url, lineNb);
 		DebuggerManager.getDebuggerManager().addBreakpoint(bp);
 	}
 

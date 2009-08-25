@@ -9,6 +9,8 @@ import java.util.Properties;
 import java.util.logging.LogManager;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import net.colar.netbeans.fan.debugger.FanDebugPathProvider;
+import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.path.FanClassPathProvider;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
@@ -53,6 +55,7 @@ public class FanProject implements Project, ProjectInformation
 				new FanCustomizedProperties(this),
 				new FanProjectProperties(this),
 				new FanClassPathProvider(this),
+				//new FanSourcePathProvider(),
 				new ProjectOpenedHookImpl(),
 				state,
 				props,
@@ -109,6 +112,7 @@ public class FanProject implements Project, ProjectInformation
 	{
 		protected void projectOpened()
 		{
+			//TODO: register thsi folder, or the parent ???
 			FanClassPathProvider cpProvider = lkp.lookup(FanClassPathProvider.class);
 			//GlobalPathRegistry.getDefault().register(PATH_BOOT, cpProvider.getProjectClassPaths(PATH_BOOT));
 			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, cpProvider.getProjectClassPaths(ClassPath.SOURCE));

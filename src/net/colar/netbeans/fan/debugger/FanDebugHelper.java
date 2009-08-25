@@ -14,7 +14,7 @@ import org.openide.filesystems.URLMapper;
  *
  * @author thibautc
  */
-public class FanBkptHelper
+public class FanDebugHelper
 {
 
 	public static LineBreakpoint createFanBp(String url, int lineNb)
@@ -25,8 +25,14 @@ public class FanBkptHelper
 		LineBreakpoint bp = LineBreakpoint.create(url, lineNb);
 		bp.setStratum("Fan");
 		bp.setHidden(false);
-		bp.setSourceName(getName(url));
-		bp.setPrintText(getName(url));
+		bp.setSourceName("Main.fan");
+		bp.setPrintText("Main.fan");
+		/*
+		 * SourcePath is required to match path in jar (LineBreakPointImpl check this)
+		 * so we have no choice but to give that path rather than the 'real' path
+		 * Our custom FanSourcePathProvider takes care of finding the right source file
+		 * given this 'jar' path.
+		 */
 		bp.setSourcePath("fan/Debug/Main.fan"/*getPath(url)*/);
 		bp.setPreferredClassName("fan.Debug.Main*"/*getClassFilter(url)*/);
 		//bp.setPreferredClassName(url);
@@ -115,5 +121,26 @@ public class FanBkptHelper
 		relativePath = relativePath.replace('/', '.') + "*";
 		System.err.println("filter: " + relativePath);
 		return relativePath;
+	}
+
+	/**
+	 * Transform a path sent from the debugger such as fan/podname/classname.fan
+	 * into a Fan source path (ie: fan/classname.path)
+	 * @param relativePath
+	 */
+	public static String binaryPathToSourcePath(String relativePath)
+	{
+		System.out.println("FanDebuHelper getUrl:"+relativePath);
+		String result=relativePath;
+		if(relativePath!=null)
+		{
+			// we get something like fan/Debug/Main.fan (Debug isthe pod name)
+			// we want to find fan/Main.fan  .... hum that could be in any pod :(
+			//remove "fan/"
+			result=relativePath.substring(relativePath.indexOf("/")+1);
+			// remove "podname/"
+			result=relativePath.substring(relativePath.indexOf("/")+1);
+		}
+		return result;
 	}
 }

@@ -5,6 +5,9 @@
 package net.colar.netbeans.fan.platform;
 
 import java.io.File;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 
 /**
  * Provides acces to "plaform" settings
@@ -13,7 +16,7 @@ import java.io.File;
  */
 public class FanPlatform
 {
-
+	private ClassPath[] classpaths;
 	private final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
 	private static FanPlatform instance = new FanPlatform();
 	private String fanHome;
@@ -37,6 +40,8 @@ public class FanPlatform
 			fanBin = fanHome + "bin" + File.separator + (IS_WIN ? "fan.exe" : "fan");
 			fanshBin = fanHome + "bin" + File.separator + (IS_WIN ? "fansh.exe" : "fansh");
 		}
+		// force updating paths
+		classpaths=null;
 	}
 
 	public static boolean checkFanHome(String path)
@@ -77,4 +82,20 @@ public class FanPlatform
 	{
 		return fanshBin;
 	}
+
+	public ClassPath[] getClassPaths()
+	{
+		//TODO: sync this ?
+		if(classpaths==null)
+		{
+			// add java and fan paths ...
+			//String path="SRC/*/FAN";  or just src/  and pathprovider will deal with pod etc... ?
+			//String path="SRC/*/JAVA";
+			ClassPath[] cps={};
+			ClassPathSupport.createClassPath("");
+			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, cps);
+		}
+		return classpaths;
+	}
+
 }

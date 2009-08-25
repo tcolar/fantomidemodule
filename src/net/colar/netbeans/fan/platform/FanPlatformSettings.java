@@ -14,37 +14,35 @@ import org.openide.util.NbPreferences;
  */
 public class FanPlatformSettings
 {
-    public static final String PREF_FAN_HOME="net.colar.netbeans.fan.prefs.FAN_HOME";
 
-    private static final FanPlatformSettings instance=new FanPlatformSettings();
-    private Preferences prefs;
+	public static final String PREF_FAN_HOME = "net.colar.netbeans.fan.prefs.FAN_HOME";
+	private static final FanPlatformSettings instance = new FanPlatformSettings();
+	private Preferences prefs;
 
-    public static FanPlatformSettings getInstance()
-    {
-	return instance;
-    }
-
-    private FanPlatformSettings()
-    {
-	prefs=NbPreferences.forModule(FanPlatformSettings.class);
-    }
-
-    public String get(String key)
-    {
-	return prefs.get(key,null);
-    }
-
-    public void put(String key, String value)
-    {
-	prefs.put(key, value);
-	try
+	public static FanPlatformSettings getInstance()
 	{
-	    prefs.flush();
+		return instance;
 	}
-	catch(Exception e)
-	{
-	    throw new RuntimeException(e);
-	}
-    }
 
+	private FanPlatformSettings()
+	{
+		prefs = NbPreferences.forModule(FanPlatformSettings.class);
+	}
+
+	public String get(String key)
+	{
+		return prefs.get(key, null);
+	}
+
+	public void put(String key, String value)
+	{
+		prefs.put(key, value);
+		try
+		{
+			prefs.flush();
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 }
