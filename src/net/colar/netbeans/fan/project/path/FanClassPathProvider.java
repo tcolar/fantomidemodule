@@ -7,7 +7,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -50,14 +49,16 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 	public ClassPath findClassPath(FileObject file, String type)
 	{
 		System.out.println(getClass().getName()+" -> findclasspath "+file);
+		ClassPath result=null;
 		/*if (type.equals(ClassPath.SOURCE))*/
 		{
-			return getSourcepath(file);
+			result=getSourcepath(file);
 		}/* else if (type.equals(FanProject.PATH_BOOT) || type.equals(FanProject.PATH_COMPILE))
 		{
 		return getBootClassPath();
 		}*/
-		//return null;
+		System.out.println(getClass().getName()+" -> Result: "+result);
+		return result;
 	}
 
 	private ClassPath getSourcepath(FileObject file)

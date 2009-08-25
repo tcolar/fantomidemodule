@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.debugger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
 import net.colar.netbeans.fan.FanLanguage;
@@ -12,7 +13,6 @@ import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
-import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
 import org.openide.filesystems.FileObject;
@@ -28,8 +28,11 @@ import org.openide.util.WeakListeners;
 //@ActionsProvider.Registration() //TODO: doesn't work ?
 public class FanBkptActionProvider extends ActionsProviderSupport implements PropertyChangeListener
 {
-	static{System.err.println("### Registering: "+FanBkptActionProvider.class.getName());}
 
+	static
+	{
+		System.err.println("### Registering: " + FanBkptActionProvider.class.getName());
+	}
 	private static final Set actions = Collections.singleton(ActionsManager.ACTION_TOGGLE_BREAKPOINT);
 	private EditorContextDispatcher context = EditorContextDispatcher.getDefault();
 
@@ -58,13 +61,14 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 			return;
 		}
 		Line line = EditorContextDispatcher.getDefault().getCurrentLine();
+		String url = EditorContextDispatcher.getDefault().getCurrentURLAsString();
 		System.out.println(line);
 		if (line == null)
 		{
 			return;
 		}
 		// Seems like this is off by 1 compared to breakpoints (one starts at 0, other at 1 ?)
-		int lineNb=line.getLineNumber()+1;
+		int lineNb = line.getLineNumber() + 1;
 		// Loop through existing breakpoints and see if there is already one on that line
 		Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
 		for (int i = 0; i != breakpoints.length; i++)
@@ -72,20 +76,18 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 			if (breakpoints[i] instanceof LineBreakpoint)
 			{
 				LineBreakpoint bp = ((LineBreakpoint) breakpoints[i]);
-
-				if (bp.getLineNumber() == lineNb)
+// Other plugins check linenumber but not also url - seems wrong to me
+				if (bp.getURL().equals(url) && bp.getLineNumber() == lineNb)
 				{
 					// Found existing BP, remove and quit
-					DebuggerManager.getDebuggerManager().removeBreakpoint(breakpoints[i]);
+					DebuggerManager.getDebuggerManager().removeBreakpoint(bp);
 					return;
 				}
 			}
 		}
 		// If we get here, it's a new bkpt, so create it.
-		String url = EditorContextDispatcher.getDefault().getCurrentURLAsString();
-		LineBreakpoint bp=LineBreakpoint.create(url, lineNb);
+		LineBreakpoint bp = FanBkptHelper.createFanBp(url, lineNb);
 		DebuggerManager.getDebuggerManager().addBreakpoint(bp);
-
 	}
 
 	@Override
