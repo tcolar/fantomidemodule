@@ -8,11 +8,13 @@ import org.netbeans.api.debugger.DebuggerEngine.Destructor;
 import org.netbeans.spi.debugger.DebuggerEngineProvider;
 
 /**
+ * UNUSED, so far
+ *
  * Debugger engine impl.
  * Gets registered with Annotation
  * @author thibautc
  */
-@DebuggerEngineProvider.Registration // TODO: doesn't work
+//@DebuggerEngineProvider.Registration // TODO: doesn't work
 public class FanDebuggerEngineProvider extends DebuggerEngineProvider 
 {
 	static{System.err.println("### Registering: "+FanDebuggerEngineProvider.class.getName());}

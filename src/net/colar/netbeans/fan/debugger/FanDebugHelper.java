@@ -3,7 +3,6 @@
  */
 package net.colar.netbeans.fan.debugger;
 
-import java.io.File;
 import java.net.URL;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -12,7 +11,8 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 
 /**
- *
+ * Helper utilities
+ * Fan breapoint creator.
  * @author thibautc
  */
 public class FanDebugHelper
@@ -21,11 +21,16 @@ public class FanDebugHelper
 
 	public static final String HARD_CODED_FAN_SRC_DIR = "fan";
 
+	/**
+	 * Create a fan Breakpoint
+	 * Fan directory structure does not matches the java packages created by Fan
+	 * So I had to be a little creative with pathing.
+	 * @param url
+	 * @param lineNb
+	 * @return
+	 */
 	public static LineBreakpoint createFanBp(String url, int lineNb)
 	{
-		//TODO: finish this, all harcoded
-		//TODO: fan.podname.classname
-		//TODO: main method code -> fan.podname.Classname$main$0.class?
 		LineBreakpoint bp = LineBreakpoint.create(url, lineNb);
 		String name = getName(url);
 		String path = getPath(url);
@@ -95,6 +100,11 @@ public class FanDebugHelper
 		return relativePath;
 	}
 
+	/**
+	 * The pod name for the url.
+	 * @param url
+	 * @return
+	 */
 	private static String getPod(String url)
 	{
 		FileObject fo = getUrlFo(url);
@@ -108,6 +118,13 @@ public class FanDebugHelper
 		return pod;
 	}
 
+	/**
+	 * Breakpoint class filter
+	 * ex: fan.Debug.Main*
+	 * @param pod
+	 * @param path
+	 * @return
+	 */
 	private static String getClassFilter(String pod, String path)
 	{
 		if (path.endsWith(".fan") || path.endsWith(".fwt"))

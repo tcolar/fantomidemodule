@@ -5,7 +5,6 @@ package net.colar.netbeans.fan.debugger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
 import net.colar.netbeans.fan.FanLanguage;
@@ -29,10 +28,10 @@ import org.openide.util.WeakListeners;
 public class FanBkptActionProvider extends ActionsProviderSupport implements PropertyChangeListener
 {
 
-	static
+	/*static
 	{
 		System.err.println("### Registering: " + FanBkptActionProvider.class.getName());
-	}
+	}*/
 	private static final Set actions = Collections.singleton(ActionsManager.ACTION_TOGGLE_BREAKPOINT);
 	private EditorContextDispatcher context = EditorContextDispatcher.getDefault();
 
@@ -48,13 +47,13 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 	{
 		boolean enabled = EditorContextDispatcher.getDefault().getCurrentLine() != null;
 		setEnabled(ActionsManager.ACTION_TOGGLE_BREAKPOINT, enabled);
-		System.out.println("Fan - BkptProvider enabling");
+		//System.out.println("Fan - BkptProvider enabling");
 	}
 
 	@Override
 	public void doAction(Object action)
 	{
-		System.out.println("Fan - BkptProvider doaction");
+		//System.out.println("Fan - BkptProvider doaction");
 		FileObject fo = EditorContextDispatcher.getDefault().getCurrentFile();
 		if (fo == null || !fo.getMIMEType().equals(FanLanguage.FAN_MIME_TYPE))
 		{

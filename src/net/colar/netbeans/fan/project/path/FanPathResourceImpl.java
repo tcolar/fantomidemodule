@@ -34,13 +34,13 @@ public class FanPathResourceImpl implements PathResourceImplementation
 
 	public URL[] getRoots()
 	{
-		System.out.println(getClass().getName()+" -> getroots");
+		//System.out.println(getClass().getName()+" -> getroots");
 		return roots;
 	}
 
 	public ClassPathImplementation getContent()
 	{
-		System.out.println(getClass().getName()+" -> getContent ");
+		//System.out.println(getClass().getName()+" -> getContent ");
 		return null;
 	}
 

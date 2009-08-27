@@ -13,7 +13,7 @@ import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.openide.filesystems.FileObject;
 
 /**
- *
+ * Class path impl. for fan projects
  * @author thibautc
  */
 public class FanClassPathImpl implements ClassPathImplementation
@@ -27,24 +27,15 @@ public class FanClassPathImpl implements ClassPathImplementation
 
 	public void add(FileObject fo)
 	{
-		/*if(fo.isFolder())
-		{
-			FileObject[] children = fo.getChildren();
-			for(FileObject child : children)
-				add(child);
-		}
-		else*/
-		{
 			FanPathResourceImpl impl=new FanPathResourceImpl(fo);
 			//ClassPathSupport.createClassPath(fo);
 			resources.add(impl);
 			System.out.println(getClass().getName()+ " -> "+fo.getPath());
-		}
 	}
 
 	public List<? extends PathResourceImplementation> getResources()
 	{
-		System.out.println(getClass().getName()+" -> getresources");
+		//System.out.println(getClass().getName()+" -> getresources");
 		return Collections.unmodifiableList(resources);
 	}
 

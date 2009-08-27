@@ -47,10 +47,6 @@ import org.openide.util.WeakListeners;
  *  but instead to fan.MyPod.Main.class
  * So we need a custom impl. here to find the correct source path and make the debugger happy.
  *
- * Mostly copied from scala plugin in turn inspired by:
- * debugger.jpda.projects/src/org/netbeans/modules/debugger/jpda/projects/SourcePathProviderImpl.java
- *
- * Only changes are first few lines of getURL()
  * @author thibautc
  */
 public class FanDebugPathProvider extends SourcePathProvider
@@ -58,11 +54,12 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 	private static final Pattern thisDirectoryPattern = Pattern.compile("(/|\\A)\\./");
 	private static final Pattern parentDirectoryPattern = Pattern.compile("(/|\\A)([^/]+?)/\\.\\./");
+	// open prjs
 	private Set<ClassPath> projectSources = new HashSet();
 	// fan distro sources
 	private Set<ClassPath> fanSources = new HashSet();
 	private Set<ClassPath> jdkSources = new HashSet();
-	// All open projects etc...
+	// All resources known to IDE...
 	private Set<ClassPath> globalSources = new HashSet();
 	// user provided paths (through listener)
 	private Set<ClassPath> customSources = new HashSet();
@@ -83,9 +80,9 @@ public class FanDebugPathProvider extends SourcePathProvider
 		pathRegistryListener = new PathRegistryListener();
 		GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(WeakListeners.create(GlobalPathRegistryListener.class, pathRegistryListener, GlobalPathRegistry.getDefault()));
 		JavaPlatformManager.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(pathRegistryListener, JavaPlatformManager.getDefault()));
-		// TODO: listeber for project sources ?
+		// TODO: listener for project sources ?
 
-		// open project sources
+		// Add open project sources
 		Project[] projects = OpenProjects.getDefault().getOpenProjects();
 		for (Project prj : projects)
 		{
@@ -124,12 +121,14 @@ public class FanDebugPathProvider extends SourcePathProvider
 			fanSources = fan.getSourceClassPaths();
 		}
 
+		// update roots list
 		updateRoots();
 		originalRoots = sourceRoots;
 
 		// global sources
 		globalSources.addAll(GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE));
 
+		// debugging
 		if (projectSources != null)
 		{
 			System.out.println("===========Prj roots=============");
@@ -153,9 +152,10 @@ public class FanDebugPathProvider extends SourcePathProvider
 	}
 
 	/**
-	 * Translates a relative path ("java/lang/Thread.java") to url
-	 * ("file:///C:/Sources/java/lang/Thread.java"). Uses GlobalPathRegistry
-	 * if global == true.
+	 * Translates a relative path ("java/lang/Thread.java") to url (as it is in jar)
+	 * A little convoluted dure to fan pod structure
+	 *
+	 * Check in Fan pods first (using fan style pathing)
 	 *
 	 * @param relativePath a relative path (java/lang/Thread.java)
 	 * @param global true if global path should be used
@@ -163,9 +163,8 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getURL(String relativePath, boolean global)
 	{
-		System.out.println("+++ Initial path: " + relativePath);
+		//System.out.println("+++ Initial path: " + relativePath);
 		String path = null;
-		//TODO: Search in ALL pod sources folder (not hardcoded)
 		if (relativePath != null && (relativePath.endsWith(".fan") || relativePath.endsWith(".fwt")))
 		{
 			String prefix = "fan/";
@@ -173,22 +172,12 @@ public class FanDebugPathProvider extends SourcePathProvider
 			int index = fanPath.indexOf("/") + 1;
 			String podFolder = fanPath.substring(0, index);
 			fanPath = prefix + fanPath.substring(index);
-			path = getURLPath(fanPath, podFolder, global);
+			path = getURLPath(fanPath, podFolder, false);
 			if (path != null)
 			{
 				return path;
 			}
 		}
-		// always starts with fan or fanx ?
-		/*if (relativePath != null && relativePath.startsWith("fan") && relativePath.endsWith(".java"))
-		{
-		String fanPath="java/"+relativePath;
-		path = getURLPath(fanPath, null, global);
-		if (path != null)
-		{
-		return path;
-		}
-		}*/
 
 		// If not found in pods, then try standard
 		path = getURLPath(relativePath, null, global);
@@ -196,9 +185,18 @@ public class FanDebugPathProvider extends SourcePathProvider
 		return path;
 	}
 
+	/**
+	 * Translates a relative path ("java/lang/Thread.java") to url (as it is in jar)
+	 * We search in open projects, then fansources then jdk sources, then global
+	 *
+	 * @param relativePath
+	 * @param cpSuffix
+	 * @param global
+	 * @return
+	 */
 	private String getURLPath(String relativePath, String cpSuffix, boolean global)
 	{
-		System.out.println(getClass().getName() + " getUrl :" + relativePath);
+		//System.out.println(getClass().getName() + " getUrl :" + relativePath);
 		relativePath = normalize(relativePath);
 
 		// Try to find it.
@@ -211,24 +209,25 @@ public class FanDebugPathProvider extends SourcePathProvider
 		{
 			fo = findResource(fanSources, cpSuffix, relativePath);
 		}
-		if (fo == null)
+		// cpSuffix ==null means Don't look in the following path for fan sources(shouldn't be there)
+		if (cpSuffix == null && fo == null)
 		{
 			fo = findResource(jdkSources, cpSuffix, relativePath);
 		}
-		if (fo == null && global)
+		if (cpSuffix == null && fo == null && global)
 		{
 			fo = findResource(globalSources, cpSuffix, relativePath);
 		}
 
 		if (fo == null)
 		{
-			System.out.println(getClass().getName() + " getUrl result: None");
+			System.out.println(getClass().getName() + " Url not found for "+relativePath);
 			return null;
 		}
 
 		try
 		{
-			System.out.println(getClass().getName() + " getUrl result:" + fo.getURL().toString());
+			//System.out.println(getClass().getName() + " getUrl result:" + fo.getURL().toString());
 			return fo.getURL().toString();
 		} catch (FileStateInvalidException e)
 		{
@@ -239,7 +238,6 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 	/**
 	 * Translates a relative path to all possible URLs.
-	 * Uses GlobalPathRegistry if global == true.
 	 *
 	 * @param relativePath a relative path (java/lang/Thread.java)
 	 * @param global true if global path should be used
@@ -248,7 +246,6 @@ public class FanDebugPathProvider extends SourcePathProvider
 	public String[] getAllURLs(String relativePath, boolean global)
 	{
 		relativePath = normalize(relativePath);
-		System.out.println(getClass().getName() + " getAllUrls for: " + relativePath);
 		Set<FileObject> fos = findAllResources(relativePath);
 		List<String> urls = new ArrayList<String>(fos.size());
 		for (FileObject fo : fos)
@@ -258,7 +255,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 				urls.add(fo.getURL().toString());
 			} catch (FileStateInvalidException e)
 			{
-				// skip it
+				e.printStackTrace();
 			}
 		}
 		return urls.toArray(new String[0]);
@@ -276,7 +273,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getRelativePath(String url, char directorySeparator, boolean includeExtension)
 	{
-		System.out.println(getClass().getName() + " getRelative path for: " + url);
+		//System.out.println(getClass().getName() + " getRelative path for: " + url);
 		// 1) url -> FileObject
 		FileObject fo = null;
 		try
@@ -494,10 +491,6 @@ public class FanDebugPathProvider extends SourcePathProvider
 	private Set<FileObject> findAllResources(String path)
 	{
 		Set<FileObject> fos = new HashSet();
-		//findAllResources(fos, projectSources, path);
-		//findAllResources(fos, customSources, path);
-		//findAllResources(fos, fanSources, path);
-		//findAllResources(fos, jdkSources, path);
 		findAllResources(fos, globalSources, path);
 		return fos;
 	}
@@ -521,22 +514,22 @@ public class FanDebugPathProvider extends SourcePathProvider
 		{
 			if (cpSuffix == null)
 			{
-				System.out.println("---- Looking for " + path + "in " + cp.toString());
+				//System.out.println("---- Looking for " + path + "in " + cp.toString());
 				fo = cp.findResource(path);
 			} else
 			{
 				String tail = cpSuffix + path;
-				System.out.println("---- Searching all resources for " + path);
+				//System.out.println("---- Searching all resources for " + path);
 				List<FileObject> fos = cp.findAllResources(path);
 				Iterator<FileObject> it = fos.iterator();
 				while (it.hasNext())
 				{
 					FileObject fob = it.next();
-					System.out.println("---- Checking " + fob.getPath() + " vs " + tail);
+					//System.out.println("---- Checking " + fob.getPath() + " vs " + tail);
 					if (fob.getPath().endsWith(tail))
 					{
 						fo = fob;
-						System.out.println("---- MATCH " + fob.getPath() + " vs " + tail);
+						//System.out.println("---- MATCH " + fob.getPath() + " vs " + tail);
 						break;
 					}
 				}
@@ -600,7 +593,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 				sourceRoots[i] = root.getPath();
 			}
 		}
-		System.out.println(getClass().getName() + " Update roots: " + sourceRoots.length);
+		//System.out.println(getClass().getName() + " Update roots: " + sourceRoots.length);
 	}
 
 	private class PathRegistryListener implements GlobalPathRegistryListener, PropertyChangeListener
@@ -613,7 +606,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 			{
 				synchronized (FanDebugPathProvider.this)
 				{
-					customSources.add(cp);
+					globalSources.add(cp);
 				}
 				changed = true;
 			}
@@ -631,7 +624,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 			{
 				synchronized (FanDebugPathProvider.this)
 				{
-					customSources.remove(cp);
+					globalSources.remove(cp);
 				}
 				changed = true;
 			}

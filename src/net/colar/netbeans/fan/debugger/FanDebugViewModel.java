@@ -11,6 +11,11 @@ import org.netbeans.spi.viewmodel.NodeModel;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 
 /**
+ * //TODO: test/ fix / use FanDebugViewModel
+ * ### UNUSED, maybe later ########
+ *
+ * Doesn't always work even when called when regsitered in META-INF ????
+ *
  * Debugger breakpoint view pane impl.
  * @author thibautc
  */
@@ -19,6 +24,8 @@ public class FanDebugViewModel implements NodeModel
 	public static final String ICON_FAN="net/colar/netbeans/fan/project/resources/fanFile.png";
 	public static final String ICON_FWT="net/colar/netbeans/fan/project/resources/fanFwt.png";
 	public static final String ICON_JAVA="net/colar/netbeans/fan/project/resources/java.png";
+
+	static{System.err.println("Fan - Init "+FanDebugViewModel.class);}
 
 	public String getDisplayName(Object node) throws UnknownTypeException
 	{
