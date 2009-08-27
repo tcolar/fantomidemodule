@@ -44,6 +44,7 @@ public class FanClassPathImpl implements ClassPathImplementation
 
 	public List<? extends PathResourceImplementation> getResources()
 	{
+		System.out.println(getClass().getName()+" -> getresources");
 		return Collections.unmodifiableList(resources);
 	}
 

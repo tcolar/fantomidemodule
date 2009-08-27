@@ -128,9 +128,9 @@ public class FanDebugHelper
 	 * into a Fan source path (ie: fan/classname.path)
 	 * @param relativePath
 	 */
-	public static String binaryPathToSourcePath(String relativePath)
+	public static String binaryPathToFanSourcePath(String relativePath)
 	{
-		System.out.println("FanDebuHelper getUrl:"+relativePath);
+		// TODO: instead of hard-coding fan spurecs to /fan, read from build.fan / pod.fan sources paths
 		String result=relativePath;
 		if(relativePath!=null)
 		{
@@ -139,7 +139,20 @@ public class FanDebugHelper
 			//remove "fan/"
 			result=relativePath.substring(relativePath.indexOf("/")+1);
 			// remove "podname/"
+			int index=result.indexOf("/")+1;
+			result=result.substring(0, index)+"fan/"+result.substring(index);
+		}
+		return result;
+	}
+
+	public static String binaryPathToJavaSourcePath(String relativePath)
+	{
+		String result=relativePath;
+		if(relativePath!=null)
+		{
 			result=relativePath.substring(relativePath.indexOf("/")+1);
+			int index=result.indexOf("/")+1;
+			result=result.substring(0, index)+"java/"+result.substring(index);
 		}
 		return result;
 	}

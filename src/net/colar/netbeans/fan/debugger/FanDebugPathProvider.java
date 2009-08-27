@@ -10,17 +10,15 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.colar.netbeans.fan.platform.FanPlatform;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.GlobalPathRegistryEvent;
@@ -28,20 +26,17 @@ import org.netbeans.api.java.classpath.GlobalPathRegistryListener;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.project.JavaProjectConstants;
-import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.jpda.SourcePathProvider;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.JarFileSystem;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.Exceptions;
 import org.openide.util.WeakListeners;
 
 /**
@@ -59,20 +54,21 @@ import org.openide.util.WeakListeners;
 public class FanDebugPathProvider extends SourcePathProvider
 {
 
-	private static boolean verbose =
-		System.getProperty("netbeans.debugger.sourcepathproviderimpl") != null;
-	private static Logger logger = Logger.getLogger("net.colar.netbeans");
 	private static final Pattern thisDirectoryPattern = Pattern.compile("(/|\\A)\\./");
 	private static final Pattern parentDirectoryPattern = Pattern.compile("(/|\\A)([^/]+?)/\\.\\./");
-	/** Contains all known source paths + jdk source path for JPDAStart task */
-	private ClassPath originalSourcePath;
-	/** Contains the additional source roots, added at a later time to the original roots. */
-	private Set<String> additionalSourceRoots;
-	/** Contains just the source paths which are selected for debugging. */
-	private ClassPath smartSteppingSourcePath;
-	private String[] projectSourceRoots;
+	private Set<ClassPath> projectSources = new HashSet();
+	// fan distro sources
+	private Set<ClassPath> fanSources = new HashSet();
+	private Set<ClassPath> jdkSources = new HashSet();
+	// All open projects etc...
+	private Set<ClassPath> globalSources = new HashSet();
+	// user provided paths (through listener)
+	private Set<ClassPath> customSources = new HashSet();
+	// TODO: binary roots any use ??
 	private PropertyChangeSupport pcs;
 	private PathRegistryListener pathRegistryListener;
+	private String[] sourceRoots;
+	private String[] originalRoots;
 
 	public FanDebugPathProvider()
 	{
@@ -82,128 +78,68 @@ public class FanDebugPathProvider extends SourcePathProvider
 	public FanDebugPathProvider(ContextProvider contextProvider)
 	{
 		pcs = new PropertyChangeSupport(this);
-		//this.session = (Session) contextProvider.lookupFirst
-		//    (null, Session.class);
-		Map properties = contextProvider.lookupFirst(null, Map.class);
+		pathRegistryListener = new PathRegistryListener();
+		GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(WeakListeners.create(GlobalPathRegistryListener.class, pathRegistryListener, GlobalPathRegistry.getDefault()));
+		JavaPlatformManager.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(pathRegistryListener, JavaPlatformManager.getDefault()));
+		// TODO: listeber for project sources ?
 
-		// 2) get default allSourceRoots of source roots used for stepping
-		if (properties != null)
+		// project sources
+		Project mainProject = OpenProjects.getDefault().getMainProject();
+		if (mainProject != null)
 		{
-			smartSteppingSourcePath = (ClassPath) properties.get("sourcepath");
-			ClassPath jdkCP = (ClassPath) properties.get("jdksources");
-			if ((jdkCP == null) && (JavaPlatform.getDefault() != null))
+			SourceGroup[] sgs = ProjectUtils.getSources(mainProject).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+			for (SourceGroup sg : sgs)
 			{
-				jdkCP = JavaPlatform.getDefault().getSourceFolders();
-			}
-			originalSourcePath = jdkCP == null ? smartSteppingSourcePath : ClassPathSupport.createProxyClassPath(
-				new ClassPath[]
+				ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
+				if (cp != null)
 				{
-					jdkCP,
-					smartSteppingSourcePath
-				});
-			projectSourceRoots = getSourceRoots(originalSourcePath);
-			Set<FileObject> preferredRoots = new HashSet<FileObject>();
-			preferredRoots.addAll(Arrays.asList(originalSourcePath.getRoots()));
-			Set<FileObject> globalRoots = new TreeSet<FileObject>(new FileObjectComparator());
-			globalRoots.addAll(GlobalPathRegistry.getDefault().getSourceRoots());
-			globalRoots.removeAll(preferredRoots);
-			ClassPath globalCP = ClassPathSupport.createClassPath(globalRoots.toArray(new FileObject[0]));
-			originalSourcePath = ClassPathSupport.createProxyClassPath(
-				originalSourcePath,
-				globalCP);
-		} else
-		{
-			pathRegistryListener = new PathRegistryListener();
-			GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(
-				WeakListeners.create(GlobalPathRegistryListener.class,
-				pathRegistryListener,
-				GlobalPathRegistry.getDefault()));
-			JavaPlatformManager.getDefault().addPropertyChangeListener(
-				WeakListeners.propertyChange(pathRegistryListener,
-				JavaPlatformManager.getDefault()));
-
-			List<FileObject> allSourceRoots = new ArrayList<FileObject>();
-			Set<FileObject> preferredRoots = new HashSet<FileObject>();
-			Set<FileObject> addedBinaryRoots = new HashSet<FileObject>();
-			Project mainProject = OpenProjects.getDefault().getMainProject();
-			if (mainProject != null)
-			{
-				SourceGroup[] sgs = ProjectUtils.getSources(mainProject).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-				for (SourceGroup sg : sgs)
-				{
-					ClassPath ecp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.EXECUTE);
-					if (ecp == null)
-					{
-						ecp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
-					}
-					if (ecp != null)
-					{
-						FileObject[] binaryRoots = ecp.getRoots();
-						for (FileObject fo : binaryRoots)
-						{
-							if (addedBinaryRoots.contains(fo))
-							{
-								continue;
-							}
-							addedBinaryRoots.add(fo);
-							try
-							{
-								FileObject[] roots = SourceForBinaryQuery.findSourceRoots(fo.getURL()).getRoots();
-								for (FileObject fr : roots)
-								{
-									if (!preferredRoots.contains(fr))
-									{
-										allSourceRoots.add(fr);
-										preferredRoots.add(fr);
-									}
-								}
-							} catch (FileStateInvalidException ex)
-							{
-								Exceptions.printStackTrace(ex);
-							}
-						}
-					}
+					projectSources.add(cp);
 				}
 			}
-			Set<FileObject> globalRoots = new TreeSet<FileObject>(new FileObjectComparator());
-			globalRoots.addAll(GlobalPathRegistry.getDefault().getSourceRoots());
-			for (FileObject fo : globalRoots)
-			{
-				if (!preferredRoots.contains(fo))
-				{
-					allSourceRoots.add(fo);
-				}
-			}
-
-			originalSourcePath = ClassPathSupport.createClassPath(
-				allSourceRoots.toArray(new FileObject[allSourceRoots.size()]));
-			projectSourceRoots = getSourceRoots(originalSourcePath);
-
-			JavaPlatform[] platforms = JavaPlatformManager.getDefault().
-				getInstalledPlatforms();
-			int i, k = platforms.length;
-			for (i = 0; i < k; i++)
-			{
-				FileObject[] roots = platforms[i].getSourceFolders().
-					getRoots();
-				int j, jj = roots.length;
-				for (j = 0; j < jj; j++)
-				{
-					allSourceRoots.remove(roots[j]);
-				}
-			}
-			smartSteppingSourcePath = ClassPathSupport.createClassPath(
-				allSourceRoots.toArray(new FileObject[allSourceRoots.size()]));
 		}
 
-		if (verbose)
+		// Jdk sources
+		JavaPlatform platform = JavaPlatformManager.getDefault().getDefaultPlatform();
+		if (platform != null)
 		{
-			System.out.println("SPPI: init originalSourcePath " + originalSourcePath);
+			ClassPath cp = platform.getSourceFolders();
+			if (cp != null)
+			{
+				jdkSources.add(cp);
+			}
 		}
-		if (verbose)
+		// Fan distro sources
+		FanPlatform fan = FanPlatform.getInstance(false);
+		if (fan != null)
 		{
-			System.out.println(
-				"SPPI: init smartSteppingSourcePath " + smartSteppingSourcePath);
+			fanSources = fan.getSourceClassPaths();
+		}
+
+		updateRoots();
+		originalRoots = sourceRoots;
+
+		// global sources
+		globalSources.addAll(GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE));
+
+		if (projectSources != null)
+		{
+			System.out.println("===========Prj roots=============");
+			dump(projectSources);
+		}
+		if (customSources != null)
+		{
+			System.out.println("===========Custom roots=============");
+			dump(customSources);
+		}
+		if (fanSources != null)
+		{
+			System.out.println("===========Fan roots=============");
+			dump(fanSources);
+		}
+		if (jdkSources != null)
+		{
+			System.out.println("===========Jdk roots=============");
+			dump(jdkSources);
 		}
 	}
 
@@ -218,60 +154,78 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getURL(String relativePath, boolean global)
 	{
-		System.out.println(getClass().getName()+" getUrl :"+relativePath);
-		// start change
-		if(relativePath!=null && relativePath.endsWith(".fan") || relativePath.endsWith(".fwt") )
+		System.out.println("+++ Initial path: "+relativePath);
+		String path = null;
+		//TODO: Search in ALL pod sources folder (not hardcoded)
+		if (relativePath != null && (relativePath.endsWith(".fan") || relativePath.endsWith(".fwt")))
 		{
-			relativePath=FanDebugHelper.binaryPathToSourcePath(relativePath);
-		}
-		//TODO: for fan, search in matching pod classpath using FanClassPathProvider (FanClaspath?)
-		// end change
-		if (verbose)
-		{
-			System.out.println("SPPI: getURL " + relativePath + " global " + global);
-		}
-		FileObject fo;
-		relativePath = normalize(relativePath);
-		if (originalSourcePath == null)
-		{
-			fo = GlobalPathRegistry.getDefault().findResource(relativePath);
-		} else
-		{
-			synchronized (this)
+			String prefix = "fan/";
+			String fanPath = relativePath.substring(relativePath.indexOf("/") + 1);
+			int index = fanPath.indexOf("/") + 1;
+			String podFolder = fanPath.substring(0, index);
+			fanPath = prefix + fanPath.substring(index);
+			path = getURLPath(fanPath, podFolder, global);
+			if (path != null)
 			{
-				if (!global)
-				{
-					fo = smartSteppingSourcePath.findResource(relativePath);
-					if (verbose)
-					{
-						System.out.println("SPPI:   fo " + fo);
-					}
-				} else
-				{
-					fo = originalSourcePath.findResource(relativePath);
-					if (verbose)
-					{
-						System.out.println("SPPI:   fo " + fo);
-					}
-				}
+				return path;
 			}
+		}
+		// always starts with fan or fanx ?
+		/*if (relativePath != null && relativePath.startsWith("fan") && relativePath.endsWith(".java"))
+		{
+			String fanPath="java/"+relativePath;
+			path = getURLPath(fanPath, null, global);
+			if (path != null)
+			{
+				return path;
+			}
+		}*/
+
+		// If not found in pods, then try standard
+		path = getURLPath(relativePath, null, global);
+
+		return path;
+	}
+
+	private String getURLPath(String relativePath, String cpSuffix, boolean global)
+	{
+		System.out.println(getClass().getName() + " getUrl :" + relativePath);
+		relativePath = normalize(relativePath);
+
+		// Try to find it.
+		FileObject fo = findResource(projectSources, cpSuffix, relativePath);
+		if (fo == null)
+		{
+			fo = findResource(customSources, cpSuffix, relativePath);
 		}
 		if (fo == null)
 		{
+			fo = findResource(fanSources, cpSuffix, relativePath);
+		}
+		if (fo == null)
+		{
+			fo = findResource(jdkSources, cpSuffix, relativePath);
+		}
+		if (fo == null && global)
+		{
+			fo = findResource(globalSources, cpSuffix, relativePath);
+		}
+
+		if (fo == null)
+		{
+			System.out.println(getClass().getName() + " getUrl result: None");
 			return null;
 		}
+
 		try
 		{
-			System.out.println(getClass().getName()+" getUrl result:"+fo.getURL().toString());
+			System.out.println(getClass().getName() + " getUrl result:" + fo.getURL().toString());
 			return fo.getURL().toString();
 		} catch (FileStateInvalidException e)
 		{
-			if (verbose)
-			{
-				System.out.println("SPPI:   FileStateInvalidException");
-			}
 			return null;
 		}
+
 	}
 
 	/**
@@ -284,40 +238,9 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String[] getAllURLs(String relativePath, boolean global)
 	{
-		if (verbose)
-		{
-			System.out.println("SPPI: getURL " + relativePath + " global " + global);
-		}
-		List<FileObject> fos;
 		relativePath = normalize(relativePath);
-		if (originalSourcePath == null)
-		{
-			fos = new ArrayList<FileObject>();
-			for (ClassPath cp : GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE))
-			{
-				fos.addAll(cp.findAllResources(relativePath));
-			}
-		} else
-		{
-			synchronized (this)
-			{
-				if (!global)
-				{
-					fos = smartSteppingSourcePath.findAllResources(relativePath);
-					if (verbose)
-					{
-						System.out.println("SPPI:   fos " + fos);
-					}
-				} else
-				{
-					fos = originalSourcePath.findAllResources(relativePath);
-					if (verbose)
-					{
-						System.out.println("SPPI:   fos " + fos);
-					}
-				}
-			}
-		}
+		System.out.println(getClass().getName() + " getAllUrls for: " + relativePath);
+		Set<FileObject> fos = findAllResources(relativePath);
 		List<String> urls = new ArrayList<String>(fos.size());
 		for (FileObject fo : fos)
 		{
@@ -326,10 +249,6 @@ public class FanDebugPathProvider extends SourcePathProvider
 				urls.add(fo.getURL().toString());
 			} catch (FileStateInvalidException e)
 			{
-				if (verbose)
-				{
-					System.out.println("SPPI:   FileStateInvalidException for " + fo);
-				}
 				// skip it
 			}
 		}
@@ -346,33 +265,22 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 *
 	 * @return relative path
 	 */
-	public String getRelativePath(
-		String url,
-		char directorySeparator,
-		boolean includeExtension)
+	public String getRelativePath(String url, char directorySeparator, boolean includeExtension)
 	{
+		System.out.println(getClass().getName() + " getRelative path for: " + url);
 		// 1) url -> FileObject
 		FileObject fo = null;
-		if (verbose)
-		{
-			System.out.println("SPPI: getRelativePath " + url);
-		}
 		try
 		{
 			fo = URLMapper.findFileObject(new URL(url));
-			if (verbose)
-			{
-				System.out.println("SPPI:   fo " + fo);
-			}
 		} catch (MalformedURLException e)
 		{
-			//e.printStackTrace ();
+			e.printStackTrace();
 			return null;
 		}
-		String relativePath = smartSteppingSourcePath.getResourceName(
-			fo,
-			directorySeparator,
-			includeExtension);
+
+		String relativePath = null;
+		//TODO: globalSources.getResourceName(fo,	directorySeparator,	includeExtension);
 		if (relativePath == null)
 		{
 			// fallback to FileObject's class path
@@ -381,15 +289,15 @@ public class FanDebugPathProvider extends SourcePathProvider
 			{
 				cp = ClassPath.getClassPath(fo, ClassPath.COMPILE);
 			}
+
 			if (cp == null)
 			{
 				return null;
 			}
-			relativePath = cp.getResourceName(
-				fo,
-				directorySeparator,
-				includeExtension);
+
+			relativePath = cp.getResourceName(fo, directorySeparator, includeExtension);
 		}
+
 		return relativePath;
 	}
 
@@ -411,6 +319,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 		{
 			fo = null;
 		}
+
 		FileObject[] roots = null;
 		if (fo != null)
 		{
@@ -419,10 +328,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 			{
 				roots = cp.getRoots();
 			}
-		}
-		if (roots == null)
-		{
-			roots = originalSourcePath.getRoots();
+
 		}
 		for (FileObject fileObject : roots)
 		{
@@ -436,6 +342,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 					{
 						return root;
 					}
+
 				}
 			} catch (FileStateInvalidException ex)
 			{
@@ -443,155 +350,6 @@ public class FanDebugPathProvider extends SourcePathProvider
 			}
 		}
 		return null; // not found
-	}
-
-	private String[] getSourceRoots(ClassPath classPath)
-	{
-		FileObject[] sourceRoots = classPath.getRoots();
-		List<String> roots = new ArrayList<String>(sourceRoots.length);
-		for (FileObject fo : sourceRoots)
-		{
-			String root = getRoot(fo);
-			if (root != null)
-			{
-				roots.add(root);
-			}
-		}
-		return roots.toArray(new String[0]);
-	}
-
-	/**
-	 * Returns allSourceRoots of original source roots.
-	 *
-	 * @return allSourceRoots of original source roots
-	 */
-	public synchronized String[] getOriginalSourceRoots()
-	{
-		return getSourceRoots(originalSourcePath);
-	}
-
-	/**
-	 * Returns array of source roots.
-	 *
-	 * @return array of source roots
-	 */
-	public synchronized String[] getSourceRoots()
-	{
-		return getSourceRoots(smartSteppingSourcePath);
-	}
-
-	/**
-	 * Returns the project's source roots.
-	 *
-	 * @return array of source roots belonging to the project
-	 */
-	public String[] getProjectSourceRoots()
-	{
-		return projectSourceRoots;
-	}
-
-	/**
-	 * Sets array of source roots.
-	 *
-	 * @param sourceRoots a new array of sourceRoots
-	 */
-	public void setSourceRoots(String[] sourceRoots)
-	{
-		if (logger.isLoggable(Level.FINE))
-		{
-			logger.fine("SourcePathProviderImpl.setSourceRoots(" + java.util.Arrays.asList(sourceRoots) + ")");
-		}
-		Set<String> newRoots = new HashSet<String>(Arrays.asList(sourceRoots));
-		ClassPath oldCP = null;
-		ClassPath newCP = null;
-		synchronized (this)
-		{
-			List<FileObject> sourcePath = new ArrayList<FileObject>(
-				Arrays.asList(smartSteppingSourcePath.getRoots()));
-			List<FileObject> sourcePathOriginal = new ArrayList<FileObject>(
-				Arrays.asList(originalSourcePath.getRoots()));
-
-			// First check whether there are some new source roots
-			Set<String> newOriginalRoots = new HashSet<String>(newRoots);
-			for (FileObject fo : sourcePathOriginal)
-			{
-				newOriginalRoots.remove(getRoot(fo));
-			}
-			if (!newOriginalRoots.isEmpty())
-			{
-				for (String root : newOriginalRoots)
-				{
-					FileObject fo = getFileObject(root);
-					if (fo != null)
-					{
-						sourcePathOriginal.add(fo);
-					}
-				}
-				originalSourcePath =
-					ClassPathSupport.createClassPath(
-					sourcePathOriginal.toArray(new FileObject[0]));
-				if (additionalSourceRoots == null)
-				{
-					additionalSourceRoots = new HashSet<String>();
-				}
-				additionalSourceRoots.addAll(newOriginalRoots);
-			}
-
-			// Then correct the smart-stepping path
-			Set<String> newSteppingRoots = new HashSet<String>(newRoots);
-			for (FileObject fo : sourcePath)
-			{
-				newSteppingRoots.remove(getRoot(fo));
-			}
-			Set<FileObject> removedSteppingRoots = new HashSet<FileObject>();
-			Set<FileObject> removedOriginalRoots = new HashSet<FileObject>();
-			for (FileObject fo : sourcePath)
-			{
-				String spr = getRoot(fo);
-				if (!newRoots.contains(spr))
-				{
-					removedSteppingRoots.add(fo);
-					if (additionalSourceRoots != null && additionalSourceRoots.contains(spr))
-					{
-						removedOriginalRoots.add(fo);
-						additionalSourceRoots.remove(spr);
-						if (additionalSourceRoots.size() == 0)
-						{
-							additionalSourceRoots = null;
-						}
-					}
-				}
-			}
-			if (removedOriginalRoots.size() > 0)
-			{
-				sourcePathOriginal.removeAll(removedOriginalRoots);
-				originalSourcePath =
-					ClassPathSupport.createClassPath(
-					sourcePathOriginal.toArray(new FileObject[0]));
-			}
-			if (newSteppingRoots.size() > 0 || removedSteppingRoots.size() > 0)
-			{
-				for (String root : newSteppingRoots)
-				{
-					FileObject fo = getFileObject(root);
-					if (fo != null)
-					{
-						sourcePath.add(fo);
-					}
-				}
-				sourcePath.removeAll(removedSteppingRoots);
-				oldCP = smartSteppingSourcePath;
-				smartSteppingSourcePath =
-					ClassPathSupport.createClassPath(
-					sourcePath.toArray(new FileObject[0]));
-				newCP = smartSteppingSourcePath;
-			}
-		}
-
-		if (oldCP != null)
-		{
-			pcs.firePropertyChange(PROP_SOURCE_ROOTS, oldCP, newCP);
-		}
 	}
 
 	/**
@@ -615,7 +373,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 		pcs.removePropertyChangeListener(l);
 	}
 
-	// helper methods ..........................................................
+// helper methods ..........................................................
 	/**
 	 * Normalizes the given path by removing unnecessary "." and ".." sequences.
 	 * This normalization is needed because the compiler stores source paths like "foo/../inc.jsp" into .class files.
@@ -630,15 +388,19 @@ public class FanDebugPathProvider extends SourcePathProvider
 		for (Matcher m = thisDirectoryPattern.matcher(path); m.find();)
 		{
 			path = m.replaceAll("$1");
-			m = thisDirectoryPattern.matcher(path);
+			m =
+				thisDirectoryPattern.matcher(path);
 		}
+
 		for (Matcher m = parentDirectoryPattern.matcher(path); m.find();)
 		{
 			if (!m.group(2).equals(".."))
 			{
 				path = path.substring(0, m.start()) + m.group(1) + path.substring(m.end());
-				m = parentDirectoryPattern.matcher(path);
+				m =
+					parentDirectoryPattern.matcher(path);
 			}
+
 		}
 		return path;
 	}
@@ -659,10 +421,12 @@ public class FanDebugPathProvider extends SourcePathProvider
 				{
 					path = "!/" + fileObject.getPath();
 				}
+
 			} else
 			{
 				f = FileUtil.toFile(fileObject);
 			}
+
 		} catch (FileStateInvalidException ex)
 		{
 		}
@@ -673,6 +437,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 		{
 			return null;
 		}
+
 	}
 
 	/**
@@ -686,10 +451,14 @@ public class FanDebugPathProvider extends SourcePathProvider
 		if (fo == null && file.contains("!/"))
 		{
 			int index = file.indexOf("!/");
-			f = new File(file.substring(0, index));
-			fo = FileUtil.toFileObject(f);
-			path = file.substring(index + "!/".length());
+			f =
+				new File(file.substring(0, index));
+			fo =
+				FileUtil.toFileObject(f);
+			path =
+				file.substring(index + "!/".length());
 		}
+
 		if (fo != null && FileUtil.isArchiveFile(fo))
 		{
 			fo = FileUtil.getArchiveRoot(fo);
@@ -697,8 +466,132 @@ public class FanDebugPathProvider extends SourcePathProvider
 			{
 				fo = fo.getFileObject(path);
 			}
+
 		}
 		return fo;
+	}
+
+	private void dump(Set<ClassPath> cps)
+	{
+		for (ClassPath cp : cps)
+		{
+			for (ClassPath.Entry entry : cp.entries())
+			{
+				System.out.println(entry);
+			}
+		}
+	}
+
+	private Set<FileObject> findAllResources(String path)
+	{
+		Set<FileObject> fos = new HashSet();
+		//findAllResources(fos, projectSources, path);
+		//findAllResources(fos, customSources, path);
+		//findAllResources(fos, fanSources, path);
+		//findAllResources(fos, jdkSources, path);
+		findAllResources(fos, globalSources, path);
+		return fos;
+	}
+
+	private void findAllResources(Set<FileObject> fos, Set<ClassPath> cps, String path)
+	{
+		for (ClassPath cp : cps)
+		{
+			FileObject fo = cp.findResource(path);
+			if (fo != null)
+			{
+				fos.add(fo);
+			}
+		}
+	}
+
+	private FileObject findResource(Set<ClassPath> classPaths, String cpSuffix, String path)
+	{
+		FileObject fo = null;
+		for (ClassPath cp : classPaths)
+		{
+			if (cpSuffix == null)
+			{
+				System.out.println("---- Looking for " + path +"in "+cp.toString());
+				fo = cp.findResource(path);
+			} else
+			{
+				String tail = cpSuffix + path;
+				System.out.println("---- Searching all resources for " + path);
+				List<FileObject> fos = cp.findAllResources(path);
+				Iterator<FileObject> it = fos.iterator();
+				while (it.hasNext())
+				{
+					FileObject fob = it.next();
+					System.out.println("---- Checking " + fob.getPath() + " vs " + tail);
+					if (fob.getPath().endsWith(tail))
+					{
+						fo = fob;
+						System.out.println("---- MATCH " + fob.getPath() + " vs " + tail);
+						break;
+					}
+				}
+
+			}
+			if (fo != null)
+			{
+				break;
+			}
+		}
+		return fo;
+	}
+
+	@Override
+	public String[] getSourceRoots()
+	{
+		return sourceRoots;
+	}
+
+	@Override
+	public void setSourceRoots(String[] sourceRoots)
+	{
+		this.sourceRoots = sourceRoots;
+	}
+
+	@Override
+	public String[] getOriginalSourceRoots()
+	{
+		return originalRoots;
+	}
+
+	private void updateRoots()
+	{
+		Set<FileObject> roots = new HashSet();
+		for (ClassPath cp : projectSources)
+		{
+			Collections.addAll(roots, cp.getRoots());
+		}
+		for (ClassPath cp : customSources)
+		{
+			Collections.addAll(roots, cp.getRoots());
+		}
+		for (ClassPath cp : fanSources)
+		{
+			Collections.addAll(roots, cp.getRoots());
+		}
+		for (ClassPath cp : jdkSources)
+		{
+			Collections.addAll(roots, cp.getRoots());
+		}
+		/*for(ClassPath cp : globalSources)
+		{
+		Collections.addAll(roots, cp.getRoots());
+		}*/
+		synchronized (FanDebugHelper.class)
+		{
+			sourceRoots = new String[roots.size()];
+			int i = 0;
+			for (FileObject root : roots)
+			{
+				sourceRoots[i] = root.getPath();
+			}
+		}
+		System.out.println(getClass().getName() + " Update roots: " + sourceRoots.length);
 	}
 
 	private class PathRegistryListener implements GlobalPathRegistryListener, PropertyChangeListener
@@ -706,100 +599,58 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 		public void pathsAdded(GlobalPathRegistryEvent event)
 		{
-			List<FileObject> addedRoots = new ArrayList<FileObject>();
+			boolean changed = false;
 			for (ClassPath cp : event.getChangedPaths())
-			{
-				for (FileObject fo : cp.getRoots())
-				{
-					addedRoots.add(fo);
-				}
-			}
-			if (addedRoots.size() > 0)
 			{
 				synchronized (FanDebugPathProvider.this)
 				{
-					List<FileObject> sourcePaths = new ArrayList<FileObject>(
-						Arrays.asList(originalSourcePath.getRoots()));
-					sourcePaths.addAll(addedRoots);
-					originalSourcePath =
-						ClassPathSupport.createClassPath(
-						sourcePaths.toArray(new FileObject[0]));
-
-					sourcePaths = new ArrayList<FileObject>(
-						Arrays.asList(smartSteppingSourcePath.getRoots()));
-					sourcePaths.addAll(addedRoots);
-					smartSteppingSourcePath =
-						ClassPathSupport.createClassPath(
-						sourcePaths.toArray(new FileObject[0]));
+					customSources.add(cp);
 				}
+				changed = true;
+			}
+			if (changed)
+			{
 				pcs.firePropertyChange(PROP_SOURCE_ROOTS, null, null);
+				updateRoots();
 			}
 		}
 
 		public void pathsRemoved(GlobalPathRegistryEvent event)
 		{
-			List<FileObject> removedRoots = new ArrayList<FileObject>();
+			boolean changed = false;
 			for (ClassPath cp : event.getChangedPaths())
-			{
-				for (FileObject fo : cp.getRoots())
-				{
-					removedRoots.add(fo);
-				}
-			}
-			if (removedRoots.size() > 0)
 			{
 				synchronized (FanDebugPathProvider.this)
 				{
-					List<FileObject> sourcePaths = new ArrayList<FileObject>(
-						Arrays.asList(originalSourcePath.getRoots()));
-					sourcePaths.removeAll(removedRoots);
-					originalSourcePath =
-						ClassPathSupport.createClassPath(
-						sourcePaths.toArray(new FileObject[0]));
-
-					sourcePaths = new ArrayList<FileObject>(
-						Arrays.asList(smartSteppingSourcePath.getRoots()));
-					sourcePaths.removeAll(removedRoots);
-					smartSteppingSourcePath =
-						ClassPathSupport.createClassPath(
-						sourcePaths.toArray(new FileObject[0]));
+					customSources.remove(cp);
 				}
+				changed = true;
+			}
+			if (changed)
+			{
 				pcs.firePropertyChange(PROP_SOURCE_ROOTS, null, null);
+				updateRoots();
 			}
 		}
 
 		public void propertyChange(PropertyChangeEvent evt)
 		{
 			// JDK sources changed
-			JavaPlatform[] platforms = JavaPlatformManager.getDefault().
-				getInstalledPlatforms();
+			JavaPlatform[] platforms = JavaPlatformManager.getDefault().getInstalledPlatforms();
 			boolean changed = false;
 			synchronized (FanDebugPathProvider.this)
 			{
-				List<FileObject> sourcePaths = new ArrayList<FileObject>(
-					Arrays.asList(originalSourcePath.getRoots()));
+				jdkSources = new HashSet();
 				for (JavaPlatform jp : platforms)
 				{
-					FileObject[] roots = jp.getSourceFolders().getRoots();
-					for (FileObject fo : roots)
-					{
-						if (!sourcePaths.contains(fo))
-						{
-							sourcePaths.add(fo);
-							changed = true;
-						}
-					}
+					jdkSources.add(jp.getSourceFolders());
 				}
-				if (changed)
-				{
-					originalSourcePath =
-						ClassPathSupport.createClassPath(
-						sourcePaths.toArray(new FileObject[0]));
-				}
+				changed = true;
 			}
 			if (changed)
 			{
 				pcs.firePropertyChange(PROP_SOURCE_ROOTS, null, null);
+				updateRoots();
 			}
 		}
 	}

@@ -22,7 +22,11 @@ class Main
     Void doStuff()
     {
                 Actor.sleep(10sec)
-                Pod.list.each |Pod p|	{echo(p)}
+                Pod.list.each |Pod p|
+                {
+                    echo(p)
+                }
+                other := Other()
                 Actor.sleep(20sec)
                 echo("done")
     }

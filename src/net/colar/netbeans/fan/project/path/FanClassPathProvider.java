@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.project.path;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -37,6 +38,7 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 
 	public ClassPath[] getProjectClassPaths(String type)
 	{
+		System.out.println(getClass().getName()+" -> getprojectcps");
 		//ClassPath cp=ClassPathSupport.createClassPath(project.getProjectDirectory());
 		//ClassPath cp=ClassPath.getClassPath(project.getProjectDirectory(), type);
 		ClassPath[] cps =
@@ -63,6 +65,7 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 
 	private ClassPath getSourcepath(FileObject file)
 	{
+		System.out.println(getClass().getName()+" -> get source path"+file);
 		return sourcePath;
 	}
 }

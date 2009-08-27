@@ -5,6 +5,8 @@
 package net.colar.netbeans.fan.platform;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -16,12 +18,14 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
  */
 public class FanPlatform
 {
-	private ClassPath[] classpaths;
+
+	private Set<ClassPath> sourcePaths = null;
 	private final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
 	private static FanPlatform instance = new FanPlatform();
 	private String fanHome;
 	private String fanBin;
 	private String fanshBin;
+	private String fanSrc;
 
 	public FanPlatform()
 	{
@@ -39,9 +43,10 @@ public class FanPlatform
 			}
 			fanBin = fanHome + "bin" + File.separator + (IS_WIN ? "fan.exe" : "fan");
 			fanshBin = fanHome + "bin" + File.separator + (IS_WIN ? "fansh.exe" : "fansh");
+			fanSrc = fanHome + "src" + File.separator;
 		}
 		// force updating paths
-		classpaths=null;
+		sourcePaths = null;
 	}
 
 	public static boolean checkFanHome(String path)
@@ -78,31 +83,45 @@ public class FanPlatform
 		return fanBin;
 	}
 
+	public String getFanSrcPath()
+	{
+		return fanSrc;
+	}
+
 	public String getFanShellBinaryPath()
 	{
 		return fanshBin;
 	}
 
 	/**
-	 * Get the Fan "platform"/distro classpaths
-	 * IE: Fan sources
-	 * Fan libs ?
-	 * etc....
+	 * Add Fan Source items (pods src)
 	 * @return
 	 */
-	public ClassPath[] getClassPaths()
+	public synchronized Set<ClassPath> getSourceClassPaths()
 	{
-		//TODO: sync this ?
-		if(classpaths==null)
+		if (sourcePaths == null && fanSrc != null)
 		{
-			// add java and fan paths ...
-			//String path="SRC/*/FAN";  or just src/  and pathprovider will deal with pod etc... ?
-			//String path="SRC/*/JAVA";
-			ClassPath[] cps={};
-			ClassPathSupport.createClassPath("");
-			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, cps);
+			sourcePaths = new HashSet<ClassPath>();
+			File f = new File(fanSrc);
+			File[] files = f.listFiles();
+			for (File file : files)
+			{
+				if (file.isDirectory() && new File(file, "pod.fan").exists())
+				{
+					ClassPath cp = ClassPathSupport.createClassPath(file.getAbsolutePath());
+					sourcePaths.add(cp);
+					System.out.println("### " + file.getAbsolutePath());
+					File javaFolder=new File(file, "java");
+					if (javaFolder.exists() && javaFolder.isDirectory())
+					{
+						ClassPath jcp = ClassPathSupport.createClassPath(javaFolder.getAbsolutePath());
+						sourcePaths.add(jcp);
+						System.out.println("### " + javaFolder.getAbsolutePath());
+					}
+				}
+			}
+			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, sourcePaths.toArray(new ClassPath[sourcePaths.size()]));
 		}
-		return classpaths;
+		return sourcePaths;
 	}
-
 }
