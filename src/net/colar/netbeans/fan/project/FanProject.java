@@ -10,7 +10,6 @@ import java.util.logging.LogManager;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import net.colar.netbeans.fan.debugger.FanDebugPathProvider;
-import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.path.FanClassPathProvider;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
@@ -55,7 +54,7 @@ public class FanProject implements Project, ProjectInformation
 				new FanCustomizedProperties(this),
 				new FanProjectProperties(this),
 				new FanClassPathProvider(this),
-				//new FanSourcePathProvider(),
+				new FanDebugPathProvider(),
 				new ProjectOpenedHookImpl(),
 				state,
 				props,

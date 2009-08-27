@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.colar.netbeans.fan.platform.FanPlatform;
+import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.GlobalPathRegistryEvent;
@@ -29,6 +30,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.jpda.SourcePathProvider;
@@ -83,21 +85,28 @@ public class FanDebugPathProvider extends SourcePathProvider
 		JavaPlatformManager.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(pathRegistryListener, JavaPlatformManager.getDefault()));
 		// TODO: listeber for project sources ?
 
-		// project sources
-		Project mainProject = OpenProjects.getDefault().getMainProject();
-		if (mainProject != null)
+		// open project sources
+		Project[] projects = OpenProjects.getDefault().getOpenProjects();
+		for (Project prj : projects)
 		{
-			SourceGroup[] sgs = ProjectUtils.getSources(mainProject).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-			for (SourceGroup sg : sgs)
+			if (prj != null)
 			{
-				ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
-				if (cp != null)
+				SourceGroup[] sgs;
+				if(prj instanceof FanProject)
+					sgs = ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
+				else
+					sgs = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+
+				for (SourceGroup sg : sgs)
 				{
-					projectSources.add(cp);
+					ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
+					if (cp != null)
+					{
+						projectSources.add(cp);
+					}
 				}
 			}
 		}
-
 		// Jdk sources
 		JavaPlatform platform = JavaPlatformManager.getDefault().getDefaultPlatform();
 		if (platform != null)
@@ -154,7 +163,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getURL(String relativePath, boolean global)
 	{
-		System.out.println("+++ Initial path: "+relativePath);
+		System.out.println("+++ Initial path: " + relativePath);
 		String path = null;
 		//TODO: Search in ALL pod sources folder (not hardcoded)
 		if (relativePath != null && (relativePath.endsWith(".fan") || relativePath.endsWith(".fwt")))
@@ -173,12 +182,12 @@ public class FanDebugPathProvider extends SourcePathProvider
 		// always starts with fan or fanx ?
 		/*if (relativePath != null && relativePath.startsWith("fan") && relativePath.endsWith(".java"))
 		{
-			String fanPath="java/"+relativePath;
-			path = getURLPath(fanPath, null, global);
-			if (path != null)
-			{
-				return path;
-			}
+		String fanPath="java/"+relativePath;
+		path = getURLPath(fanPath, null, global);
+		if (path != null)
+		{
+		return path;
+		}
 		}*/
 
 		// If not found in pods, then try standard
@@ -512,7 +521,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 		{
 			if (cpSuffix == null)
 			{
-				System.out.println("---- Looking for " + path +"in "+cp.toString());
+				System.out.println("---- Looking for " + path + "in " + cp.toString());
 				fo = cp.findResource(path);
 			} else
 			{

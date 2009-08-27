@@ -65,7 +65,7 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 
 	private ClassPath getSourcepath(FileObject file)
 	{
-		System.out.println(getClass().getName()+" -> get source path"+file);
+		System.out.println(getClass().getName()+" -> get source path "+file+ ": "+sourcePath);
 		return sourcePath;
 	}
 }
