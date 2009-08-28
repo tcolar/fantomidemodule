@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
+import net.colar.netbeans.fan.project.path.FanClassPathProvider;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.GlobalPathRegistryEvent;
@@ -115,6 +116,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 			}
 		}
 		// Fan distro sources
+		//TODO: those are already in open projects path ????
 		FanPlatform fan = FanPlatform.getInstance(false);
 		if (fan != null)
 		{
@@ -163,16 +165,16 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getURL(String relativePath, boolean global)
 	{
-		//System.out.println("+++ Initial path: " + relativePath);
+		System.out.println("+++ Initial path: " + relativePath);
 		String path = null;
 		if (relativePath != null && (relativePath.endsWith(".fan") || relativePath.endsWith(".fwt")))
 		{
-			String prefix = "fan/";
+			//String prefix = "fan/";
 			String fanPath = relativePath.substring(relativePath.indexOf("/") + 1);
 			int index = fanPath.indexOf("/") + 1;
 			String podFolder = fanPath.substring(0, index);
-			fanPath = prefix + fanPath.substring(index);
-			path = getURLPath(fanPath, podFolder, false);
+			fanPath = /*prefix +*/ fanPath.substring(index);
+			path = getURLPath(fanPath, podFolder + FanProject.HARDCODED_FAN_SRC_FOLDER + '/', false);
 			if (path != null)
 			{
 				return path;
@@ -514,8 +516,8 @@ public class FanDebugPathProvider extends SourcePathProvider
 		{
 			if (cpSuffix == null)
 			{
-				//System.out.println("---- Looking for " + path + "in " + cp.toString());
 				fo = cp.findResource(path);
+				//System.out.println("---- Looking for " + path + "in " + cp.toString()+ "-> "+fo==null?"null":fo.getPath());
 			} else
 			{
 				String tail = cpSuffix + path;
@@ -525,7 +527,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 				while (it.hasNext())
 				{
 					FileObject fob = it.next();
-					//System.out.println("---- Checking " + fob.getPath() + " vs " + tail);
+					System.out.println("---- Checking " + fob.getPath() + " vs " + tail);
 					if (fob.getPath().endsWith(tail))
 					{
 						fo = fob;

@@ -7,6 +7,7 @@ package net.colar.netbeans.fan.platform;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -18,6 +19,7 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
  */
 public class FanPlatform
 {
+	//TODO: should not be hardcoded
 
 	private Set<ClassPath> sourcePaths = null;
 	private final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
@@ -108,20 +110,23 @@ public class FanPlatform
 			{
 				if (file.isDirectory() && new File(file, "pod.fan").exists())
 				{
-					ClassPath cp = ClassPathSupport.createClassPath(file.getAbsolutePath());
-					sourcePaths.add(cp);
-					System.out.println("### " + file.getAbsolutePath());
-					File javaFolder=new File(file, "java");
-					if (javaFolder.exists() && javaFolder.isDirectory())
-					{
-						ClassPath jcp = ClassPathSupport.createClassPath(javaFolder.getAbsolutePath());
-						sourcePaths.add(jcp);
-						System.out.println("### " + javaFolder.getAbsolutePath());
-					}
+					addFolder(new File(file, FanProject.HARDCODED_JAVA_SRC_FOLDER));
+					addFolder(new File(file, FanProject.HARDCODED_FAN_SRC_FOLDER));
+					addFolder(new File(file, FanProject.HARDCODED_TEST_SRC_FOLDER));
 				}
 			}
 			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, sourcePaths.toArray(new ClassPath[sourcePaths.size()]));
 		}
 		return sourcePaths;
+	}
+
+	private void addFolder(File folder)
+	{
+		if (folder.exists() && folder.isDirectory())
+		{
+			ClassPath jcp = ClassPathSupport.createClassPath(folder.getAbsolutePath());
+			sourcePaths.add(jcp);
+			System.out.println("### " + folder.getAbsolutePath());
+		}
 	}
 }

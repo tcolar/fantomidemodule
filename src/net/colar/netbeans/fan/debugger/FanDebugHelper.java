@@ -3,9 +3,12 @@
  */
 package net.colar.netbeans.fan.debugger;
 
+import java.net.URI;
 import java.net.URL;
+import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
-import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -17,9 +20,6 @@ import org.openide.filesystems.URLMapper;
  */
 public class FanDebugHelper
 {
-	// this is very lame ... use user defined project src folders instead
-
-	public static final String HARD_CODED_FAN_SRC_DIR = "fan";
 
 	/**
 	 * Create a fan Breakpoint
@@ -31,34 +31,45 @@ public class FanDebugHelper
 	 */
 	public static LineBreakpoint createFanBp(String url, int lineNb)
 	{
-		LineBreakpoint bp = LineBreakpoint.create(url, lineNb);
-		String name = getName(url);
-		String path = getPath(url);
-		String pod = getPod(url);
-		String filter = getClassFilter(pod, path);
+		System.err.println("bp url: " + url);
+		URI uri=null;
+		try
+		{
+			uri = new URI(url);
+		}catch(Exception e){throw new RuntimeException("Create breakpoint null param ",e);}
+		Project prj = FileOwnerQuery.getOwner(uri);
 
-		bp.setStratum("Fan");
-		bp.setHidden(false);
-		bp.setSourceName(name);
-		bp.setPrintText("[" + pod + "] " + HARD_CODED_FAN_SRC_DIR + "/" + path);
-		/*
-		 * SourcePath is required to match path in jar (LineBreakPointImpl check this)
-		 * so we have no choice but to give that path rather than the 'real' path
-		 * Our custom FanSourcePathProvider takes care of finding the right source file
-		 * given this 'jar' path.
-		 */
-		bp.setSourcePath(HARD_CODED_FAN_SRC_DIR + "/" + pod + "/" + path);
-		bp.setPreferredClassName(filter);
-		bp.setSuspend(LineBreakpoint.SUSPEND_ALL);
-		System.out.println("bp class:" + bp.getPreferredClassName());
-		System.out.println("bp sourceName:" + bp.getSourceName());
-		System.out.println("bp lineNb:" + bp.getLineNumber());
-		System.out.println("bp cond:" + bp.getCondition());
-		System.out.println("bp printText:" + bp.getPrintText());
-		System.out.println("bp groupName:" + bp.getGroupName());
-		System.out.println("bp vMessage:" + bp.getValidityMessage());
-		System.out.println("bp sourcePath:" + bp.getSourcePath());
-		System.out.println("bp url:" + bp.getURL());
+		LineBreakpoint bp = LineBreakpoint.create(url, lineNb);
+		if (prj != null && prj instanceof FanProject)
+		{
+			String name = getName(url);
+			String path = getPath(prj.getProjectDirectory(), url);
+			String pod = getPod(prj);
+			String filter = getClassFilter(pod, path);
+
+			bp.setStratum("Fan");
+			bp.setHidden(false);
+			bp.setSourceName(name);
+			bp.setPrintText("[" + pod + "] " + FanProject.HARDCODED_FAN_SRC_FOLDER + "/" + path);
+			/*
+			 * SourcePath is required to match path in jar (LineBreakPointImpl check this)
+			 * so we have no choice but to give that path rather than the 'real' path
+			 * Our custom FanSourcePathProvider takes care of finding the right source file
+			 * given this 'jar' path.
+			 */
+			bp.setSourcePath(FanProject.HARDCODED_FAN_SRC_FOLDER + "/" + pod + "/" + path);
+			bp.setPreferredClassName(filter);
+			bp.setSuspend(LineBreakpoint.SUSPEND_ALL);
+			System.out.println("bp class:" + bp.getPreferredClassName());
+			System.out.println("bp sourceName:" + bp.getSourceName());
+			System.out.println("bp lineNb:" + bp.getLineNumber());
+			System.out.println("bp cond:" + bp.getCondition());
+			System.out.println("bp printText:" + bp.getPrintText());
+			System.out.println("bp groupName:" + bp.getGroupName());
+			System.out.println("bp vMessage:" + bp.getValidityMessage());
+			System.out.println("bp sourcePath:" + bp.getSourcePath());
+			System.out.println("bp url:" + bp.getURL());
+		}
 		return bp;
 	}
 
@@ -83,19 +94,18 @@ public class FanDebugHelper
 	 * @param url
 	 * @return
 	 */
-	private static String getPath(String url)
+	private static String getPath(FileObject prjDir, String url)
 	{
 		FileObject fo = getUrlFo(url);
 		String relativePath = url;
 		if (fo != null)
 		{
-			FileObject root = ClassPath.getClassPath(fo, ClassPath.SOURCE).findOwnerRoot(fo);
-			FileObject srcFolder = root.getFileObject(HARD_CODED_FAN_SRC_DIR);
+			FileObject srcFolder = prjDir.getFileObject(FanProject.HARDCODED_FAN_SRC_FOLDER);
 			if (srcFolder != null)
 			{
-				root = srcFolder;
+				prjDir = srcFolder;
 			}
-			relativePath = FileUtil.getRelativePath(root, fo);
+			relativePath = FileUtil.getRelativePath(prjDir, fo);
 		}
 		return relativePath;
 	}
@@ -105,16 +115,10 @@ public class FanDebugHelper
 	 * @param url
 	 * @return
 	 */
-	private static String getPod(String url)
+	private static String getPod(Project prj)
 	{
-		FileObject fo = getUrlFo(url);
-		String pod = "";
-		if (fo != null)
-		{
-			FileObject root = ClassPath.getClassPath(fo, ClassPath.SOURCE).findOwnerRoot(fo);
-			pod = root.getName();
-			System.err.println("~~~ Pod: " + root.getName());
-		}
+		String pod = prj.getProjectDirectory().getName();
+		System.err.println("~~~ Pod: " + pod);
 		return pod;
 	}
 
@@ -132,7 +136,7 @@ public class FanDebugHelper
 			path = path.substring(0, path.lastIndexOf("."));
 		}
 		path = path.replace('/', '.');
-		return HARD_CODED_FAN_SRC_DIR + "." + pod + "." + path + "*";
+		return FanProject.HARDCODED_FAN_SRC_FOLDER + "." + pod + "." + path + "*";
 	}
 
 	private static FileObject getUrlFo(String url)

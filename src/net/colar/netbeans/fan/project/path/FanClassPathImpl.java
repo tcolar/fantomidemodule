@@ -29,13 +29,13 @@ public class FanClassPathImpl implements ClassPathImplementation
 	{
 			FanPathResourceImpl impl=new FanPathResourceImpl(fo);
 			//ClassPathSupport.createClassPath(fo);
+			System.out.println("---- "+getClass().getName()+ " -> ADDING "+fo.getPath());
 			resources.add(impl);
-			System.out.println(getClass().getName()+ " -> "+fo.getPath());
 	}
 
 	public List<? extends PathResourceImplementation> getResources()
 	{
-		//System.out.println(getClass().getName()+" -> getresources");
+		System.out.println(getClass().getName()+" -> getresources");
 		return Collections.unmodifiableList(resources);
 	}
 

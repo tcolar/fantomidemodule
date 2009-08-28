@@ -5,9 +5,20 @@ package net.colar.netbeans.fan.project.path;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+import net.colar.netbeans.fan.debugger.FanDebugHelper;
+import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.platform.JavaPlatformManager;
+import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -26,7 +37,66 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 	public FanClassPathProvider(FanProject project)
 	{
 		this.project = project;
-		sourcePath=ClassPathSupport.createClassPath(project.getProjectDirectory());
+		Set<FileObject> srcRoots = new HashSet();
+		srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_JAVA_SRC_FOLDER));
+		srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_FAN_SRC_FOLDER));
+		srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_TEST_SRC_FOLDER));
+
+		Project[] projects = OpenProjects.getDefault().getOpenProjects();
+		for (Project prj : projects)
+		{
+			if (prj != null)
+			{
+				SourceGroup[] sgs;
+				if (prj instanceof FanProject)
+				{
+					sgs = ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
+				} else
+				{
+					sgs = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+				}
+
+				for (SourceGroup sg : sgs)
+				{
+					ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
+					if (cp != null)
+					{
+						for (FileObject root : cp.getRoots())
+						{
+							srcRoots.add(root);
+						}
+					}
+				}
+			}
+		}
+		// Jdk sources
+		JavaPlatform platform = JavaPlatformManager.getDefault().getDefaultPlatform();
+		if (platform != null)
+		{
+			ClassPath cp = platform.getSourceFolders();
+			if (cp != null)
+			{
+				for (FileObject root : cp.getRoots())
+				{
+					srcRoots.add(root);
+				}
+			}
+		}
+		// Fan distro sources
+		FanPlatform fan = FanPlatform.getInstance(false);
+		if (fan != null)
+		{
+			Set<ClassPath> cps = fan.getSourceClassPaths();
+			for (ClassPath cp : cps)
+			{
+				for (FileObject root : cp.getRoots())
+				{
+					srcRoots.add(root);
+				}
+			}
+		}
+
+		sourcePath = ClassPathSupport.createClassPath(srcRoots.toArray(new FileObject[srcRoots.size()]));
 	}
 
 	public void propertyChange(PropertyChangeEvent arg0)
@@ -35,26 +105,26 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 
 	public ClassPath[] getProjectClassPaths(String type)
 	{
-		System.out.println(getClass().getName()+" -> getprojectcps");
 		ClassPath[] cps =
 		{
-			sourcePath
 		};
+		if (type.equals(sourcePath.SOURCE))
+		{
+			System.out.println(getClass().getName() + " -> getprojectcps " + type);
+			cps = new ClassPath[1];
+			cps[0] = sourcePath;
+		}
 		return cps;
 	}
 
 	public ClassPath findClassPath(FileObject file, String type)
 	{
-		//System.out.println(getClass().getName()+" -> findclasspath "+file);
-		ClassPath result=null;
-		result=getSourcepath(file);
-		//System.out.println(getClass().getName()+" -> Result: "+result);
+		System.out.println(getClass().getName() + " -> findclasspath " + file + " " + type);
+		ClassPath result = null;
+		if (type.equals(ClassPath.SOURCE))
+			result = sourcePath;
+		System.out.println(getClass().getName() + " -> Result: " + result);
 		return result;
 	}
 
-	private ClassPath getSourcepath(FileObject file)
-	{
-		//System.out.println(getClass().getName()+" -> get source path "+file+ ": "+sourcePath);
-		return sourcePath;
-	}
 }
