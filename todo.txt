@@ -1,38 +1,12 @@
-net/colar/netbeans/fan/antlr/Fan__.g:// TODO: probably should use \r?\n  ... but that seem to cause issues when testing in antlrworks -> why ?
-net/colar/netbeans/fan/antlr/Fan.g:// TODO: probably should use \r?\n  ... but that seem to cause issues when testing in antlrworks -> why ?
-net/colar/netbeans/fan/antlr/FanGrammarHelper.java:	// TODO: consider movin methods here from keystrokeHandler for token matching
-net/colar/netbeans/fan/project/FanProjectFactory.java:	//TODO: what do we need to do here ??
-net/colar/netbeans/fan/project/FanProjectActionProvider.java:		//TODO: enhance this as needed
-net/colar/netbeans/fan/project/FanProject.java:	//TODO: make src folders dynamic
+net/colar/netbeans/fan/project/FanProject.java:		//TODO: make src folders dynamic
 net/colar/netbeans/fan/project/FanProject.java:		//TODO: remove this
 net/colar/netbeans/fan/project/FanProject.java:		//TODO: is this enough ?
-net/colar/netbeans/fan/project/FanProject.java:			//TODO: register this folder, or the parent ???
 net/colar/netbeans/fan/project/FanProjectProperties.java:			// TODO: needs to be fixed, creates files all over the place
-net/colar/netbeans/fan/project/FanNode.java:	//TODO: are those vars working ?
-net/colar/netbeans/fan/wizard/NewFileVisualPanel1.java:	// TODO add your handling code here:
-net/colar/netbeans/fan/wizard/NewFileWizardIterator.java:					// TODO if using org.openide.dialogs >= 7.8, can use WizardDescriptor.PROP_*:
-net/colar/netbeans/fan/handlers/FanKeyStrokeHandler.java:					// TODO: this probably not good if using spaces instead of tabs ??
-net/colar/netbeans/fan/structure/FanElementHandle.java:		return false;//TODO
-net/colar/netbeans/fan/structure/FanFormatter.java:	//TODO: implement PrettyFormatter
-net/colar/netbeans/fan/structure/FanFormatter.java:	// TODO shouldn't this be a setting ?
-net/colar/netbeans/fan/structure/FanFormatter.java:	// TODO shouldn't this be a setting ?
-net/colar/netbeans/fan/structure/FanStructureAnalyzer.java:					//TODO: comments folding (in hidden channel)
-net/colar/netbeans/fan/structure/FanStructureAnalyzer.java:					//TODO: also imports folding (using)
-net/colar/netbeans/fan/structure/FanStructureItem.java:		//TODO: modifiers
-net/colar/netbeans/fan/templates/FanFile.html:        // TODO
-net/colar/netbeans/fan/templates/FanFile.html:    // TODO
-net/colar/netbeans/fan/templates/FanFile.html:    // TODO
-net/colar/netbeans/fan/completion/FanCompletionProposal.java:		//TODO: java icon for java items ?
+net/colar/netbeans/fan/structure/FanStructureItem.java:	//TODO: modifiers
 net/colar/netbeans/fan/platform/FanPlatform.java:	//TODO: should not be hardcoded
-net/colar/netbeans/fan/platform/FanPlatform.java:				return exe.exists() && exe.isFile() /*&& exe.canExecute()*/;//TODO: fix
-net/colar/netbeans/fan/platform/FanPlatform.java:			//TODO: handle this cleanly (warning dialog)
-net/colar/netbeans/fan/debugger/FanDebugPathProvider.java:	// TODO: binary roots any use ??
 net/colar/netbeans/fan/debugger/FanDebugPathProvider.java:		// TODO: listener for project sources ?
 net/colar/netbeans/fan/debugger/FanDebugPathProvider.java:		//TODO: those are already in open projects path ????
-net/colar/netbeans/fan/debugger/FanDebugPathProvider.java:		//TODO: globalSources.getResourceName(fo,	directorySeparator,	includeExtension);
 net/colar/netbeans/fan/debugger/FanDebugPathProvider.java:	 * TODO: compiler bug? report to JDK?
-net/colar/netbeans/fan/debugger/FanBkptActionProvider.java://@ActionsProvider.Registration() //TODO: doesn't work ?
-net/colar/netbeans/fan/debugger/FanDebugViewModel.java: * //TODO: test/ fix / use FanDebugViewModel
-net/colar/netbeans/fan/debugger/FanDebuggerEngineProvider.java://@DebuggerEngineProvider.Registration // TODO: doesn't work
-net/colar/netbeans/fan/actions/BuildAndRunFanPodAction.java:		//TODO: only build if files changed
-net/colar/netbeans/fan/actions/FanAction.java:	 * TODO If the user "selects" a project node it will run that one rather
+
+
+Fan debug shell script (debug project etc...)
