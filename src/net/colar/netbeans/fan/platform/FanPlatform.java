@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.project.FanProject;
+import net.colar.netbeans.fan.wizard.FanGlobalSettings;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -27,8 +28,8 @@ public class FanPlatform
 	private static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac");
 	private static FanPlatform instance = new FanPlatform();
 	private String fanHome;
-	public final static String FAN_CLASS="fanx.tools.Fan";
-	public final static String FAN_SH="fansh";
+	public final static String FAN_CLASS = "fanx.tools.Fan";
+	public final static String FAN_SH = "fansh";
 	//private String fanBin;
 	//private String fanshBin;
 	private String fanSrc;
@@ -86,9 +87,8 @@ public class FanPlatform
 
 	/*public String getFanBinaryPath()
 	{
-		return fanBin;
+	return fanBin;
 	}*/
-
 	public String getFanSrcPath()
 	{
 		return fanSrc;
@@ -96,9 +96,8 @@ public class FanPlatform
 
 	/*public String getFanShellBinaryPath()
 	{
-		return fanshBin;
+	return fanshBin;
 	}*/
-
 	/**
 	 * Add Fan Source items (pods src)
 	 * @return
@@ -140,45 +139,55 @@ public class FanPlatform
 	 */
 	public void buildFanCall(FanExecution fanExec)
 	{
-		buildFanCall(fanExec, -1);
+		buildFanCall(fanExec, false);
 	}
-	
+
 	/**
 	 * Updated the FanExecution object such as the fanlaunch shell script would
 	 * IE: set classpath, library path etc ....
 	 * @param fanExec
 	 * @param debugPort (-1 = no debugger)
 	 */
-	public void buildFanCall(FanExecution fanExec, int debugPort)
+	public void buildFanCall(FanExecution fanExec, boolean enableDebug)
 	{
 		// We will be spawning a new java VM
 		String separator = System.getProperty("file.separator");
-        String path = System.getProperty("java.home") + separator + "bin" + separator + "java";
+		String path = System.getProperty("java.home") + separator + "bin" + separator + "java";
 		fanExec.setCommand(path);
 
 		// classpath
-        //String classpath = System.getProperty("java.class.path");
-		String classpath=buildFanClasspath();
+		//String classpath = System.getProperty("java.class.path");
+		String classpath = buildFanClasspath();
 		fanExec.addCommandArg("-cp");
 		fanExec.addCommandArg(classpath);
 
 		//Set lib path
-		String libPath=buildLibraryPath();
-		fanExec.addCommandArg("-Djava.library.path="+libPath);
+		String libPath = buildLibraryPath();
+		fanExec.addCommandArg("-Djava.library.path=" + libPath);
 
 		//Set fan.home 
-		fanExec.addCommandArg("-Dfan.home="+fanHome);
+		fanExec.addCommandArg("-Dfan.home=" + fanHome);
 
 		//Enable debugger
-		if(debugPort > 0)
+		if (enableDebug)
 		{
+			String debugPort = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT, "8000");
 			fanExec.addCommandArg("-Xdebug");
-			fanExec.addCommandArg("-Xrunjdwp:transport=dt_socket,address="+debugPort+",server=y,suspend=y");
+			fanExec.addCommandArg("-Xrunjdwp:transport=dt_socket,address=" + debugPort + ",server=y,suspend=y");
 		}
 
+		// custom options
+		String option=FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx128m");
+		String[] options = option.split(" ");
+		for(String opt : options)
+			fanExec.addCommandArg(opt);
+		
+
 		//OSX only flag needed for SWT (as in fanlaunch)
-		if(IS_MAC)
+		if (IS_MAC)
+		{
 			fanExec.addCommandArg("-XstartOnFirstThread");
+		}
 	}
 
 	/**
@@ -187,41 +196,44 @@ public class FanPlatform
 	 */
 	private String buildFanClasspath()
 	{
-		String cp="";
-		String cpSeparator=IS_WIN?";":":";
-		String s=File.separator;
+		String cp = "";
+		String cpSeparator = IS_WIN ? ";" : ":";
+		String s = File.separator;
 		// sys.jar
-		cp+=fanHome+"lib"+s+"java"+s+"sys.jar";
+		cp += fanHome + "lib" + s + "java" + s + "sys.jar";
 		// add jars in lib/java/ext
-		String extDir=fanHome+"lib"+s+"java"+s+"ext";
-		File dir=new File(extDir);
-		if(dir.exists() && dir.isDirectory())
+		String extDir = fanHome + "lib" + s + "java" + s + "ext";
+		File dir = new File(extDir);
+		if (dir.exists() && dir.isDirectory())
 		{
-			File[] jars=dir.listFiles();
-			for(File jar : jars)
+			File[] jars = dir.listFiles();
+			for (File jar : jars)
 			{
-				if(jar.isFile() && jar.getName().toLowerCase().endsWith(".jar"))
+				if (jar.isFile() && jar.getName().toLowerCase().endsWith(".jar"))
 				{
-					cp+=cpSeparator+extDir+s+jar.getName();
+					cp += cpSeparator + extDir + s + jar.getName();
 				}
 			}
 		}
 		// add jars file in lib/java/ext/{os}
-		String os="linux";
-		if(IS_MAC)
-			os="mac";
-		else if(IS_WIN)
-			os="win";
-		extDir+=s+os;
-		dir=new File(extDir);
-		if(dir.exists() && dir.isDirectory())
+		String os = "linux";
+		if (IS_MAC)
 		{
-			File[] jars=dir.listFiles();
-			for(File jar : jars)
+			os = "mac";
+		} else if (IS_WIN)
+		{
+			os = "win";
+		}
+		extDir += s + os;
+		dir = new File(extDir);
+		if (dir.exists() && dir.isDirectory())
+		{
+			File[] jars = dir.listFiles();
+			for (File jar : jars)
 			{
-				if(jar.isFile() && jar.getName().toLowerCase().endsWith(".jar"))
+				if (jar.isFile() && jar.getName().toLowerCase().endsWith(".jar"))
 				{
-					cp+=cpSeparator+extDir+s+jar.getName();
+					cp += cpSeparator + extDir + s + jar.getName();
 				}
 			}
 		}
@@ -231,15 +243,17 @@ public class FanPlatform
 
 	private String buildLibraryPath()
 	{
-		String s=File.separator;
-		String extDir=fanHome+"lib"+s+"java"+s+"ext";
-		String os="linux";
-		if(IS_MAC)
-			os="mac";
-		else if(IS_WIN)
-			os="win";
-		extDir+=s+os;
+		String s = File.separator;
+		String extDir = fanHome + "lib" + s + "java" + s + "ext";
+		String os = "linux";
+		if (IS_MAC)
+		{
+			os = "mac";
+		} else if (IS_WIN)
+		{
+			os = "win";
+		}
+		extDir += s + os;
 		return extDir;
 	}
-
 }

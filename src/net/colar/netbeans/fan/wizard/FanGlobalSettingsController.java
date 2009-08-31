@@ -20,76 +20,82 @@ import org.openide.util.Lookup;
 public class FanGlobalSettingsController extends OptionsPanelController
 {
 
-    private FanGlobalSettingsPanel panel;
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private boolean changed;
+	private FanGlobalSettingsPanel panel;
+	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+	private boolean changed;
 
-    public void update()
-    {
-	panel.setFanHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME));
-	changed();
-    }
-
-    public void applyChanges()
-    {
-	String home=panel.getFanHome();
-	FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, home);
-	// reread the plaform settings
-	FanPlatform.getInstance(false).readSettings();
-	changed = false;
-    }
-
-    public void cancel()
-    {
-	// need not do anything special, if no changes have been persisted yet
-    }
-
-    public boolean isValid()
-    {
-	return getPanel().valid();
-    }
-
-    public boolean isChanged()
-    {
-	return changed;
-    }
-
-    public HelpCtx getHelpCtx()
-    {
-	return null;
-    }
-
-    public JComponent getComponent(Lookup masterLookup)
-    {
-	return getPanel();
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener l)
-    {
-	pcs.addPropertyChangeListener(l);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener l)
-    {
-	pcs.removePropertyChangeListener(l);
-    }
-
-    private FanGlobalSettingsPanel getPanel()
-    {
-	if (panel == null)
+	public void update()
 	{
-	    panel = new FanGlobalSettingsPanel(this);
+		panel.setFanHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME));
+		panel.setDebugPort(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT,"8000"));
+		panel.setRunOptions(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS,"-Xmx128m"));
+		changed();
 	}
-	return panel;
-    }
 
-    void changed()
-    {
-	if (!changed)
+	public void applyChanges()
 	{
-	    changed = true;
-	    pcs.firePropertyChange(OptionsPanelController.PROP_CHANGED, false, true);
+		String home = panel.getFanHome();
+		String debugPort = panel.getDebugPort();
+		String runOptions = panel.getRunOptions();
+		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, home);
+		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_DEBUG_PORT, debugPort);
+		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_RUN_OPTIONS, runOptions);
+		// reread the plaform settings
+		FanPlatform.getInstance(false).readSettings();
+		changed = false;
 	}
-	pcs.firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
-    }
+
+	public void cancel()
+	{
+		// need not do anything special, if no changes have been persisted yet
+	}
+
+	public boolean isValid()
+	{
+		return getPanel().valid();
+	}
+
+	public boolean isChanged()
+	{
+		return changed;
+	}
+
+	public HelpCtx getHelpCtx()
+	{
+		return null;
+	}
+
+	public JComponent getComponent(Lookup masterLookup)
+	{
+		return getPanel();
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener l)
+	{
+		pcs.addPropertyChangeListener(l);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener l)
+	{
+		pcs.removePropertyChangeListener(l);
+	}
+
+	private FanGlobalSettingsPanel getPanel()
+	{
+		if (panel == null)
+		{
+			panel = new FanGlobalSettingsPanel(this);
+		}
+		return panel;
+	}
+
+	void changed()
+	{
+		if (!changed)
+		{
+			changed = true;
+			pcs.firePropertyChange(OptionsPanelController.PROP_CHANGED, false, true);
+		}
+		pcs.firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
+	}
 }

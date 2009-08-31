@@ -16,6 +16,9 @@ public class FanPlatformSettings
 {
 
 	public static final String PREF_FAN_HOME = "net.colar.netbeans.fan.prefs.FAN_HOME";
+	public static final String PREF_DEBUG_PORT = "net.colar.netbeans.fan.prefs.DEBUG_PORT";
+	public static final String PREF_RUN_OPTIONS = "net.colar.netbeans.fan.prefs.RUN_OPTIONS";
+
 	private static final FanPlatformSettings instance = new FanPlatformSettings();
 	private Preferences prefs;
 
@@ -31,7 +34,12 @@ public class FanPlatformSettings
 
 	public String get(String key)
 	{
-		return prefs.get(key, null);
+		return get(key, null);
+	}
+
+	public String get(String key, String defaultVal)
+	{
+		return prefs.get(key, defaultVal);
 	}
 
 	public void put(String key, String value)

@@ -16,47 +16,46 @@ import org.netbeans.spi.options.OptionsPanelController;
 public class FanGlobalSettings extends AdvancedOption
 {
 
-    private static FanGlobalSettings instance;
-    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+	private static FanGlobalSettings instance;
+	private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-    private FanGlobalSettings()
-    {
-	super();
-    }
-
-    public static synchronized FanGlobalSettings getInstance()
-    {
-	if (instance == null)
+	private FanGlobalSettings()
 	{
-	    instance = new FanGlobalSettings();
+		super();
 	}
-	return instance;
-    }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener)
-    {
-	propertyChangeSupport.addPropertyChangeListener(listener);
-    }
+	public static synchronized FanGlobalSettings getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new FanGlobalSettings();
+		}
+		return instance;
+	}
 
-    public void removePropertyChangeListener(PropertyChangeListener listener)
-    {
-	propertyChangeSupport.removePropertyChangeListener(listener);
-    }
+	public void addPropertyChangeListener(PropertyChangeListener listener)
+	{
+		propertyChangeSupport.addPropertyChangeListener(listener);
+	}
 
-    public String getDisplayName()
-    {
-	return "Fan options";
-    }
+	public void removePropertyChangeListener(PropertyChangeListener listener)
+	{
+		propertyChangeSupport.removePropertyChangeListener(listener);
+	}
 
-    public String getTooltip()
-    {
-	return "Fan options";
-    }
+	public String getDisplayName()
+	{
+		return "Fan options";
+	}
 
-    public OptionsPanelController create()
-    {
-	return new FanGlobalSettingsController();
-    }
+	public String getTooltip()
+	{
+		return "Fan options";
+	}
 
+	public OptionsPanelController create()
+	{
+		return new FanGlobalSettingsController();
+	}
 }
 

@@ -107,7 +107,6 @@ public abstract class FanAction
 			fanExec.setDisplayName(file.getName());
 			fanExec.setWorkingDirectory(path);
 			FanPlatform.getInstance().buildFanCall(fanExec);
-			//TODO: add custom args (ex: -XM64M)
 			fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 			fanExec.addCommandArg(target);
 			return fanExec.run();
@@ -179,7 +178,6 @@ public abstract class FanAction
 				fanExec.setDisplayName(file.getName());
 				fanExec.setWorkingDirectory(path);
 				FanPlatform.getInstance().buildFanCall(fanExec);
-				//TODO: add custom args (ex: -XM64M)
 				fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 				fanExec.addCommandArg("build.fan");
 				fanExec.addCommandArg(target);

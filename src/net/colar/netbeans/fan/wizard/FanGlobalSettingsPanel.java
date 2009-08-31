@@ -43,6 +43,10 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
         homeBrowse = new javax.swing.JButton();
         homeField = new javax.swing.JTextField();
         errorLabel = new javax.swing.JLabel();
+        debugLabel = new javax.swing.JLabel();
+        debugField = new javax.swing.JTextField();
+        execLabel = new javax.swing.JLabel();
+        execField = new javax.swing.JTextField();
 
         homeLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.homeLabel.text")); // NOI18N
 
@@ -64,6 +68,24 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
         errorLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.errorLabel.text")); // NOI18N
 
+        debugLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.debugLabel.text")); // NOI18N
+
+        debugField.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.debugField.text")); // NOI18N
+        debugField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                debugFieldKeyReleased(evt);
+            }
+        });
+
+        execLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.execLabel.text")); // NOI18N
+
+        execField.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.execField.text")); // NOI18N
+        execField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                execFieldKeyReleased(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -73,11 +95,20 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(errorLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                     .add(layout.createSequentialGroup()
-                        .add(homeLabel)
-                        .add(18, 18, 18)
-                        .add(homeField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(homeBrowse)))
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(debugLabel)
+                            .add(execLabel)
+                            .add(homeLabel))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(layout.createSequentialGroup()
+                                .add(homeField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(homeBrowse))
+                            .add(layout.createSequentialGroup()
+                                .add(debugField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(20, 20, 20))
+                            .add(execField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -88,7 +119,15 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
                     .add(homeLabel)
                     .add(homeBrowse)
                     .add(homeField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 230, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(debugLabel)
+                    .add(debugField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(execLabel)
+                    .add(execField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 152, Short.MAX_VALUE)
                 .add(errorLabel)
                 .addContainerGap())
         );
@@ -108,8 +147,23 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
     {//GEN-HEADEREND:event_homeFieldKeyReleased
 		controller.changed();
     }//GEN-LAST:event_homeFieldKeyReleased
+
+	private void debugFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_debugFieldKeyReleased
+	{//GEN-HEADEREND:event_debugFieldKeyReleased
+		controller.changed();
+	}//GEN-LAST:event_debugFieldKeyReleased
+
+	private void execFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_execFieldKeyReleased
+	{//GEN-HEADEREND:event_execFieldKeyReleased
+		controller.changed();
+	}//GEN-LAST:event_execFieldKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField debugField;
+    private javax.swing.JLabel debugLabel;
     private javax.swing.JLabel errorLabel;
+    private javax.swing.JTextField execField;
+    private javax.swing.JLabel execLabel;
     private javax.swing.JButton homeBrowse;
     private javax.swing.JTextField homeField;
     private javax.swing.JLabel homeLabel;
@@ -123,7 +177,21 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 			errorLabel.setText("Fan Home is invalid!");
 		} else
 		{
-			errorLabel.setText("");
+			boolean validDebug=false;
+			try
+			{
+				Integer port=new Integer(debugField.getText());
+				validDebug=true;
+			}catch(NumberFormatException e){}
+			if(!validDebug)
+			{
+				errorLabel.setText("Invalid Debugger port.");
+			}
+			else
+			{
+				//valid
+				errorLabel.setText("");
+			}
 		}
 		return valid;
 	}
@@ -140,5 +208,25 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 	String getFanHome()
 	{
 		return homeField.getText();
+	}
+
+	String getDebugPort()
+	{
+		return debugField.getText();
+	}
+
+	String getRunOptions()
+	{
+		return execField.getText();
+	}
+
+	void setDebugPort(String port)
+	{
+		debugField.setText(port);
+	}
+
+	void setRunOptions(String options)
+	{
+		execField.setText(options);
 	}
 }
