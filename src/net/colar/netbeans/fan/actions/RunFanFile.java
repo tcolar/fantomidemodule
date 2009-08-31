@@ -54,7 +54,8 @@ public class RunFanFile extends FanAction
 			FanExecution fanExec = new FanExecution();
 			fanExec.setDisplayName(file.getName());
 			fanExec.setWorkingDirectory(path);
-			fanExec.setCommand(FanPlatform.getInstance().getFanBinaryPath());
+			FanPlatform.getInstance().buildFanCall(fanExec);
+			fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 			fanExec.addCommandArg(script);
 
 			fanExec.run();

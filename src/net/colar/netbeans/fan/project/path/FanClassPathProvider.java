@@ -87,11 +87,14 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 		if (fan != null)
 		{
 			Set<ClassPath> cps = fan.getSourceClassPaths();
-			for (ClassPath cp : cps)
+			if (cps != null)
 			{
-				for (FileObject root : cp.getRoots())
+				for (ClassPath cp : cps)
 				{
-					srcRoots.add(root);
+					for (FileObject root : cp.getRoots())
+					{
+						srcRoots.add(root);
+					}
 				}
 			}
 		}
@@ -122,9 +125,10 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 		System.out.println(getClass().getName() + " -> findclasspath " + file + " " + type);
 		ClassPath result = null;
 		if (type.equals(ClassPath.SOURCE))
+		{
 			result = sourcePath;
+		}
 		System.out.println(getClass().getName() + " -> Result: " + result);
 		return result;
 	}
-
 }

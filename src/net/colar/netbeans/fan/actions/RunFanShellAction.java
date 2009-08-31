@@ -33,8 +33,10 @@ public class RunFanShellAction extends FanAction
 	{
 		FanExecution fanExec = new FanExecution();
 		fanExec.setDisplayName("Fan Shell (fansh)");
-		//fanExec.setWorkingDirectory(path);
-		fanExec.setCommand(FanPlatform.getInstance().getFanShellBinaryPath());
+
+		FanPlatform.getInstance().buildFanCall(fanExec);
+		fanExec.addCommandArg(FanPlatform.FAN_CLASS);
+		fanExec.addCommandArg(FanPlatform.FAN_SH);
 
 		fanExec.run();
 	}

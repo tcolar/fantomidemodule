@@ -106,14 +106,22 @@ public abstract class FanAction
 			FanExecution fanExec = new FanExecution();
 			fanExec.setDisplayName(file.getName());
 			fanExec.setWorkingDirectory(path);
-			fanExec.setCommand(FanPlatform.getInstance().getFanBinaryPath());
+			FanPlatform.getInstance().buildFanCall(fanExec);
+			//TODO: add custom args (ex: -XM64M)
+			fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 			fanExec.addCommandArg(target);
 			return fanExec.run();
 		}
 		return null;
 	}
 
-	private Future buildAction(Lookup lookup, String target)
+	/**
+	 * "OLD" way of calling fan using the fan wrapper script
+	 * @param lookup
+	 * @param target
+	 * @return
+	 */
+	/*private Future buildActionExternal(Lookup lookup, String target)
 	{
 		// if default target "", see what user chose in props;
 		if (target.equals(""))
@@ -135,6 +143,44 @@ public abstract class FanAction
 				fanExec.setDisplayName(file.getName());
 				fanExec.setWorkingDirectory(path);
 				fanExec.setCommand(FanPlatform.getInstance().getFanBinaryPath());
+				fanExec.addCommandArg("build.fan");
+				fanExec.addCommandArg(target);
+				return fanExec.run();
+			}
+		}
+		return null;
+	}*/
+
+	/**
+	 * Call the action using internal call to Fan java class (not the wrapper scripts).
+	 * @param lookup
+	 * @param target
+	 * @return
+	 */
+	private Future buildAction(Lookup lookup, String target/*, String extraParams*/)
+	{
+		// if default target "", see what user chose in props;
+		if (target.equals(""))
+		{
+			String newTarget = FanProjectProperties.getProperties(project).getBuildTarget();
+			if (newTarget != null)
+			{
+				target = newTarget;
+			}
+		}
+		FileObject file = findTargetProject(lookup);
+		if (file != null)
+		{
+			FileObject buildFile = file.getFileObject("build.fan");
+			if (buildFile != null)
+			{
+				String path = FileUtil.toFile(file).getAbsolutePath();
+				FanExecution fanExec = new FanExecution();
+				fanExec.setDisplayName(file.getName());
+				fanExec.setWorkingDirectory(path);
+				FanPlatform.getInstance().buildFanCall(fanExec);
+				//TODO: add custom args (ex: -XM64M)
+				fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 				fanExec.addCommandArg("build.fan");
 				fanExec.addCommandArg(target);
 				return fanExec.run();
