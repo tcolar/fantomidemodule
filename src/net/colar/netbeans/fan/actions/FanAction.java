@@ -89,7 +89,7 @@ public abstract class FanAction
 		return buildAction(lookup, buildTarget);
 	}
 
-	protected Future runPodAction(Lookup lookup)
+	protected Future runPodAction(Lookup lookup, boolean debug)
 	{
 		FileObject file = findTargetProject(lookup);
 		if (file != null)
@@ -104,9 +104,9 @@ public abstract class FanAction
 				target = podName + "::" + "Main" + "." + "main";
 			}
 			FanExecution fanExec = new FanExecution();
-			fanExec.setDisplayName(file.getName());
+			fanExec.setDisplayName((debug?"Debug ":"")+file.getName());
 			fanExec.setWorkingDirectory(path);
-			FanPlatform.getInstance().buildFanCall(fanExec);
+			FanPlatform.getInstance().buildFanCall(fanExec, debug);
 			fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 			fanExec.addCommandArg(target);
 			return fanExec.run();

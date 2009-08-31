@@ -9,6 +9,7 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 import javax.swing.Action;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
+import net.colar.netbeans.fan.actions.DebugFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
 import org.netbeans.api.project.Project;
@@ -122,6 +123,8 @@ public class FanNode extends FilterNode
 			putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_CLEAN, "Clean Pod", null));
 			putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_REBUILD, "Clean & Build Pod", null));
 			putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_TEST, "Test Pod", null));
+			putAction(null);
+			putAction(ProjectSensitiveActions.projectCommandAction(DebugFanPodAction.COMMAND_DEBUG_FAN_POD, "Build & Debug Pod", null));
 			putAction(null);
 			putAction(ProjectSensitiveActions.projectCommandAction(RunFanShellAction.COMMAND_RUN_FAN_SHELL, "Start Fan Shell", null));
 			putAction(null);

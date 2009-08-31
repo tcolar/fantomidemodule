@@ -14,12 +14,11 @@ import org.openide.util.Lookup;
  *
  * @author tcolar
  */
-public class BuildAndRunFanPodAction extends FanAction
+public class DebugFanPodAction extends FanAction
 {
-	// Make this the standard RUN command for now
-	public static final String COMMAND_BUILD_RUN_FAN_POD = ActionProvider.COMMAND_RUN;
+	public static final String COMMAND_DEBUG_FAN_POD = ActionProvider.COMMAND_DEBUG;
 
-	public BuildAndRunFanPodAction(FanProject project)
+	public DebugFanPodAction(FanProject project)
 	{
 		super(project);
 	}
@@ -27,7 +26,7 @@ public class BuildAndRunFanPodAction extends FanAction
 	@Override
 	public String getCommandId()
 	{
-		return COMMAND_BUILD_RUN_FAN_POD;
+		return COMMAND_DEBUG_FAN_POD;
 	}
 
 	@Override
@@ -45,7 +44,8 @@ public class BuildAndRunFanPodAction extends FanAction
 		if(result!=null)
 		{
 			if(((Integer)result)==0)
-				runPodAction(context, false);
+				// true = debug mode
+				runPodAction(context, true);
 		}
 	}
 

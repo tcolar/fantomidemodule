@@ -10,6 +10,7 @@ import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
 import net.colar.netbeans.fan.actions.BuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanAndBuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanFanPodAction;
+import net.colar.netbeans.fan.actions.DebugFanPodAction;
 import net.colar.netbeans.fan.actions.FanAction;
 import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
@@ -40,6 +41,7 @@ public class FanProjectActionProvider implements ActionProvider
 			new RunFanPodAction(project),
 			new BuildAndRunFanPodAction(project),
 			new TestFanPodAction(project),
+			new DebugFanPodAction(project),
 			new BuildFanPodAction(project),
 			new CleanFanPodAction(project),
 			new CleanAndBuildFanPodAction(project),
