@@ -47,6 +47,7 @@ public class DebugFanPodAction extends FanAction
 				// true = debug mode
 				runPodAction(context, true);
 		}
+		// TODO: attach to it standrad code ??
 	}
 
 	@Override
