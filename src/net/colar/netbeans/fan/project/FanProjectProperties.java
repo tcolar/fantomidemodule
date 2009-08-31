@@ -19,7 +19,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
-import org.openide.util.lookup.Lookups;
 
 /**
  * Properties for Fan Pod/Project
@@ -39,7 +38,7 @@ public class FanProjectProperties
 	private volatile String buildTarget;
 	private File propFile = null;
 
-			// TODO: needs to be fixed, creates files all over the place
+	// TODO: needs to be fixed, creates files all over the place
 	public FanProjectProperties(FanProject project)
 	{
 		assert project != null;
@@ -208,7 +207,7 @@ public class FanProjectProperties
 
 		public void fileAttributeChanged(FileAttributeEvent event)
 		{
-			System.out.println("Props file attr changed :" + event.getFile().getPath());
+			System.out.println("Props file attr changed :" + event.getFile().getPath() + event.toString());
 		}
 	}
 }

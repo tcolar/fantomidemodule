@@ -9,10 +9,11 @@ import java.util.HashSet;
 import java.util.Set;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.project.FanProject;
-import net.colar.netbeans.fan.wizard.FanGlobalSettings;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  * Provides acces to "plaform" settings
@@ -129,7 +130,7 @@ public class FanPlatform
 		{
 			ClassPath jcp = ClassPathSupport.createClassPath(folder.getAbsolutePath());
 			sourcePaths.add(jcp);
-			System.out.println("### " + folder.getAbsolutePath());
+			//System.out.println("### " + folder.getAbsolutePath());
 		}
 	}
 
@@ -255,5 +256,11 @@ public class FanPlatform
 		}
 		extDir += s + os;
 		return extDir;
+	}
+
+	public FileObject getFanHome()
+	{
+		File f=new File(fanHome);
+		return FileUtil.toFileObject(f);
 	}
 }

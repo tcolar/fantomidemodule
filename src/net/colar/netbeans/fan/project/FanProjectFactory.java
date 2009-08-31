@@ -21,21 +21,21 @@ import org.openide.filesystems.FileObject;
 public final class FanProjectFactory implements ProjectFactory
 {
 
-    public static final String FAN_BUILD_FILE = "build.fan";
+	public static final String FAN_BUILD_FILE = "build.fan";
 
-    public boolean isProject(FileObject projectDirectory)
-    {
-	return projectDirectory.getFileObject(FAN_BUILD_FILE) != null;
-    }
+	public boolean isProject(FileObject projectDirectory)
+	{
+		return projectDirectory.getFileObject(FAN_BUILD_FILE) != null;
+	}
 
-    public Project loadProject(FileObject projectDirectory, ProjectState projectState) throws IOException
-    {
-	return isProject(projectDirectory) ? new FanProject(projectDirectory, projectState) : null;
-    }
+	public Project loadProject(FileObject projectDirectory, ProjectState projectState) throws IOException
+	{
+		return isProject(projectDirectory) ? new FanProject(projectDirectory, projectState) : null;
+	}
 
-    public void saveProject(Project project) throws IOException, ClassCastException
-    {
-	//TODO: what do we need to do here ??
-	//throw new UnsupportedOperationException("Not supported yet.");
-    }
+	public void saveProject(Project project) throws IOException, ClassCastException
+	{
+		//TODO: what do we need to do here ??
+		//throw new UnsupportedOperationException("Not supported yet.");
+	}
 }

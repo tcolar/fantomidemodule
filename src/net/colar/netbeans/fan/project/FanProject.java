@@ -33,23 +33,30 @@ import org.openide.util.lookup.Lookups;
 public class FanProject implements Project, ProjectInformation
 {
 	//TODO: make src folders dynamic
+
 	public static final String HARDCODED_JAVA_SRC_FOLDER = "java";
 	public static final String HARDCODED_FAN_SRC_FOLDER = "fan";
 	public static final String HARDCODED_TEST_SRC_FOLDER = "test";
-
-
 	private final FileObject dir;
 	private final Lookup lkp;
 	final RequestProcessor rp;
 	final Properties props = new Properties();
 
-	public FanProject(FileObject dir, ProjectState state)
+	static
 	{
 		//TODO: remove this
 		System.setProperty("org.netbeans.modules.debugger.jpda.breakpoints.level", "100");
-		try{
+		System.setProperty("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater.level", "100");
+		try
+		{
 			LogManager.getLogManager().readConfiguration();
-		}catch(Exception e){}
+		} catch (Exception e)
+		{
+		}
+	}
+
+	public FanProject(FileObject dir, ProjectState state)
+	{
 
 		this.dir = dir;
 		lkp = Lookups.fixed(new Object[]
@@ -115,6 +122,7 @@ public class FanProject implements Project, ProjectInformation
 
 	private final class ProjectOpenedHookImpl extends ProjectOpenedHook
 	{
+
 		protected void projectOpened()
 		{
 			//TODO: register this folder, or the parent ???
