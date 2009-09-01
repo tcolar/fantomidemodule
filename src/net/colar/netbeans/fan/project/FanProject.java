@@ -42,7 +42,7 @@ public class FanProject implements Project, ProjectInformation
 	final RequestProcessor rp;
 	final Properties props = new Properties();
 
-	static
+	/*static
 	{
 		//TODO: remove this
 		System.setProperty("org.netbeans.modules.debugger.jpda.breakpoints.level", "100");
@@ -53,7 +53,7 @@ public class FanProject implements Project, ProjectInformation
 		} catch (Exception e)
 		{
 		}
-	}
+	}*/
 
 	public FanProject(FileObject dir, ProjectState state)
 	{

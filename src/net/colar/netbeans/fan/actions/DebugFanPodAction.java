@@ -5,8 +5,17 @@
 
 package net.colar.netbeans.fan.actions;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Future;
+import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.colar.netbeans.fan.project.FanProject;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
 
@@ -47,7 +56,17 @@ public class DebugFanPodAction extends FanAction
 				// true = debug mode
 				runPodAction(context, true);
 		}
-		// TODO: attach to it standrad code ??
+		// start JPDA
+		System.out.println("Starting JPDA");
+		String portStr=FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT,"8000");
+		int port=new Integer(portStr).intValue();
+		try
+		{
+			// TODO: this is kinda ugly - Use JPDASupport instead ??
+			Thread.sleep(1500);
+			JPDADebugger.attach("localhost", port, new Object[0]);
+		}catch(Exception e){e.printStackTrace();}
+		
 	}
 
 	@Override
@@ -55,4 +74,24 @@ public class DebugFanPodAction extends FanAction
 	{
 		return true;
 	}
+
+	private static Object[] createServices () {
+        try {
+            Map map = new HashMap ();
+            String sourceRoot = System.getProperty ("test.dir.src");
+            URL sourceUrl = new File(sourceRoot).toURI().toURL();
+            String sourceUrlStr = sourceUrl.toString() + "/";
+            sourceUrl = new URL(sourceUrlStr);
+            ClassPath cp = ClassPathSupport.createClassPath (new URL[] {
+                sourceUrl
+            });
+            map.put ("sourcepath", cp);
+            map.put ("baseDir", new File(sourceRoot).getParentFile());
+            return new Object[] { map };
+        } catch (MalformedURLException ex) {
+            //System.err.println("MalformedURLException: sourceRoot = '"+sourceRoot+"'.");
+            ex.printStackTrace();
+            return new Object[] {};
+        }
+    }
 }
