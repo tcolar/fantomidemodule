@@ -18,7 +18,7 @@ import org.netbeans.modules.csl.spi.DefaultCompletionResult;
 import org.netbeans.modules.csl.spi.ParserResult;
 
 /**
- *
+ * Code Completion
  * @author thibautc
  */
 public class FanCompletionHandler implements CodeCompletionHandler
@@ -93,7 +93,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	}
 
 	/**
-	Root level (ouside class/mixin/enum
+	Root level (outside class/mixin/enum)
 	propose slot begining keywords (class,enum,mixin , public, abstract and so on)
 	also propose imports items (if within "using ...")
 	proposeImports(proposals);
@@ -120,6 +120,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposeImports(ArrayList<CompletionProposal> proposals, int anchor)
 	{
-		proposals.add(new FanKeywordProposal("Sys", anchor));
+		proposals.add(new FanKeywordProposal("sys", anchor));
 	}
 }

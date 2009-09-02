@@ -11,16 +11,21 @@ import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 
 /**
- *
+ * Index parsed files (used later for completion etc...)
  * @author tcolar
  */
 public class FanIndexer extends EmbeddingIndexer
 {
 
+	public FanIndexer()
+	{
+		super();
+	}
+
 	@Override
 	protected void index(Indexable indexable, Result parserResult, Context context)
 	{
-		throw new UnsupportedOperationException("Not supported yet.");
+		System.err.println("Indexing requested for: "+indexable.getRelativePath());
 	}
 
 }

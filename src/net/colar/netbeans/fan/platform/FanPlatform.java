@@ -99,12 +99,14 @@ public class FanPlatform
 	{
 	return fanshBin;
 	}*/
+
 	/**
 	 * Add Fan Source items (pods src)
 	 * @return
 	 */
 	public synchronized Set<ClassPath> getSourceClassPaths()
 	{
+		// Do it only once.
 		if (sourcePaths == null && fanSrc != null)
 		{
 			sourcePaths = new HashSet<ClassPath>();
