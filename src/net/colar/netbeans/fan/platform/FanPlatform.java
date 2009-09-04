@@ -52,6 +52,9 @@ public class FanPlatform
 			//fanBin = fanHome + "bin" + File.separator + (IS_WIN ? "fan.exe" : "fan");
 			//fanshBin = fanHome + "bin" + File.separator + (IS_WIN ? "fansh.exe" : "fansh");
 			fanSrc = fanHome + "src" + File.separator;
+
+			// Set fan.home property, so we casn use Fan code later
+			System.setProperty("fan.home", fanHome);
 		}
 		// force updating paths
 		sourcePaths = null;

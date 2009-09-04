@@ -99,7 +99,6 @@ public class FanLanguage extends DefaultLanguageConfig
 
 
 	// Being worked on
-
 	@Override
 	public CodeCompletionHandler getCompletionHandler()
 	{

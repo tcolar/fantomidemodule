@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.text.JTextComponent;
+import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -32,6 +33,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public CodeCompletionResult complete(CodeCompletionContext context)
 	{
+		String prefix = context.getPrefix();
+		if(prefix==null)
+			prefix="";
+
 		FanCompletionContext cpl = new FanCompletionContext(context);
 		ArrayList<CompletionProposal> proposals = new ArrayList();
 		int anchor = context.getCaretOffset();
@@ -39,10 +44,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		switch (cpl.getCompletionType())
 		{
 			case ROOT_LEVEL:
-				proposeRootItems(proposals, anchor);
+				proposeRootItems(proposals, anchor, prefix.toLowerCase());
 				break;
 			case IMPORT:
-				proposeImports(proposals, anchor);
+				proposeImports(proposals, anchor, prefix.toLowerCase());
 				break;
 		}
 
@@ -98,11 +103,14 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	also propose imports items (if within "using ...")
 	proposeImports(proposals);
 	 */
-	private void proposeRootItems(ArrayList<CompletionProposal> proposals, int anchor)
+	private void proposeRootItems(ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
 		for (String item : ROOT_ITEMS)
 		{
-			proposals.add(new FanKeywordProposal(item, anchor));
+			if (item.toLowerCase().startsWith(prefix))
+			{
+				proposals.add(new FanKeywordProposal(item.substring(prefix.length()), anchor));
+			}
 		}
 	}
 
@@ -118,8 +126,15 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param anchor
 	 * @return
 	 */
-	private void proposeImports(ArrayList<CompletionProposal> proposals, int anchor)
+	private void proposeImports(ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		proposals.add(new FanKeywordProposal("sys", anchor));
+		Set<String> names = FanPodIndexer.getInstance().getAllPodNames();
+		for (String name : names)
+		{
+			if (name.toLowerCase().startsWith(prefix))
+			{
+				proposals.add(new FanKeywordProposal(name.substring(prefix.length()), anchor));
+			}
+		}
 	}
 }
