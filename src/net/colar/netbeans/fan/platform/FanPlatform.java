@@ -178,8 +178,11 @@ public class FanPlatform
 		if (enableDebug)
 		{
 			String debugPort = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT, "8000");
+			// java debugger
 			fanExec.addCommandArg("-Xdebug");
 			fanExec.addCommandArg("-Xrunjdwp:transport=dt_socket,address=" + debugPort + ",server=y,suspend=y");
+			// fan debug
+			fanExec.addCommandArg("-Dfan.debug=true");
 		}
 
 		// custom options

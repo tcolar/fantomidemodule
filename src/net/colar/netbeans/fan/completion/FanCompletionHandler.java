@@ -34,8 +34,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	public CodeCompletionResult complete(CodeCompletionContext context)
 	{
 		String prefix = context.getPrefix();
-		if(prefix==null)
-			prefix="";
+		if (prefix == null)
+		{
+			prefix = "";
+		}
 
 		FanCompletionContext cpl = new FanCompletionContext(context);
 		ArrayList<CompletionProposal> proposals = new ArrayList();
@@ -128,12 +130,28 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposeImports(ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		Set<String> names = FanPodIndexer.getInstance().getAllPodNames();
-		for (String name : names)
+		System.out.println("prefix: "+prefix);
+		int i1=prefix.lastIndexOf(".");
+		int i2=prefix.lastIndexOf(":");
+
+		if (i1 > -1 && i1 > i2)
 		{
-			if (name.toLowerCase().startsWith(prefix))
+			// complete item like java:java. ....
+		} else if (i2 > -1 && i2 > i1)
+		{
+			// complete item like  sys: ...    or   java: ....
+		} else
+		{   // List all pods
+			FanImportProposal prop=new FanImportProposal("java:", anchor, true);
+			prop.setSortPrio(1);
+			proposals.add(prop);
+			Set<String> names = FanPodIndexer.getInstance().getAllPodNames();
+			for (String name : names)
 			{
-				proposals.add(new FanKeywordProposal(name.substring(prefix.length()), anchor));
+				if (name.toLowerCase().startsWith(prefix))
+				{
+					proposals.add(new FanImportProposal(name, anchor, false));
+				}
 			}
 		}
 	}

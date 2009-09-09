@@ -23,6 +23,8 @@ public abstract class FanCompletionProposal implements CompletionProposal
 	protected String name;
 	protected Set<Modifier> modifiers;
 	protected ElementKind kind;
+	protected ImageIcon icon;
+	private int prio = 5;
 
 	@Override
 	public int getAnchorOffset()
@@ -42,6 +44,10 @@ public abstract class FanCompletionProposal implements CompletionProposal
 		return name;
 	}
 
+	/**
+	 * What's actually inserted
+	 * @return
+	 */
 	@Override
 	public String getInsertPrefix()
 	{
@@ -86,8 +92,7 @@ public abstract class FanCompletionProposal implements CompletionProposal
 	@Override
 	public ImageIcon getIcon()
 	{
-		//TODO: java icon for java items ?
-		return null;
+		return icon;
 	}
 
 	@Override
@@ -105,7 +110,7 @@ public abstract class FanCompletionProposal implements CompletionProposal
 	@Override
 	public int getSortPrioOverride()
 	{
-		return 0;
+		return prio;
 	}
 
 	@Override
@@ -113,5 +118,11 @@ public abstract class FanCompletionProposal implements CompletionProposal
 	{
 		return null;
 	}
+
+	public void setSortPrio(int i)
+	{
+		prio=i;
+	}
+
 
 }
