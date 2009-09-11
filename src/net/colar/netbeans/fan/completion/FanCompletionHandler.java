@@ -25,6 +25,15 @@ import org.netbeans.modules.csl.spi.ParserResult;
 public class FanCompletionHandler implements CodeCompletionHandler
 {
 
+	private static enum DocTypes
+	{
+
+		NA,
+		POD,
+		POD_TYPE
+	};
+	DocTypes docType = DocTypes.NA;
+	String preamble = "";
 	public static final String[] ROOT_ITEMS =
 	{
 		"class", "mixin", "enum", "public", "internal", "abstract", "final", "const", "using"
@@ -42,14 +51,29 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		FanCompletionContext cpl = new FanCompletionContext(context);
 		ArrayList<CompletionProposal> proposals = new ArrayList();
 		int anchor = context.getCaretOffset();
+		preamble = cpl.getPreamble();
 
 		switch (cpl.getCompletionType())
 		{
 			case ROOT_LEVEL:
 				proposeRootItems(proposals, anchor, prefix.toLowerCase());
 				break;
-			case IMPORT:
-				proposeImports(proposals, anchor, prefix.toLowerCase());
+			case IMPORT_POD:
+				if (preamble.contains("::"))
+				{
+					String pod = preamble.substring(0, preamble.indexOf("::"));
+					proposeTypes(pod, proposals, anchor, prefix.toLowerCase());
+				} else
+				{
+					// Propose [java] then all pods
+					FanImportProposal prop = new FanImportProposal("[java]", anchor, true);
+					prop.setSortPrio(1);
+					proposals.add(prop);
+					proposePods(proposals, anchor, prefix.toLowerCase());
+				}
+				break;
+			case IMPORT_FFI_JAVA:
+				//TODO
 				break;
 		}
 
@@ -60,7 +84,22 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public String document(ParserResult result, ElementHandle handle)
 	{
-		return "";
+		String doc = "";
+		switch (docType)
+		{
+			case POD:
+				doc = FanPodIndexer.getInstance().getPodDoc(handle.getName());
+				break;
+			case POD_TYPE:
+				String pod = preamble.substring(0, preamble.indexOf("::"));
+				doc = FanPodIndexer.getInstance().getPodTypeDoc(pod, handle.getName());
+				break;
+		}
+		if(doc!=null)
+		{
+			doc=doc.replaceAll("\n", "<br/>");
+		}
+		return doc;
 	}
 
 	@Override
@@ -109,7 +148,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	{
 		for (String item : ROOT_ITEMS)
 		{
-			if (item.toLowerCase().startsWith(prefix))
+			//if (item.toLowerCase().startsWith(prefix))
 			{
 				proposals.add(new FanKeywordProposal(item.substring(prefix.length()), anchor));
 			}
@@ -128,31 +167,30 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param anchor
 	 * @return
 	 */
-	private void proposeImports(ArrayList<CompletionProposal> proposals, int anchor, String prefix)
+	private void proposePods(ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		System.out.println("prefix: "+prefix);
-		int i1=prefix.lastIndexOf(".");
-		int i2=prefix.lastIndexOf(":");
-
-		if (i1 > -1 && i1 > i2)
+		Set<String> names = FanPodIndexer.getInstance().getAllPodNames();
+		for (String name : names)
 		{
-			// complete item like java:java. ....
-		} else if (i2 > -1 && i2 > i1)
-		{
-			// complete item like  sys: ...    or   java: ....
-		} else
-		{   // List all pods
-			FanImportProposal prop=new FanImportProposal("java:", anchor, true);
-			prop.setSortPrio(1);
-			proposals.add(prop);
-			Set<String> names = FanPodIndexer.getInstance().getAllPodNames();
-			for (String name : names)
+			if (name.toLowerCase().startsWith(prefix))
 			{
-				if (name.toLowerCase().startsWith(prefix))
-				{
-					proposals.add(new FanImportProposal(name, anchor, false));
-				}
+				proposals.add(new FanImportProposal(name, anchor, false));
+				docType = DocTypes.POD;
 			}
 		}
+	}
+
+	private void proposeTypes(String podName, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
+	{
+		Set<String> types = FanPodIndexer.getInstance().getImportTypes(podName);
+		for (String name : types)
+		{
+			if (name.toLowerCase().startsWith(prefix))
+			{
+				proposals.add(new FanImportProposal(name, anchor, false));
+				docType = DocTypes.POD_TYPE;
+			}
+		}
+		//docType = DocTypes.POD
 	}
 }

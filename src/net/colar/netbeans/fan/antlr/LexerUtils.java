@@ -271,6 +271,8 @@ public class LexerUtils
 	 */
 	public static boolean moveToNextNonWSToken(TokenSequence seq, int fromOfset, int maxOffset)
 	{
+		if(fromOfset>maxOffset || fromOfset>seq.tokenCount())
+			return false;
 		seq.move(fromOfset);
 		while(seq.moveNext() && seq.offset()<=maxOffset)
 		{
@@ -290,8 +292,9 @@ public class LexerUtils
 	 */
 	public static boolean moveToNextSignificantToken(TokenSequence seq, int fromOfset, int maxOffset)
 	{
-		seq.move(fromOfset);
-		while(seq.moveNext() && seq.offset()<=maxOffset)
+		if(fromOfset>maxOffset || fromOfset>seq.tokenCount())
+			return false;
+		while(seq.offset()<=maxOffset && seq.moveNext() && seq.offset()<=maxOffset)
 		{
 			int tokenType=seq.token().id().ordinal();
 			if( ! matchType(tokenType, FanGrammarHelper.INSIGNIFICANT_TOKENS))

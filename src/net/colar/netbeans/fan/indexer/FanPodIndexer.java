@@ -3,11 +3,15 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import fan.sys.List;
+import fan.sys.Pod;
 import fan.sys.Repo;
 import fan.sys.Sys;
+import fan.sys.Type;
 import fanx.fcode.FPod;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.ZipInputStream;
@@ -54,23 +58,6 @@ public class FanPodIndexer implements FileChangeListener
 		{
 			indexPod(pods.get(key));
 		}
-		/*{
-			HashMap map = Repo.findAllPods();
-			//List pods = new List(Sys.PodType, map.size());
-			Iterator it = map.keySet().iterator();
-			while (it.hasNext())
-			{
-				String name = (String) it.next();
-				try
-				{
-					allPodsList.add(doFind(name, true, null, null));
-				} catch (Throwable e)
-				{
-					System.out.println("ERROR: Invalid pod file: " + name);
-					e.printStackTrace();
-				}
-			}
-		}*/
 	}
 
 	private void indexPod(java.io.File pod)
@@ -124,4 +111,37 @@ public class FanPodIndexer implements FileChangeListener
 		return allPods.keySet();
 	}
 
+	public String getPodDoc(String podName)
+	{
+		if(allPods.containsKey(podName))
+			return Pod.find(podName).doc();
+		return null;
+	}
+
+	public Set<String> getImportTypes(String podName)
+	{
+		Set<String> result=new HashSet();
+		if(allPods.containsKey(podName))
+		{
+			List types=Pod.find(podName).types();
+			for(int i=0; i!=types.size(); i++)
+			{
+				Type type=(Type)types.get(i);
+				result.add(type.name());
+			}
+		}
+		return result;
+	}
+
+	public String getPodTypeDoc(String podName, String typeName)
+	{
+		if(allPods.containsKey(podName))
+		{
+			Pod pod=Pod.find(podName);
+			Type t=pod.findType(typeName);
+			if(t!=null)
+				return t.doc();
+		}
+		return null;
+	}
 }

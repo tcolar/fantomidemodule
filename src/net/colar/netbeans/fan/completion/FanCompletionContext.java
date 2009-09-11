@@ -33,10 +33,11 @@ public class FanCompletionContext
 	private final TokenSequence<? extends FanTokenID> tokenStream;
 	private final CommonTree curNode;
 
-	public static enum completionTypes{UNKNOWN, ROOT_LEVEL, IMPORT, IMPORT_FFI_JAVA};
+	public static enum completionTypes{UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA};
 
 	private final CodeCompletionContext context;
 	FanParserResult result;
+	private String preamble="";
 
 	public FanCompletionContext(CodeCompletionContext context)
 	{
@@ -68,15 +69,30 @@ public class FanCompletionContext
 		tokenStream.move(offset);
 		if(curNode.isNil())
 		{
+			// ie: not within a type (class etc...)
 			completionType=completionTypes.ROOT_LEVEL;
 			int begin=LexerUtils.getLineBeginOffset(tokenStream, offset, true);
 			if(LexerUtils.moveToNextNonWSToken(tokenStream, begin, offset))
 			{
 				Token tk=tokenStream.token();
 				int tkType=tk.id().ordinal();
-				System.out.println("Next token:" + tk);
 				if(tkType == FanLexer.KW_USING)
-					completionType=completionTypes.IMPORT;
+				{
+					completionType=completionTypes.IMPORT_POD;
+					tokenStream.moveNext();
+					while(LexerUtils.moveToNextNonWSToken(tokenStream, tokenStream.offset(), offset))
+					{
+						Token t=tokenStream.token();
+						preamble+=t.toString();
+						tokenStream.moveNext();
+						if(preamble.startsWith("[java]"))
+						{
+							completionType=completionTypes.IMPORT_FFI_JAVA;
+							preamble="";
+						}
+					}
+					System.out.println("Preamble:" + preamble);
+				}
 			}
 		}
 		// restore ts offset
@@ -136,6 +152,15 @@ public class FanCompletionContext
 	public TokenSequence<? extends FanTokenID> getTokenStream()
 	{
 		return tokenStream;
+	}
+
+	/**
+	 * Preamble contains prefix text relevant to the completion
+	 * @return
+	 */
+	public String getPreamble()
+	{
+		return preamble;
 	}
 
 	

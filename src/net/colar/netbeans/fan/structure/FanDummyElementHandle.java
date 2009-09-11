@@ -42,7 +42,7 @@ public class FanDummyElementHandle implements ElementHandle
 
 	public String getName()
 	{
-		return "el "+name;
+		return name;
 	}
 
 	public FileObject getFileObject()
