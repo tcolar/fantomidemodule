@@ -95,10 +95,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				doc = FanPodIndexer.getInstance().getPodTypeDoc(pod, handle.getName());
 				break;
 		}
-		if(doc!=null)
-		{
-			doc=doc.replaceAll("\n", "<br/>");
-		}
 		return doc;
 	}
 

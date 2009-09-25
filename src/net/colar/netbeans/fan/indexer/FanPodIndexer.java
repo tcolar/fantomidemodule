@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import fan.sys.FanObj;
 import fan.sys.List;
 import fan.sys.Pod;
 import fan.sys.Repo;
@@ -28,8 +29,8 @@ import org.openide.filesystems.FileUtil;
  */
 public class FanPodIndexer implements FileChangeListener
 {
+
 	private static final FanPodIndexer instance = new FanPodIndexer();
-	
 	// treemap is sorted
 	TreeMap<String, FPod> allPods = new TreeMap<String, FPod>();
 
@@ -47,14 +48,16 @@ public class FanPodIndexer implements FileChangeListener
 	{
 		// If fan.home not set yet (no fan platform yet), skip
 		FanPlatform platform = FanPlatform.getInstance(false);
-		if(platform == null)
+		if (platform == null)
+		{
 			return;
+		}
 
 		FileUtil.addFileChangeListener(this, Sys.PodsDir);
 
 		allPods = new TreeMap<String, FPod>();
 		HashMap<String, java.io.File> pods = Repo.findAllPods();
-		for(String key : pods.keySet())
+		for (String key : pods.keySet())
 		{
 			indexPod(pods.get(key));
 		}
@@ -65,14 +68,13 @@ public class FanPodIndexer implements FileChangeListener
 		FPod fpod = new FPod(null, null, null);
 		try
 		{
-			FileInputStream fos=new FileInputStream(pod);
+			FileInputStream fos = new FileInputStream(pod);
 			fpod.readFully(new ZipInputStream(fos));
 			// close -> move to finaly
 			fos.close();
-			System.out.println("### Adding pod: "+pod.getPath()+" "+fpod.podName);
+			System.out.println("### Adding pod: " + pod.getPath() + " " + fpod.podName);
 			allPods.put(fpod.podName, fpod);
-		}
-		catch(Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -113,20 +115,22 @@ public class FanPodIndexer implements FileChangeListener
 
 	public String getPodDoc(String podName)
 	{
-		if(allPods.containsKey(podName))
-			return Pod.find(podName).doc();
+		if (allPods.containsKey(podName))
+		{
+			return fanDocToHtml(Pod.find(podName).doc());
+		}
 		return null;
 	}
 
 	public Set<String> getImportTypes(String podName)
 	{
-		Set<String> result=new HashSet();
-		if(allPods.containsKey(podName))
+		Set<String> result = new HashSet();
+		if (allPods.containsKey(podName))
 		{
-			List types=Pod.find(podName).types();
-			for(int i=0; i!=types.size(); i++)
+			List types = Pod.find(podName).types();
+			for (int i = 0; i != types.size(); i++)
 			{
-				Type type=(Type)types.get(i);
+				Type type = (Type) types.get(i);
 				result.add(type.name());
 			}
 		}
@@ -135,13 +139,39 @@ public class FanPodIndexer implements FileChangeListener
 
 	public String getPodTypeDoc(String podName, String typeName)
 	{
-		if(allPods.containsKey(podName))
+		if (allPods.containsKey(podName))
 		{
-			Pod pod=Pod.find(podName);
-			Type t=pod.findType(typeName);
-			if(t!=null)
-				return t.doc();
+			Pod pod = Pod.find(podName);
+			Type t = pod.findType(typeName);
+			if (t != null)
+			{
+				return fanDocToHtml(t.doc());
+			}
 		}
 		return null;
+	}
+
+	/**
+	 * Parse Fandoc text into HTML using fan's builtin parser.
+	 * @param fandoc
+	 * @return
+	 */
+	public static String fanDocToHtml(String fandoc)
+	{
+		FanPlatform platform = FanPlatform.getInstance(false);
+		if(platform==null)
+			return fandoc;
+		String html = fandoc;
+		try
+		{
+			FanObj parser = (FanObj) Type.find("fandoc::FandocParser").make();
+			FanObj doc = (FanObj) parser.type().method("parseStr").call(parser, fandoc);
+			html = (String) doc.type().method("write").call(doc, Type.find("fandoc::HtmlDocWriter").make());
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		System.out.println("Html doc: "+html);
+		return html;
 	}
 }
