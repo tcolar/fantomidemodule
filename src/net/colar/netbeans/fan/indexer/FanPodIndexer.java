@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import fan.sys.Buf;
 import fan.sys.FanObj;
 import fan.sys.List;
 import fan.sys.Pod;
@@ -166,12 +167,15 @@ public class FanPodIndexer implements FileChangeListener
 		{
 			FanObj parser = (FanObj) Type.find("fandoc::FandocParser").make();
 			FanObj doc = (FanObj) parser.type().method("parseStr").call(parser, fandoc);
-			html = (String) doc.type().method("write").call(doc, Type.find("fandoc::HtmlDocWriter").make());
+			Buf buf = Buf.make();
+			FanObj writer = (FanObj)Type.find("fandoc::HtmlDocWriter").method("make").call(buf.out());
+			doc.type().method("write").call(doc, writer);
+			html = buf.flip().readAllStr();
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		System.out.println("Html doc: "+html);
+		//System.out.println("Html doc: "+html);
 		return html;
 	}
 }

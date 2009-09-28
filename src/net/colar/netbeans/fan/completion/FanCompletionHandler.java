@@ -101,6 +101,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public ElementHandle resolveLink(String link, ElementHandle handle)
 	{
+		//TODO: resolve links
+		/*System.out.println("Resolve link: "+link);
+		link="sys.File";
+		return new ElementHandle.UrlHandle(link);*/
 		return null;
 	}
 
