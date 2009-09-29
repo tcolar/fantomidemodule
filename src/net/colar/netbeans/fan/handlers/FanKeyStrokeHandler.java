@@ -123,7 +123,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			}
 		}
 		// Same but dual characters
-		if ((car == '/' && prev=='*' && token.id().ordinal() == FanLexer.MULTI_COMMENT) ||
+		if (/*(car == '/' && prev=='*' && token.id().ordinal() == FanLexer.MULTI_COMMENT) ||*/
 				(car == '>' && prev=='|' && token.id().ordinal() == FanLexer.DSL))
 		{
 			// remove previous char and then skip existing one
@@ -186,12 +186,12 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 					toInsert = "|>";
 				}
 				break;
-			case '*':
+			/*case '*':
 				if (prev=='/')
 				{
-					toInsert = "*/";
+					toInsert = "* /";
 				}
-				break;
+				break;*/
 		}
 		// do the insertion job
 		if (toInsert.length() > 0)
