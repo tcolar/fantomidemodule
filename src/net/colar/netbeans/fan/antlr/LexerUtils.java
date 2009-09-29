@@ -240,6 +240,21 @@ public class LexerUtils
 		return result;
 	}
 
+	public static int getLineEndOffset(TokenSequence seq, int offset, boolean semiIsNL)
+	{
+		seq.move(offset);
+		while(seq.moveNext())
+		{
+			System.out.println("seq: "+seq.offset());
+			int tokenType=seq.token().id().ordinal();
+			if(tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
+				break;
+		}
+		int result = seq.offset();
+		// put it back where it was.
+		seq.move(offset);
+		return result;
+	}
 	/**
 	 * Return the offset of the beginiing of this line (after a LineBreak or beginning of file)
 	 * @param seq
@@ -310,4 +325,23 @@ public class LexerUtils
 				return true;
 		return false;
 	}
+
+	/**
+	 * Return the offset of the start of the next line.
+	 * Max offset is the maximum, if not found by then, return -1;
+	 * @param offset
+	 * @param maxOffset
+	 * @return
+	 */
+	public static int nextLineStartOffset(TokenSequence seq, int offset, int maxOffset)
+	{
+		int of = getLineEndOffset(seq, offset, false);
+		if(of>-1)
+			of+=2;
+		System.out.println("of: "+of);
+		if(of > seq.tokenCount())
+			return -1;
+		return of;
+	}
+
 }

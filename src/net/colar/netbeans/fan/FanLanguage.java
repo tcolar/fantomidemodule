@@ -9,12 +9,13 @@ import java.util.Set;
 import net.colar.netbeans.fan.completion.FanCompletionHandler;
 import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
+import net.colar.netbeans.fan.structure.FanFormatter;
 import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
-import org.netbeans.modules.csl.api.HintsProvider;
+import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
@@ -98,6 +99,11 @@ public class FanLanguage extends DefaultLanguageConfig
 		return Collections.singleton(ClassPath.SOURCE);
 	}
 
+	@Override
+	public Formatter getFormatter()
+	{
+		return new FanFormatter();
+	}
 
 	// Being worked on
 	@Override
@@ -110,6 +116,12 @@ public class FanLanguage extends DefaultLanguageConfig
 	public EmbeddingIndexerFactory getIndexerFactory()
 	{
 		return new FanIndexerFactory();
+	}
+
+	@Override
+	public boolean hasFormatter()
+	{
+		return true;
 	}
 
 }

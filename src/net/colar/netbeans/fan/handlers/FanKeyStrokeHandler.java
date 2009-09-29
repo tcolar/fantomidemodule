@@ -40,7 +40,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	 * Note .*?  = match anything NON-greedily
 	 */
 
-	private static Pattern[] INDENT_AFTER_PATTERNS =
+	public static Pattern[] INDENT_AFTER_PATTERNS =
 	{
 		// single line if
 		Pattern.compile("^\\s*if\\s*\\(.*?\\)[^{]*$"),
