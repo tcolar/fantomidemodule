@@ -163,7 +163,7 @@ public class FanParserResult extends ParserResult
 		System.err.println("-------------------End AST Tree dump-----------------------");
 	}
 
-	private void dumpTree(CommonTree t, int indent)
+	public static void dumpTree(CommonTree t, int indent)
 	{
 		if (t != null)
 		{

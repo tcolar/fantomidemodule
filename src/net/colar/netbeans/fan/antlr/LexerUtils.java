@@ -45,22 +45,28 @@ public class LexerUtils
 	 * @param doc
 	 * @return
 	 */
-	public static TokenSequence<? extends FanTokenID> getFanTokenSequence(Document doc)
+	public static TokenSequence<? extends FanTokenID> getFanTokenSequence(Document doc, int offset)
 	{
 		//System.err.println("doc:" + doc);
 		TokenHierarchy<Document> th = TokenHierarchy.get(doc);
 		//System.err.println("hierarchy: " + th);
-		return getFanTokenSequence(th);
+		return getFanTokenSequence(th, offset);
 	}
-
+	
+	public static TokenSequence<? extends FanTokenID> getFanTokenSequence(Document doc)
+	{
+		return getFanTokenSequence(doc, 0);
+	}
 	/**
 	 * Returns the tokensequence from th tokenhierarchy
 	 * @param th
 	 * @return
 	 */
-	public static TokenSequence<? extends FanTokenID> getFanTokenSequence(TokenHierarchy<?> th)
+	public static TokenSequence<? extends FanTokenID> getFanTokenSequence(TokenHierarchy<?> th, int offset)
 	{
 		TokenSequence<? extends FanTokenID> ts = th.tokenSequence(FanTokenID.language());
+		if(offset!=0)
+			ts=ts.subSequence(offset);
 		return ts;
 	}
 
@@ -242,17 +248,27 @@ public class LexerUtils
 
 	public static int getLineEndOffset(TokenSequence seq, int offset, boolean semiIsNL)
 	{
+		//System.out.println(">gleo " + offset);
+		int result=-1;
 		seq.move(offset);
-		while(seq.moveNext())
+		// check if mve failed -> =~ end of stream
+		if(!seq.moveNext() || seq.offset() < offset)
+			return -1;
+		do
 		{
-			System.out.println("seq: "+seq.offset());
+			//System.out.println("seq: "+seq.offset());
+			// If this happens, we reached end of stream
 			int tokenType=seq.token().id().ordinal();
 			if(tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
+			{
+				result = seq.offset();
 				break;
+			}
 		}
-		int result = seq.offset();
+		while(seq.moveNext());
 		// put it back where it was.
 		seq.move(offset);
+		//System.out.println("<gleo "+result);
 		return result;
 	}
 	/**
@@ -267,11 +283,12 @@ public class LexerUtils
 		seq.move(offset);
 		while(seq.movePrevious())
 		{
+			//System.out.println("seq2: "+seq.offset());
 			int tokenType=seq.token().id().ordinal();
 			if(tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
 				break;
 		}
-		int result = seq.offset();
+		int result = seq.offset()+1;
 		// put it back where it was.
 		seq.move(offset);
 		return result;
@@ -335,13 +352,30 @@ public class LexerUtils
 	 */
 	public static int nextLineStartOffset(TokenSequence seq, int offset, int maxOffset)
 	{
+		//System.out.println(">nlso");
 		int of = getLineEndOffset(seq, offset, false);
-		if(of>-1)
-			of+=2;
-		System.out.println("of: "+of);
-		if(of > seq.tokenCount())
-			return -1;
+		if(of > -1)
+			of+=1;
+		//System.out.println("of: "+of);
+		/*if(of > seq.)
+			return -1;*/
 		return of;
+	}
+
+	public static int getPrevLineOffset(Document document, int startOfLine)
+	{
+		int result=-1;
+		TokenSequence seq = getFanTokenSequence(document);
+		seq.move(startOfLine);
+		while(seq.movePrevious())
+		{
+			System.out.println("seq3: "+seq.offset());
+
+			if(seq.token().id().ordinal() == FanLexer.LB)
+				break;
+		}
+		result=seq.offset();
+		return result;
 	}
 
 }
