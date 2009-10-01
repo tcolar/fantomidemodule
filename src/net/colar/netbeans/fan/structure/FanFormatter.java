@@ -85,7 +85,7 @@ public class FanFormatter implements Formatter
 			TokenId id = token.id();
 			int ord = id.ordinal();
 
-			if (ord == FanLexer.KW_CLASS || ord == FanLexer.KW_MIXIN || ord==FanLexer.KW_ENUM)
+			if (ord == FanLexer.KW_CLASS || ord == FanLexer.KW_MIXIN || ord == FanLexer.KW_ENUM)
 			{
 				return ts.offset();
 			}
@@ -115,21 +115,21 @@ public class FanFormatter implements Formatter
 					return -1;
 				}
 			}
-		} else if (ord == FanLexer.PAR_L || ord==FanLexer.BRACKET_L || ord == FanLexer.SQ_BRACKET_L)
+		} else if (ord == FanLexer.PAR_L || ord == FanLexer.BRACKET_L || ord == FanLexer.SQ_BRACKET_L)
 		{
 			return 1;
-		} else if (ord == FanLexer.PAR_R || ord==FanLexer.BRACKET_R || ord == FanLexer.SQ_BRACKET_R)
+		} else if (ord == FanLexer.PAR_R || ord == FanLexer.BRACKET_R || ord == FanLexer.SQ_BRACKET_R)
 		{
 			return -1;
 		} /*else if (includeKeywords)
 		{
-			if (LexUtilities.isBeginToken(id, doc, ts))
-			{
-				return 1;
-			} else if (id == FanTokenID.RBRACE)
-			{
-				return -1;
-			}
+		if (LexUtilities.isBeginToken(id, doc, ts))
+		{
+		return 1;
+		} else if (id == FanTokenID.RBRACE)
+		{
+		return -1;
+		}
 		}*/
 
 		return 0;
@@ -245,7 +245,7 @@ public class FanFormatter implements Formatter
 			// If the line starts with an end-marker, such as "end", "}", "]", etc.,
 			// find the corresponding opening marker, and indent the line to the same
 			// offset as the beginning of that line.
-			return (/*LexUtilities.isIndentToken(id) && !LexUtilities.isBeginToken(id, doc, offset)) ||*/ord == FanLexer.BRACKET_R || ord == FanLexer.PAR_R || ord == FanLexer.KW_BREAK);
+			return ( /*LexUtilities.isIndentToken(id) && !LexUtilities.isBeginToken(id, doc, offset)) ||*/ord == FanLexer.BRACKET_R || ord == FanLexer.PAR_R || ord == FanLexer.SQ_BRACKET_R);
 		}
 
 		return false;
@@ -492,10 +492,12 @@ public class FanFormatter implements Formatter
 			// The bracket balance at the offset ( parens, bracket, brace )
 			int bracketBalance = 0;
 			boolean continued = false;
-			boolean indentHtml = false;
+			boolean checkForSignleStmt = false;
+			boolean inCaseStmt = false;
 
 			while ((!includeEnd && offset < end) || (includeEnd && offset <= end))
 			{
+				int singleStmtAdjust = 0;
 				int indent; // The indentation to be used for the current line
 
 				int hangingIndent = continued ? (hangingIndentSize) : 0;
@@ -515,6 +517,51 @@ public class FanFormatter implements Formatter
 
 				int endOfLine = Utilities.getRowEnd(doc, offset) + 1;
 
+				// thibaut.c
+				// start add-on for single stmt and switch/case identation handling
+				Token<? extends FanTokenID> token = getFirstToken(doc, offset);
+				String line=doc.getText(offset, endOfLine-offset);
+				if (token != null)
+				{
+					int ord = token.id().ordinal();
+					// Check if we are in single stmt
+					if (checkForSignleStmt)
+					{
+						if (ord != FanLexer.BRACKET_L)
+						{
+							singleStmtAdjust = indentSize;
+						}
+						checkForSignleStmt = false;
+					}
+					if (inCaseStmt)
+					{
+						if (ord == FanLexer.BRACKET_R || ord == FanLexer.KW_CASE || ord == FanLexer.KW_DEFAULT)
+						{
+							inCaseStmt = false;
+						} else
+						{
+							singleStmtAdjust = indentSize;
+						}
+
+					}
+					// Check current line to set single stmt flags for next pass
+					if (ord == FanLexer.KW_IF || ord == FanLexer.KW_ELSE ||
+						ord == FanLexer.KW_TRY || ord == FanLexer.KW_CATCH || ord == FanLexer.KW_FINALLY ||
+						ord == FanLexer.KW_FOR || ord == FanLexer.KW_WHILE)
+					{
+						// Deal with when there is a bracket at the end of line (then not a single stmt)
+						// Not perfect ... but probably OK
+						if(line!=null && !line.trim().endsWith("{"))
+							checkForSignleStmt = true;
+					}
+					if (ord == FanLexer.KW_CASE || ord == FanLexer.KW_DEFAULT)
+					{
+						inCaseStmt = true;
+					}
+
+				}
+				//end add-on
+
 				if (indent < 0)
 				{
 					indent = 0;
@@ -527,7 +574,7 @@ public class FanFormatter implements Formatter
 				{
 					// Don't do a hanging indent if we're already indenting beyond the parent level?
 
-					indents.add(Integer.valueOf(indent));
+					indents.add(Integer.valueOf(indent + singleStmtAdjust));
 					offsets.add(Integer.valueOf(offset));
 				}
 
