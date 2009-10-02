@@ -177,7 +177,7 @@ public class FanFormatter implements Formatter
 				TokenId id = token.id();
 				// If we're in a string literal (or regexp or documentation) leave
 				// indentation alone!
-				if (LexerUtils.matchType(id.ordinal(), FanGrammarHelper.INSIGNIFICANT_TOKENS) ||
+				if (/*LexerUtils.matchType(id.ordinal(), FanGrammarHelper.INSIGNIFICANT_TOKENS) ||*/
 					id.ordinal() == FanLexer.DSL || id.ordinal() == FanLexer.QUOTSTR ||
 					id.ordinal() == FanLexer.STR)
 				{
