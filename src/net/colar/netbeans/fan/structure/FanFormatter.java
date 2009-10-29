@@ -26,7 +26,7 @@ import org.openide.util.Exceptions;
  * The formatter, is responsible for "pretty-formatting" a file when requested
  * (indentation etc....)
  *
- * Mostly copied from Groovy formatter and C hnaged as needed.
+ * Mostly copied from Groovy formatter and Changed as needed.
  *
  * TODO: Indent single line expr like If, Try etc...
  * TODO: Also try to use proper indent for Switch / Case
@@ -177,8 +177,7 @@ public class FanFormatter implements Formatter
 				TokenId id = token.id();
 				// If we're in a string literal (or regexp or documentation) leave
 				// indentation alone!
-				if (/*LexerUtils.matchType(id.ordinal(), FanGrammarHelper.INSIGNIFICANT_TOKENS) ||*/
-					id.ordinal() == FanLexer.DSL || id.ordinal() == FanLexer.QUOTSTR ||
+				if (/*LexerUtils.matchType(id.ordinal(), FanGrammarHelper.INSIGNIFICANT_TOKENS) ||*/id.ordinal() == FanLexer.DSL || id.ordinal() == FanLexer.QUOTSTR ||
 					id.ordinal() == FanLexer.STR)
 				{
 					// Those can be multiline, so leave it alone
@@ -520,7 +519,7 @@ public class FanFormatter implements Formatter
 				// thibaut.c
 				// start add-on for single stmt and switch/case identation handling
 				Token<? extends FanTokenID> token = getFirstToken(doc, offset);
-				String line=doc.getText(offset, endOfLine-offset);
+				String line = doc.getText(offset, endOfLine - offset);
 				if (token != null)
 				{
 					int ord = token.id().ordinal();
@@ -551,8 +550,10 @@ public class FanFormatter implements Formatter
 					{
 						// Deal with when there is a bracket at the end of line (then not a single stmt)
 						// Not perfect ... but probably OK
-						if(line!=null && !line.trim().endsWith("{"))
+						if (line != null && !line.trim().endsWith("{"))
+						{
 							checkForSignleStmt = true;
+						}
 					}
 					if (ord == FanLexer.KW_CASE || ord == FanLexer.KW_DEFAULT)
 					{

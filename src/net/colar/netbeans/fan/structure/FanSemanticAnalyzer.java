@@ -48,6 +48,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		FanParserResult res = (FanParserResult) result;
 		Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap();
 		CommonTree ast = res.getTree();
+		System.out.println(ast.toStringTree());
 		scanTree(res, ast, newHighlights);
 		highlights = newHighlights.size() == 0 ? null : newHighlights;
 	}
@@ -79,12 +80,12 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	{
 		if (node != null && !cancelled)
 		{
-			/*String par = null;
+			String par = null;
 			if (node.getParent() != null)
 			{
 				par = node.getParent().getText();
 			}
-			System.out.println("Node: .... "+par+" -> "+node.getText());*/
+			System.out.println("Node: .... "+par+" -> "+node.getText());
 			switch (node.getType())
 			{
 				case FanParser.AST_STR:
