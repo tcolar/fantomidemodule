@@ -55,7 +55,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			highlights = newHighlights.size() == 0 ? null : newHighlights;
 		} else
 		{
-			System.out.println("AST TREE HAS ERRORS");
+			//System.out.println("AST TREE HAS ERRORS");
 		}
 	}
 
@@ -88,12 +88,15 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		// this prevent parsing to restart after then was an error
 		if (node != null /*&& !cancelled*/)
 		{
-			String par = null;
-			if (node.getParent() != null)
+			// DEBUGGING - inneficient
+			String par = "";
+			Tree parNode=node;
+			while((parNode=parNode.getParent()) != null)
 			{
-				par = node.getParent().getText();
+				par += "  ";// nesting level
 			}
-			System.out.println("Node: .... " + par + " -> " + node.getText());
+			System.out.println("Node: " + par + node.getText());
+			
 			switch (node.getType())
 			{
 				case FanParser.AST_STR:
@@ -188,7 +191,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	 */
 	private void addInterpolationHighlights(FanParserResult result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, CommonTree node)
 	{
-		System.out.println(">interpolation");
+		//System.out.println(">interpolation");
 		if (node.getChildCount() == 0)
 		{
 			return; // shouldn't happen but being safe
@@ -196,7 +199,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		CommonTree textNode = (CommonTree) node.getChild(0);
 		OffsetRange strRange = LexerUtils.getContentNodeRange((FanParserResult) result, node);
 		String str = textNode.getText();
-		System.out.println("interpolation : " + str);
+		//System.out.println("interpolation : " + str);
 		Matcher matcher = INTERPOLATION.matcher(str);
 		while (matcher.find())
 		{
@@ -204,8 +207,8 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			int end = strRange.getStart() + matcher.end();
 			OffsetRange range = new OffsetRange(start, end);
 			newHighlights.put(range, ColoringAttributes.CUSTOM2_SET);
-			System.out.println("interpolation added : " + start + "-" + end);
+			//System.out.println("interpolation added : " + start + "-" + end);
 		}
-		System.out.println("<interpolation");
+		//System.out.println("<interpolation");
 	}
 }
