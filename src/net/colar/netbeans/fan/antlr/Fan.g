@@ -332,7 +332,7 @@ ctorChainSuper	:	KW_SUPER (DOT id)? parL args? parR;
 staticBlock	:	KW_STATIC block;
 block 		@init {paraphrase.push("Block");} @after{paraphrase.pop();}
 		:	((bracketL)=>multiStmt | stmt);
-multiStmt	:	bracketL s=(stmt*) bracketR -> ^(AST_CODE_BLOCK bracketL $s? bracketR);
+multiStmt	:	bracketL stmt* bracketR -> ^(AST_CODE_BLOCK bracketL (stmt*)? bracketR);
 stmt
 @init {paraphrase.push("Statement");} @after{paraphrase.pop();}
 		:	(g_if | g_for | g_while | g_break |

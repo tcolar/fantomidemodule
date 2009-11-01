@@ -33,7 +33,6 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 
 	private volatile boolean cancelled = false;
 	private Map<OffsetRange, Set<ColoringAttributes>> highlights = null;
-
 	private static final Pattern INTERPOLATION = Pattern.compile("[^\\\\]\\$\\{?[a-zA-Z0-9\\.]*\\}?");
 
 	@Override
@@ -47,10 +46,17 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	{
 		FanParserResult res = (FanParserResult) result;
 		Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap();
-		CommonTree ast = res.getTree();
-		System.out.println(ast.toStringTree());
-		scanTree(res, ast, newHighlights);
-		highlights = newHighlights.size() == 0 ? null : newHighlights;
+		// If there where parsing error, we skip semantic analysis
+		if (res.getDiagnostics().isEmpty())
+		{
+			CommonTree ast = res.getTree();
+			System.out.println("AST TREE: " + ast.toStringTree());
+			scanTree(res, ast, newHighlights);
+			highlights = newHighlights.size() == 0 ? null : newHighlights;
+		} else
+		{
+			System.out.println("AST TREE HAS ERRORS");
+		}
 	}
 
 	@Override
@@ -78,14 +84,16 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	 */
 	private void scanTree(FanParserResult result, CommonTree node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights)
 	{
-		if (node != null && !cancelled)
+		// It seems that even parsing is good again, the cancel flag stays ON
+		// this prevent parsing to restart after then was an error
+		if (node != null /*&& !cancelled*/)
 		{
 			String par = null;
 			if (node.getParent() != null)
 			{
 				par = node.getParent().getText();
 			}
-			System.out.println("Node: .... "+par+" -> "+node.getText());
+			System.out.println("Node: .... " + par + " -> " + node.getText());
 			switch (node.getType())
 			{
 				case FanParser.AST_STR:
@@ -119,6 +127,10 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 				CommonTree subNode = (CommonTree) node.getChild(i);
 				scanTree(result, subNode, newHighlights);
 			}
+		}
+		else
+		{
+			System.out.println("Node: "+node+" Cancelled:"+cancelled);
 		}
 	}
 
@@ -173,21 +185,27 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 
 	/**
 	 * Highlight interpolated variables in Strings
-	*/
+	 */
 	private void addInterpolationHighlights(FanParserResult result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, CommonTree node)
 	{
-			if(node.getChildCount()==0)
-				return; // shouldn't happen but being safe
-			CommonTree textNode = (CommonTree) node.getChild(0);
-			OffsetRange strRange = LexerUtils.getContentNodeRange((FanParserResult) result, node);
-			String str=textNode.getText();
-			Matcher matcher=INTERPOLATION.matcher(str);
-			while(matcher.find())
-			{
-				int start = strRange.getStart() + matcher.start();
-				int end = strRange.getStart() + matcher.end();
-				OffsetRange range = new OffsetRange(start, end);
-				newHighlights.put(range, ColoringAttributes.CUSTOM2_SET);
-			}
+		System.out.println(">interpolation");
+		if (node.getChildCount() == 0)
+		{
+			return; // shouldn't happen but being safe
+		}
+		CommonTree textNode = (CommonTree) node.getChild(0);
+		OffsetRange strRange = LexerUtils.getContentNodeRange((FanParserResult) result, node);
+		String str = textNode.getText();
+		System.out.println("interpolation : " + str);
+		Matcher matcher = INTERPOLATION.matcher(str);
+		while (matcher.find())
+		{
+			int start = strRange.getStart() + matcher.start();
+			int end = strRange.getStart() + matcher.end();
+			OffsetRange range = new OffsetRange(start, end);
+			newHighlights.put(range, ColoringAttributes.CUSTOM2_SET);
+			System.out.println("interpolation added : " + start + "-" + end);
+		}
+		System.out.println("<interpolation");
 	}
 }
