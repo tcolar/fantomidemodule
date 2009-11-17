@@ -16,7 +16,12 @@ import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ParameterInfo;
 import org.netbeans.modules.csl.spi.DefaultCompletionResult;
+import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.parsing.api.indexing.IndexingManager;
+import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
+import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
+import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 
 /**
  * Code Completion
@@ -74,6 +79,11 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				break;
 			case IMPORT_FFI_JAVA:
 				//TODO
+				break;
+			case TEMP:
+				//proposeTest(proposals, anchor, prefix.toLowerCase())
+				//GsfUtilities.getR
+				//QuerySupport.
 				break;
 		}
 
@@ -153,6 +163,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				proposals.add(new FanKeywordProposal(item.substring(prefix.length()), anchor));
 			}
 		}
+	}
+
+	private void proposeTest(ArrayList<CompletionProposal> proposals, int anchor, String toLowerCase)
+	{
 	}
 
 	/**

@@ -30,7 +30,7 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
  */
 public class FanSemanticAnalyzer extends SemanticAnalyzer
 {
-
+	
 	private volatile boolean cancelled = false;
 	private Map<OffsetRange, Set<ColoringAttributes>> highlights = null;
 	private static final Pattern INTERPOLATION = Pattern.compile("[^\\\\]\\$\\{?[a-zA-Z0-9\\.]*\\}?");
@@ -95,7 +95,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			{
 				par += "  ";// nesting level
 			}
-			System.out.println("Node: " + par + node.getText());
+			//System.out.println("Node: " + par + node.getText());
 			
 			switch (node.getType())
 			{
@@ -133,7 +133,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		}
 		else
 		{
-			System.out.println("Node: "+node+" Cancelled:"+cancelled);
+			//System.out.println("Node: "+node+" Cancelled:"+cancelled);
 		}
 	}
 

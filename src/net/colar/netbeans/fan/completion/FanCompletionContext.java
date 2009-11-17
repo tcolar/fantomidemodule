@@ -33,7 +33,7 @@ public class FanCompletionContext
 	private final TokenSequence<? extends FanTokenID> tokenStream;
 	private final CommonTree curNode;
 
-	public static enum completionTypes{UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA};
+	public static enum completionTypes{UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, TEMP};
 
 	private final CodeCompletionContext context;
 	FanParserResult result;
@@ -94,6 +94,10 @@ public class FanCompletionContext
 					System.out.println("Preamble:" + preamble);
 				}
 			}
+		}
+		else
+		{
+			completionType=completionTypes.TEMP;
 		}
 		// restore ts offset
 		tokenStream.move(offset);

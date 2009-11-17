@@ -5,9 +5,9 @@
 package net.colar.netbeans.fan.indexer;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.antlr.FanParser;
+import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -23,6 +23,11 @@ public class FanIndexer extends EmbeddingIndexer
 {
 
 	public static final String INDEX_POD = "INDEX_POD";
+	public static final String INDEX_CLASS = "INDEX_CLASS";
+	public static final String INDEX_MIXIN = "INDEX_MIXIN";
+	public static final String INDEX_ENUM = "INDEX_ENUM";
+	public static final String INDEX_FUNCTION = "INDEX_FUNCTION";
+	public static final String INDEX_FIELD = "INDEX_FIELD";
 
 	public FanIndexer()
 	{
@@ -36,46 +41,87 @@ public class FanIndexer extends EmbeddingIndexer
 		try
 		{
 			IndexingSupport support = IndexingSupport.getInstance(context);
+			IndexDocument doc = support.createDocument(indexable);
 
 			FanParserResult fanResult = (FanParserResult) parserResult;
 			CommonTree ast = fanResult.getTree();
-			Set<IndexDocument> docs = parseTree(support, indexable, ast);
+			parseTree(doc, indexable, ast);
 
-			for (IndexDocument doc : docs)
-			{
-				support.addDocument(doc);
-			}
+			support.addDocument(doc);
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 	}
 
-	private Set<IndexDocument> parseTree(IndexingSupport support, Indexable indexable, CommonTree node)
+	private IndexDocument parseTree(IndexDocument doc, Indexable indexable, CommonTree node)
 	{
-		Set<IndexDocument> docs = new HashSet();
-		if (node != null && !node.isNil())
+		if (node != null)
 		{
 			switch (node.getType())
 			{
-				/*case FanParser.AST_CLASS:
+				case FanParser.AST_CLASS:
+					addType(INDEX_CLASS, doc, node);
+					break;
 				case FanParser.AST_MIXIN:
+					addType(INDEX_MIXIN, doc, node);
+					break;
 				case FanParser.AST_ENUM:
-				*/
+					addType(INDEX_ENUM, doc, node);
+					break;
+				case FanParser.AST_FIELD:
+					addField(INDEX_FIELD, doc, node);
+					break;
 			}
-			IndexDocument doc = support.createDocument(indexable);
 			//doc.addPair(INDEX_POD, pod, true, true);
-			support.addDocument(doc);
 
 			for (int i = 0; i < node.getChildCount(); i++)
 			{
 				CommonTree subNode = (CommonTree) node.getChild(i);
 				if (subNode != null && !subNode.isNil())
 				{
-					docs.addAll(parseTree(support, indexable, node));
+					parseTree(doc, indexable, subNode);
 				}
 			}
 		}
-		return docs;
+		return doc;
+	}
+
+	/**
+	 * Add a type (mixin, class, enum)
+	 * @param type
+	 * @param doc
+	 * @param node
+	 */
+	private void addType(String type, IndexDocument doc, CommonTree node)
+	{
+		FanIndexItem item = new FanIndexItem();
+		String id = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_ID, -1);
+		String modifs = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_MODIFIER, -1);
+		String inheritance = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_INHERITANCE, -1);
+		item.addItem(FanIndexItem.TYPE.ID, id);
+		item.addItem(FanIndexItem.TYPE.MODIFIERS, modifs);
+		item.addItem(FanIndexItem.TYPE.INHERITANCE, inheritance);
+		StringBuilder infos = new StringBuilder(item.toString(FanIndexItem.TYPE.ID));
+		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.MODIFIERS));
+		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.INHERITANCE));
+		System.out.println("Indexing "+type+" : "+infos.toString());
+		doc.addPair(type, infos.toString(), true, true);
+	}
+
+	private void addField(String type, IndexDocument doc, CommonTree node)
+	{
+		FanIndexItem item = new FanIndexItem();
+		String id = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_ID, -1);
+		String modifs = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_MODIFIER, -1);
+		String fieldType = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_TYPE, -1);
+		item.addItem(FanIndexItem.TYPE.ID, id);
+		item.addItem(FanIndexItem.TYPE.TYPE, fieldType);
+		item.addItem(FanIndexItem.TYPE.MODIFIERS, modifs);
+		StringBuilder infos = new StringBuilder(item.toString(FanIndexItem.TYPE.ID));
+		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.TYPE));
+		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.MODIFIERS));
+		System.out.println("Indexing "+type+" : "+infos.toString());
+		doc.addPair(type, infos.toString(), true, true);
 	}
 }
