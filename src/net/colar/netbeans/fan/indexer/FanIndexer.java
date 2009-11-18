@@ -17,6 +17,8 @@ import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
 /**
  * Index parsed files (used later for completion etc...)
+ * I feel like it's not right to have the item data encoded into a string
+ * This should probably be backed by a JavaDB instead ... but whatever
  * @author tcolar
  */
 public class FanIndexer extends EmbeddingIndexer

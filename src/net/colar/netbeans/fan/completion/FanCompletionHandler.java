@@ -4,10 +4,13 @@
 package net.colar.netbeans.fan.completion;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.text.JTextComponent;
+import net.colar.netbeans.fan.indexer.FanIndexHelper;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
@@ -16,12 +19,8 @@ import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ParameterInfo;
 import org.netbeans.modules.csl.spi.DefaultCompletionResult;
-import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.parsing.api.indexing.IndexingManager;
-import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
-import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
-import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.openide.filesystems.FileObject;
 
 /**
  * Code Completion
@@ -47,6 +46,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public CodeCompletionResult complete(CodeCompletionContext context)
 	{
+		FileObject fo = context.getParserResult().getSnapshot().getSource().getFileObject();
 		String prefix = context.getPrefix();
 		if (prefix == null)
 		{
@@ -81,6 +81,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				//TODO
 				break;
 			case TEMP:
+				addtoProposals(proposals, FanIndexHelper.findRootTypes(fo, prefix));
 				//proposeTest(proposals, anchor, prefix.toLowerCase())
 				//GsfUtilities.getR
 				//QuerySupport.
@@ -90,6 +91,16 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		DefaultCompletionResult completionResult = new DefaultCompletionResult(proposals, false);
 		return completionResult;
 	}
+
+	private void addtoProposals(ArrayList<CompletionProposal> proposals, Collection findRootTypes)
+	{
+		Iterator it = findRootTypes.iterator();
+		while(it.hasNext())
+		{
+			System.out.println("Prop: "+it.next());
+		}
+	}
+
 
 	@Override
 	public String document(ParserResult result, ElementHandle handle)
