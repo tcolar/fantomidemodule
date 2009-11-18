@@ -4,6 +4,9 @@
 // History:
 //   Aug 24, 2009  thibautc  Creation
 //
+using sys::toto as tata
+using [java] java.lang.Blah
+using sys::Buf
 
 **
 ** Main
@@ -21,6 +24,7 @@ class Main
     
     Void doStuff()
     {
+        echo("Debug: "+Sys.env["fan.debug"])
                 Actor.sleep(10sec)
                 Pod.list.each |Pod p|
                 {

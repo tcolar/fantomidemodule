@@ -174,7 +174,7 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 		boolean valid = FanPlatform.checkFanHome(homeField.getText());
 		if (!valid)
 		{
-			errorLabel.setText("Fan Home is invalid!");
+			errorLabel.setText("Fantom Home is invalid!");
 		} else
 		{
 			boolean validDebug=false;

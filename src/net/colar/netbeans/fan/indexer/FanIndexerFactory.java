@@ -20,7 +20,7 @@ import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
 public class FanIndexerFactory extends EmbeddingIndexerFactory
 {
 
-	static{System.err.println("Fan - Init indexer Factory");}
+	static{System.err.println("Fantom - Init indexer Factory");}
 
 	public static final String NAME = "FanIndexer";
 	public static final int VERSION = 1;

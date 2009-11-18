@@ -102,7 +102,7 @@ public class FanProjectProperties
 		}
 		dest.getParentFile().mkdirs();
 		FileOutputStream fos = new FileOutputStream(dest);
-		projectProperties.store(fos, "Fan Project Properties");
+		projectProperties.store(fos, "Fantom Project Properties");
 		fos.close();
 	}
 
@@ -167,7 +167,7 @@ public class FanProjectProperties
 		try
 		{
 			FileOutputStream fos = new FileOutputStream(dest);
-			props.store(fos, "Fan Project Properties");
+			props.store(fos, "Fantom Project Properties");
 			fos.close();
 		} catch (IOException e)
 		{

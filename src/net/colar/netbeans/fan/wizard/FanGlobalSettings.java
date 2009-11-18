@@ -45,12 +45,12 @@ public class FanGlobalSettings extends AdvancedOption
 
 	public String getDisplayName()
 	{
-		return "Fan options";
+		return "Fantom options";
 	}
 
 	public String getTooltip()
 	{
-		return "Fan options";
+		return "Fantom options";
 	}
 
 	public OptionsPanelController create()

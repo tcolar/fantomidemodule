@@ -61,7 +61,7 @@ public abstract class FanAction
 
 	protected void showLaunchError(String message)
 	{
-		JOptionPane.showMessageDialog(null, message, "Fan Launch Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, message, "Fantom Launch Error", JOptionPane.ERROR_MESSAGE);
 
 	}
 

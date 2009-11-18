@@ -32,7 +32,7 @@ public class RunFanShellAction extends FanAction
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
 		FanExecution fanExec = new FanExecution();
-		fanExec.setDisplayName("Fan Shell (fansh)");
+		fanExec.setDisplayName("Fantom Shell (fansh)");
 
 		FanPlatform.getInstance().buildFanCall(fanExec);
 		fanExec.addCommandArg(FanPlatform.FAN_CLASS);

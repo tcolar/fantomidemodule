@@ -9,9 +9,11 @@
 **
 class Other
 {
+    Int global := 23
     new make()
     {
-        echo("other")
+        local := "Local var"
+        echo("Hello")
     }
 }
 

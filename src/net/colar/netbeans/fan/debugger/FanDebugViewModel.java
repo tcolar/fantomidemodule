@@ -25,7 +25,7 @@ public class FanDebugViewModel implements NodeModel
 	public static final String ICON_FWT="net/colar/netbeans/fan/project/resources/fanFwt.png";
 	public static final String ICON_JAVA="net/colar/netbeans/fan/project/resources/java.png";
 
-	static{System.err.println("Fan - Init "+FanDebugViewModel.class);}
+	static{System.err.println("Fantom - Init "+FanDebugViewModel.class);}
 
 	public String getDisplayName(Object node) throws UnknownTypeException
 	{
