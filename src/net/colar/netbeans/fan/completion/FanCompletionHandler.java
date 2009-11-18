@@ -81,7 +81,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				//TODO
 				break;
 			case TEMP:
-				addtoProposals(proposals, FanIndexHelper.findRootTypes(fo, prefix));
+				//addtoProposals(proposals, FanIndexHelper.findRootTypes(fo, prefix));
 				//proposeTest(proposals, anchor, prefix.toLowerCase())
 				//GsfUtilities.getR
 				//QuerySupport.
