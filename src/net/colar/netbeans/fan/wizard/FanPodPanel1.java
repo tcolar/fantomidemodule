@@ -44,7 +44,7 @@ public final class FanPodPanel1 extends JPanel
 	@Override
 	public String getName()
 	{
-		return "New Fan Project";
+		return "New Fantom Project";
 	}
 
 	/** This method is called from within the constructor to
