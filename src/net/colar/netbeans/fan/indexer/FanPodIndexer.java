@@ -8,6 +8,7 @@ import fan.sys.FanObj;
 import fan.sys.List;
 import fan.sys.Pod;
 import fan.sys.Repo;
+import fan.sys.Slot;
 import fan.sys.Sys;
 import fan.sys.Type;
 import fanx.fcode.FPod;
@@ -146,7 +147,7 @@ public class FanPodIndexer implements FileChangeListener
 	public Set<String> getAllTypes()
 	{
 		Set<String> result = new HashSet();
-		for(String podName : allPods.keySet())
+		for (String podName : allPods.keySet())
 		{
 			List types = Pod.find(podName).types();
 			for (int i = 0; i != types.size(); i++)
@@ -180,15 +181,17 @@ public class FanPodIndexer implements FileChangeListener
 	public static String fanDocToHtml(String fandoc)
 	{
 		FanPlatform platform = FanPlatform.getInstance(false);
-		if(platform==null)
+		if (platform == null)
+		{
 			return fandoc;
+		}
 		String html = fandoc;
 		try
 		{
 			FanObj parser = (FanObj) Type.find("fandoc::FandocParser").make();
 			FanObj doc = (FanObj) parser.type().method("parseStr").call(parser, fandoc);
 			Buf buf = Buf.make();
-			FanObj writer = (FanObj)Type.find("fandoc::HtmlDocWriter").method("make").call(buf.out());
+			FanObj writer = (FanObj) Type.find("fandoc::HtmlDocWriter").method("make").call(buf.out());
 			doc.type().method("write").call(doc, writer);
 			html = buf.flip().readAllStr();
 		} catch (Exception e)
@@ -197,5 +200,24 @@ public class FanPodIndexer implements FileChangeListener
 		}
 		//System.out.println("Html doc: "+html);
 		return html;
+	}
+
+	public Set<String> getSlots(String pod, String t)
+	{
+		Set<String> result = new HashSet();
+		if (allPods.containsKey(pod))
+		{
+			Type type = Pod.find(pod).findType(t);
+			if (type != null)
+			{
+				List slots = type.slots();
+				for (int i=0; i!=slots.size(); i++)
+				{
+					Slot slot = (Slot)slots.get(i);
+					result.add(slot.name());
+				}
+			}
+		}
+		return result;
 	}
 }

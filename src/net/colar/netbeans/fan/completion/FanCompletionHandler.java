@@ -90,7 +90,9 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				if (preamble.contains("."))
 				{
 					//TODO
-					//proposeSlots(null, proposals, anchor, prefix.toLowerCase());
+					String type = "Actor";
+					String pod = "Sys";
+					proposeSlots(pod, type, proposals, anchor, prefix.toLowerCase());
 					//docType = DocTypes.TYPE;
 				}
 				else
@@ -273,4 +275,19 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 		//docType = DocTypes.POD
 	}
+
+	private void proposeSlots(String pod, String type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
+	{
+		Set<String> slots = FanPodIndexer.getInstance().getSlots(pod, type);
+		for (String slot : slots)
+		{
+			if (slot.toLowerCase().startsWith(prefix))
+			{
+				//TODO: FanSlotProposal
+				proposals.add(new FanKeywordProposal(slot, anchor));
+				docType = DocTypes.POD_TYPE; // TODO
+			}
+		}
+	}
+
 }
