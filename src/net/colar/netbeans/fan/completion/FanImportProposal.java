@@ -21,7 +21,7 @@ public class FanImportProposal extends FanCompletionProposal
 		this.name=kw;
 		this.anchor=anchor;
 		this.modifiers=Collections.EMPTY_SET;
-		this.kind=ElementKind.KEYWORD;
+		this.kind=ElementKind.PACKAGE;
 		if( ! isJava)
 			icon = ImageUtilities.loadImageIcon("net/colar/netbeans/fan/fan.png", false);
 		else

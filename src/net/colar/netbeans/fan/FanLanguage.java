@@ -30,6 +30,12 @@ import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
  */
 public class FanLanguage extends DefaultLanguageConfig
 {
+	// Initialize special logging as needed
+	static
+	{
+		FanNBLogging.setupLogging();
+	}
+
 	// Fan mime Type (used all over)
 	public static final String FAN_MIME_TYPE = "text/x-fan";
 

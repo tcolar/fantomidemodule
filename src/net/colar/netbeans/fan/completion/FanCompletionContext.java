@@ -33,7 +33,7 @@ public class FanCompletionContext
 	private final TokenSequence<? extends FanTokenID> tokenStream;
 	private final CommonTree curNode;
 
-	public static enum completionTypes{UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, TEMP};
+	public static enum completionTypes{UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, BASE_TYPE};
 
 	private final CodeCompletionContext context;
 	FanParserResult result;
@@ -97,7 +97,7 @@ public class FanCompletionContext
 		}
 		else
 		{
-			completionType=completionTypes.TEMP;
+			completionType=completionTypes.BASE_TYPE;
 		}
 		// restore ts offset
 		tokenStream.move(offset);

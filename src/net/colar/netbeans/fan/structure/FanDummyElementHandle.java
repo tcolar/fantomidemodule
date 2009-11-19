@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan.structure;
 
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Set;
 import net.colar.netbeans.fan.FanLanguage;
 import org.netbeans.modules.csl.api.ElementHandle;
@@ -20,8 +21,14 @@ import org.openide.filesystems.FileObject;
  */
 public class FanDummyElementHandle implements ElementHandle
 {
+	// custom param ID's
+	public enum params{POD}
+
 	private final String name;
 	private final ElementKind kind;
+	private FileObject fo;
+	// Stores custom data
+	private Hashtable<params, String> customParams=new Hashtable<params, String>();
 
 	public FanDummyElementHandle(String name, ElementKind kind)
 	{
@@ -47,7 +54,7 @@ public class FanDummyElementHandle implements ElementHandle
 
 	public FileObject getFileObject()
 	{
-		return null;
+		return fo;
 	}
 
 	public String getIn()
@@ -69,5 +76,22 @@ public class FanDummyElementHandle implements ElementHandle
 	{
 		return OffsetRange.NONE;
 	}
+
+	public Hashtable<params, String> getCustomParams()
+	{
+		return customParams;
+	}
+
+	public void setCustomParams(Hashtable customParams)
+	{
+		this.customParams = customParams;
+	}
+
+	public void setFo(FileObject fo)
+	{
+		this.fo = fo;
+	}
+
+
 
 }

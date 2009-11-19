@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.indexer;
 
 import java.util.Collection;
 import java.util.Collections;
+import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
 import org.openide.filesystems.FileObject;
@@ -32,23 +33,24 @@ public class FanIndexHelper
 	{
 		QuerySupport qs = getQuerySupport(fo);
 		if(qs!=null)
-			return query(qs, FanIndexer.INDEX_CLASS, prefix, QuerySupport.Kind.CASE_INSENSITIVE_PREFIX, (String[])null);
+			return query(qs, FanIndexer.INDEX_CLASS, prefix, Kind.PREFIX, (String[])null);
 		return Collections.EMPTY_SET;
 		// enums ?? - yes
 		//mixins ?? - no ?
 	}
 
-	public static Collection query(QuerySupport qs, String fieldName, String fieldValue, Kind kind, final String[] fieldsToLoad)
+	public static Collection<? extends IndexResult> query(QuerySupport qs, String fieldName, String fieldValue, Kind kind, final String[] fieldsToLoad)
 	{
 		try
 		{
-			Collection c = qs.query(FanIndexer.INDEX_CLASS, "A", Kind.CASE_INSENSITIVE_PREFIX, fieldsToLoad);
+			// Kind.CASE_INSENSITIVE_PREFIX seem to not work right !
+			Collection<? extends IndexResult> c = qs.query(fieldName, fieldValue, kind, fieldsToLoad);
 			return c;
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			return Collections.EMPTY_SET;
+			return (Collection<? extends IndexResult>)Collections.EMPTY_SET;
 		}
 	}
 	// Types that can be inherited from

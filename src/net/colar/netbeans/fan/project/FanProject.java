@@ -6,7 +6,6 @@ package net.colar.netbeans.fan.project;
 
 import java.beans.PropertyChangeListener;
 import java.util.Properties;
-import java.util.logging.LogManager;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import net.colar.netbeans.fan.debugger.FanDebugPathProvider;
@@ -41,19 +40,6 @@ public class FanProject implements Project, ProjectInformation
 	private final Lookup lkp;
 	final RequestProcessor rp;
 	final Properties props = new Properties();
-
-	/*static
-	{
-		//TODO: remove this
-		System.setProperty("org.netbeans.modules.debugger.jpda.breakpoints.level", "100");
-		System.setProperty("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater.level", "100");
-		try
-		{
-			LogManager.getLogManager().readConfiguration();
-		} catch (Exception e)
-		{
-		}
-	}*/
 
 	public FanProject(FileObject dir, ProjectState state)
 	{
@@ -137,4 +123,5 @@ public class FanProject implements Project, ProjectInformation
 			GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, cpProvider.getProjectClassPaths(ClassPath.SOURCE));
 		}
 	}
+
 }

@@ -11,7 +11,10 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.indexer.FanIndexHelper;
+import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
+import net.colar.netbeans.fan.structure.FanDummyElementHandle;
+import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -20,7 +23,9 @@ import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ParameterInfo;
 import org.netbeans.modules.csl.spi.DefaultCompletionResult;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  * Code Completion
@@ -34,7 +39,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 		NA,
 		POD,
-		POD_TYPE
+		POD_TYPE,
+		TYPE,
 	};
 	DocTypes docType = DocTypes.NA;
 	String preamble = "";
@@ -80,11 +86,21 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			case IMPORT_FFI_JAVA:
 				//TODO
 				break;
-			case TEMP:
-				//addtoProposals(proposals, FanIndexHelper.findRootTypes(fo, prefix));
-				//proposeTest(proposals, anchor, prefix.toLowerCase())
-				//GsfUtilities.getR
-				//QuerySupport.
+			case BASE_TYPE:
+				proposeTypes(null, proposals, anchor, prefix.toLowerCase());
+				docType = DocTypes.TYPE;
+				/*if (preamble.contains("."))
+				{
+					// propose fields 
+					// propose methods
+					// TODO: this is not right
+					String type = preamble.substring(0, preamble.lastIndexOf("."));
+					//proposeTypes(pod, proposals, anchor, prefix.toLowerCase());
+				} else
+				{
+					addtoTypeProposals(proposals, FanIndexHelper.findRootTypes(fo, prefix));
+					docType = DocTypes.TYPE;
+				}*/
 				break;
 		}
 
@@ -92,31 +108,61 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		return completionResult;
 	}
 
-	private void addtoProposals(ArrayList<CompletionProposal> proposals, Collection findRootTypes)
+	/*private void addtoTypeProposals(ArrayList<CompletionProposal> proposals, Collection<? extends IndexResult> findRootTypes)
 	{
 		Iterator it = findRootTypes.iterator();
-		while(it.hasNext())
+		while (it.hasNext())
 		{
-			System.out.println("Prop: "+it.next());
+			IndexResult result = (IndexResult) it.next();
+			String txt = result.getValue(FanIndexer.INDEX_CLASS);
+			System.out.println("Prop: " + txt);
+			if (txt != null)
+			{
+				String type = txt.substring(0, txt.indexOf(';')).trim();
+				String pod = findPod(result.getFile());
+				
+				proposals.add(new FanTypeProposal(type, 0, pod));
+			}
 		}
-	}
-
+	}*/
 
 	@Override
 	public String document(ParserResult result, ElementHandle handle)
 	{
 		String doc = "";
+		String pod = "";
 		switch (docType)
 		{
 			case POD:
 				doc = FanPodIndexer.getInstance().getPodDoc(handle.getName());
 				break;
+			case TYPE:
+				pod = ((FanDummyElementHandle) handle).getCustomParams().get(FanDummyElementHandle.params.POD);
+				if (pod != null)
+				{
+					doc = FanPodIndexer.getInstance().getPodTypeDoc(pod, handle.getName());
+				}
+				break;
 			case POD_TYPE:
-				String pod = preamble.substring(0, preamble.indexOf("::"));
+				pod = preamble.substring(0, preamble.indexOf("::"));
 				doc = FanPodIndexer.getInstance().getPodTypeDoc(pod, handle.getName());
 				break;
 		}
 		return doc;
+	}
+
+	public String findPod(FileObject file)
+	{
+		Set<FileObject> fos = GlobalPathRegistry.getDefault().getSourceRoots();
+		for (FileObject fo : fos)
+		{
+			// It will return the "fan" or "test" subfolder, so we want the parent.
+			if (FileUtil.isParentOf(fo, file))
+			{
+				return fo.getParent().getName();
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -150,7 +196,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public Set<String> getApplicableTemplates(ParserResult result, int arg1, int arg2)
 	{
-		return Collections.EMPTY_SET;
+		return (Set<String>) Collections.EMPTY_SET;
 	}
 
 	@Override
@@ -174,10 +220,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				proposals.add(new FanKeywordProposal(item.substring(prefix.length()), anchor));
 			}
 		}
-	}
-
-	private void proposeTest(ArrayList<CompletionProposal> proposals, int anchor, String toLowerCase)
-	{
 	}
 
 	/**
@@ -207,7 +249,11 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 	private void proposeTypes(String podName, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		Set<String> types = FanPodIndexer.getInstance().getImportTypes(podName);
+		Set<String> types;
+		if(podName ==null)
+			types = FanPodIndexer.getInstance().getAllTypes();
+		else
+			types = FanPodIndexer.getInstance().getImportTypes(podName);
 		for (String name : types)
 		{
 			if (name.toLowerCase().startsWith(prefix))

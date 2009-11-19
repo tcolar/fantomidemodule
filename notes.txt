@@ -1,3 +1,19 @@
+===== Indexing ====
+2 Index: "compiled" and "new"
+
+Using FanPodIndexer for "compiled" pods (builtin Fan reflection)
+
+On "reindex"(files changed in or out of editor) add to "temp" index, using AST tree from structureAnalyzer
+On "compile" remove all types/files in the compile pod from "temp"
+
+Search:
+Search in "temp" index first.
+Then using FanPodIndexer for "compiled" pods (builtin Fan reflection)
+
+Persistance:
+Persist to NB cache ? compiled doesn't need to - new probably does (or simply cache list of files and load them again in mem at startup ?)
+
+
 ========== Currently Being worked on============================================
   - [DONE] Fix Bug in license mport for Fan File template
   - [DONE] Fix Bug where main class name is not update in project props on pod creation.
