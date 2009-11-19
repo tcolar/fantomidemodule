@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import org.openide.filesystems.FileAttributeEvent;
@@ -31,6 +32,9 @@ import org.openide.filesystems.FileUtil;
  */
 public class FanPodIndexer implements FileChangeListener
 {
+	// closures are compiled into classes with names ending by $ and a number
+	private final static Pattern CLOSURECLASS = Pattern.compile(".*?\\$\\d+\\z");
+
 
 	private static final FanPodIndexer instance = new FanPodIndexer();
 	// treemap is sorted
@@ -129,32 +133,29 @@ public class FanPodIndexer implements FileChangeListener
 	 * @param podName null = all pods
 	 * @return
 	 */
-	public Set<String> getImportTypes(String podName)
+	public Set<Type> getImportTypes(String podName)
 	{
-		Set<String> result = new HashSet();
+		Set<Type> result = new HashSet();
 		if (allPods.containsKey(podName))
 		{
 			List types = Pod.find(podName).types();
 			for (int i = 0; i != types.size(); i++)
 			{
 				Type type = (Type) types.get(i);
-				result.add(type.name());
+				String name = type.name();
+				if(!CLOSURECLASS.matcher(name).matches())
+					result.add(type);
 			}
 		}
 		return result;
 	}
 
-	public Set<String> getAllTypes()
+	public Set<Type> getAllTypes()
 	{
-		Set<String> result = new HashSet();
+		Set<Type> result = new HashSet();
 		for (String podName : allPods.keySet())
 		{
-			List types = Pod.find(podName).types();
-			for (int i = 0; i != types.size(); i++)
-			{
-				Type type = (Type) types.get(i);
-				result.add(type.name());
-			}
+			result.addAll(getImportTypes(podName));
 		}
 		return result;
 	}
@@ -202,9 +203,9 @@ public class FanPodIndexer implements FileChangeListener
 		return html;
 	}
 
-	public Set<String> getSlots(String pod, String t)
+	public Set<Slot> getSlots(String pod, String t)
 	{
-		Set<String> result = new HashSet();
+		Set<Slot> result = new HashSet();
 		if (allPods.containsKey(pod))
 		{
 			Type type = Pod.find(pod).findType(t);
@@ -214,7 +215,7 @@ public class FanPodIndexer implements FileChangeListener
 				for (int i=0; i!=slots.size(); i++)
 				{
 					Slot slot = (Slot)slots.get(i);
-					result.add(slot.name());
+					result.add(slot);
 				}
 			}
 		}

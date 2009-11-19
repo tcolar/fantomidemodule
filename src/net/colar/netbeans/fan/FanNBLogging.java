@@ -17,8 +17,8 @@ public class FanNBLogging
 	{
 		//System.setProperty("org.netbeans.modules.debugger.jpda.breakpoints.level", "100");
 		//System.setProperty("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater.level", "100");
-		System.setProperty("org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.level", "100");
-		System.setProperty("org.netbeans.modules.parsing.impl.indexing.lucene.LuceneIndex.level","100");
+		//System.setProperty("org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.level", "100");
+		//System.setProperty("org.netbeans.modules.parsing.impl.indexing.lucene.LuceneIndex.level","100");
 		try
 		{
 			LogManager.getLogManager().readConfiguration();

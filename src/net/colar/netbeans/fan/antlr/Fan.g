@@ -300,9 +300,8 @@ slotDef 	:	((KW_STATIC bracketL)=> staticBlock|
 					)
 				)
 			);
-// Global Field MUST have a type
 fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
-		:	docs facet* m=fieldFlags type id (AS_INIT_VAL expr)?
+		:	docs facet* m=fieldFlags typeId (AS_INIT_VAL expr)?
 				(
 				(bracketL (protection? (getter | setter) SP_SEMI? block?)+ bracketR)
 				| eos)

@@ -315,6 +315,20 @@ public class LexerUtils
 		return false;
 	}
 
+	public static boolean moveToPrevNonWSToken(TokenSequence seq, int fromOfset, int minOffset)
+	{
+		if(fromOfset<minOffset || fromOfset<0)
+			return false;
+		seq.move(fromOfset);
+		while(seq.movePrevious() && seq.offset()>=minOffset)
+		{
+			int tokenType=seq.token().id().ordinal();
+			if( ! matchType(tokenType, FanGrammarHelper.WS_TOKENS))
+				return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Move to next non significant token (ie: non whitespace / comments/ doc token)
 	 * @param seq

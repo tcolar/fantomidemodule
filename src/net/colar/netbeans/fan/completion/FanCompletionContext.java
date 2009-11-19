@@ -91,12 +91,18 @@ public class FanCompletionContext
 							preamble="";
 						}
 					}
-					System.out.println("Preamble:" + preamble);
 				}
+				System.out.println("Preamble:" + preamble);
 			}
 		}
 		else
 		{
+			LexerUtils.moveToPrevNonWSToken(tokenStream, offset, 0);
+			System.out.println("curNode :"+curNode.toStringTree());
+			//System.out.println("curNodeToken :"+curNode.token.toString());
+			Token tk=tokenStream.token();
+			System.out.println("token :"+tk.toString());
+			System.out.println("tokenId :"+tk.id().toString());
 			completionType=completionTypes.BASE_TYPE;
 		}
 		// restore ts offset
