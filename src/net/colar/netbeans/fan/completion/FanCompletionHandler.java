@@ -87,8 +87,17 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				//TODO
 				break;
 			case BASE_TYPE:
-				proposeTypes(null, proposals, anchor, prefix.toLowerCase());
-				docType = DocTypes.TYPE;
+				if (preamble.contains("."))
+				{
+					//TODO
+					//proposeSlots(null, proposals, anchor, prefix.toLowerCase());
+					//docType = DocTypes.TYPE;
+				}
+				else
+				{
+					proposeTypes(null, proposals, anchor, prefix.toLowerCase());
+					docType = DocTypes.TYPE;
+				}
 				/*if (preamble.contains("."))
 				{
 					// propose fields 

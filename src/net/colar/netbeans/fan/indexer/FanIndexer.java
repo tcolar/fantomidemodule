@@ -4,8 +4,6 @@
  */
 package net.colar.netbeans.fan.indexer;
 
-import java.io.IOException;
-import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.antlr.runtime.tree.CommonTree;
@@ -14,8 +12,10 @@ import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
-import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
 /**
+ *
+ * Update: Will not be using lucerne anymore ...
+ *
  * Index parsed files (used later for completion etc...)
  * I feel like it's not right to have the item data encoded into a string
  * This should probably be backed by a JavaDB instead ... but whatever
@@ -40,7 +40,7 @@ public class FanIndexer extends EmbeddingIndexer
 	protected void index(Indexable indexable, Result parserResult, Context context)
 	{
 		System.err.println("Indexing requested for: " + indexable.getURL());
-		try
+		/*try
 		{
 			IndexingSupport support = IndexingSupport.getInstance(context);
 			IndexDocument doc = support.createDocument(indexable);
@@ -53,7 +53,7 @@ public class FanIndexer extends EmbeddingIndexer
 		} catch (IOException e)
 		{
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	private IndexDocument parseTree(IndexDocument doc, Indexable indexable, CommonTree node)
