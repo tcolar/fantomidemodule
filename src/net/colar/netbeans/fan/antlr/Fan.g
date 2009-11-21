@@ -305,7 +305,7 @@ fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
 				(
 				(bracketL (protection? (getter | setter) SP_SEMI? block?)+ bracketR)
 				| eos)
-			-> ^(AST_FIELD ^(AST_TYPE type) ^(AST_ID id) ^(AST_MODIFIER $m)* expr?);
+			-> ^(AST_FIELD typeId ^(AST_MODIFIER $m)* expr?);
 typeId		:	((type id)=>typeAndId | fieldId);
 fieldId		:	id
 			   -> ^(AST_ID id);
