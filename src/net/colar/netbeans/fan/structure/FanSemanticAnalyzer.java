@@ -50,7 +50,8 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		if (res.getDiagnostics().isEmpty())
 		{
 			CommonTree ast = res.getTree();
-			System.out.println("AST TREE: " + ast.toStringTree());
+			//System.out.println("AST TREE: " + ast.toStringTree());
+			res.dumpTree();
 			scanTree(res, ast, newHighlights);
 			highlights = newHighlights.size() == 0 ? null : newHighlights;
 		} else

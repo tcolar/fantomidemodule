@@ -42,8 +42,7 @@ public class FanCompletionContext
 	public static enum completionTypes
 	{
 
-		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, BASE_TYPE
-	};
+		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, BASE_TYPE, DOTCALL};
 	private final CodeCompletionContext context;
 	FanParserResult result;
 	private String preamble = "";
@@ -52,7 +51,9 @@ public class FanCompletionContext
 	{
 		this.context = context;
 		result = (FanParserResult) context.getParserResult();
-		offset = context.getCaretOffset();
+		result.dumpTree();
+
+		offset = context.getCaretOffset();//>0?context.getCaretOffset()-1:0;
 		String prefix = context.getPrefix();
 		if (prefix == null)
 		{
@@ -75,14 +76,14 @@ public class FanCompletionContext
 	 *
 	 * TODO: Propose after '->' ? -> probably not since a dynamic call anyhow.
 	 *
-	 * NOTE: call can be after '.' or '?.'
+	 * NOTE: Call can be after '.' or '?.'
 	 * NOTE: For inferred vars ... try to recognize the 'easy' ones (literals): http://wiki.colar.net/fan_cheat_sheet#literals
 	 *		Easy: Local Fields, Local method calls, Bool, Numbers(Char), Str, Uri, 'Type (#)'??
 	 *		Less easy: Lists, Maps, Range, Inherited methods calls, Inherited fields, Static method/field
 	 *		More Difficult: External fields, methods.
 	 *
 	 * What to complete ?
-	 * - Outside of type, default: prpose root level items (Class, public etc...)
+	 * - Outside of type, default: propose root level items (Class, public etc...)
 	 *
 	 * - In using statement
 	 *   * before '::' give pod lists + 'java'
@@ -103,7 +104,7 @@ public class FanCompletionContext
 	 *   * After 'super.' : Propose inherited slots.
 	 *
 	 * - It block
-	 *	 * Try to prpose right stuff for 'it.'
+	 *	 * Try to propose right stuff for 'it.'
 	 *
 	 * - Closure
 	 *	 * Propose closure params
@@ -121,6 +122,8 @@ public class FanCompletionContext
 	 */
 	private void determineCompletionType()
 	{
+		completionType = completionTypes.BASE_TYPE;
+
 		tokenStream.move(offset);
 		if (curNode.isNil())
 		{
@@ -152,27 +155,17 @@ public class FanCompletionContext
 			}
 		} else
 		{
-			// Ok we are at least within a type
-			FanLexer lexer = new FanLexer(new ANTLRStringStream("Table.getData(25).c"));
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			FanParser parser = new FanParser(tokens);
-			try
+			tokenStream.movePrevious();
+			CommonTree node = LexerUtils.findASTNodeAt(result, tokenStream.offset());
+			int ord = node.getType();
+			// expression completion after a '.' or '?.'
+			if (ord == FanParser.INC_DOTCALL || ord == FanParser.INC_SAFEDOTCALL)
 			{
-				FanParser.termExpr_return expr = parser.termExpr();
-				System.out.println("expr tree:"+expr.toString());
-				System.out.println("expr tree:"+expr.getTree().toString());
+				completionType = completionType.DOTCALL;
+				// Start at the . or ?. node.
+				System.out.println("Node :" + node.toStringTree());
 			}
-			catch(RecognitionException re)
-			{
-				re.printStackTrace();
-			}
-			// Get the token before '.' (or '?.')
-			LexerUtils.moveToPrevNonWSToken(tokenStream, offset - 1, 0);
-			System.out.println("curNode :" + curNode.toStringTree());
-			Token tk = tokenStream.token();
-			System.out.println("token :" + tk.toString());
-			System.out.println("tokenId :" + tk.id().toString());
-			completionType = completionTypes.BASE_TYPE;
+			//TODO: id / method completion
 		}
 		// restore ts offset
 		tokenStream.move(offset);

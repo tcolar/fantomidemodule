@@ -84,6 +84,10 @@ INC_STR;
 INC_URI;
 INC_COMMENT;
 INC_DSL;
+INC_CALL;
+// help getting valid AST fro completion:
+INC_DOTCALL;
+INC_SAFEDOTCALL;
 
 // AST elements
 AST_CLASS;
@@ -96,6 +100,11 @@ AST_CONSTRUCTOR_CHAIN;
 AST_CODE_BLOCK;
 AST_DOCS;
 AST_STR;
+AST_CALL;
+AST_TERM_EXPR;
+AST_DOT_CALL;
+AST_SAFE_DOT_CALL;
+AST_STATIC_CALL;
 // generic items
 AST_ID;
 AST_MODIFIER;
@@ -404,23 +413,32 @@ groupedExpr 	:	parL expr parR termChain*;
 unaryExpr 	:	prefixExpr | postfixExpr | termExpr;
 prefixExpr 	:	(OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS) parenExpr ;
 postfixExpr 	:	termExpr (OP_2PLUS | OP_2MINUS) ;
-termExpr 	:	termBase termChain*;
+termExpr 	:	termBase termChain*
+			-> ^(AST_TERM_EXPR termBase termChain*);
 // check for ID alone last (and not as part of idExpr) otherwise it would never check literals !
 termBase 	:	idExprReq | literal | typeBase | id;
 typeBase	:	typeLiteral | slotLiteral | namedSuper | staticCall |
  	                dsl | closure | simple | ctorBlock;
 ctorBlock	:	type itBlock;
-staticCall	:	type DOT idExpr;
+staticCall	:	type DOT idExpr
+				-> ^(AST_STATIC_CALL type idExpr);
 
 termChain 	:	dotCall | dynCall | safeDotCall | safeDynCall |
-			indexExpr | callOp | itBlock;
+			indexExpr | callOp | itBlock | incDotCall | incSafeDotCall;
 dsl	        :	simpleType DSL;
+
+incDotCall	: DOT
+				-> ^(INC_DOTCALL);
+incSafeDotCall: OP_SAFE_CALL
+				-> ^(INC_SAFEDOTCALL);
 
 // itBlocks can have a COMMA after statements, which means to call it.add(expr).
 itBlock 	:	bracketL (stmt SP_COMMA? SP_SEMI?)* bracketR;
-dotCall 	:	DOT idExpr;
+dotCall 	:	DOT idExpr
+				-> ^(AST_DOT_CALL idExpr);
 dynCall 	:	OP_ARROW idExpr;
-safeDotCall 	:	OP_SAFE_CALL idExpr;
+safeDotCall 	:	OP_SAFE_CALL idExpr
+				-> ^(AST_SAFE_DOT_CALL idExpr);
 safeDynCall	:	OP_SAFEDYN_CALL idExpr;
 indexExpr 	:	{notAfterEol()}? sq_bracketL expr sq_bracketR;
 // eos = end of expression
@@ -434,7 +452,8 @@ idExprReq	:	field | call;
 // require '*' otherwise it's just and ID (this would prevent termbase from checking literals)
 field		:	OP_MULTI ID; // changed from @ to *
  // require params or/and closure, otherwise it's just and ID (this would prevent termbase from checking literals)
-call		:	id ((callParams closure) | callParams | closure);
+call		:	id ((callParams closure) | callParams | closure)
+			-> ^(AST_CALL id);
 
 callParams	:	{notAfterEol()}? parL args? parR;
 args 		:	expr (SP_COMMA  expr)*;

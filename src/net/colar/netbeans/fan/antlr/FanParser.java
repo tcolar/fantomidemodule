@@ -1,4 +1,4 @@
-// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-11-20 16:00:49
+// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-11-23 16:01:22
 package net.colar.netbeans.fan.antlr;
 import net.colar.netbeans.fan.FanParserResult;
 
@@ -14,147 +14,155 @@ import org.antlr.runtime.tree.*;
 
 public class FanParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "KW_BREAK", "KW_CONTINUE", "KW_FOR", "KW_IF", "KW_RETURN", "KW_SWITCH", "KW_THROW", "KW_WHILE", "KW_TRY", "KW_CASE", "KW_DEFAULT", "KW_CATCH", "KW_FINALLY", "KW_USING", "KW_AS", "KW_RD_ONLY", "KW_CONST", "KW_STATIC", "KW_NATIVE", "KW_VOLATILE", "KW_OVERRIDE", "KW_VIRTUAL", "KW_FINAL", "KW_VOID", "KW_CLASS", "KW_ENUM", "KW_MIXIN", "KW_ABSTRACT", "KW_PRIVATE", "KW_PROTECTED", "KW_PUBLIC", "KW_INTERNAL", "KW_NEW", "KW_ONCE", "KW_THIS", "KW_SUPER", "KW_ELSE", "KW_IS", "KW_ISNOT", "KW_NULL", "KW_IT", "KW_TRUE", "KW_FALSE", "INC_STR", "INC_URI", "INC_COMMENT", "INC_DSL", "AST_CLASS", "AST_ENUM", "AST_MIXIN", "AST_METHOD", "AST_CONSTRUCTOR", "AST_FIELD", "AST_CONSTRUCTOR_CHAIN", "AST_CODE_BLOCK", "AST_DOCS", "AST_STR", "AST_ID", "AST_MODIFIER", "AST_INHERITANCE", "AST_PARAMS", "AST_TYPE", "SP_COLCOL", "DOT", "BRACKET_L", "BRACKET_R", "AS_INIT_VAL", "SP_COLON", "SP_COMMA", "SP_QMARK", "LIST_TYPE", "SP_PIPE", "OP_ARROW", "SP_SEMI", "AS_EQUAL", "AS_ASSIGN_OP", "OP_OR", "OP_AND", "CP_EQUALITY", "CP_COMPARATORS", "OP_ELVIS", "OP_RANG_EXCL_OLD", "OP_RANGE_EXCL", "OP_RANGE", "OP_BITOR", "OP_CURRY", "OP_LSHIFT", "OP_RSHIFT", "OP_PLUS", "OP_MINUS", "OP_MULTI", "OP_DIV", "OP_MOD", "OP_BANG", "OP_2PLUS", "OP_2MINUS", "OP_TILDA", "DSL", "OP_SAFE_CALL", "OP_SAFEDYN_CALL", "ID", "URI", "CHAR", "QUOTSTR", "STR", "OP_POUND", "AT", "DOC", "NUMBER", "SQ_BRACKET_L", "SQ_BRACKET_R", "PAR_L", "PAR_R", "LB", "WS", "LINE_COMMENT", "EXEC_COMMENT", "COMPL_ML_COMMENT", "MULTI_COMMENT", "COMPL_DSL", "DIGIT", "HEXLETTER", "COMPL_QSTR", "COMPL_STR", "COMPL_URI", "KEYWORD", "UNDERSCORE", "HEX_HEADER", "HEXNB", "DECIMAL", "FRACTIONAL", "HEXHEADER", "FRACTION", "EXPONENT", "NBTYPE", "LETTER", "INC_UNKNOWN_ITEM", "'$'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "KW_BREAK", "KW_CONTINUE", "KW_FOR", "KW_IF", "KW_RETURN", "KW_SWITCH", "KW_THROW", "KW_WHILE", "KW_TRY", "KW_CASE", "KW_DEFAULT", "KW_CATCH", "KW_FINALLY", "KW_USING", "KW_AS", "KW_RD_ONLY", "KW_CONST", "KW_STATIC", "KW_NATIVE", "KW_VOLATILE", "KW_OVERRIDE", "KW_VIRTUAL", "KW_FINAL", "KW_VOID", "KW_CLASS", "KW_ENUM", "KW_MIXIN", "KW_ABSTRACT", "KW_PRIVATE", "KW_PROTECTED", "KW_PUBLIC", "KW_INTERNAL", "KW_NEW", "KW_ONCE", "KW_THIS", "KW_SUPER", "KW_ELSE", "KW_IS", "KW_ISNOT", "KW_NULL", "KW_IT", "KW_TRUE", "KW_FALSE", "INC_STR", "INC_URI", "INC_COMMENT", "INC_DSL", "INC_CALL", "INC_DOTCALL", "INC_SAFEDOTCALL", "AST_CLASS", "AST_ENUM", "AST_MIXIN", "AST_METHOD", "AST_CONSTRUCTOR", "AST_FIELD", "AST_CONSTRUCTOR_CHAIN", "AST_CODE_BLOCK", "AST_DOCS", "AST_STR", "AST_CALL", "AST_TERM_EXPR", "AST_DOT_CALL", "AST_SAFE_DOT_CALL", "AST_STATIC_CALL", "AST_ID", "AST_MODIFIER", "AST_INHERITANCE", "AST_PARAMS", "AST_TYPE", "SP_COLCOL", "DOT", "BRACKET_L", "BRACKET_R", "AS_INIT_VAL", "SP_COLON", "SP_COMMA", "SP_QMARK", "LIST_TYPE", "SP_PIPE", "OP_ARROW", "SP_SEMI", "AS_EQUAL", "AS_ASSIGN_OP", "OP_OR", "OP_AND", "CP_EQUALITY", "CP_COMPARATORS", "OP_ELVIS", "OP_RANG_EXCL_OLD", "OP_RANGE_EXCL", "OP_RANGE", "OP_BITOR", "OP_CURRY", "OP_LSHIFT", "OP_RSHIFT", "OP_PLUS", "OP_MINUS", "OP_MULTI", "OP_DIV", "OP_MOD", "OP_BANG", "OP_2PLUS", "OP_2MINUS", "OP_TILDA", "DSL", "OP_SAFE_CALL", "OP_SAFEDYN_CALL", "ID", "URI", "CHAR", "QUOTSTR", "STR", "OP_POUND", "AT", "DOC", "NUMBER", "SQ_BRACKET_L", "SQ_BRACKET_R", "PAR_L", "PAR_R", "LB", "WS", "LINE_COMMENT", "EXEC_COMMENT", "COMPL_ML_COMMENT", "MULTI_COMMENT", "COMPL_DSL", "DIGIT", "HEXLETTER", "COMPL_QSTR", "COMPL_STR", "COMPL_URI", "KEYWORD", "UNDERSCORE", "HEX_HEADER", "HEXNB", "DECIMAL", "FRACTIONAL", "HEXHEADER", "FRACTION", "EXPONENT", "NBTYPE", "LETTER", "INC_UNKNOWN_ITEM", "'$'"
     };
-    public static final int EXPONENT=137;
-    public static final int DSL=101;
+    public static final int EXPONENT=145;
+    public static final int DSL=109;
     public static final int KW_NATIVE=22;
-    public static final int OP_AND=81;
-    public static final int AST_PARAMS=64;
-    public static final int LETTER=139;
-    public static final int HEXNB=132;
-    public static final int CHAR=106;
-    public static final int OP_2PLUS=98;
+    public static final int OP_AND=89;
+    public static final int AST_PARAMS=72;
+    public static final int LETTER=147;
+    public static final int HEXNB=140;
+    public static final int CHAR=114;
+    public static final int OP_2PLUS=106;
     public static final int KW_DEFAULT=14;
     public static final int KW_ONCE=37;
-    public static final int SP_SEMI=77;
-    public static final int INC_UNKNOWN_ITEM=140;
-    public static final int AST_MIXIN=53;
+    public static final int SP_SEMI=85;
+    public static final int INC_UNKNOWN_ITEM=148;
+    public static final int AST_MIXIN=56;
     public static final int EOF=-1;
     public static final int KW_PUBLIC=34;
     public static final int KW_ISNOT=42;
-    public static final int OP_MOD=96;
-    public static final int PAR_R=116;
-    public static final int OP_MINUS=93;
+    public static final int OP_MOD=104;
+    public static final int PAR_R=124;
+    public static final int OP_MINUS=101;
     public static final int KW_NEW=36;
     public static final int KW_BREAK=4;
+    public static final int T__149=149;
     public static final int KW_SWITCH=9;
-    public static final int OP_RANG_EXCL_OLD=85;
-    public static final int AST_CLASS=51;
-    public static final int OP_BITOR=88;
-    public static final int QUOTSTR=107;
-    public static final int AST_TYPE=65;
-    public static final int OP_BANG=97;
-    public static final int PAR_L=115;
-    public static final int OP_MULTI=94;
-    public static final int KEYWORD=129;
+    public static final int OP_RANG_EXCL_OLD=93;
+    public static final int AST_CLASS=54;
+    public static final int OP_BITOR=96;
+    public static final int QUOTSTR=115;
+    public static final int AST_TYPE=73;
+    public static final int OP_BANG=105;
+    public static final int AST_DOT_CALL=66;
+    public static final int PAR_L=123;
+    public static final int OP_MULTI=102;
+    public static final int KEYWORD=137;
     public static final int KW_PROTECTED=33;
-    public static final int AST_STR=60;
-    public static final int LINE_COMMENT=119;
-    public static final int CP_COMPARATORS=83;
-    public static final int NUMBER=112;
+    public static final int AST_STR=63;
+    public static final int LINE_COMMENT=127;
+    public static final int CP_COMPARATORS=91;
+    public static final int NUMBER=120;
     public static final int KW_CATCH=15;
-    public static final int AS_EQUAL=78;
-    public static final int UNDERSCORE=130;
-    public static final int OP_DIV=95;
-    public static final int SP_COMMA=72;
-    public static final int T__141=141;
-    public static final int URI=105;
+    public static final int AS_EQUAL=86;
+    public static final int UNDERSCORE=138;
+    public static final int INC_CALL=51;
+    public static final int OP_DIV=103;
+    public static final int SP_COMMA=80;
+    public static final int URI=113;
     public static final int KW_FINALLY=16;
-    public static final int WS=118;
+    public static final int WS=126;
     public static final int KW_THROW=10;
-    public static final int OP_POUND=109;
+    public static final int OP_POUND=117;
     public static final int KW_STATIC=21;
     public static final int INC_COMMENT=49;
-    public static final int AST_METHOD=54;
-    public static final int AST_ENUM=52;
-    public static final int SP_QMARK=73;
-    public static final int AST_ID=61;
-    public static final int HEXHEADER=135;
-    public static final int AS_INIT_VAL=70;
-    public static final int COMPL_DSL=123;
-    public static final int NBTYPE=138;
+    public static final int AST_METHOD=57;
+    public static final int AST_ENUM=55;
+    public static final int AST_CALL=64;
+    public static final int SP_QMARK=81;
+    public static final int AST_ID=69;
+    public static final int HEXHEADER=143;
+    public static final int AS_INIT_VAL=78;
+    public static final int COMPL_DSL=131;
+    public static final int NBTYPE=146;
     public static final int KW_SUPER=39;
-    public static final int OP_2MINUS=99;
-    public static final int OP_RSHIFT=91;
+    public static final int OP_2MINUS=107;
+    public static final int OP_RSHIFT=99;
     public static final int KW_ELSE=40;
-    public static final int OP_OR=80;
-    public static final int AST_MODIFIER=62;
-    public static final int DOC=111;
+    public static final int OP_OR=88;
+    public static final int AST_MODIFIER=70;
+    public static final int DOC=119;
     public static final int KW_OVERRIDE=24;
-    public static final int AST_FIELD=56;
-    public static final int AST_CODE_BLOCK=58;
+    public static final int AST_FIELD=59;
+    public static final int AST_CODE_BLOCK=61;
     public static final int KW_ABSTRACT=31;
-    public static final int MULTI_COMMENT=122;
+    public static final int MULTI_COMMENT=130;
     public static final int KW_CONST=20;
-    public static final int AST_DOCS=59;
-    public static final int COMPL_ML_COMMENT=121;
-    public static final int OP_ELVIS=84;
-    public static final int BRACKET_R=69;
+    public static final int AST_DOCS=62;
+    public static final int COMPL_ML_COMMENT=129;
+    public static final int OP_ELVIS=92;
+    public static final int BRACKET_R=77;
     public static final int KW_TRUE=45;
-    public static final int ID=104;
-    public static final int SP_COLON=71;
-    public static final int AST_CONSTRUCTOR_CHAIN=57;
-    public static final int BRACKET_L=68;
-    public static final int AT=110;
-    public static final int STR=108;
-    public static final int SP_PIPE=75;
-    public static final int OP_RANGE_EXCL=86;
-    public static final int COMPL_QSTR=126;
-    public static final int OP_TILDA=100;
+    public static final int ID=112;
+    public static final int SP_COLON=79;
+    public static final int INC_DOTCALL=52;
+    public static final int INC_SAFEDOTCALL=53;
+    public static final int AST_CONSTRUCTOR_CHAIN=60;
+    public static final int AST_TERM_EXPR=65;
+    public static final int BRACKET_L=76;
+    public static final int AT=118;
+    public static final int STR=116;
+    public static final int OP_RANGE_EXCL=94;
+    public static final int SP_PIPE=83;
+    public static final int COMPL_QSTR=134;
+    public static final int OP_TILDA=108;
     public static final int KW_VIRTUAL=25;
-    public static final int CP_EQUALITY=82;
+    public static final int CP_EQUALITY=90;
+    public static final int AST_SAFE_DOT_CALL=67;
     public static final int KW_FOR=6;
     public static final int KW_WHILE=11;
-    public static final int COMPL_URI=128;
-    public static final int OP_RANGE=87;
+    public static final int COMPL_URI=136;
+    public static final int OP_RANGE=95;
     public static final int KW_RETURN=8;
     public static final int INC_DSL=50;
-    public static final int SQ_BRACKET_R=114;
+    public static final int SQ_BRACKET_R=122;
     public static final int KW_IS=41;
-    public static final int DIGIT=124;
+    public static final int DIGIT=132;
     public static final int KW_TRY=12;
     public static final int KW_IT=44;
-    public static final int DOT=67;
+    public static final int DOT=75;
     public static final int KW_THIS=38;
     public static final int KW_IF=7;
-    public static final int OP_CURRY=89;
-    public static final int SQ_BRACKET_L=113;
-    public static final int OP_PLUS=92;
+    public static final int OP_CURRY=97;
+    public static final int SQ_BRACKET_L=121;
+    public static final int OP_PLUS=100;
     public static final int KW_FALSE=46;
     public static final int KW_INTERNAL=35;
     public static final int KW_FINAL=26;
-    public static final int HEXLETTER=125;
+    public static final int HEXLETTER=133;
     public static final int KW_CONTINUE=5;
     public static final int KW_PRIVATE=32;
     public static final int KW_ENUM=29;
-    public static final int HEX_HEADER=131;
-    public static final int OP_SAFEDYN_CALL=103;
+    public static final int HEX_HEADER=139;
+    public static final int OP_SAFEDYN_CALL=111;
     public static final int KW_VOLATILE=23;
     public static final int KW_CASE=13;
-    public static final int LIST_TYPE=74;
-    public static final int FRACTIONAL=134;
-    public static final int OP_LSHIFT=90;
-    public static final int EXEC_COMMENT=120;
+    public static final int LIST_TYPE=82;
+    public static final int FRACTIONAL=142;
+    public static final int OP_LSHIFT=98;
+    public static final int EXEC_COMMENT=128;
     public static final int KW_MIXIN=30;
-    public static final int OP_ARROW=76;
+    public static final int OP_ARROW=84;
     public static final int KW_VOID=27;
-    public static final int DECIMAL=133;
+    public static final int DECIMAL=141;
     public static final int INC_URI=48;
     public static final int KW_CLASS=28;
-    public static final int AS_ASSIGN_OP=79;
-    public static final int AST_CONSTRUCTOR=55;
+    public static final int AS_ASSIGN_OP=87;
+    public static final int AST_CONSTRUCTOR=58;
     public static final int KW_RD_ONLY=19;
     public static final int INC_STR=47;
-    public static final int OP_SAFE_CALL=102;
+    public static final int AST_STATIC_CALL=68;
+    public static final int OP_SAFE_CALL=110;
     public static final int KW_AS=18;
-    public static final int COMPL_STR=127;
-    public static final int LB=117;
+    public static final int COMPL_STR=135;
+    public static final int LB=125;
     public static final int KW_USING=17;
     public static final int KW_NULL=43;
-    public static final int FRACTION=136;
-    public static final int AST_INHERITANCE=63;
-    public static final int SP_COLCOL=66;
+    public static final int FRACTION=144;
+    public static final int AST_INHERITANCE=71;
+    public static final int SP_COLCOL=74;
 
     // delegates
     // delegators
@@ -165,7 +173,7 @@ public class FanParser extends Parser {
         }
         public FanParser(TokenStream input, RecognizerSharedState state) {
             super(input, state);
-            this.state.ruleMemo = new HashMap[392+1];
+            this.state.ruleMemo = new HashMap[396+1];
              
              
         }
@@ -292,7 +300,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "prog"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:233:1: prog : ( using )* ( podDef | ( typeDef )* ) docs EOF ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:242:1: prog : ( using )* ( podDef | ( typeDef )* ) docs EOF ;
     public final FanParser.prog_return prog() throws RecognitionException {
         FanParser.prog_return retval = new FanParser.prog_return();
         retval.start = input.LT(1);
@@ -313,12 +321,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 1) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:233:7: ( ( using )* ( podDef | ( typeDef )* ) docs EOF )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:233:11: ( using )* ( podDef | ( typeDef )* ) docs EOF
+            // src/net/colar/netbeans/fan/antlr/Fan.g:242:7: ( ( using )* ( podDef | ( typeDef )* ) docs EOF )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:242:11: ( using )* ( podDef | ( typeDef )* ) docs EOF
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:233:11: ( using )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:242:11: ( using )*
             loop1:
             do {
                 int alt1=2;
@@ -333,7 +341,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: using
             	    {
-            	    pushFollow(FOLLOW_using_in_prog409);
+            	    pushFollow(FOLLOW_using_in_prog434);
             	    using1=using();
 
             	    state._fsp--;
@@ -348,14 +356,14 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:233:18: ( podDef | ( typeDef )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:242:18: ( podDef | ( typeDef )* )
             int alt3=2;
             alt3 = dfa3.predict(input);
             switch (alt3) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:233:19: podDef
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:242:19: podDef
                     {
-                    pushFollow(FOLLOW_podDef_in_prog413);
+                    pushFollow(FOLLOW_podDef_in_prog438);
                     podDef2=podDef();
 
                     state._fsp--;
@@ -365,9 +373,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:233:28: ( typeDef )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:242:28: ( typeDef )*
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:233:28: ( typeDef )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:242:28: ( typeDef )*
                     loop2:
                     do {
                         int alt2=2;
@@ -376,7 +384,7 @@ public class FanParser extends Parser {
                     	case 1 :
                     	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: typeDef
                     	    {
-                    	    pushFollow(FOLLOW_typeDef_in_prog417);
+                    	    pushFollow(FOLLOW_typeDef_in_prog442);
                     	    typeDef3=typeDef();
 
                     	    state._fsp--;
@@ -397,13 +405,13 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_docs_in_prog421);
+            pushFollow(FOLLOW_docs_in_prog446);
             docs4=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, docs4.getTree());
-            EOF5=(Token)match(input,EOF,FOLLOW_EOF_in_prog423); if (state.failed) return retval;
+            EOF5=(Token)match(input,EOF,FOLLOW_EOF_in_prog448); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             EOF5_tree = (Object)adaptor.create(EOF5);
             adaptor.addChild(root_0, EOF5_tree);
@@ -438,7 +446,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "using"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:234:1: using : ( usingPod | usingType | usingAs ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:243:1: using : ( usingPod | usingType | usingAs ) ;
     public final FanParser.using_return using() throws RecognitionException {
         FanParser.using_return retval = new FanParser.using_return();
         retval.start = input.LT(1);
@@ -456,19 +464,19 @@ public class FanParser extends Parser {
         paraphrase.push("Using statements");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 2) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:235:3: ( ( usingPod | usingType | usingAs ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:235:5: ( usingPod | usingType | usingAs )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:244:3: ( ( usingPod | usingType | usingAs ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:244:5: ( usingPod | usingType | usingAs )
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:235:5: ( usingPod | usingType | usingAs )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:244:5: ( usingPod | usingType | usingAs )
             int alt4=3;
             alt4 = dfa4.predict(input);
             switch (alt4) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:235:6: usingPod
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:244:6: usingPod
                     {
-                    pushFollow(FOLLOW_usingPod_in_using443);
+                    pushFollow(FOLLOW_usingPod_in_using468);
                     usingPod6=usingPod();
 
                     state._fsp--;
@@ -478,9 +486,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:235:17: usingType
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:244:17: usingType
                     {
-                    pushFollow(FOLLOW_usingType_in_using447);
+                    pushFollow(FOLLOW_usingType_in_using472);
                     usingType7=usingType();
 
                     state._fsp--;
@@ -490,9 +498,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:235:29: usingAs
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:244:29: usingAs
                     {
-                    pushFollow(FOLLOW_usingAs_in_using451);
+                    pushFollow(FOLLOW_usingAs_in_using476);
                     usingAs8=usingAs();
 
                     state._fsp--;
@@ -537,7 +545,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "usingPod"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:236:1: usingPod : KW_USING podSpec eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:245:1: usingPod : KW_USING podSpec eos ;
     public final FanParser.usingPod_return usingPod() throws RecognitionException {
         FanParser.usingPod_return retval = new FanParser.usingPod_return();
         retval.start = input.LT(1);
@@ -554,23 +562,23 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 3) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:237:3: ( KW_USING podSpec eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:237:5: KW_USING podSpec eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:246:3: ( KW_USING podSpec eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:246:5: KW_USING podSpec eos
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_USING9=(Token)match(input,KW_USING,FOLLOW_KW_USING_in_usingPod461); if (state.failed) return retval;
+            KW_USING9=(Token)match(input,KW_USING,FOLLOW_KW_USING_in_usingPod486); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_USING9_tree = (Object)adaptor.create(KW_USING9);
             adaptor.addChild(root_0, KW_USING9_tree);
             }
-            pushFollow(FOLLOW_podSpec_in_usingPod463);
+            pushFollow(FOLLOW_podSpec_in_usingPod488);
             podSpec10=podSpec();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, podSpec10.getTree());
-            pushFollow(FOLLOW_eos_in_usingPod465);
+            pushFollow(FOLLOW_eos_in_usingPod490);
             eos11=eos();
 
             state._fsp--;
@@ -606,7 +614,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "usingType"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:238:1: usingType : KW_USING podSpec SP_COLCOL id eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:247:1: usingType : KW_USING podSpec SP_COLCOL id eos ;
     public final FanParser.usingType_return usingType() throws RecognitionException {
         FanParser.usingType_return retval = new FanParser.usingType_return();
         retval.start = input.LT(1);
@@ -627,34 +635,34 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 4) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:239:3: ( KW_USING podSpec SP_COLCOL id eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:239:5: KW_USING podSpec SP_COLCOL id eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:248:3: ( KW_USING podSpec SP_COLCOL id eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:248:5: KW_USING podSpec SP_COLCOL id eos
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_USING12=(Token)match(input,KW_USING,FOLLOW_KW_USING_in_usingType475); if (state.failed) return retval;
+            KW_USING12=(Token)match(input,KW_USING,FOLLOW_KW_USING_in_usingType500); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_USING12_tree = (Object)adaptor.create(KW_USING12);
             adaptor.addChild(root_0, KW_USING12_tree);
             }
-            pushFollow(FOLLOW_podSpec_in_usingType477);
+            pushFollow(FOLLOW_podSpec_in_usingType502);
             podSpec13=podSpec();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, podSpec13.getTree());
-            SP_COLCOL14=(Token)match(input,SP_COLCOL,FOLLOW_SP_COLCOL_in_usingType479); if (state.failed) return retval;
+            SP_COLCOL14=(Token)match(input,SP_COLCOL,FOLLOW_SP_COLCOL_in_usingType504); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_COLCOL14_tree = (Object)adaptor.create(SP_COLCOL14);
             adaptor.addChild(root_0, SP_COLCOL14_tree);
             }
-            pushFollow(FOLLOW_id_in_usingType481);
+            pushFollow(FOLLOW_id_in_usingType506);
             id15=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id15.getTree());
-            pushFollow(FOLLOW_eos_in_usingType483);
+            pushFollow(FOLLOW_eos_in_usingType508);
             eos16=eos();
 
             state._fsp--;
@@ -690,7 +698,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "usingAs"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:241:1: usingAs : KW_USING podSpec SP_COLCOL id ( '$' id )* KW_AS id eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:250:1: usingAs : KW_USING podSpec SP_COLCOL id ( '$' id )* KW_AS id eos ;
     public final FanParser.usingAs_return usingAs() throws RecognitionException {
         FanParser.usingAs_return retval = new FanParser.usingAs_return();
         retval.start = input.LT(1);
@@ -719,54 +727,54 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 5) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:241:10: ( KW_USING podSpec SP_COLCOL id ( '$' id )* KW_AS id eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:241:12: KW_USING podSpec SP_COLCOL id ( '$' id )* KW_AS id eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:250:10: ( KW_USING podSpec SP_COLCOL id ( '$' id )* KW_AS id eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:250:12: KW_USING podSpec SP_COLCOL id ( '$' id )* KW_AS id eos
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_USING17=(Token)match(input,KW_USING,FOLLOW_KW_USING_in_usingAs492); if (state.failed) return retval;
+            KW_USING17=(Token)match(input,KW_USING,FOLLOW_KW_USING_in_usingAs517); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_USING17_tree = (Object)adaptor.create(KW_USING17);
             adaptor.addChild(root_0, KW_USING17_tree);
             }
-            pushFollow(FOLLOW_podSpec_in_usingAs494);
+            pushFollow(FOLLOW_podSpec_in_usingAs519);
             podSpec18=podSpec();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, podSpec18.getTree());
-            SP_COLCOL19=(Token)match(input,SP_COLCOL,FOLLOW_SP_COLCOL_in_usingAs496); if (state.failed) return retval;
+            SP_COLCOL19=(Token)match(input,SP_COLCOL,FOLLOW_SP_COLCOL_in_usingAs521); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_COLCOL19_tree = (Object)adaptor.create(SP_COLCOL19);
             adaptor.addChild(root_0, SP_COLCOL19_tree);
             }
-            pushFollow(FOLLOW_id_in_usingAs498);
+            pushFollow(FOLLOW_id_in_usingAs523);
             id20=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id20.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:241:42: ( '$' id )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:250:42: ( '$' id )*
             loop5:
             do {
                 int alt5=2;
                 int LA5_0 = input.LA(1);
 
-                if ( (LA5_0==141) ) {
+                if ( (LA5_0==149) ) {
                     alt5=1;
                 }
 
 
                 switch (alt5) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:241:43: '$' id
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:250:43: '$' id
             	    {
-            	    char_literal21=(Token)match(input,141,FOLLOW_141_in_usingAs501); if (state.failed) return retval;
+            	    char_literal21=(Token)match(input,149,FOLLOW_149_in_usingAs526); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    char_literal21_tree = (Object)adaptor.create(char_literal21);
             	    adaptor.addChild(root_0, char_literal21_tree);
             	    }
-            	    pushFollow(FOLLOW_id_in_usingAs503);
+            	    pushFollow(FOLLOW_id_in_usingAs528);
             	    id22=id();
 
             	    state._fsp--;
@@ -781,18 +789,18 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            KW_AS23=(Token)match(input,KW_AS,FOLLOW_KW_AS_in_usingAs507); if (state.failed) return retval;
+            KW_AS23=(Token)match(input,KW_AS,FOLLOW_KW_AS_in_usingAs532); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_AS23_tree = (Object)adaptor.create(KW_AS23);
             adaptor.addChild(root_0, KW_AS23_tree);
             }
-            pushFollow(FOLLOW_id_in_usingAs509);
+            pushFollow(FOLLOW_id_in_usingAs534);
             id24=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id24.getTree());
-            pushFollow(FOLLOW_eos_in_usingAs511);
+            pushFollow(FOLLOW_eos_in_usingAs536);
             eos25=eos();
 
             state._fsp--;
@@ -828,7 +836,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "podSpec"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:242:1: podSpec : ( ffi )? id ( DOT id )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:251:1: podSpec : ( ffi )? id ( DOT id )* ;
     public final FanParser.podSpec_return podSpec() throws RecognitionException {
         FanParser.podSpec_return retval = new FanParser.podSpec_return();
         retval.start = input.LT(1);
@@ -847,12 +855,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 6) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:242:10: ( ( ffi )? id ( DOT id )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:242:12: ( ffi )? id ( DOT id )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:251:10: ( ( ffi )? id ( DOT id )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:251:12: ( ffi )? id ( DOT id )*
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:242:12: ( ffi )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:251:12: ( ffi )?
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -863,7 +871,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: ffi
                     {
-                    pushFollow(FOLLOW_ffi_in_podSpec519);
+                    pushFollow(FOLLOW_ffi_in_podSpec544);
                     ffi26=ffi();
 
                     state._fsp--;
@@ -875,13 +883,13 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_id_in_podSpec522);
+            pushFollow(FOLLOW_id_in_podSpec547);
             id27=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id27.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:242:20: ( DOT id )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:251:20: ( DOT id )*
             loop7:
             do {
                 int alt7=2;
@@ -894,14 +902,14 @@ public class FanParser extends Parser {
 
                 switch (alt7) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:242:21: DOT id
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:251:21: DOT id
             	    {
-            	    DOT28=(Token)match(input,DOT,FOLLOW_DOT_in_podSpec525); if (state.failed) return retval;
+            	    DOT28=(Token)match(input,DOT,FOLLOW_DOT_in_podSpec550); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    DOT28_tree = (Object)adaptor.create(DOT28);
             	    adaptor.addChild(root_0, DOT28_tree);
             	    }
-            	    pushFollow(FOLLOW_id_in_podSpec527);
+            	    pushFollow(FOLLOW_id_in_podSpec552);
             	    id29=id();
 
             	    state._fsp--;
@@ -946,7 +954,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "ffi"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:243:1: ffi : sq_bracketL id sq_bracketR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:252:1: ffi : sq_bracketL id sq_bracketR ;
     public final FanParser.ffi_return ffi() throws RecognitionException {
         FanParser.ffi_return retval = new FanParser.ffi_return();
         retval.start = input.LT(1);
@@ -963,24 +971,24 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 7) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:243:7: ( sq_bracketL id sq_bracketR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:243:9: sq_bracketL id sq_bracketR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:252:7: ( sq_bracketL id sq_bracketR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:252:9: sq_bracketL id sq_bracketR
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_sq_bracketL_in_ffi538);
+            pushFollow(FOLLOW_sq_bracketL_in_ffi563);
             sq_bracketL30=sq_bracketL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketL30.getTree());
-            pushFollow(FOLLOW_id_in_ffi540);
+            pushFollow(FOLLOW_id_in_ffi565);
             id31=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id31.getTree());
-            pushFollow(FOLLOW_sq_bracketR_in_ffi542);
+            pushFollow(FOLLOW_sq_bracketR_in_ffi567);
             sq_bracketR32=sq_bracketR();
 
             state._fsp--;
@@ -1016,7 +1024,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "podDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:245:1: podDef : podHeader BRACKET_L ( symbolDef )* BRACKET_R ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:254:1: podDef : podHeader BRACKET_L ( symbolDef )* BRACKET_R ;
     public final FanParser.podDef_return podDef() throws RecognitionException {
         FanParser.podDef_return retval = new FanParser.podDef_return();
         retval.start = input.LT(1);
@@ -1035,23 +1043,23 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 8) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:245:9: ( podHeader BRACKET_L ( symbolDef )* BRACKET_R )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:245:11: podHeader BRACKET_L ( symbolDef )* BRACKET_R
+            // src/net/colar/netbeans/fan/antlr/Fan.g:254:9: ( podHeader BRACKET_L ( symbolDef )* BRACKET_R )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:254:11: podHeader BRACKET_L ( symbolDef )* BRACKET_R
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_podHeader_in_podDef551);
+            pushFollow(FOLLOW_podHeader_in_podDef576);
             podHeader33=podHeader();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, podHeader33.getTree());
-            BRACKET_L34=(Token)match(input,BRACKET_L,FOLLOW_BRACKET_L_in_podDef553); if (state.failed) return retval;
+            BRACKET_L34=(Token)match(input,BRACKET_L,FOLLOW_BRACKET_L_in_podDef578); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             BRACKET_L34_tree = (Object)adaptor.create(BRACKET_L34);
             adaptor.addChild(root_0, BRACKET_L34_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:245:31: ( symbolDef )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:254:31: ( symbolDef )*
             loop8:
             do {
                 int alt8=2;
@@ -1066,7 +1074,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: symbolDef
             	    {
-            	    pushFollow(FOLLOW_symbolDef_in_podDef555);
+            	    pushFollow(FOLLOW_symbolDef_in_podDef580);
             	    symbolDef35=symbolDef();
 
             	    state._fsp--;
@@ -1081,7 +1089,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            BRACKET_R36=(Token)match(input,BRACKET_R,FOLLOW_BRACKET_R_in_podDef558); if (state.failed) return retval;
+            BRACKET_R36=(Token)match(input,BRACKET_R,FOLLOW_BRACKET_R_in_podDef583); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             BRACKET_R36_tree = (Object)adaptor.create(BRACKET_R36);
             adaptor.addChild(root_0, BRACKET_R36_tree);
@@ -1116,7 +1124,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "podHeader"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:246:1: podHeader : docs ( facet )* pod id ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:255:1: podHeader : docs ( facet )* pod id ;
     public final FanParser.podHeader_return podHeader() throws RecognitionException {
         FanParser.podHeader_return retval = new FanParser.podHeader_return();
         retval.start = input.LT(1);
@@ -1135,18 +1143,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 9) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:246:11: ( docs ( facet )* pod id )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:246:13: docs ( facet )* pod id
+            // src/net/colar/netbeans/fan/antlr/Fan.g:255:11: ( docs ( facet )* pod id )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:255:13: docs ( facet )* pod id
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_docs_in_podHeader565);
+            pushFollow(FOLLOW_docs_in_podHeader590);
             docs37=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, docs37.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:246:18: ( facet )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:255:18: ( facet )*
             loop9:
             do {
                 int alt9=2;
@@ -1161,7 +1169,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
             	    {
-            	    pushFollow(FOLLOW_facet_in_podHeader567);
+            	    pushFollow(FOLLOW_facet_in_podHeader592);
             	    facet38=facet();
 
             	    state._fsp--;
@@ -1176,13 +1184,13 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_pod_in_podHeader570);
+            pushFollow(FOLLOW_pod_in_podHeader595);
             pod39=pod();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, pod39.getTree());
-            pushFollow(FOLLOW_id_in_podHeader572);
+            pushFollow(FOLLOW_id_in_podHeader597);
             id40=id();
 
             state._fsp--;
@@ -1218,7 +1226,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "symbolDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:247:1: symbolDef : docs ( facet )* ( symbolFlag )* typeId AS_INIT_VAL expr eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:256:1: symbolDef : docs ( facet )* ( symbolFlag )* typeId AS_INIT_VAL expr eos ;
     public final FanParser.symbolDef_return symbolDef() throws RecognitionException {
         FanParser.symbolDef_return retval = new FanParser.symbolDef_return();
         retval.start = input.LT(1);
@@ -1243,18 +1251,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 10) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:247:11: ( docs ( facet )* ( symbolFlag )* typeId AS_INIT_VAL expr eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:247:13: docs ( facet )* ( symbolFlag )* typeId AS_INIT_VAL expr eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:256:11: ( docs ( facet )* ( symbolFlag )* typeId AS_INIT_VAL expr eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:256:13: docs ( facet )* ( symbolFlag )* typeId AS_INIT_VAL expr eos
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_docs_in_symbolDef579);
+            pushFollow(FOLLOW_docs_in_symbolDef604);
             docs41=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, docs41.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:247:18: ( facet )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:256:18: ( facet )*
             loop10:
             do {
                 int alt10=2;
@@ -1269,7 +1277,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
             	    {
-            	    pushFollow(FOLLOW_facet_in_symbolDef581);
+            	    pushFollow(FOLLOW_facet_in_symbolDef606);
             	    facet42=facet();
 
             	    state._fsp--;
@@ -1284,7 +1292,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:247:25: ( symbolFlag )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:256:25: ( symbolFlag )*
             loop11:
             do {
                 int alt11=2;
@@ -1299,7 +1307,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: symbolFlag
             	    {
-            	    pushFollow(FOLLOW_symbolFlag_in_symbolDef584);
+            	    pushFollow(FOLLOW_symbolFlag_in_symbolDef609);
             	    symbolFlag43=symbolFlag();
 
             	    state._fsp--;
@@ -1314,24 +1322,24 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_typeId_in_symbolDef587);
+            pushFollow(FOLLOW_typeId_in_symbolDef612);
             typeId44=typeId();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, typeId44.getTree());
-            AS_INIT_VAL45=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_symbolDef589); if (state.failed) return retval;
+            AS_INIT_VAL45=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_symbolDef614); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             AS_INIT_VAL45_tree = (Object)adaptor.create(AS_INIT_VAL45);
             adaptor.addChild(root_0, AS_INIT_VAL45_tree);
             }
-            pushFollow(FOLLOW_expr_in_symbolDef591);
+            pushFollow(FOLLOW_expr_in_symbolDef616);
             expr46=expr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, expr46.getTree());
-            pushFollow(FOLLOW_eos_in_symbolDef593);
+            pushFollow(FOLLOW_eos_in_symbolDef618);
             eos47=eos();
 
             state._fsp--;
@@ -1367,7 +1375,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "symbolFlag"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:248:1: symbolFlag : 'virtual' ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:257:1: symbolFlag : 'virtual' ;
     public final FanParser.symbolFlag_return symbolFlag() throws RecognitionException {
         FanParser.symbolFlag_return retval = new FanParser.symbolFlag_return();
         retval.start = input.LT(1);
@@ -1380,12 +1388,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 11) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:248:12: ( 'virtual' )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:248:14: 'virtual'
+            // src/net/colar/netbeans/fan/antlr/Fan.g:257:12: ( 'virtual' )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:257:14: 'virtual'
             {
             root_0 = (Object)adaptor.nil();
 
-            string_literal48=(Token)match(input,KW_VIRTUAL,FOLLOW_KW_VIRTUAL_in_symbolFlag600); if (state.failed) return retval;
+            string_literal48=(Token)match(input,KW_VIRTUAL,FOLLOW_KW_VIRTUAL_in_symbolFlag625); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             string_literal48_tree = (Object)adaptor.create(string_literal48);
             adaptor.addChild(root_0, string_literal48_tree);
@@ -1420,7 +1428,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "typeDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:251:1: typeDef : docs ( facet )* ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:260:1: typeDef : docs ( facet )* ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef ) ;
     public final FanParser.typeDef_return typeDef() throws RecognitionException {
         FanParser.typeDef_return retval = new FanParser.typeDef_return();
         retval.start = input.LT(1);
@@ -1441,18 +1449,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 12) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:251:10: ( docs ( facet )* ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:251:12: docs ( facet )* ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:260:10: ( docs ( facet )* ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:260:12: docs ( facet )* ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef )
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_docs_in_typeDef610);
+            pushFollow(FOLLOW_docs_in_typeDef635);
             docs49=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, docs49.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:251:17: ( facet )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:260:17: ( facet )*
             loop12:
             do {
                 int alt12=2;
@@ -1479,7 +1487,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
             	    {
-            	    pushFollow(FOLLOW_facet_in_typeDef612);
+            	    pushFollow(FOLLOW_facet_in_typeDef637);
             	    facet50=facet();
 
             	    state._fsp--;
@@ -1494,14 +1502,14 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:251:24: ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:260:24: ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef )
             int alt13=3;
             alt13 = dfa13.predict(input);
             switch (alt13) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:251:25: ( ( classFlags )* KW_CLASS )=> classDef
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:260:25: ( ( classFlags )* KW_CLASS )=> classDef
                     {
-                    pushFollow(FOLLOW_classDef_in_typeDef623);
+                    pushFollow(FOLLOW_classDef_in_typeDef648);
                     classDef51=classDef();
 
                     state._fsp--;
@@ -1511,9 +1519,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:252:4: ( ( protection )? KW_ENUM )=> enumDef
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:261:4: ( ( protection )? KW_ENUM )=> enumDef
                     {
-                    pushFollow(FOLLOW_enumDef_in_typeDef637);
+                    pushFollow(FOLLOW_enumDef_in_typeDef662);
                     enumDef52=enumDef();
 
                     state._fsp--;
@@ -1523,9 +1531,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:252:37: mixinDef
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:261:37: mixinDef
                     {
-                    pushFollow(FOLLOW_mixinDef_in_typeDef641);
+                    pushFollow(FOLLOW_mixinDef_in_typeDef666);
                     mixinDef53=mixinDef();
 
                     state._fsp--;
@@ -1567,7 +1575,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "classDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:253:1: classDef : classHeader classBody -> ^( AST_CLASS classHeader classBody ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:262:1: classDef : classHeader classBody -> ^( AST_CLASS classHeader classBody ) ;
     public final FanParser.classDef_return classDef() throws RecognitionException {
         FanParser.classDef_return retval = new FanParser.classDef_return();
         retval.start = input.LT(1);
@@ -1584,16 +1592,16 @@ public class FanParser extends Parser {
         paraphrase.push("Class definition");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 13) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:254:3: ( classHeader classBody -> ^( AST_CLASS classHeader classBody ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:254:7: classHeader classBody
+            // src/net/colar/netbeans/fan/antlr/Fan.g:263:3: ( classHeader classBody -> ^( AST_CLASS classHeader classBody ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:263:7: classHeader classBody
             {
-            pushFollow(FOLLOW_classHeader_in_classDef663);
+            pushFollow(FOLLOW_classHeader_in_classDef688);
             classHeader54=classHeader();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_classHeader.add(classHeader54.getTree());
-            pushFollow(FOLLOW_classBody_in_classDef665);
+            pushFollow(FOLLOW_classBody_in_classDef690);
             classBody55=classBody();
 
             state._fsp--;
@@ -1602,7 +1610,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: classHeader, classBody
+            // elements: classBody, classHeader
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -1613,9 +1621,9 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 255:7: -> ^( AST_CLASS classHeader classBody )
+            // 264:7: -> ^( AST_CLASS classHeader classBody )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:255:10: ^( AST_CLASS classHeader classBody )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:264:10: ^( AST_CLASS classHeader classBody )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_CLASS, "AST_CLASS"), root_1);
@@ -1661,7 +1669,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "classHeader"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:256:1: classHeader : docs ( facet )* (m= classFlags )* KW_CLASS cname= id ( inheritance )? -> ^( AST_ID $cname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:265:1: classHeader : docs ( facet )* (m= classFlags )* KW_CLASS cname= id ( inheritance )? -> ^( AST_ID $cname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* ;
     public final FanParser.classHeader_return classHeader() throws RecognitionException {
         FanParser.classHeader_return retval = new FanParser.classHeader_return();
         retval.start = input.LT(1);
@@ -1689,16 +1697,16 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_inheritance=new RewriteRuleSubtreeStream(adaptor,"rule inheritance");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 14) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:256:13: ( docs ( facet )* (m= classFlags )* KW_CLASS cname= id ( inheritance )? -> ^( AST_ID $cname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:256:15: docs ( facet )* (m= classFlags )* KW_CLASS cname= id ( inheritance )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:265:13: ( docs ( facet )* (m= classFlags )* KW_CLASS cname= id ( inheritance )? -> ^( AST_ID $cname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:265:15: docs ( facet )* (m= classFlags )* KW_CLASS cname= id ( inheritance )?
             {
-            pushFollow(FOLLOW_docs_in_classHeader688);
+            pushFollow(FOLLOW_docs_in_classHeader713);
             docs56=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_docs.add(docs56.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:256:20: ( facet )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:265:20: ( facet )*
             loop14:
             do {
                 int alt14=2;
@@ -1713,7 +1721,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
             	    {
-            	    pushFollow(FOLLOW_facet_in_classHeader690);
+            	    pushFollow(FOLLOW_facet_in_classHeader715);
             	    facet57=facet();
 
             	    state._fsp--;
@@ -1728,7 +1736,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:256:28: (m= classFlags )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:265:28: (m= classFlags )*
             loop15:
             do {
                 int alt15=2;
@@ -1743,7 +1751,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: m= classFlags
             	    {
-            	    pushFollow(FOLLOW_classFlags_in_classHeader695);
+            	    pushFollow(FOLLOW_classFlags_in_classHeader720);
             	    m=classFlags();
 
             	    state._fsp--;
@@ -1758,16 +1766,16 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            KW_CLASS58=(Token)match(input,KW_CLASS,FOLLOW_KW_CLASS_in_classHeader698); if (state.failed) return retval; 
+            KW_CLASS58=(Token)match(input,KW_CLASS,FOLLOW_KW_CLASS_in_classHeader723); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_KW_CLASS.add(KW_CLASS58);
 
-            pushFollow(FOLLOW_id_in_classHeader702);
+            pushFollow(FOLLOW_id_in_classHeader727);
             cname=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_id.add(cname.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:256:59: ( inheritance )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:265:59: ( inheritance )?
             int alt16=2;
             int LA16_0 = input.LA(1);
 
@@ -1778,7 +1786,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: inheritance
                     {
-                    pushFollow(FOLLOW_inheritance_in_classHeader704);
+                    pushFollow(FOLLOW_inheritance_in_classHeader729);
                     inheritance59=inheritance();
 
                     state._fsp--;
@@ -1793,7 +1801,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: cname, m, inheritance
+            // elements: inheritance, m, cname
             // token labels: 
             // rule labels: retval, m, cname
             // token list labels: 
@@ -1806,9 +1814,9 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_cname=new RewriteRuleSubtreeStream(adaptor,"rule cname",cname!=null?cname.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 257:4: -> ^( AST_ID $cname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )*
+            // 266:4: -> ^( AST_ID $cname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )*
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:257:7: ^( AST_ID $cname)
+                // src/net/colar/netbeans/fan/antlr/Fan.g:266:7: ^( AST_ID $cname)
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_ID, "AST_ID"), root_1);
@@ -1817,9 +1825,9 @@ public class FanParser extends Parser {
 
                 adaptor.addChild(root_0, root_1);
                 }
-                // src/net/colar/netbeans/fan/antlr/Fan.g:257:24: ( ^( AST_INHERITANCE inheritance ) )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:266:24: ( ^( AST_INHERITANCE inheritance ) )?
                 if ( stream_inheritance.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:257:24: ^( AST_INHERITANCE inheritance )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:266:24: ^( AST_INHERITANCE inheritance )
                     {
                     Object root_1 = (Object)adaptor.nil();
                     root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_INHERITANCE, "AST_INHERITANCE"), root_1);
@@ -1831,9 +1839,9 @@ public class FanParser extends Parser {
 
                 }
                 stream_inheritance.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:257:56: ( ^( AST_MODIFIER $m) )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:266:56: ( ^( AST_MODIFIER $m) )*
                 while ( stream_m.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:257:56: ^( AST_MODIFIER $m)
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:266:56: ^( AST_MODIFIER $m)
                     {
                     Object root_1 = (Object)adaptor.nil();
                     root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_MODIFIER, "AST_MODIFIER"), root_1);
@@ -1878,7 +1886,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "classFlags"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:258:1: classFlags : ( protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:267:1: classFlags : ( protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC );
     public final FanParser.classFlags_return classFlags() throws RecognitionException {
         FanParser.classFlags_return retval = new FanParser.classFlags_return();
         retval.start = input.LT(1);
@@ -1899,7 +1907,7 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 15) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:258:13: ( protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:267:13: ( protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC )
             int alt17=5;
             switch ( input.LA(1) ) {
             case KW_PRIVATE:
@@ -1940,11 +1948,11 @@ public class FanParser extends Parser {
 
             switch (alt17) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:258:15: protection
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:267:15: protection
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_protection_in_classFlags740);
+                    pushFollow(FOLLOW_protection_in_classFlags765);
                     protection60=protection();
 
                     state._fsp--;
@@ -1954,11 +1962,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:258:28: KW_ABSTRACT
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:267:28: KW_ABSTRACT
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_ABSTRACT61=(Token)match(input,KW_ABSTRACT,FOLLOW_KW_ABSTRACT_in_classFlags744); if (state.failed) return retval;
+                    KW_ABSTRACT61=(Token)match(input,KW_ABSTRACT,FOLLOW_KW_ABSTRACT_in_classFlags769); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_ABSTRACT61_tree = (Object)adaptor.create(KW_ABSTRACT61);
                     adaptor.addChild(root_0, KW_ABSTRACT61_tree);
@@ -1967,11 +1975,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:258:42: KW_FINAL
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:267:42: KW_FINAL
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_FINAL62=(Token)match(input,KW_FINAL,FOLLOW_KW_FINAL_in_classFlags748); if (state.failed) return retval;
+                    KW_FINAL62=(Token)match(input,KW_FINAL,FOLLOW_KW_FINAL_in_classFlags773); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_FINAL62_tree = (Object)adaptor.create(KW_FINAL62);
                     adaptor.addChild(root_0, KW_FINAL62_tree);
@@ -1980,11 +1988,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:258:53: KW_CONST
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:267:53: KW_CONST
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_CONST63=(Token)match(input,KW_CONST,FOLLOW_KW_CONST_in_classFlags752); if (state.failed) return retval;
+                    KW_CONST63=(Token)match(input,KW_CONST,FOLLOW_KW_CONST_in_classFlags777); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_CONST63_tree = (Object)adaptor.create(KW_CONST63);
                     adaptor.addChild(root_0, KW_CONST63_tree);
@@ -1993,11 +2001,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:258:64: KW_STATIC
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:267:64: KW_STATIC
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_STATIC64=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_classFlags756); if (state.failed) return retval;
+                    KW_STATIC64=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_classFlags781); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_STATIC64_tree = (Object)adaptor.create(KW_STATIC64);
                     adaptor.addChild(root_0, KW_STATIC64_tree);
@@ -2034,7 +2042,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "classBody"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:259:1: classBody : ( bracketL ( slotDef )* bracketR ) -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:268:1: classBody : ( bracketL ( slotDef )* bracketR ) -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR ) ;
     public final FanParser.classBody_return classBody() throws RecognitionException {
         FanParser.classBody_return retval = new FanParser.classBody_return();
         retval.start = input.LT(1);
@@ -2053,19 +2061,19 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_bracketR=new RewriteRuleSubtreeStream(adaptor,"rule bracketR");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 16) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:259:12: ( ( bracketL ( slotDef )* bracketR ) -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:259:14: ( bracketL ( slotDef )* bracketR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:268:12: ( ( bracketL ( slotDef )* bracketR ) -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:268:14: ( bracketL ( slotDef )* bracketR )
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:259:14: ( bracketL ( slotDef )* bracketR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:259:15: bracketL ( slotDef )* bracketR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:268:14: ( bracketL ( slotDef )* bracketR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:268:15: bracketL ( slotDef )* bracketR
             {
-            pushFollow(FOLLOW_bracketL_in_classBody765);
+            pushFollow(FOLLOW_bracketL_in_classBody790);
             bracketL65=bracketL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_bracketL.add(bracketL65.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:259:24: ( slotDef )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:268:24: ( slotDef )*
             loop18:
             do {
                 int alt18=2;
@@ -2080,7 +2088,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: slotDef
             	    {
-            	    pushFollow(FOLLOW_slotDef_in_classBody767);
+            	    pushFollow(FOLLOW_slotDef_in_classBody792);
             	    slotDef66=slotDef();
 
             	    state._fsp--;
@@ -2095,7 +2103,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_bracketR_in_classBody770);
+            pushFollow(FOLLOW_bracketR_in_classBody795);
             bracketR67=bracketR();
 
             state._fsp--;
@@ -2107,7 +2115,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: slotDef, bracketL, bracketR
+            // elements: bracketR, slotDef, bracketL
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -2118,15 +2126,15 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 259:44: -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR )
+            // 268:44: -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:259:47: ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:268:47: ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_CODE_BLOCK, "AST_CODE_BLOCK"), root_1);
 
                 adaptor.addChild(root_1, stream_bracketL.nextTree());
-                // src/net/colar/netbeans/fan/antlr/Fan.g:259:73: ( slotDef )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:268:73: ( slotDef )*
                 while ( stream_slotDef.hasNext() ) {
                     adaptor.addChild(root_1, stream_slotDef.nextTree());
 
@@ -2169,7 +2177,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "protection"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:260:1: protection : ( KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:269:1: protection : ( KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL );
     public final FanParser.protection_return protection() throws RecognitionException {
         FanParser.protection_return retval = new FanParser.protection_return();
         retval.start = input.LT(1);
@@ -2182,7 +2190,7 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 17) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:260:12: ( KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:269:12: ( KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL )
             // src/net/colar/netbeans/fan/antlr/Fan.g:
             {
             root_0 = (Object)adaptor.nil();
@@ -2229,7 +2237,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "mixinDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:261:1: mixinDef : mixinHeader mixinBody -> ^( AST_MIXIN mixinHeader mixinBody ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:270:1: mixinDef : mixinHeader mixinBody -> ^( AST_MIXIN mixinHeader mixinBody ) ;
     public final FanParser.mixinDef_return mixinDef() throws RecognitionException {
         FanParser.mixinDef_return retval = new FanParser.mixinDef_return();
         retval.start = input.LT(1);
@@ -2246,16 +2254,16 @@ public class FanParser extends Parser {
         paraphrase.push("Mixin definition");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 18) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:262:3: ( mixinHeader mixinBody -> ^( AST_MIXIN mixinHeader mixinBody ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:262:5: mixinHeader mixinBody
+            // src/net/colar/netbeans/fan/antlr/Fan.g:271:3: ( mixinHeader mixinBody -> ^( AST_MIXIN mixinHeader mixinBody ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:271:5: mixinHeader mixinBody
             {
-            pushFollow(FOLLOW_mixinHeader_in_mixinDef822);
+            pushFollow(FOLLOW_mixinHeader_in_mixinDef847);
             mixinHeader69=mixinHeader();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_mixinHeader.add(mixinHeader69.getTree());
-            pushFollow(FOLLOW_mixinBody_in_mixinDef824);
+            pushFollow(FOLLOW_mixinBody_in_mixinDef849);
             mixinBody70=mixinBody();
 
             state._fsp--;
@@ -2275,9 +2283,9 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 263:7: -> ^( AST_MIXIN mixinHeader mixinBody )
+            // 272:7: -> ^( AST_MIXIN mixinHeader mixinBody )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:263:10: ^( AST_MIXIN mixinHeader mixinBody )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:272:10: ^( AST_MIXIN mixinHeader mixinBody )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_MIXIN, "AST_MIXIN"), root_1);
@@ -2323,7 +2331,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "mixinHeader"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:264:1: mixinHeader : docs ( facet )* (m= mixinFlags )* KW_MIXIN mname= id ( inheritance )? -> ^( AST_ID $mname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:273:1: mixinHeader : docs ( facet )* (m= mixinFlags )* KW_MIXIN mname= id ( inheritance )? -> ^( AST_ID $mname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* ;
     public final FanParser.mixinHeader_return mixinHeader() throws RecognitionException {
         FanParser.mixinHeader_return retval = new FanParser.mixinHeader_return();
         retval.start = input.LT(1);
@@ -2351,16 +2359,16 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_inheritance=new RewriteRuleSubtreeStream(adaptor,"rule inheritance");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 19) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:264:13: ( docs ( facet )* (m= mixinFlags )* KW_MIXIN mname= id ( inheritance )? -> ^( AST_ID $mname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:264:15: docs ( facet )* (m= mixinFlags )* KW_MIXIN mname= id ( inheritance )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:273:13: ( docs ( facet )* (m= mixinFlags )* KW_MIXIN mname= id ( inheritance )? -> ^( AST_ID $mname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:273:15: docs ( facet )* (m= mixinFlags )* KW_MIXIN mname= id ( inheritance )?
             {
-            pushFollow(FOLLOW_docs_in_mixinHeader847);
+            pushFollow(FOLLOW_docs_in_mixinHeader872);
             docs71=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_docs.add(docs71.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:264:20: ( facet )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:273:20: ( facet )*
             loop19:
             do {
                 int alt19=2;
@@ -2375,7 +2383,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
             	    {
-            	    pushFollow(FOLLOW_facet_in_mixinHeader849);
+            	    pushFollow(FOLLOW_facet_in_mixinHeader874);
             	    facet72=facet();
 
             	    state._fsp--;
@@ -2390,7 +2398,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:264:28: (m= mixinFlags )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:273:28: (m= mixinFlags )*
             loop20:
             do {
                 int alt20=2;
@@ -2405,7 +2413,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: m= mixinFlags
             	    {
-            	    pushFollow(FOLLOW_mixinFlags_in_mixinHeader854);
+            	    pushFollow(FOLLOW_mixinFlags_in_mixinHeader879);
             	    m=mixinFlags();
 
             	    state._fsp--;
@@ -2420,16 +2428,16 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            KW_MIXIN73=(Token)match(input,KW_MIXIN,FOLLOW_KW_MIXIN_in_mixinHeader857); if (state.failed) return retval; 
+            KW_MIXIN73=(Token)match(input,KW_MIXIN,FOLLOW_KW_MIXIN_in_mixinHeader882); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_KW_MIXIN.add(KW_MIXIN73);
 
-            pushFollow(FOLLOW_id_in_mixinHeader861);
+            pushFollow(FOLLOW_id_in_mixinHeader886);
             mname=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_id.add(mname.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:264:59: ( inheritance )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:273:59: ( inheritance )?
             int alt21=2;
             int LA21_0 = input.LA(1);
 
@@ -2440,7 +2448,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: inheritance
                     {
-                    pushFollow(FOLLOW_inheritance_in_mixinHeader863);
+                    pushFollow(FOLLOW_inheritance_in_mixinHeader888);
                     inheritance74=inheritance();
 
                     state._fsp--;
@@ -2455,7 +2463,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: inheritance, mname, m
+            // elements: mname, m, inheritance
             // token labels: 
             // rule labels: mname, retval, m
             // token list labels: 
@@ -2468,9 +2476,9 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_m=new RewriteRuleSubtreeStream(adaptor,"rule m",m!=null?m.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 265:4: -> ^( AST_ID $mname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )*
+            // 274:4: -> ^( AST_ID $mname) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )*
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:265:7: ^( AST_ID $mname)
+                // src/net/colar/netbeans/fan/antlr/Fan.g:274:7: ^( AST_ID $mname)
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_ID, "AST_ID"), root_1);
@@ -2479,9 +2487,9 @@ public class FanParser extends Parser {
 
                 adaptor.addChild(root_0, root_1);
                 }
-                // src/net/colar/netbeans/fan/antlr/Fan.g:265:24: ( ^( AST_INHERITANCE inheritance ) )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:274:24: ( ^( AST_INHERITANCE inheritance ) )?
                 if ( stream_inheritance.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:265:24: ^( AST_INHERITANCE inheritance )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:274:24: ^( AST_INHERITANCE inheritance )
                     {
                     Object root_1 = (Object)adaptor.nil();
                     root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_INHERITANCE, "AST_INHERITANCE"), root_1);
@@ -2493,9 +2501,9 @@ public class FanParser extends Parser {
 
                 }
                 stream_inheritance.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:265:56: ( ^( AST_MODIFIER $m) )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:274:56: ( ^( AST_MODIFIER $m) )*
                 while ( stream_m.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:265:56: ^( AST_MODIFIER $m)
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:274:56: ^( AST_MODIFIER $m)
                     {
                     Object root_1 = (Object)adaptor.nil();
                     root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_MODIFIER, "AST_MODIFIER"), root_1);
@@ -2540,7 +2548,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "mixinFlags"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:266:1: mixinFlags : ( protection | KW_CONST | KW_STATIC | KW_FINAL );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:275:1: mixinFlags : ( protection | KW_CONST | KW_STATIC | KW_FINAL );
     public final FanParser.mixinFlags_return mixinFlags() throws RecognitionException {
         FanParser.mixinFlags_return retval = new FanParser.mixinFlags_return();
         retval.start = input.LT(1);
@@ -2559,7 +2567,7 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 20) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:266:12: ( protection | KW_CONST | KW_STATIC | KW_FINAL )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:275:12: ( protection | KW_CONST | KW_STATIC | KW_FINAL )
             int alt22=4;
             switch ( input.LA(1) ) {
             case KW_PRIVATE:
@@ -2595,11 +2603,11 @@ public class FanParser extends Parser {
 
             switch (alt22) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:266:14: protection
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:275:14: protection
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_protection_in_mixinFlags898);
+                    pushFollow(FOLLOW_protection_in_mixinFlags923);
                     protection75=protection();
 
                     state._fsp--;
@@ -2609,11 +2617,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:266:27: KW_CONST
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:275:27: KW_CONST
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_CONST76=(Token)match(input,KW_CONST,FOLLOW_KW_CONST_in_mixinFlags902); if (state.failed) return retval;
+                    KW_CONST76=(Token)match(input,KW_CONST,FOLLOW_KW_CONST_in_mixinFlags927); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_CONST76_tree = (Object)adaptor.create(KW_CONST76);
                     adaptor.addChild(root_0, KW_CONST76_tree);
@@ -2622,11 +2630,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:266:38: KW_STATIC
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:275:38: KW_STATIC
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_STATIC77=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_mixinFlags906); if (state.failed) return retval;
+                    KW_STATIC77=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_mixinFlags931); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_STATIC77_tree = (Object)adaptor.create(KW_STATIC77);
                     adaptor.addChild(root_0, KW_STATIC77_tree);
@@ -2635,11 +2643,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:266:50: KW_FINAL
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:275:50: KW_FINAL
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_FINAL78=(Token)match(input,KW_FINAL,FOLLOW_KW_FINAL_in_mixinFlags910); if (state.failed) return retval;
+                    KW_FINAL78=(Token)match(input,KW_FINAL,FOLLOW_KW_FINAL_in_mixinFlags935); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_FINAL78_tree = (Object)adaptor.create(KW_FINAL78);
                     adaptor.addChild(root_0, KW_FINAL78_tree);
@@ -2676,7 +2684,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "mixinBody"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:267:1: mixinBody : bracketL ( slotDef )* bracketR -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:276:1: mixinBody : bracketL ( slotDef )* bracketR -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR ) ;
     public final FanParser.mixinBody_return mixinBody() throws RecognitionException {
         FanParser.mixinBody_return retval = new FanParser.mixinBody_return();
         retval.start = input.LT(1);
@@ -2695,16 +2703,16 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_bracketR=new RewriteRuleSubtreeStream(adaptor,"rule bracketR");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 21) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:267:11: ( bracketL ( slotDef )* bracketR -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:267:13: bracketL ( slotDef )* bracketR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:276:11: ( bracketL ( slotDef )* bracketR -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:276:13: bracketL ( slotDef )* bracketR
             {
-            pushFollow(FOLLOW_bracketL_in_mixinBody917);
+            pushFollow(FOLLOW_bracketL_in_mixinBody942);
             bracketL79=bracketL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_bracketL.add(bracketL79.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:267:22: ( slotDef )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:276:22: ( slotDef )*
             loop23:
             do {
                 int alt23=2;
@@ -2719,7 +2727,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: slotDef
             	    {
-            	    pushFollow(FOLLOW_slotDef_in_mixinBody919);
+            	    pushFollow(FOLLOW_slotDef_in_mixinBody944);
             	    slotDef80=slotDef();
 
             	    state._fsp--;
@@ -2734,7 +2742,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_bracketR_in_mixinBody922);
+            pushFollow(FOLLOW_bracketR_in_mixinBody947);
             bracketR81=bracketR();
 
             state._fsp--;
@@ -2743,7 +2751,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketR, bracketL, slotDef
+            // elements: bracketL, slotDef, bracketR
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -2754,15 +2762,15 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 267:41: -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR )
+            // 276:41: -> ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:267:44: ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:276:44: ^( AST_CODE_BLOCK bracketL ( slotDef )* bracketR )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_CODE_BLOCK, "AST_CODE_BLOCK"), root_1);
 
                 adaptor.addChild(root_1, stream_bracketL.nextTree());
-                // src/net/colar/netbeans/fan/antlr/Fan.g:267:70: ( slotDef )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:276:70: ( slotDef )*
                 while ( stream_slotDef.hasNext() ) {
                     adaptor.addChild(root_1, stream_slotDef.nextTree());
 
@@ -2805,7 +2813,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "enumDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:268:1: enumDef : enumHeader enumBody -> ^( AST_ENUM enumHeader enumBody ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:277:1: enumDef : enumHeader enumBody -> ^( AST_ENUM enumHeader enumBody ) ;
     public final FanParser.enumDef_return enumDef() throws RecognitionException {
         FanParser.enumDef_return retval = new FanParser.enumDef_return();
         retval.start = input.LT(1);
@@ -2822,16 +2830,16 @@ public class FanParser extends Parser {
         paraphrase.push("Enumeration definition");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 22) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:269:3: ( enumHeader enumBody -> ^( AST_ENUM enumHeader enumBody ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:269:5: enumHeader enumBody
+            // src/net/colar/netbeans/fan/antlr/Fan.g:278:3: ( enumHeader enumBody -> ^( AST_ENUM enumHeader enumBody ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:278:5: enumHeader enumBody
             {
-            pushFollow(FOLLOW_enumHeader_in_enumDef955);
+            pushFollow(FOLLOW_enumHeader_in_enumDef980);
             enumHeader82=enumHeader();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_enumHeader.add(enumHeader82.getTree());
-            pushFollow(FOLLOW_enumBody_in_enumDef957);
+            pushFollow(FOLLOW_enumBody_in_enumDef982);
             enumBody83=enumBody();
 
             state._fsp--;
@@ -2840,7 +2848,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: enumBody, enumHeader
+            // elements: enumHeader, enumBody
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -2851,9 +2859,9 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 270:7: -> ^( AST_ENUM enumHeader enumBody )
+            // 279:7: -> ^( AST_ENUM enumHeader enumBody )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:270:10: ^( AST_ENUM enumHeader enumBody )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:279:10: ^( AST_ENUM enumHeader enumBody )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_ENUM, "AST_ENUM"), root_1);
@@ -2899,7 +2907,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "enumHeader"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:271:1: enumHeader : docs ( facet )* (m= protection )? KW_ENUM ename= id ( inheritance )? -> ^( AST_ID $ename) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:280:1: enumHeader : docs ( facet )* (m= protection )? KW_ENUM ename= id ( inheritance )? -> ^( AST_ID $ename) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* ;
     public final FanParser.enumHeader_return enumHeader() throws RecognitionException {
         FanParser.enumHeader_return retval = new FanParser.enumHeader_return();
         retval.start = input.LT(1);
@@ -2927,16 +2935,16 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_inheritance=new RewriteRuleSubtreeStream(adaptor,"rule inheritance");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 23) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:271:12: ( docs ( facet )* (m= protection )? KW_ENUM ename= id ( inheritance )? -> ^( AST_ID $ename) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:271:17: docs ( facet )* (m= protection )? KW_ENUM ename= id ( inheritance )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:280:12: ( docs ( facet )* (m= protection )? KW_ENUM ename= id ( inheritance )? -> ^( AST_ID $ename) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:280:17: docs ( facet )* (m= protection )? KW_ENUM ename= id ( inheritance )?
             {
-            pushFollow(FOLLOW_docs_in_enumHeader983);
+            pushFollow(FOLLOW_docs_in_enumHeader1008);
             docs84=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_docs.add(docs84.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:271:22: ( facet )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:280:22: ( facet )*
             loop24:
             do {
                 int alt24=2;
@@ -2951,7 +2959,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
             	    {
-            	    pushFollow(FOLLOW_facet_in_enumHeader985);
+            	    pushFollow(FOLLOW_facet_in_enumHeader1010);
             	    facet85=facet();
 
             	    state._fsp--;
@@ -2966,7 +2974,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:271:30: (m= protection )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:280:30: (m= protection )?
             int alt25=2;
             int LA25_0 = input.LA(1);
 
@@ -2977,7 +2985,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: m= protection
                     {
-                    pushFollow(FOLLOW_protection_in_enumHeader990);
+                    pushFollow(FOLLOW_protection_in_enumHeader1015);
                     m=protection();
 
                     state._fsp--;
@@ -2989,16 +2997,16 @@ public class FanParser extends Parser {
 
             }
 
-            KW_ENUM86=(Token)match(input,KW_ENUM,FOLLOW_KW_ENUM_in_enumHeader993); if (state.failed) return retval; 
+            KW_ENUM86=(Token)match(input,KW_ENUM,FOLLOW_KW_ENUM_in_enumHeader1018); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_KW_ENUM.add(KW_ENUM86);
 
-            pushFollow(FOLLOW_id_in_enumHeader997);
+            pushFollow(FOLLOW_id_in_enumHeader1022);
             ename=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_id.add(ename.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:271:60: ( inheritance )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:280:60: ( inheritance )?
             int alt26=2;
             int LA26_0 = input.LA(1);
 
@@ -3009,7 +3017,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: inheritance
                     {
-                    pushFollow(FOLLOW_inheritance_in_enumHeader999);
+                    pushFollow(FOLLOW_inheritance_in_enumHeader1024);
                     inheritance87=inheritance();
 
                     state._fsp--;
@@ -3024,7 +3032,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: inheritance, m, ename
+            // elements: m, ename, inheritance
             // token labels: 
             // rule labels: retval, ename, m
             // token list labels: 
@@ -3037,9 +3045,9 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_m=new RewriteRuleSubtreeStream(adaptor,"rule m",m!=null?m.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 272:4: -> ^( AST_ID $ename) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )*
+            // 281:4: -> ^( AST_ID $ename) ( ^( AST_INHERITANCE inheritance ) )? ( ^( AST_MODIFIER $m) )*
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:272:7: ^( AST_ID $ename)
+                // src/net/colar/netbeans/fan/antlr/Fan.g:281:7: ^( AST_ID $ename)
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_ID, "AST_ID"), root_1);
@@ -3048,9 +3056,9 @@ public class FanParser extends Parser {
 
                 adaptor.addChild(root_0, root_1);
                 }
-                // src/net/colar/netbeans/fan/antlr/Fan.g:272:24: ( ^( AST_INHERITANCE inheritance ) )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:281:24: ( ^( AST_INHERITANCE inheritance ) )?
                 if ( stream_inheritance.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:272:24: ^( AST_INHERITANCE inheritance )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:281:24: ^( AST_INHERITANCE inheritance )
                     {
                     Object root_1 = (Object)adaptor.nil();
                     root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_INHERITANCE, "AST_INHERITANCE"), root_1);
@@ -3062,9 +3070,9 @@ public class FanParser extends Parser {
 
                 }
                 stream_inheritance.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:272:56: ( ^( AST_MODIFIER $m) )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:281:56: ( ^( AST_MODIFIER $m) )*
                 while ( stream_m.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:272:56: ^( AST_MODIFIER $m)
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:281:56: ^( AST_MODIFIER $m)
                     {
                     Object root_1 = (Object)adaptor.nil();
                     root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_MODIFIER, "AST_MODIFIER"), root_1);
@@ -3109,7 +3117,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "enumBody"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:273:1: enumBody : bracketL enumValDefs ( slotDef )* bracketR -> ^( AST_CODE_BLOCK bracketL enumValDefs ( slotDef )* bracketR ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:282:1: enumBody : bracketL enumValDefs ( slotDef )* bracketR -> ^( AST_CODE_BLOCK bracketL enumValDefs ( slotDef )* bracketR ) ;
     public final FanParser.enumBody_return enumBody() throws RecognitionException {
         FanParser.enumBody_return retval = new FanParser.enumBody_return();
         retval.start = input.LT(1);
@@ -3131,22 +3139,22 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_enumValDefs=new RewriteRuleSubtreeStream(adaptor,"rule enumValDefs");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 24) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:273:10: ( bracketL enumValDefs ( slotDef )* bracketR -> ^( AST_CODE_BLOCK bracketL enumValDefs ( slotDef )* bracketR ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:273:12: bracketL enumValDefs ( slotDef )* bracketR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:282:10: ( bracketL enumValDefs ( slotDef )* bracketR -> ^( AST_CODE_BLOCK bracketL enumValDefs ( slotDef )* bracketR ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:282:12: bracketL enumValDefs ( slotDef )* bracketR
             {
-            pushFollow(FOLLOW_bracketL_in_enumBody1034);
+            pushFollow(FOLLOW_bracketL_in_enumBody1059);
             bracketL88=bracketL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_bracketL.add(bracketL88.getTree());
-            pushFollow(FOLLOW_enumValDefs_in_enumBody1036);
+            pushFollow(FOLLOW_enumValDefs_in_enumBody1061);
             enumValDefs89=enumValDefs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_enumValDefs.add(enumValDefs89.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:273:33: ( slotDef )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:282:33: ( slotDef )*
             loop27:
             do {
                 int alt27=2;
@@ -3161,7 +3169,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: slotDef
             	    {
-            	    pushFollow(FOLLOW_slotDef_in_enumBody1038);
+            	    pushFollow(FOLLOW_slotDef_in_enumBody1063);
             	    slotDef90=slotDef();
 
             	    state._fsp--;
@@ -3176,7 +3184,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_bracketR_in_enumBody1041);
+            pushFollow(FOLLOW_bracketR_in_enumBody1066);
             bracketR91=bracketR();
 
             state._fsp--;
@@ -3196,16 +3204,16 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 273:53: -> ^( AST_CODE_BLOCK bracketL enumValDefs ( slotDef )* bracketR )
+            // 282:53: -> ^( AST_CODE_BLOCK bracketL enumValDefs ( slotDef )* bracketR )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:273:56: ^( AST_CODE_BLOCK bracketL enumValDefs ( slotDef )* bracketR )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:282:56: ^( AST_CODE_BLOCK bracketL enumValDefs ( slotDef )* bracketR )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_CODE_BLOCK, "AST_CODE_BLOCK"), root_1);
 
                 adaptor.addChild(root_1, stream_bracketL.nextTree());
                 adaptor.addChild(root_1, stream_enumValDefs.nextTree());
-                // src/net/colar/netbeans/fan/antlr/Fan.g:273:94: ( slotDef )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:282:94: ( slotDef )*
                 while ( stream_slotDef.hasNext() ) {
                     adaptor.addChild(root_1, stream_slotDef.nextTree());
 
@@ -3248,7 +3256,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "inheritance"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:274:1: inheritance : SP_COLON typeList ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:283:1: inheritance : SP_COLON typeList ;
     public final FanParser.inheritance_return inheritance() throws RecognitionException {
         FanParser.inheritance_return retval = new FanParser.inheritance_return();
         retval.start = input.LT(1);
@@ -3263,17 +3271,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 25) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:274:14: ( SP_COLON typeList )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:274:16: SP_COLON typeList
+            // src/net/colar/netbeans/fan/antlr/Fan.g:283:14: ( SP_COLON typeList )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:283:16: SP_COLON typeList
             {
             root_0 = (Object)adaptor.nil();
 
-            SP_COLON92=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_inheritance1066); if (state.failed) return retval;
+            SP_COLON92=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_inheritance1091); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_COLON92_tree = (Object)adaptor.create(SP_COLON92);
             adaptor.addChild(root_0, SP_COLON92_tree);
             }
-            pushFollow(FOLLOW_typeList_in_inheritance1068);
+            pushFollow(FOLLOW_typeList_in_inheritance1093);
             typeList93=typeList();
 
             state._fsp--;
@@ -3309,7 +3317,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "enumValDefs"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:276:1: enumValDefs : enumValDef ( SP_COMMA enumValDef )* eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:285:1: enumValDefs : enumValDef ( SP_COMMA enumValDef )* eos ;
     public final FanParser.enumValDefs_return enumValDefs() throws RecognitionException {
         FanParser.enumValDefs_return retval = new FanParser.enumValDefs_return();
         retval.start = input.LT(1);
@@ -3328,18 +3336,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 26) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:276:14: ( enumValDef ( SP_COMMA enumValDef )* eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:276:16: enumValDef ( SP_COMMA enumValDef )* eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:285:14: ( enumValDef ( SP_COMMA enumValDef )* eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:285:16: enumValDef ( SP_COMMA enumValDef )* eos
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_enumValDef_in_enumValDefs1078);
+            pushFollow(FOLLOW_enumValDef_in_enumValDefs1103);
             enumValDef94=enumValDef();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, enumValDef94.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:276:27: ( SP_COMMA enumValDef )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:285:27: ( SP_COMMA enumValDef )*
             loop28:
             do {
                 int alt28=2;
@@ -3352,14 +3360,14 @@ public class FanParser extends Parser {
 
                 switch (alt28) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:276:28: SP_COMMA enumValDef
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:285:28: SP_COMMA enumValDef
             	    {
-            	    SP_COMMA95=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_enumValDefs1081); if (state.failed) return retval;
+            	    SP_COMMA95=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_enumValDefs1106); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    SP_COMMA95_tree = (Object)adaptor.create(SP_COMMA95);
             	    adaptor.addChild(root_0, SP_COMMA95_tree);
             	    }
-            	    pushFollow(FOLLOW_enumValDef_in_enumValDefs1084);
+            	    pushFollow(FOLLOW_enumValDef_in_enumValDefs1109);
             	    enumValDef96=enumValDef();
 
             	    state._fsp--;
@@ -3374,7 +3382,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_eos_in_enumValDefs1088);
+            pushFollow(FOLLOW_eos_in_enumValDefs1113);
             eos97=eos();
 
             state._fsp--;
@@ -3410,7 +3418,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "enumValDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:277:1: enumValDef : docs id ( parL ( args )? parR )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:286:1: enumValDef : docs id ( parL ( args )? parR )? ;
     public final FanParser.enumValDef_return enumValDef() throws RecognitionException {
         FanParser.enumValDef_return retval = new FanParser.enumValDef_return();
         retval.start = input.LT(1);
@@ -3431,24 +3439,24 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 27) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:277:13: ( docs id ( parL ( args )? parR )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:277:15: docs id ( parL ( args )? parR )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:286:13: ( docs id ( parL ( args )? parR )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:286:15: docs id ( parL ( args )? parR )?
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_docs_in_enumValDef1096);
+            pushFollow(FOLLOW_docs_in_enumValDef1121);
             docs98=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, docs98.getTree());
-            pushFollow(FOLLOW_id_in_enumValDef1098);
+            pushFollow(FOLLOW_id_in_enumValDef1123);
             id99=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id99.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:277:23: ( parL ( args )? parR )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:286:23: ( parL ( args )? parR )?
             int alt30=2;
             int LA30_0 = input.LA(1);
 
@@ -3457,15 +3465,15 @@ public class FanParser extends Parser {
             }
             switch (alt30) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:277:24: parL ( args )? parR
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:286:24: parL ( args )? parR
                     {
-                    pushFollow(FOLLOW_parL_in_enumValDef1101);
+                    pushFollow(FOLLOW_parL_in_enumValDef1126);
                     parL100=parL();
 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) adaptor.addChild(root_0, parL100.getTree());
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:277:29: ( args )?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:286:29: ( args )?
                     int alt29=2;
                     int LA29_0 = input.LA(1);
 
@@ -3476,7 +3484,7 @@ public class FanParser extends Parser {
                         case 1 :
                             // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: args
                             {
-                            pushFollow(FOLLOW_args_in_enumValDef1103);
+                            pushFollow(FOLLOW_args_in_enumValDef1128);
                             args101=args();
 
                             state._fsp--;
@@ -3488,7 +3496,7 @@ public class FanParser extends Parser {
 
                     }
 
-                    pushFollow(FOLLOW_parR_in_enumValDef1106);
+                    pushFollow(FOLLOW_parR_in_enumValDef1131);
                     parR102=parR();
 
                     state._fsp--;
@@ -3530,7 +3538,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "typeList"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:278:1: typeList : type ( SP_COMMA type )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:287:1: typeList : type ( SP_COMMA type )* ;
     public final FanParser.typeList_return typeList() throws RecognitionException {
         FanParser.typeList_return retval = new FanParser.typeList_return();
         retval.start = input.LT(1);
@@ -3547,18 +3555,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 28) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:278:10: ( type ( SP_COMMA type )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:278:14: type ( SP_COMMA type )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:287:10: ( type ( SP_COMMA type )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:287:14: type ( SP_COMMA type )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_type_in_typeList1117);
+            pushFollow(FOLLOW_type_in_typeList1142);
             type103=type();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, type103.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:278:19: ( SP_COMMA type )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:287:19: ( SP_COMMA type )*
             loop31:
             do {
                 int alt31=2;
@@ -3571,14 +3579,14 @@ public class FanParser extends Parser {
 
                 switch (alt31) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:278:20: SP_COMMA type
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:287:20: SP_COMMA type
             	    {
-            	    SP_COMMA104=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_typeList1120); if (state.failed) return retval;
+            	    SP_COMMA104=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_typeList1145); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    SP_COMMA104_tree = (Object)adaptor.create(SP_COMMA104);
             	    adaptor.addChild(root_0, SP_COMMA104_tree);
             	    }
-            	    pushFollow(FOLLOW_type_in_typeList1122);
+            	    pushFollow(FOLLOW_type_in_typeList1147);
             	    type105=type();
 
             	    state._fsp--;
@@ -3623,7 +3631,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "type"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:280:1: type : typeRoot ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:289:1: type : typeRoot ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* ;
     public final FanParser.type_return type() throws RecognitionException {
         FanParser.type_return retval = new FanParser.type_return();
         retval.start = input.LT(1);
@@ -3642,18 +3650,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 29) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:280:14: ( typeRoot ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:280:18: typeRoot ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:289:14: ( typeRoot ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:289:18: typeRoot ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_typeRoot_in_type1142);
+            pushFollow(FOLLOW_typeRoot_in_type1167);
             typeRoot106=typeRoot();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, typeRoot106.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:280:28: ( SP_QMARK )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:289:28: ( SP_QMARK )?
             int alt32=2;
             int LA32_0 = input.LA(1);
 
@@ -3668,7 +3676,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_QMARK
                     {
-                    SP_QMARK107=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_type1145); if (state.failed) return retval;
+                    SP_QMARK107=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_type1170); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     SP_QMARK107_tree = (Object)adaptor.create(SP_QMARK107);
                     adaptor.addChild(root_0, SP_QMARK107_tree);
@@ -3679,7 +3687,7 @@ public class FanParser extends Parser {
 
             }
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:280:38: ( LIST_TYPE ( SP_QMARK )? )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:289:38: ( LIST_TYPE ( SP_QMARK )? )*
             loop34:
             do {
                 int alt34=2;
@@ -3698,14 +3706,14 @@ public class FanParser extends Parser {
 
                 switch (alt34) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:280:39: LIST_TYPE ( SP_QMARK )?
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:289:39: LIST_TYPE ( SP_QMARK )?
             	    {
-            	    LIST_TYPE108=(Token)match(input,LIST_TYPE,FOLLOW_LIST_TYPE_in_type1149); if (state.failed) return retval;
+            	    LIST_TYPE108=(Token)match(input,LIST_TYPE,FOLLOW_LIST_TYPE_in_type1174); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    LIST_TYPE108_tree = (Object)adaptor.create(LIST_TYPE108);
             	    adaptor.addChild(root_0, LIST_TYPE108_tree);
             	    }
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:280:49: ( SP_QMARK )?
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:289:49: ( SP_QMARK )?
             	    int alt33=2;
             	    int LA33_0 = input.LA(1);
 
@@ -3720,7 +3728,7 @@ public class FanParser extends Parser {
             	        case 1 :
             	            // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_QMARK
             	            {
-            	            SP_QMARK109=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_type1151); if (state.failed) return retval;
+            	            SP_QMARK109=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_type1176); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
             	            SP_QMARK109_tree = (Object)adaptor.create(SP_QMARK109);
             	            adaptor.addChild(root_0, SP_QMARK109_tree);
@@ -3770,7 +3778,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "nonMapType"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:281:1: nonMapType : ( funcType | simpleType );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:290:1: nonMapType : ( funcType | simpleType );
     public final FanParser.nonMapType_return nonMapType() throws RecognitionException {
         FanParser.nonMapType_return retval = new FanParser.nonMapType_return();
         retval.start = input.LT(1);
@@ -3785,7 +3793,7 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 30) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:281:12: ( funcType | simpleType )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:290:12: ( funcType | simpleType )
             int alt35=2;
             int LA35_0 = input.LA(1);
 
@@ -3804,11 +3812,11 @@ public class FanParser extends Parser {
             }
             switch (alt35) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:281:14: funcType
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:290:14: funcType
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_funcType_in_nonMapType1162);
+                    pushFollow(FOLLOW_funcType_in_nonMapType1187);
                     funcType110=funcType();
 
                     state._fsp--;
@@ -3818,11 +3826,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:281:25: simpleType
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:290:25: simpleType
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_simpleType_in_nonMapType1166);
+                    pushFollow(FOLLOW_simpleType_in_nonMapType1191);
                     simpleType111=simpleType();
 
                     state._fsp--;
@@ -3860,7 +3868,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "typeRoot"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:282:1: typeRoot : ( mapType | nonMapType );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:291:1: typeRoot : ( mapType | nonMapType );
     public final FanParser.typeRoot_return typeRoot() throws RecognitionException {
         FanParser.typeRoot_return retval = new FanParser.typeRoot_return();
         retval.start = input.LT(1);
@@ -3875,7 +3883,7 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 31) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:282:10: ( mapType | nonMapType )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:291:10: ( mapType | nonMapType )
             int alt36=2;
             switch ( input.LA(1) ) {
             case SQ_BRACKET_L:
@@ -3931,11 +3939,11 @@ public class FanParser extends Parser {
 
             switch (alt36) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:282:12: mapType
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:291:12: mapType
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_mapType_in_typeRoot1173);
+                    pushFollow(FOLLOW_mapType_in_typeRoot1198);
                     mapType112=mapType();
 
                     state._fsp--;
@@ -3945,11 +3953,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:282:22: nonMapType
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:291:22: nonMapType
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_nonMapType_in_typeRoot1177);
+                    pushFollow(FOLLOW_nonMapType_in_typeRoot1202);
                     nonMapType113=nonMapType();
 
                     state._fsp--;
@@ -3987,7 +3995,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "simpleType"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:283:1: simpleType : id ( SP_COLCOL id )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:292:1: simpleType : id ( SP_COLCOL id )? ;
     public final FanParser.simpleType_return simpleType() throws RecognitionException {
         FanParser.simpleType_return retval = new FanParser.simpleType_return();
         retval.start = input.LT(1);
@@ -4004,18 +4012,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 32) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:283:17: ( id ( SP_COLCOL id )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:283:21: id ( SP_COLCOL id )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:292:17: ( id ( SP_COLCOL id )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:292:21: id ( SP_COLCOL id )?
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_id_in_simpleType1191);
+            pushFollow(FOLLOW_id_in_simpleType1216);
             id114=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id114.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:283:24: ( SP_COLCOL id )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:292:24: ( SP_COLCOL id )?
             int alt37=2;
             int LA37_0 = input.LA(1);
 
@@ -4024,14 +4032,14 @@ public class FanParser extends Parser {
             }
             switch (alt37) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:283:25: SP_COLCOL id
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:292:25: SP_COLCOL id
                     {
-                    SP_COLCOL115=(Token)match(input,SP_COLCOL,FOLLOW_SP_COLCOL_in_simpleType1194); if (state.failed) return retval;
+                    SP_COLCOL115=(Token)match(input,SP_COLCOL,FOLLOW_SP_COLCOL_in_simpleType1219); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     SP_COLCOL115_tree = (Object)adaptor.create(SP_COLCOL115);
                     adaptor.addChild(root_0, SP_COLCOL115_tree);
                     }
-                    pushFollow(FOLLOW_id_in_simpleType1196);
+                    pushFollow(FOLLOW_id_in_simpleType1221);
                     id116=id();
 
                     state._fsp--;
@@ -4073,7 +4081,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "mapType"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:285:1: mapType : ( sq_bracketL )? nonMapType ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* ({...}? SP_COLON {...}? type )+ ( sq_bracketR )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:294:1: mapType : ( sq_bracketL )? nonMapType ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* ({...}? SP_COLON {...}? type )+ ( sq_bracketR )? ;
     public final FanParser.mapType_return mapType() throws RecognitionException {
         FanParser.mapType_return retval = new FanParser.mapType_return();
         retval.start = input.LT(1);
@@ -4100,12 +4108,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 33) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:285:10: ( ( sq_bracketL )? nonMapType ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* ({...}? SP_COLON {...}? type )+ ( sq_bracketR )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:285:12: ( sq_bracketL )? nonMapType ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* ({...}? SP_COLON {...}? type )+ ( sq_bracketR )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:294:10: ( ( sq_bracketL )? nonMapType ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* ({...}? SP_COLON {...}? type )+ ( sq_bracketR )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:294:12: ( sq_bracketL )? nonMapType ( SP_QMARK )? ( LIST_TYPE ( SP_QMARK )? )* ({...}? SP_COLON {...}? type )+ ( sq_bracketR )?
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:285:12: ( sq_bracketL )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:294:12: ( sq_bracketL )?
             int alt38=2;
             int LA38_0 = input.LA(1);
 
@@ -4116,7 +4124,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: sq_bracketL
                     {
-                    pushFollow(FOLLOW_sq_bracketL_in_mapType1207);
+                    pushFollow(FOLLOW_sq_bracketL_in_mapType1232);
                     sq_bracketL117=sq_bracketL();
 
                     state._fsp--;
@@ -4128,13 +4136,13 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_nonMapType_in_mapType1210);
+            pushFollow(FOLLOW_nonMapType_in_mapType1235);
             nonMapType118=nonMapType();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, nonMapType118.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:285:36: ( SP_QMARK )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:294:36: ( SP_QMARK )?
             int alt39=2;
             int LA39_0 = input.LA(1);
 
@@ -4145,7 +4153,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_QMARK
                     {
-                    SP_QMARK119=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_mapType1212); if (state.failed) return retval;
+                    SP_QMARK119=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_mapType1237); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     SP_QMARK119_tree = (Object)adaptor.create(SP_QMARK119);
                     adaptor.addChild(root_0, SP_QMARK119_tree);
@@ -4156,7 +4164,7 @@ public class FanParser extends Parser {
 
             }
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:285:46: ( LIST_TYPE ( SP_QMARK )? )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:294:46: ( LIST_TYPE ( SP_QMARK )? )*
             loop41:
             do {
                 int alt41=2;
@@ -4169,14 +4177,14 @@ public class FanParser extends Parser {
 
                 switch (alt41) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:285:47: LIST_TYPE ( SP_QMARK )?
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:294:47: LIST_TYPE ( SP_QMARK )?
             	    {
-            	    LIST_TYPE120=(Token)match(input,LIST_TYPE,FOLLOW_LIST_TYPE_in_mapType1216); if (state.failed) return retval;
+            	    LIST_TYPE120=(Token)match(input,LIST_TYPE,FOLLOW_LIST_TYPE_in_mapType1241); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    LIST_TYPE120_tree = (Object)adaptor.create(LIST_TYPE120);
             	    adaptor.addChild(root_0, LIST_TYPE120_tree);
             	    }
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:285:57: ( SP_QMARK )?
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:294:57: ( SP_QMARK )?
             	    int alt40=2;
             	    int LA40_0 = input.LA(1);
 
@@ -4187,7 +4195,7 @@ public class FanParser extends Parser {
             	        case 1 :
             	            // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_QMARK
             	            {
-            	            SP_QMARK121=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_mapType1218); if (state.failed) return retval;
+            	            SP_QMARK121=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_mapType1243); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
             	            SP_QMARK121_tree = (Object)adaptor.create(SP_QMARK121);
             	            adaptor.addChild(root_0, SP_QMARK121_tree);
@@ -4207,7 +4215,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:286:5: ({...}? SP_COLON {...}? type )+
+            // src/net/colar/netbeans/fan/antlr/Fan.g:295:5: ({...}? SP_COLON {...}? type )+
             int cnt42=0;
             loop42:
             do {
@@ -4227,13 +4235,13 @@ public class FanParser extends Parser {
 
                 switch (alt42) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:286:6: {...}? SP_COLON {...}? type
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:295:6: {...}? SP_COLON {...}? type
             	    {
             	    if ( !((notAfterEol())) ) {
             	        if (state.backtracking>0) {state.failed=true; return retval;}
             	        throw new FailedPredicateException(input, "mapType", "notAfterEol()");
             	    }
-            	    SP_COLON122=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_mapType1230); if (state.failed) return retval;
+            	    SP_COLON122=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_mapType1255); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    SP_COLON122_tree = (Object)adaptor.create(SP_COLON122);
             	    adaptor.addChild(root_0, SP_COLON122_tree);
@@ -4242,7 +4250,7 @@ public class FanParser extends Parser {
             	        if (state.backtracking>0) {state.failed=true; return retval;}
             	        throw new FailedPredicateException(input, "mapType", "notAfterEol()");
             	    }
-            	    pushFollow(FOLLOW_type_in_mapType1234);
+            	    pushFollow(FOLLOW_type_in_mapType1259);
             	    type123=type();
 
             	    state._fsp--;
@@ -4262,7 +4270,7 @@ public class FanParser extends Parser {
                 cnt42++;
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:286:56: ( sq_bracketR )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:295:56: ( sq_bracketR )?
             int alt43=2;
             int LA43_0 = input.LA(1);
 
@@ -4277,7 +4285,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: sq_bracketR
                     {
-                    pushFollow(FOLLOW_sq_bracketR_in_mapType1238);
+                    pushFollow(FOLLOW_sq_bracketR_in_mapType1263);
                     sq_bracketR124=sq_bracketR();
 
                     state._fsp--;
@@ -4319,7 +4327,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "funcType"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:287:1: funcType : SP_PIPE ( SP_COMMA | ( formals ( ( OP_ARROW )=> assignedType )? ) | ( ( OP_ARROW )=> assignedType ) ) SP_PIPE ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:296:1: funcType : SP_PIPE ( SP_COMMA | ( formals ( ( OP_ARROW )=> assignedType )? ) | ( ( OP_ARROW )=> assignedType ) ) SP_PIPE ;
     public final FanParser.funcType_return funcType() throws RecognitionException {
         FanParser.funcType_return retval = new FanParser.funcType_return();
         retval.start = input.LT(1);
@@ -4342,17 +4350,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 34) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:287:11: ( SP_PIPE ( SP_COMMA | ( formals ( ( OP_ARROW )=> assignedType )? ) | ( ( OP_ARROW )=> assignedType ) ) SP_PIPE )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:287:13: SP_PIPE ( SP_COMMA | ( formals ( ( OP_ARROW )=> assignedType )? ) | ( ( OP_ARROW )=> assignedType ) ) SP_PIPE
+            // src/net/colar/netbeans/fan/antlr/Fan.g:296:11: ( SP_PIPE ( SP_COMMA | ( formals ( ( OP_ARROW )=> assignedType )? ) | ( ( OP_ARROW )=> assignedType ) ) SP_PIPE )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:296:13: SP_PIPE ( SP_COMMA | ( formals ( ( OP_ARROW )=> assignedType )? ) | ( ( OP_ARROW )=> assignedType ) ) SP_PIPE
             {
             root_0 = (Object)adaptor.nil();
 
-            SP_PIPE125=(Token)match(input,SP_PIPE,FOLLOW_SP_PIPE_in_funcType1247); if (state.failed) return retval;
+            SP_PIPE125=(Token)match(input,SP_PIPE,FOLLOW_SP_PIPE_in_funcType1272); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_PIPE125_tree = (Object)adaptor.create(SP_PIPE125);
             adaptor.addChild(root_0, SP_PIPE125_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:287:21: ( SP_COMMA | ( formals ( ( OP_ARROW )=> assignedType )? ) | ( ( OP_ARROW )=> assignedType ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:296:21: ( SP_COMMA | ( formals ( ( OP_ARROW )=> assignedType )? ) | ( ( OP_ARROW )=> assignedType ) )
             int alt45=3;
             int LA45_0 = input.LA(1);
 
@@ -4374,9 +4382,9 @@ public class FanParser extends Parser {
             }
             switch (alt45) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:287:22: SP_COMMA
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:296:22: SP_COMMA
                     {
-                    SP_COMMA126=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_funcType1250); if (state.failed) return retval;
+                    SP_COMMA126=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_funcType1275); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     SP_COMMA126_tree = (Object)adaptor.create(SP_COMMA126);
                     adaptor.addChild(root_0, SP_COMMA126_tree);
@@ -4385,18 +4393,18 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:287:33: ( formals ( ( OP_ARROW )=> assignedType )? )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:296:33: ( formals ( ( OP_ARROW )=> assignedType )? )
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:287:33: ( formals ( ( OP_ARROW )=> assignedType )? )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:287:34: formals ( ( OP_ARROW )=> assignedType )?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:296:33: ( formals ( ( OP_ARROW )=> assignedType )? )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:296:34: formals ( ( OP_ARROW )=> assignedType )?
                     {
-                    pushFollow(FOLLOW_formals_in_funcType1255);
+                    pushFollow(FOLLOW_formals_in_funcType1280);
                     formals127=formals();
 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) adaptor.addChild(root_0, formals127.getTree());
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:287:42: ( ( OP_ARROW )=> assignedType )?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:296:42: ( ( OP_ARROW )=> assignedType )?
                     int alt44=2;
                     int LA44_0 = input.LA(1);
 
@@ -4405,9 +4413,9 @@ public class FanParser extends Parser {
                     }
                     switch (alt44) {
                         case 1 :
-                            // src/net/colar/netbeans/fan/antlr/Fan.g:287:43: ( OP_ARROW )=> assignedType
+                            // src/net/colar/netbeans/fan/antlr/Fan.g:296:43: ( OP_ARROW )=> assignedType
                             {
-                            pushFollow(FOLLOW_assignedType_in_funcType1262);
+                            pushFollow(FOLLOW_assignedType_in_funcType1287);
                             assignedType128=assignedType();
 
                             state._fsp--;
@@ -4426,12 +4434,12 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:287:73: ( ( OP_ARROW )=> assignedType )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:296:73: ( ( OP_ARROW )=> assignedType )
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:287:73: ( ( OP_ARROW )=> assignedType )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:287:74: ( OP_ARROW )=> assignedType
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:296:73: ( ( OP_ARROW )=> assignedType )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:296:74: ( OP_ARROW )=> assignedType
                     {
-                    pushFollow(FOLLOW_assignedType_in_funcType1274);
+                    pushFollow(FOLLOW_assignedType_in_funcType1299);
                     assignedType129=assignedType();
 
                     state._fsp--;
@@ -4446,7 +4454,7 @@ public class FanParser extends Parser {
 
             }
 
-            SP_PIPE130=(Token)match(input,SP_PIPE,FOLLOW_SP_PIPE_in_funcType1278); if (state.failed) return retval;
+            SP_PIPE130=(Token)match(input,SP_PIPE,FOLLOW_SP_PIPE_in_funcType1303); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_PIPE130_tree = (Object)adaptor.create(SP_PIPE130);
             adaptor.addChild(root_0, SP_PIPE130_tree);
@@ -4481,7 +4489,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "assignedType"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:288:1: assignedType : OP_ARROW type ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:297:1: assignedType : OP_ARROW type ;
     public final FanParser.assignedType_return assignedType() throws RecognitionException {
         FanParser.assignedType_return retval = new FanParser.assignedType_return();
         retval.start = input.LT(1);
@@ -4496,17 +4504,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 35) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:288:14: ( OP_ARROW type )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:288:16: OP_ARROW type
+            // src/net/colar/netbeans/fan/antlr/Fan.g:297:14: ( OP_ARROW type )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:297:16: OP_ARROW type
             {
             root_0 = (Object)adaptor.nil();
 
-            OP_ARROW131=(Token)match(input,OP_ARROW,FOLLOW_OP_ARROW_in_assignedType1285); if (state.failed) return retval;
+            OP_ARROW131=(Token)match(input,OP_ARROW,FOLLOW_OP_ARROW_in_assignedType1310); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             OP_ARROW131_tree = (Object)adaptor.create(OP_ARROW131);
             adaptor.addChild(root_0, OP_ARROW131_tree);
             }
-            pushFollow(FOLLOW_type_in_assignedType1287);
+            pushFollow(FOLLOW_type_in_assignedType1312);
             type132=type();
 
             state._fsp--;
@@ -4542,7 +4550,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "formals"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:289:1: formals : formal ( SP_COMMA formal )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:298:1: formals : formal ( SP_COMMA formal )* ;
     public final FanParser.formals_return formals() throws RecognitionException {
         FanParser.formals_return retval = new FanParser.formals_return();
         retval.start = input.LT(1);
@@ -4559,18 +4567,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 36) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:289:10: ( formal ( SP_COMMA formal )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:289:14: formal ( SP_COMMA formal )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:298:10: ( formal ( SP_COMMA formal )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:298:14: formal ( SP_COMMA formal )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_formal_in_formals1297);
+            pushFollow(FOLLOW_formal_in_formals1322);
             formal133=formal();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, formal133.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:289:21: ( SP_COMMA formal )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:298:21: ( SP_COMMA formal )*
             loop46:
             do {
                 int alt46=2;
@@ -4583,14 +4591,14 @@ public class FanParser extends Parser {
 
                 switch (alt46) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:289:22: SP_COMMA formal
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:298:22: SP_COMMA formal
             	    {
-            	    SP_COMMA134=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_formals1300); if (state.failed) return retval;
+            	    SP_COMMA134=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_formals1325); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    SP_COMMA134_tree = (Object)adaptor.create(SP_COMMA134);
             	    adaptor.addChild(root_0, SP_COMMA134_tree);
             	    }
-            	    pushFollow(FOLLOW_formal_in_formals1302);
+            	    pushFollow(FOLLOW_formal_in_formals1327);
             	    formal135=formal();
 
             	    state._fsp--;
@@ -4635,7 +4643,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "formal"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:290:1: formal : ( formalFull | formalTypeOnly | formalInferred );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:299:1: formal : ( formalFull | formalTypeOnly | formalInferred );
     public final FanParser.formal_return formal() throws RecognitionException {
         FanParser.formal_return retval = new FanParser.formal_return();
         retval.start = input.LT(1);
@@ -4652,7 +4660,7 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 37) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:290:9: ( formalFull | formalTypeOnly | formalInferred )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:299:9: ( formalFull | formalTypeOnly | formalInferred )
             int alt47=3;
             switch ( input.LA(1) ) {
             case SQ_BRACKET_L:
@@ -4725,11 +4733,11 @@ public class FanParser extends Parser {
 
             switch (alt47) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:290:11: formalFull
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:299:11: formalFull
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_formalFull_in_formal1312);
+                    pushFollow(FOLLOW_formalFull_in_formal1337);
                     formalFull136=formalFull();
 
                     state._fsp--;
@@ -4739,11 +4747,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:290:24: formalTypeOnly
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:299:24: formalTypeOnly
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_formalTypeOnly_in_formal1316);
+                    pushFollow(FOLLOW_formalTypeOnly_in_formal1341);
                     formalTypeOnly137=formalTypeOnly();
 
                     state._fsp--;
@@ -4753,11 +4761,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:290:41: formalInferred
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:299:41: formalInferred
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_formalInferred_in_formal1320);
+                    pushFollow(FOLLOW_formalInferred_in_formal1345);
                     formalInferred138=formalInferred();
 
                     state._fsp--;
@@ -4795,7 +4803,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "formalFull"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:291:1: formalFull : type id ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:300:1: formalFull : type id ;
     public final FanParser.formalFull_return formalFull() throws RecognitionException {
         FanParser.formalFull_return retval = new FanParser.formalFull_return();
         retval.start = input.LT(1);
@@ -4810,18 +4818,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 38) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:291:17: ( type id )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:291:19: type id
+            // src/net/colar/netbeans/fan/antlr/Fan.g:300:17: ( type id )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:300:19: type id
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_type_in_formalFull1332);
+            pushFollow(FOLLOW_type_in_formalFull1357);
             type139=type();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, type139.getTree());
-            pushFollow(FOLLOW_id_in_formalFull1334);
+            pushFollow(FOLLOW_id_in_formalFull1359);
             id140=id();
 
             state._fsp--;
@@ -4857,7 +4865,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "formalTypeOnly"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:292:1: formalTypeOnly : type ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:301:1: formalTypeOnly : type ;
     public final FanParser.formalTypeOnly_return formalTypeOnly() throws RecognitionException {
         FanParser.formalTypeOnly_return retval = new FanParser.formalTypeOnly_return();
         retval.start = input.LT(1);
@@ -4870,12 +4878,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 39) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:292:17: ( type )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:292:21: type
+            // src/net/colar/netbeans/fan/antlr/Fan.g:301:17: ( type )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:301:21: type
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_type_in_formalTypeOnly1344);
+            pushFollow(FOLLOW_type_in_formalTypeOnly1369);
             type141=type();
 
             state._fsp--;
@@ -4911,7 +4919,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "formalInferred"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:293:1: formalInferred : id ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:302:1: formalInferred : id ;
     public final FanParser.formalInferred_return formalInferred() throws RecognitionException {
         FanParser.formalInferred_return retval = new FanParser.formalInferred_return();
         retval.start = input.LT(1);
@@ -4924,12 +4932,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 40) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:293:17: ( id )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:293:21: id
+            // src/net/colar/netbeans/fan/antlr/Fan.g:302:17: ( id )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:302:21: id
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_id_in_formalInferred1354);
+            pushFollow(FOLLOW_id_in_formalInferred1379);
             id142=id();
 
             state._fsp--;
@@ -4965,7 +4973,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "slotDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:294:1: slotDef : ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:303:1: slotDef : ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) ) ;
     public final FanParser.slotDef_return slotDef() throws RecognitionException {
         FanParser.slotDef_return retval = new FanParser.slotDef_return();
         retval.start = input.LT(1);
@@ -4988,19 +4996,19 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 41) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:294:10: ( ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:294:12: ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:303:10: ( ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:303:12: ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) )
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:294:12: ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:303:12: ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) )
             int alt50=2;
             alt50 = dfa50.predict(input);
             switch (alt50) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:294:13: ( KW_STATIC bracketL )=> staticBlock
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:303:13: ( KW_STATIC bracketL )=> staticBlock
                     {
-                    pushFollow(FOLLOW_staticBlock_in_slotDef1370);
+                    pushFollow(FOLLOW_staticBlock_in_slotDef1395);
                     staticBlock143=staticBlock();
 
                     state._fsp--;
@@ -5010,18 +5018,18 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:295:5: ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:304:5: ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) )
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:295:5: ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:295:6: docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:304:5: ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:304:6: docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef )
                     {
-                    pushFollow(FOLLOW_docs_in_slotDef1378);
+                    pushFollow(FOLLOW_docs_in_slotDef1403);
                     docs144=docs();
 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) adaptor.addChild(root_0, docs144.getTree());
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:295:11: ( facet )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:304:11: ( facet )*
                     loop48:
                     do {
                         int alt48=2;
@@ -5048,7 +5056,7 @@ public class FanParser extends Parser {
                     	case 1 :
                     	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
                     	    {
-                    	    pushFollow(FOLLOW_facet_in_slotDef1380);
+                    	    pushFollow(FOLLOW_facet_in_slotDef1405);
                     	    facet145=facet();
 
                     	    state._fsp--;
@@ -5063,14 +5071,14 @@ public class FanParser extends Parser {
                         }
                     } while (true);
 
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:296:6: ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:305:6: ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef )
                     int alt49=3;
                     alt49 = dfa49.predict(input);
                     switch (alt49) {
                         case 1 :
-                            // src/net/colar/netbeans/fan/antlr/Fan.g:297:7: ( ( ctorFlags )* KW_NEW )=> ctorDef
+                            // src/net/colar/netbeans/fan/antlr/Fan.g:306:7: ( ( ctorFlags )* KW_NEW )=> ctorDef
                             {
-                            pushFollow(FOLLOW_ctorDef_in_slotDef1403);
+                            pushFollow(FOLLOW_ctorDef_in_slotDef1428);
                             ctorDef146=ctorDef();
 
                             state._fsp--;
@@ -5080,9 +5088,9 @@ public class FanParser extends Parser {
                             }
                             break;
                         case 2 :
-                            // src/net/colar/netbeans/fan/antlr/Fan.g:298:7: ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef
+                            // src/net/colar/netbeans/fan/antlr/Fan.g:307:7: ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef
                             {
-                            pushFollow(FOLLOW_methodDef_in_slotDef1430);
+                            pushFollow(FOLLOW_methodDef_in_slotDef1455);
                             methodDef147=methodDef();
 
                             state._fsp--;
@@ -5092,9 +5100,9 @@ public class FanParser extends Parser {
                             }
                             break;
                         case 3 :
-                            // src/net/colar/netbeans/fan/antlr/Fan.g:299:7: fieldDef
+                            // src/net/colar/netbeans/fan/antlr/Fan.g:308:7: fieldDef
                             {
-                            pushFollow(FOLLOW_fieldDef_in_slotDef1440);
+                            pushFollow(FOLLOW_fieldDef_in_slotDef1465);
                             fieldDef148=fieldDef();
 
                             state._fsp--;
@@ -5145,7 +5153,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "fieldDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:303:1: fieldDef : docs ( facet )* m= fieldFlags typeId ( AS_INIT_VAL expr )? ( ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR ) | eos ) -> ^( AST_FIELD typeId ( ^( AST_MODIFIER $m) )* ( expr )? ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:312:1: fieldDef : docs ( facet )* m= fieldFlags typeId ( AS_INIT_VAL expr )? ( ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR ) | eos ) -> ^( AST_FIELD typeId ( ^( AST_MODIFIER $m) )* ( expr )? ) ;
     public final FanParser.fieldDef_return fieldDef() throws RecognitionException {
         FanParser.fieldDef_return retval = new FanParser.fieldDef_return();
         retval.start = input.LT(1);
@@ -5198,16 +5206,16 @@ public class FanParser extends Parser {
         paraphrase.push("Field definition");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 42) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:304:3: ( docs ( facet )* m= fieldFlags typeId ( AS_INIT_VAL expr )? ( ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR ) | eos ) -> ^( AST_FIELD typeId ( ^( AST_MODIFIER $m) )* ( expr )? ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:304:5: docs ( facet )* m= fieldFlags typeId ( AS_INIT_VAL expr )? ( ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR ) | eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:313:3: ( docs ( facet )* m= fieldFlags typeId ( AS_INIT_VAL expr )? ( ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR ) | eos ) -> ^( AST_FIELD typeId ( ^( AST_MODIFIER $m) )* ( expr )? ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:313:5: docs ( facet )* m= fieldFlags typeId ( AS_INIT_VAL expr )? ( ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR ) | eos )
             {
-            pushFollow(FOLLOW_docs_in_fieldDef1476);
+            pushFollow(FOLLOW_docs_in_fieldDef1501);
             docs149=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_docs.add(docs149.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:304:10: ( facet )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:313:10: ( facet )*
             loop51:
             do {
                 int alt51=2;
@@ -5222,7 +5230,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
             	    {
-            	    pushFollow(FOLLOW_facet_in_fieldDef1478);
+            	    pushFollow(FOLLOW_facet_in_fieldDef1503);
             	    facet150=facet();
 
             	    state._fsp--;
@@ -5237,19 +5245,19 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_fieldFlags_in_fieldDef1483);
+            pushFollow(FOLLOW_fieldFlags_in_fieldDef1508);
             m=fieldFlags();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_fieldFlags.add(m.getTree());
-            pushFollow(FOLLOW_typeId_in_fieldDef1485);
+            pushFollow(FOLLOW_typeId_in_fieldDef1510);
             typeId151=typeId();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_typeId.add(typeId151.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:304:37: ( AS_INIT_VAL expr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:313:37: ( AS_INIT_VAL expr )?
             int alt52=2;
             int LA52_0 = input.LA(1);
 
@@ -5258,12 +5266,12 @@ public class FanParser extends Parser {
             }
             switch (alt52) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:304:38: AS_INIT_VAL expr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:313:38: AS_INIT_VAL expr
                     {
-                    AS_INIT_VAL152=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_fieldDef1488); if (state.failed) return retval; 
+                    AS_INIT_VAL152=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_fieldDef1513); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_AS_INIT_VAL.add(AS_INIT_VAL152);
 
-                    pushFollow(FOLLOW_expr_in_fieldDef1490);
+                    pushFollow(FOLLOW_expr_in_fieldDef1515);
                     expr153=expr();
 
                     state._fsp--;
@@ -5275,7 +5283,7 @@ public class FanParser extends Parser {
 
             }
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:305:5: ( ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR ) | eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:314:5: ( ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR ) | eos )
             int alt58=2;
             int LA58_0 = input.LA(1);
 
@@ -5294,18 +5302,18 @@ public class FanParser extends Parser {
             }
             switch (alt58) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:306:5: ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:315:5: ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR )
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:306:5: ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:306:6: bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:315:5: ( bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:315:6: bracketL ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+ bracketR
                     {
-                    pushFollow(FOLLOW_bracketL_in_fieldDef1505);
+                    pushFollow(FOLLOW_bracketL_in_fieldDef1530);
                     bracketL154=bracketL();
 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) stream_bracketL.add(bracketL154.getTree());
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:306:15: ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:315:15: ( ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )? )+
                     int cnt57=0;
                     loop57:
                     do {
@@ -5319,9 +5327,9 @@ public class FanParser extends Parser {
 
                         switch (alt57) {
                     	case 1 :
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:306:16: ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )?
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:315:16: ( protection )? ( getter | setter ) ( SP_SEMI )? ( block )?
                     	    {
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:306:16: ( protection )?
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:315:16: ( protection )?
                     	    int alt53=2;
                     	    int LA53_0 = input.LA(1);
 
@@ -5332,7 +5340,7 @@ public class FanParser extends Parser {
                     	        case 1 :
                     	            // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: protection
                     	            {
-                    	            pushFollow(FOLLOW_protection_in_fieldDef1508);
+                    	            pushFollow(FOLLOW_protection_in_fieldDef1533);
                     	            protection155=protection();
 
                     	            state._fsp--;
@@ -5344,7 +5352,7 @@ public class FanParser extends Parser {
 
                     	    }
 
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:306:28: ( getter | setter )
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:315:28: ( getter | setter )
                     	    int alt54=2;
                     	    int LA54_0 = input.LA(1);
 
@@ -5374,9 +5382,9 @@ public class FanParser extends Parser {
                     	    }
                     	    switch (alt54) {
                     	        case 1 :
-                    	            // src/net/colar/netbeans/fan/antlr/Fan.g:306:29: getter
+                    	            // src/net/colar/netbeans/fan/antlr/Fan.g:315:29: getter
                     	            {
-                    	            pushFollow(FOLLOW_getter_in_fieldDef1512);
+                    	            pushFollow(FOLLOW_getter_in_fieldDef1537);
                     	            getter156=getter();
 
                     	            state._fsp--;
@@ -5386,9 +5394,9 @@ public class FanParser extends Parser {
                     	            }
                     	            break;
                     	        case 2 :
-                    	            // src/net/colar/netbeans/fan/antlr/Fan.g:306:38: setter
+                    	            // src/net/colar/netbeans/fan/antlr/Fan.g:315:38: setter
                     	            {
-                    	            pushFollow(FOLLOW_setter_in_fieldDef1516);
+                    	            pushFollow(FOLLOW_setter_in_fieldDef1541);
                     	            setter157=setter();
 
                     	            state._fsp--;
@@ -5400,7 +5408,7 @@ public class FanParser extends Parser {
 
                     	    }
 
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:306:46: ( SP_SEMI )?
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:315:46: ( SP_SEMI )?
                     	    int alt55=2;
                     	    int LA55_0 = input.LA(1);
 
@@ -5411,7 +5419,7 @@ public class FanParser extends Parser {
                     	        case 1 :
                     	            // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_SEMI
                     	            {
-                    	            SP_SEMI158=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_fieldDef1519); if (state.failed) return retval; 
+                    	            SP_SEMI158=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_fieldDef1544); if (state.failed) return retval; 
                     	            if ( state.backtracking==0 ) stream_SP_SEMI.add(SP_SEMI158);
 
 
@@ -5420,7 +5428,7 @@ public class FanParser extends Parser {
 
                     	    }
 
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:306:55: ( block )?
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:315:55: ( block )?
                     	    int alt56=2;
                     	    int LA56_0 = input.LA(1);
 
@@ -5438,7 +5446,7 @@ public class FanParser extends Parser {
                     	        case 1 :
                     	            // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: block
                     	            {
-                    	            pushFollow(FOLLOW_block_in_fieldDef1522);
+                    	            pushFollow(FOLLOW_block_in_fieldDef1547);
                     	            block159=block();
 
                     	            state._fsp--;
@@ -5464,7 +5472,7 @@ public class FanParser extends Parser {
                         cnt57++;
                     } while (true);
 
-                    pushFollow(FOLLOW_bracketR_in_fieldDef1527);
+                    pushFollow(FOLLOW_bracketR_in_fieldDef1552);
                     bracketR160=bracketR();
 
                     state._fsp--;
@@ -5477,9 +5485,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:307:7: eos
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:316:7: eos
                     {
-                    pushFollow(FOLLOW_eos_in_fieldDef1536);
+                    pushFollow(FOLLOW_eos_in_fieldDef1561);
                     eos161=eos();
 
                     state._fsp--;
@@ -5506,17 +5514,17 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_m=new RewriteRuleSubtreeStream(adaptor,"rule m",m!=null?m.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 308:4: -> ^( AST_FIELD typeId ( ^( AST_MODIFIER $m) )* ( expr )? )
+            // 317:4: -> ^( AST_FIELD typeId ( ^( AST_MODIFIER $m) )* ( expr )? )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:308:7: ^( AST_FIELD typeId ( ^( AST_MODIFIER $m) )* ( expr )? )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:317:7: ^( AST_FIELD typeId ( ^( AST_MODIFIER $m) )* ( expr )? )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_FIELD, "AST_FIELD"), root_1);
 
                 adaptor.addChild(root_1, stream_typeId.nextTree());
-                // src/net/colar/netbeans/fan/antlr/Fan.g:308:26: ( ^( AST_MODIFIER $m) )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:317:26: ( ^( AST_MODIFIER $m) )*
                 while ( stream_m.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:308:26: ^( AST_MODIFIER $m)
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:317:26: ^( AST_MODIFIER $m)
                     {
                     Object root_2 = (Object)adaptor.nil();
                     root_2 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_MODIFIER, "AST_MODIFIER"), root_2);
@@ -5528,7 +5536,7 @@ public class FanParser extends Parser {
 
                 }
                 stream_m.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:308:46: ( expr )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:317:46: ( expr )?
                 if ( stream_expr.hasNext() ) {
                     adaptor.addChild(root_1, stream_expr.nextTree());
 
@@ -5573,7 +5581,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "typeId"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:309:1: typeId : ( ( type id )=> typeAndId | fieldId ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:318:1: typeId : ( ( type id )=> typeAndId | fieldId ) ;
     public final FanParser.typeId_return typeId() throws RecognitionException {
         FanParser.typeId_return retval = new FanParser.typeId_return();
         retval.start = input.LT(1);
@@ -5588,19 +5596,19 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 43) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:309:9: ( ( ( type id )=> typeAndId | fieldId ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:309:11: ( ( type id )=> typeAndId | fieldId )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:318:9: ( ( ( type id )=> typeAndId | fieldId ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:318:11: ( ( type id )=> typeAndId | fieldId )
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:309:11: ( ( type id )=> typeAndId | fieldId )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:318:11: ( ( type id )=> typeAndId | fieldId )
             int alt59=2;
             alt59 = dfa59.predict(input);
             switch (alt59) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:309:12: ( type id )=> typeAndId
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:318:12: ( type id )=> typeAndId
                     {
-                    pushFollow(FOLLOW_typeAndId_in_typeId1574);
+                    pushFollow(FOLLOW_typeAndId_in_typeId1599);
                     typeAndId162=typeAndId();
 
                     state._fsp--;
@@ -5610,9 +5618,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:309:35: fieldId
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:318:35: fieldId
                     {
-                    pushFollow(FOLLOW_fieldId_in_typeId1578);
+                    pushFollow(FOLLOW_fieldId_in_typeId1603);
                     fieldId163=fieldId();
 
                     state._fsp--;
@@ -5654,7 +5662,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "fieldId"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:310:1: fieldId : id -> ^( AST_ID id ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:319:1: fieldId : id -> ^( AST_ID id ) ;
     public final FanParser.fieldId_return fieldId() throws RecognitionException {
         FanParser.fieldId_return retval = new FanParser.fieldId_return();
         retval.start = input.LT(1);
@@ -5667,10 +5675,10 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_id=new RewriteRuleSubtreeStream(adaptor,"rule id");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 44) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:310:10: ( id -> ^( AST_ID id ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:310:12: id
+            // src/net/colar/netbeans/fan/antlr/Fan.g:319:10: ( id -> ^( AST_ID id ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:319:12: id
             {
-            pushFollow(FOLLOW_id_in_fieldId1587);
+            pushFollow(FOLLOW_id_in_fieldId1612);
             id164=id();
 
             state._fsp--;
@@ -5690,9 +5698,9 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 311:7: -> ^( AST_ID id )
+            // 320:7: -> ^( AST_ID id )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:311:10: ^( AST_ID id )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:320:10: ^( AST_ID id )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_ID, "AST_ID"), root_1);
@@ -5734,7 +5742,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "typeAndId"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:312:1: typeAndId : type id -> ^( AST_ID id ) ^( AST_TYPE type ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:321:1: typeAndId : type id -> ^( AST_ID id ) ^( AST_TYPE type ) ;
     public final FanParser.typeAndId_return typeAndId() throws RecognitionException {
         FanParser.typeAndId_return retval = new FanParser.typeAndId_return();
         retval.start = input.LT(1);
@@ -5750,16 +5758,16 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_type=new RewriteRuleSubtreeStream(adaptor,"rule type");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 45) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:312:11: ( type id -> ^( AST_ID id ) ^( AST_TYPE type ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:312:13: type id
+            // src/net/colar/netbeans/fan/antlr/Fan.g:321:11: ( type id -> ^( AST_ID id ) ^( AST_TYPE type ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:321:13: type id
             {
-            pushFollow(FOLLOW_type_in_typeAndId1608);
+            pushFollow(FOLLOW_type_in_typeAndId1633);
             type165=type();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_type.add(type165.getTree());
-            pushFollow(FOLLOW_id_in_typeAndId1610);
+            pushFollow(FOLLOW_id_in_typeAndId1635);
             id166=id();
 
             state._fsp--;
@@ -5768,7 +5776,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: id, type
+            // elements: type, id
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -5779,9 +5787,9 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 313:7: -> ^( AST_ID id ) ^( AST_TYPE type )
+            // 322:7: -> ^( AST_ID id ) ^( AST_TYPE type )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:313:10: ^( AST_ID id )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:322:10: ^( AST_ID id )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_ID, "AST_ID"), root_1);
@@ -5790,7 +5798,7 @@ public class FanParser extends Parser {
 
                 adaptor.addChild(root_0, root_1);
                 }
-                // src/net/colar/netbeans/fan/antlr/Fan.g:313:23: ^( AST_TYPE type )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:322:23: ^( AST_TYPE type )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_TYPE, "AST_TYPE"), root_1);
@@ -5832,7 +5840,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "fieldFlags"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:314:1: fieldFlags : ( KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:323:1: fieldFlags : ( KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection )* ;
     public final FanParser.fieldFlags_return fieldFlags() throws RecognitionException {
         FanParser.fieldFlags_return retval = new FanParser.fieldFlags_return();
         retval.start = input.LT(1);
@@ -5863,12 +5871,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 46) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:314:12: ( ( KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:314:14: ( KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:323:12: ( ( KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:323:14: ( KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection )*
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:314:14: ( KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:323:14: ( KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection )*
             loop60:
             do {
                 int alt60=11;
@@ -5931,9 +5939,9 @@ public class FanParser extends Parser {
 
                 switch (alt60) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:15: KW_ABSTRACT
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:15: KW_ABSTRACT
             	    {
-            	    KW_ABSTRACT167=(Token)match(input,KW_ABSTRACT,FOLLOW_KW_ABSTRACT_in_fieldFlags1638); if (state.failed) return retval;
+            	    KW_ABSTRACT167=(Token)match(input,KW_ABSTRACT,FOLLOW_KW_ABSTRACT_in_fieldFlags1663); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    KW_ABSTRACT167_tree = (Object)adaptor.create(KW_ABSTRACT167);
             	    adaptor.addChild(root_0, KW_ABSTRACT167_tree);
@@ -5942,9 +5950,9 @@ public class FanParser extends Parser {
             	    }
             	    break;
             	case 2 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:29: KW_RD_ONLY
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:29: KW_RD_ONLY
             	    {
-            	    KW_RD_ONLY168=(Token)match(input,KW_RD_ONLY,FOLLOW_KW_RD_ONLY_in_fieldFlags1642); if (state.failed) return retval;
+            	    KW_RD_ONLY168=(Token)match(input,KW_RD_ONLY,FOLLOW_KW_RD_ONLY_in_fieldFlags1667); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    KW_RD_ONLY168_tree = (Object)adaptor.create(KW_RD_ONLY168);
             	    adaptor.addChild(root_0, KW_RD_ONLY168_tree);
@@ -5953,9 +5961,9 @@ public class FanParser extends Parser {
             	    }
             	    break;
             	case 3 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:42: KW_CONST
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:42: KW_CONST
             	    {
-            	    KW_CONST169=(Token)match(input,KW_CONST,FOLLOW_KW_CONST_in_fieldFlags1646); if (state.failed) return retval;
+            	    KW_CONST169=(Token)match(input,KW_CONST,FOLLOW_KW_CONST_in_fieldFlags1671); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    KW_CONST169_tree = (Object)adaptor.create(KW_CONST169);
             	    adaptor.addChild(root_0, KW_CONST169_tree);
@@ -5964,9 +5972,9 @@ public class FanParser extends Parser {
             	    }
             	    break;
             	case 4 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:53: KW_STATIC
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:53: KW_STATIC
             	    {
-            	    KW_STATIC170=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_fieldFlags1650); if (state.failed) return retval;
+            	    KW_STATIC170=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_fieldFlags1675); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    KW_STATIC170_tree = (Object)adaptor.create(KW_STATIC170);
             	    adaptor.addChild(root_0, KW_STATIC170_tree);
@@ -5975,9 +5983,9 @@ public class FanParser extends Parser {
             	    }
             	    break;
             	case 5 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:65: KW_NATIVE
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:65: KW_NATIVE
             	    {
-            	    KW_NATIVE171=(Token)match(input,KW_NATIVE,FOLLOW_KW_NATIVE_in_fieldFlags1654); if (state.failed) return retval;
+            	    KW_NATIVE171=(Token)match(input,KW_NATIVE,FOLLOW_KW_NATIVE_in_fieldFlags1679); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    KW_NATIVE171_tree = (Object)adaptor.create(KW_NATIVE171);
             	    adaptor.addChild(root_0, KW_NATIVE171_tree);
@@ -5986,9 +5994,9 @@ public class FanParser extends Parser {
             	    }
             	    break;
             	case 6 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:77: KW_VOLATILE
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:77: KW_VOLATILE
             	    {
-            	    KW_VOLATILE172=(Token)match(input,KW_VOLATILE,FOLLOW_KW_VOLATILE_in_fieldFlags1658); if (state.failed) return retval;
+            	    KW_VOLATILE172=(Token)match(input,KW_VOLATILE,FOLLOW_KW_VOLATILE_in_fieldFlags1683); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    KW_VOLATILE172_tree = (Object)adaptor.create(KW_VOLATILE172);
             	    adaptor.addChild(root_0, KW_VOLATILE172_tree);
@@ -5997,9 +6005,9 @@ public class FanParser extends Parser {
             	    }
             	    break;
             	case 7 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:91: KW_OVERRIDE
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:91: KW_OVERRIDE
             	    {
-            	    KW_OVERRIDE173=(Token)match(input,KW_OVERRIDE,FOLLOW_KW_OVERRIDE_in_fieldFlags1662); if (state.failed) return retval;
+            	    KW_OVERRIDE173=(Token)match(input,KW_OVERRIDE,FOLLOW_KW_OVERRIDE_in_fieldFlags1687); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    KW_OVERRIDE173_tree = (Object)adaptor.create(KW_OVERRIDE173);
             	    adaptor.addChild(root_0, KW_OVERRIDE173_tree);
@@ -6008,9 +6016,9 @@ public class FanParser extends Parser {
             	    }
             	    break;
             	case 8 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:105: KW_VIRTUAL
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:105: KW_VIRTUAL
             	    {
-            	    KW_VIRTUAL174=(Token)match(input,KW_VIRTUAL,FOLLOW_KW_VIRTUAL_in_fieldFlags1666); if (state.failed) return retval;
+            	    KW_VIRTUAL174=(Token)match(input,KW_VIRTUAL,FOLLOW_KW_VIRTUAL_in_fieldFlags1691); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    KW_VIRTUAL174_tree = (Object)adaptor.create(KW_VIRTUAL174);
             	    adaptor.addChild(root_0, KW_VIRTUAL174_tree);
@@ -6019,9 +6027,9 @@ public class FanParser extends Parser {
             	    }
             	    break;
             	case 9 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:118: KW_FINAL
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:118: KW_FINAL
             	    {
-            	    KW_FINAL175=(Token)match(input,KW_FINAL,FOLLOW_KW_FINAL_in_fieldFlags1670); if (state.failed) return retval;
+            	    KW_FINAL175=(Token)match(input,KW_FINAL,FOLLOW_KW_FINAL_in_fieldFlags1695); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    KW_FINAL175_tree = (Object)adaptor.create(KW_FINAL175);
             	    adaptor.addChild(root_0, KW_FINAL175_tree);
@@ -6030,9 +6038,9 @@ public class FanParser extends Parser {
             	    }
             	    break;
             	case 10 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:314:129: protection
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:323:129: protection
             	    {
-            	    pushFollow(FOLLOW_protection_in_fieldFlags1674);
+            	    pushFollow(FOLLOW_protection_in_fieldFlags1699);
             	    protection176=protection();
 
             	    state._fsp--;
@@ -6077,7 +6085,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "methodDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:315:1: methodDef : docs ( facet )* (m= methodFlags )* returnType= type mname= id parL params parR methodBody -> ^( AST_METHOD ( methodBody )? ^( AST_ID $mname) ^( AST_TYPE $returnType) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:324:1: methodDef : docs ( facet )* (m= methodFlags )* returnType= type mname= id parL params parR methodBody -> ^( AST_METHOD ( methodBody )? ^( AST_ID $mname) ^( AST_TYPE $returnType) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ) ;
     public final FanParser.methodDef_return methodDef() throws RecognitionException {
         FanParser.methodDef_return retval = new FanParser.methodDef_return();
         retval.start = input.LT(1);
@@ -6115,16 +6123,16 @@ public class FanParser extends Parser {
         paraphrase.push("Method definition");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 47) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:316:3: ( docs ( facet )* (m= methodFlags )* returnType= type mname= id parL params parR methodBody -> ^( AST_METHOD ( methodBody )? ^( AST_ID $mname) ^( AST_TYPE $returnType) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:316:5: docs ( facet )* (m= methodFlags )* returnType= type mname= id parL params parR methodBody
+            // src/net/colar/netbeans/fan/antlr/Fan.g:325:3: ( docs ( facet )* (m= methodFlags )* returnType= type mname= id parL params parR methodBody -> ^( AST_METHOD ( methodBody )? ^( AST_ID $mname) ^( AST_TYPE $returnType) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:325:5: docs ( facet )* (m= methodFlags )* returnType= type mname= id parL params parR methodBody
             {
-            pushFollow(FOLLOW_docs_in_methodDef1694);
+            pushFollow(FOLLOW_docs_in_methodDef1719);
             docs177=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_docs.add(docs177.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:316:10: ( facet )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:325:10: ( facet )*
             loop61:
             do {
                 int alt61=2;
@@ -6139,7 +6147,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
             	    {
-            	    pushFollow(FOLLOW_facet_in_methodDef1696);
+            	    pushFollow(FOLLOW_facet_in_methodDef1721);
             	    facet178=facet();
 
             	    state._fsp--;
@@ -6154,7 +6162,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:316:18: (m= methodFlags )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:325:18: (m= methodFlags )*
             loop62:
             do {
                 int alt62=2;
@@ -6169,7 +6177,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: m= methodFlags
             	    {
-            	    pushFollow(FOLLOW_methodFlags_in_methodDef1701);
+            	    pushFollow(FOLLOW_methodFlags_in_methodDef1726);
             	    m=methodFlags();
 
             	    state._fsp--;
@@ -6184,37 +6192,37 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_type_in_methodDef1706);
+            pushFollow(FOLLOW_type_in_methodDef1731);
             returnType=type();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_type.add(returnType.getTree());
-            pushFollow(FOLLOW_id_in_methodDef1712);
+            pushFollow(FOLLOW_id_in_methodDef1737);
             mname=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_id.add(mname.getTree());
-            pushFollow(FOLLOW_parL_in_methodDef1714);
+            pushFollow(FOLLOW_parL_in_methodDef1739);
             parL179=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_parL.add(parL179.getTree());
-            pushFollow(FOLLOW_params_in_methodDef1716);
+            pushFollow(FOLLOW_params_in_methodDef1741);
             params180=params();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_params.add(params180.getTree());
-            pushFollow(FOLLOW_parR_in_methodDef1718);
+            pushFollow(FOLLOW_parR_in_methodDef1743);
             parR181=parR();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_parR.add(parR181.getTree());
-            pushFollow(FOLLOW_methodBody_in_methodDef1720);
+            pushFollow(FOLLOW_methodBody_in_methodDef1745);
             methodBody182=methodBody();
 
             state._fsp--;
@@ -6223,7 +6231,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: params, returnType, methodBody, mname, m
+            // elements: m, params, mname, returnType, methodBody
             // token labels: 
             // rule labels: mname, retval, m, returnType
             // token list labels: 
@@ -6237,20 +6245,20 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_returnType=new RewriteRuleSubtreeStream(adaptor,"rule returnType",returnType!=null?returnType.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 317:7: -> ^( AST_METHOD ( methodBody )? ^( AST_ID $mname) ^( AST_TYPE $returnType) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* )
+            // 326:7: -> ^( AST_METHOD ( methodBody )? ^( AST_ID $mname) ^( AST_TYPE $returnType) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:317:10: ^( AST_METHOD ( methodBody )? ^( AST_ID $mname) ^( AST_TYPE $returnType) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:326:10: ^( AST_METHOD ( methodBody )? ^( AST_ID $mname) ^( AST_TYPE $returnType) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_METHOD, "AST_METHOD"), root_1);
 
-                // src/net/colar/netbeans/fan/antlr/Fan.g:317:23: ( methodBody )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:326:23: ( methodBody )?
                 if ( stream_methodBody.hasNext() ) {
                     adaptor.addChild(root_1, stream_methodBody.nextTree());
 
                 }
                 stream_methodBody.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:317:35: ^( AST_ID $mname)
+                // src/net/colar/netbeans/fan/antlr/Fan.g:326:35: ^( AST_ID $mname)
                 {
                 Object root_2 = (Object)adaptor.nil();
                 root_2 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_ID, "AST_ID"), root_2);
@@ -6259,7 +6267,7 @@ public class FanParser extends Parser {
 
                 adaptor.addChild(root_1, root_2);
                 }
-                // src/net/colar/netbeans/fan/antlr/Fan.g:317:52: ^( AST_TYPE $returnType)
+                // src/net/colar/netbeans/fan/antlr/Fan.g:326:52: ^( AST_TYPE $returnType)
                 {
                 Object root_2 = (Object)adaptor.nil();
                 root_2 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_TYPE, "AST_TYPE"), root_2);
@@ -6268,9 +6276,9 @@ public class FanParser extends Parser {
 
                 adaptor.addChild(root_1, root_2);
                 }
-                // src/net/colar/netbeans/fan/antlr/Fan.g:317:76: ( ^( AST_PARAMS params ) )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:326:76: ( ^( AST_PARAMS params ) )?
                 if ( stream_params.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:317:76: ^( AST_PARAMS params )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:326:76: ^( AST_PARAMS params )
                     {
                     Object root_2 = (Object)adaptor.nil();
                     root_2 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_PARAMS, "AST_PARAMS"), root_2);
@@ -6282,9 +6290,9 @@ public class FanParser extends Parser {
 
                 }
                 stream_params.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:317:98: ( ^( AST_MODIFIER $m) )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:326:98: ( ^( AST_MODIFIER $m) )*
                 while ( stream_m.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:317:98: ^( AST_MODIFIER $m)
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:326:98: ^( AST_MODIFIER $m)
                     {
                     Object root_2 = (Object)adaptor.nil();
                     root_2 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_MODIFIER, "AST_MODIFIER"), root_2);
@@ -6335,7 +6343,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "methodFlags"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:318:1: methodFlags : ( protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE | KW_NATIVE | KW_FINAL );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:327:1: methodFlags : ( protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE | KW_NATIVE | KW_FINAL );
     public final FanParser.methodFlags_return methodFlags() throws RecognitionException {
         FanParser.methodFlags_return retval = new FanParser.methodFlags_return();
         retval.start = input.LT(1);
@@ -6362,7 +6370,7 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 48) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:318:13: ( protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE | KW_NATIVE | KW_FINAL )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:327:13: ( protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE | KW_NATIVE | KW_FINAL )
             int alt63=8;
             switch ( input.LA(1) ) {
             case KW_PRIVATE:
@@ -6418,11 +6426,11 @@ public class FanParser extends Parser {
 
             switch (alt63) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:318:15: protection
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:327:15: protection
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_protection_in_methodFlags1771);
+                    pushFollow(FOLLOW_protection_in_methodFlags1796);
                     protection183=protection();
 
                     state._fsp--;
@@ -6432,11 +6440,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:318:28: KW_VIRTUAL
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:327:28: KW_VIRTUAL
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_VIRTUAL184=(Token)match(input,KW_VIRTUAL,FOLLOW_KW_VIRTUAL_in_methodFlags1775); if (state.failed) return retval;
+                    KW_VIRTUAL184=(Token)match(input,KW_VIRTUAL,FOLLOW_KW_VIRTUAL_in_methodFlags1800); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_VIRTUAL184_tree = (Object)adaptor.create(KW_VIRTUAL184);
                     adaptor.addChild(root_0, KW_VIRTUAL184_tree);
@@ -6445,11 +6453,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:318:41: KW_OVERRIDE
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:327:41: KW_OVERRIDE
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_OVERRIDE185=(Token)match(input,KW_OVERRIDE,FOLLOW_KW_OVERRIDE_in_methodFlags1779); if (state.failed) return retval;
+                    KW_OVERRIDE185=(Token)match(input,KW_OVERRIDE,FOLLOW_KW_OVERRIDE_in_methodFlags1804); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_OVERRIDE185_tree = (Object)adaptor.create(KW_OVERRIDE185);
                     adaptor.addChild(root_0, KW_OVERRIDE185_tree);
@@ -6458,11 +6466,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:318:55: KW_ABSTRACT
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:327:55: KW_ABSTRACT
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_ABSTRACT186=(Token)match(input,KW_ABSTRACT,FOLLOW_KW_ABSTRACT_in_methodFlags1783); if (state.failed) return retval;
+                    KW_ABSTRACT186=(Token)match(input,KW_ABSTRACT,FOLLOW_KW_ABSTRACT_in_methodFlags1808); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_ABSTRACT186_tree = (Object)adaptor.create(KW_ABSTRACT186);
                     adaptor.addChild(root_0, KW_ABSTRACT186_tree);
@@ -6471,11 +6479,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:318:69: KW_STATIC
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:327:69: KW_STATIC
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_STATIC187=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_methodFlags1787); if (state.failed) return retval;
+                    KW_STATIC187=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_methodFlags1812); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_STATIC187_tree = (Object)adaptor.create(KW_STATIC187);
                     adaptor.addChild(root_0, KW_STATIC187_tree);
@@ -6484,11 +6492,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 6 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:318:81: KW_ONCE
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:327:81: KW_ONCE
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_ONCE188=(Token)match(input,KW_ONCE,FOLLOW_KW_ONCE_in_methodFlags1791); if (state.failed) return retval;
+                    KW_ONCE188=(Token)match(input,KW_ONCE,FOLLOW_KW_ONCE_in_methodFlags1816); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_ONCE188_tree = (Object)adaptor.create(KW_ONCE188);
                     adaptor.addChild(root_0, KW_ONCE188_tree);
@@ -6497,11 +6505,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 7 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:319:5: KW_NATIVE
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:328:5: KW_NATIVE
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_NATIVE189=(Token)match(input,KW_NATIVE,FOLLOW_KW_NATIVE_in_methodFlags1799); if (state.failed) return retval;
+                    KW_NATIVE189=(Token)match(input,KW_NATIVE,FOLLOW_KW_NATIVE_in_methodFlags1824); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_NATIVE189_tree = (Object)adaptor.create(KW_NATIVE189);
                     adaptor.addChild(root_0, KW_NATIVE189_tree);
@@ -6510,11 +6518,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 8 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:319:17: KW_FINAL
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:328:17: KW_FINAL
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_FINAL190=(Token)match(input,KW_FINAL,FOLLOW_KW_FINAL_in_methodFlags1803); if (state.failed) return retval;
+                    KW_FINAL190=(Token)match(input,KW_FINAL,FOLLOW_KW_FINAL_in_methodFlags1828); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_FINAL190_tree = (Object)adaptor.create(KW_FINAL190);
                     adaptor.addChild(root_0, KW_FINAL190_tree);
@@ -6551,7 +6559,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "params"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:320:1: params : ( param ( SP_COMMA param )* )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:329:1: params : ( param ( SP_COMMA param )* )? ;
     public final FanParser.params_return params() throws RecognitionException {
         FanParser.params_return retval = new FanParser.params_return();
         retval.start = input.LT(1);
@@ -6568,12 +6576,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 49) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:320:9: ( ( param ( SP_COMMA param )* )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:320:11: ( param ( SP_COMMA param )* )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:329:9: ( ( param ( SP_COMMA param )* )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:329:11: ( param ( SP_COMMA param )* )?
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:320:11: ( param ( SP_COMMA param )* )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:329:11: ( param ( SP_COMMA param )* )?
             int alt65=2;
             int LA65_0 = input.LA(1);
 
@@ -6582,15 +6590,15 @@ public class FanParser extends Parser {
             }
             switch (alt65) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:320:12: param ( SP_COMMA param )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:329:12: param ( SP_COMMA param )*
                     {
-                    pushFollow(FOLLOW_param_in_params1812);
+                    pushFollow(FOLLOW_param_in_params1837);
                     param191=param();
 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) adaptor.addChild(root_0, param191.getTree());
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:320:18: ( SP_COMMA param )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:329:18: ( SP_COMMA param )*
                     loop64:
                     do {
                         int alt64=2;
@@ -6603,14 +6611,14 @@ public class FanParser extends Parser {
 
                         switch (alt64) {
                     	case 1 :
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:320:19: SP_COMMA param
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:329:19: SP_COMMA param
                     	    {
-                    	    SP_COMMA192=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_params1815); if (state.failed) return retval;
+                    	    SP_COMMA192=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_params1840); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
                     	    SP_COMMA192_tree = (Object)adaptor.create(SP_COMMA192);
                     	    adaptor.addChild(root_0, SP_COMMA192_tree);
                     	    }
-                    	    pushFollow(FOLLOW_param_in_params1817);
+                    	    pushFollow(FOLLOW_param_in_params1842);
                     	    param193=param();
 
                     	    state._fsp--;
@@ -6661,7 +6669,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "param"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:321:1: param : type id ( AS_INIT_VAL expr )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:330:1: param : type id ( AS_INIT_VAL expr )? ;
     public final FanParser.param_return param() throws RecognitionException {
         FanParser.param_return retval = new FanParser.param_return();
         retval.start = input.LT(1);
@@ -6680,24 +6688,24 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 50) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:321:9: ( type id ( AS_INIT_VAL expr )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:321:11: type id ( AS_INIT_VAL expr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:330:9: ( type id ( AS_INIT_VAL expr )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:330:11: type id ( AS_INIT_VAL expr )?
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_type_in_param1830);
+            pushFollow(FOLLOW_type_in_param1855);
             type194=type();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, type194.getTree());
-            pushFollow(FOLLOW_id_in_param1832);
+            pushFollow(FOLLOW_id_in_param1857);
             id195=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id195.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:321:19: ( AS_INIT_VAL expr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:330:19: ( AS_INIT_VAL expr )?
             int alt66=2;
             int LA66_0 = input.LA(1);
 
@@ -6706,14 +6714,14 @@ public class FanParser extends Parser {
             }
             switch (alt66) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:321:20: AS_INIT_VAL expr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:330:20: AS_INIT_VAL expr
                     {
-                    AS_INIT_VAL196=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_param1835); if (state.failed) return retval;
+                    AS_INIT_VAL196=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_param1860); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     AS_INIT_VAL196_tree = (Object)adaptor.create(AS_INIT_VAL196);
                     adaptor.addChild(root_0, AS_INIT_VAL196_tree);
                     }
-                    pushFollow(FOLLOW_expr_in_param1837);
+                    pushFollow(FOLLOW_expr_in_param1862);
                     expr197=expr();
 
                     state._fsp--;
@@ -6755,7 +6763,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "methodBody"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:322:1: methodBody : ( ( multiStmt )=> multiStmt | eos ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:331:1: methodBody : ( ( multiStmt )=> multiStmt | eos ) ;
     public final FanParser.methodBody_return methodBody() throws RecognitionException {
         FanParser.methodBody_return retval = new FanParser.methodBody_return();
         retval.start = input.LT(1);
@@ -6770,12 +6778,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 51) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:322:12: ( ( ( multiStmt )=> multiStmt | eos ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:322:14: ( ( multiStmt )=> multiStmt | eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:331:12: ( ( ( multiStmt )=> multiStmt | eos ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:331:14: ( ( multiStmt )=> multiStmt | eos )
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:322:14: ( ( multiStmt )=> multiStmt | eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:331:14: ( ( multiStmt )=> multiStmt | eos )
             int alt67=2;
             int LA67_0 = input.LA(1);
 
@@ -6794,9 +6802,9 @@ public class FanParser extends Parser {
             }
             switch (alt67) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:322:15: ( multiStmt )=> multiStmt
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:331:15: ( multiStmt )=> multiStmt
                     {
-                    pushFollow(FOLLOW_multiStmt_in_methodBody1851);
+                    pushFollow(FOLLOW_multiStmt_in_methodBody1876);
                     multiStmt198=multiStmt();
 
                     state._fsp--;
@@ -6806,9 +6814,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:322:40: eos
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:331:40: eos
                     {
-                    pushFollow(FOLLOW_eos_in_methodBody1855);
+                    pushFollow(FOLLOW_eos_in_methodBody1880);
                     eos199=eos();
 
                     state._fsp--;
@@ -6850,7 +6858,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "ctorDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:323:1: ctorDef : docs ( facet )* (m= ctorFlags )* KW_NEW cname= id parL params parR (cchain= ( ( SP_COLON )=> ctorChain ) )? methodBody -> ^( AST_CONSTRUCTOR ( methodBody )? ^( AST_ID $cname) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )* ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:332:1: ctorDef : docs ( facet )* (m= ctorFlags )* KW_NEW cname= id parL params parR (cchain= ( ( SP_COLON )=> ctorChain ) )? methodBody -> ^( AST_CONSTRUCTOR ( methodBody )? ^( AST_ID $cname) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )* ) ;
     public final FanParser.ctorDef_return ctorDef() throws RecognitionException {
         FanParser.ctorDef_return retval = new FanParser.ctorDef_return();
         retval.start = input.LT(1);
@@ -6893,16 +6901,16 @@ public class FanParser extends Parser {
         paraphrase.push("Constructor definition");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 52) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:324:3: ( docs ( facet )* (m= ctorFlags )* KW_NEW cname= id parL params parR (cchain= ( ( SP_COLON )=> ctorChain ) )? methodBody -> ^( AST_CONSTRUCTOR ( methodBody )? ^( AST_ID $cname) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )* ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:324:5: docs ( facet )* (m= ctorFlags )* KW_NEW cname= id parL params parR (cchain= ( ( SP_COLON )=> ctorChain ) )? methodBody
+            // src/net/colar/netbeans/fan/antlr/Fan.g:333:3: ( docs ( facet )* (m= ctorFlags )* KW_NEW cname= id parL params parR (cchain= ( ( SP_COLON )=> ctorChain ) )? methodBody -> ^( AST_CONSTRUCTOR ( methodBody )? ^( AST_ID $cname) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )* ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:333:5: docs ( facet )* (m= ctorFlags )* KW_NEW cname= id parL params parR (cchain= ( ( SP_COLON )=> ctorChain ) )? methodBody
             {
-            pushFollow(FOLLOW_docs_in_ctorDef1875);
+            pushFollow(FOLLOW_docs_in_ctorDef1900);
             docs200=docs();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_docs.add(docs200.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:324:10: ( facet )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:333:10: ( facet )*
             loop68:
             do {
                 int alt68=2;
@@ -6917,7 +6925,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: facet
             	    {
-            	    pushFollow(FOLLOW_facet_in_ctorDef1877);
+            	    pushFollow(FOLLOW_facet_in_ctorDef1902);
             	    facet201=facet();
 
             	    state._fsp--;
@@ -6932,7 +6940,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:324:18: (m= ctorFlags )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:333:18: (m= ctorFlags )*
             loop69:
             do {
                 int alt69=2;
@@ -6947,7 +6955,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: m= ctorFlags
             	    {
-            	    pushFollow(FOLLOW_ctorFlags_in_ctorDef1882);
+            	    pushFollow(FOLLOW_ctorFlags_in_ctorDef1907);
             	    m=ctorFlags();
 
             	    state._fsp--;
@@ -6962,34 +6970,34 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            KW_NEW202=(Token)match(input,KW_NEW,FOLLOW_KW_NEW_in_ctorDef1885); if (state.failed) return retval; 
+            KW_NEW202=(Token)match(input,KW_NEW,FOLLOW_KW_NEW_in_ctorDef1910); if (state.failed) return retval; 
             if ( state.backtracking==0 ) stream_KW_NEW.add(KW_NEW202);
 
-            pushFollow(FOLLOW_id_in_ctorDef1889);
+            pushFollow(FOLLOW_id_in_ctorDef1914);
             cname=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_id.add(cname.getTree());
-            pushFollow(FOLLOW_parL_in_ctorDef1891);
+            pushFollow(FOLLOW_parL_in_ctorDef1916);
             parL203=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_parL.add(parL203.getTree());
-            pushFollow(FOLLOW_params_in_ctorDef1893);
+            pushFollow(FOLLOW_params_in_ctorDef1918);
             params204=params();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_params.add(params204.getTree());
-            pushFollow(FOLLOW_parR_in_ctorDef1895);
+            pushFollow(FOLLOW_parR_in_ctorDef1920);
             parR205=parR();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_parR.add(parR205.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:324:69: (cchain= ( ( SP_COLON )=> ctorChain ) )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:333:69: (cchain= ( ( SP_COLON )=> ctorChain ) )?
             int alt70=2;
             int LA70_0 = input.LA(1);
 
@@ -7000,10 +7008,10 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: cchain= ( ( SP_COLON )=> ctorChain )
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:324:70: ( ( SP_COLON )=> ctorChain )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:324:71: ( SP_COLON )=> ctorChain
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:333:70: ( ( SP_COLON )=> ctorChain )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:333:71: ( SP_COLON )=> ctorChain
                     {
-                    pushFollow(FOLLOW_ctorChain_in_ctorDef1904);
+                    pushFollow(FOLLOW_ctorChain_in_ctorDef1929);
                     ctorChain206=ctorChain();
 
                     state._fsp--;
@@ -7018,7 +7026,7 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_methodBody_in_ctorDef1908);
+            pushFollow(FOLLOW_methodBody_in_ctorDef1933);
             methodBody207=methodBody();
 
             state._fsp--;
@@ -7027,7 +7035,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: cname, params, m, cchain, methodBody
+            // elements: params, m, cchain, cname, methodBody
             // token labels: cchain
             // rule labels: retval, m, cname
             // token list labels: 
@@ -7041,20 +7049,20 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_cname=new RewriteRuleSubtreeStream(adaptor,"rule cname",cname!=null?cname.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 325:7: -> ^( AST_CONSTRUCTOR ( methodBody )? ^( AST_ID $cname) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )* )
+            // 334:7: -> ^( AST_CONSTRUCTOR ( methodBody )? ^( AST_ID $cname) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )* )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:325:10: ^( AST_CONSTRUCTOR ( methodBody )? ^( AST_ID $cname) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )* )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:334:10: ^( AST_CONSTRUCTOR ( methodBody )? ^( AST_ID $cname) ( ^( AST_PARAMS params ) )? ( ^( AST_MODIFIER $m) )* ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )* )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_CONSTRUCTOR, "AST_CONSTRUCTOR"), root_1);
 
-                // src/net/colar/netbeans/fan/antlr/Fan.g:325:28: ( methodBody )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:334:28: ( methodBody )?
                 if ( stream_methodBody.hasNext() ) {
                     adaptor.addChild(root_1, stream_methodBody.nextTree());
 
                 }
                 stream_methodBody.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:325:40: ^( AST_ID $cname)
+                // src/net/colar/netbeans/fan/antlr/Fan.g:334:40: ^( AST_ID $cname)
                 {
                 Object root_2 = (Object)adaptor.nil();
                 root_2 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_ID, "AST_ID"), root_2);
@@ -7063,9 +7071,9 @@ public class FanParser extends Parser {
 
                 adaptor.addChild(root_1, root_2);
                 }
-                // src/net/colar/netbeans/fan/antlr/Fan.g:325:57: ( ^( AST_PARAMS params ) )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:334:57: ( ^( AST_PARAMS params ) )?
                 if ( stream_params.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:325:57: ^( AST_PARAMS params )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:334:57: ^( AST_PARAMS params )
                     {
                     Object root_2 = (Object)adaptor.nil();
                     root_2 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_PARAMS, "AST_PARAMS"), root_2);
@@ -7077,9 +7085,9 @@ public class FanParser extends Parser {
 
                 }
                 stream_params.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:325:79: ( ^( AST_MODIFIER $m) )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:334:79: ( ^( AST_MODIFIER $m) )*
                 while ( stream_m.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:325:79: ^( AST_MODIFIER $m)
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:334:79: ^( AST_MODIFIER $m)
                     {
                     Object root_2 = (Object)adaptor.nil();
                     root_2 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_MODIFIER, "AST_MODIFIER"), root_2);
@@ -7091,9 +7099,9 @@ public class FanParser extends Parser {
 
                 }
                 stream_m.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:325:99: ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )*
+                // src/net/colar/netbeans/fan/antlr/Fan.g:334:99: ( ^( AST_CONSTRUCTOR_CHAIN $cchain) )*
                 while ( stream_cchain.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:325:99: ^( AST_CONSTRUCTOR_CHAIN $cchain)
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:334:99: ^( AST_CONSTRUCTOR_CHAIN $cchain)
                     {
                     Object root_2 = (Object)adaptor.nil();
                     root_2 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_CONSTRUCTOR_CHAIN, "AST_CONSTRUCTOR_CHAIN"), root_2);
@@ -7144,7 +7152,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "ctorFlags"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:326:1: ctorFlags : protection ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:335:1: ctorFlags : protection ;
     public final FanParser.ctorFlags_return ctorFlags() throws RecognitionException {
         FanParser.ctorFlags_return retval = new FanParser.ctorFlags_return();
         retval.start = input.LT(1);
@@ -7157,12 +7165,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 53) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:326:11: ( protection )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:326:13: protection
+            // src/net/colar/netbeans/fan/antlr/Fan.g:335:11: ( protection )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:335:13: protection
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_protection_in_ctorFlags1961);
+            pushFollow(FOLLOW_protection_in_ctorFlags1986);
             protection208=protection();
 
             state._fsp--;
@@ -7198,7 +7206,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "ctorChain"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:327:1: ctorChain : SP_COLON ( ctorChainThis | ctorChainSuper ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:336:1: ctorChain : SP_COLON ( ctorChainThis | ctorChainSuper ) ;
     public final FanParser.ctorChain_return ctorChain() throws RecognitionException {
         FanParser.ctorChain_return retval = new FanParser.ctorChain_return();
         retval.start = input.LT(1);
@@ -7215,17 +7223,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 54) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:327:11: ( SP_COLON ( ctorChainThis | ctorChainSuper ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:327:13: SP_COLON ( ctorChainThis | ctorChainSuper )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:336:11: ( SP_COLON ( ctorChainThis | ctorChainSuper ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:336:13: SP_COLON ( ctorChainThis | ctorChainSuper )
             {
             root_0 = (Object)adaptor.nil();
 
-            SP_COLON209=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_ctorChain1968); if (state.failed) return retval;
+            SP_COLON209=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_ctorChain1993); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_COLON209_tree = (Object)adaptor.create(SP_COLON209);
             adaptor.addChild(root_0, SP_COLON209_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:327:22: ( ctorChainThis | ctorChainSuper )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:336:22: ( ctorChainThis | ctorChainSuper )
             int alt71=2;
             int LA71_0 = input.LA(1);
 
@@ -7244,9 +7252,9 @@ public class FanParser extends Parser {
             }
             switch (alt71) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:327:23: ctorChainThis
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:336:23: ctorChainThis
                     {
-                    pushFollow(FOLLOW_ctorChainThis_in_ctorChain1971);
+                    pushFollow(FOLLOW_ctorChainThis_in_ctorChain1996);
                     ctorChainThis210=ctorChainThis();
 
                     state._fsp--;
@@ -7256,9 +7264,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:327:39: ctorChainSuper
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:336:39: ctorChainSuper
                     {
-                    pushFollow(FOLLOW_ctorChainSuper_in_ctorChain1975);
+                    pushFollow(FOLLOW_ctorChainSuper_in_ctorChain2000);
                     ctorChainSuper211=ctorChainSuper();
 
                     state._fsp--;
@@ -7300,7 +7308,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "ctorChainThis"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:329:1: ctorChainThis : KW_THIS DOT id parL ( args )? parR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:338:1: ctorChainThis : KW_THIS DOT id parL ( args )? parR ;
     public final FanParser.ctorChainThis_return ctorChainThis() throws RecognitionException {
         FanParser.ctorChainThis_return retval = new FanParser.ctorChainThis_return();
         retval.start = input.LT(1);
@@ -7323,34 +7331,34 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 55) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:329:15: ( KW_THIS DOT id parL ( args )? parR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:329:17: KW_THIS DOT id parL ( args )? parR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:338:15: ( KW_THIS DOT id parL ( args )? parR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:338:17: KW_THIS DOT id parL ( args )? parR
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_THIS212=(Token)match(input,KW_THIS,FOLLOW_KW_THIS_in_ctorChainThis1984); if (state.failed) return retval;
+            KW_THIS212=(Token)match(input,KW_THIS,FOLLOW_KW_THIS_in_ctorChainThis2009); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_THIS212_tree = (Object)adaptor.create(KW_THIS212);
             adaptor.addChild(root_0, KW_THIS212_tree);
             }
-            DOT213=(Token)match(input,DOT,FOLLOW_DOT_in_ctorChainThis1986); if (state.failed) return retval;
+            DOT213=(Token)match(input,DOT,FOLLOW_DOT_in_ctorChainThis2011); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             DOT213_tree = (Object)adaptor.create(DOT213);
             adaptor.addChild(root_0, DOT213_tree);
             }
-            pushFollow(FOLLOW_id_in_ctorChainThis1988);
+            pushFollow(FOLLOW_id_in_ctorChainThis2013);
             id214=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id214.getTree());
-            pushFollow(FOLLOW_parL_in_ctorChainThis1990);
+            pushFollow(FOLLOW_parL_in_ctorChainThis2015);
             parL215=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parL215.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:329:37: ( args )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:338:37: ( args )?
             int alt72=2;
             int LA72_0 = input.LA(1);
 
@@ -7361,7 +7369,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: args
                     {
-                    pushFollow(FOLLOW_args_in_ctorChainThis1992);
+                    pushFollow(FOLLOW_args_in_ctorChainThis2017);
                     args216=args();
 
                     state._fsp--;
@@ -7373,7 +7381,7 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_parR_in_ctorChainThis1995);
+            pushFollow(FOLLOW_parR_in_ctorChainThis2020);
             parR217=parR();
 
             state._fsp--;
@@ -7409,7 +7417,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "ctorChainSuper"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:330:1: ctorChainSuper : KW_SUPER ( DOT id )? parL ( args )? parR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:339:1: ctorChainSuper : KW_SUPER ( DOT id )? parL ( args )? parR ;
     public final FanParser.ctorChainSuper_return ctorChainSuper() throws RecognitionException {
         FanParser.ctorChainSuper_return retval = new FanParser.ctorChainSuper_return();
         retval.start = input.LT(1);
@@ -7432,17 +7440,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 56) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:330:16: ( KW_SUPER ( DOT id )? parL ( args )? parR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:330:18: KW_SUPER ( DOT id )? parL ( args )? parR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:339:16: ( KW_SUPER ( DOT id )? parL ( args )? parR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:339:18: KW_SUPER ( DOT id )? parL ( args )? parR
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_SUPER218=(Token)match(input,KW_SUPER,FOLLOW_KW_SUPER_in_ctorChainSuper2002); if (state.failed) return retval;
+            KW_SUPER218=(Token)match(input,KW_SUPER,FOLLOW_KW_SUPER_in_ctorChainSuper2027); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_SUPER218_tree = (Object)adaptor.create(KW_SUPER218);
             adaptor.addChild(root_0, KW_SUPER218_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:330:27: ( DOT id )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:339:27: ( DOT id )?
             int alt73=2;
             int LA73_0 = input.LA(1);
 
@@ -7451,14 +7459,14 @@ public class FanParser extends Parser {
             }
             switch (alt73) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:330:28: DOT id
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:339:28: DOT id
                     {
-                    DOT219=(Token)match(input,DOT,FOLLOW_DOT_in_ctorChainSuper2005); if (state.failed) return retval;
+                    DOT219=(Token)match(input,DOT,FOLLOW_DOT_in_ctorChainSuper2030); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     DOT219_tree = (Object)adaptor.create(DOT219);
                     adaptor.addChild(root_0, DOT219_tree);
                     }
-                    pushFollow(FOLLOW_id_in_ctorChainSuper2007);
+                    pushFollow(FOLLOW_id_in_ctorChainSuper2032);
                     id220=id();
 
                     state._fsp--;
@@ -7470,13 +7478,13 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_parL_in_ctorChainSuper2011);
+            pushFollow(FOLLOW_parL_in_ctorChainSuper2036);
             parL221=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parL221.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:330:42: ( args )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:339:42: ( args )?
             int alt74=2;
             int LA74_0 = input.LA(1);
 
@@ -7487,7 +7495,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: args
                     {
-                    pushFollow(FOLLOW_args_in_ctorChainSuper2013);
+                    pushFollow(FOLLOW_args_in_ctorChainSuper2038);
                     args222=args();
 
                     state._fsp--;
@@ -7499,7 +7507,7 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_parR_in_ctorChainSuper2016);
+            pushFollow(FOLLOW_parR_in_ctorChainSuper2041);
             parR223=parR();
 
             state._fsp--;
@@ -7535,7 +7543,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "staticBlock"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:332:1: staticBlock : KW_STATIC block ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:341:1: staticBlock : KW_STATIC block ;
     public final FanParser.staticBlock_return staticBlock() throws RecognitionException {
         FanParser.staticBlock_return retval = new FanParser.staticBlock_return();
         retval.start = input.LT(1);
@@ -7550,17 +7558,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 57) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:332:13: ( KW_STATIC block )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:332:15: KW_STATIC block
+            // src/net/colar/netbeans/fan/antlr/Fan.g:341:13: ( KW_STATIC block )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:341:15: KW_STATIC block
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_STATIC224=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_staticBlock2024); if (state.failed) return retval;
+            KW_STATIC224=(Token)match(input,KW_STATIC,FOLLOW_KW_STATIC_in_staticBlock2049); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_STATIC224_tree = (Object)adaptor.create(KW_STATIC224);
             adaptor.addChild(root_0, KW_STATIC224_tree);
             }
-            pushFollow(FOLLOW_block_in_staticBlock2026);
+            pushFollow(FOLLOW_block_in_staticBlock2051);
             block225=block();
 
             state._fsp--;
@@ -7596,7 +7604,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "block"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:333:1: block : ( ( bracketL )=> multiStmt | stmt ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:342:1: block : ( ( bracketL )=> multiStmt | stmt ) ;
     public final FanParser.block_return block() throws RecognitionException {
         FanParser.block_return retval = new FanParser.block_return();
         retval.start = input.LT(1);
@@ -7612,12 +7620,12 @@ public class FanParser extends Parser {
         paraphrase.push("Block");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 58) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:334:3: ( ( ( bracketL )=> multiStmt | stmt ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:334:5: ( ( bracketL )=> multiStmt | stmt )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:343:3: ( ( ( bracketL )=> multiStmt | stmt ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:343:5: ( ( bracketL )=> multiStmt | stmt )
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:334:5: ( ( bracketL )=> multiStmt | stmt )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:343:5: ( ( bracketL )=> multiStmt | stmt )
             int alt75=2;
             int LA75_0 = input.LA(1);
 
@@ -7636,9 +7644,9 @@ public class FanParser extends Parser {
             }
             switch (alt75) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:334:6: ( bracketL )=> multiStmt
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:343:6: ( bracketL )=> multiStmt
                     {
-                    pushFollow(FOLLOW_multiStmt_in_block2051);
+                    pushFollow(FOLLOW_multiStmt_in_block2076);
                     multiStmt226=multiStmt();
 
                     state._fsp--;
@@ -7648,9 +7656,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:334:30: stmt
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:343:30: stmt
                     {
-                    pushFollow(FOLLOW_stmt_in_block2055);
+                    pushFollow(FOLLOW_stmt_in_block2080);
                     stmt227=stmt();
 
                     state._fsp--;
@@ -7695,7 +7703,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "multiStmt"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:335:1: multiStmt : bracketL ( stmt )* bracketR -> ^( AST_CODE_BLOCK bracketL ( ( stmt )* )? bracketR ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:344:1: multiStmt : bracketL ( stmt )* bracketR -> ^( AST_CODE_BLOCK bracketL ( ( stmt )* )? bracketR ) ;
     public final FanParser.multiStmt_return multiStmt() throws RecognitionException {
         FanParser.multiStmt_return retval = new FanParser.multiStmt_return();
         retval.start = input.LT(1);
@@ -7714,16 +7722,16 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_bracketR=new RewriteRuleSubtreeStream(adaptor,"rule bracketR");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 59) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:335:11: ( bracketL ( stmt )* bracketR -> ^( AST_CODE_BLOCK bracketL ( ( stmt )* )? bracketR ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:335:13: bracketL ( stmt )* bracketR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:344:11: ( bracketL ( stmt )* bracketR -> ^( AST_CODE_BLOCK bracketL ( ( stmt )* )? bracketR ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:344:13: bracketL ( stmt )* bracketR
             {
-            pushFollow(FOLLOW_bracketL_in_multiStmt2063);
+            pushFollow(FOLLOW_bracketL_in_multiStmt2088);
             bracketL228=bracketL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) stream_bracketL.add(bracketL228.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:335:22: ( stmt )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:344:22: ( stmt )*
             loop76:
             do {
                 int alt76=2;
@@ -7738,7 +7746,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: stmt
             	    {
-            	    pushFollow(FOLLOW_stmt_in_multiStmt2065);
+            	    pushFollow(FOLLOW_stmt_in_multiStmt2090);
             	    stmt229=stmt();
 
             	    state._fsp--;
@@ -7753,7 +7761,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_bracketR_in_multiStmt2068);
+            pushFollow(FOLLOW_bracketR_in_multiStmt2093);
             bracketR230=bracketR();
 
             state._fsp--;
@@ -7762,7 +7770,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketR, stmt, bracketL
+            // elements: bracketR, bracketL, stmt
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -7773,17 +7781,17 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 335:37: -> ^( AST_CODE_BLOCK bracketL ( ( stmt )* )? bracketR )
+            // 344:37: -> ^( AST_CODE_BLOCK bracketL ( ( stmt )* )? bracketR )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:335:40: ^( AST_CODE_BLOCK bracketL ( ( stmt )* )? bracketR )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:344:40: ^( AST_CODE_BLOCK bracketL ( ( stmt )* )? bracketR )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_CODE_BLOCK, "AST_CODE_BLOCK"), root_1);
 
                 adaptor.addChild(root_1, stream_bracketL.nextTree());
-                // src/net/colar/netbeans/fan/antlr/Fan.g:335:66: ( ( stmt )* )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:344:66: ( ( stmt )* )?
                 if ( stream_stmt.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:335:67: ( stmt )*
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:344:67: ( stmt )*
                     while ( stream_stmt.hasNext() ) {
                         adaptor.addChild(root_1, stream_stmt.nextTree());
 
@@ -7829,7 +7837,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "stmt"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:336:1: stmt : ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:345:1: stmt : ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef ) ;
     public final FanParser.stmt_return stmt() throws RecognitionException {
         FanParser.stmt_return retval = new FanParser.stmt_return();
         retval.start = input.LT(1);
@@ -7863,19 +7871,19 @@ public class FanParser extends Parser {
         paraphrase.push("Statement");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 60) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:338:3: ( ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:338:5: ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:347:3: ( ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:347:5: ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef )
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:338:5: ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:347:5: ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef )
             int alt77=11;
             alt77 = dfa77.predict(input);
             switch (alt77) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:338:6: g_if
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:347:6: g_if
                     {
-                    pushFollow(FOLLOW_g_if_in_stmt2103);
+                    pushFollow(FOLLOW_g_if_in_stmt2128);
                     g_if231=g_if();
 
                     state._fsp--;
@@ -7885,9 +7893,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:338:13: g_for
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:347:13: g_for
                     {
-                    pushFollow(FOLLOW_g_for_in_stmt2107);
+                    pushFollow(FOLLOW_g_for_in_stmt2132);
                     g_for232=g_for();
 
                     state._fsp--;
@@ -7897,9 +7905,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:338:21: g_while
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:347:21: g_while
                     {
-                    pushFollow(FOLLOW_g_while_in_stmt2111);
+                    pushFollow(FOLLOW_g_while_in_stmt2136);
                     g_while233=g_while();
 
                     state._fsp--;
@@ -7909,9 +7917,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:338:31: g_break
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:347:31: g_break
                     {
-                    pushFollow(FOLLOW_g_break_in_stmt2115);
+                    pushFollow(FOLLOW_g_break_in_stmt2140);
                     g_break234=g_break();
 
                     state._fsp--;
@@ -7921,9 +7929,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:339:4: g_continue
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:348:4: g_continue
                     {
-                    pushFollow(FOLLOW_g_continue_in_stmt2122);
+                    pushFollow(FOLLOW_g_continue_in_stmt2147);
                     g_continue235=g_continue();
 
                     state._fsp--;
@@ -7933,9 +7941,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 6 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:339:17: g_return
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:348:17: g_return
                     {
-                    pushFollow(FOLLOW_g_return_in_stmt2126);
+                    pushFollow(FOLLOW_g_return_in_stmt2151);
                     g_return236=g_return();
 
                     state._fsp--;
@@ -7945,9 +7953,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 7 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:339:28: g_switch
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:348:28: g_switch
                     {
-                    pushFollow(FOLLOW_g_switch_in_stmt2130);
+                    pushFollow(FOLLOW_g_switch_in_stmt2155);
                     g_switch237=g_switch();
 
                     state._fsp--;
@@ -7957,9 +7965,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 8 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:340:4: g_throw
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:349:4: g_throw
                     {
-                    pushFollow(FOLLOW_g_throw_in_stmt2137);
+                    pushFollow(FOLLOW_g_throw_in_stmt2162);
                     g_throw238=g_throw();
 
                     state._fsp--;
@@ -7969,9 +7977,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 9 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:340:14: g_try
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:349:14: g_try
                     {
-                    pushFollow(FOLLOW_g_try_in_stmt2141);
+                    pushFollow(FOLLOW_g_try_in_stmt2166);
                     g_try239=g_try();
 
                     state._fsp--;
@@ -7981,9 +7989,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 10 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:340:22: exprStmt
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:349:22: exprStmt
                     {
-                    pushFollow(FOLLOW_exprStmt_in_stmt2145);
+                    pushFollow(FOLLOW_exprStmt_in_stmt2170);
                     exprStmt240=exprStmt();
 
                     state._fsp--;
@@ -7993,9 +8001,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 11 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:340:33: localDef
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:349:33: localDef
                     {
-                    pushFollow(FOLLOW_localDef_in_stmt2149);
+                    pushFollow(FOLLOW_localDef_in_stmt2174);
                     localDef241=localDef();
 
                     state._fsp--;
@@ -8040,7 +8048,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "stmtList"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:342:1: stmtList : s= ( ( stmt )* ) -> ^( AST_CODE_BLOCK ( $s)? ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:351:1: stmtList : s= ( ( stmt )* ) -> ^( AST_CODE_BLOCK ( $s)? ) ;
     public final FanParser.stmtList_return stmtList() throws RecognitionException {
         FanParser.stmtList_return retval = new FanParser.stmtList_return();
         retval.start = input.LT(1);
@@ -8055,13 +8063,13 @@ public class FanParser extends Parser {
         RewriteRuleSubtreeStream stream_stmt=new RewriteRuleSubtreeStream(adaptor,"rule stmt");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 61) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:342:10: (s= ( ( stmt )* ) -> ^( AST_CODE_BLOCK ( $s)? ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:342:12: s= ( ( stmt )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:351:10: (s= ( ( stmt )* ) -> ^( AST_CODE_BLOCK ( $s)? ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:351:12: s= ( ( stmt )* )
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:342:14: ( ( stmt )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:342:15: ( stmt )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:351:14: ( ( stmt )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:351:15: ( stmt )*
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:342:15: ( stmt )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:351:15: ( stmt )*
             loop78:
             do {
                 int alt78=2;
@@ -8070,7 +8078,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: stmt
             	    {
-            	    pushFollow(FOLLOW_stmt_in_stmtList2162);
+            	    pushFollow(FOLLOW_stmt_in_stmtList2187);
             	    stmt242=stmt();
 
             	    state._fsp--;
@@ -8103,14 +8111,14 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 342:22: -> ^( AST_CODE_BLOCK ( $s)? )
+            // 351:22: -> ^( AST_CODE_BLOCK ( $s)? )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:342:25: ^( AST_CODE_BLOCK ( $s)? )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:351:25: ^( AST_CODE_BLOCK ( $s)? )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_CODE_BLOCK, "AST_CODE_BLOCK"), root_1);
 
-                // src/net/colar/netbeans/fan/antlr/Fan.g:342:42: ( $s)?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:351:42: ( $s)?
                 if ( stream_s.hasNext() ) {
                     adaptor.addChild(root_1, stream_s.nextNode());
 
@@ -8152,7 +8160,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_break"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:348:1: g_break : KW_BREAK eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:357:1: g_break : KW_BREAK eos ;
     public final FanParser.g_break_return g_break() throws RecognitionException {
         FanParser.g_break_return retval = new FanParser.g_break_return();
         retval.start = input.LT(1);
@@ -8167,17 +8175,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 62) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:348:10: ( KW_BREAK eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:348:12: KW_BREAK eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:357:10: ( KW_BREAK eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:357:12: KW_BREAK eos
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_BREAK243=(Token)match(input,KW_BREAK,FOLLOW_KW_BREAK_in_g_break2184); if (state.failed) return retval;
+            KW_BREAK243=(Token)match(input,KW_BREAK,FOLLOW_KW_BREAK_in_g_break2209); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_BREAK243_tree = (Object)adaptor.create(KW_BREAK243);
             adaptor.addChild(root_0, KW_BREAK243_tree);
             }
-            pushFollow(FOLLOW_eos_in_g_break2186);
+            pushFollow(FOLLOW_eos_in_g_break2211);
             eos244=eos();
 
             state._fsp--;
@@ -8213,7 +8221,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_continue"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:349:1: g_continue : KW_CONTINUE eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:358:1: g_continue : KW_CONTINUE eos ;
     public final FanParser.g_continue_return g_continue() throws RecognitionException {
         FanParser.g_continue_return retval = new FanParser.g_continue_return();
         retval.start = input.LT(1);
@@ -8228,17 +8236,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 63) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:349:12: ( KW_CONTINUE eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:349:14: KW_CONTINUE eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:358:12: ( KW_CONTINUE eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:358:14: KW_CONTINUE eos
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_CONTINUE245=(Token)match(input,KW_CONTINUE,FOLLOW_KW_CONTINUE_in_g_continue2193); if (state.failed) return retval;
+            KW_CONTINUE245=(Token)match(input,KW_CONTINUE,FOLLOW_KW_CONTINUE_in_g_continue2218); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_CONTINUE245_tree = (Object)adaptor.create(KW_CONTINUE245);
             adaptor.addChild(root_0, KW_CONTINUE245_tree);
             }
-            pushFollow(FOLLOW_eos_in_g_continue2195);
+            pushFollow(FOLLOW_eos_in_g_continue2220);
             eos246=eos();
 
             state._fsp--;
@@ -8274,7 +8282,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_for"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:350:1: g_for : KW_FOR parL ( forInit )? SP_SEMI ( expr )? SP_SEMI ( expr )? parR block ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:359:1: g_for : KW_FOR parL ( forInit )? SP_SEMI ( expr )? SP_SEMI ( expr )? parR block ;
     public final FanParser.g_for_return g_for() throws RecognitionException {
         FanParser.g_for_return retval = new FanParser.g_for_return();
         retval.start = input.LT(1);
@@ -8303,23 +8311,23 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 64) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:350:8: ( KW_FOR parL ( forInit )? SP_SEMI ( expr )? SP_SEMI ( expr )? parR block )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:350:10: KW_FOR parL ( forInit )? SP_SEMI ( expr )? SP_SEMI ( expr )? parR block
+            // src/net/colar/netbeans/fan/antlr/Fan.g:359:8: ( KW_FOR parL ( forInit )? SP_SEMI ( expr )? SP_SEMI ( expr )? parR block )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:359:10: KW_FOR parL ( forInit )? SP_SEMI ( expr )? SP_SEMI ( expr )? parR block
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_FOR247=(Token)match(input,KW_FOR,FOLLOW_KW_FOR_in_g_for2203); if (state.failed) return retval;
+            KW_FOR247=(Token)match(input,KW_FOR,FOLLOW_KW_FOR_in_g_for2228); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_FOR247_tree = (Object)adaptor.create(KW_FOR247);
             adaptor.addChild(root_0, KW_FOR247_tree);
             }
-            pushFollow(FOLLOW_parL_in_g_for2205);
+            pushFollow(FOLLOW_parL_in_g_for2230);
             parL248=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parL248.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:350:22: ( forInit )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:359:22: ( forInit )?
             int alt79=2;
             int LA79_0 = input.LA(1);
 
@@ -8330,7 +8338,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: forInit
                     {
-                    pushFollow(FOLLOW_forInit_in_g_for2207);
+                    pushFollow(FOLLOW_forInit_in_g_for2232);
                     forInit249=forInit();
 
                     state._fsp--;
@@ -8342,12 +8350,12 @@ public class FanParser extends Parser {
 
             }
 
-            SP_SEMI250=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_g_for2210); if (state.failed) return retval;
+            SP_SEMI250=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_g_for2235); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_SEMI250_tree = (Object)adaptor.create(SP_SEMI250);
             adaptor.addChild(root_0, SP_SEMI250_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:350:39: ( expr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:359:39: ( expr )?
             int alt80=2;
             int LA80_0 = input.LA(1);
 
@@ -8358,7 +8366,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: expr
                     {
-                    pushFollow(FOLLOW_expr_in_g_for2212);
+                    pushFollow(FOLLOW_expr_in_g_for2237);
                     expr251=expr();
 
                     state._fsp--;
@@ -8370,12 +8378,12 @@ public class FanParser extends Parser {
 
             }
 
-            SP_SEMI252=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_g_for2215); if (state.failed) return retval;
+            SP_SEMI252=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_g_for2240); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_SEMI252_tree = (Object)adaptor.create(SP_SEMI252);
             adaptor.addChild(root_0, SP_SEMI252_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:350:53: ( expr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:359:53: ( expr )?
             int alt81=2;
             int LA81_0 = input.LA(1);
 
@@ -8386,7 +8394,7 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: expr
                     {
-                    pushFollow(FOLLOW_expr_in_g_for2217);
+                    pushFollow(FOLLOW_expr_in_g_for2242);
                     expr253=expr();
 
                     state._fsp--;
@@ -8398,13 +8406,13 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_parR_in_g_for2220);
+            pushFollow(FOLLOW_parR_in_g_for2245);
             parR254=parR();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parR254.getTree());
-            pushFollow(FOLLOW_block_in_g_for2223);
+            pushFollow(FOLLOW_block_in_g_for2248);
             block255=block();
 
             state._fsp--;
@@ -8440,7 +8448,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_if"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:351:1: g_if : KW_IF parL expr parR block ( KW_ELSE block )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:360:1: g_if : KW_IF parL expr parR block ( KW_ELSE block )? ;
     public final FanParser.g_if_return g_if() throws RecognitionException {
         FanParser.g_if_return retval = new FanParser.g_if_return();
         retval.start = input.LT(1);
@@ -8465,41 +8473,41 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 65) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:351:7: ( KW_IF parL expr parR block ( KW_ELSE block )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:351:9: KW_IF parL expr parR block ( KW_ELSE block )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:360:7: ( KW_IF parL expr parR block ( KW_ELSE block )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:360:9: KW_IF parL expr parR block ( KW_ELSE block )?
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_IF256=(Token)match(input,KW_IF,FOLLOW_KW_IF_in_g_if2231); if (state.failed) return retval;
+            KW_IF256=(Token)match(input,KW_IF,FOLLOW_KW_IF_in_g_if2256); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_IF256_tree = (Object)adaptor.create(KW_IF256);
             adaptor.addChild(root_0, KW_IF256_tree);
             }
-            pushFollow(FOLLOW_parL_in_g_if2233);
+            pushFollow(FOLLOW_parL_in_g_if2258);
             parL257=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parL257.getTree());
-            pushFollow(FOLLOW_expr_in_g_if2235);
+            pushFollow(FOLLOW_expr_in_g_if2260);
             expr258=expr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, expr258.getTree());
-            pushFollow(FOLLOW_parR_in_g_if2237);
+            pushFollow(FOLLOW_parR_in_g_if2262);
             parR259=parR();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parR259.getTree());
-            pushFollow(FOLLOW_block_in_g_if2239);
+            pushFollow(FOLLOW_block_in_g_if2264);
             block260=block();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, block260.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:352:5: ( KW_ELSE block )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:361:5: ( KW_ELSE block )?
             int alt82=2;
             int LA82_0 = input.LA(1);
 
@@ -8512,14 +8520,14 @@ public class FanParser extends Parser {
             }
             switch (alt82) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:352:6: KW_ELSE block
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:361:6: KW_ELSE block
                     {
-                    KW_ELSE261=(Token)match(input,KW_ELSE,FOLLOW_KW_ELSE_in_g_if2246); if (state.failed) return retval;
+                    KW_ELSE261=(Token)match(input,KW_ELSE,FOLLOW_KW_ELSE_in_g_if2271); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     KW_ELSE261_tree = (Object)adaptor.create(KW_ELSE261);
                     adaptor.addChild(root_0, KW_ELSE261_tree);
                     }
-                    pushFollow(FOLLOW_block_in_g_if2248);
+                    pushFollow(FOLLOW_block_in_g_if2273);
                     block262=block();
 
                     state._fsp--;
@@ -8561,7 +8569,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_return"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:353:1: g_return : KW_RETURN ( eos | expr eos ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:362:1: g_return : KW_RETURN ( eos | expr eos ) ;
     public final FanParser.g_return_return g_return() throws RecognitionException {
         FanParser.g_return_return retval = new FanParser.g_return_return();
         retval.start = input.LT(1);
@@ -8580,24 +8588,24 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 66) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:353:10: ( KW_RETURN ( eos | expr eos ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:353:12: KW_RETURN ( eos | expr eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:362:10: ( KW_RETURN ( eos | expr eos ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:362:12: KW_RETURN ( eos | expr eos )
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_RETURN263=(Token)match(input,KW_RETURN,FOLLOW_KW_RETURN_in_g_return2257); if (state.failed) return retval;
+            KW_RETURN263=(Token)match(input,KW_RETURN,FOLLOW_KW_RETURN_in_g_return2282); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_RETURN263_tree = (Object)adaptor.create(KW_RETURN263);
             adaptor.addChild(root_0, KW_RETURN263_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:353:22: ( eos | expr eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:362:22: ( eos | expr eos )
             int alt83=2;
             alt83 = dfa83.predict(input);
             switch (alt83) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:353:23: eos
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:362:23: eos
                     {
-                    pushFollow(FOLLOW_eos_in_g_return2260);
+                    pushFollow(FOLLOW_eos_in_g_return2285);
                     eos264=eos();
 
                     state._fsp--;
@@ -8607,15 +8615,15 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:353:29: expr eos
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:362:29: expr eos
                     {
-                    pushFollow(FOLLOW_expr_in_g_return2264);
+                    pushFollow(FOLLOW_expr_in_g_return2289);
                     expr265=expr();
 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) adaptor.addChild(root_0, expr265.getTree());
-                    pushFollow(FOLLOW_eos_in_g_return2266);
+                    pushFollow(FOLLOW_eos_in_g_return2291);
                     eos266=eos();
 
                     state._fsp--;
@@ -8657,7 +8665,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_switch"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:354:1: g_switch : KW_SWITCH parL expr parR bracketL ( g_case )* ( g_default )? bracketR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:363:1: g_switch : KW_SWITCH parL expr parR bracketL ( g_case )* ( g_default )? bracketR ;
     public final FanParser.g_switch_return g_switch() throws RecognitionException {
         FanParser.g_switch_return retval = new FanParser.g_switch_return();
         retval.start = input.LT(1);
@@ -8684,41 +8692,41 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 67) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:354:10: ( KW_SWITCH parL expr parR bracketL ( g_case )* ( g_default )? bracketR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:354:12: KW_SWITCH parL expr parR bracketL ( g_case )* ( g_default )? bracketR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:363:10: ( KW_SWITCH parL expr parR bracketL ( g_case )* ( g_default )? bracketR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:363:12: KW_SWITCH parL expr parR bracketL ( g_case )* ( g_default )? bracketR
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_SWITCH267=(Token)match(input,KW_SWITCH,FOLLOW_KW_SWITCH_in_g_switch2274); if (state.failed) return retval;
+            KW_SWITCH267=(Token)match(input,KW_SWITCH,FOLLOW_KW_SWITCH_in_g_switch2299); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_SWITCH267_tree = (Object)adaptor.create(KW_SWITCH267);
             adaptor.addChild(root_0, KW_SWITCH267_tree);
             }
-            pushFollow(FOLLOW_parL_in_g_switch2276);
+            pushFollow(FOLLOW_parL_in_g_switch2301);
             parL268=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parL268.getTree());
-            pushFollow(FOLLOW_expr_in_g_switch2278);
+            pushFollow(FOLLOW_expr_in_g_switch2303);
             expr269=expr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, expr269.getTree());
-            pushFollow(FOLLOW_parR_in_g_switch2280);
+            pushFollow(FOLLOW_parR_in_g_switch2305);
             parR270=parR();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parR270.getTree());
-            pushFollow(FOLLOW_bracketL_in_g_switch2282);
+            pushFollow(FOLLOW_bracketL_in_g_switch2307);
             bracketL271=bracketL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, bracketL271.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:354:46: ( g_case )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:363:46: ( g_case )*
             loop84:
             do {
                 int alt84=2;
@@ -8731,9 +8739,9 @@ public class FanParser extends Parser {
 
                 switch (alt84) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:354:47: g_case
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:363:47: g_case
             	    {
-            	    pushFollow(FOLLOW_g_case_in_g_switch2285);
+            	    pushFollow(FOLLOW_g_case_in_g_switch2310);
             	    g_case272=g_case();
 
             	    state._fsp--;
@@ -8748,7 +8756,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:354:56: ( g_default )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:363:56: ( g_default )?
             int alt85=2;
             int LA85_0 = input.LA(1);
 
@@ -8757,9 +8765,9 @@ public class FanParser extends Parser {
             }
             switch (alt85) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:354:57: g_default
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:363:57: g_default
                     {
-                    pushFollow(FOLLOW_g_default_in_g_switch2290);
+                    pushFollow(FOLLOW_g_default_in_g_switch2315);
                     g_default273=g_default();
 
                     state._fsp--;
@@ -8771,7 +8779,7 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_bracketR_in_g_switch2294);
+            pushFollow(FOLLOW_bracketR_in_g_switch2319);
             bracketR274=bracketR();
 
             state._fsp--;
@@ -8807,7 +8815,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_throw"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:355:1: g_throw : KW_THROW expr eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:364:1: g_throw : KW_THROW expr eos ;
     public final FanParser.g_throw_return g_throw() throws RecognitionException {
         FanParser.g_throw_return retval = new FanParser.g_throw_return();
         retval.start = input.LT(1);
@@ -8824,23 +8832,23 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 68) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:355:10: ( KW_THROW expr eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:355:12: KW_THROW expr eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:364:10: ( KW_THROW expr eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:364:12: KW_THROW expr eos
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_THROW275=(Token)match(input,KW_THROW,FOLLOW_KW_THROW_in_g_throw2302); if (state.failed) return retval;
+            KW_THROW275=(Token)match(input,KW_THROW,FOLLOW_KW_THROW_in_g_throw2327); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_THROW275_tree = (Object)adaptor.create(KW_THROW275);
             adaptor.addChild(root_0, KW_THROW275_tree);
             }
-            pushFollow(FOLLOW_expr_in_g_throw2304);
+            pushFollow(FOLLOW_expr_in_g_throw2329);
             expr276=expr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, expr276.getTree());
-            pushFollow(FOLLOW_eos_in_g_throw2306);
+            pushFollow(FOLLOW_eos_in_g_throw2331);
             eos277=eos();
 
             state._fsp--;
@@ -8876,7 +8884,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_while"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:356:1: g_while : KW_WHILE parL expr parR block ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:365:1: g_while : KW_WHILE parL expr parR block ;
     public final FanParser.g_while_return g_while() throws RecognitionException {
         FanParser.g_while_return retval = new FanParser.g_while_return();
         retval.start = input.LT(1);
@@ -8897,35 +8905,35 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 69) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:356:10: ( KW_WHILE parL expr parR block )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:356:12: KW_WHILE parL expr parR block
+            // src/net/colar/netbeans/fan/antlr/Fan.g:365:10: ( KW_WHILE parL expr parR block )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:365:12: KW_WHILE parL expr parR block
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_WHILE278=(Token)match(input,KW_WHILE,FOLLOW_KW_WHILE_in_g_while2314); if (state.failed) return retval;
+            KW_WHILE278=(Token)match(input,KW_WHILE,FOLLOW_KW_WHILE_in_g_while2339); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_WHILE278_tree = (Object)adaptor.create(KW_WHILE278);
             adaptor.addChild(root_0, KW_WHILE278_tree);
             }
-            pushFollow(FOLLOW_parL_in_g_while2316);
+            pushFollow(FOLLOW_parL_in_g_while2341);
             parL279=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parL279.getTree());
-            pushFollow(FOLLOW_expr_in_g_while2318);
+            pushFollow(FOLLOW_expr_in_g_while2343);
             expr280=expr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, expr280.getTree());
-            pushFollow(FOLLOW_parR_in_g_while2320);
+            pushFollow(FOLLOW_parR_in_g_while2345);
             parR281=parR();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parR281.getTree());
-            pushFollow(FOLLOW_block_in_g_while2322);
+            pushFollow(FOLLOW_block_in_g_while2347);
             block282=block();
 
             state._fsp--;
@@ -8961,7 +8969,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_try"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:357:1: g_try : KW_TRY ( ( bracketL )=> try_long | stmtList ) ( ( KW_CATCH )=> g_catch )* ( ( KW_FINALLY )=> g_finally )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:366:1: g_try : KW_TRY ( ( bracketL )=> try_long | stmtList ) ( ( KW_CATCH )=> g_catch )* ( ( KW_FINALLY )=> g_finally )? ;
     public final FanParser.g_try_return g_try() throws RecognitionException {
         FanParser.g_try_return retval = new FanParser.g_try_return();
         retval.start = input.LT(1);
@@ -8982,17 +8990,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 70) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:357:8: ( KW_TRY ( ( bracketL )=> try_long | stmtList ) ( ( KW_CATCH )=> g_catch )* ( ( KW_FINALLY )=> g_finally )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:357:10: KW_TRY ( ( bracketL )=> try_long | stmtList ) ( ( KW_CATCH )=> g_catch )* ( ( KW_FINALLY )=> g_finally )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:366:8: ( KW_TRY ( ( bracketL )=> try_long | stmtList ) ( ( KW_CATCH )=> g_catch )* ( ( KW_FINALLY )=> g_finally )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:366:10: KW_TRY ( ( bracketL )=> try_long | stmtList ) ( ( KW_CATCH )=> g_catch )* ( ( KW_FINALLY )=> g_finally )?
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_TRY283=(Token)match(input,KW_TRY,FOLLOW_KW_TRY_in_g_try2330); if (state.failed) return retval;
+            KW_TRY283=(Token)match(input,KW_TRY,FOLLOW_KW_TRY_in_g_try2355); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_TRY283_tree = (Object)adaptor.create(KW_TRY283);
             adaptor.addChild(root_0, KW_TRY283_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:357:17: ( ( bracketL )=> try_long | stmtList )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:366:17: ( ( bracketL )=> try_long | stmtList )
             int alt86=2;
             int LA86_0 = input.LA(1);
 
@@ -9011,9 +9019,9 @@ public class FanParser extends Parser {
             }
             switch (alt86) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:357:18: ( bracketL )=> try_long
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:366:18: ( bracketL )=> try_long
                     {
-                    pushFollow(FOLLOW_try_long_in_g_try2337);
+                    pushFollow(FOLLOW_try_long_in_g_try2362);
                     try_long284=try_long();
 
                     state._fsp--;
@@ -9023,9 +9031,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:357:41: stmtList
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:366:41: stmtList
                     {
-                    pushFollow(FOLLOW_stmtList_in_g_try2341);
+                    pushFollow(FOLLOW_stmtList_in_g_try2366);
                     stmtList285=stmtList();
 
                     state._fsp--;
@@ -9037,7 +9045,7 @@ public class FanParser extends Parser {
 
             }
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:357:51: ( ( KW_CATCH )=> g_catch )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:366:51: ( ( KW_CATCH )=> g_catch )*
             loop87:
             do {
                 int alt87=2;
@@ -9056,9 +9064,9 @@ public class FanParser extends Parser {
 
                 switch (alt87) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:357:52: ( KW_CATCH )=> g_catch
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:366:52: ( KW_CATCH )=> g_catch
             	    {
-            	    pushFollow(FOLLOW_g_catch_in_g_try2349);
+            	    pushFollow(FOLLOW_g_catch_in_g_try2374);
             	    g_catch286=g_catch();
 
             	    state._fsp--;
@@ -9073,7 +9081,7 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:357:74: ( ( KW_FINALLY )=> g_finally )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:366:74: ( ( KW_FINALLY )=> g_finally )?
             int alt88=2;
             int LA88_0 = input.LA(1);
 
@@ -9086,9 +9094,9 @@ public class FanParser extends Parser {
             }
             switch (alt88) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:357:75: ( KW_FINALLY )=> g_finally
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:366:75: ( KW_FINALLY )=> g_finally
                     {
-                    pushFollow(FOLLOW_g_finally_in_g_try2358);
+                    pushFollow(FOLLOW_g_finally_in_g_try2383);
                     g_finally287=g_finally();
 
                     state._fsp--;
@@ -9130,7 +9138,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "try_long"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:358:1: try_long : multiStmt ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:367:1: try_long : multiStmt ;
     public final FanParser.try_long_return try_long() throws RecognitionException {
         FanParser.try_long_return retval = new FanParser.try_long_return();
         retval.start = input.LT(1);
@@ -9143,12 +9151,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 71) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:358:10: ( multiStmt )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:358:12: multiStmt
+            // src/net/colar/netbeans/fan/antlr/Fan.g:367:10: ( multiStmt )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:367:12: multiStmt
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_multiStmt_in_try_long2367);
+            pushFollow(FOLLOW_multiStmt_in_try_long2392);
             multiStmt288=multiStmt();
 
             state._fsp--;
@@ -9184,7 +9192,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "exprStmt"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:359:1: exprStmt : expr eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:368:1: exprStmt : expr eos ;
     public final FanParser.exprStmt_return exprStmt() throws RecognitionException {
         FanParser.exprStmt_return retval = new FanParser.exprStmt_return();
         retval.start = input.LT(1);
@@ -9199,18 +9207,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 72) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:359:10: ( expr eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:359:12: expr eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:368:10: ( expr eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:368:12: expr eos
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_expr_in_exprStmt2374);
+            pushFollow(FOLLOW_expr_in_exprStmt2399);
             expr289=expr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, expr289.getTree());
-            pushFollow(FOLLOW_eos_in_exprStmt2376);
+            pushFollow(FOLLOW_eos_in_exprStmt2401);
             eos290=eos();
 
             state._fsp--;
@@ -9246,7 +9254,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "localDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:360:1: localDef : typeId ( AS_INIT_VAL expr )? eos ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:369:1: localDef : typeId ( AS_INIT_VAL expr )? eos ;
     public final FanParser.localDef_return localDef() throws RecognitionException {
         FanParser.localDef_return retval = new FanParser.localDef_return();
         retval.start = input.LT(1);
@@ -9265,18 +9273,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 73) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:360:10: ( typeId ( AS_INIT_VAL expr )? eos )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:360:12: typeId ( AS_INIT_VAL expr )? eos
+            // src/net/colar/netbeans/fan/antlr/Fan.g:369:10: ( typeId ( AS_INIT_VAL expr )? eos )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:369:12: typeId ( AS_INIT_VAL expr )? eos
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_typeId_in_localDef2383);
+            pushFollow(FOLLOW_typeId_in_localDef2408);
             typeId291=typeId();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, typeId291.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:360:19: ( AS_INIT_VAL expr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:369:19: ( AS_INIT_VAL expr )?
             int alt89=2;
             int LA89_0 = input.LA(1);
 
@@ -9285,14 +9293,14 @@ public class FanParser extends Parser {
             }
             switch (alt89) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:360:20: AS_INIT_VAL expr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:369:20: AS_INIT_VAL expr
                     {
-                    AS_INIT_VAL292=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_localDef2386); if (state.failed) return retval;
+                    AS_INIT_VAL292=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_localDef2411); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     AS_INIT_VAL292_tree = (Object)adaptor.create(AS_INIT_VAL292);
                     adaptor.addChild(root_0, AS_INIT_VAL292_tree);
                     }
-                    pushFollow(FOLLOW_expr_in_localDef2388);
+                    pushFollow(FOLLOW_expr_in_localDef2413);
                     expr293=expr();
 
                     state._fsp--;
@@ -9304,7 +9312,7 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_eos_in_localDef2392);
+            pushFollow(FOLLOW_eos_in_localDef2417);
             eos294=eos();
 
             state._fsp--;
@@ -9340,7 +9348,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "forInit"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:361:1: forInit : ( forInitDef | expr );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:370:1: forInit : ( forInitDef | expr );
     public final FanParser.forInit_return forInit() throws RecognitionException {
         FanParser.forInit_return retval = new FanParser.forInit_return();
         retval.start = input.LT(1);
@@ -9355,16 +9363,16 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 74) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:361:10: ( forInitDef | expr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:370:10: ( forInitDef | expr )
             int alt90=2;
             alt90 = dfa90.predict(input);
             switch (alt90) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:361:12: forInitDef
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:370:12: forInitDef
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_forInitDef_in_forInit2400);
+                    pushFollow(FOLLOW_forInitDef_in_forInit2425);
                     forInitDef295=forInitDef();
 
                     state._fsp--;
@@ -9374,11 +9382,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:361:25: expr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:370:25: expr
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_expr_in_forInit2404);
+                    pushFollow(FOLLOW_expr_in_forInit2429);
                     expr296=expr();
 
                     state._fsp--;
@@ -9416,7 +9424,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "forInitDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:362:1: forInitDef : typeId ( AS_INIT_VAL expr )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:371:1: forInitDef : typeId ( AS_INIT_VAL expr )? ;
     public final FanParser.forInitDef_return forInitDef() throws RecognitionException {
         FanParser.forInitDef_return retval = new FanParser.forInitDef_return();
         retval.start = input.LT(1);
@@ -9433,18 +9441,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 75) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:362:12: ( typeId ( AS_INIT_VAL expr )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:362:14: typeId ( AS_INIT_VAL expr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:371:12: ( typeId ( AS_INIT_VAL expr )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:371:14: typeId ( AS_INIT_VAL expr )?
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_typeId_in_forInitDef2411);
+            pushFollow(FOLLOW_typeId_in_forInitDef2436);
             typeId297=typeId();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, typeId297.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:362:21: ( AS_INIT_VAL expr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:371:21: ( AS_INIT_VAL expr )?
             int alt91=2;
             int LA91_0 = input.LA(1);
 
@@ -9453,14 +9461,14 @@ public class FanParser extends Parser {
             }
             switch (alt91) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:362:22: AS_INIT_VAL expr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:371:22: AS_INIT_VAL expr
                     {
-                    AS_INIT_VAL298=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_forInitDef2414); if (state.failed) return retval;
+                    AS_INIT_VAL298=(Token)match(input,AS_INIT_VAL,FOLLOW_AS_INIT_VAL_in_forInitDef2439); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                     AS_INIT_VAL298_tree = (Object)adaptor.create(AS_INIT_VAL298);
                     adaptor.addChild(root_0, AS_INIT_VAL298_tree);
                     }
-                    pushFollow(FOLLOW_expr_in_forInitDef2416);
+                    pushFollow(FOLLOW_expr_in_forInitDef2441);
                     expr299=expr();
 
                     state._fsp--;
@@ -9502,7 +9510,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_catch"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:364:1: g_catch : KW_CATCH ( catchDef )? ( ( bracketL )=> catch_long | stmtList ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:373:1: g_catch : KW_CATCH ( catchDef )? ( ( bracketL )=> catch_long | stmtList ) ;
     public final FanParser.g_catch_return g_catch() throws RecognitionException {
         FanParser.g_catch_return retval = new FanParser.g_catch_return();
         retval.start = input.LT(1);
@@ -9521,24 +9529,24 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 76) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:364:10: ( KW_CATCH ( catchDef )? ( ( bracketL )=> catch_long | stmtList ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:364:12: KW_CATCH ( catchDef )? ( ( bracketL )=> catch_long | stmtList )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:373:10: ( KW_CATCH ( catchDef )? ( ( bracketL )=> catch_long | stmtList ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:373:12: KW_CATCH ( catchDef )? ( ( bracketL )=> catch_long | stmtList )
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_CATCH300=(Token)match(input,KW_CATCH,FOLLOW_KW_CATCH_in_g_catch2427); if (state.failed) return retval;
+            KW_CATCH300=(Token)match(input,KW_CATCH,FOLLOW_KW_CATCH_in_g_catch2452); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_CATCH300_tree = (Object)adaptor.create(KW_CATCH300);
             adaptor.addChild(root_0, KW_CATCH300_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:364:21: ( catchDef )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:373:21: ( catchDef )?
             int alt92=2;
             alt92 = dfa92.predict(input);
             switch (alt92) {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: catchDef
                     {
-                    pushFollow(FOLLOW_catchDef_in_g_catch2429);
+                    pushFollow(FOLLOW_catchDef_in_g_catch2454);
                     catchDef301=catchDef();
 
                     state._fsp--;
@@ -9550,7 +9558,7 @@ public class FanParser extends Parser {
 
             }
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:364:31: ( ( bracketL )=> catch_long | stmtList )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:373:31: ( ( bracketL )=> catch_long | stmtList )
             int alt93=2;
             int LA93_0 = input.LA(1);
 
@@ -9569,9 +9577,9 @@ public class FanParser extends Parser {
             }
             switch (alt93) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:364:32: ( bracketL )=> catch_long
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:373:32: ( bracketL )=> catch_long
                     {
-                    pushFollow(FOLLOW_catch_long_in_g_catch2437);
+                    pushFollow(FOLLOW_catch_long_in_g_catch2462);
                     catch_long302=catch_long();
 
                     state._fsp--;
@@ -9581,9 +9589,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:364:57: stmtList
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:373:57: stmtList
                     {
-                    pushFollow(FOLLOW_stmtList_in_g_catch2441);
+                    pushFollow(FOLLOW_stmtList_in_g_catch2466);
                     stmtList303=stmtList();
 
                     state._fsp--;
@@ -9625,7 +9633,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "catch_long"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:365:1: catch_long : multiStmt ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:374:1: catch_long : multiStmt ;
     public final FanParser.catch_long_return catch_long() throws RecognitionException {
         FanParser.catch_long_return retval = new FanParser.catch_long_return();
         retval.start = input.LT(1);
@@ -9638,12 +9646,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 77) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:365:12: ( multiStmt )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:365:14: multiStmt
+            // src/net/colar/netbeans/fan/antlr/Fan.g:374:12: ( multiStmt )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:374:14: multiStmt
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_multiStmt_in_catch_long2449);
+            pushFollow(FOLLOW_multiStmt_in_catch_long2474);
             multiStmt304=multiStmt();
 
             state._fsp--;
@@ -9679,7 +9687,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "catchDef"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:366:1: catchDef : parL type id parR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:375:1: catchDef : parL type id parR ;
     public final FanParser.catchDef_return catchDef() throws RecognitionException {
         FanParser.catchDef_return retval = new FanParser.catchDef_return();
         retval.start = input.LT(1);
@@ -9698,30 +9706,30 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 78) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:366:11: ( parL type id parR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:366:13: parL type id parR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:375:11: ( parL type id parR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:375:13: parL type id parR
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_parL_in_catchDef2457);
+            pushFollow(FOLLOW_parL_in_catchDef2482);
             parL305=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parL305.getTree());
-            pushFollow(FOLLOW_type_in_catchDef2459);
+            pushFollow(FOLLOW_type_in_catchDef2484);
             type306=type();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, type306.getTree());
-            pushFollow(FOLLOW_id_in_catchDef2461);
+            pushFollow(FOLLOW_id_in_catchDef2486);
             id307=id();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, id307.getTree());
-            pushFollow(FOLLOW_parR_in_catchDef2463);
+            pushFollow(FOLLOW_parR_in_catchDef2488);
             parR308=parR();
 
             state._fsp--;
@@ -9757,7 +9765,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_finally"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:368:1: g_finally : KW_FINALLY ( ( bracketL )=> finally_long | stmtList ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:377:1: g_finally : KW_FINALLY ( ( bracketL )=> finally_long | stmtList ) ;
     public final FanParser.g_finally_return g_finally() throws RecognitionException {
         FanParser.g_finally_return retval = new FanParser.g_finally_return();
         retval.start = input.LT(1);
@@ -9774,17 +9782,17 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 79) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:368:11: ( KW_FINALLY ( ( bracketL )=> finally_long | stmtList ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:368:13: KW_FINALLY ( ( bracketL )=> finally_long | stmtList )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:377:11: ( KW_FINALLY ( ( bracketL )=> finally_long | stmtList ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:377:13: KW_FINALLY ( ( bracketL )=> finally_long | stmtList )
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_FINALLY309=(Token)match(input,KW_FINALLY,FOLLOW_KW_FINALLY_in_g_finally2471); if (state.failed) return retval;
+            KW_FINALLY309=(Token)match(input,KW_FINALLY,FOLLOW_KW_FINALLY_in_g_finally2496); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_FINALLY309_tree = (Object)adaptor.create(KW_FINALLY309);
             adaptor.addChild(root_0, KW_FINALLY309_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:368:24: ( ( bracketL )=> finally_long | stmtList )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:377:24: ( ( bracketL )=> finally_long | stmtList )
             int alt94=2;
             int LA94_0 = input.LA(1);
 
@@ -9803,9 +9811,9 @@ public class FanParser extends Parser {
             }
             switch (alt94) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:368:25: ( bracketL )=> finally_long
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:377:25: ( bracketL )=> finally_long
                     {
-                    pushFollow(FOLLOW_finally_long_in_g_finally2478);
+                    pushFollow(FOLLOW_finally_long_in_g_finally2503);
                     finally_long310=finally_long();
 
                     state._fsp--;
@@ -9815,9 +9823,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:368:52: stmtList
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:377:52: stmtList
                     {
-                    pushFollow(FOLLOW_stmtList_in_g_finally2482);
+                    pushFollow(FOLLOW_stmtList_in_g_finally2507);
                     stmtList311=stmtList();
 
                     state._fsp--;
@@ -9859,7 +9867,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "finally_long"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:369:1: finally_long : multiStmt ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:378:1: finally_long : multiStmt ;
     public final FanParser.finally_long_return finally_long() throws RecognitionException {
         FanParser.finally_long_return retval = new FanParser.finally_long_return();
         retval.start = input.LT(1);
@@ -9872,12 +9880,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 80) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:369:14: ( multiStmt )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:369:16: multiStmt
+            // src/net/colar/netbeans/fan/antlr/Fan.g:378:14: ( multiStmt )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:378:16: multiStmt
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_multiStmt_in_finally_long2490);
+            pushFollow(FOLLOW_multiStmt_in_finally_long2515);
             multiStmt312=multiStmt();
 
             state._fsp--;
@@ -9913,7 +9921,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_case"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:370:1: g_case : KW_CASE expr SP_COLON ( stmt )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:379:1: g_case : KW_CASE expr SP_COLON ( stmt )* ;
     public final FanParser.g_case_return g_case() throws RecognitionException {
         FanParser.g_case_return retval = new FanParser.g_case_return();
         retval.start = input.LT(1);
@@ -9932,28 +9940,28 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 81) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:370:9: ( KW_CASE expr SP_COLON ( stmt )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:370:11: KW_CASE expr SP_COLON ( stmt )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:379:9: ( KW_CASE expr SP_COLON ( stmt )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:379:11: KW_CASE expr SP_COLON ( stmt )*
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_CASE313=(Token)match(input,KW_CASE,FOLLOW_KW_CASE_in_g_case2498); if (state.failed) return retval;
+            KW_CASE313=(Token)match(input,KW_CASE,FOLLOW_KW_CASE_in_g_case2523); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_CASE313_tree = (Object)adaptor.create(KW_CASE313);
             adaptor.addChild(root_0, KW_CASE313_tree);
             }
-            pushFollow(FOLLOW_expr_in_g_case2500);
+            pushFollow(FOLLOW_expr_in_g_case2525);
             expr314=expr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, expr314.getTree());
-            SP_COLON315=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_g_case2502); if (state.failed) return retval;
+            SP_COLON315=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_g_case2527); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_COLON315_tree = (Object)adaptor.create(SP_COLON315);
             adaptor.addChild(root_0, SP_COLON315_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:370:33: ( stmt )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:379:33: ( stmt )*
             loop95:
             do {
                 int alt95=2;
@@ -9968,7 +9976,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: stmt
             	    {
-            	    pushFollow(FOLLOW_stmt_in_g_case2504);
+            	    pushFollow(FOLLOW_stmt_in_g_case2529);
             	    stmt316=stmt();
 
             	    state._fsp--;
@@ -10013,7 +10021,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "g_default"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:371:1: g_default : KW_DEFAULT SP_COLON ( stmt )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:380:1: g_default : KW_DEFAULT SP_COLON ( stmt )* ;
     public final FanParser.g_default_return g_default() throws RecognitionException {
         FanParser.g_default_return retval = new FanParser.g_default_return();
         retval.start = input.LT(1);
@@ -10030,22 +10038,22 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 82) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:371:11: ( KW_DEFAULT SP_COLON ( stmt )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:371:13: KW_DEFAULT SP_COLON ( stmt )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:380:11: ( KW_DEFAULT SP_COLON ( stmt )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:380:13: KW_DEFAULT SP_COLON ( stmt )*
             {
             root_0 = (Object)adaptor.nil();
 
-            KW_DEFAULT317=(Token)match(input,KW_DEFAULT,FOLLOW_KW_DEFAULT_in_g_default2512); if (state.failed) return retval;
+            KW_DEFAULT317=(Token)match(input,KW_DEFAULT,FOLLOW_KW_DEFAULT_in_g_default2537); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             KW_DEFAULT317_tree = (Object)adaptor.create(KW_DEFAULT317);
             adaptor.addChild(root_0, KW_DEFAULT317_tree);
             }
-            SP_COLON318=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_g_default2514); if (state.failed) return retval;
+            SP_COLON318=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_g_default2539); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_COLON318_tree = (Object)adaptor.create(SP_COLON318);
             adaptor.addChild(root_0, SP_COLON318_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:371:33: ( stmt )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:380:33: ( stmt )*
             loop96:
             do {
                 int alt96=2;
@@ -10060,7 +10068,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: stmt
             	    {
-            	    pushFollow(FOLLOW_stmt_in_g_default2516);
+            	    pushFollow(FOLLOW_stmt_in_g_default2541);
             	    stmt319=stmt();
 
             	    state._fsp--;
@@ -10105,7 +10113,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "expr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:374:1: expr : assignExpr ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:383:1: expr : assignExpr ;
     public final FanParser.expr_return expr() throws RecognitionException {
         FanParser.expr_return retval = new FanParser.expr_return();
         retval.start = input.LT(1);
@@ -10119,12 +10127,12 @@ public class FanParser extends Parser {
         paraphrase.push("Expression");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 83) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:376:3: ( assignExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:376:5: assignExpr
+            // src/net/colar/netbeans/fan/antlr/Fan.g:385:3: ( assignExpr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:385:5: assignExpr
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_assignExpr_in_expr2537);
+            pushFollow(FOLLOW_assignExpr_in_expr2562);
             assignExpr320=assignExpr();
 
             state._fsp--;
@@ -10163,7 +10171,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "assignExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:377:1: assignExpr : ternaryExpr ( assignOp assignExpr )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:386:1: assignExpr : ternaryExpr ( assignOp assignExpr )? ;
     public final FanParser.assignExpr_return assignExpr() throws RecognitionException {
         FanParser.assignExpr_return retval = new FanParser.assignExpr_return();
         retval.start = input.LT(1);
@@ -10180,18 +10188,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 84) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:377:12: ( ternaryExpr ( assignOp assignExpr )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:377:14: ternaryExpr ( assignOp assignExpr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:386:12: ( ternaryExpr ( assignOp assignExpr )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:386:14: ternaryExpr ( assignOp assignExpr )?
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_ternaryExpr_in_assignExpr2544);
+            pushFollow(FOLLOW_ternaryExpr_in_assignExpr2569);
             ternaryExpr321=ternaryExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, ternaryExpr321.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:377:26: ( assignOp assignExpr )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:386:26: ( assignOp assignExpr )?
             int alt97=2;
             int LA97_0 = input.LA(1);
 
@@ -10200,15 +10208,15 @@ public class FanParser extends Parser {
             }
             switch (alt97) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:377:27: assignOp assignExpr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:386:27: assignOp assignExpr
                     {
-                    pushFollow(FOLLOW_assignOp_in_assignExpr2547);
+                    pushFollow(FOLLOW_assignOp_in_assignExpr2572);
                     assignOp322=assignOp();
 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) adaptor.addChild(root_0, assignOp322.getTree());
-                    pushFollow(FOLLOW_assignExpr_in_assignExpr2549);
+                    pushFollow(FOLLOW_assignExpr_in_assignExpr2574);
                     assignExpr323=assignExpr();
 
                     state._fsp--;
@@ -10250,7 +10258,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "ternaryExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:378:1: ternaryExpr : condOrExpr ( ternaryTail )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:387:1: ternaryExpr : condOrExpr ( ternaryTail )? ;
     public final FanParser.ternaryExpr_return ternaryExpr() throws RecognitionException {
         FanParser.ternaryExpr_return retval = new FanParser.ternaryExpr_return();
         retval.start = input.LT(1);
@@ -10265,18 +10273,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 85) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:378:13: ( condOrExpr ( ternaryTail )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:378:15: condOrExpr ( ternaryTail )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:387:13: ( condOrExpr ( ternaryTail )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:387:15: condOrExpr ( ternaryTail )?
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_condOrExpr_in_ternaryExpr2558);
+            pushFollow(FOLLOW_condOrExpr_in_ternaryExpr2583);
             condOrExpr324=condOrExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, condOrExpr324.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:378:26: ( ternaryTail )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:387:26: ( ternaryTail )?
             int alt98=2;
             int LA98_0 = input.LA(1);
 
@@ -10285,9 +10293,9 @@ public class FanParser extends Parser {
             }
             switch (alt98) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:378:27: ternaryTail
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:387:27: ternaryTail
                     {
-                    pushFollow(FOLLOW_ternaryTail_in_ternaryExpr2561);
+                    pushFollow(FOLLOW_ternaryTail_in_ternaryExpr2586);
                     ternaryTail325=ternaryTail();
 
                     state._fsp--;
@@ -10329,7 +10337,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "ternaryTail"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:380:1: ternaryTail : SP_QMARK condOrExpr SP_COLON condOrExpr ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:389:1: ternaryTail : SP_QMARK condOrExpr SP_COLON condOrExpr ;
     public final FanParser.ternaryTail_return ternaryTail() throws RecognitionException {
         FanParser.ternaryTail_return retval = new FanParser.ternaryTail_return();
         retval.start = input.LT(1);
@@ -10348,28 +10356,28 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 86) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:380:13: ( SP_QMARK condOrExpr SP_COLON condOrExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:380:15: SP_QMARK condOrExpr SP_COLON condOrExpr
+            // src/net/colar/netbeans/fan/antlr/Fan.g:389:13: ( SP_QMARK condOrExpr SP_COLON condOrExpr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:389:15: SP_QMARK condOrExpr SP_COLON condOrExpr
             {
             root_0 = (Object)adaptor.nil();
 
-            SP_QMARK326=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_ternaryTail2571); if (state.failed) return retval;
+            SP_QMARK326=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_ternaryTail2596); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_QMARK326_tree = (Object)adaptor.create(SP_QMARK326);
             adaptor.addChild(root_0, SP_QMARK326_tree);
             }
-            pushFollow(FOLLOW_condOrExpr_in_ternaryTail2573);
+            pushFollow(FOLLOW_condOrExpr_in_ternaryTail2598);
             condOrExpr327=condOrExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, condOrExpr327.getTree());
-            SP_COLON328=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_ternaryTail2575); if (state.failed) return retval;
+            SP_COLON328=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_ternaryTail2600); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             SP_COLON328_tree = (Object)adaptor.create(SP_COLON328);
             adaptor.addChild(root_0, SP_COLON328_tree);
             }
-            pushFollow(FOLLOW_condOrExpr_in_ternaryTail2577);
+            pushFollow(FOLLOW_condOrExpr_in_ternaryTail2602);
             condOrExpr329=condOrExpr();
 
             state._fsp--;
@@ -10405,7 +10413,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "assignOp"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:381:1: assignOp : ( AS_EQUAL | AS_ASSIGN_OP );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:390:1: assignOp : ( AS_EQUAL | AS_ASSIGN_OP );
     public final FanParser.assignOp_return assignOp() throws RecognitionException {
         FanParser.assignOp_return retval = new FanParser.assignOp_return();
         retval.start = input.LT(1);
@@ -10418,7 +10426,7 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 87) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:381:10: ( AS_EQUAL | AS_ASSIGN_OP )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:390:10: ( AS_EQUAL | AS_ASSIGN_OP )
             // src/net/colar/netbeans/fan/antlr/Fan.g:
             {
             root_0 = (Object)adaptor.nil();
@@ -10465,7 +10473,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "condOrExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:382:1: condOrExpr : condAndExpr ( OP_OR condAndExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:391:1: condOrExpr : condAndExpr ( OP_OR condAndExpr )* ;
     public final FanParser.condOrExpr_return condOrExpr() throws RecognitionException {
         FanParser.condOrExpr_return retval = new FanParser.condOrExpr_return();
         retval.start = input.LT(1);
@@ -10482,18 +10490,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 88) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:382:13: ( condAndExpr ( OP_OR condAndExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:382:15: condAndExpr ( OP_OR condAndExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:391:13: ( condAndExpr ( OP_OR condAndExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:391:15: condAndExpr ( OP_OR condAndExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_condAndExpr_in_condOrExpr2596);
+            pushFollow(FOLLOW_condAndExpr_in_condOrExpr2621);
             condAndExpr331=condAndExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, condAndExpr331.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:382:28: ( OP_OR condAndExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:391:28: ( OP_OR condAndExpr )*
             loop99:
             do {
                 int alt99=2;
@@ -10506,14 +10514,14 @@ public class FanParser extends Parser {
 
                 switch (alt99) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:382:29: OP_OR condAndExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:391:29: OP_OR condAndExpr
             	    {
-            	    OP_OR332=(Token)match(input,OP_OR,FOLLOW_OP_OR_in_condOrExpr2600); if (state.failed) return retval;
+            	    OP_OR332=(Token)match(input,OP_OR,FOLLOW_OP_OR_in_condOrExpr2625); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    OP_OR332_tree = (Object)adaptor.create(OP_OR332);
             	    adaptor.addChild(root_0, OP_OR332_tree);
             	    }
-            	    pushFollow(FOLLOW_condAndExpr_in_condOrExpr2603);
+            	    pushFollow(FOLLOW_condAndExpr_in_condOrExpr2628);
             	    condAndExpr333=condAndExpr();
 
             	    state._fsp--;
@@ -10558,7 +10566,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "condAndExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:383:1: condAndExpr : equalityExpr ( OP_AND equalityExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:392:1: condAndExpr : equalityExpr ( OP_AND equalityExpr )* ;
     public final FanParser.condAndExpr_return condAndExpr() throws RecognitionException {
         FanParser.condAndExpr_return retval = new FanParser.condAndExpr_return();
         retval.start = input.LT(1);
@@ -10575,18 +10583,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 89) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:383:14: ( equalityExpr ( OP_AND equalityExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:383:16: equalityExpr ( OP_AND equalityExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:392:14: ( equalityExpr ( OP_AND equalityExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:392:16: equalityExpr ( OP_AND equalityExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_equalityExpr_in_condAndExpr2613);
+            pushFollow(FOLLOW_equalityExpr_in_condAndExpr2638);
             equalityExpr334=equalityExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, equalityExpr334.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:383:29: ( OP_AND equalityExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:392:29: ( OP_AND equalityExpr )*
             loop100:
             do {
                 int alt100=2;
@@ -10599,14 +10607,14 @@ public class FanParser extends Parser {
 
                 switch (alt100) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:383:30: OP_AND equalityExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:392:30: OP_AND equalityExpr
             	    {
-            	    OP_AND335=(Token)match(input,OP_AND,FOLLOW_OP_AND_in_condAndExpr2616); if (state.failed) return retval;
+            	    OP_AND335=(Token)match(input,OP_AND,FOLLOW_OP_AND_in_condAndExpr2641); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    OP_AND335_tree = (Object)adaptor.create(OP_AND335);
             	    adaptor.addChild(root_0, OP_AND335_tree);
             	    }
-            	    pushFollow(FOLLOW_equalityExpr_in_condAndExpr2619);
+            	    pushFollow(FOLLOW_equalityExpr_in_condAndExpr2644);
             	    equalityExpr336=equalityExpr();
 
             	    state._fsp--;
@@ -10651,7 +10659,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "equalityExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:384:1: equalityExpr : relationalExpr ( CP_EQUALITY relationalExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:393:1: equalityExpr : relationalExpr ( CP_EQUALITY relationalExpr )* ;
     public final FanParser.equalityExpr_return equalityExpr() throws RecognitionException {
         FanParser.equalityExpr_return retval = new FanParser.equalityExpr_return();
         retval.start = input.LT(1);
@@ -10668,18 +10676,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 90) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:384:14: ( relationalExpr ( CP_EQUALITY relationalExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:384:16: relationalExpr ( CP_EQUALITY relationalExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:393:14: ( relationalExpr ( CP_EQUALITY relationalExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:393:16: relationalExpr ( CP_EQUALITY relationalExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_relationalExpr_in_equalityExpr2629);
+            pushFollow(FOLLOW_relationalExpr_in_equalityExpr2654);
             relationalExpr337=relationalExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, relationalExpr337.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:384:31: ( CP_EQUALITY relationalExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:393:31: ( CP_EQUALITY relationalExpr )*
             loop101:
             do {
                 int alt101=2;
@@ -10692,14 +10700,14 @@ public class FanParser extends Parser {
 
                 switch (alt101) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:384:32: CP_EQUALITY relationalExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:393:32: CP_EQUALITY relationalExpr
             	    {
-            	    CP_EQUALITY338=(Token)match(input,CP_EQUALITY,FOLLOW_CP_EQUALITY_in_equalityExpr2632); if (state.failed) return retval;
+            	    CP_EQUALITY338=(Token)match(input,CP_EQUALITY,FOLLOW_CP_EQUALITY_in_equalityExpr2657); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    CP_EQUALITY338_tree = (Object)adaptor.create(CP_EQUALITY338);
             	    adaptor.addChild(root_0, CP_EQUALITY338_tree);
             	    }
-            	    pushFollow(FOLLOW_relationalExpr_in_equalityExpr2634);
+            	    pushFollow(FOLLOW_relationalExpr_in_equalityExpr2659);
             	    relationalExpr339=relationalExpr();
 
             	    state._fsp--;
@@ -10744,7 +10752,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "relationalExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:386:1: relationalExpr : elvisExpr ( typeCheck | compare ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:395:1: relationalExpr : elvisExpr ( typeCheck | compare ) ;
     public final FanParser.relationalExpr_return relationalExpr() throws RecognitionException {
         FanParser.relationalExpr_return retval = new FanParser.relationalExpr_return();
         retval.start = input.LT(1);
@@ -10761,18 +10769,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 91) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:386:16: ( elvisExpr ( typeCheck | compare ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:386:20: elvisExpr ( typeCheck | compare )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:395:16: ( elvisExpr ( typeCheck | compare ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:395:20: elvisExpr ( typeCheck | compare )
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_elvisExpr_in_relationalExpr2647);
+            pushFollow(FOLLOW_elvisExpr_in_relationalExpr2672);
             elvisExpr340=elvisExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, elvisExpr340.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:386:30: ( typeCheck | compare )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:395:30: ( typeCheck | compare )
             int alt102=2;
             int LA102_0 = input.LA(1);
 
@@ -10791,9 +10799,9 @@ public class FanParser extends Parser {
             }
             switch (alt102) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:386:31: typeCheck
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:395:31: typeCheck
                     {
-                    pushFollow(FOLLOW_typeCheck_in_relationalExpr2650);
+                    pushFollow(FOLLOW_typeCheck_in_relationalExpr2675);
                     typeCheck341=typeCheck();
 
                     state._fsp--;
@@ -10803,9 +10811,9 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:386:43: compare
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:395:43: compare
                     {
-                    pushFollow(FOLLOW_compare_in_relationalExpr2654);
+                    pushFollow(FOLLOW_compare_in_relationalExpr2679);
                     compare342=compare();
 
                     state._fsp--;
@@ -10847,7 +10855,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "typeCheck"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:388:1: typeCheck : ( KW_ISNOT | KW_IS | KW_AS ) typeRoot ( ( SP_QMARK )? {...}? '[]' )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:397:1: typeCheck : ( KW_ISNOT | KW_IS | KW_AS ) typeRoot ( ( SP_QMARK )? {...}? '[]' )* ;
     public final FanParser.typeCheck_return typeCheck() throws RecognitionException {
         FanParser.typeCheck_return retval = new FanParser.typeCheck_return();
         retval.start = input.LT(1);
@@ -10866,8 +10874,8 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 92) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:388:11: ( ( KW_ISNOT | KW_IS | KW_AS ) typeRoot ( ( SP_QMARK )? {...}? '[]' )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:388:15: ( KW_ISNOT | KW_IS | KW_AS ) typeRoot ( ( SP_QMARK )? {...}? '[]' )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:397:11: ( ( KW_ISNOT | KW_IS | KW_AS ) typeRoot ( ( SP_QMARK )? {...}? '[]' )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:397:15: ( KW_ISNOT | KW_IS | KW_AS ) typeRoot ( ( SP_QMARK )? {...}? '[]' )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -10883,13 +10891,13 @@ public class FanParser extends Parser {
                 throw mse;
             }
 
-            pushFollow(FOLLOW_typeRoot_in_typeCheck2677);
+            pushFollow(FOLLOW_typeRoot_in_typeCheck2702);
             typeRoot344=typeRoot();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, typeRoot344.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:388:51: ( ( SP_QMARK )? {...}? '[]' )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:397:51: ( ( SP_QMARK )? {...}? '[]' )*
             loop104:
             do {
                 int alt104=2;
@@ -10911,9 +10919,9 @@ public class FanParser extends Parser {
 
                 switch (alt104) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:388:52: ( SP_QMARK )? {...}? '[]'
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:397:52: ( SP_QMARK )? {...}? '[]'
             	    {
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:388:52: ( SP_QMARK )?
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:397:52: ( SP_QMARK )?
             	    int alt103=2;
             	    int LA103_0 = input.LA(1);
 
@@ -10924,7 +10932,7 @@ public class FanParser extends Parser {
             	        case 1 :
             	            // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_QMARK
             	            {
-            	            SP_QMARK345=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_typeCheck2680); if (state.failed) return retval;
+            	            SP_QMARK345=(Token)match(input,SP_QMARK,FOLLOW_SP_QMARK_in_typeCheck2705); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
             	            SP_QMARK345_tree = (Object)adaptor.create(SP_QMARK345);
             	            adaptor.addChild(root_0, SP_QMARK345_tree);
@@ -10939,7 +10947,7 @@ public class FanParser extends Parser {
             	        if (state.backtracking>0) {state.failed=true; return retval;}
             	        throw new FailedPredicateException(input, "typeCheck", "notAfterEol()");
             	    }
-            	    string_literal346=(Token)match(input,LIST_TYPE,FOLLOW_LIST_TYPE_in_typeCheck2685); if (state.failed) return retval;
+            	    string_literal346=(Token)match(input,LIST_TYPE,FOLLOW_LIST_TYPE_in_typeCheck2710); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    string_literal346_tree = (Object)adaptor.create(string_literal346);
             	    adaptor.addChild(root_0, string_literal346_tree);
@@ -10983,7 +10991,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "compare"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:389:1: compare : ( CP_COMPARATORS elvisExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:398:1: compare : ( CP_COMPARATORS elvisExpr )* ;
     public final FanParser.compare_return compare() throws RecognitionException {
         FanParser.compare_return retval = new FanParser.compare_return();
         retval.start = input.LT(1);
@@ -10998,12 +11006,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 93) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:389:10: ( ( CP_COMPARATORS elvisExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:389:14: ( CP_COMPARATORS elvisExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:398:10: ( ( CP_COMPARATORS elvisExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:398:14: ( CP_COMPARATORS elvisExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:389:14: ( CP_COMPARATORS elvisExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:398:14: ( CP_COMPARATORS elvisExpr )*
             loop105:
             do {
                 int alt105=2;
@@ -11016,14 +11024,14 @@ public class FanParser extends Parser {
 
                 switch (alt105) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:389:15: CP_COMPARATORS elvisExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:398:15: CP_COMPARATORS elvisExpr
             	    {
-            	    CP_COMPARATORS347=(Token)match(input,CP_COMPARATORS,FOLLOW_CP_COMPARATORS_in_compare2698); if (state.failed) return retval;
+            	    CP_COMPARATORS347=(Token)match(input,CP_COMPARATORS,FOLLOW_CP_COMPARATORS_in_compare2723); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    CP_COMPARATORS347_tree = (Object)adaptor.create(CP_COMPARATORS347);
             	    adaptor.addChild(root_0, CP_COMPARATORS347_tree);
             	    }
-            	    pushFollow(FOLLOW_elvisExpr_in_compare2700);
+            	    pushFollow(FOLLOW_elvisExpr_in_compare2725);
             	    elvisExpr348=elvisExpr();
 
             	    state._fsp--;
@@ -11068,7 +11076,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "elvisExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:391:1: elvisExpr : rangeExpr ( OP_ELVIS rangeExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:400:1: elvisExpr : rangeExpr ( OP_ELVIS rangeExpr )* ;
     public final FanParser.elvisExpr_return elvisExpr() throws RecognitionException {
         FanParser.elvisExpr_return retval = new FanParser.elvisExpr_return();
         retval.start = input.LT(1);
@@ -11085,18 +11093,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 94) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:391:12: ( rangeExpr ( OP_ELVIS rangeExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:391:14: rangeExpr ( OP_ELVIS rangeExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:400:12: ( rangeExpr ( OP_ELVIS rangeExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:400:14: rangeExpr ( OP_ELVIS rangeExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_rangeExpr_in_elvisExpr2711);
+            pushFollow(FOLLOW_rangeExpr_in_elvisExpr2736);
             rangeExpr349=rangeExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, rangeExpr349.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:391:24: ( OP_ELVIS rangeExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:400:24: ( OP_ELVIS rangeExpr )*
             loop106:
             do {
                 int alt106=2;
@@ -11109,14 +11117,14 @@ public class FanParser extends Parser {
 
                 switch (alt106) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:391:25: OP_ELVIS rangeExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:400:25: OP_ELVIS rangeExpr
             	    {
-            	    OP_ELVIS350=(Token)match(input,OP_ELVIS,FOLLOW_OP_ELVIS_in_elvisExpr2714); if (state.failed) return retval;
+            	    OP_ELVIS350=(Token)match(input,OP_ELVIS,FOLLOW_OP_ELVIS_in_elvisExpr2739); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    OP_ELVIS350_tree = (Object)adaptor.create(OP_ELVIS350);
             	    adaptor.addChild(root_0, OP_ELVIS350_tree);
             	    }
-            	    pushFollow(FOLLOW_rangeExpr_in_elvisExpr2716);
+            	    pushFollow(FOLLOW_rangeExpr_in_elvisExpr2741);
             	    rangeExpr351=rangeExpr();
 
             	    state._fsp--;
@@ -11161,7 +11169,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "rangeExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:392:1: rangeExpr : bitOrExpr ( ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:401:1: rangeExpr : bitOrExpr ( ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr )* ;
     public final FanParser.rangeExpr_return rangeExpr() throws RecognitionException {
         FanParser.rangeExpr_return retval = new FanParser.rangeExpr_return();
         retval.start = input.LT(1);
@@ -11178,18 +11186,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 95) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:392:12: ( bitOrExpr ( ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:392:14: bitOrExpr ( ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:401:12: ( bitOrExpr ( ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:401:14: bitOrExpr ( ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_bitOrExpr_in_rangeExpr2727);
+            pushFollow(FOLLOW_bitOrExpr_in_rangeExpr2752);
             bitOrExpr352=bitOrExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, bitOrExpr352.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:392:24: ( ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:401:24: ( ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr )*
             loop107:
             do {
                 int alt107=2;
@@ -11202,7 +11210,7 @@ public class FanParser extends Parser {
 
                 switch (alt107) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:392:25: ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:401:25: ( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr
             	    {
             	    set353=(Token)input.LT(1);
             	    if ( (input.LA(1)>=OP_RANG_EXCL_OLD && input.LA(1)<=OP_RANGE) ) {
@@ -11216,7 +11224,7 @@ public class FanParser extends Parser {
             	        throw mse;
             	    }
 
-            	    pushFollow(FOLLOW_bitOrExpr_in_rangeExpr2744);
+            	    pushFollow(FOLLOW_bitOrExpr_in_rangeExpr2769);
             	    bitOrExpr354=bitOrExpr();
 
             	    state._fsp--;
@@ -11261,7 +11269,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "bitOrExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:393:1: bitOrExpr : bitAndExpr ( ( OP_BITOR | SP_PIPE ) bitAndExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:402:1: bitOrExpr : bitAndExpr ( ( OP_BITOR | SP_PIPE ) bitAndExpr )* ;
     public final FanParser.bitOrExpr_return bitOrExpr() throws RecognitionException {
         FanParser.bitOrExpr_return retval = new FanParser.bitOrExpr_return();
         retval.start = input.LT(1);
@@ -11278,25 +11286,25 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 96) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:393:12: ( bitAndExpr ( ( OP_BITOR | SP_PIPE ) bitAndExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:393:14: bitAndExpr ( ( OP_BITOR | SP_PIPE ) bitAndExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:402:12: ( bitAndExpr ( ( OP_BITOR | SP_PIPE ) bitAndExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:402:14: bitAndExpr ( ( OP_BITOR | SP_PIPE ) bitAndExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_bitAndExpr_in_bitOrExpr2755);
+            pushFollow(FOLLOW_bitAndExpr_in_bitOrExpr2780);
             bitAndExpr355=bitAndExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, bitAndExpr355.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:393:25: ( ( OP_BITOR | SP_PIPE ) bitAndExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:402:25: ( ( OP_BITOR | SP_PIPE ) bitAndExpr )*
             loop108:
             do {
                 int alt108=2;
                 alt108 = dfa108.predict(input);
                 switch (alt108) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:393:26: ( OP_BITOR | SP_PIPE ) bitAndExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:402:26: ( OP_BITOR | SP_PIPE ) bitAndExpr
             	    {
             	    set356=(Token)input.LT(1);
             	    if ( input.LA(1)==SP_PIPE||input.LA(1)==OP_BITOR ) {
@@ -11310,7 +11318,7 @@ public class FanParser extends Parser {
             	        throw mse;
             	    }
 
-            	    pushFollow(FOLLOW_bitAndExpr_in_bitOrExpr2766);
+            	    pushFollow(FOLLOW_bitAndExpr_in_bitOrExpr2791);
             	    bitAndExpr357=bitAndExpr();
 
             	    state._fsp--;
@@ -11355,7 +11363,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "bitAndExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:394:1: bitAndExpr : shiftExpr ( OP_CURRY shiftExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:403:1: bitAndExpr : shiftExpr ( OP_CURRY shiftExpr )* ;
     public final FanParser.bitAndExpr_return bitAndExpr() throws RecognitionException {
         FanParser.bitAndExpr_return retval = new FanParser.bitAndExpr_return();
         retval.start = input.LT(1);
@@ -11372,32 +11380,32 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 97) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:394:13: ( shiftExpr ( OP_CURRY shiftExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:394:15: shiftExpr ( OP_CURRY shiftExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:403:13: ( shiftExpr ( OP_CURRY shiftExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:403:15: shiftExpr ( OP_CURRY shiftExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_shiftExpr_in_bitAndExpr2777);
+            pushFollow(FOLLOW_shiftExpr_in_bitAndExpr2802);
             shiftExpr358=shiftExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, shiftExpr358.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:394:25: ( OP_CURRY shiftExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:403:25: ( OP_CURRY shiftExpr )*
             loop109:
             do {
                 int alt109=2;
                 alt109 = dfa109.predict(input);
                 switch (alt109) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:394:26: OP_CURRY shiftExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:403:26: OP_CURRY shiftExpr
             	    {
-            	    OP_CURRY359=(Token)match(input,OP_CURRY,FOLLOW_OP_CURRY_in_bitAndExpr2780); if (state.failed) return retval;
+            	    OP_CURRY359=(Token)match(input,OP_CURRY,FOLLOW_OP_CURRY_in_bitAndExpr2805); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
             	    OP_CURRY359_tree = (Object)adaptor.create(OP_CURRY359);
             	    adaptor.addChild(root_0, OP_CURRY359_tree);
             	    }
-            	    pushFollow(FOLLOW_shiftExpr_in_bitAndExpr2782);
+            	    pushFollow(FOLLOW_shiftExpr_in_bitAndExpr2807);
             	    shiftExpr360=shiftExpr();
 
             	    state._fsp--;
@@ -11442,7 +11450,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "shiftExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:395:1: shiftExpr : addExpr ( ( OP_LSHIFT | OP_RSHIFT ) addExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:404:1: shiftExpr : addExpr ( ( OP_LSHIFT | OP_RSHIFT ) addExpr )* ;
     public final FanParser.shiftExpr_return shiftExpr() throws RecognitionException {
         FanParser.shiftExpr_return retval = new FanParser.shiftExpr_return();
         retval.start = input.LT(1);
@@ -11459,18 +11467,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 98) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:395:12: ( addExpr ( ( OP_LSHIFT | OP_RSHIFT ) addExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:395:14: addExpr ( ( OP_LSHIFT | OP_RSHIFT ) addExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:404:12: ( addExpr ( ( OP_LSHIFT | OP_RSHIFT ) addExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:404:14: addExpr ( ( OP_LSHIFT | OP_RSHIFT ) addExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_addExpr_in_shiftExpr2794);
+            pushFollow(FOLLOW_addExpr_in_shiftExpr2819);
             addExpr361=addExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, addExpr361.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:395:22: ( ( OP_LSHIFT | OP_RSHIFT ) addExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:404:22: ( ( OP_LSHIFT | OP_RSHIFT ) addExpr )*
             loop110:
             do {
                 int alt110=2;
@@ -11483,7 +11491,7 @@ public class FanParser extends Parser {
 
                 switch (alt110) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:395:23: ( OP_LSHIFT | OP_RSHIFT ) addExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:404:23: ( OP_LSHIFT | OP_RSHIFT ) addExpr
             	    {
             	    set362=(Token)input.LT(1);
             	    if ( (input.LA(1)>=OP_LSHIFT && input.LA(1)<=OP_RSHIFT) ) {
@@ -11497,7 +11505,7 @@ public class FanParser extends Parser {
             	        throw mse;
             	    }
 
-            	    pushFollow(FOLLOW_addExpr_in_shiftExpr2805);
+            	    pushFollow(FOLLOW_addExpr_in_shiftExpr2830);
             	    addExpr363=addExpr();
 
             	    state._fsp--;
@@ -11542,7 +11550,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "addExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:396:1: addExpr : multExpr ( ( OP_PLUS | OP_MINUS ) multExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:405:1: addExpr : multExpr ( ( OP_PLUS | OP_MINUS ) multExpr )* ;
     public final FanParser.addExpr_return addExpr() throws RecognitionException {
         FanParser.addExpr_return retval = new FanParser.addExpr_return();
         retval.start = input.LT(1);
@@ -11559,25 +11567,25 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 99) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:396:10: ( multExpr ( ( OP_PLUS | OP_MINUS ) multExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:396:12: multExpr ( ( OP_PLUS | OP_MINUS ) multExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:405:10: ( multExpr ( ( OP_PLUS | OP_MINUS ) multExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:405:12: multExpr ( ( OP_PLUS | OP_MINUS ) multExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_multExpr_in_addExpr2816);
+            pushFollow(FOLLOW_multExpr_in_addExpr2841);
             multExpr364=multExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, multExpr364.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:396:21: ( ( OP_PLUS | OP_MINUS ) multExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:405:21: ( ( OP_PLUS | OP_MINUS ) multExpr )*
             loop111:
             do {
                 int alt111=2;
                 alt111 = dfa111.predict(input);
                 switch (alt111) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:396:22: ( OP_PLUS | OP_MINUS ) multExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:405:22: ( OP_PLUS | OP_MINUS ) multExpr
             	    {
             	    set365=(Token)input.LT(1);
             	    if ( (input.LA(1)>=OP_PLUS && input.LA(1)<=OP_MINUS) ) {
@@ -11591,7 +11599,7 @@ public class FanParser extends Parser {
             	        throw mse;
             	    }
 
-            	    pushFollow(FOLLOW_multExpr_in_addExpr2827);
+            	    pushFollow(FOLLOW_multExpr_in_addExpr2852);
             	    multExpr366=multExpr();
 
             	    state._fsp--;
@@ -11636,7 +11644,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "addAppend"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:397:1: addAppend : ( OP_PLUS | OP_MINUS ) parenExpr ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:406:1: addAppend : ( OP_PLUS | OP_MINUS ) parenExpr ;
     public final FanParser.addAppend_return addAppend() throws RecognitionException {
         FanParser.addAppend_return retval = new FanParser.addAppend_return();
         retval.start = input.LT(1);
@@ -11651,8 +11659,8 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 100) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:397:11: ( ( OP_PLUS | OP_MINUS ) parenExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:397:13: ( OP_PLUS | OP_MINUS ) parenExpr
+            // src/net/colar/netbeans/fan/antlr/Fan.g:406:11: ( ( OP_PLUS | OP_MINUS ) parenExpr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:406:13: ( OP_PLUS | OP_MINUS ) parenExpr
             {
             root_0 = (Object)adaptor.nil();
 
@@ -11668,7 +11676,7 @@ public class FanParser extends Parser {
                 throw mse;
             }
 
-            pushFollow(FOLLOW_parenExpr_in_addAppend2845);
+            pushFollow(FOLLOW_parenExpr_in_addAppend2870);
             parenExpr368=parenExpr();
 
             state._fsp--;
@@ -11704,7 +11712,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "multExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:398:1: multExpr : parenExpr ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:407:1: multExpr : parenExpr ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )* ;
     public final FanParser.multExpr_return multExpr() throws RecognitionException {
         FanParser.multExpr_return retval = new FanParser.multExpr_return();
         retval.start = input.LT(1);
@@ -11721,18 +11729,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 101) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:398:11: ( parenExpr ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:398:13: parenExpr ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:407:11: ( parenExpr ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:407:13: parenExpr ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_parenExpr_in_multExpr2853);
+            pushFollow(FOLLOW_parenExpr_in_multExpr2878);
             parenExpr369=parenExpr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parenExpr369.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:398:23: ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:407:23: ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )*
             loop112:
             do {
                 int alt112=2;
@@ -11763,7 +11771,7 @@ public class FanParser extends Parser {
 
                 switch (alt112) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:398:24: ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:407:24: ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr
             	    {
             	    set370=(Token)input.LT(1);
             	    if ( (input.LA(1)>=OP_MULTI && input.LA(1)<=OP_MOD) ) {
@@ -11777,7 +11785,7 @@ public class FanParser extends Parser {
             	        throw mse;
             	    }
 
-            	    pushFollow(FOLLOW_parenExpr_in_multExpr2868);
+            	    pushFollow(FOLLOW_parenExpr_in_multExpr2893);
             	    parenExpr371=parenExpr();
 
             	    state._fsp--;
@@ -11822,7 +11830,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "parenExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:399:1: parenExpr : ( castExpr | groupedExpr | unaryExpr );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:408:1: parenExpr : ( castExpr | groupedExpr | unaryExpr );
     public final FanParser.parenExpr_return parenExpr() throws RecognitionException {
         FanParser.parenExpr_return retval = new FanParser.parenExpr_return();
         retval.start = input.LT(1);
@@ -11839,16 +11847,16 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 102) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:399:12: ( castExpr | groupedExpr | unaryExpr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:408:12: ( castExpr | groupedExpr | unaryExpr )
             int alt113=3;
             alt113 = dfa113.predict(input);
             switch (alt113) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:399:14: castExpr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:408:14: castExpr
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_castExpr_in_parenExpr2879);
+                    pushFollow(FOLLOW_castExpr_in_parenExpr2904);
                     castExpr372=castExpr();
 
                     state._fsp--;
@@ -11858,11 +11866,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:399:25: groupedExpr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:408:25: groupedExpr
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_groupedExpr_in_parenExpr2883);
+                    pushFollow(FOLLOW_groupedExpr_in_parenExpr2908);
                     groupedExpr373=groupedExpr();
 
                     state._fsp--;
@@ -11872,11 +11880,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:399:39: unaryExpr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:408:39: unaryExpr
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_unaryExpr_in_parenExpr2887);
+                    pushFollow(FOLLOW_unaryExpr_in_parenExpr2912);
                     unaryExpr374=unaryExpr();
 
                     state._fsp--;
@@ -11914,7 +11922,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "castExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:401:1: castExpr : {...}? parL type parR parenExpr ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:410:1: castExpr : {...}? parL type parR parenExpr ;
     public final FanParser.castExpr_return castExpr() throws RecognitionException {
         FanParser.castExpr_return retval = new FanParser.castExpr_return();
         retval.start = input.LT(1);
@@ -11933,8 +11941,8 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 103) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:401:11: ({...}? parL type parR parenExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:401:13: {...}? parL type parR parenExpr
+            // src/net/colar/netbeans/fan/antlr/Fan.g:410:11: ({...}? parL type parR parenExpr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:410:13: {...}? parL type parR parenExpr
             {
             root_0 = (Object)adaptor.nil();
 
@@ -11942,25 +11950,25 @@ public class FanParser extends Parser {
                 if (state.backtracking>0) {state.failed=true; return retval;}
                 throw new FailedPredicateException(input, "castExpr", "notAfterEol()");
             }
-            pushFollow(FOLLOW_parL_in_castExpr2898);
+            pushFollow(FOLLOW_parL_in_castExpr2923);
             parL375=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parL375.getTree());
-            pushFollow(FOLLOW_type_in_castExpr2900);
+            pushFollow(FOLLOW_type_in_castExpr2925);
             type376=type();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, type376.getTree());
-            pushFollow(FOLLOW_parR_in_castExpr2902);
+            pushFollow(FOLLOW_parR_in_castExpr2927);
             parR377=parR();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parR377.getTree());
-            pushFollow(FOLLOW_parenExpr_in_castExpr2904);
+            pushFollow(FOLLOW_parenExpr_in_castExpr2929);
             parenExpr378=parenExpr();
 
             state._fsp--;
@@ -11996,7 +12004,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "groupedExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:403:1: groupedExpr : parL expr parR ( termChain )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:412:1: groupedExpr : parL expr parR ( termChain )* ;
     public final FanParser.groupedExpr_return groupedExpr() throws RecognitionException {
         FanParser.groupedExpr_return retval = new FanParser.groupedExpr_return();
         retval.start = input.LT(1);
@@ -12015,30 +12023,30 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 104) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:403:14: ( parL expr parR ( termChain )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:403:16: parL expr parR ( termChain )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:412:14: ( parL expr parR ( termChain )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:412:16: parL expr parR ( termChain )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_parL_in_groupedExpr2913);
+            pushFollow(FOLLOW_parL_in_groupedExpr2938);
             parL379=parL();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parL379.getTree());
-            pushFollow(FOLLOW_expr_in_groupedExpr2915);
+            pushFollow(FOLLOW_expr_in_groupedExpr2940);
             expr380=expr();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, expr380.getTree());
-            pushFollow(FOLLOW_parR_in_groupedExpr2917);
+            pushFollow(FOLLOW_parR_in_groupedExpr2942);
             parR381=parR();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, parR381.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:403:31: ( termChain )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:412:31: ( termChain )*
             loop114:
             do {
                 int alt114=2;
@@ -12047,7 +12055,7 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: termChain
             	    {
-            	    pushFollow(FOLLOW_termChain_in_groupedExpr2919);
+            	    pushFollow(FOLLOW_termChain_in_groupedExpr2944);
             	    termChain382=termChain();
 
             	    state._fsp--;
@@ -12092,7 +12100,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "unaryExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:404:1: unaryExpr : ( prefixExpr | postfixExpr | termExpr );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:413:1: unaryExpr : ( prefixExpr | postfixExpr | termExpr );
     public final FanParser.unaryExpr_return unaryExpr() throws RecognitionException {
         FanParser.unaryExpr_return retval = new FanParser.unaryExpr_return();
         retval.start = input.LT(1);
@@ -12109,16 +12117,16 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 105) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:404:12: ( prefixExpr | postfixExpr | termExpr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:413:12: ( prefixExpr | postfixExpr | termExpr )
             int alt115=3;
             alt115 = dfa115.predict(input);
             switch (alt115) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:404:14: prefixExpr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:413:14: prefixExpr
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_prefixExpr_in_unaryExpr2928);
+                    pushFollow(FOLLOW_prefixExpr_in_unaryExpr2953);
                     prefixExpr383=prefixExpr();
 
                     state._fsp--;
@@ -12128,11 +12136,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:404:27: postfixExpr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:413:27: postfixExpr
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_postfixExpr_in_unaryExpr2932);
+                    pushFollow(FOLLOW_postfixExpr_in_unaryExpr2957);
                     postfixExpr384=postfixExpr();
 
                     state._fsp--;
@@ -12142,11 +12150,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:404:41: termExpr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:413:41: termExpr
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_termExpr_in_unaryExpr2936);
+                    pushFollow(FOLLOW_termExpr_in_unaryExpr2961);
                     termExpr385=termExpr();
 
                     state._fsp--;
@@ -12184,7 +12192,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "prefixExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:405:1: prefixExpr : ( OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS ) parenExpr ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:414:1: prefixExpr : ( OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS ) parenExpr ;
     public final FanParser.prefixExpr_return prefixExpr() throws RecognitionException {
         FanParser.prefixExpr_return retval = new FanParser.prefixExpr_return();
         retval.start = input.LT(1);
@@ -12199,8 +12207,8 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 106) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:405:13: ( ( OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS ) parenExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:405:15: ( OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS ) parenExpr
+            // src/net/colar/netbeans/fan/antlr/Fan.g:414:13: ( ( OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS ) parenExpr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:414:15: ( OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS ) parenExpr
             {
             root_0 = (Object)adaptor.nil();
 
@@ -12216,7 +12224,7 @@ public class FanParser extends Parser {
                 throw mse;
             }
 
-            pushFollow(FOLLOW_parenExpr_in_prefixExpr2972);
+            pushFollow(FOLLOW_parenExpr_in_prefixExpr2997);
             parenExpr387=parenExpr();
 
             state._fsp--;
@@ -12252,7 +12260,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "postfixExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:406:1: postfixExpr : termExpr ( OP_2PLUS | OP_2MINUS ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:415:1: postfixExpr : termExpr ( OP_2PLUS | OP_2MINUS ) ;
     public final FanParser.postfixExpr_return postfixExpr() throws RecognitionException {
         FanParser.postfixExpr_return retval = new FanParser.postfixExpr_return();
         retval.start = input.LT(1);
@@ -12267,12 +12275,12 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 107) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:406:14: ( termExpr ( OP_2PLUS | OP_2MINUS ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:406:16: termExpr ( OP_2PLUS | OP_2MINUS )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:415:14: ( termExpr ( OP_2PLUS | OP_2MINUS ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:415:16: termExpr ( OP_2PLUS | OP_2MINUS )
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_termExpr_in_postfixExpr2981);
+            pushFollow(FOLLOW_termExpr_in_postfixExpr3006);
             termExpr388=termExpr();
 
             state._fsp--;
@@ -12320,7 +12328,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "termExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:407:1: termExpr : termBase ( termChain )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:416:1: termExpr : termBase ( termChain )* -> ^( AST_TERM_EXPR termBase ( termChain )* ) ;
     public final FanParser.termExpr_return termExpr() throws RecognitionException {
         FanParser.termExpr_return retval = new FanParser.termExpr_return();
         retval.start = input.LT(1);
@@ -12332,21 +12340,20 @@ public class FanParser extends Parser {
         FanParser.termChain_return termChain391 = null;
 
 
-
+        RewriteRuleSubtreeStream stream_termBase=new RewriteRuleSubtreeStream(adaptor,"rule termBase");
+        RewriteRuleSubtreeStream stream_termChain=new RewriteRuleSubtreeStream(adaptor,"rule termChain");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 108) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:407:11: ( termBase ( termChain )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:407:13: termBase ( termChain )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:416:11: ( termBase ( termChain )* -> ^( AST_TERM_EXPR termBase ( termChain )* ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:416:13: termBase ( termChain )*
             {
-            root_0 = (Object)adaptor.nil();
-
-            pushFollow(FOLLOW_termBase_in_termExpr2998);
+            pushFollow(FOLLOW_termBase_in_termExpr3023);
             termBase390=termBase();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, termBase390.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:407:22: ( termChain )*
+            if ( state.backtracking==0 ) stream_termBase.add(termBase390.getTree());
+            // src/net/colar/netbeans/fan/antlr/Fan.g:416:22: ( termChain )*
             loop116:
             do {
                 int alt116=2;
@@ -12355,12 +12362,12 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: termChain
             	    {
-            	    pushFollow(FOLLOW_termChain_in_termExpr3000);
+            	    pushFollow(FOLLOW_termChain_in_termExpr3025);
             	    termChain391=termChain();
 
             	    state._fsp--;
             	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, termChain391.getTree());
+            	    if ( state.backtracking==0 ) stream_termChain.add(termChain391.getTree());
 
             	    }
             	    break;
@@ -12371,6 +12378,40 @@ public class FanParser extends Parser {
             } while (true);
 
 
+
+            // AST REWRITE
+            // elements: termChain, termBase
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            if ( state.backtracking==0 ) {
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (Object)adaptor.nil();
+            // 417:4: -> ^( AST_TERM_EXPR termBase ( termChain )* )
+            {
+                // src/net/colar/netbeans/fan/antlr/Fan.g:417:7: ^( AST_TERM_EXPR termBase ( termChain )* )
+                {
+                Object root_1 = (Object)adaptor.nil();
+                root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_TERM_EXPR, "AST_TERM_EXPR"), root_1);
+
+                adaptor.addChild(root_1, stream_termBase.nextTree());
+                // src/net/colar/netbeans/fan/antlr/Fan.g:417:32: ( termChain )*
+                while ( stream_termChain.hasNext() ) {
+                    adaptor.addChild(root_1, stream_termChain.nextTree());
+
+                }
+                stream_termChain.reset();
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;}
             }
 
             retval.stop = input.LT(-1);
@@ -12400,7 +12441,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "termBase"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:409:1: termBase : ( idExprReq | literal | typeBase | id );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:419:1: termBase : ( idExprReq | literal | typeBase | id );
     public final FanParser.termBase_return termBase() throws RecognitionException {
         FanParser.termBase_return retval = new FanParser.termBase_return();
         retval.start = input.LT(1);
@@ -12419,16 +12460,16 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 109) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:409:11: ( idExprReq | literal | typeBase | id )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:419:11: ( idExprReq | literal | typeBase | id )
             int alt117=4;
             alt117 = dfa117.predict(input);
             switch (alt117) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:409:13: idExprReq
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:419:13: idExprReq
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_idExprReq_in_termBase3010);
+                    pushFollow(FOLLOW_idExprReq_in_termBase3049);
                     idExprReq392=idExprReq();
 
                     state._fsp--;
@@ -12438,11 +12479,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:409:25: literal
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:419:25: literal
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_literal_in_termBase3014);
+                    pushFollow(FOLLOW_literal_in_termBase3053);
                     literal393=literal();
 
                     state._fsp--;
@@ -12452,11 +12493,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:409:35: typeBase
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:419:35: typeBase
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_typeBase_in_termBase3018);
+                    pushFollow(FOLLOW_typeBase_in_termBase3057);
                     typeBase394=typeBase();
 
                     state._fsp--;
@@ -12466,11 +12507,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:409:46: id
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:419:46: id
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_id_in_termBase3022);
+                    pushFollow(FOLLOW_id_in_termBase3061);
                     id395=id();
 
                     state._fsp--;
@@ -12508,7 +12549,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "typeBase"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:410:1: typeBase : ( typeLiteral | slotLiteral | namedSuper | staticCall | dsl | closure | simple | ctorBlock );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:420:1: typeBase : ( typeLiteral | slotLiteral | namedSuper | staticCall | dsl | closure | simple | ctorBlock );
     public final FanParser.typeBase_return typeBase() throws RecognitionException {
         FanParser.typeBase_return retval = new FanParser.typeBase_return();
         retval.start = input.LT(1);
@@ -12535,16 +12576,16 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 110) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:410:10: ( typeLiteral | slotLiteral | namedSuper | staticCall | dsl | closure | simple | ctorBlock )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:420:10: ( typeLiteral | slotLiteral | namedSuper | staticCall | dsl | closure | simple | ctorBlock )
             int alt118=8;
             alt118 = dfa118.predict(input);
             switch (alt118) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:410:12: typeLiteral
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:420:12: typeLiteral
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_typeLiteral_in_typeBase3029);
+                    pushFollow(FOLLOW_typeLiteral_in_typeBase3068);
                     typeLiteral396=typeLiteral();
 
                     state._fsp--;
@@ -12554,11 +12595,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:410:26: slotLiteral
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:420:26: slotLiteral
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_slotLiteral_in_typeBase3033);
+                    pushFollow(FOLLOW_slotLiteral_in_typeBase3072);
                     slotLiteral397=slotLiteral();
 
                     state._fsp--;
@@ -12568,11 +12609,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:410:40: namedSuper
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:420:40: namedSuper
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_namedSuper_in_typeBase3037);
+                    pushFollow(FOLLOW_namedSuper_in_typeBase3076);
                     namedSuper398=namedSuper();
 
                     state._fsp--;
@@ -12582,11 +12623,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:410:53: staticCall
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:420:53: staticCall
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_staticCall_in_typeBase3041);
+                    pushFollow(FOLLOW_staticCall_in_typeBase3080);
                     staticCall399=staticCall();
 
                     state._fsp--;
@@ -12596,11 +12637,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:411:19: dsl
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:421:19: dsl
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_dsl_in_typeBase3063);
+                    pushFollow(FOLLOW_dsl_in_typeBase3102);
                     dsl400=dsl();
 
                     state._fsp--;
@@ -12610,11 +12651,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 6 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:411:25: closure
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:421:25: closure
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_closure_in_typeBase3067);
+                    pushFollow(FOLLOW_closure_in_typeBase3106);
                     closure401=closure();
 
                     state._fsp--;
@@ -12624,11 +12665,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 7 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:411:35: simple
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:421:35: simple
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_simple_in_typeBase3071);
+                    pushFollow(FOLLOW_simple_in_typeBase3110);
                     simple402=simple();
 
                     state._fsp--;
@@ -12638,11 +12679,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 8 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:411:44: ctorBlock
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:421:44: ctorBlock
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_ctorBlock_in_typeBase3075);
+                    pushFollow(FOLLOW_ctorBlock_in_typeBase3114);
                     ctorBlock403=ctorBlock();
 
                     state._fsp--;
@@ -12680,7 +12721,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "ctorBlock"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:412:1: ctorBlock : type itBlock ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:422:1: ctorBlock : type itBlock ;
     public final FanParser.ctorBlock_return ctorBlock() throws RecognitionException {
         FanParser.ctorBlock_return retval = new FanParser.ctorBlock_return();
         retval.start = input.LT(1);
@@ -12695,18 +12736,18 @@ public class FanParser extends Parser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 111) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:412:11: ( type itBlock )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:412:13: type itBlock
+            // src/net/colar/netbeans/fan/antlr/Fan.g:422:11: ( type itBlock )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:422:13: type itBlock
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_type_in_ctorBlock3082);
+            pushFollow(FOLLOW_type_in_ctorBlock3121);
             type404=type();
 
             state._fsp--;
             if (state.failed) return retval;
             if ( state.backtracking==0 ) adaptor.addChild(root_0, type404.getTree());
-            pushFollow(FOLLOW_itBlock_in_ctorBlock3084);
+            pushFollow(FOLLOW_itBlock_in_ctorBlock3123);
             itBlock405=itBlock();
 
             state._fsp--;
@@ -12742,7 +12783,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "staticCall"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:413:1: staticCall : type DOT idExpr ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:423:1: staticCall : type DOT idExpr -> ^( AST_STATIC_CALL type idExpr ) ;
     public final FanParser.staticCall_return staticCall() throws RecognitionException {
         FanParser.staticCall_return retval = new FanParser.staticCall_return();
         retval.start = input.LT(1);
@@ -12756,32 +12797,59 @@ public class FanParser extends Parser {
 
 
         Object DOT407_tree=null;
-
+        RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
+        RewriteRuleSubtreeStream stream_idExpr=new RewriteRuleSubtreeStream(adaptor,"rule idExpr");
+        RewriteRuleSubtreeStream stream_type=new RewriteRuleSubtreeStream(adaptor,"rule type");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 112) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:413:12: ( type DOT idExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:413:14: type DOT idExpr
+            // src/net/colar/netbeans/fan/antlr/Fan.g:423:12: ( type DOT idExpr -> ^( AST_STATIC_CALL type idExpr ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:423:14: type DOT idExpr
             {
-            root_0 = (Object)adaptor.nil();
-
-            pushFollow(FOLLOW_type_in_staticCall3091);
+            pushFollow(FOLLOW_type_in_staticCall3130);
             type406=type();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, type406.getTree());
-            DOT407=(Token)match(input,DOT,FOLLOW_DOT_in_staticCall3093); if (state.failed) return retval;
-            if ( state.backtracking==0 ) {
-            DOT407_tree = (Object)adaptor.create(DOT407);
-            adaptor.addChild(root_0, DOT407_tree);
-            }
-            pushFollow(FOLLOW_idExpr_in_staticCall3095);
+            if ( state.backtracking==0 ) stream_type.add(type406.getTree());
+            DOT407=(Token)match(input,DOT,FOLLOW_DOT_in_staticCall3132); if (state.failed) return retval; 
+            if ( state.backtracking==0 ) stream_DOT.add(DOT407);
+
+            pushFollow(FOLLOW_idExpr_in_staticCall3134);
             idExpr408=idExpr();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, idExpr408.getTree());
+            if ( state.backtracking==0 ) stream_idExpr.add(idExpr408.getTree());
 
+
+            // AST REWRITE
+            // elements: type, idExpr
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            if ( state.backtracking==0 ) {
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (Object)adaptor.nil();
+            // 424:5: -> ^( AST_STATIC_CALL type idExpr )
+            {
+                // src/net/colar/netbeans/fan/antlr/Fan.g:424:8: ^( AST_STATIC_CALL type idExpr )
+                {
+                Object root_1 = (Object)adaptor.nil();
+                root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_STATIC_CALL, "AST_STATIC_CALL"), root_1);
+
+                adaptor.addChild(root_1, stream_type.nextTree());
+                adaptor.addChild(root_1, stream_idExpr.nextTree());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;}
             }
 
             retval.stop = input.LT(-1);
@@ -12811,7 +12879,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "termChain"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:415:1: termChain : ( dotCall | dynCall | safeDotCall | safeDynCall | indexExpr | callOp | itBlock );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:426:1: termChain : ( dotCall | dynCall | safeDotCall | safeDynCall | indexExpr | callOp | itBlock | incDotCall | incSafeDotCall );
     public final FanParser.termChain_return termChain() throws RecognitionException {
         FanParser.termChain_return retval = new FanParser.termChain_return();
         retval.start = input.LT(1);
@@ -12832,63 +12900,24 @@ public class FanParser extends Parser {
 
         FanParser.itBlock_return itBlock415 = null;
 
+        FanParser.incDotCall_return incDotCall416 = null;
+
+        FanParser.incSafeDotCall_return incSafeDotCall417 = null;
+
 
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 113) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:415:12: ( dotCall | dynCall | safeDotCall | safeDynCall | indexExpr | callOp | itBlock )
-            int alt119=7;
-            switch ( input.LA(1) ) {
-            case DOT:
-                {
-                alt119=1;
-                }
-                break;
-            case OP_ARROW:
-                {
-                alt119=2;
-                }
-                break;
-            case OP_SAFE_CALL:
-                {
-                alt119=3;
-                }
-                break;
-            case OP_SAFEDYN_CALL:
-                {
-                alt119=4;
-                }
-                break;
-            case SQ_BRACKET_L:
-                {
-                alt119=5;
-                }
-                break;
-            case PAR_L:
-                {
-                alt119=6;
-                }
-                break;
-            case BRACKET_L:
-                {
-                alt119=7;
-                }
-                break;
-            default:
-                if (state.backtracking>0) {state.failed=true; return retval;}
-                NoViableAltException nvae =
-                    new NoViableAltException("", 119, 0, input);
-
-                throw nvae;
-            }
-
+            // src/net/colar/netbeans/fan/antlr/Fan.g:426:12: ( dotCall | dynCall | safeDotCall | safeDynCall | indexExpr | callOp | itBlock | incDotCall | incSafeDotCall )
+            int alt119=9;
+            alt119 = dfa119.predict(input);
             switch (alt119) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:415:14: dotCall
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:426:14: dotCall
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_dotCall_in_termChain3104);
+                    pushFollow(FOLLOW_dotCall_in_termChain3157);
                     dotCall409=dotCall();
 
                     state._fsp--;
@@ -12898,11 +12927,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:415:24: dynCall
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:426:24: dynCall
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_dynCall_in_termChain3108);
+                    pushFollow(FOLLOW_dynCall_in_termChain3161);
                     dynCall410=dynCall();
 
                     state._fsp--;
@@ -12912,11 +12941,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:415:34: safeDotCall
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:426:34: safeDotCall
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_safeDotCall_in_termChain3112);
+                    pushFollow(FOLLOW_safeDotCall_in_termChain3165);
                     safeDotCall411=safeDotCall();
 
                     state._fsp--;
@@ -12926,11 +12955,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:415:48: safeDynCall
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:426:48: safeDynCall
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_safeDynCall_in_termChain3116);
+                    pushFollow(FOLLOW_safeDynCall_in_termChain3169);
                     safeDynCall412=safeDynCall();
 
                     state._fsp--;
@@ -12940,11 +12969,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:416:4: indexExpr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:427:4: indexExpr
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_indexExpr_in_termChain3123);
+                    pushFollow(FOLLOW_indexExpr_in_termChain3176);
                     indexExpr413=indexExpr();
 
                     state._fsp--;
@@ -12954,11 +12983,11 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 6 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:416:16: callOp
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:427:16: callOp
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_callOp_in_termChain3127);
+                    pushFollow(FOLLOW_callOp_in_termChain3180);
                     callOp414=callOp();
 
                     state._fsp--;
@@ -12968,16 +12997,44 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 7 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:416:25: itBlock
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:427:25: itBlock
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_itBlock_in_termChain3131);
+                    pushFollow(FOLLOW_itBlock_in_termChain3184);
                     itBlock415=itBlock();
 
                     state._fsp--;
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) adaptor.addChild(root_0, itBlock415.getTree());
+
+                    }
+                    break;
+                case 8 :
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:427:35: incDotCall
+                    {
+                    root_0 = (Object)adaptor.nil();
+
+                    pushFollow(FOLLOW_incDotCall_in_termChain3188);
+                    incDotCall416=incDotCall();
+
+                    state._fsp--;
+                    if (state.failed) return retval;
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, incDotCall416.getTree());
+
+                    }
+                    break;
+                case 9 :
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:427:48: incSafeDotCall
+                    {
+                    root_0 = (Object)adaptor.nil();
+
+                    pushFollow(FOLLOW_incSafeDotCall_in_termChain3192);
+                    incSafeDotCall417=incSafeDotCall();
+
+                    state._fsp--;
+                    if (state.failed) return retval;
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, incSafeDotCall417.getTree());
 
                     }
                     break;
@@ -13010,36 +13067,36 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "dsl"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:417:1: dsl : simpleType DSL ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:428:1: dsl : simpleType DSL ;
     public final FanParser.dsl_return dsl() throws RecognitionException {
         FanParser.dsl_return retval = new FanParser.dsl_return();
         retval.start = input.LT(1);
         int dsl_StartIndex = input.index();
         Object root_0 = null;
 
-        Token DSL417=null;
-        FanParser.simpleType_return simpleType416 = null;
+        Token DSL419=null;
+        FanParser.simpleType_return simpleType418 = null;
 
 
-        Object DSL417_tree=null;
+        Object DSL419_tree=null;
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 114) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:417:13: ( simpleType DSL )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:417:15: simpleType DSL
+            // src/net/colar/netbeans/fan/antlr/Fan.g:428:13: ( simpleType DSL )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:428:15: simpleType DSL
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_simpleType_in_dsl3146);
-            simpleType416=simpleType();
+            pushFollow(FOLLOW_simpleType_in_dsl3207);
+            simpleType418=simpleType();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, simpleType416.getTree());
-            DSL417=(Token)match(input,DSL,FOLLOW_DSL_in_dsl3148); if (state.failed) return retval;
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, simpleType418.getTree());
+            DSL419=(Token)match(input,DSL,FOLLOW_DSL_in_dsl3209); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            DSL417_tree = (Object)adaptor.create(DSL417);
-            adaptor.addChild(root_0, DSL417_tree);
+            DSL419_tree = (Object)adaptor.create(DSL419);
+            adaptor.addChild(root_0, DSL419_tree);
             }
 
             }
@@ -13065,45 +13122,197 @@ public class FanParser extends Parser {
     }
     // $ANTLR end "dsl"
 
+    public static class incDotCall_return extends ParserRuleReturnScope {
+        Object tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "incDotCall"
+    // src/net/colar/netbeans/fan/antlr/Fan.g:430:1: incDotCall : DOT -> ^( INC_DOTCALL ) ;
+    public final FanParser.incDotCall_return incDotCall() throws RecognitionException {
+        FanParser.incDotCall_return retval = new FanParser.incDotCall_return();
+        retval.start = input.LT(1);
+        int incDotCall_StartIndex = input.index();
+        Object root_0 = null;
+
+        Token DOT420=null;
+
+        Object DOT420_tree=null;
+        RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
+
+        try {
+            if ( state.backtracking>0 && alreadyParsedRule(input, 115) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:430:12: ( DOT -> ^( INC_DOTCALL ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:430:14: DOT
+            {
+            DOT420=(Token)match(input,DOT,FOLLOW_DOT_in_incDotCall3217); if (state.failed) return retval; 
+            if ( state.backtracking==0 ) stream_DOT.add(DOT420);
+
+
+
+            // AST REWRITE
+            // elements: 
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            if ( state.backtracking==0 ) {
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (Object)adaptor.nil();
+            // 431:5: -> ^( INC_DOTCALL )
+            {
+                // src/net/colar/netbeans/fan/antlr/Fan.g:431:8: ^( INC_DOTCALL )
+                {
+                Object root_1 = (Object)adaptor.nil();
+                root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(INC_DOTCALL, "INC_DOTCALL"), root_1);
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;}
+            }
+
+            retval.stop = input.LT(-1);
+
+            if ( state.backtracking==0 ) {
+
+            retval.tree = (Object)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+            }
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (Object)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+            if ( state.backtracking>0 ) { memoize(input, 115, incDotCall_StartIndex); }
+        }
+        return retval;
+    }
+    // $ANTLR end "incDotCall"
+
+    public static class incSafeDotCall_return extends ParserRuleReturnScope {
+        Object tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "incSafeDotCall"
+    // src/net/colar/netbeans/fan/antlr/Fan.g:432:1: incSafeDotCall : OP_SAFE_CALL -> ^( INC_SAFEDOTCALL ) ;
+    public final FanParser.incSafeDotCall_return incSafeDotCall() throws RecognitionException {
+        FanParser.incSafeDotCall_return retval = new FanParser.incSafeDotCall_return();
+        retval.start = input.LT(1);
+        int incSafeDotCall_StartIndex = input.index();
+        Object root_0 = null;
+
+        Token OP_SAFE_CALL421=null;
+
+        Object OP_SAFE_CALL421_tree=null;
+        RewriteRuleTokenStream stream_OP_SAFE_CALL=new RewriteRuleTokenStream(adaptor,"token OP_SAFE_CALL");
+
+        try {
+            if ( state.backtracking>0 && alreadyParsedRule(input, 116) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:432:15: ( OP_SAFE_CALL -> ^( INC_SAFEDOTCALL ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:432:17: OP_SAFE_CALL
+            {
+            OP_SAFE_CALL421=(Token)match(input,OP_SAFE_CALL,FOLLOW_OP_SAFE_CALL_in_incSafeDotCall3233); if (state.failed) return retval; 
+            if ( state.backtracking==0 ) stream_OP_SAFE_CALL.add(OP_SAFE_CALL421);
+
+
+
+            // AST REWRITE
+            // elements: 
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            if ( state.backtracking==0 ) {
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (Object)adaptor.nil();
+            // 433:5: -> ^( INC_SAFEDOTCALL )
+            {
+                // src/net/colar/netbeans/fan/antlr/Fan.g:433:8: ^( INC_SAFEDOTCALL )
+                {
+                Object root_1 = (Object)adaptor.nil();
+                root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(INC_SAFEDOTCALL, "INC_SAFEDOTCALL"), root_1);
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;}
+            }
+
+            retval.stop = input.LT(-1);
+
+            if ( state.backtracking==0 ) {
+
+            retval.tree = (Object)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+            }
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (Object)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+            if ( state.backtracking>0 ) { memoize(input, 116, incSafeDotCall_StartIndex); }
+        }
+        return retval;
+    }
+    // $ANTLR end "incSafeDotCall"
+
     public static class itBlock_return extends ParserRuleReturnScope {
         Object tree;
         public Object getTree() { return tree; }
     };
 
     // $ANTLR start "itBlock"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:420:1: itBlock : bracketL ( stmt ( SP_COMMA )? ( SP_SEMI )? )* bracketR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:436:1: itBlock : bracketL ( stmt ( SP_COMMA )? ( SP_SEMI )? )* bracketR ;
     public final FanParser.itBlock_return itBlock() throws RecognitionException {
         FanParser.itBlock_return retval = new FanParser.itBlock_return();
         retval.start = input.LT(1);
         int itBlock_StartIndex = input.index();
         Object root_0 = null;
 
-        Token SP_COMMA420=null;
-        Token SP_SEMI421=null;
-        FanParser.bracketL_return bracketL418 = null;
+        Token SP_COMMA424=null;
+        Token SP_SEMI425=null;
+        FanParser.bracketL_return bracketL422 = null;
 
-        FanParser.stmt_return stmt419 = null;
+        FanParser.stmt_return stmt423 = null;
 
-        FanParser.bracketR_return bracketR422 = null;
+        FanParser.bracketR_return bracketR426 = null;
 
 
-        Object SP_COMMA420_tree=null;
-        Object SP_SEMI421_tree=null;
+        Object SP_COMMA424_tree=null;
+        Object SP_SEMI425_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 115) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:420:10: ( bracketL ( stmt ( SP_COMMA )? ( SP_SEMI )? )* bracketR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:420:12: bracketL ( stmt ( SP_COMMA )? ( SP_SEMI )? )* bracketR
+            if ( state.backtracking>0 && alreadyParsedRule(input, 117) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:436:10: ( bracketL ( stmt ( SP_COMMA )? ( SP_SEMI )? )* bracketR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:436:12: bracketL ( stmt ( SP_COMMA )? ( SP_SEMI )? )* bracketR
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_bracketL_in_itBlock3158);
-            bracketL418=bracketL();
+            pushFollow(FOLLOW_bracketL_in_itBlock3253);
+            bracketL422=bracketL();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, bracketL418.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:420:21: ( stmt ( SP_COMMA )? ( SP_SEMI )? )*
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, bracketL422.getTree());
+            // src/net/colar/netbeans/fan/antlr/Fan.g:436:21: ( stmt ( SP_COMMA )? ( SP_SEMI )? )*
             loop122:
             do {
                 int alt122=2;
@@ -13116,15 +13325,15 @@ public class FanParser extends Parser {
 
                 switch (alt122) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:420:22: stmt ( SP_COMMA )? ( SP_SEMI )?
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:436:22: stmt ( SP_COMMA )? ( SP_SEMI )?
             	    {
-            	    pushFollow(FOLLOW_stmt_in_itBlock3161);
-            	    stmt419=stmt();
+            	    pushFollow(FOLLOW_stmt_in_itBlock3256);
+            	    stmt423=stmt();
 
             	    state._fsp--;
             	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, stmt419.getTree());
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:420:27: ( SP_COMMA )?
+            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, stmt423.getTree());
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:436:27: ( SP_COMMA )?
             	    int alt120=2;
             	    int LA120_0 = input.LA(1);
 
@@ -13135,10 +13344,10 @@ public class FanParser extends Parser {
             	        case 1 :
             	            // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_COMMA
             	            {
-            	            SP_COMMA420=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_itBlock3163); if (state.failed) return retval;
+            	            SP_COMMA424=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_itBlock3258); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
-            	            SP_COMMA420_tree = (Object)adaptor.create(SP_COMMA420);
-            	            adaptor.addChild(root_0, SP_COMMA420_tree);
+            	            SP_COMMA424_tree = (Object)adaptor.create(SP_COMMA424);
+            	            adaptor.addChild(root_0, SP_COMMA424_tree);
             	            }
 
             	            }
@@ -13146,7 +13355,7 @@ public class FanParser extends Parser {
 
             	    }
 
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:420:37: ( SP_SEMI )?
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:436:37: ( SP_SEMI )?
             	    int alt121=2;
             	    int LA121_0 = input.LA(1);
 
@@ -13157,10 +13366,10 @@ public class FanParser extends Parser {
             	        case 1 :
             	            // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_SEMI
             	            {
-            	            SP_SEMI421=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_itBlock3166); if (state.failed) return retval;
+            	            SP_SEMI425=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_itBlock3261); if (state.failed) return retval;
             	            if ( state.backtracking==0 ) {
-            	            SP_SEMI421_tree = (Object)adaptor.create(SP_SEMI421);
-            	            adaptor.addChild(root_0, SP_SEMI421_tree);
+            	            SP_SEMI425_tree = (Object)adaptor.create(SP_SEMI425);
+            	            adaptor.addChild(root_0, SP_SEMI425_tree);
             	            }
 
             	            }
@@ -13177,12 +13386,12 @@ public class FanParser extends Parser {
                 }
             } while (true);
 
-            pushFollow(FOLLOW_bracketR_in_itBlock3171);
-            bracketR422=bracketR();
+            pushFollow(FOLLOW_bracketR_in_itBlock3266);
+            bracketR426=bracketR();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, bracketR422.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, bracketR426.getTree());
 
             }
 
@@ -13201,7 +13410,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 115, itBlock_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 117, itBlock_StartIndex); }
         }
         return retval;
     }
@@ -13213,38 +13422,63 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "dotCall"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:421:1: dotCall : DOT idExpr ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:437:1: dotCall : DOT idExpr -> ^( AST_DOT_CALL idExpr ) ;
     public final FanParser.dotCall_return dotCall() throws RecognitionException {
         FanParser.dotCall_return retval = new FanParser.dotCall_return();
         retval.start = input.LT(1);
         int dotCall_StartIndex = input.index();
         Object root_0 = null;
 
-        Token DOT423=null;
-        FanParser.idExpr_return idExpr424 = null;
+        Token DOT427=null;
+        FanParser.idExpr_return idExpr428 = null;
 
 
-        Object DOT423_tree=null;
-
+        Object DOT427_tree=null;
+        RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
+        RewriteRuleSubtreeStream stream_idExpr=new RewriteRuleSubtreeStream(adaptor,"rule idExpr");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 116) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:421:10: ( DOT idExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:421:12: DOT idExpr
+            if ( state.backtracking>0 && alreadyParsedRule(input, 118) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:437:10: ( DOT idExpr -> ^( AST_DOT_CALL idExpr ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:437:12: DOT idExpr
             {
-            root_0 = (Object)adaptor.nil();
+            DOT427=(Token)match(input,DOT,FOLLOW_DOT_in_dotCall3274); if (state.failed) return retval; 
+            if ( state.backtracking==0 ) stream_DOT.add(DOT427);
 
-            DOT423=(Token)match(input,DOT,FOLLOW_DOT_in_dotCall3179); if (state.failed) return retval;
-            if ( state.backtracking==0 ) {
-            DOT423_tree = (Object)adaptor.create(DOT423);
-            adaptor.addChild(root_0, DOT423_tree);
-            }
-            pushFollow(FOLLOW_idExpr_in_dotCall3181);
-            idExpr424=idExpr();
+            pushFollow(FOLLOW_idExpr_in_dotCall3276);
+            idExpr428=idExpr();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, idExpr424.getTree());
+            if ( state.backtracking==0 ) stream_idExpr.add(idExpr428.getTree());
 
+
+            // AST REWRITE
+            // elements: idExpr
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            if ( state.backtracking==0 ) {
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (Object)adaptor.nil();
+            // 438:5: -> ^( AST_DOT_CALL idExpr )
+            {
+                // src/net/colar/netbeans/fan/antlr/Fan.g:438:8: ^( AST_DOT_CALL idExpr )
+                {
+                Object root_1 = (Object)adaptor.nil();
+                root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_DOT_CALL, "AST_DOT_CALL"), root_1);
+
+                adaptor.addChild(root_1, stream_idExpr.nextTree());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;}
             }
 
             retval.stop = input.LT(-1);
@@ -13262,7 +13496,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 116, dotCall_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 118, dotCall_StartIndex); }
         }
         return retval;
     }
@@ -13274,154 +13508,32 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "dynCall"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:422:1: dynCall : OP_ARROW idExpr ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:439:1: dynCall : OP_ARROW idExpr ;
     public final FanParser.dynCall_return dynCall() throws RecognitionException {
         FanParser.dynCall_return retval = new FanParser.dynCall_return();
         retval.start = input.LT(1);
         int dynCall_StartIndex = input.index();
         Object root_0 = null;
 
-        Token OP_ARROW425=null;
-        FanParser.idExpr_return idExpr426 = null;
-
-
-        Object OP_ARROW425_tree=null;
-
-        try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 117) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:422:10: ( OP_ARROW idExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:422:12: OP_ARROW idExpr
-            {
-            root_0 = (Object)adaptor.nil();
-
-            OP_ARROW425=(Token)match(input,OP_ARROW,FOLLOW_OP_ARROW_in_dynCall3189); if (state.failed) return retval;
-            if ( state.backtracking==0 ) {
-            OP_ARROW425_tree = (Object)adaptor.create(OP_ARROW425);
-            adaptor.addChild(root_0, OP_ARROW425_tree);
-            }
-            pushFollow(FOLLOW_idExpr_in_dynCall3191);
-            idExpr426=idExpr();
-
-            state._fsp--;
-            if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, idExpr426.getTree());
-
-            }
-
-            retval.stop = input.LT(-1);
-
-            if ( state.backtracking==0 ) {
-
-            retval.tree = (Object)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-            }
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (Object)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-            if ( state.backtracking>0 ) { memoize(input, 117, dynCall_StartIndex); }
-        }
-        return retval;
-    }
-    // $ANTLR end "dynCall"
-
-    public static class safeDotCall_return extends ParserRuleReturnScope {
-        Object tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "safeDotCall"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:423:1: safeDotCall : OP_SAFE_CALL idExpr ;
-    public final FanParser.safeDotCall_return safeDotCall() throws RecognitionException {
-        FanParser.safeDotCall_return retval = new FanParser.safeDotCall_return();
-        retval.start = input.LT(1);
-        int safeDotCall_StartIndex = input.index();
-        Object root_0 = null;
-
-        Token OP_SAFE_CALL427=null;
-        FanParser.idExpr_return idExpr428 = null;
-
-
-        Object OP_SAFE_CALL427_tree=null;
-
-        try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 118) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:423:14: ( OP_SAFE_CALL idExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:423:16: OP_SAFE_CALL idExpr
-            {
-            root_0 = (Object)adaptor.nil();
-
-            OP_SAFE_CALL427=(Token)match(input,OP_SAFE_CALL,FOLLOW_OP_SAFE_CALL_in_safeDotCall3199); if (state.failed) return retval;
-            if ( state.backtracking==0 ) {
-            OP_SAFE_CALL427_tree = (Object)adaptor.create(OP_SAFE_CALL427);
-            adaptor.addChild(root_0, OP_SAFE_CALL427_tree);
-            }
-            pushFollow(FOLLOW_idExpr_in_safeDotCall3201);
-            idExpr428=idExpr();
-
-            state._fsp--;
-            if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, idExpr428.getTree());
-
-            }
-
-            retval.stop = input.LT(-1);
-
-            if ( state.backtracking==0 ) {
-
-            retval.tree = (Object)adaptor.rulePostProcessing(root_0);
-            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
-            }
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-    	retval.tree = (Object)adaptor.errorNode(input, retval.start, input.LT(-1), re);
-
-        }
-        finally {
-            if ( state.backtracking>0 ) { memoize(input, 118, safeDotCall_StartIndex); }
-        }
-        return retval;
-    }
-    // $ANTLR end "safeDotCall"
-
-    public static class safeDynCall_return extends ParserRuleReturnScope {
-        Object tree;
-        public Object getTree() { return tree; }
-    };
-
-    // $ANTLR start "safeDynCall"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:424:1: safeDynCall : OP_SAFEDYN_CALL idExpr ;
-    public final FanParser.safeDynCall_return safeDynCall() throws RecognitionException {
-        FanParser.safeDynCall_return retval = new FanParser.safeDynCall_return();
-        retval.start = input.LT(1);
-        int safeDynCall_StartIndex = input.index();
-        Object root_0 = null;
-
-        Token OP_SAFEDYN_CALL429=null;
+        Token OP_ARROW429=null;
         FanParser.idExpr_return idExpr430 = null;
 
 
-        Object OP_SAFEDYN_CALL429_tree=null;
+        Object OP_ARROW429_tree=null;
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 119) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:424:13: ( OP_SAFEDYN_CALL idExpr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:424:15: OP_SAFEDYN_CALL idExpr
+            // src/net/colar/netbeans/fan/antlr/Fan.g:439:10: ( OP_ARROW idExpr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:439:12: OP_ARROW idExpr
             {
             root_0 = (Object)adaptor.nil();
 
-            OP_SAFEDYN_CALL429=(Token)match(input,OP_SAFEDYN_CALL,FOLLOW_OP_SAFEDYN_CALL_in_safeDynCall3208); if (state.failed) return retval;
+            OP_ARROW429=(Token)match(input,OP_ARROW,FOLLOW_OP_ARROW_in_dynCall3296); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            OP_SAFEDYN_CALL429_tree = (Object)adaptor.create(OP_SAFEDYN_CALL429);
-            adaptor.addChild(root_0, OP_SAFEDYN_CALL429_tree);
+            OP_ARROW429_tree = (Object)adaptor.create(OP_ARROW429);
+            adaptor.addChild(root_0, OP_ARROW429_tree);
             }
-            pushFollow(FOLLOW_idExpr_in_safeDynCall3210);
+            pushFollow(FOLLOW_idExpr_in_dynCall3298);
             idExpr430=idExpr();
 
             state._fsp--;
@@ -13445,62 +13557,135 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 119, safeDynCall_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 119, dynCall_StartIndex); }
         }
         return retval;
     }
-    // $ANTLR end "safeDynCall"
+    // $ANTLR end "dynCall"
 
-    public static class indexExpr_return extends ParserRuleReturnScope {
+    public static class safeDotCall_return extends ParserRuleReturnScope {
         Object tree;
         public Object getTree() { return tree; }
     };
 
-    // $ANTLR start "indexExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:425:1: indexExpr : {...}? sq_bracketL expr sq_bracketR ;
-    public final FanParser.indexExpr_return indexExpr() throws RecognitionException {
-        FanParser.indexExpr_return retval = new FanParser.indexExpr_return();
+    // $ANTLR start "safeDotCall"
+    // src/net/colar/netbeans/fan/antlr/Fan.g:440:1: safeDotCall : OP_SAFE_CALL idExpr -> ^( AST_SAFE_DOT_CALL idExpr ) ;
+    public final FanParser.safeDotCall_return safeDotCall() throws RecognitionException {
+        FanParser.safeDotCall_return retval = new FanParser.safeDotCall_return();
         retval.start = input.LT(1);
-        int indexExpr_StartIndex = input.index();
+        int safeDotCall_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.sq_bracketL_return sq_bracketL431 = null;
-
-        FanParser.expr_return expr432 = null;
-
-        FanParser.sq_bracketR_return sq_bracketR433 = null;
+        Token OP_SAFE_CALL431=null;
+        FanParser.idExpr_return idExpr432 = null;
 
 
-
+        Object OP_SAFE_CALL431_tree=null;
+        RewriteRuleTokenStream stream_OP_SAFE_CALL=new RewriteRuleTokenStream(adaptor,"token OP_SAFE_CALL");
+        RewriteRuleSubtreeStream stream_idExpr=new RewriteRuleSubtreeStream(adaptor,"rule idExpr");
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 120) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:425:12: ({...}? sq_bracketL expr sq_bracketR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:425:14: {...}? sq_bracketL expr sq_bracketR
+            // src/net/colar/netbeans/fan/antlr/Fan.g:440:14: ( OP_SAFE_CALL idExpr -> ^( AST_SAFE_DOT_CALL idExpr ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:440:16: OP_SAFE_CALL idExpr
+            {
+            OP_SAFE_CALL431=(Token)match(input,OP_SAFE_CALL,FOLLOW_OP_SAFE_CALL_in_safeDotCall3306); if (state.failed) return retval; 
+            if ( state.backtracking==0 ) stream_OP_SAFE_CALL.add(OP_SAFE_CALL431);
+
+            pushFollow(FOLLOW_idExpr_in_safeDotCall3308);
+            idExpr432=idExpr();
+
+            state._fsp--;
+            if (state.failed) return retval;
+            if ( state.backtracking==0 ) stream_idExpr.add(idExpr432.getTree());
+
+
+            // AST REWRITE
+            // elements: idExpr
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            if ( state.backtracking==0 ) {
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (Object)adaptor.nil();
+            // 441:5: -> ^( AST_SAFE_DOT_CALL idExpr )
+            {
+                // src/net/colar/netbeans/fan/antlr/Fan.g:441:8: ^( AST_SAFE_DOT_CALL idExpr )
+                {
+                Object root_1 = (Object)adaptor.nil();
+                root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_SAFE_DOT_CALL, "AST_SAFE_DOT_CALL"), root_1);
+
+                adaptor.addChild(root_1, stream_idExpr.nextTree());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;}
+            }
+
+            retval.stop = input.LT(-1);
+
+            if ( state.backtracking==0 ) {
+
+            retval.tree = (Object)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+            }
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (Object)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+            if ( state.backtracking>0 ) { memoize(input, 120, safeDotCall_StartIndex); }
+        }
+        return retval;
+    }
+    // $ANTLR end "safeDotCall"
+
+    public static class safeDynCall_return extends ParserRuleReturnScope {
+        Object tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "safeDynCall"
+    // src/net/colar/netbeans/fan/antlr/Fan.g:442:1: safeDynCall : OP_SAFEDYN_CALL idExpr ;
+    public final FanParser.safeDynCall_return safeDynCall() throws RecognitionException {
+        FanParser.safeDynCall_return retval = new FanParser.safeDynCall_return();
+        retval.start = input.LT(1);
+        int safeDynCall_StartIndex = input.index();
+        Object root_0 = null;
+
+        Token OP_SAFEDYN_CALL433=null;
+        FanParser.idExpr_return idExpr434 = null;
+
+
+        Object OP_SAFEDYN_CALL433_tree=null;
+
+        try {
+            if ( state.backtracking>0 && alreadyParsedRule(input, 121) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:442:13: ( OP_SAFEDYN_CALL idExpr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:442:15: OP_SAFEDYN_CALL idExpr
             {
             root_0 = (Object)adaptor.nil();
 
-            if ( !((notAfterEol())) ) {
-                if (state.backtracking>0) {state.failed=true; return retval;}
-                throw new FailedPredicateException(input, "indexExpr", "notAfterEol()");
+            OP_SAFEDYN_CALL433=(Token)match(input,OP_SAFEDYN_CALL,FOLLOW_OP_SAFEDYN_CALL_in_safeDynCall3327); if (state.failed) return retval;
+            if ( state.backtracking==0 ) {
+            OP_SAFEDYN_CALL433_tree = (Object)adaptor.create(OP_SAFEDYN_CALL433);
+            adaptor.addChild(root_0, OP_SAFEDYN_CALL433_tree);
             }
-            pushFollow(FOLLOW_sq_bracketL_in_indexExpr3220);
-            sq_bracketL431=sq_bracketL();
+            pushFollow(FOLLOW_idExpr_in_safeDynCall3329);
+            idExpr434=idExpr();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketL431.getTree());
-            pushFollow(FOLLOW_expr_in_indexExpr3222);
-            expr432=expr();
-
-            state._fsp--;
-            if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr432.getTree());
-            pushFollow(FOLLOW_sq_bracketR_in_indexExpr3224);
-            sq_bracketR433=sq_bracketR();
-
-            state._fsp--;
-            if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketR433.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, idExpr434.getTree());
 
             }
 
@@ -13519,7 +13704,81 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 120, indexExpr_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 121, safeDynCall_StartIndex); }
+        }
+        return retval;
+    }
+    // $ANTLR end "safeDynCall"
+
+    public static class indexExpr_return extends ParserRuleReturnScope {
+        Object tree;
+        public Object getTree() { return tree; }
+    };
+
+    // $ANTLR start "indexExpr"
+    // src/net/colar/netbeans/fan/antlr/Fan.g:443:1: indexExpr : {...}? sq_bracketL expr sq_bracketR ;
+    public final FanParser.indexExpr_return indexExpr() throws RecognitionException {
+        FanParser.indexExpr_return retval = new FanParser.indexExpr_return();
+        retval.start = input.LT(1);
+        int indexExpr_StartIndex = input.index();
+        Object root_0 = null;
+
+        FanParser.sq_bracketL_return sq_bracketL435 = null;
+
+        FanParser.expr_return expr436 = null;
+
+        FanParser.sq_bracketR_return sq_bracketR437 = null;
+
+
+
+        try {
+            if ( state.backtracking>0 && alreadyParsedRule(input, 122) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:443:12: ({...}? sq_bracketL expr sq_bracketR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:443:14: {...}? sq_bracketL expr sq_bracketR
+            {
+            root_0 = (Object)adaptor.nil();
+
+            if ( !((notAfterEol())) ) {
+                if (state.backtracking>0) {state.failed=true; return retval;}
+                throw new FailedPredicateException(input, "indexExpr", "notAfterEol()");
+            }
+            pushFollow(FOLLOW_sq_bracketL_in_indexExpr3339);
+            sq_bracketL435=sq_bracketL();
+
+            state._fsp--;
+            if (state.failed) return retval;
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketL435.getTree());
+            pushFollow(FOLLOW_expr_in_indexExpr3341);
+            expr436=expr();
+
+            state._fsp--;
+            if (state.failed) return retval;
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr436.getTree());
+            pushFollow(FOLLOW_sq_bracketR_in_indexExpr3343);
+            sq_bracketR437=sq_bracketR();
+
+            state._fsp--;
+            if (state.failed) return retval;
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketR437.getTree());
+
+            }
+
+            retval.stop = input.LT(-1);
+
+            if ( state.backtracking==0 ) {
+
+            retval.tree = (Object)adaptor.rulePostProcessing(root_0);
+            adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
+            }
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+    	retval.tree = (Object)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+
+        }
+        finally {
+            if ( state.backtracking>0 ) { memoize(input, 122, indexExpr_StartIndex); }
         }
         return retval;
     }
@@ -13531,27 +13790,27 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "callOp"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:427:1: callOp : {...}? parL ( args )? parR ( closure )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:445:1: callOp : {...}? parL ( args )? parR ( closure )* ;
     public final FanParser.callOp_return callOp() throws RecognitionException {
         FanParser.callOp_return retval = new FanParser.callOp_return();
         retval.start = input.LT(1);
         int callOp_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.parL_return parL434 = null;
+        FanParser.parL_return parL438 = null;
 
-        FanParser.args_return args435 = null;
+        FanParser.args_return args439 = null;
 
-        FanParser.parR_return parR436 = null;
+        FanParser.parR_return parR440 = null;
 
-        FanParser.closure_return closure437 = null;
+        FanParser.closure_return closure441 = null;
 
 
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 121) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:427:9: ({...}? parL ( args )? parR ( closure )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:427:11: {...}? parL ( args )? parR ( closure )*
+            if ( state.backtracking>0 && alreadyParsedRule(input, 123) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:445:9: ({...}? parL ( args )? parR ( closure )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:445:11: {...}? parL ( args )? parR ( closure )*
             {
             root_0 = (Object)adaptor.nil();
 
@@ -13559,13 +13818,13 @@ public class FanParser extends Parser {
                 if (state.backtracking>0) {state.failed=true; return retval;}
                 throw new FailedPredicateException(input, "callOp", "notAfterEol()");
             }
-            pushFollow(FOLLOW_parL_in_callOp3235);
-            parL434=parL();
+            pushFollow(FOLLOW_parL_in_callOp3354);
+            parL438=parL();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, parL434.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:427:33: ( args )?
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, parL438.getTree());
+            // src/net/colar/netbeans/fan/antlr/Fan.g:445:33: ( args )?
             int alt123=2;
             int LA123_0 = input.LA(1);
 
@@ -13576,25 +13835,25 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: args
                     {
-                    pushFollow(FOLLOW_args_in_callOp3237);
-                    args435=args();
+                    pushFollow(FOLLOW_args_in_callOp3356);
+                    args439=args();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, args435.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, args439.getTree());
 
                     }
                     break;
 
             }
 
-            pushFollow(FOLLOW_parR_in_callOp3241);
-            parR436=parR();
+            pushFollow(FOLLOW_parR_in_callOp3360);
+            parR440=parR();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, parR436.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:427:45: ( closure )*
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, parR440.getTree());
+            // src/net/colar/netbeans/fan/antlr/Fan.g:445:45: ( closure )*
             loop124:
             do {
                 int alt124=2;
@@ -13603,12 +13862,12 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: closure
             	    {
-            	    pushFollow(FOLLOW_closure_in_callOp3243);
-            	    closure437=closure();
+            	    pushFollow(FOLLOW_closure_in_callOp3362);
+            	    closure441=closure();
 
             	    state._fsp--;
             	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, closure437.getTree());
+            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, closure441.getTree());
 
             	    }
             	    break;
@@ -13636,7 +13895,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 121, callOp_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 123, callOp_StartIndex); }
         }
         return retval;
     }
@@ -13648,39 +13907,39 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "closure"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:428:1: closure : funcType multiStmt ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:446:1: closure : funcType multiStmt ;
     public final FanParser.closure_return closure() throws RecognitionException {
         FanParser.closure_return retval = new FanParser.closure_return();
         retval.start = input.LT(1);
         int closure_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.funcType_return funcType438 = null;
+        FanParser.funcType_return funcType442 = null;
 
-        FanParser.multiStmt_return multiStmt439 = null;
+        FanParser.multiStmt_return multiStmt443 = null;
 
 
 
         paraphrase.push("Closure");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 122) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:429:3: ( funcType multiStmt )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:429:7: funcType multiStmt
+            if ( state.backtracking>0 && alreadyParsedRule(input, 124) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:447:3: ( funcType multiStmt )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:447:7: funcType multiStmt
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_funcType_in_closure3265);
-            funcType438=funcType();
+            pushFollow(FOLLOW_funcType_in_closure3384);
+            funcType442=funcType();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, funcType438.getTree());
-            pushFollow(FOLLOW_multiStmt_in_closure3267);
-            multiStmt439=multiStmt();
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, funcType442.getTree());
+            pushFollow(FOLLOW_multiStmt_in_closure3386);
+            multiStmt443=multiStmt();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, multiStmt439.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, multiStmt443.getTree());
 
             }
 
@@ -13702,7 +13961,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 122, closure_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 124, closure_StartIndex); }
         }
         return retval;
     }
@@ -13714,22 +13973,22 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "idExpr"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:431:1: idExpr : ( idExprReq | id );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:449:1: idExpr : ( idExprReq | id );
     public final FanParser.idExpr_return idExpr() throws RecognitionException {
         FanParser.idExpr_return retval = new FanParser.idExpr_return();
         retval.start = input.LT(1);
         int idExpr_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.idExprReq_return idExprReq440 = null;
+        FanParser.idExprReq_return idExprReq444 = null;
 
-        FanParser.id_return id441 = null;
+        FanParser.id_return id445 = null;
 
 
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 123) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:431:10: ( idExprReq | id )
+            if ( state.backtracking>0 && alreadyParsedRule(input, 125) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:449:10: ( idExprReq | id )
             int alt125=2;
             int LA125_0 = input.LA(1);
 
@@ -13739,7 +13998,7 @@ public class FanParser extends Parser {
             else if ( (LA125_0==ID) ) {
                 int LA125_2 = input.LA(2);
 
-                if ( (synpred202_Fan()) ) {
+                if ( (synpred204_Fan()) ) {
                     alt125=1;
                 }
                 else if ( (true) ) {
@@ -13762,30 +14021,30 @@ public class FanParser extends Parser {
             }
             switch (alt125) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:431:12: idExprReq
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:449:12: idExprReq
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_idExprReq_in_idExpr3277);
-                    idExprReq440=idExprReq();
+                    pushFollow(FOLLOW_idExprReq_in_idExpr3396);
+                    idExprReq444=idExprReq();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, idExprReq440.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, idExprReq444.getTree());
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:431:24: id
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:449:24: id
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_id_in_idExpr3281);
-                    id441=id();
+                    pushFollow(FOLLOW_id_in_idExpr3400);
+                    id445=id();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, id441.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, id445.getTree());
 
                     }
                     break;
@@ -13806,7 +14065,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 123, idExpr_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 125, idExpr_StartIndex); }
         }
         return retval;
     }
@@ -13818,22 +14077,22 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "idExprReq"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:433:1: idExprReq : ( field | call );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:451:1: idExprReq : ( field | call );
     public final FanParser.idExprReq_return idExprReq() throws RecognitionException {
         FanParser.idExprReq_return retval = new FanParser.idExprReq_return();
         retval.start = input.LT(1);
         int idExprReq_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.field_return field442 = null;
+        FanParser.field_return field446 = null;
 
-        FanParser.call_return call443 = null;
+        FanParser.call_return call447 = null;
 
 
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 124) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:433:11: ( field | call )
+            if ( state.backtracking>0 && alreadyParsedRule(input, 126) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:451:11: ( field | call )
             int alt126=2;
             int LA126_0 = input.LA(1);
 
@@ -13852,30 +14111,30 @@ public class FanParser extends Parser {
             }
             switch (alt126) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:433:13: field
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:451:13: field
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_field_in_idExprReq3289);
-                    field442=field();
+                    pushFollow(FOLLOW_field_in_idExprReq3408);
+                    field446=field();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, field442.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, field446.getTree());
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:433:21: call
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:451:21: call
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_call_in_idExprReq3293);
-                    call443=call();
+                    pushFollow(FOLLOW_call_in_idExprReq3412);
+                    call447=call();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, call443.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, call447.getTree());
 
                     }
                     break;
@@ -13896,7 +14155,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 124, idExprReq_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 126, idExprReq_StartIndex); }
         }
         return retval;
     }
@@ -13908,35 +14167,35 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "field"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:435:1: field : OP_MULTI ID ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:453:1: field : OP_MULTI ID ;
     public final FanParser.field_return field() throws RecognitionException {
         FanParser.field_return retval = new FanParser.field_return();
         retval.start = input.LT(1);
         int field_StartIndex = input.index();
         Object root_0 = null;
 
-        Token OP_MULTI444=null;
-        Token ID445=null;
+        Token OP_MULTI448=null;
+        Token ID449=null;
 
-        Object OP_MULTI444_tree=null;
-        Object ID445_tree=null;
+        Object OP_MULTI448_tree=null;
+        Object ID449_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 125) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:435:8: ( OP_MULTI ID )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:435:10: OP_MULTI ID
+            if ( state.backtracking>0 && alreadyParsedRule(input, 127) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:453:8: ( OP_MULTI ID )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:453:10: OP_MULTI ID
             {
             root_0 = (Object)adaptor.nil();
 
-            OP_MULTI444=(Token)match(input,OP_MULTI,FOLLOW_OP_MULTI_in_field3302); if (state.failed) return retval;
+            OP_MULTI448=(Token)match(input,OP_MULTI,FOLLOW_OP_MULTI_in_field3421); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            OP_MULTI444_tree = (Object)adaptor.create(OP_MULTI444);
-            adaptor.addChild(root_0, OP_MULTI444_tree);
+            OP_MULTI448_tree = (Object)adaptor.create(OP_MULTI448);
+            adaptor.addChild(root_0, OP_MULTI448_tree);
             }
-            ID445=(Token)match(input,ID,FOLLOW_ID_in_field3304); if (state.failed) return retval;
+            ID449=(Token)match(input,ID,FOLLOW_ID_in_field3423); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            ID445_tree = (Object)adaptor.create(ID445);
-            adaptor.addChild(root_0, ID445_tree);
+            ID449_tree = (Object)adaptor.create(ID449);
+            adaptor.addChild(root_0, ID449_tree);
             }
 
             }
@@ -13956,7 +14215,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 125, field_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 127, field_StartIndex); }
         }
         return retval;
     }
@@ -13968,49 +14227,49 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "call"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:437:1: call : id ( ( callParams closure ) | callParams | closure ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:455:1: call : id ( ( callParams closure ) | callParams | closure ) -> ^( AST_CALL id ) ;
     public final FanParser.call_return call() throws RecognitionException {
         FanParser.call_return retval = new FanParser.call_return();
         retval.start = input.LT(1);
         int call_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.id_return id446 = null;
+        FanParser.id_return id450 = null;
 
-        FanParser.callParams_return callParams447 = null;
+        FanParser.callParams_return callParams451 = null;
 
-        FanParser.closure_return closure448 = null;
+        FanParser.closure_return closure452 = null;
 
-        FanParser.callParams_return callParams449 = null;
+        FanParser.callParams_return callParams453 = null;
 
-        FanParser.closure_return closure450 = null;
+        FanParser.closure_return closure454 = null;
 
 
-
+        RewriteRuleSubtreeStream stream_id=new RewriteRuleSubtreeStream(adaptor,"rule id");
+        RewriteRuleSubtreeStream stream_closure=new RewriteRuleSubtreeStream(adaptor,"rule closure");
+        RewriteRuleSubtreeStream stream_callParams=new RewriteRuleSubtreeStream(adaptor,"rule callParams");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 126) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:437:7: ( id ( ( callParams closure ) | callParams | closure ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:437:9: id ( ( callParams closure ) | callParams | closure )
+            if ( state.backtracking>0 && alreadyParsedRule(input, 128) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:455:7: ( id ( ( callParams closure ) | callParams | closure ) -> ^( AST_CALL id ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:455:9: id ( ( callParams closure ) | callParams | closure )
             {
-            root_0 = (Object)adaptor.nil();
-
-            pushFollow(FOLLOW_id_in_call3315);
-            id446=id();
+            pushFollow(FOLLOW_id_in_call3434);
+            id450=id();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, id446.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:437:12: ( ( callParams closure ) | callParams | closure )
+            if ( state.backtracking==0 ) stream_id.add(id450.getTree());
+            // src/net/colar/netbeans/fan/antlr/Fan.g:455:12: ( ( callParams closure ) | callParams | closure )
             int alt127=3;
             int LA127_0 = input.LA(1);
 
             if ( (LA127_0==PAR_L) ) {
                 int LA127_1 = input.LA(2);
 
-                if ( ((synpred204_Fan()&&(notAfterEol()))) ) {
+                if ( ((synpred206_Fan()&&(notAfterEol()))) ) {
                     alt127=1;
                 }
-                else if ( ((synpred205_Fan()&&(notAfterEol()))) ) {
+                else if ( ((synpred207_Fan()&&(notAfterEol()))) ) {
                     alt127=2;
                 }
                 else {
@@ -14033,23 +14292,23 @@ public class FanParser extends Parser {
             }
             switch (alt127) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:437:13: ( callParams closure )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:455:13: ( callParams closure )
                     {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:437:13: ( callParams closure )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:437:14: callParams closure
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:455:13: ( callParams closure )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:455:14: callParams closure
                     {
-                    pushFollow(FOLLOW_callParams_in_call3319);
-                    callParams447=callParams();
+                    pushFollow(FOLLOW_callParams_in_call3438);
+                    callParams451=callParams();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, callParams447.getTree());
-                    pushFollow(FOLLOW_closure_in_call3321);
-                    closure448=closure();
+                    if ( state.backtracking==0 ) stream_callParams.add(callParams451.getTree());
+                    pushFollow(FOLLOW_closure_in_call3440);
+                    closure452=closure();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, closure448.getTree());
+                    if ( state.backtracking==0 ) stream_closure.add(closure452.getTree());
 
                     }
 
@@ -14057,26 +14316,26 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:437:36: callParams
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:455:36: callParams
                     {
-                    pushFollow(FOLLOW_callParams_in_call3326);
-                    callParams449=callParams();
+                    pushFollow(FOLLOW_callParams_in_call3445);
+                    callParams453=callParams();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, callParams449.getTree());
+                    if ( state.backtracking==0 ) stream_callParams.add(callParams453.getTree());
 
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:437:49: closure
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:455:49: closure
                     {
-                    pushFollow(FOLLOW_closure_in_call3330);
-                    closure450=closure();
+                    pushFollow(FOLLOW_closure_in_call3449);
+                    closure454=closure();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, closure450.getTree());
+                    if ( state.backtracking==0 ) stream_closure.add(closure454.getTree());
 
                     }
                     break;
@@ -14084,6 +14343,34 @@ public class FanParser extends Parser {
             }
 
 
+
+            // AST REWRITE
+            // elements: id
+            // token labels: 
+            // rule labels: retval
+            // token list labels: 
+            // rule list labels: 
+            // wildcard labels: 
+            if ( state.backtracking==0 ) {
+            retval.tree = root_0;
+            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
+
+            root_0 = (Object)adaptor.nil();
+            // 456:4: -> ^( AST_CALL id )
+            {
+                // src/net/colar/netbeans/fan/antlr/Fan.g:456:7: ^( AST_CALL id )
+                {
+                Object root_1 = (Object)adaptor.nil();
+                root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_CALL, "AST_CALL"), root_1);
+
+                adaptor.addChild(root_1, stream_id.nextTree());
+
+                adaptor.addChild(root_0, root_1);
+                }
+
+            }
+
+            retval.tree = root_0;}
             }
 
             retval.stop = input.LT(-1);
@@ -14101,7 +14388,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 126, call_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 128, call_StartIndex); }
         }
         return retval;
     }
@@ -14113,25 +14400,25 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "callParams"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:439:1: callParams : {...}? parL ( args )? parR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:458:1: callParams : {...}? parL ( args )? parR ;
     public final FanParser.callParams_return callParams() throws RecognitionException {
         FanParser.callParams_return retval = new FanParser.callParams_return();
         retval.start = input.LT(1);
         int callParams_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.parL_return parL451 = null;
+        FanParser.parL_return parL455 = null;
 
-        FanParser.args_return args452 = null;
+        FanParser.args_return args456 = null;
 
-        FanParser.parR_return parR453 = null;
+        FanParser.parR_return parR457 = null;
 
 
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 127) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:439:12: ({...}? parL ( args )? parR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:439:14: {...}? parL ( args )? parR
+            if ( state.backtracking>0 && alreadyParsedRule(input, 129) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:458:12: ({...}? parL ( args )? parR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:458:14: {...}? parL ( args )? parR
             {
             root_0 = (Object)adaptor.nil();
 
@@ -14139,13 +14426,13 @@ public class FanParser extends Parser {
                 if (state.backtracking>0) {state.failed=true; return retval;}
                 throw new FailedPredicateException(input, "callParams", "notAfterEol()");
             }
-            pushFollow(FOLLOW_parL_in_callParams3341);
-            parL451=parL();
+            pushFollow(FOLLOW_parL_in_callParams3471);
+            parL455=parL();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, parL451.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:439:36: ( args )?
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, parL455.getTree());
+            // src/net/colar/netbeans/fan/antlr/Fan.g:458:36: ( args )?
             int alt128=2;
             int LA128_0 = input.LA(1);
 
@@ -14156,24 +14443,24 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: args
                     {
-                    pushFollow(FOLLOW_args_in_callParams3343);
-                    args452=args();
+                    pushFollow(FOLLOW_args_in_callParams3473);
+                    args456=args();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, args452.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, args456.getTree());
 
                     }
                     break;
 
             }
 
-            pushFollow(FOLLOW_parR_in_callParams3346);
-            parR453=parR();
+            pushFollow(FOLLOW_parR_in_callParams3476);
+            parR457=parR();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, parR453.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, parR457.getTree());
 
             }
 
@@ -14192,7 +14479,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 127, callParams_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 129, callParams_StartIndex); }
         }
         return retval;
     }
@@ -14204,35 +14491,35 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "args"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:440:1: args : expr ( SP_COMMA expr )* ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:459:1: args : expr ( SP_COMMA expr )* ;
     public final FanParser.args_return args() throws RecognitionException {
         FanParser.args_return retval = new FanParser.args_return();
         retval.start = input.LT(1);
         int args_StartIndex = input.index();
         Object root_0 = null;
 
-        Token SP_COMMA455=null;
-        FanParser.expr_return expr454 = null;
+        Token SP_COMMA459=null;
+        FanParser.expr_return expr458 = null;
 
-        FanParser.expr_return expr456 = null;
+        FanParser.expr_return expr460 = null;
 
 
-        Object SP_COMMA455_tree=null;
+        Object SP_COMMA459_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 128) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:440:8: ( expr ( SP_COMMA expr )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:440:10: expr ( SP_COMMA expr )*
+            if ( state.backtracking>0 && alreadyParsedRule(input, 130) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:459:8: ( expr ( SP_COMMA expr )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:459:10: expr ( SP_COMMA expr )*
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_expr_in_args3355);
-            expr454=expr();
+            pushFollow(FOLLOW_expr_in_args3485);
+            expr458=expr();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr454.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:440:15: ( SP_COMMA expr )*
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr458.getTree());
+            // src/net/colar/netbeans/fan/antlr/Fan.g:459:15: ( SP_COMMA expr )*
             loop129:
             do {
                 int alt129=2;
@@ -14245,19 +14532,19 @@ public class FanParser extends Parser {
 
                 switch (alt129) {
             	case 1 :
-            	    // src/net/colar/netbeans/fan/antlr/Fan.g:440:16: SP_COMMA expr
+            	    // src/net/colar/netbeans/fan/antlr/Fan.g:459:16: SP_COMMA expr
             	    {
-            	    SP_COMMA455=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_args3358); if (state.failed) return retval;
+            	    SP_COMMA459=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_args3488); if (state.failed) return retval;
             	    if ( state.backtracking==0 ) {
-            	    SP_COMMA455_tree = (Object)adaptor.create(SP_COMMA455);
-            	    adaptor.addChild(root_0, SP_COMMA455_tree);
+            	    SP_COMMA459_tree = (Object)adaptor.create(SP_COMMA459);
+            	    adaptor.addChild(root_0, SP_COMMA459_tree);
             	    }
-            	    pushFollow(FOLLOW_expr_in_args3361);
-            	    expr456=expr();
+            	    pushFollow(FOLLOW_expr_in_args3491);
+            	    expr460=expr();
 
             	    state._fsp--;
             	    if (state.failed) return retval;
-            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, expr456.getTree());
+            	    if ( state.backtracking==0 ) adaptor.addChild(root_0, expr460.getTree());
 
             	    }
             	    break;
@@ -14285,7 +14572,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 128, args_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 130, args_StartIndex); }
         }
         return retval;
     }
@@ -14297,282 +14584,282 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "literal"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:442:1: literal : ( KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | URI | number | CHAR | namedSuper | slotLiteral | typeLiteral | list | map | symbLiteral | simple );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:461:1: literal : ( KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | URI | number | CHAR | namedSuper | slotLiteral | typeLiteral | list | map | symbLiteral | simple );
     public final FanParser.literal_return literal() throws RecognitionException {
         FanParser.literal_return retval = new FanParser.literal_return();
         retval.start = input.LT(1);
         int literal_StartIndex = input.index();
         Object root_0 = null;
 
-        Token KW_NULL457=null;
-        Token KW_THIS458=null;
-        Token KW_SUPER459=null;
-        Token KW_IT460=null;
-        Token KW_TRUE461=null;
-        Token KW_FALSE462=null;
-        Token URI464=null;
-        Token CHAR466=null;
-        FanParser.strs_return strs463 = null;
+        Token KW_NULL461=null;
+        Token KW_THIS462=null;
+        Token KW_SUPER463=null;
+        Token KW_IT464=null;
+        Token KW_TRUE465=null;
+        Token KW_FALSE466=null;
+        Token URI468=null;
+        Token CHAR470=null;
+        FanParser.strs_return strs467 = null;
 
-        FanParser.number_return number465 = null;
+        FanParser.number_return number469 = null;
 
-        FanParser.namedSuper_return namedSuper467 = null;
+        FanParser.namedSuper_return namedSuper471 = null;
 
-        FanParser.slotLiteral_return slotLiteral468 = null;
+        FanParser.slotLiteral_return slotLiteral472 = null;
 
-        FanParser.typeLiteral_return typeLiteral469 = null;
+        FanParser.typeLiteral_return typeLiteral473 = null;
 
-        FanParser.list_return list470 = null;
+        FanParser.list_return list474 = null;
 
-        FanParser.map_return map471 = null;
+        FanParser.map_return map475 = null;
 
-        FanParser.symbLiteral_return symbLiteral472 = null;
+        FanParser.symbLiteral_return symbLiteral476 = null;
 
-        FanParser.simple_return simple473 = null;
+        FanParser.simple_return simple477 = null;
 
 
-        Object KW_NULL457_tree=null;
-        Object KW_THIS458_tree=null;
-        Object KW_SUPER459_tree=null;
-        Object KW_IT460_tree=null;
-        Object KW_TRUE461_tree=null;
-        Object KW_FALSE462_tree=null;
-        Object URI464_tree=null;
-        Object CHAR466_tree=null;
+        Object KW_NULL461_tree=null;
+        Object KW_THIS462_tree=null;
+        Object KW_SUPER463_tree=null;
+        Object KW_IT464_tree=null;
+        Object KW_TRUE465_tree=null;
+        Object KW_FALSE466_tree=null;
+        Object URI468_tree=null;
+        Object CHAR470_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 129) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:442:10: ( KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | URI | number | CHAR | namedSuper | slotLiteral | typeLiteral | list | map | symbLiteral | simple )
+            if ( state.backtracking>0 && alreadyParsedRule(input, 131) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:461:10: ( KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | URI | number | CHAR | namedSuper | slotLiteral | typeLiteral | list | map | symbLiteral | simple )
             int alt130=17;
             alt130 = dfa130.predict(input);
             switch (alt130) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:442:12: KW_NULL
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:461:12: KW_NULL
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_NULL457=(Token)match(input,KW_NULL,FOLLOW_KW_NULL_in_literal3372); if (state.failed) return retval;
+                    KW_NULL461=(Token)match(input,KW_NULL,FOLLOW_KW_NULL_in_literal3502); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    KW_NULL457_tree = (Object)adaptor.create(KW_NULL457);
-                    adaptor.addChild(root_0, KW_NULL457_tree);
+                    KW_NULL461_tree = (Object)adaptor.create(KW_NULL461);
+                    adaptor.addChild(root_0, KW_NULL461_tree);
                     }
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:442:22: KW_THIS
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:461:22: KW_THIS
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_THIS458=(Token)match(input,KW_THIS,FOLLOW_KW_THIS_in_literal3376); if (state.failed) return retval;
+                    KW_THIS462=(Token)match(input,KW_THIS,FOLLOW_KW_THIS_in_literal3506); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    KW_THIS458_tree = (Object)adaptor.create(KW_THIS458);
-                    adaptor.addChild(root_0, KW_THIS458_tree);
+                    KW_THIS462_tree = (Object)adaptor.create(KW_THIS462);
+                    adaptor.addChild(root_0, KW_THIS462_tree);
                     }
 
                     }
                     break;
                 case 3 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:442:32: KW_SUPER
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:461:32: KW_SUPER
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_SUPER459=(Token)match(input,KW_SUPER,FOLLOW_KW_SUPER_in_literal3380); if (state.failed) return retval;
+                    KW_SUPER463=(Token)match(input,KW_SUPER,FOLLOW_KW_SUPER_in_literal3510); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    KW_SUPER459_tree = (Object)adaptor.create(KW_SUPER459);
-                    adaptor.addChild(root_0, KW_SUPER459_tree);
+                    KW_SUPER463_tree = (Object)adaptor.create(KW_SUPER463);
+                    adaptor.addChild(root_0, KW_SUPER463_tree);
                     }
 
                     }
                     break;
                 case 4 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:442:43: KW_IT
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:461:43: KW_IT
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_IT460=(Token)match(input,KW_IT,FOLLOW_KW_IT_in_literal3384); if (state.failed) return retval;
+                    KW_IT464=(Token)match(input,KW_IT,FOLLOW_KW_IT_in_literal3514); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    KW_IT460_tree = (Object)adaptor.create(KW_IT460);
-                    adaptor.addChild(root_0, KW_IT460_tree);
+                    KW_IT464_tree = (Object)adaptor.create(KW_IT464);
+                    adaptor.addChild(root_0, KW_IT464_tree);
                     }
 
                     }
                     break;
                 case 5 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:442:51: KW_TRUE
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:461:51: KW_TRUE
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_TRUE461=(Token)match(input,KW_TRUE,FOLLOW_KW_TRUE_in_literal3388); if (state.failed) return retval;
+                    KW_TRUE465=(Token)match(input,KW_TRUE,FOLLOW_KW_TRUE_in_literal3518); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    KW_TRUE461_tree = (Object)adaptor.create(KW_TRUE461);
-                    adaptor.addChild(root_0, KW_TRUE461_tree);
+                    KW_TRUE465_tree = (Object)adaptor.create(KW_TRUE465);
+                    adaptor.addChild(root_0, KW_TRUE465_tree);
                     }
 
                     }
                     break;
                 case 6 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:442:61: KW_FALSE
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:461:61: KW_FALSE
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    KW_FALSE462=(Token)match(input,KW_FALSE,FOLLOW_KW_FALSE_in_literal3392); if (state.failed) return retval;
+                    KW_FALSE466=(Token)match(input,KW_FALSE,FOLLOW_KW_FALSE_in_literal3522); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    KW_FALSE462_tree = (Object)adaptor.create(KW_FALSE462);
-                    adaptor.addChild(root_0, KW_FALSE462_tree);
+                    KW_FALSE466_tree = (Object)adaptor.create(KW_FALSE466);
+                    adaptor.addChild(root_0, KW_FALSE466_tree);
                     }
 
                     }
                     break;
                 case 7 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:442:72: strs
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:461:72: strs
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_strs_in_literal3396);
-                    strs463=strs();
+                    pushFollow(FOLLOW_strs_in_literal3526);
+                    strs467=strs();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, strs463.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, strs467.getTree());
 
                     }
                     break;
                 case 8 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:442:79: URI
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:461:79: URI
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    URI464=(Token)match(input,URI,FOLLOW_URI_in_literal3400); if (state.failed) return retval;
+                    URI468=(Token)match(input,URI,FOLLOW_URI_in_literal3530); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    URI464_tree = (Object)adaptor.create(URI464);
-                    adaptor.addChild(root_0, URI464_tree);
+                    URI468_tree = (Object)adaptor.create(URI468);
+                    adaptor.addChild(root_0, URI468_tree);
                     }
 
                     }
                     break;
                 case 9 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:443:4: number
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:462:4: number
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_number_in_literal3407);
-                    number465=number();
+                    pushFollow(FOLLOW_number_in_literal3537);
+                    number469=number();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, number465.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, number469.getTree());
 
                     }
                     break;
                 case 10 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:443:13: CHAR
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:462:13: CHAR
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    CHAR466=(Token)match(input,CHAR,FOLLOW_CHAR_in_literal3411); if (state.failed) return retval;
+                    CHAR470=(Token)match(input,CHAR,FOLLOW_CHAR_in_literal3541); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    CHAR466_tree = (Object)adaptor.create(CHAR466);
-                    adaptor.addChild(root_0, CHAR466_tree);
+                    CHAR470_tree = (Object)adaptor.create(CHAR470);
+                    adaptor.addChild(root_0, CHAR470_tree);
                     }
 
                     }
                     break;
                 case 11 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:443:20: namedSuper
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:462:20: namedSuper
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_namedSuper_in_literal3415);
-                    namedSuper467=namedSuper();
+                    pushFollow(FOLLOW_namedSuper_in_literal3545);
+                    namedSuper471=namedSuper();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, namedSuper467.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, namedSuper471.getTree());
 
                     }
                     break;
                 case 12 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:444:4: slotLiteral
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:463:4: slotLiteral
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_slotLiteral_in_literal3422);
-                    slotLiteral468=slotLiteral();
+                    pushFollow(FOLLOW_slotLiteral_in_literal3552);
+                    slotLiteral472=slotLiteral();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, slotLiteral468.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, slotLiteral472.getTree());
 
                     }
                     break;
                 case 13 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:444:18: typeLiteral
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:463:18: typeLiteral
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_typeLiteral_in_literal3426);
-                    typeLiteral469=typeLiteral();
+                    pushFollow(FOLLOW_typeLiteral_in_literal3556);
+                    typeLiteral473=typeLiteral();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, typeLiteral469.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, typeLiteral473.getTree());
 
                     }
                     break;
                 case 14 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:444:32: list
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:463:32: list
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_list_in_literal3430);
-                    list470=list();
+                    pushFollow(FOLLOW_list_in_literal3560);
+                    list474=list();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, list470.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, list474.getTree());
 
                     }
                     break;
                 case 15 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:444:39: map
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:463:39: map
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_map_in_literal3434);
-                    map471=map();
+                    pushFollow(FOLLOW_map_in_literal3564);
+                    map475=map();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, map471.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, map475.getTree());
 
                     }
                     break;
                 case 16 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:444:45: symbLiteral
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:463:45: symbLiteral
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_symbLiteral_in_literal3438);
-                    symbLiteral472=symbLiteral();
+                    pushFollow(FOLLOW_symbLiteral_in_literal3568);
+                    symbLiteral476=symbLiteral();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, symbLiteral472.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, symbLiteral476.getTree());
 
                     }
                     break;
                 case 17 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:444:59: simple
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:463:59: simple
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    pushFollow(FOLLOW_simple_in_literal3442);
-                    simple473=simple();
+                    pushFollow(FOLLOW_simple_in_literal3572);
+                    simple477=simple();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, simple473.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, simple477.getTree());
 
                     }
                     break;
@@ -14593,7 +14880,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 129, literal_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 131, literal_StartIndex); }
         }
         return retval;
     }
@@ -14605,7 +14892,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "strs"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:445:1: strs : (qs= QUOTSTR | s= STR ) -> ( ^( AST_STR $s) )? ( ^( AST_STR $qs) )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:464:1: strs : (qs= QUOTSTR | s= STR ) -> ( ^( AST_STR $s) )? ( ^( AST_STR $qs) )? ;
     public final FanParser.strs_return strs() throws RecognitionException {
         FanParser.strs_return retval = new FanParser.strs_return();
         retval.start = input.LT(1);
@@ -14621,11 +14908,11 @@ public class FanParser extends Parser {
         RewriteRuleTokenStream stream_STR=new RewriteRuleTokenStream(adaptor,"token STR");
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 130) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:445:7: ( (qs= QUOTSTR | s= STR ) -> ( ^( AST_STR $s) )? ( ^( AST_STR $qs) )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:445:9: (qs= QUOTSTR | s= STR )
+            if ( state.backtracking>0 && alreadyParsedRule(input, 132) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:464:7: ( (qs= QUOTSTR | s= STR ) -> ( ^( AST_STR $s) )? ( ^( AST_STR $qs) )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:464:9: (qs= QUOTSTR | s= STR )
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:445:9: (qs= QUOTSTR | s= STR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:464:9: (qs= QUOTSTR | s= STR )
             int alt131=2;
             int LA131_0 = input.LA(1);
 
@@ -14644,18 +14931,18 @@ public class FanParser extends Parser {
             }
             switch (alt131) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:445:10: qs= QUOTSTR
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:464:10: qs= QUOTSTR
                     {
-                    qs=(Token)match(input,QUOTSTR,FOLLOW_QUOTSTR_in_strs3453); if (state.failed) return retval; 
+                    qs=(Token)match(input,QUOTSTR,FOLLOW_QUOTSTR_in_strs3583); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_QUOTSTR.add(qs);
 
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:445:23: s= STR
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:464:23: s= STR
                     {
-                    s=(Token)match(input,STR,FOLLOW_STR_in_strs3459); if (state.failed) return retval; 
+                    s=(Token)match(input,STR,FOLLOW_STR_in_strs3589); if (state.failed) return retval; 
                     if ( state.backtracking==0 ) stream_STR.add(s);
 
 
@@ -14680,11 +14967,11 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 446:5: -> ( ^( AST_STR $s) )? ( ^( AST_STR $qs) )?
+            // 465:5: -> ( ^( AST_STR $s) )? ( ^( AST_STR $qs) )?
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:446:8: ( ^( AST_STR $s) )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:465:8: ( ^( AST_STR $s) )?
                 if ( stream_s.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:446:8: ^( AST_STR $s)
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:465:8: ^( AST_STR $s)
                     {
                     Object root_1 = (Object)adaptor.nil();
                     root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_STR, "AST_STR"), root_1);
@@ -14696,9 +14983,9 @@ public class FanParser extends Parser {
 
                 }
                 stream_s.reset();
-                // src/net/colar/netbeans/fan/antlr/Fan.g:446:23: ( ^( AST_STR $qs) )?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:465:23: ( ^( AST_STR $qs) )?
                 if ( stream_qs.hasNext() ) {
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:446:23: ^( AST_STR $qs)
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:465:23: ^( AST_STR $qs)
                     {
                     Object root_1 = (Object)adaptor.nil();
                     root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_STR, "AST_STR"), root_1);
@@ -14731,7 +15018,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 130, strs_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 132, strs_StartIndex); }
         }
         return retval;
     }
@@ -14743,40 +15030,40 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "typeLiteral"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:447:1: typeLiteral : type {...}? OP_POUND ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:466:1: typeLiteral : type {...}? OP_POUND ;
     public final FanParser.typeLiteral_return typeLiteral() throws RecognitionException {
         FanParser.typeLiteral_return retval = new FanParser.typeLiteral_return();
         retval.start = input.LT(1);
         int typeLiteral_StartIndex = input.index();
         Object root_0 = null;
 
-        Token OP_POUND475=null;
-        FanParser.type_return type474 = null;
+        Token OP_POUND479=null;
+        FanParser.type_return type478 = null;
 
 
-        Object OP_POUND475_tree=null;
+        Object OP_POUND479_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 131) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:447:13: ( type {...}? OP_POUND )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:447:17: type {...}? OP_POUND
+            if ( state.backtracking>0 && alreadyParsedRule(input, 133) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:466:13: ( type {...}? OP_POUND )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:466:17: type {...}? OP_POUND
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_type_in_typeLiteral3491);
-            type474=type();
+            pushFollow(FOLLOW_type_in_typeLiteral3621);
+            type478=type();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, type474.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, type478.getTree());
             if ( !((notAfterEol())) ) {
                 if (state.backtracking>0) {state.failed=true; return retval;}
                 throw new FailedPredicateException(input, "typeLiteral", "notAfterEol()");
             }
-            OP_POUND475=(Token)match(input,OP_POUND,FOLLOW_OP_POUND_in_typeLiteral3495); if (state.failed) return retval;
+            OP_POUND479=(Token)match(input,OP_POUND,FOLLOW_OP_POUND_in_typeLiteral3625); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            OP_POUND475_tree = (Object)adaptor.create(OP_POUND475);
-            adaptor.addChild(root_0, OP_POUND475_tree);
+            OP_POUND479_tree = (Object)adaptor.create(OP_POUND479);
+            adaptor.addChild(root_0, OP_POUND479_tree);
             }
 
             }
@@ -14796,7 +15083,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 131, typeLiteral_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 133, typeLiteral_StartIndex); }
         }
         return retval;
     }
@@ -14808,29 +15095,29 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "slotLiteral"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:448:1: slotLiteral : ( type )? OP_POUND {...}? id ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:467:1: slotLiteral : ( type )? OP_POUND {...}? id ;
     public final FanParser.slotLiteral_return slotLiteral() throws RecognitionException {
         FanParser.slotLiteral_return retval = new FanParser.slotLiteral_return();
         retval.start = input.LT(1);
         int slotLiteral_StartIndex = input.index();
         Object root_0 = null;
 
-        Token OP_POUND477=null;
-        FanParser.type_return type476 = null;
+        Token OP_POUND481=null;
+        FanParser.type_return type480 = null;
 
-        FanParser.id_return id478 = null;
+        FanParser.id_return id482 = null;
 
 
-        Object OP_POUND477_tree=null;
+        Object OP_POUND481_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 132) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:448:13: ( ( type )? OP_POUND {...}? id )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:448:17: ( type )? OP_POUND {...}? id
+            if ( state.backtracking>0 && alreadyParsedRule(input, 134) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:467:13: ( ( type )? OP_POUND {...}? id )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:467:17: ( type )? OP_POUND {...}? id
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:448:17: ( type )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:467:17: ( type )?
             int alt132=2;
             int LA132_0 = input.LA(1);
 
@@ -14841,33 +15128,33 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: type
                     {
-                    pushFollow(FOLLOW_type_in_slotLiteral3504);
-                    type476=type();
+                    pushFollow(FOLLOW_type_in_slotLiteral3634);
+                    type480=type();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, type476.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, type480.getTree());
 
                     }
                     break;
 
             }
 
-            OP_POUND477=(Token)match(input,OP_POUND,FOLLOW_OP_POUND_in_slotLiteral3507); if (state.failed) return retval;
+            OP_POUND481=(Token)match(input,OP_POUND,FOLLOW_OP_POUND_in_slotLiteral3637); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            OP_POUND477_tree = (Object)adaptor.create(OP_POUND477);
-            adaptor.addChild(root_0, OP_POUND477_tree);
+            OP_POUND481_tree = (Object)adaptor.create(OP_POUND481);
+            adaptor.addChild(root_0, OP_POUND481_tree);
             }
             if ( !((notAfterEol())) ) {
                 if (state.backtracking>0) {state.failed=true; return retval;}
                 throw new FailedPredicateException(input, "slotLiteral", "notAfterEol()");
             }
-            pushFollow(FOLLOW_id_in_slotLiteral3511);
-            id478=id();
+            pushFollow(FOLLOW_id_in_slotLiteral3641);
+            id482=id();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, id478.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, id482.getTree());
 
             }
 
@@ -14886,7 +15173,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 132, slotLiteral_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 134, slotLiteral_StartIndex); }
         }
         return retval;
     }
@@ -14898,38 +15185,38 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "symbLiteral"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:449:1: symbLiteral : AT ( id SP_COLON SP_COLON )? id ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:468:1: symbLiteral : AT ( id SP_COLON SP_COLON )? id ;
     public final FanParser.symbLiteral_return symbLiteral() throws RecognitionException {
         FanParser.symbLiteral_return retval = new FanParser.symbLiteral_return();
         retval.start = input.LT(1);
         int symbLiteral_StartIndex = input.index();
         Object root_0 = null;
 
-        Token AT479=null;
-        Token SP_COLON481=null;
-        Token SP_COLON482=null;
-        FanParser.id_return id480 = null;
+        Token AT483=null;
+        Token SP_COLON485=null;
+        Token SP_COLON486=null;
+        FanParser.id_return id484 = null;
 
-        FanParser.id_return id483 = null;
+        FanParser.id_return id487 = null;
 
 
-        Object AT479_tree=null;
-        Object SP_COLON481_tree=null;
-        Object SP_COLON482_tree=null;
+        Object AT483_tree=null;
+        Object SP_COLON485_tree=null;
+        Object SP_COLON486_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 133) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:449:13: ( AT ( id SP_COLON SP_COLON )? id )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:449:17: AT ( id SP_COLON SP_COLON )? id
+            if ( state.backtracking>0 && alreadyParsedRule(input, 135) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:468:13: ( AT ( id SP_COLON SP_COLON )? id )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:468:17: AT ( id SP_COLON SP_COLON )? id
             {
             root_0 = (Object)adaptor.nil();
 
-            AT479=(Token)match(input,AT,FOLLOW_AT_in_symbLiteral3520); if (state.failed) return retval;
+            AT483=(Token)match(input,AT,FOLLOW_AT_in_symbLiteral3650); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            AT479_tree = (Object)adaptor.create(AT479);
-            adaptor.addChild(root_0, AT479_tree);
+            AT483_tree = (Object)adaptor.create(AT483);
+            adaptor.addChild(root_0, AT483_tree);
             }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:449:20: ( id SP_COLON SP_COLON )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:468:20: ( id SP_COLON SP_COLON )?
             int alt133=2;
             int LA133_0 = input.LA(1);
 
@@ -14946,23 +15233,23 @@ public class FanParser extends Parser {
             }
             switch (alt133) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:449:21: id SP_COLON SP_COLON
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:468:21: id SP_COLON SP_COLON
                     {
-                    pushFollow(FOLLOW_id_in_symbLiteral3523);
-                    id480=id();
+                    pushFollow(FOLLOW_id_in_symbLiteral3653);
+                    id484=id();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, id480.getTree());
-                    SP_COLON481=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_symbLiteral3525); if (state.failed) return retval;
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, id484.getTree());
+                    SP_COLON485=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_symbLiteral3655); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    SP_COLON481_tree = (Object)adaptor.create(SP_COLON481);
-                    adaptor.addChild(root_0, SP_COLON481_tree);
+                    SP_COLON485_tree = (Object)adaptor.create(SP_COLON485);
+                    adaptor.addChild(root_0, SP_COLON485_tree);
                     }
-                    SP_COLON482=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_symbLiteral3527); if (state.failed) return retval;
+                    SP_COLON486=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_symbLiteral3657); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    SP_COLON482_tree = (Object)adaptor.create(SP_COLON482);
-                    adaptor.addChild(root_0, SP_COLON482_tree);
+                    SP_COLON486_tree = (Object)adaptor.create(SP_COLON486);
+                    adaptor.addChild(root_0, SP_COLON486_tree);
                     }
 
                     }
@@ -14970,12 +15257,12 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_id_in_symbLiteral3531);
-            id483=id();
+            pushFollow(FOLLOW_id_in_symbLiteral3661);
+            id487=id();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, id483.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, id487.getTree());
 
             }
 
@@ -14994,7 +15281,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 133, symbLiteral_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 135, symbLiteral_StartIndex); }
         }
         return retval;
     }
@@ -15006,43 +15293,43 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "namedSuper"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:450:1: namedSuper : simpleType DOT KW_SUPER ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:469:1: namedSuper : simpleType DOT KW_SUPER ;
     public final FanParser.namedSuper_return namedSuper() throws RecognitionException {
         FanParser.namedSuper_return retval = new FanParser.namedSuper_return();
         retval.start = input.LT(1);
         int namedSuper_StartIndex = input.index();
         Object root_0 = null;
 
-        Token DOT485=null;
-        Token KW_SUPER486=null;
-        FanParser.simpleType_return simpleType484 = null;
+        Token DOT489=null;
+        Token KW_SUPER490=null;
+        FanParser.simpleType_return simpleType488 = null;
 
 
-        Object DOT485_tree=null;
-        Object KW_SUPER486_tree=null;
+        Object DOT489_tree=null;
+        Object KW_SUPER490_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 134) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:450:13: ( simpleType DOT KW_SUPER )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:450:15: simpleType DOT KW_SUPER
+            if ( state.backtracking>0 && alreadyParsedRule(input, 136) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:469:13: ( simpleType DOT KW_SUPER )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:469:15: simpleType DOT KW_SUPER
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_simpleType_in_namedSuper3539);
-            simpleType484=simpleType();
+            pushFollow(FOLLOW_simpleType_in_namedSuper3669);
+            simpleType488=simpleType();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, simpleType484.getTree());
-            DOT485=(Token)match(input,DOT,FOLLOW_DOT_in_namedSuper3541); if (state.failed) return retval;
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, simpleType488.getTree());
+            DOT489=(Token)match(input,DOT,FOLLOW_DOT_in_namedSuper3671); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            DOT485_tree = (Object)adaptor.create(DOT485);
-            adaptor.addChild(root_0, DOT485_tree);
+            DOT489_tree = (Object)adaptor.create(DOT489);
+            adaptor.addChild(root_0, DOT489_tree);
             }
-            KW_SUPER486=(Token)match(input,KW_SUPER,FOLLOW_KW_SUPER_in_namedSuper3543); if (state.failed) return retval;
+            KW_SUPER490=(Token)match(input,KW_SUPER,FOLLOW_KW_SUPER_in_namedSuper3673); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            KW_SUPER486_tree = (Object)adaptor.create(KW_SUPER486);
-            adaptor.addChild(root_0, KW_SUPER486_tree);
+            KW_SUPER490_tree = (Object)adaptor.create(KW_SUPER490);
+            adaptor.addChild(root_0, KW_SUPER490_tree);
             }
 
             }
@@ -15062,7 +15349,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 134, namedSuper_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 136, namedSuper_StartIndex); }
         }
         return retval;
     }
@@ -15074,38 +15361,38 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "list"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:451:1: list : ( type {...}?)? sq_bracketL listItems sq_bracketR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:470:1: list : ( type {...}?)? sq_bracketL listItems sq_bracketR ;
     public final FanParser.list_return list() throws RecognitionException {
         FanParser.list_return retval = new FanParser.list_return();
         retval.start = input.LT(1);
         int list_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.type_return type487 = null;
+        FanParser.type_return type491 = null;
 
-        FanParser.sq_bracketL_return sq_bracketL488 = null;
+        FanParser.sq_bracketL_return sq_bracketL492 = null;
 
-        FanParser.listItems_return listItems489 = null;
+        FanParser.listItems_return listItems493 = null;
 
-        FanParser.sq_bracketR_return sq_bracketR490 = null;
+        FanParser.sq_bracketR_return sq_bracketR494 = null;
 
 
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 135) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:451:8: ( ( type {...}?)? sq_bracketL listItems sq_bracketR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:451:10: ( type {...}?)? sq_bracketL listItems sq_bracketR
+            if ( state.backtracking>0 && alreadyParsedRule(input, 137) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:470:8: ( ( type {...}?)? sq_bracketL listItems sq_bracketR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:470:10: ( type {...}?)? sq_bracketL listItems sq_bracketR
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:451:10: ( type {...}?)?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:470:10: ( type {...}?)?
             int alt134=2;
             int LA134_0 = input.LA(1);
 
             if ( (LA134_0==SQ_BRACKET_L) ) {
                 int LA134_1 = input.LA(2);
 
-                if ( (synpred227_Fan()) ) {
+                if ( (synpred229_Fan()) ) {
                     alt134=1;
                 }
             }
@@ -15114,14 +15401,14 @@ public class FanParser extends Parser {
             }
             switch (alt134) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:451:11: type {...}?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:470:11: type {...}?
                     {
-                    pushFollow(FOLLOW_type_in_list3553);
-                    type487=type();
+                    pushFollow(FOLLOW_type_in_list3683);
+                    type491=type();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, type487.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, type491.getTree());
                     if ( !((notAfterEol())) ) {
                         if (state.backtracking>0) {state.failed=true; return retval;}
                         throw new FailedPredicateException(input, "list", "notAfterEol()");
@@ -15132,24 +15419,24 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_sq_bracketL_in_list3559);
-            sq_bracketL488=sq_bracketL();
+            pushFollow(FOLLOW_sq_bracketL_in_list3689);
+            sq_bracketL492=sq_bracketL();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketL488.getTree());
-            pushFollow(FOLLOW_listItems_in_list3561);
-            listItems489=listItems();
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketL492.getTree());
+            pushFollow(FOLLOW_listItems_in_list3691);
+            listItems493=listItems();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, listItems489.getTree());
-            pushFollow(FOLLOW_sq_bracketR_in_list3563);
-            sq_bracketR490=sq_bracketR();
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, listItems493.getTree());
+            pushFollow(FOLLOW_sq_bracketR_in_list3693);
+            sq_bracketR494=sq_bracketR();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketR490.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketR494.getTree());
 
             }
 
@@ -15168,7 +15455,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 135, list_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 137, list_StartIndex); }
         }
         return retval;
     }
@@ -15180,28 +15467,28 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "listItems"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:452:1: listItems : ( ( expr ( SP_COMMA expr )* ( SP_COMMA )? ) | SP_COMMA );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:471:1: listItems : ( ( expr ( SP_COMMA expr )* ( SP_COMMA )? ) | SP_COMMA );
     public final FanParser.listItems_return listItems() throws RecognitionException {
         FanParser.listItems_return retval = new FanParser.listItems_return();
         retval.start = input.LT(1);
         int listItems_StartIndex = input.index();
         Object root_0 = null;
 
-        Token SP_COMMA492=null;
-        Token SP_COMMA494=null;
-        Token SP_COMMA495=null;
-        FanParser.expr_return expr491 = null;
+        Token SP_COMMA496=null;
+        Token SP_COMMA498=null;
+        Token SP_COMMA499=null;
+        FanParser.expr_return expr495 = null;
 
-        FanParser.expr_return expr493 = null;
+        FanParser.expr_return expr497 = null;
 
 
-        Object SP_COMMA492_tree=null;
-        Object SP_COMMA494_tree=null;
-        Object SP_COMMA495_tree=null;
+        Object SP_COMMA496_tree=null;
+        Object SP_COMMA498_tree=null;
+        Object SP_COMMA499_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 136) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:452:12: ( ( expr ( SP_COMMA expr )* ( SP_COMMA )? ) | SP_COMMA )
+            if ( state.backtracking>0 && alreadyParsedRule(input, 138) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:471:12: ( ( expr ( SP_COMMA expr )* ( SP_COMMA )? ) | SP_COMMA )
             int alt137=2;
             int LA137_0 = input.LA(1);
 
@@ -15220,20 +15507,20 @@ public class FanParser extends Parser {
             }
             switch (alt137) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:452:14: ( expr ( SP_COMMA expr )* ( SP_COMMA )? )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:471:14: ( expr ( SP_COMMA expr )* ( SP_COMMA )? )
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:452:14: ( expr ( SP_COMMA expr )* ( SP_COMMA )? )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:452:15: expr ( SP_COMMA expr )* ( SP_COMMA )?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:471:14: ( expr ( SP_COMMA expr )* ( SP_COMMA )? )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:471:15: expr ( SP_COMMA expr )* ( SP_COMMA )?
                     {
-                    pushFollow(FOLLOW_expr_in_listItems3572);
-                    expr491=expr();
+                    pushFollow(FOLLOW_expr_in_listItems3702);
+                    expr495=expr();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, expr491.getTree());
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:452:20: ( SP_COMMA expr )*
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, expr495.getTree());
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:471:20: ( SP_COMMA expr )*
                     loop135:
                     do {
                         int alt135=2;
@@ -15252,19 +15539,19 @@ public class FanParser extends Parser {
 
                         switch (alt135) {
                     	case 1 :
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:452:21: SP_COMMA expr
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:471:21: SP_COMMA expr
                     	    {
-                    	    SP_COMMA492=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_listItems3575); if (state.failed) return retval;
+                    	    SP_COMMA496=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_listItems3705); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
-                    	    SP_COMMA492_tree = (Object)adaptor.create(SP_COMMA492);
-                    	    adaptor.addChild(root_0, SP_COMMA492_tree);
+                    	    SP_COMMA496_tree = (Object)adaptor.create(SP_COMMA496);
+                    	    adaptor.addChild(root_0, SP_COMMA496_tree);
                     	    }
-                    	    pushFollow(FOLLOW_expr_in_listItems3577);
-                    	    expr493=expr();
+                    	    pushFollow(FOLLOW_expr_in_listItems3707);
+                    	    expr497=expr();
 
                     	    state._fsp--;
                     	    if (state.failed) return retval;
-                    	    if ( state.backtracking==0 ) adaptor.addChild(root_0, expr493.getTree());
+                    	    if ( state.backtracking==0 ) adaptor.addChild(root_0, expr497.getTree());
 
                     	    }
                     	    break;
@@ -15274,7 +15561,7 @@ public class FanParser extends Parser {
                         }
                     } while (true);
 
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:452:38: ( SP_COMMA )?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:471:38: ( SP_COMMA )?
                     int alt136=2;
                     int LA136_0 = input.LA(1);
 
@@ -15285,10 +15572,10 @@ public class FanParser extends Parser {
                         case 1 :
                             // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_COMMA
                             {
-                            SP_COMMA494=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_listItems3582); if (state.failed) return retval;
+                            SP_COMMA498=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_listItems3712); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
-                            SP_COMMA494_tree = (Object)adaptor.create(SP_COMMA494);
-                            adaptor.addChild(root_0, SP_COMMA494_tree);
+                            SP_COMMA498_tree = (Object)adaptor.create(SP_COMMA498);
+                            adaptor.addChild(root_0, SP_COMMA498_tree);
                             }
 
                             }
@@ -15303,14 +15590,14 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:452:51: SP_COMMA
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:471:51: SP_COMMA
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    SP_COMMA495=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_listItems3588); if (state.failed) return retval;
+                    SP_COMMA499=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_listItems3718); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    SP_COMMA495_tree = (Object)adaptor.create(SP_COMMA495);
-                    adaptor.addChild(root_0, SP_COMMA495_tree);
+                    SP_COMMA499_tree = (Object)adaptor.create(SP_COMMA499);
+                    adaptor.addChild(root_0, SP_COMMA499_tree);
                     }
 
                     }
@@ -15332,7 +15619,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 136, listItems_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 138, listItems_StartIndex); }
         }
         return retval;
     }
@@ -15344,38 +15631,38 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "map"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:453:1: map : ( mapType {...}?)? sq_bracketL mapItems sq_bracketR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:472:1: map : ( mapType {...}?)? sq_bracketL mapItems sq_bracketR ;
     public final FanParser.map_return map() throws RecognitionException {
         FanParser.map_return retval = new FanParser.map_return();
         retval.start = input.LT(1);
         int map_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.mapType_return mapType496 = null;
+        FanParser.mapType_return mapType500 = null;
 
-        FanParser.sq_bracketL_return sq_bracketL497 = null;
+        FanParser.sq_bracketL_return sq_bracketL501 = null;
 
-        FanParser.mapItems_return mapItems498 = null;
+        FanParser.mapItems_return mapItems502 = null;
 
-        FanParser.sq_bracketR_return sq_bracketR499 = null;
+        FanParser.sq_bracketR_return sq_bracketR503 = null;
 
 
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 137) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:453:7: ( ( mapType {...}?)? sq_bracketL mapItems sq_bracketR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:453:9: ( mapType {...}?)? sq_bracketL mapItems sq_bracketR
+            if ( state.backtracking>0 && alreadyParsedRule(input, 139) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:472:7: ( ( mapType {...}?)? sq_bracketL mapItems sq_bracketR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:472:9: ( mapType {...}?)? sq_bracketL mapItems sq_bracketR
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:453:9: ( mapType {...}?)?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:472:9: ( mapType {...}?)?
             int alt138=2;
             int LA138_0 = input.LA(1);
 
             if ( (LA138_0==SQ_BRACKET_L) ) {
                 int LA138_1 = input.LA(2);
 
-                if ( (synpred231_Fan()) ) {
+                if ( (synpred233_Fan()) ) {
                     alt138=1;
                 }
             }
@@ -15384,14 +15671,14 @@ public class FanParser extends Parser {
             }
             switch (alt138) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:453:10: mapType {...}?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:472:10: mapType {...}?
                     {
-                    pushFollow(FOLLOW_mapType_in_map3598);
-                    mapType496=mapType();
+                    pushFollow(FOLLOW_mapType_in_map3728);
+                    mapType500=mapType();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, mapType496.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, mapType500.getTree());
                     if ( !((notAfterEol())) ) {
                         if (state.backtracking>0) {state.failed=true; return retval;}
                         throw new FailedPredicateException(input, "map", "notAfterEol()");
@@ -15402,24 +15689,24 @@ public class FanParser extends Parser {
 
             }
 
-            pushFollow(FOLLOW_sq_bracketL_in_map3604);
-            sq_bracketL497=sq_bracketL();
+            pushFollow(FOLLOW_sq_bracketL_in_map3734);
+            sq_bracketL501=sq_bracketL();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketL497.getTree());
-            pushFollow(FOLLOW_mapItems_in_map3606);
-            mapItems498=mapItems();
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketL501.getTree());
+            pushFollow(FOLLOW_mapItems_in_map3736);
+            mapItems502=mapItems();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, mapItems498.getTree());
-            pushFollow(FOLLOW_sq_bracketR_in_map3608);
-            sq_bracketR499=sq_bracketR();
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, mapItems502.getTree());
+            pushFollow(FOLLOW_sq_bracketR_in_map3738);
+            sq_bracketR503=sq_bracketR();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketR499.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, sq_bracketR503.getTree());
 
             }
 
@@ -15438,7 +15725,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 137, map_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 139, map_StartIndex); }
         }
         return retval;
     }
@@ -15450,28 +15737,28 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "mapItems"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:454:1: mapItems : ( ( mapPair ( SP_COMMA mapPair )* ( SP_COMMA )? ) | SP_COLON );
+    // src/net/colar/netbeans/fan/antlr/Fan.g:473:1: mapItems : ( ( mapPair ( SP_COMMA mapPair )* ( SP_COMMA )? ) | SP_COLON );
     public final FanParser.mapItems_return mapItems() throws RecognitionException {
         FanParser.mapItems_return retval = new FanParser.mapItems_return();
         retval.start = input.LT(1);
         int mapItems_StartIndex = input.index();
         Object root_0 = null;
 
-        Token SP_COMMA501=null;
-        Token SP_COMMA503=null;
-        Token SP_COLON504=null;
-        FanParser.mapPair_return mapPair500 = null;
+        Token SP_COMMA505=null;
+        Token SP_COMMA507=null;
+        Token SP_COLON508=null;
+        FanParser.mapPair_return mapPair504 = null;
 
-        FanParser.mapPair_return mapPair502 = null;
+        FanParser.mapPair_return mapPair506 = null;
 
 
-        Object SP_COMMA501_tree=null;
-        Object SP_COMMA503_tree=null;
-        Object SP_COLON504_tree=null;
+        Object SP_COMMA505_tree=null;
+        Object SP_COMMA507_tree=null;
+        Object SP_COLON508_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 138) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:454:11: ( ( mapPair ( SP_COMMA mapPair )* ( SP_COMMA )? ) | SP_COLON )
+            if ( state.backtracking>0 && alreadyParsedRule(input, 140) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:473:11: ( ( mapPair ( SP_COMMA mapPair )* ( SP_COMMA )? ) | SP_COLON )
             int alt141=2;
             int LA141_0 = input.LA(1);
 
@@ -15490,20 +15777,20 @@ public class FanParser extends Parser {
             }
             switch (alt141) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:454:13: ( mapPair ( SP_COMMA mapPair )* ( SP_COMMA )? )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:473:13: ( mapPair ( SP_COMMA mapPair )* ( SP_COMMA )? )
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:454:13: ( mapPair ( SP_COMMA mapPair )* ( SP_COMMA )? )
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:454:14: mapPair ( SP_COMMA mapPair )* ( SP_COMMA )?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:473:13: ( mapPair ( SP_COMMA mapPair )* ( SP_COMMA )? )
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:473:14: mapPair ( SP_COMMA mapPair )* ( SP_COMMA )?
                     {
-                    pushFollow(FOLLOW_mapPair_in_mapItems3617);
-                    mapPair500=mapPair();
+                    pushFollow(FOLLOW_mapPair_in_mapItems3747);
+                    mapPair504=mapPair();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, mapPair500.getTree());
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:454:22: ( SP_COMMA mapPair )*
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, mapPair504.getTree());
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:473:22: ( SP_COMMA mapPair )*
                     loop139:
                     do {
                         int alt139=2;
@@ -15522,19 +15809,19 @@ public class FanParser extends Parser {
 
                         switch (alt139) {
                     	case 1 :
-                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:454:23: SP_COMMA mapPair
+                    	    // src/net/colar/netbeans/fan/antlr/Fan.g:473:23: SP_COMMA mapPair
                     	    {
-                    	    SP_COMMA501=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_mapItems3620); if (state.failed) return retval;
+                    	    SP_COMMA505=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_mapItems3750); if (state.failed) return retval;
                     	    if ( state.backtracking==0 ) {
-                    	    SP_COMMA501_tree = (Object)adaptor.create(SP_COMMA501);
-                    	    adaptor.addChild(root_0, SP_COMMA501_tree);
+                    	    SP_COMMA505_tree = (Object)adaptor.create(SP_COMMA505);
+                    	    adaptor.addChild(root_0, SP_COMMA505_tree);
                     	    }
-                    	    pushFollow(FOLLOW_mapPair_in_mapItems3622);
-                    	    mapPair502=mapPair();
+                    	    pushFollow(FOLLOW_mapPair_in_mapItems3752);
+                    	    mapPair506=mapPair();
 
                     	    state._fsp--;
                     	    if (state.failed) return retval;
-                    	    if ( state.backtracking==0 ) adaptor.addChild(root_0, mapPair502.getTree());
+                    	    if ( state.backtracking==0 ) adaptor.addChild(root_0, mapPair506.getTree());
 
                     	    }
                     	    break;
@@ -15544,7 +15831,7 @@ public class FanParser extends Parser {
                         }
                     } while (true);
 
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:454:42: ( SP_COMMA )?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:473:42: ( SP_COMMA )?
                     int alt140=2;
                     int LA140_0 = input.LA(1);
 
@@ -15555,10 +15842,10 @@ public class FanParser extends Parser {
                         case 1 :
                             // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_COMMA
                             {
-                            SP_COMMA503=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_mapItems3626); if (state.failed) return retval;
+                            SP_COMMA507=(Token)match(input,SP_COMMA,FOLLOW_SP_COMMA_in_mapItems3756); if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
-                            SP_COMMA503_tree = (Object)adaptor.create(SP_COMMA503);
-                            adaptor.addChild(root_0, SP_COMMA503_tree);
+                            SP_COMMA507_tree = (Object)adaptor.create(SP_COMMA507);
+                            adaptor.addChild(root_0, SP_COMMA507_tree);
                             }
 
                             }
@@ -15573,14 +15860,14 @@ public class FanParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:454:55: SP_COLON
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:473:55: SP_COLON
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    SP_COLON504=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_mapItems3632); if (state.failed) return retval;
+                    SP_COLON508=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_mapItems3762); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    SP_COLON504_tree = (Object)adaptor.create(SP_COLON504);
-                    adaptor.addChild(root_0, SP_COLON504_tree);
+                    SP_COLON508_tree = (Object)adaptor.create(SP_COLON508);
+                    adaptor.addChild(root_0, SP_COLON508_tree);
                     }
 
                     }
@@ -15602,7 +15889,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 138, mapItems_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 140, mapItems_StartIndex); }
         }
         return retval;
     }
@@ -15614,45 +15901,45 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "mapPair"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:455:1: mapPair : expr SP_COLON expr ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:474:1: mapPair : expr SP_COLON expr ;
     public final FanParser.mapPair_return mapPair() throws RecognitionException {
         FanParser.mapPair_return retval = new FanParser.mapPair_return();
         retval.start = input.LT(1);
         int mapPair_StartIndex = input.index();
         Object root_0 = null;
 
-        Token SP_COLON506=null;
-        FanParser.expr_return expr505 = null;
+        Token SP_COLON510=null;
+        FanParser.expr_return expr509 = null;
 
-        FanParser.expr_return expr507 = null;
+        FanParser.expr_return expr511 = null;
 
 
-        Object SP_COLON506_tree=null;
+        Object SP_COLON510_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 139) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:455:10: ( expr SP_COLON expr )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:455:12: expr SP_COLON expr
+            if ( state.backtracking>0 && alreadyParsedRule(input, 141) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:474:10: ( expr SP_COLON expr )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:474:12: expr SP_COLON expr
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_expr_in_mapPair3640);
-            expr505=expr();
+            pushFollow(FOLLOW_expr_in_mapPair3770);
+            expr509=expr();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr505.getTree());
-            SP_COLON506=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_mapPair3642); if (state.failed) return retval;
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr509.getTree());
+            SP_COLON510=(Token)match(input,SP_COLON,FOLLOW_SP_COLON_in_mapPair3772); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            SP_COLON506_tree = (Object)adaptor.create(SP_COLON506);
-            adaptor.addChild(root_0, SP_COLON506_tree);
+            SP_COLON510_tree = (Object)adaptor.create(SP_COLON510);
+            adaptor.addChild(root_0, SP_COLON510_tree);
             }
-            pushFollow(FOLLOW_expr_in_mapPair3644);
-            expr507=expr();
+            pushFollow(FOLLOW_expr_in_mapPair3774);
+            expr511=expr();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr507.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr511.getTree());
 
             }
 
@@ -15671,7 +15958,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 139, mapPair_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 141, mapPair_StartIndex); }
         }
         return retval;
     }
@@ -15683,54 +15970,54 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "simple"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:456:1: simple : type parL expr parR ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:475:1: simple : type parL expr parR ;
     public final FanParser.simple_return simple() throws RecognitionException {
         FanParser.simple_return retval = new FanParser.simple_return();
         retval.start = input.LT(1);
         int simple_StartIndex = input.index();
         Object root_0 = null;
 
-        FanParser.type_return type508 = null;
+        FanParser.type_return type512 = null;
 
-        FanParser.parL_return parL509 = null;
+        FanParser.parL_return parL513 = null;
 
-        FanParser.expr_return expr510 = null;
+        FanParser.expr_return expr514 = null;
 
-        FanParser.parR_return parR511 = null;
+        FanParser.parR_return parR515 = null;
 
 
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 140) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:456:9: ( type parL expr parR )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:456:11: type parL expr parR
+            if ( state.backtracking>0 && alreadyParsedRule(input, 142) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:475:9: ( type parL expr parR )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:475:11: type parL expr parR
             {
             root_0 = (Object)adaptor.nil();
 
-            pushFollow(FOLLOW_type_in_simple3652);
-            type508=type();
+            pushFollow(FOLLOW_type_in_simple3782);
+            type512=type();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, type508.getTree());
-            pushFollow(FOLLOW_parL_in_simple3654);
-            parL509=parL();
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, type512.getTree());
+            pushFollow(FOLLOW_parL_in_simple3784);
+            parL513=parL();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, parL509.getTree());
-            pushFollow(FOLLOW_expr_in_simple3656);
-            expr510=expr();
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, parL513.getTree());
+            pushFollow(FOLLOW_expr_in_simple3786);
+            expr514=expr();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr510.getTree());
-            pushFollow(FOLLOW_parR_in_simple3658);
-            parR511=parR();
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, expr514.getTree());
+            pushFollow(FOLLOW_parR_in_simple3788);
+            parR515=parR();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, parR511.getTree());
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, parR515.getTree());
 
             }
 
@@ -15749,7 +16036,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 140, simple_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 142, simple_StartIndex); }
         }
         return retval;
     }
@@ -15761,7 +16048,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "docs"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:458:1: docs : d= ( ( DOC )* ) -> ^( AST_DOCS ( $d)? ) ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:477:1: docs : d= ( ( DOC )* ) -> ^( AST_DOCS ( $d)? ) ;
     public final FanParser.docs_return docs() throws RecognitionException {
         FanParser.docs_return retval = new FanParser.docs_return();
         retval.start = input.LT(1);
@@ -15769,21 +16056,21 @@ public class FanParser extends Parser {
         Object root_0 = null;
 
         Token d=null;
-        Token DOC512=null;
+        Token DOC516=null;
 
         Object d_tree=null;
-        Object DOC512_tree=null;
+        Object DOC516_tree=null;
         RewriteRuleTokenStream stream_DOC=new RewriteRuleTokenStream(adaptor,"token DOC");
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 141) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:458:7: (d= ( ( DOC )* ) -> ^( AST_DOCS ( $d)? ) )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:458:9: d= ( ( DOC )* )
+            if ( state.backtracking>0 && alreadyParsedRule(input, 143) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:477:7: (d= ( ( DOC )* ) -> ^( AST_DOCS ( $d)? ) )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:477:9: d= ( ( DOC )* )
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:458:11: ( ( DOC )* )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:458:12: ( DOC )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:477:11: ( ( DOC )* )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:477:12: ( DOC )*
             {
-            // src/net/colar/netbeans/fan/antlr/Fan.g:458:12: ( DOC )*
+            // src/net/colar/netbeans/fan/antlr/Fan.g:477:12: ( DOC )*
             loop142:
             do {
                 int alt142=2;
@@ -15792,7 +16079,7 @@ public class FanParser extends Parser {
                 if ( (LA142_0==DOC) ) {
                     int LA142_2 = input.LA(2);
 
-                    if ( (synpred235_Fan()) ) {
+                    if ( (synpred237_Fan()) ) {
                         alt142=1;
                     }
 
@@ -15804,8 +16091,8 @@ public class FanParser extends Parser {
             	case 1 :
             	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: DOC
             	    {
-            	    DOC512=(Token)match(input,DOC,FOLLOW_DOC_in_docs3670); if (state.failed) return retval; 
-            	    if ( state.backtracking==0 ) stream_DOC.add(DOC512);
+            	    DOC516=(Token)match(input,DOC,FOLLOW_DOC_in_docs3800); if (state.failed) return retval; 
+            	    if ( state.backtracking==0 ) stream_DOC.add(DOC516);
 
 
             	    }
@@ -15834,14 +16121,14 @@ public class FanParser extends Parser {
             RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
             root_0 = (Object)adaptor.nil();
-            // 458:18: -> ^( AST_DOCS ( $d)? )
+            // 477:18: -> ^( AST_DOCS ( $d)? )
             {
-                // src/net/colar/netbeans/fan/antlr/Fan.g:458:21: ^( AST_DOCS ( $d)? )
+                // src/net/colar/netbeans/fan/antlr/Fan.g:477:21: ^( AST_DOCS ( $d)? )
                 {
                 Object root_1 = (Object)adaptor.nil();
                 root_1 = (Object)adaptor.becomeRoot((Object)adaptor.create(AST_DOCS, "AST_DOCS"), root_1);
 
-                // src/net/colar/netbeans/fan/antlr/Fan.g:458:32: ( $d)?
+                // src/net/colar/netbeans/fan/antlr/Fan.g:477:32: ( $d)?
                 if ( stream_d.hasNext() ) {
                     adaptor.addChild(root_1, stream_d.nextNode());
 
@@ -15871,7 +16158,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 141, docs_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 143, docs_StartIndex); }
         }
         return retval;
     }
@@ -15883,27 +16170,27 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "number"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:460:1: number : ( OP_MINUS )? NUMBER ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:479:1: number : ( OP_MINUS )? NUMBER ;
     public final FanParser.number_return number() throws RecognitionException {
         FanParser.number_return retval = new FanParser.number_return();
         retval.start = input.LT(1);
         int number_StartIndex = input.index();
         Object root_0 = null;
 
-        Token OP_MINUS513=null;
-        Token NUMBER514=null;
+        Token OP_MINUS517=null;
+        Token NUMBER518=null;
 
-        Object OP_MINUS513_tree=null;
-        Object NUMBER514_tree=null;
+        Object OP_MINUS517_tree=null;
+        Object NUMBER518_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 142) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:460:9: ( ( OP_MINUS )? NUMBER )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:460:12: ( OP_MINUS )? NUMBER
+            if ( state.backtracking>0 && alreadyParsedRule(input, 144) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:479:9: ( ( OP_MINUS )? NUMBER )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:479:12: ( OP_MINUS )? NUMBER
             {
             root_0 = (Object)adaptor.nil();
 
-            // src/net/colar/netbeans/fan/antlr/Fan.g:460:12: ( OP_MINUS )?
+            // src/net/colar/netbeans/fan/antlr/Fan.g:479:12: ( OP_MINUS )?
             int alt143=2;
             int LA143_0 = input.LA(1);
 
@@ -15914,10 +16201,10 @@ public class FanParser extends Parser {
                 case 1 :
                     // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: OP_MINUS
                     {
-                    OP_MINUS513=(Token)match(input,OP_MINUS,FOLLOW_OP_MINUS_in_number3692); if (state.failed) return retval;
+                    OP_MINUS517=(Token)match(input,OP_MINUS,FOLLOW_OP_MINUS_in_number3822); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    OP_MINUS513_tree = (Object)adaptor.create(OP_MINUS513);
-                    adaptor.addChild(root_0, OP_MINUS513_tree);
+                    OP_MINUS517_tree = (Object)adaptor.create(OP_MINUS517);
+                    adaptor.addChild(root_0, OP_MINUS517_tree);
                     }
 
                     }
@@ -15925,10 +16212,10 @@ public class FanParser extends Parser {
 
             }
 
-            NUMBER514=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_number3695); if (state.failed) return retval;
+            NUMBER518=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_number3825); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            NUMBER514_tree = (Object)adaptor.create(NUMBER514);
-            adaptor.addChild(root_0, NUMBER514_tree);
+            NUMBER518_tree = (Object)adaptor.create(NUMBER518);
+            adaptor.addChild(root_0, NUMBER518_tree);
             }
 
             }
@@ -15948,7 +16235,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 142, number_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 144, number_StartIndex); }
         }
         return retval;
     }
@@ -15960,42 +16247,42 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "facet"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:461:1: facet : AT id ( AS_EQUAL expr )? ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:480:1: facet : AT id ( AS_EQUAL expr )? ;
     public final FanParser.facet_return facet() throws RecognitionException {
         FanParser.facet_return retval = new FanParser.facet_return();
         retval.start = input.LT(1);
         int facet_StartIndex = input.index();
         Object root_0 = null;
 
-        Token AT515=null;
-        Token AS_EQUAL517=null;
-        FanParser.id_return id516 = null;
+        Token AT519=null;
+        Token AS_EQUAL521=null;
+        FanParser.id_return id520 = null;
 
-        FanParser.expr_return expr518 = null;
+        FanParser.expr_return expr522 = null;
 
 
-        Object AT515_tree=null;
-        Object AS_EQUAL517_tree=null;
+        Object AT519_tree=null;
+        Object AS_EQUAL521_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 143) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:461:8: ( AT id ( AS_EQUAL expr )? )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:461:10: AT id ( AS_EQUAL expr )?
+            if ( state.backtracking>0 && alreadyParsedRule(input, 145) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:480:8: ( AT id ( AS_EQUAL expr )? )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:480:10: AT id ( AS_EQUAL expr )?
             {
             root_0 = (Object)adaptor.nil();
 
-            AT515=(Token)match(input,AT,FOLLOW_AT_in_facet3703); if (state.failed) return retval;
+            AT519=(Token)match(input,AT,FOLLOW_AT_in_facet3833); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            AT515_tree = (Object)adaptor.create(AT515);
-            adaptor.addChild(root_0, AT515_tree);
+            AT519_tree = (Object)adaptor.create(AT519);
+            adaptor.addChild(root_0, AT519_tree);
             }
-            pushFollow(FOLLOW_id_in_facet3705);
-            id516=id();
+            pushFollow(FOLLOW_id_in_facet3835);
+            id520=id();
 
             state._fsp--;
             if (state.failed) return retval;
-            if ( state.backtracking==0 ) adaptor.addChild(root_0, id516.getTree());
-            // src/net/colar/netbeans/fan/antlr/Fan.g:461:16: ( AS_EQUAL expr )?
+            if ( state.backtracking==0 ) adaptor.addChild(root_0, id520.getTree());
+            // src/net/colar/netbeans/fan/antlr/Fan.g:480:16: ( AS_EQUAL expr )?
             int alt144=2;
             int LA144_0 = input.LA(1);
 
@@ -16004,19 +16291,19 @@ public class FanParser extends Parser {
             }
             switch (alt144) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:461:17: AS_EQUAL expr
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:480:17: AS_EQUAL expr
                     {
-                    AS_EQUAL517=(Token)match(input,AS_EQUAL,FOLLOW_AS_EQUAL_in_facet3708); if (state.failed) return retval;
+                    AS_EQUAL521=(Token)match(input,AS_EQUAL,FOLLOW_AS_EQUAL_in_facet3838); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    AS_EQUAL517_tree = (Object)adaptor.create(AS_EQUAL517);
-                    adaptor.addChild(root_0, AS_EQUAL517_tree);
+                    AS_EQUAL521_tree = (Object)adaptor.create(AS_EQUAL521);
+                    adaptor.addChild(root_0, AS_EQUAL521_tree);
                     }
-                    pushFollow(FOLLOW_expr_in_facet3710);
-                    expr518=expr();
+                    pushFollow(FOLLOW_expr_in_facet3840);
+                    expr522=expr();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    if ( state.backtracking==0 ) adaptor.addChild(root_0, expr518.getTree());
+                    if ( state.backtracking==0 ) adaptor.addChild(root_0, expr522.getTree());
 
                     }
                     break;
@@ -16041,7 +16328,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 143, facet_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 145, facet_StartIndex); }
         }
         return retval;
     }
@@ -16053,28 +16340,28 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "eos"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:464:1: eos : ( SP_SEMI | {...}?);
+    // src/net/colar/netbeans/fan/antlr/Fan.g:483:1: eos : ( SP_SEMI | {...}?);
     public final FanParser.eos_return eos() throws RecognitionException {
         FanParser.eos_return retval = new FanParser.eos_return();
         retval.start = input.LT(1);
         int eos_StartIndex = input.index();
         Object root_0 = null;
 
-        Token SP_SEMI519=null;
+        Token SP_SEMI523=null;
 
-        Object SP_SEMI519_tree=null;
+        Object SP_SEMI523_tree=null;
 
         paraphrase.push("Semicolumn or LineBreak");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 144) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:466:3: ( SP_SEMI | {...}?)
+            if ( state.backtracking>0 && alreadyParsedRule(input, 146) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:485:3: ( SP_SEMI | {...}?)
             int alt145=2;
             int LA145_0 = input.LA(1);
 
             if ( (LA145_0==SP_SEMI) ) {
                 int LA145_1 = input.LA(2);
 
-                if ( (synpred238_Fan()) ) {
+                if ( (synpred240_Fan()) ) {
                     alt145=1;
                 }
                 else if ( ((lookupNL())) ) {
@@ -16100,20 +16387,20 @@ public class FanParser extends Parser {
             }
             switch (alt145) {
                 case 1 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:466:5: SP_SEMI
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:485:5: SP_SEMI
                     {
                     root_0 = (Object)adaptor.nil();
 
-                    SP_SEMI519=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_eos3732); if (state.failed) return retval;
+                    SP_SEMI523=(Token)match(input,SP_SEMI,FOLLOW_SP_SEMI_in_eos3862); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
-                    SP_SEMI519_tree = (Object)adaptor.create(SP_SEMI519);
-                    adaptor.addChild(root_0, SP_SEMI519_tree);
+                    SP_SEMI523_tree = (Object)adaptor.create(SP_SEMI523);
+                    adaptor.addChild(root_0, SP_SEMI523_tree);
                     }
 
                     }
                     break;
                 case 2 :
-                    // src/net/colar/netbeans/fan/antlr/Fan.g:466:15: {...}?
+                    // src/net/colar/netbeans/fan/antlr/Fan.g:485:15: {...}?
                     {
                     root_0 = (Object)adaptor.nil();
 
@@ -16144,7 +16431,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 144, eos_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 146, eos_StartIndex); }
         }
         return retval;
     }
@@ -16156,29 +16443,29 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "id"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:468:1: id : ID ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:487:1: id : ID ;
     public final FanParser.id_return id() throws RecognitionException {
         FanParser.id_return retval = new FanParser.id_return();
         retval.start = input.LT(1);
         int id_StartIndex = input.index();
         Object root_0 = null;
 
-        Token ID520=null;
+        Token ID524=null;
 
-        Object ID520_tree=null;
+        Object ID524_tree=null;
 
         paraphrase.push("Identifier");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 145) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:470:3: ( ID )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:470:6: ID
+            if ( state.backtracking>0 && alreadyParsedRule(input, 147) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:489:3: ( ID )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:489:6: ID
             {
             root_0 = (Object)adaptor.nil();
 
-            ID520=(Token)match(input,ID,FOLLOW_ID_in_id3756); if (state.failed) return retval;
+            ID524=(Token)match(input,ID,FOLLOW_ID_in_id3886); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            ID520_tree = (Object)adaptor.create(ID520);
-            adaptor.addChild(root_0, ID520_tree);
+            ID524_tree = (Object)adaptor.create(ID524);
+            adaptor.addChild(root_0, ID524_tree);
             }
 
             }
@@ -16201,7 +16488,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 145, id_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 147, id_StartIndex); }
         }
         return retval;
     }
@@ -16213,7 +16500,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "getter"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:476:1: getter : t= ID {...}?;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:495:1: getter : t= ID {...}?;
     public final FanParser.getter_return getter() throws RecognitionException {
         FanParser.getter_return retval = new FanParser.getter_return();
         retval.start = input.LT(1);
@@ -16225,13 +16512,13 @@ public class FanParser extends Parser {
         Object t_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 146) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:476:10: (t= ID {...}?)
-            // src/net/colar/netbeans/fan/antlr/Fan.g:476:12: t= ID {...}?
+            if ( state.backtracking>0 && alreadyParsedRule(input, 148) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:495:10: (t= ID {...}?)
+            // src/net/colar/netbeans/fan/antlr/Fan.g:495:12: t= ID {...}?
             {
             root_0 = (Object)adaptor.nil();
 
-            t=(Token)match(input,ID,FOLLOW_ID_in_getter3769); if (state.failed) return retval;
+            t=(Token)match(input,ID,FOLLOW_ID_in_getter3899); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             t_tree = (Object)adaptor.create(t);
             adaptor.addChild(root_0, t_tree);
@@ -16258,7 +16545,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 146, getter_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 148, getter_StartIndex); }
         }
         return retval;
     }
@@ -16270,7 +16557,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "setter"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:477:1: setter : t= ID {...}?;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:496:1: setter : t= ID {...}?;
     public final FanParser.setter_return setter() throws RecognitionException {
         FanParser.setter_return retval = new FanParser.setter_return();
         retval.start = input.LT(1);
@@ -16282,13 +16569,13 @@ public class FanParser extends Parser {
         Object t_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 147) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:477:10: (t= ID {...}?)
-            // src/net/colar/netbeans/fan/antlr/Fan.g:477:12: t= ID {...}?
+            if ( state.backtracking>0 && alreadyParsedRule(input, 149) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:496:10: (t= ID {...}?)
+            // src/net/colar/netbeans/fan/antlr/Fan.g:496:12: t= ID {...}?
             {
             root_0 = (Object)adaptor.nil();
 
-            t=(Token)match(input,ID,FOLLOW_ID_in_setter3782); if (state.failed) return retval;
+            t=(Token)match(input,ID,FOLLOW_ID_in_setter3912); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             t_tree = (Object)adaptor.create(t);
             adaptor.addChild(root_0, t_tree);
@@ -16315,7 +16602,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 147, setter_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 149, setter_StartIndex); }
         }
         return retval;
     }
@@ -16327,7 +16614,7 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "pod"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:478:1: pod : t= ID {...}?;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:497:1: pod : t= ID {...}?;
     public final FanParser.pod_return pod() throws RecognitionException {
         FanParser.pod_return retval = new FanParser.pod_return();
         retval.start = input.LT(1);
@@ -16339,13 +16626,13 @@ public class FanParser extends Parser {
         Object t_tree=null;
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 148) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:478:8: (t= ID {...}?)
-            // src/net/colar/netbeans/fan/antlr/Fan.g:478:10: t= ID {...}?
+            if ( state.backtracking>0 && alreadyParsedRule(input, 150) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:497:8: (t= ID {...}?)
+            // src/net/colar/netbeans/fan/antlr/Fan.g:497:10: t= ID {...}?
             {
             root_0 = (Object)adaptor.nil();
 
-            t=(Token)match(input,ID,FOLLOW_ID_in_pod3796); if (state.failed) return retval;
+            t=(Token)match(input,ID,FOLLOW_ID_in_pod3926); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
             t_tree = (Object)adaptor.create(t);
             adaptor.addChild(root_0, t_tree);
@@ -16372,7 +16659,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 148, pod_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 150, pod_StartIndex); }
         }
         return retval;
     }
@@ -16384,29 +16671,29 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "bracketL"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:481:1: bracketL : BRACKET_L ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:500:1: bracketL : BRACKET_L ;
     public final FanParser.bracketL_return bracketL() throws RecognitionException {
         FanParser.bracketL_return retval = new FanParser.bracketL_return();
         retval.start = input.LT(1);
         int bracketL_StartIndex = input.index();
         Object root_0 = null;
 
-        Token BRACKET_L521=null;
+        Token BRACKET_L525=null;
 
-        Object BRACKET_L521_tree=null;
+        Object BRACKET_L525_tree=null;
 
         paraphrase.push("{");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 149) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:483:3: ( BRACKET_L )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:483:5: BRACKET_L
+            if ( state.backtracking>0 && alreadyParsedRule(input, 151) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:502:3: ( BRACKET_L )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:502:5: BRACKET_L
             {
             root_0 = (Object)adaptor.nil();
 
-            BRACKET_L521=(Token)match(input,BRACKET_L,FOLLOW_BRACKET_L_in_bracketL3818); if (state.failed) return retval;
+            BRACKET_L525=(Token)match(input,BRACKET_L,FOLLOW_BRACKET_L_in_bracketL3948); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            BRACKET_L521_tree = (Object)adaptor.create(BRACKET_L521);
-            adaptor.addChild(root_0, BRACKET_L521_tree);
+            BRACKET_L525_tree = (Object)adaptor.create(BRACKET_L525);
+            adaptor.addChild(root_0, BRACKET_L525_tree);
             }
 
             }
@@ -16429,7 +16716,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 149, bracketL_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 151, bracketL_StartIndex); }
         }
         return retval;
     }
@@ -16441,29 +16728,29 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "bracketR"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:484:1: bracketR : BRACKET_R ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:503:1: bracketR : BRACKET_R ;
     public final FanParser.bracketR_return bracketR() throws RecognitionException {
         FanParser.bracketR_return retval = new FanParser.bracketR_return();
         retval.start = input.LT(1);
         int bracketR_StartIndex = input.index();
         Object root_0 = null;
 
-        Token BRACKET_R522=null;
+        Token BRACKET_R526=null;
 
-        Object BRACKET_R522_tree=null;
+        Object BRACKET_R526_tree=null;
 
         paraphrase.push("}");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 150) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:486:3: ( BRACKET_R )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:486:5: BRACKET_R
+            if ( state.backtracking>0 && alreadyParsedRule(input, 152) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:505:3: ( BRACKET_R )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:505:5: BRACKET_R
             {
             root_0 = (Object)adaptor.nil();
 
-            BRACKET_R522=(Token)match(input,BRACKET_R,FOLLOW_BRACKET_R_in_bracketR3836); if (state.failed) return retval;
+            BRACKET_R526=(Token)match(input,BRACKET_R,FOLLOW_BRACKET_R_in_bracketR3966); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            BRACKET_R522_tree = (Object)adaptor.create(BRACKET_R522);
-            adaptor.addChild(root_0, BRACKET_R522_tree);
+            BRACKET_R526_tree = (Object)adaptor.create(BRACKET_R526);
+            adaptor.addChild(root_0, BRACKET_R526_tree);
             }
 
             }
@@ -16486,7 +16773,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 150, bracketR_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 152, bracketR_StartIndex); }
         }
         return retval;
     }
@@ -16498,29 +16785,29 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "sq_bracketL"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:487:1: sq_bracketL : SQ_BRACKET_L ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:506:1: sq_bracketL : SQ_BRACKET_L ;
     public final FanParser.sq_bracketL_return sq_bracketL() throws RecognitionException {
         FanParser.sq_bracketL_return retval = new FanParser.sq_bracketL_return();
         retval.start = input.LT(1);
         int sq_bracketL_StartIndex = input.index();
         Object root_0 = null;
 
-        Token SQ_BRACKET_L523=null;
+        Token SQ_BRACKET_L527=null;
 
-        Object SQ_BRACKET_L523_tree=null;
+        Object SQ_BRACKET_L527_tree=null;
 
         paraphrase.push("[");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 151) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:489:3: ( SQ_BRACKET_L )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:489:5: SQ_BRACKET_L
+            if ( state.backtracking>0 && alreadyParsedRule(input, 153) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:508:3: ( SQ_BRACKET_L )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:508:5: SQ_BRACKET_L
             {
             root_0 = (Object)adaptor.nil();
 
-            SQ_BRACKET_L523=(Token)match(input,SQ_BRACKET_L,FOLLOW_SQ_BRACKET_L_in_sq_bracketL3854); if (state.failed) return retval;
+            SQ_BRACKET_L527=(Token)match(input,SQ_BRACKET_L,FOLLOW_SQ_BRACKET_L_in_sq_bracketL3984); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            SQ_BRACKET_L523_tree = (Object)adaptor.create(SQ_BRACKET_L523);
-            adaptor.addChild(root_0, SQ_BRACKET_L523_tree);
+            SQ_BRACKET_L527_tree = (Object)adaptor.create(SQ_BRACKET_L527);
+            adaptor.addChild(root_0, SQ_BRACKET_L527_tree);
             }
 
             }
@@ -16543,7 +16830,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 151, sq_bracketL_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 153, sq_bracketL_StartIndex); }
         }
         return retval;
     }
@@ -16555,29 +16842,29 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "sq_bracketR"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:490:1: sq_bracketR : SQ_BRACKET_R ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:509:1: sq_bracketR : SQ_BRACKET_R ;
     public final FanParser.sq_bracketR_return sq_bracketR() throws RecognitionException {
         FanParser.sq_bracketR_return retval = new FanParser.sq_bracketR_return();
         retval.start = input.LT(1);
         int sq_bracketR_StartIndex = input.index();
         Object root_0 = null;
 
-        Token SQ_BRACKET_R524=null;
+        Token SQ_BRACKET_R528=null;
 
-        Object SQ_BRACKET_R524_tree=null;
+        Object SQ_BRACKET_R528_tree=null;
 
         paraphrase.push("]");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 152) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:492:3: ( SQ_BRACKET_R )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:492:5: SQ_BRACKET_R
+            if ( state.backtracking>0 && alreadyParsedRule(input, 154) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:511:3: ( SQ_BRACKET_R )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:511:5: SQ_BRACKET_R
             {
             root_0 = (Object)adaptor.nil();
 
-            SQ_BRACKET_R524=(Token)match(input,SQ_BRACKET_R,FOLLOW_SQ_BRACKET_R_in_sq_bracketR3872); if (state.failed) return retval;
+            SQ_BRACKET_R528=(Token)match(input,SQ_BRACKET_R,FOLLOW_SQ_BRACKET_R_in_sq_bracketR4002); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            SQ_BRACKET_R524_tree = (Object)adaptor.create(SQ_BRACKET_R524);
-            adaptor.addChild(root_0, SQ_BRACKET_R524_tree);
+            SQ_BRACKET_R528_tree = (Object)adaptor.create(SQ_BRACKET_R528);
+            adaptor.addChild(root_0, SQ_BRACKET_R528_tree);
             }
 
             }
@@ -16600,7 +16887,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 152, sq_bracketR_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 154, sq_bracketR_StartIndex); }
         }
         return retval;
     }
@@ -16612,29 +16899,29 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "parL"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:493:1: parL : PAR_L ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:512:1: parL : PAR_L ;
     public final FanParser.parL_return parL() throws RecognitionException {
         FanParser.parL_return retval = new FanParser.parL_return();
         retval.start = input.LT(1);
         int parL_StartIndex = input.index();
         Object root_0 = null;
 
-        Token PAR_L525=null;
+        Token PAR_L529=null;
 
-        Object PAR_L525_tree=null;
+        Object PAR_L529_tree=null;
 
         paraphrase.push("(");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 153) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:495:3: ( PAR_L )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:495:5: PAR_L
+            if ( state.backtracking>0 && alreadyParsedRule(input, 155) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:514:3: ( PAR_L )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:514:5: PAR_L
             {
             root_0 = (Object)adaptor.nil();
 
-            PAR_L525=(Token)match(input,PAR_L,FOLLOW_PAR_L_in_parL3890); if (state.failed) return retval;
+            PAR_L529=(Token)match(input,PAR_L,FOLLOW_PAR_L_in_parL4020); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            PAR_L525_tree = (Object)adaptor.create(PAR_L525);
-            adaptor.addChild(root_0, PAR_L525_tree);
+            PAR_L529_tree = (Object)adaptor.create(PAR_L529);
+            adaptor.addChild(root_0, PAR_L529_tree);
             }
 
             }
@@ -16657,7 +16944,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 153, parL_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 155, parL_StartIndex); }
         }
         return retval;
     }
@@ -16669,29 +16956,29 @@ public class FanParser extends Parser {
     };
 
     // $ANTLR start "parR"
-    // src/net/colar/netbeans/fan/antlr/Fan.g:496:1: parR : PAR_R ;
+    // src/net/colar/netbeans/fan/antlr/Fan.g:515:1: parR : PAR_R ;
     public final FanParser.parR_return parR() throws RecognitionException {
         FanParser.parR_return retval = new FanParser.parR_return();
         retval.start = input.LT(1);
         int parR_StartIndex = input.index();
         Object root_0 = null;
 
-        Token PAR_R526=null;
+        Token PAR_R530=null;
 
-        Object PAR_R526_tree=null;
+        Object PAR_R530_tree=null;
 
         paraphrase.push(")");
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 154) ) { return retval; }
-            // src/net/colar/netbeans/fan/antlr/Fan.g:498:3: ( PAR_R )
-            // src/net/colar/netbeans/fan/antlr/Fan.g:498:5: PAR_R
+            if ( state.backtracking>0 && alreadyParsedRule(input, 156) ) { return retval; }
+            // src/net/colar/netbeans/fan/antlr/Fan.g:517:3: ( PAR_R )
+            // src/net/colar/netbeans/fan/antlr/Fan.g:517:5: PAR_R
             {
             root_0 = (Object)adaptor.nil();
 
-            PAR_R526=(Token)match(input,PAR_R,FOLLOW_PAR_R_in_parR3908); if (state.failed) return retval;
+            PAR_R530=(Token)match(input,PAR_R,FOLLOW_PAR_R_in_parR4038); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
-            PAR_R526_tree = (Object)adaptor.create(PAR_R526);
-            adaptor.addChild(root_0, PAR_R526_tree);
+            PAR_R530_tree = (Object)adaptor.create(PAR_R530);
+            adaptor.addChild(root_0, PAR_R530_tree);
             }
 
             }
@@ -16714,7 +17001,7 @@ public class FanParser extends Parser {
 
         }
         finally {
-            if ( state.backtracking>0 ) { memoize(input, 154, parR_StartIndex); }
+            if ( state.backtracking>0 ) { memoize(input, 156, parR_StartIndex); }
         }
         return retval;
     }
@@ -16722,10 +17009,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred2_Fan
     public final void synpred2_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:233:19: ( podDef )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:233:19: podDef
+        // src/net/colar/netbeans/fan/antlr/Fan.g:242:19: ( podDef )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:242:19: podDef
         {
-        pushFollow(FOLLOW_podDef_in_synpred2_Fan413);
+        pushFollow(FOLLOW_podDef_in_synpred2_Fan438);
         podDef();
 
         state._fsp--;
@@ -16737,10 +17024,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred13_Fan
     public final void synpred13_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:251:17: ( facet )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:251:17: facet
+        // src/net/colar/netbeans/fan/antlr/Fan.g:260:17: ( facet )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:260:17: facet
         {
-        pushFollow(FOLLOW_facet_in_synpred13_Fan612);
+        pushFollow(FOLLOW_facet_in_synpred13_Fan637);
         facet();
 
         state._fsp--;
@@ -16752,10 +17039,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred15_Fan
     public final void synpred15_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:251:25: ( ( classFlags )* KW_CLASS )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:251:26: ( classFlags )* KW_CLASS
+        // src/net/colar/netbeans/fan/antlr/Fan.g:260:25: ( ( classFlags )* KW_CLASS )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:260:26: ( classFlags )* KW_CLASS
         {
-        // src/net/colar/netbeans/fan/antlr/Fan.g:251:26: ( classFlags )*
+        // src/net/colar/netbeans/fan/antlr/Fan.g:260:26: ( classFlags )*
         loop146:
         do {
             int alt146=2;
@@ -16770,7 +17057,7 @@ public class FanParser extends Parser {
         	case 1 :
         	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: classFlags
         	    {
-        	    pushFollow(FOLLOW_classFlags_in_synpred15_Fan617);
+        	    pushFollow(FOLLOW_classFlags_in_synpred15_Fan642);
         	    classFlags();
 
         	    state._fsp--;
@@ -16784,7 +17071,7 @@ public class FanParser extends Parser {
             }
         } while (true);
 
-        match(input,KW_CLASS,FOLLOW_KW_CLASS_in_synpred15_Fan620); if (state.failed) return ;
+        match(input,KW_CLASS,FOLLOW_KW_CLASS_in_synpred15_Fan645); if (state.failed) return ;
 
         }
     }
@@ -16792,10 +17079,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred17_Fan
     public final void synpred17_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:252:4: ( ( protection )? KW_ENUM )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:252:5: ( protection )? KW_ENUM
+        // src/net/colar/netbeans/fan/antlr/Fan.g:261:4: ( ( protection )? KW_ENUM )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:261:5: ( protection )? KW_ENUM
         {
-        // src/net/colar/netbeans/fan/antlr/Fan.g:252:5: ( protection )?
+        // src/net/colar/netbeans/fan/antlr/Fan.g:261:5: ( protection )?
         int alt147=2;
         int LA147_0 = input.LA(1);
 
@@ -16806,7 +17093,7 @@ public class FanParser extends Parser {
             case 1 :
                 // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: protection
                 {
-                pushFollow(FOLLOW_protection_in_synpred17_Fan631);
+                pushFollow(FOLLOW_protection_in_synpred17_Fan656);
                 protection();
 
                 state._fsp--;
@@ -16817,7 +17104,7 @@ public class FanParser extends Parser {
 
         }
 
-        match(input,KW_ENUM,FOLLOW_KW_ENUM_in_synpred17_Fan634); if (state.failed) return ;
+        match(input,KW_ENUM,FOLLOW_KW_ENUM_in_synpred17_Fan659); if (state.failed) return ;
 
         }
     }
@@ -16825,10 +17112,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred44_Fan
     public final void synpred44_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:280:28: ( SP_QMARK )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:280:28: SP_QMARK
+        // src/net/colar/netbeans/fan/antlr/Fan.g:289:28: ( SP_QMARK )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:289:28: SP_QMARK
         {
-        match(input,SP_QMARK,FOLLOW_SP_QMARK_in_synpred44_Fan1145); if (state.failed) return ;
+        match(input,SP_QMARK,FOLLOW_SP_QMARK_in_synpred44_Fan1170); if (state.failed) return ;
 
         }
     }
@@ -16836,10 +17123,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred45_Fan
     public final void synpred45_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:280:49: ( SP_QMARK )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:280:49: SP_QMARK
+        // src/net/colar/netbeans/fan/antlr/Fan.g:289:49: ( SP_QMARK )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:289:49: SP_QMARK
         {
-        match(input,SP_QMARK,FOLLOW_SP_QMARK_in_synpred45_Fan1151); if (state.failed) return ;
+        match(input,SP_QMARK,FOLLOW_SP_QMARK_in_synpred45_Fan1176); if (state.failed) return ;
 
         }
     }
@@ -16847,11 +17134,11 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred46_Fan
     public final void synpred46_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:280:39: ( LIST_TYPE ( SP_QMARK )? )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:280:39: LIST_TYPE ( SP_QMARK )?
+        // src/net/colar/netbeans/fan/antlr/Fan.g:289:39: ( LIST_TYPE ( SP_QMARK )? )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:289:39: LIST_TYPE ( SP_QMARK )?
         {
-        match(input,LIST_TYPE,FOLLOW_LIST_TYPE_in_synpred46_Fan1149); if (state.failed) return ;
-        // src/net/colar/netbeans/fan/antlr/Fan.g:280:49: ( SP_QMARK )?
+        match(input,LIST_TYPE,FOLLOW_LIST_TYPE_in_synpred46_Fan1174); if (state.failed) return ;
+        // src/net/colar/netbeans/fan/antlr/Fan.g:289:49: ( SP_QMARK )?
         int alt149=2;
         int LA149_0 = input.LA(1);
 
@@ -16862,7 +17149,7 @@ public class FanParser extends Parser {
             case 1 :
                 // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: SP_QMARK
                 {
-                match(input,SP_QMARK,FOLLOW_SP_QMARK_in_synpred46_Fan1151); if (state.failed) return ;
+                match(input,SP_QMARK,FOLLOW_SP_QMARK_in_synpred46_Fan1176); if (state.failed) return ;
 
                 }
                 break;
@@ -16876,10 +17163,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred48_Fan
     public final void synpred48_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:282:12: ( mapType )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:282:12: mapType
+        // src/net/colar/netbeans/fan/antlr/Fan.g:291:12: ( mapType )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:291:12: mapType
         {
-        pushFollow(FOLLOW_mapType_in_synpred48_Fan1173);
+        pushFollow(FOLLOW_mapType_in_synpred48_Fan1198);
         mapType();
 
         state._fsp--;
@@ -16891,19 +17178,19 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred54_Fan
     public final void synpred54_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:286:6: ({...}? SP_COLON {...}? type )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:286:6: {...}? SP_COLON {...}? type
+        // src/net/colar/netbeans/fan/antlr/Fan.g:295:6: ({...}? SP_COLON {...}? type )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:295:6: {...}? SP_COLON {...}? type
         {
         if ( !((notAfterEol())) ) {
             if (state.backtracking>0) {state.failed=true; return ;}
             throw new FailedPredicateException(input, "synpred54_Fan", "notAfterEol()");
         }
-        match(input,SP_COLON,FOLLOW_SP_COLON_in_synpred54_Fan1230); if (state.failed) return ;
+        match(input,SP_COLON,FOLLOW_SP_COLON_in_synpred54_Fan1255); if (state.failed) return ;
         if ( !((notAfterEol())) ) {
             if (state.backtracking>0) {state.failed=true; return ;}
             throw new FailedPredicateException(input, "synpred54_Fan", "notAfterEol()");
         }
-        pushFollow(FOLLOW_type_in_synpred54_Fan1234);
+        pushFollow(FOLLOW_type_in_synpred54_Fan1259);
         type();
 
         state._fsp--;
@@ -16915,10 +17202,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred55_Fan
     public final void synpred55_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:286:56: ( sq_bracketR )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:286:56: sq_bracketR
+        // src/net/colar/netbeans/fan/antlr/Fan.g:295:56: ( sq_bracketR )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:295:56: sq_bracketR
         {
-        pushFollow(FOLLOW_sq_bracketR_in_synpred55_Fan1238);
+        pushFollow(FOLLOW_sq_bracketR_in_synpred55_Fan1263);
         sq_bracketR();
 
         state._fsp--;
@@ -16930,10 +17217,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred57_Fan
     public final void synpred57_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:287:43: ( OP_ARROW )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:287:44: OP_ARROW
+        // src/net/colar/netbeans/fan/antlr/Fan.g:296:43: ( OP_ARROW )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:296:44: OP_ARROW
         {
-        match(input,OP_ARROW,FOLLOW_OP_ARROW_in_synpred57_Fan1259); if (state.failed) return ;
+        match(input,OP_ARROW,FOLLOW_OP_ARROW_in_synpred57_Fan1284); if (state.failed) return ;
 
         }
     }
@@ -16941,10 +17228,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred59_Fan
     public final void synpred59_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:287:74: ( OP_ARROW )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:287:75: OP_ARROW
+        // src/net/colar/netbeans/fan/antlr/Fan.g:296:74: ( OP_ARROW )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:296:75: OP_ARROW
         {
-        match(input,OP_ARROW,FOLLOW_OP_ARROW_in_synpred59_Fan1271); if (state.failed) return ;
+        match(input,OP_ARROW,FOLLOW_OP_ARROW_in_synpred59_Fan1296); if (state.failed) return ;
 
         }
     }
@@ -16952,10 +17239,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred61_Fan
     public final void synpred61_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:290:11: ( formalFull )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:290:11: formalFull
+        // src/net/colar/netbeans/fan/antlr/Fan.g:299:11: ( formalFull )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:299:11: formalFull
         {
-        pushFollow(FOLLOW_formalFull_in_synpred61_Fan1312);
+        pushFollow(FOLLOW_formalFull_in_synpred61_Fan1337);
         formalFull();
 
         state._fsp--;
@@ -16967,10 +17254,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred62_Fan
     public final void synpred62_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:290:24: ( formalTypeOnly )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:290:24: formalTypeOnly
+        // src/net/colar/netbeans/fan/antlr/Fan.g:299:24: ( formalTypeOnly )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:299:24: formalTypeOnly
         {
-        pushFollow(FOLLOW_formalTypeOnly_in_synpred62_Fan1316);
+        pushFollow(FOLLOW_formalTypeOnly_in_synpred62_Fan1341);
         formalTypeOnly();
 
         state._fsp--;
@@ -16982,11 +17269,11 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred63_Fan
     public final void synpred63_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:294:13: ( KW_STATIC bracketL )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:294:14: KW_STATIC bracketL
+        // src/net/colar/netbeans/fan/antlr/Fan.g:303:13: ( KW_STATIC bracketL )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:303:14: KW_STATIC bracketL
         {
-        match(input,KW_STATIC,FOLLOW_KW_STATIC_in_synpred63_Fan1364); if (state.failed) return ;
-        pushFollow(FOLLOW_bracketL_in_synpred63_Fan1366);
+        match(input,KW_STATIC,FOLLOW_KW_STATIC_in_synpred63_Fan1389); if (state.failed) return ;
+        pushFollow(FOLLOW_bracketL_in_synpred63_Fan1391);
         bracketL();
 
         state._fsp--;
@@ -16998,10 +17285,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred64_Fan
     public final void synpred64_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:295:11: ( facet )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:295:11: facet
+        // src/net/colar/netbeans/fan/antlr/Fan.g:304:11: ( facet )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:304:11: facet
         {
-        pushFollow(FOLLOW_facet_in_synpred64_Fan1380);
+        pushFollow(FOLLOW_facet_in_synpred64_Fan1405);
         facet();
 
         state._fsp--;
@@ -17013,10 +17300,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred66_Fan
     public final void synpred66_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:297:7: ( ( ctorFlags )* KW_NEW )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:297:8: ( ctorFlags )* KW_NEW
+        // src/net/colar/netbeans/fan/antlr/Fan.g:306:7: ( ( ctorFlags )* KW_NEW )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:306:8: ( ctorFlags )* KW_NEW
         {
-        // src/net/colar/netbeans/fan/antlr/Fan.g:297:8: ( ctorFlags )*
+        // src/net/colar/netbeans/fan/antlr/Fan.g:306:8: ( ctorFlags )*
         loop152:
         do {
             int alt152=2;
@@ -17031,7 +17318,7 @@ public class FanParser extends Parser {
         	case 1 :
         	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: ctorFlags
         	    {
-        	    pushFollow(FOLLOW_ctorFlags_in_synpred66_Fan1397);
+        	    pushFollow(FOLLOW_ctorFlags_in_synpred66_Fan1422);
         	    ctorFlags();
 
         	    state._fsp--;
@@ -17045,7 +17332,7 @@ public class FanParser extends Parser {
             }
         } while (true);
 
-        match(input,KW_NEW,FOLLOW_KW_NEW_in_synpred66_Fan1400); if (state.failed) return ;
+        match(input,KW_NEW,FOLLOW_KW_NEW_in_synpred66_Fan1425); if (state.failed) return ;
 
         }
     }
@@ -17053,10 +17340,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred69_Fan
     public final void synpred69_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:298:7: ( ( methodFlags )* ( type | KW_VOID ) id parL )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:298:8: ( methodFlags )* ( type | KW_VOID ) id parL
+        // src/net/colar/netbeans/fan/antlr/Fan.g:307:7: ( ( methodFlags )* ( type | KW_VOID ) id parL )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:307:8: ( methodFlags )* ( type | KW_VOID ) id parL
         {
-        // src/net/colar/netbeans/fan/antlr/Fan.g:298:8: ( methodFlags )*
+        // src/net/colar/netbeans/fan/antlr/Fan.g:307:8: ( methodFlags )*
         loop153:
         do {
             int alt153=2;
@@ -17071,7 +17358,7 @@ public class FanParser extends Parser {
         	case 1 :
         	    // src/net/colar/netbeans/fan/antlr/Fan.g:0:0: methodFlags
         	    {
-        	    pushFollow(FOLLOW_methodFlags_in_synpred69_Fan1414);
+        	    pushFollow(FOLLOW_methodFlags_in_synpred69_Fan1439);
         	    methodFlags();
 
         	    state._fsp--;
@@ -17085,7 +17372,7 @@ public class FanParser extends Parser {
             }
         } while (true);
 
-        // src/net/colar/netbeans/fan/antlr/Fan.g:298:21: ( type | KW_VOID )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:307:21: ( type | KW_VOID )
         int alt154=2;
         int LA154_0 = input.LA(1);
 
@@ -17104,9 +17391,9 @@ public class FanParser extends Parser {
         }
         switch (alt154) {
             case 1 :
-                // src/net/colar/netbeans/fan/antlr/Fan.g:298:22: type
+                // src/net/colar/netbeans/fan/antlr/Fan.g:307:22: type
                 {
-                pushFollow(FOLLOW_type_in_synpred69_Fan1418);
+                pushFollow(FOLLOW_type_in_synpred69_Fan1443);
                 type();
 
                 state._fsp--;
@@ -17115,21 +17402,21 @@ public class FanParser extends Parser {
                 }
                 break;
             case 2 :
-                // src/net/colar/netbeans/fan/antlr/Fan.g:298:29: KW_VOID
+                // src/net/colar/netbeans/fan/antlr/Fan.g:307:29: KW_VOID
                 {
-                match(input,KW_VOID,FOLLOW_KW_VOID_in_synpred69_Fan1422); if (state.failed) return ;
+                match(input,KW_VOID,FOLLOW_KW_VOID_in_synpred69_Fan1447); if (state.failed) return ;
 
                 }
                 break;
 
         }
 
-        pushFollow(FOLLOW_id_in_synpred69_Fan1425);
+        pushFollow(FOLLOW_id_in_synpred69_Fan1450);
         id();
 
         state._fsp--;
         if (state.failed) return ;
-        pushFollow(FOLLOW_parL_in_synpred69_Fan1427);
+        pushFollow(FOLLOW_parL_in_synpred69_Fan1452);
         parL();
 
         state._fsp--;
@@ -17141,10 +17428,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred73_Fan
     public final void synpred73_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:306:29: ( getter )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:306:29: getter
+        // src/net/colar/netbeans/fan/antlr/Fan.g:315:29: ( getter )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:315:29: getter
         {
-        pushFollow(FOLLOW_getter_in_synpred73_Fan1512);
+        pushFollow(FOLLOW_getter_in_synpred73_Fan1537);
         getter();
 
         state._fsp--;
@@ -17156,10 +17443,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred75_Fan
     public final void synpred75_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:306:55: ( block )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:306:55: block
+        // src/net/colar/netbeans/fan/antlr/Fan.g:315:55: ( block )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:315:55: block
         {
-        pushFollow(FOLLOW_block_in_synpred75_Fan1522);
+        pushFollow(FOLLOW_block_in_synpred75_Fan1547);
         block();
 
         state._fsp--;
@@ -17171,15 +17458,15 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred78_Fan
     public final void synpred78_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:309:12: ( type id )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:309:13: type id
+        // src/net/colar/netbeans/fan/antlr/Fan.g:318:12: ( type id )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:318:13: type id
         {
-        pushFollow(FOLLOW_type_in_synpred78_Fan1569);
+        pushFollow(FOLLOW_type_in_synpred78_Fan1594);
         type();
 
         state._fsp--;
         if (state.failed) return ;
-        pushFollow(FOLLOW_id_in_synpred78_Fan1571);
+        pushFollow(FOLLOW_id_in_synpred78_Fan1596);
         id();
 
         state._fsp--;
@@ -17191,10 +17478,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred101_Fan
     public final void synpred101_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:322:15: ( multiStmt )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:322:16: multiStmt
+        // src/net/colar/netbeans/fan/antlr/Fan.g:331:15: ( multiStmt )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:331:16: multiStmt
         {
-        pushFollow(FOLLOW_multiStmt_in_synpred101_Fan1848);
+        pushFollow(FOLLOW_multiStmt_in_synpred101_Fan1873);
         multiStmt();
 
         state._fsp--;
@@ -17206,10 +17493,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred110_Fan
     public final void synpred110_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:334:6: ( bracketL )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:334:7: bracketL
+        // src/net/colar/netbeans/fan/antlr/Fan.g:343:6: ( bracketL )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:343:7: bracketL
         {
-        pushFollow(FOLLOW_bracketL_in_synpred110_Fan2048);
+        pushFollow(FOLLOW_bracketL_in_synpred110_Fan2073);
         bracketL();
 
         state._fsp--;
@@ -17221,10 +17508,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred121_Fan
     public final void synpred121_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:340:22: ( exprStmt )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:340:22: exprStmt
+        // src/net/colar/netbeans/fan/antlr/Fan.g:349:22: ( exprStmt )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:349:22: exprStmt
         {
-        pushFollow(FOLLOW_exprStmt_in_synpred121_Fan2145);
+        pushFollow(FOLLOW_exprStmt_in_synpred121_Fan2170);
         exprStmt();
 
         state._fsp--;
@@ -17236,10 +17523,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred122_Fan
     public final void synpred122_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:342:15: ( stmt )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:342:15: stmt
+        // src/net/colar/netbeans/fan/antlr/Fan.g:351:15: ( stmt )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:351:15: stmt
         {
-        pushFollow(FOLLOW_stmt_in_synpred122_Fan2162);
+        pushFollow(FOLLOW_stmt_in_synpred122_Fan2187);
         stmt();
 
         state._fsp--;
@@ -17251,11 +17538,11 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred126_Fan
     public final void synpred126_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:352:6: ( KW_ELSE block )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:352:6: KW_ELSE block
+        // src/net/colar/netbeans/fan/antlr/Fan.g:361:6: ( KW_ELSE block )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:361:6: KW_ELSE block
         {
-        match(input,KW_ELSE,FOLLOW_KW_ELSE_in_synpred126_Fan2246); if (state.failed) return ;
-        pushFollow(FOLLOW_block_in_synpred126_Fan2248);
+        match(input,KW_ELSE,FOLLOW_KW_ELSE_in_synpred126_Fan2271); if (state.failed) return ;
+        pushFollow(FOLLOW_block_in_synpred126_Fan2273);
         block();
 
         state._fsp--;
@@ -17267,10 +17554,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred127_Fan
     public final void synpred127_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:353:23: ( eos )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:353:23: eos
+        // src/net/colar/netbeans/fan/antlr/Fan.g:362:23: ( eos )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:362:23: eos
         {
-        pushFollow(FOLLOW_eos_in_synpred127_Fan2260);
+        pushFollow(FOLLOW_eos_in_synpred127_Fan2285);
         eos();
 
         state._fsp--;
@@ -17282,10 +17569,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred130_Fan
     public final void synpred130_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:357:18: ( bracketL )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:357:19: bracketL
+        // src/net/colar/netbeans/fan/antlr/Fan.g:366:18: ( bracketL )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:366:19: bracketL
         {
-        pushFollow(FOLLOW_bracketL_in_synpred130_Fan2334);
+        pushFollow(FOLLOW_bracketL_in_synpred130_Fan2359);
         bracketL();
 
         state._fsp--;
@@ -17297,10 +17584,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred131_Fan
     public final void synpred131_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:357:52: ( KW_CATCH )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:357:53: KW_CATCH
+        // src/net/colar/netbeans/fan/antlr/Fan.g:366:52: ( KW_CATCH )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:366:53: KW_CATCH
         {
-        match(input,KW_CATCH,FOLLOW_KW_CATCH_in_synpred131_Fan2346); if (state.failed) return ;
+        match(input,KW_CATCH,FOLLOW_KW_CATCH_in_synpred131_Fan2371); if (state.failed) return ;
 
         }
     }
@@ -17308,10 +17595,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred132_Fan
     public final void synpred132_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:357:75: ( KW_FINALLY )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:357:76: KW_FINALLY
+        // src/net/colar/netbeans/fan/antlr/Fan.g:366:75: ( KW_FINALLY )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:366:76: KW_FINALLY
         {
-        match(input,KW_FINALLY,FOLLOW_KW_FINALLY_in_synpred132_Fan2355); if (state.failed) return ;
+        match(input,KW_FINALLY,FOLLOW_KW_FINALLY_in_synpred132_Fan2380); if (state.failed) return ;
 
         }
     }
@@ -17319,10 +17606,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred134_Fan
     public final void synpred134_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:361:12: ( forInitDef )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:361:12: forInitDef
+        // src/net/colar/netbeans/fan/antlr/Fan.g:370:12: ( forInitDef )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:370:12: forInitDef
         {
-        pushFollow(FOLLOW_forInitDef_in_synpred134_Fan2400);
+        pushFollow(FOLLOW_forInitDef_in_synpred134_Fan2425);
         forInitDef();
 
         state._fsp--;
@@ -17334,10 +17621,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred136_Fan
     public final void synpred136_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:364:21: ( catchDef )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:364:21: catchDef
+        // src/net/colar/netbeans/fan/antlr/Fan.g:373:21: ( catchDef )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:373:21: catchDef
         {
-        pushFollow(FOLLOW_catchDef_in_synpred136_Fan2429);
+        pushFollow(FOLLOW_catchDef_in_synpred136_Fan2454);
         catchDef();
 
         state._fsp--;
@@ -17349,10 +17636,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred137_Fan
     public final void synpred137_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:364:32: ( bracketL )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:364:33: bracketL
+        // src/net/colar/netbeans/fan/antlr/Fan.g:373:32: ( bracketL )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:373:33: bracketL
         {
-        pushFollow(FOLLOW_bracketL_in_synpred137_Fan2434);
+        pushFollow(FOLLOW_bracketL_in_synpred137_Fan2459);
         bracketL();
 
         state._fsp--;
@@ -17364,10 +17651,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred138_Fan
     public final void synpred138_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:368:25: ( bracketL )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:368:26: bracketL
+        // src/net/colar/netbeans/fan/antlr/Fan.g:377:25: ( bracketL )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:377:26: bracketL
         {
-        pushFollow(FOLLOW_bracketL_in_synpred138_Fan2475);
+        pushFollow(FOLLOW_bracketL_in_synpred138_Fan2500);
         bracketL();
 
         state._fsp--;
@@ -17379,8 +17666,8 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred158_Fan
     public final void synpred158_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:393:26: ( ( OP_BITOR | SP_PIPE ) bitAndExpr )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:393:26: ( OP_BITOR | SP_PIPE ) bitAndExpr
+        // src/net/colar/netbeans/fan/antlr/Fan.g:402:26: ( ( OP_BITOR | SP_PIPE ) bitAndExpr )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:402:26: ( OP_BITOR | SP_PIPE ) bitAndExpr
         {
         if ( input.LA(1)==SP_PIPE||input.LA(1)==OP_BITOR ) {
             input.consume();
@@ -17392,7 +17679,7 @@ public class FanParser extends Parser {
             throw mse;
         }
 
-        pushFollow(FOLLOW_bitAndExpr_in_synpred158_Fan2766);
+        pushFollow(FOLLOW_bitAndExpr_in_synpred158_Fan2791);
         bitAndExpr();
 
         state._fsp--;
@@ -17404,11 +17691,11 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred159_Fan
     public final void synpred159_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:394:26: ( OP_CURRY shiftExpr )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:394:26: OP_CURRY shiftExpr
+        // src/net/colar/netbeans/fan/antlr/Fan.g:403:26: ( OP_CURRY shiftExpr )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:403:26: OP_CURRY shiftExpr
         {
-        match(input,OP_CURRY,FOLLOW_OP_CURRY_in_synpred159_Fan2780); if (state.failed) return ;
-        pushFollow(FOLLOW_shiftExpr_in_synpred159_Fan2782);
+        match(input,OP_CURRY,FOLLOW_OP_CURRY_in_synpred159_Fan2805); if (state.failed) return ;
+        pushFollow(FOLLOW_shiftExpr_in_synpred159_Fan2807);
         shiftExpr();
 
         state._fsp--;
@@ -17420,8 +17707,8 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred163_Fan
     public final void synpred163_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:396:22: ( ( OP_PLUS | OP_MINUS ) multExpr )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:396:22: ( OP_PLUS | OP_MINUS ) multExpr
+        // src/net/colar/netbeans/fan/antlr/Fan.g:405:22: ( ( OP_PLUS | OP_MINUS ) multExpr )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:405:22: ( OP_PLUS | OP_MINUS ) multExpr
         {
         if ( (input.LA(1)>=OP_PLUS && input.LA(1)<=OP_MINUS) ) {
             input.consume();
@@ -17433,7 +17720,7 @@ public class FanParser extends Parser {
             throw mse;
         }
 
-        pushFollow(FOLLOW_multExpr_in_synpred163_Fan2827);
+        pushFollow(FOLLOW_multExpr_in_synpred163_Fan2852);
         multExpr();
 
         state._fsp--;
@@ -17445,8 +17732,8 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred167_Fan
     public final void synpred167_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:398:24: ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:398:24: ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr
+        // src/net/colar/netbeans/fan/antlr/Fan.g:407:24: ( ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:407:24: ( OP_MULTI | OP_DIV | OP_MOD ) parenExpr
         {
         if ( (input.LA(1)>=OP_MULTI && input.LA(1)<=OP_MOD) ) {
             input.consume();
@@ -17458,7 +17745,7 @@ public class FanParser extends Parser {
             throw mse;
         }
 
-        pushFollow(FOLLOW_parenExpr_in_synpred167_Fan2868);
+        pushFollow(FOLLOW_parenExpr_in_synpred167_Fan2893);
         parenExpr();
 
         state._fsp--;
@@ -17470,10 +17757,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred168_Fan
     public final void synpred168_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:399:14: ( castExpr )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:399:14: castExpr
+        // src/net/colar/netbeans/fan/antlr/Fan.g:408:14: ( castExpr )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:408:14: castExpr
         {
-        pushFollow(FOLLOW_castExpr_in_synpred168_Fan2879);
+        pushFollow(FOLLOW_castExpr_in_synpred168_Fan2904);
         castExpr();
 
         state._fsp--;
@@ -17485,10 +17772,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred169_Fan
     public final void synpred169_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:399:25: ( groupedExpr )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:399:25: groupedExpr
+        // src/net/colar/netbeans/fan/antlr/Fan.g:408:25: ( groupedExpr )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:408:25: groupedExpr
         {
-        pushFollow(FOLLOW_groupedExpr_in_synpred169_Fan2883);
+        pushFollow(FOLLOW_groupedExpr_in_synpred169_Fan2908);
         groupedExpr();
 
         state._fsp--;
@@ -17500,10 +17787,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred170_Fan
     public final void synpred170_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:403:31: ( termChain )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:403:31: termChain
+        // src/net/colar/netbeans/fan/antlr/Fan.g:412:31: ( termChain )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:412:31: termChain
         {
-        pushFollow(FOLLOW_termChain_in_synpred170_Fan2919);
+        pushFollow(FOLLOW_termChain_in_synpred170_Fan2944);
         termChain();
 
         state._fsp--;
@@ -17515,10 +17802,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred171_Fan
     public final void synpred171_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:404:14: ( prefixExpr )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:404:14: prefixExpr
+        // src/net/colar/netbeans/fan/antlr/Fan.g:413:14: ( prefixExpr )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:413:14: prefixExpr
         {
-        pushFollow(FOLLOW_prefixExpr_in_synpred171_Fan2928);
+        pushFollow(FOLLOW_prefixExpr_in_synpred171_Fan2953);
         prefixExpr();
 
         state._fsp--;
@@ -17530,10 +17817,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred172_Fan
     public final void synpred172_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:404:27: ( postfixExpr )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:404:27: postfixExpr
+        // src/net/colar/netbeans/fan/antlr/Fan.g:413:27: ( postfixExpr )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:413:27: postfixExpr
         {
-        pushFollow(FOLLOW_postfixExpr_in_synpred172_Fan2932);
+        pushFollow(FOLLOW_postfixExpr_in_synpred172_Fan2957);
         postfixExpr();
 
         state._fsp--;
@@ -17545,10 +17832,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred180_Fan
     public final void synpred180_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:407:22: ( termChain )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:407:22: termChain
+        // src/net/colar/netbeans/fan/antlr/Fan.g:416:22: ( termChain )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:416:22: termChain
         {
-        pushFollow(FOLLOW_termChain_in_synpred180_Fan3000);
+        pushFollow(FOLLOW_termChain_in_synpred180_Fan3025);
         termChain();
 
         state._fsp--;
@@ -17560,10 +17847,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred181_Fan
     public final void synpred181_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:409:13: ( idExprReq )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:409:13: idExprReq
+        // src/net/colar/netbeans/fan/antlr/Fan.g:419:13: ( idExprReq )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:419:13: idExprReq
         {
-        pushFollow(FOLLOW_idExprReq_in_synpred181_Fan3010);
+        pushFollow(FOLLOW_idExprReq_in_synpred181_Fan3049);
         idExprReq();
 
         state._fsp--;
@@ -17575,10 +17862,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred182_Fan
     public final void synpred182_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:409:25: ( literal )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:409:25: literal
+        // src/net/colar/netbeans/fan/antlr/Fan.g:419:25: ( literal )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:419:25: literal
         {
-        pushFollow(FOLLOW_literal_in_synpred182_Fan3014);
+        pushFollow(FOLLOW_literal_in_synpred182_Fan3053);
         literal();
 
         state._fsp--;
@@ -17590,10 +17877,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred183_Fan
     public final void synpred183_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:409:35: ( typeBase )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:409:35: typeBase
+        // src/net/colar/netbeans/fan/antlr/Fan.g:419:35: ( typeBase )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:419:35: typeBase
         {
-        pushFollow(FOLLOW_typeBase_in_synpred183_Fan3018);
+        pushFollow(FOLLOW_typeBase_in_synpred183_Fan3057);
         typeBase();
 
         state._fsp--;
@@ -17605,10 +17892,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred184_Fan
     public final void synpred184_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:410:12: ( typeLiteral )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:410:12: typeLiteral
+        // src/net/colar/netbeans/fan/antlr/Fan.g:420:12: ( typeLiteral )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:420:12: typeLiteral
         {
-        pushFollow(FOLLOW_typeLiteral_in_synpred184_Fan3029);
+        pushFollow(FOLLOW_typeLiteral_in_synpred184_Fan3068);
         typeLiteral();
 
         state._fsp--;
@@ -17620,10 +17907,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred185_Fan
     public final void synpred185_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:410:26: ( slotLiteral )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:410:26: slotLiteral
+        // src/net/colar/netbeans/fan/antlr/Fan.g:420:26: ( slotLiteral )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:420:26: slotLiteral
         {
-        pushFollow(FOLLOW_slotLiteral_in_synpred185_Fan3033);
+        pushFollow(FOLLOW_slotLiteral_in_synpred185_Fan3072);
         slotLiteral();
 
         state._fsp--;
@@ -17635,10 +17922,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred186_Fan
     public final void synpred186_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:410:40: ( namedSuper )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:410:40: namedSuper
+        // src/net/colar/netbeans/fan/antlr/Fan.g:420:40: ( namedSuper )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:420:40: namedSuper
         {
-        pushFollow(FOLLOW_namedSuper_in_synpred186_Fan3037);
+        pushFollow(FOLLOW_namedSuper_in_synpred186_Fan3076);
         namedSuper();
 
         state._fsp--;
@@ -17650,10 +17937,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred187_Fan
     public final void synpred187_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:410:53: ( staticCall )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:410:53: staticCall
+        // src/net/colar/netbeans/fan/antlr/Fan.g:420:53: ( staticCall )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:420:53: staticCall
         {
-        pushFollow(FOLLOW_staticCall_in_synpred187_Fan3041);
+        pushFollow(FOLLOW_staticCall_in_synpred187_Fan3080);
         staticCall();
 
         state._fsp--;
@@ -17665,10 +17952,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred188_Fan
     public final void synpred188_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:411:19: ( dsl )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:411:19: dsl
+        // src/net/colar/netbeans/fan/antlr/Fan.g:421:19: ( dsl )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:421:19: dsl
         {
-        pushFollow(FOLLOW_dsl_in_synpred188_Fan3063);
+        pushFollow(FOLLOW_dsl_in_synpred188_Fan3102);
         dsl();
 
         state._fsp--;
@@ -17680,10 +17967,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred189_Fan
     public final void synpred189_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:411:25: ( closure )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:411:25: closure
+        // src/net/colar/netbeans/fan/antlr/Fan.g:421:25: ( closure )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:421:25: closure
         {
-        pushFollow(FOLLOW_closure_in_synpred189_Fan3067);
+        pushFollow(FOLLOW_closure_in_synpred189_Fan3106);
         closure();
 
         state._fsp--;
@@ -17695,10 +17982,10 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred190_Fan
     public final void synpred190_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:411:35: ( simple )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:411:35: simple
+        // src/net/colar/netbeans/fan/antlr/Fan.g:421:35: ( simple )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:421:35: simple
         {
-        pushFollow(FOLLOW_simple_in_synpred190_Fan3071);
+        pushFollow(FOLLOW_simple_in_synpred190_Fan3110);
         simple();
 
         state._fsp--;
@@ -17708,12 +17995,57 @@ public class FanParser extends Parser {
     }
     // $ANTLR end synpred190_Fan
 
-    // $ANTLR start synpred201_Fan
-    public final void synpred201_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:427:45: ( closure )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:427:45: closure
+    // $ANTLR start synpred191_Fan
+    public final void synpred191_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:426:14: ( dotCall )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:426:14: dotCall
         {
-        pushFollow(FOLLOW_closure_in_synpred201_Fan3243);
+        pushFollow(FOLLOW_dotCall_in_synpred191_Fan3157);
+        dotCall();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+    }
+    // $ANTLR end synpred191_Fan
+
+    // $ANTLR start synpred193_Fan
+    public final void synpred193_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:426:34: ( safeDotCall )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:426:34: safeDotCall
+        {
+        pushFollow(FOLLOW_safeDotCall_in_synpred193_Fan3165);
+        safeDotCall();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+    }
+    // $ANTLR end synpred193_Fan
+
+    // $ANTLR start synpred198_Fan
+    public final void synpred198_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:427:35: ( incDotCall )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:427:35: incDotCall
+        {
+        pushFollow(FOLLOW_incDotCall_in_synpred198_Fan3188);
+        incDotCall();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+    }
+    // $ANTLR end synpred198_Fan
+
+    // $ANTLR start synpred203_Fan
+    public final void synpred203_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:445:45: ( closure )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:445:45: closure
+        {
+        pushFollow(FOLLOW_closure_in_synpred203_Fan3362);
         closure();
 
         state._fsp--;
@@ -17721,14 +18053,14 @@ public class FanParser extends Parser {
 
         }
     }
-    // $ANTLR end synpred201_Fan
+    // $ANTLR end synpred203_Fan
 
-    // $ANTLR start synpred202_Fan
-    public final void synpred202_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:431:12: ( idExprReq )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:431:12: idExprReq
+    // $ANTLR start synpred204_Fan
+    public final void synpred204_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:449:12: ( idExprReq )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:449:12: idExprReq
         {
-        pushFollow(FOLLOW_idExprReq_in_synpred202_Fan3277);
+        pushFollow(FOLLOW_idExprReq_in_synpred204_Fan3396);
         idExprReq();
 
         state._fsp--;
@@ -17736,22 +18068,22 @@ public class FanParser extends Parser {
 
         }
     }
-    // $ANTLR end synpred202_Fan
+    // $ANTLR end synpred204_Fan
 
-    // $ANTLR start synpred204_Fan
-    public final void synpred204_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:437:13: ( ( callParams closure ) )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:437:13: ( callParams closure )
+    // $ANTLR start synpred206_Fan
+    public final void synpred206_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:455:13: ( ( callParams closure ) )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:455:13: ( callParams closure )
         {
-        // src/net/colar/netbeans/fan/antlr/Fan.g:437:13: ( callParams closure )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:437:14: callParams closure
+        // src/net/colar/netbeans/fan/antlr/Fan.g:455:13: ( callParams closure )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:455:14: callParams closure
         {
-        pushFollow(FOLLOW_callParams_in_synpred204_Fan3319);
+        pushFollow(FOLLOW_callParams_in_synpred206_Fan3438);
         callParams();
 
         state._fsp--;
         if (state.failed) return ;
-        pushFollow(FOLLOW_closure_in_synpred204_Fan3321);
+        pushFollow(FOLLOW_closure_in_synpred206_Fan3440);
         closure();
 
         state._fsp--;
@@ -17762,14 +18094,14 @@ public class FanParser extends Parser {
 
         }
     }
-    // $ANTLR end synpred204_Fan
+    // $ANTLR end synpred206_Fan
 
-    // $ANTLR start synpred205_Fan
-    public final void synpred205_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:437:36: ( callParams )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:437:36: callParams
+    // $ANTLR start synpred207_Fan
+    public final void synpred207_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:455:36: ( callParams )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:455:36: callParams
         {
-        pushFollow(FOLLOW_callParams_in_synpred205_Fan3326);
+        pushFollow(FOLLOW_callParams_in_synpred207_Fan3445);
         callParams();
 
         state._fsp--;
@@ -17777,45 +18109,15 @@ public class FanParser extends Parser {
 
         }
     }
-    // $ANTLR end synpred205_Fan
-
-    // $ANTLR start synpred218_Fan
-    public final void synpred218_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:443:20: ( namedSuper )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:443:20: namedSuper
-        {
-        pushFollow(FOLLOW_namedSuper_in_synpred218_Fan3415);
-        namedSuper();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-    }
-    // $ANTLR end synpred218_Fan
-
-    // $ANTLR start synpred219_Fan
-    public final void synpred219_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:444:4: ( slotLiteral )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:444:4: slotLiteral
-        {
-        pushFollow(FOLLOW_slotLiteral_in_synpred219_Fan3422);
-        slotLiteral();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-    }
-    // $ANTLR end synpred219_Fan
+    // $ANTLR end synpred207_Fan
 
     // $ANTLR start synpred220_Fan
     public final void synpred220_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:444:18: ( typeLiteral )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:444:18: typeLiteral
+        // src/net/colar/netbeans/fan/antlr/Fan.g:462:20: ( namedSuper )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:462:20: namedSuper
         {
-        pushFollow(FOLLOW_typeLiteral_in_synpred220_Fan3426);
-        typeLiteral();
+        pushFollow(FOLLOW_namedSuper_in_synpred220_Fan3545);
+        namedSuper();
 
         state._fsp--;
         if (state.failed) return ;
@@ -17826,11 +18128,11 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred221_Fan
     public final void synpred221_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:444:32: ( list )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:444:32: list
+        // src/net/colar/netbeans/fan/antlr/Fan.g:463:4: ( slotLiteral )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:463:4: slotLiteral
         {
-        pushFollow(FOLLOW_list_in_synpred221_Fan3430);
-        list();
+        pushFollow(FOLLOW_slotLiteral_in_synpred221_Fan3552);
+        slotLiteral();
 
         state._fsp--;
         if (state.failed) return ;
@@ -17841,11 +18143,11 @@ public class FanParser extends Parser {
 
     // $ANTLR start synpred222_Fan
     public final void synpred222_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:444:39: ( map )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:444:39: map
+        // src/net/colar/netbeans/fan/antlr/Fan.g:463:18: ( typeLiteral )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:463:18: typeLiteral
         {
-        pushFollow(FOLLOW_map_in_synpred222_Fan3434);
-        map();
+        pushFollow(FOLLOW_typeLiteral_in_synpred222_Fan3556);
+        typeLiteral();
 
         state._fsp--;
         if (state.failed) return ;
@@ -17854,68 +18156,112 @@ public class FanParser extends Parser {
     }
     // $ANTLR end synpred222_Fan
 
-    // $ANTLR start synpred227_Fan
-    public final void synpred227_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:451:11: ( type {...}?)
-        // src/net/colar/netbeans/fan/antlr/Fan.g:451:11: type {...}?
+    // $ANTLR start synpred223_Fan
+    public final void synpred223_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:463:32: ( list )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:463:32: list
         {
-        pushFollow(FOLLOW_type_in_synpred227_Fan3553);
+        pushFollow(FOLLOW_list_in_synpred223_Fan3560);
+        list();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+    }
+    // $ANTLR end synpred223_Fan
+
+    // $ANTLR start synpred224_Fan
+    public final void synpred224_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:463:39: ( map )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:463:39: map
+        {
+        pushFollow(FOLLOW_map_in_synpred224_Fan3564);
+        map();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+    }
+    // $ANTLR end synpred224_Fan
+
+    // $ANTLR start synpred229_Fan
+    public final void synpred229_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:470:11: ( type {...}?)
+        // src/net/colar/netbeans/fan/antlr/Fan.g:470:11: type {...}?
+        {
+        pushFollow(FOLLOW_type_in_synpred229_Fan3683);
         type();
 
         state._fsp--;
         if (state.failed) return ;
         if ( !((notAfterEol())) ) {
             if (state.backtracking>0) {state.failed=true; return ;}
-            throw new FailedPredicateException(input, "synpred227_Fan", "notAfterEol()");
+            throw new FailedPredicateException(input, "synpred229_Fan", "notAfterEol()");
         }
 
         }
     }
-    // $ANTLR end synpred227_Fan
+    // $ANTLR end synpred229_Fan
 
-    // $ANTLR start synpred231_Fan
-    public final void synpred231_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:453:10: ( mapType {...}?)
-        // src/net/colar/netbeans/fan/antlr/Fan.g:453:10: mapType {...}?
+    // $ANTLR start synpred233_Fan
+    public final void synpred233_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:472:10: ( mapType {...}?)
+        // src/net/colar/netbeans/fan/antlr/Fan.g:472:10: mapType {...}?
         {
-        pushFollow(FOLLOW_mapType_in_synpred231_Fan3598);
+        pushFollow(FOLLOW_mapType_in_synpred233_Fan3728);
         mapType();
 
         state._fsp--;
         if (state.failed) return ;
         if ( !((notAfterEol())) ) {
             if (state.backtracking>0) {state.failed=true; return ;}
-            throw new FailedPredicateException(input, "synpred231_Fan", "notAfterEol()");
+            throw new FailedPredicateException(input, "synpred233_Fan", "notAfterEol()");
         }
 
         }
     }
-    // $ANTLR end synpred231_Fan
+    // $ANTLR end synpred233_Fan
 
-    // $ANTLR start synpred235_Fan
-    public final void synpred235_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:458:12: ( DOC )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:458:12: DOC
+    // $ANTLR start synpred237_Fan
+    public final void synpred237_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:477:12: ( DOC )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:477:12: DOC
         {
-        match(input,DOC,FOLLOW_DOC_in_synpred235_Fan3670); if (state.failed) return ;
+        match(input,DOC,FOLLOW_DOC_in_synpred237_Fan3800); if (state.failed) return ;
 
         }
     }
-    // $ANTLR end synpred235_Fan
+    // $ANTLR end synpred237_Fan
 
-    // $ANTLR start synpred238_Fan
-    public final void synpred238_Fan_fragment() throws RecognitionException {   
-        // src/net/colar/netbeans/fan/antlr/Fan.g:466:5: ( SP_SEMI )
-        // src/net/colar/netbeans/fan/antlr/Fan.g:466:5: SP_SEMI
+    // $ANTLR start synpred240_Fan
+    public final void synpred240_Fan_fragment() throws RecognitionException {   
+        // src/net/colar/netbeans/fan/antlr/Fan.g:485:5: ( SP_SEMI )
+        // src/net/colar/netbeans/fan/antlr/Fan.g:485:5: SP_SEMI
         {
-        match(input,SP_SEMI,FOLLOW_SP_SEMI_in_synpred238_Fan3732); if (state.failed) return ;
+        match(input,SP_SEMI,FOLLOW_SP_SEMI_in_synpred240_Fan3862); if (state.failed) return ;
 
         }
     }
-    // $ANTLR end synpred238_Fan
+    // $ANTLR end synpred240_Fan
 
     // Delegated rules
 
+    public final boolean synpred233_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred233_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
     public final boolean synpred189_Fan() {
         state.backtracking++;
         int start = input.mark();
@@ -17935,34 +18281,6 @@ public class FanParser extends Parser {
         int start = input.mark();
         try {
             synpred138_Fan_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred227_Fan() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred227_Fan_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred219_Fan() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred219_Fan_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -18028,11 +18346,11 @@ public class FanParser extends Parser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred122_Fan() {
+    public final boolean synpred193_Fan() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred122_Fan_fragment(); // can never throw exception
+            synpred193_Fan_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -18042,11 +18360,11 @@ public class FanParser extends Parser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred231_Fan() {
+    public final boolean synpred122_Fan() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred231_Fan_fragment(); // can never throw exception
+            synpred122_Fan_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -18103,6 +18421,34 @@ public class FanParser extends Parser {
         int start = input.mark();
         try {
             synpred180_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred203_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred203_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred207_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred207_Fan_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -18182,11 +18528,25 @@ public class FanParser extends Parser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred218_Fan() {
+    public final boolean synpred224_Fan() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred218_Fan_fragment(); // can never throw exception
+            synpred224_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred206_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred206_Fan_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -18224,11 +18584,53 @@ public class FanParser extends Parser {
         state.failed=false;
         return success;
     }
+    public final boolean synpred191_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred191_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
     public final boolean synpred127_Fan() {
         state.backtracking++;
         int start = input.mark();
         try {
             synpred127_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred229_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred229_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred223_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred223_Fan_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -18308,6 +18710,20 @@ public class FanParser extends Parser {
         state.failed=false;
         return success;
     }
+    public final boolean synpred198_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred198_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
     public final boolean synpred101_Fan() {
         state.backtracking++;
         int start = input.mark();
@@ -18350,53 +18766,11 @@ public class FanParser extends Parser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred238_Fan() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred238_Fan_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
     public final boolean synpred187_Fan() {
         state.backtracking++;
         int start = input.mark();
         try {
             synpred187_Fan_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred201_Fan() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred201_Fan_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred235_Fan() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred235_Fan_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -18518,6 +18892,20 @@ public class FanParser extends Parser {
         state.failed=false;
         return success;
     }
+    public final boolean synpred240_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred240_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
     public final boolean synpred131_Fan() {
         state.backtracking++;
         int start = input.mark();
@@ -18537,6 +18925,20 @@ public class FanParser extends Parser {
         int start = input.mark();
         try {
             synpred171_Fan_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred237_Fan() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred237_Fan_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -18700,20 +19102,6 @@ public class FanParser extends Parser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred202_Fan() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred202_Fan_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
     public final boolean synpred185_Fan() {
         state.backtracking++;
         int start = input.mark();
@@ -18798,20 +19186,6 @@ public class FanParser extends Parser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred205_Fan() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred205_Fan_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
     public final boolean synpred167_Fan() {
         state.backtracking++;
         int start = input.mark();
@@ -18877,6 +19251,7 @@ public class FanParser extends Parser {
     protected DFA116 dfa116 = new DFA116(this);
     protected DFA117 dfa117 = new DFA117(this);
     protected DFA118 dfa118 = new DFA118(this);
+    protected DFA119 dfa119 = new DFA119(this);
     protected DFA124 dfa124 = new DFA124(this);
     protected DFA130 dfa130 = new DFA130(this);
     static final String DFA3_eotS =
@@ -18886,13 +19261,13 @@ public class FanParser extends Parser {
     static final String DFA3_minS =
         "\1\24\2\0\12\uffff";
     static final String DFA3_maxS =
-        "\1\157\2\0\12\uffff";
+        "\1\167\2\0\12\uffff";
     static final String DFA3_acceptS =
         "\3\uffff\1\1\1\2\10\uffff";
     static final String DFA3_specialS =
         "\1\uffff\1\0\1\1\12\uffff}>";
     static final String[] DFA3_transitionS = {
-            "\2\4\4\uffff\1\4\1\uffff\10\4\104\uffff\1\3\5\uffff\1\2\1\1",
+            "\2\4\4\uffff\1\4\1\uffff\10\4\114\uffff\1\3\5\uffff\1\2\1\1",
             "\1\uffff",
             "\1\uffff",
             "",
@@ -18937,7 +19312,7 @@ public class FanParser extends Parser {
             this.transition = DFA3_transition;
         }
         public String getDescription() {
-            return "233:18: ( podDef | ( typeDef )* )";
+            return "242:18: ( podDef | ( typeDef )* )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -18988,14 +19363,14 @@ public class FanParser extends Parser {
     static final String DFA2_minS =
         "\2\24\2\uffff";
     static final String DFA2_maxS =
-        "\2\157\2\uffff";
+        "\2\167\2\uffff";
     static final String DFA2_acceptS =
         "\2\uffff\1\2\1\1";
     static final String DFA2_specialS =
         "\4\uffff}>";
     static final String[] DFA2_transitionS = {
-            "\2\3\4\uffff\1\3\1\uffff\10\3\112\uffff\1\3\1\1",
-            "\2\3\4\uffff\1\3\1\uffff\10\3\112\uffff\1\3\1\1",
+            "\2\3\4\uffff\1\3\1\uffff\10\3\122\uffff\1\3\1\1",
+            "\2\3\4\uffff\1\3\1\uffff\10\3\122\uffff\1\3\1\1",
             "",
             ""
     };
@@ -19030,36 +19405,36 @@ public class FanParser extends Parser {
             this.transition = DFA2_transition;
         }
         public String getDescription() {
-            return "()* loopback of 233:28: ( typeDef )*";
+            return "()* loopback of 242:28: ( typeDef )*";
         }
     }
     static final String DFA4_eotS =
         "\15\uffff";
     static final String DFA4_eofS =
-        "\3\uffff\1\6\5\uffff\1\6\1\14\2\uffff";
+        "\3\uffff\1\7\5\uffff\1\7\1\14\2\uffff";
     static final String DFA4_minS =
-        "\1\21\2\150\1\21\1\162\1\150\1\uffff\2\150\2\21\2\uffff";
+        "\1\21\2\160\1\21\1\172\2\160\1\uffff\1\160\2\21\2\uffff";
     static final String DFA4_maxS =
-        "\1\21\1\161\1\150\1\157\1\162\1\150\1\uffff\2\150\1\157\1\u008d"+
+        "\1\21\1\171\1\160\1\167\1\172\2\160\1\uffff\1\160\1\167\1\u0095"+
         "\2\uffff";
     static final String DFA4_acceptS =
-        "\6\uffff\1\1\4\uffff\1\3\1\2";
+        "\7\uffff\1\1\3\uffff\1\3\1\2";
     static final String DFA4_specialS =
         "\15\uffff}>";
     static final String[] DFA4_transitionS = {
             "\1\1",
             "\1\3\10\uffff\1\2",
             "\1\4",
-            "\1\6\2\uffff\2\6\4\uffff\1\6\1\uffff\10\6\36\uffff\1\7\1\5"+
-            "\11\uffff\1\6\32\uffff\1\6\5\uffff\2\6",
+            "\1\7\2\uffff\2\7\4\uffff\1\7\1\uffff\10\7\46\uffff\1\6\1\5"+
+            "\11\uffff\1\7\32\uffff\1\7\5\uffff\2\7",
             "\1\10",
             "\1\11",
-            "",
             "\1\12",
+            "",
             "\1\3",
-            "\1\6\2\uffff\2\6\4\uffff\1\6\1\uffff\10\6\36\uffff\1\7\1\5"+
-            "\11\uffff\1\6\32\uffff\1\6\5\uffff\2\6",
-            "\1\14\1\13\1\uffff\2\14\4\uffff\1\14\1\uffff\10\14\51\uffff"+
+            "\1\7\2\uffff\2\7\4\uffff\1\7\1\uffff\10\7\46\uffff\1\6\1\5"+
+            "\11\uffff\1\7\32\uffff\1\7\5\uffff\2\7",
+            "\1\14\1\13\1\uffff\2\14\4\uffff\1\14\1\uffff\10\14\61\uffff"+
             "\1\14\32\uffff\1\14\5\uffff\2\14\35\uffff\1\13",
             "",
             ""
@@ -19095,7 +19470,7 @@ public class FanParser extends Parser {
             this.transition = DFA4_transition;
         }
         public String getDescription() {
-            return "235:5: ( usingPod | usingType | usingAs )";
+            return "244:5: ( usingPod | usingType | usingAs )";
         }
     }
     static final String DFA13_eotS =
@@ -19105,13 +19480,13 @@ public class FanParser extends Parser {
     static final String DFA13_minS =
         "\1\24\3\0\1\uffff\3\0\3\uffff";
     static final String DFA13_maxS =
-        "\1\157\3\0\1\uffff\3\0\3\uffff";
+        "\1\167\3\0\1\uffff\3\0\3\uffff";
     static final String DFA13_acceptS =
         "\4\uffff\1\1\3\uffff\1\1\1\2\1\3";
     static final String DFA13_specialS =
         "\1\0\1\1\1\2\1\3\1\uffff\1\4\1\5\1\6\3\uffff}>";
     static final String[] DFA13_transitionS = {
-            "\1\6\1\7\4\uffff\1\5\1\uffff\1\10\1\11\1\12\1\4\4\3\112\uffff"+
+            "\1\6\1\7\4\uffff\1\5\1\uffff\1\10\1\11\1\12\1\4\4\3\122\uffff"+
             "\1\2\1\1",
             "\1\uffff",
             "\1\uffff",
@@ -19155,7 +19530,7 @@ public class FanParser extends Parser {
             this.transition = DFA13_transition;
         }
         public String getDescription() {
-            return "251:24: ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef )";
+            return "260:24: ( ( ( classFlags )* KW_CLASS )=> classDef | ( ( protection )? KW_ENUM )=> enumDef | mixinDef )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -19303,13 +19678,13 @@ public class FanParser extends Parser {
     static final String DFA50_minS =
         "\1\23\1\0\21\uffff";
     static final String DFA50_maxS =
-        "\1\161\1\0\21\uffff";
+        "\1\171\1\0\21\uffff";
     static final String DFA50_acceptS =
         "\2\uffff\1\2\17\uffff\1\1";
     static final String DFA50_specialS =
         "\1\uffff\1\0\21\uffff}>";
     static final String[] DFA50_transitionS = {
-            "\2\2\1\1\5\2\4\uffff\7\2\45\uffff\1\2\34\uffff\1\2\5\uffff\2"+
+            "\2\2\1\1\5\2\4\uffff\7\2\55\uffff\1\2\34\uffff\1\2\5\uffff\2"+
             "\2\1\uffff\1\2",
             "\1\uffff",
             "",
@@ -19361,7 +19736,7 @@ public class FanParser extends Parser {
             this.transition = DFA50_transition;
         }
         public String getDescription() {
-            return "294:12: ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) )";
+            return "303:12: ( ( KW_STATIC bracketL )=> staticBlock | ( docs ( facet )* ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef ) ) )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -19397,14 +19772,14 @@ public class FanParser extends Parser {
     static final String DFA49_minS =
         "\1\23\3\0\1\uffff\4\0\1\uffff\5\0\3\uffff";
     static final String DFA49_maxS =
-        "\1\161\3\0\1\uffff\4\0\1\uffff\5\0\3\uffff";
+        "\1\171\3\0\1\uffff\4\0\1\uffff\5\0\3\uffff";
     static final String DFA49_acceptS =
         "\4\uffff\1\1\4\uffff\1\2\5\uffff\1\3\2\uffff";
     static final String DFA49_specialS =
         "\1\0\1\1\1\2\1\3\1\uffff\1\4\1\5\1\6\1\7\1\uffff\1\10\1\11\1\12"+
         "\1\13\1\14\3\uffff}>";
     static final String[] DFA49_transitionS = {
-            "\2\17\1\10\1\12\1\17\1\6\1\5\1\13\4\uffff\1\7\4\3\1\4\1\11\45"+
+            "\2\17\1\10\1\12\1\17\1\6\1\5\1\13\4\uffff\1\7\4\3\1\4\1\11\55"+
             "\uffff\1\15\34\uffff\1\16\5\uffff\1\2\1\1\1\uffff\1\14",
             "\1\uffff",
             "\1\uffff",
@@ -19455,7 +19830,7 @@ public class FanParser extends Parser {
             this.transition = DFA49_transition;
         }
         public String getDescription() {
-            return "296:6: ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef )";
+            return "305:6: ( ( ( ctorFlags )* KW_NEW )=> ctorDef | ( ( methodFlags )* ( type | KW_VOID ) id parL )=> methodDef | fieldDef )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -19699,23 +20074,23 @@ public class FanParser extends Parser {
     static final String DFA59_eotS =
         "\12\uffff";
     static final String DFA59_eofS =
-        "\3\uffff\1\10\6\uffff";
+        "\3\uffff\1\11\6\uffff";
     static final String DFA59_minS =
-        "\1\113\2\uffff\1\4\3\uffff\1\0\2\uffff";
+        "\1\123\2\uffff\1\4\3\uffff\1\0\2\uffff";
     static final String DFA59_maxS =
-        "\1\161\2\uffff\1\163\3\uffff\1\0\2\uffff";
+        "\1\171\2\uffff\1\173\3\uffff\1\0\2\uffff";
     static final String DFA59_acceptS =
-        "\1\uffff\2\1\1\uffff\3\1\1\uffff\1\2\1\1";
+        "\1\uffff\2\1\1\uffff\3\1\1\uffff\1\1\1\2";
     static final String DFA59_specialS =
-        "\1\1\2\uffff\1\0\3\uffff\1\2\2\uffff}>";
+        "\1\2\2\uffff\1\0\3\uffff\1\1\2\uffff}>";
     static final String[] DFA59_transitionS = {
             "\1\2\34\uffff\1\3\10\uffff\1\1",
             "",
             "",
-            "\15\10\2\uffff\10\10\4\uffff\12\10\2\uffff\4\10\23\uffff\1"+
-            "\4\1\uffff\3\10\1\11\1\10\1\5\1\6\1\10\1\uffff\1\10\13\uffff"+
-            "\1\10\2\uffff\3\10\2\uffff\4\10\3\uffff\1\7\11\10\1\uffff\1"+
-            "\10",
+            "\15\11\2\uffff\10\11\4\uffff\12\11\2\uffff\4\11\33\uffff\1"+
+            "\4\1\uffff\3\11\1\10\1\11\1\5\1\6\1\11\1\uffff\1\11\13\uffff"+
+            "\1\11\2\uffff\3\11\2\uffff\4\11\3\uffff\1\7\11\11\1\uffff\1"+
+            "\11",
             "",
             "",
             "",
@@ -19754,7 +20129,7 @@ public class FanParser extends Parser {
             this.transition = DFA59_transition;
         }
         public String getDescription() {
-            return "309:11: ( ( type id )=> typeAndId | fieldId )";
+            return "318:11: ( ( type id )=> typeAndId | fieldId )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -19775,15 +20150,30 @@ public class FanParser extends Parser {
 
                         else if ( (LA59_3==ID) ) {s = 7;}
 
-                        else if ( (LA59_3==EOF||(LA59_3>=KW_BREAK && LA59_3<=KW_FINALLY)||(LA59_3>=KW_RD_ONLY && LA59_3<=KW_FINAL)||(LA59_3>=KW_ABSTRACT && LA59_3<=KW_ELSE)||(LA59_3>=KW_NULL && LA59_3<=KW_FALSE)||(LA59_3>=BRACKET_L && LA59_3<=AS_INIT_VAL)||LA59_3==SP_COMMA||LA59_3==SP_PIPE||LA59_3==SP_SEMI||LA59_3==OP_CURRY||(LA59_3>=OP_PLUS && LA59_3<=OP_MULTI)||(LA59_3>=OP_BANG && LA59_3<=OP_TILDA)||(LA59_3>=URI && LA59_3<=SQ_BRACKET_L)||LA59_3==PAR_L) ) {s = 8;}
+                        else if ( (LA59_3==SP_COLON) && (synpred78_Fan())) {s = 8;}
 
-                        else if ( (LA59_3==SP_COLON) && (synpred78_Fan())) {s = 9;}
+                        else if ( (LA59_3==EOF||(LA59_3>=KW_BREAK && LA59_3<=KW_FINALLY)||(LA59_3>=KW_RD_ONLY && LA59_3<=KW_FINAL)||(LA59_3>=KW_ABSTRACT && LA59_3<=KW_ELSE)||(LA59_3>=KW_NULL && LA59_3<=KW_FALSE)||(LA59_3>=BRACKET_L && LA59_3<=AS_INIT_VAL)||LA59_3==SP_COMMA||LA59_3==SP_PIPE||LA59_3==SP_SEMI||LA59_3==OP_CURRY||(LA59_3>=OP_PLUS && LA59_3<=OP_MULTI)||(LA59_3>=OP_BANG && LA59_3<=OP_TILDA)||(LA59_3>=URI && LA59_3<=SQ_BRACKET_L)||LA59_3==PAR_L) ) {s = 9;}
 
                          
                         input.seek(index59_3);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
+                        int LA59_7 = input.LA(1);
+
+                         
+                        int index59_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred78_Fan()) ) {s = 8;}
+
+                        else if ( (true) ) {s = 9;}
+
+                         
+                        input.seek(index59_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
                         int LA59_0 = input.LA(1);
 
                          
@@ -19798,21 +20188,6 @@ public class FanParser extends Parser {
 
                          
                         input.seek(index59_0);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA59_7 = input.LA(1);
-
-                         
-                        int index59_7 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred78_Fan()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index59_7);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -19830,14 +20205,14 @@ public class FanParser extends Parser {
     static final String DFA77_minS =
         "\1\4\14\uffff\1\0\14\uffff\2\0\3\uffff";
     static final String DFA77_maxS =
-        "\1\163\14\uffff\1\0\14\uffff\2\0\3\uffff";
+        "\1\173\14\uffff\1\0\14\uffff\2\0\3\uffff";
     static final String DFA77_acceptS =
         "\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\23\uffff\1\13";
     static final String DFA77_specialS =
         "\15\uffff\1\0\14\uffff\1\1\1\2\3\uffff}>";
     static final String[] DFA77_transitionS = {
             "\1\4\1\5\1\2\1\1\1\6\1\7\1\10\1\3\1\11\31\uffff\2\12\3\uffff"+
-            "\4\12\34\uffff\1\33\15\uffff\1\12\2\uffff\3\12\2\uffff\4\12"+
+            "\4\12\44\uffff\1\33\15\uffff\1\12\2\uffff\3\12\2\uffff\4\12"+
             "\3\uffff\1\15\6\12\1\uffff\1\12\1\32\1\uffff\1\12",
             "",
             "",
@@ -19901,7 +20276,7 @@ public class FanParser extends Parser {
             this.transition = DFA77_transition;
         }
         public String getDescription() {
-            return "338:5: ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef )";
+            return "347:5: ( g_if | g_for | g_while | g_break | g_continue | g_return | g_switch | g_throw | g_try | exprStmt | localDef )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -19967,7 +20342,7 @@ public class FanParser extends Parser {
     static final String DFA78_minS =
         "\1\4\4\uffff\1\0\2\uffff\1\0\7\uffff\2\0\5\uffff\31\0\5\uffff";
     static final String DFA78_maxS =
-        "\1\163\4\uffff\1\0\2\uffff\1\0\7\uffff\2\0\5\uffff\31\0\5\uffff";
+        "\1\173\4\uffff\1\0\2\uffff\1\0\7\uffff\2\0\5\uffff\31\0\5\uffff";
     static final String DFA78_acceptS =
         "\1\uffff\1\2\62\uffff\1\1";
     static final String DFA78_specialS =
@@ -19976,7 +20351,7 @@ public class FanParser extends Parser {
         "\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\34\5\uffff}>";
     static final String[] DFA78_transitionS = {
             "\1\32\1\33\1\30\1\27\1\34\1\35\1\36\1\31\1\37\4\1\2\uffff\10"+
-            "\1\4\uffff\7\1\1\44\1\45\1\1\2\uffff\1\43\1\46\1\47\1\50\26"+
+            "\1\4\uffff\7\1\1\44\1\45\1\1\2\uffff\1\43\1\46\1\47\1\50\36"+
             "\uffff\1\1\2\uffff\1\1\2\uffff\1\21\1\uffff\1\1\13\uffff\1\54"+
             "\2\uffff\1\54\1\41\1\42\2\uffff\4\54\3\uffff\1\5\1\53\1\56\1"+
             "\51\1\52\1\57\1\10\1\1\1\55\1\20\1\uffff\1\40",
@@ -20064,7 +20439,7 @@ public class FanParser extends Parser {
             this.transition = DFA78_transition;
         }
         public String getDescription() {
-            return "()* loopback of 342:15: ( stmt )*";
+            return "()* loopback of 351:15: ( stmt )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -20520,7 +20895,7 @@ public class FanParser extends Parser {
     static final String DFA83_minS =
         "\1\4\3\uffff\1\0\2\uffff\1\0\7\uffff\2\0\16\uffff\20\0\6\uffff";
     static final String DFA83_maxS =
-        "\1\163\3\uffff\1\0\2\uffff\1\0\7\uffff\2\0\16\uffff\20\0\6\uffff";
+        "\1\173\3\uffff\1\0\2\uffff\1\0\7\uffff\2\0\16\uffff\20\0\6\uffff";
     static final String DFA83_acceptS =
         "\1\uffff\1\1\62\uffff\1\2";
     static final String DFA83_specialS =
@@ -20529,7 +20904,7 @@ public class FanParser extends Parser {
         "\uffff}>";
     static final String[] DFA83_transitionS = {
             "\15\1\2\uffff\10\1\4\uffff\7\1\1\43\1\44\1\1\2\uffff\1\42\1"+
-            "\45\1\46\1\47\26\uffff\1\1\2\uffff\1\1\2\uffff\1\20\1\uffff"+
+            "\45\1\46\1\47\36\uffff\1\1\2\uffff\1\1\2\uffff\1\20\1\uffff"+
             "\1\1\13\uffff\1\53\2\uffff\1\53\1\40\1\41\2\uffff\4\53\3\uffff"+
             "\1\4\1\52\1\55\1\50\1\51\1\56\1\7\1\1\1\54\1\17\1\uffff\1\37",
             "",
@@ -20616,7 +20991,7 @@ public class FanParser extends Parser {
             this.transition = DFA83_transition;
         }
         public String getDescription() {
-            return "353:22: ( eos | expr eos )";
+            return "362:22: ( eos | expr eos )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -20689,7 +21064,7 @@ public class FanParser extends Parser {
                         int index83_31 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (((synpred127_Fan()&&(lookupNL()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol())))) ) {s = 1;}
+                        if ( ((((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||(synpred127_Fan()&&(lookupNL()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred127_Fan()&&(lookupNL()))&&(notAfterEol())))) ) {s = 1;}
 
                         else if ( (true) ) {s = 52;}
 
@@ -20937,13 +21312,13 @@ public class FanParser extends Parser {
     static final String DFA90_minS =
         "\1\46\3\0\22\uffff";
     static final String DFA90_maxS =
-        "\1\163\3\0\22\uffff";
+        "\1\173\3\0\22\uffff";
     static final String DFA90_acceptS =
         "\4\uffff\1\2\20\uffff\1\1";
     static final String DFA90_specialS =
         "\1\uffff\1\0\1\1\1\2\22\uffff}>";
     static final String[] DFA90_transitionS = {
-            "\2\4\3\uffff\4\4\34\uffff\1\2\15\uffff\1\4\2\uffff\3\4\2\uffff"+
+            "\2\4\3\uffff\4\4\44\uffff\1\2\15\uffff\1\4\2\uffff\3\4\2\uffff"+
             "\4\4\3\uffff\1\3\6\4\1\uffff\1\4\1\1\1\uffff\1\4",
             "\1\uffff",
             "\1\uffff",
@@ -20998,7 +21373,7 @@ public class FanParser extends Parser {
             this.transition = DFA90_transition;
         }
         public String getDescription() {
-            return "361:1: forInit : ( forInitDef | expr );";
+            return "370:1: forInit : ( forInitDef | expr );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -21064,13 +21439,13 @@ public class FanParser extends Parser {
     static final String DFA92_minS =
         "\1\4\1\0\64\uffff";
     static final String DFA92_maxS =
-        "\1\163\1\0\64\uffff";
+        "\1\173\1\0\64\uffff";
     static final String DFA92_acceptS =
         "\2\uffff\1\2\62\uffff\1\1";
     static final String DFA92_specialS =
         "\1\uffff\1\0\64\uffff}>";
     static final String[] DFA92_transitionS = {
-            "\15\2\2\uffff\10\2\4\uffff\12\2\2\uffff\4\2\25\uffff\2\2\2\uffff"+
+            "\15\2\2\uffff\10\2\4\uffff\12\2\2\uffff\4\2\35\uffff\2\2\2\uffff"+
             "\1\2\2\uffff\1\2\1\uffff\1\2\13\uffff\1\2\2\uffff\3\2\2\uffff"+
             "\4\2\3\uffff\12\2\1\uffff\1\1",
             "\1\uffff",
@@ -21158,7 +21533,7 @@ public class FanParser extends Parser {
             this.transition = DFA92_transition;
         }
         public String getDescription() {
-            return "364:21: ( catchDef )?";
+            return "373:21: ( catchDef )?";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -21194,13 +21569,13 @@ public class FanParser extends Parser {
     static final String DFA108_minS =
         "\1\4\17\uffff\1\0\64\uffff";
     static final String DFA108_maxS =
-        "\1\164\17\uffff\1\0\64\uffff";
+        "\1\174\17\uffff\1\0\64\uffff";
     static final String DFA108_acceptS =
         "\1\uffff\1\2\102\uffff\1\1";
     static final String DFA108_specialS =
         "\20\uffff\1\0\64\uffff}>";
     static final String[] DFA108_transitionS = {
-            "\15\1\1\uffff\11\1\1\uffff\23\1\25\uffff\2\1\1\uffff\3\1\1\uffff"+
+            "\15\1\1\uffff\11\1\1\uffff\23\1\35\uffff\2\1\1\uffff\3\1\1\uffff"+
             "\1\20\1\uffff\13\1\1\104\1\1\2\uffff\3\1\2\uffff\4\1\3\uffff"+
             "\15\1",
             "",
@@ -21303,7 +21678,7 @@ public class FanParser extends Parser {
             this.transition = DFA108_transition;
         }
         public String getDescription() {
-            return "()* loopback of 393:25: ( ( OP_BITOR | SP_PIPE ) bitAndExpr )*";
+            return "()* loopback of 402:25: ( ( OP_BITOR | SP_PIPE ) bitAndExpr )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -21339,13 +21714,13 @@ public class FanParser extends Parser {
     static final String DFA109_minS =
         "\1\4\67\uffff\1\0\16\uffff";
     static final String DFA109_maxS =
-        "\1\164\67\uffff\1\0\16\uffff";
+        "\1\174\67\uffff\1\0\16\uffff";
     static final String DFA109_acceptS =
         "\1\uffff\1\2\104\uffff\1\1";
     static final String DFA109_specialS =
         "\70\uffff\1\0\16\uffff}>";
     static final String[] DFA109_transitionS = {
-            "\15\1\1\uffff\11\1\1\uffff\23\1\25\uffff\2\1\1\uffff\3\1\1\uffff"+
+            "\15\1\1\uffff\11\1\1\uffff\23\1\35\uffff\2\1\1\uffff\3\1\1\uffff"+
             "\1\1\1\uffff\14\1\1\70\2\uffff\3\1\2\uffff\4\1\3\uffff\15\1",
             "",
             "",
@@ -21449,7 +21824,7 @@ public class FanParser extends Parser {
             this.transition = DFA109_transition;
         }
         public String getDescription() {
-            return "()* loopback of 394:25: ( OP_CURRY shiftExpr )*";
+            return "()* loopback of 403:25: ( OP_CURRY shiftExpr )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -21485,13 +21860,13 @@ public class FanParser extends Parser {
     static final String DFA111_minS =
         "\1\4\56\uffff\1\0\12\uffff\1\0\16\uffff";
     static final String DFA111_maxS =
-        "\1\164\56\uffff\1\0\12\uffff\1\0\16\uffff";
+        "\1\174\56\uffff\1\0\12\uffff\1\0\16\uffff";
     static final String DFA111_acceptS =
         "\1\uffff\1\2\106\uffff\1\1";
     static final String DFA111_specialS =
         "\57\uffff\1\0\12\uffff\1\1\16\uffff}>";
     static final String[] DFA111_transitionS = {
-            "\15\1\1\uffff\11\1\1\uffff\23\1\25\uffff\2\1\1\uffff\3\1\1\uffff"+
+            "\15\1\1\uffff\11\1\1\uffff\23\1\35\uffff\2\1\1\uffff\3\1\1\uffff"+
             "\1\1\1\uffff\17\1\1\72\1\57\1\1\2\uffff\4\1\3\uffff\15\1",
             "",
             "",
@@ -21597,7 +21972,7 @@ public class FanParser extends Parser {
             this.transition = DFA111_transition;
         }
         public String getDescription() {
-            return "()* loopback of 396:21: ( ( OP_PLUS | OP_MINUS ) multExpr )*";
+            return "()* loopback of 405:21: ( ( OP_PLUS | OP_MINUS ) multExpr )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -21648,13 +22023,13 @@ public class FanParser extends Parser {
     static final String DFA113_minS =
         "\1\46\1\0\25\uffff";
     static final String DFA113_maxS =
-        "\1\163\1\0\25\uffff";
+        "\1\173\1\0\25\uffff";
     static final String DFA113_acceptS =
         "\2\uffff\1\3\22\uffff\1\1\1\2";
     static final String DFA113_specialS =
         "\1\uffff\1\0\25\uffff}>";
     static final String[] DFA113_transitionS = {
-            "\2\2\3\uffff\4\2\34\uffff\1\2\15\uffff\1\2\2\uffff\3\2\2\uffff"+
+            "\2\2\3\uffff\4\2\44\uffff\1\2\15\uffff\1\2\2\uffff\3\2\2\uffff"+
             "\4\2\3\uffff\7\2\1\uffff\2\2\1\uffff\1\1",
             "\1\uffff",
             "",
@@ -21710,7 +22085,7 @@ public class FanParser extends Parser {
             this.transition = DFA113_transition;
         }
         public String getDescription() {
-            return "399:1: parenExpr : ( castExpr | groupedExpr | unaryExpr );";
+            return "408:1: parenExpr : ( castExpr | groupedExpr | unaryExpr );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -21746,13 +22121,13 @@ public class FanParser extends Parser {
     static final String DFA114_minS =
         "\1\4\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\34\uffff";
     static final String DFA114_maxS =
-        "\1\164\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\34\uffff";
+        "\1\174\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\34\uffff";
     static final String DFA114_acceptS =
         "\1\uffff\1\2\107\uffff\1\1\3\uffff";
     static final String DFA114_specialS =
         "\25\uffff\1\0\2\uffff\1\1\27\uffff\1\2\34\uffff}>";
     static final String[] DFA114_transitionS = {
-            "\15\1\1\uffff\11\1\1\uffff\23\1\24\uffff\1\111\1\30\1\1\1\uffff"+
+            "\15\1\1\uffff\11\1\1\uffff\23\1\34\uffff\1\111\1\30\1\1\1\uffff"+
             "\3\1\1\uffff\1\1\1\111\30\1\1\uffff\2\111\11\1\1\25\1\1\1\60"+
             "\1\1",
             "",
@@ -21863,7 +22238,7 @@ public class FanParser extends Parser {
             this.transition = DFA114_transition;
         }
         public String getDescription() {
-            return "()* loopback of 403:31: ( termChain )*";
+            return "()* loopback of 412:31: ( termChain )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -21908,7 +22283,7 @@ public class FanParser extends Parser {
                         s = -1;
                         if ( ((synpred170_Fan()&&(notAfterEol()))) ) {s = 73;}
 
-                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL()))) ) {s = 1;}
+                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
 
                          
                         input.seek(index114_48);
@@ -21929,14 +22304,14 @@ public class FanParser extends Parser {
     static final String DFA115_minS =
         "\1\46\14\0\1\uffff\6\0\2\uffff";
     static final String DFA115_maxS =
-        "\1\161\14\0\1\uffff\6\0\2\uffff";
+        "\1\171\14\0\1\uffff\6\0\2\uffff";
     static final String DFA115_acceptS =
         "\15\uffff\1\1\6\uffff\1\2\1\3";
     static final String DFA115_specialS =
         "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\uffff"+
         "\1\14\1\15\1\16\1\17\1\20\1\21\2\uffff}>";
     static final String[] DFA115_transitionS = {
-            "\1\5\1\6\3\uffff\1\4\1\7\1\10\1\11\34\uffff\1\21\15\uffff\1"+
+            "\1\5\1\6\3\uffff\1\4\1\7\1\10\1\11\44\uffff\1\21\15\uffff\1"+
             "\15\2\uffff\1\15\1\1\1\2\2\uffff\4\15\3\uffff\1\3\1\14\1\17"+
             "\1\12\1\13\1\22\1\23\1\uffff\1\16\1\20",
             "\1\uffff",
@@ -21992,7 +22367,7 @@ public class FanParser extends Parser {
             this.transition = DFA115_transition;
         }
         public String getDescription() {
-            return "404:1: unaryExpr : ( prefixExpr | postfixExpr | termExpr );";
+            return "413:1: unaryExpr : ( prefixExpr | postfixExpr | termExpr );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -22285,13 +22660,13 @@ public class FanParser extends Parser {
     static final String DFA116_minS =
         "\1\4\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\35\uffff";
     static final String DFA116_maxS =
-        "\1\164\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\35\uffff";
+        "\1\174\24\uffff\1\0\2\uffff\1\0\27\uffff\1\0\35\uffff";
     static final String DFA116_acceptS =
         "\1\uffff\1\2\110\uffff\1\1\3\uffff";
     static final String DFA116_specialS =
         "\25\uffff\1\0\2\uffff\1\1\27\uffff\1\2\35\uffff}>";
     static final String[] DFA116_transitionS = {
-            "\15\1\1\uffff\11\1\1\uffff\23\1\24\uffff\1\112\1\30\1\1\1\uffff"+
+            "\15\1\1\uffff\11\1\1\uffff\23\1\34\uffff\1\112\1\30\1\1\1\uffff"+
             "\3\1\1\uffff\1\1\1\112\30\1\1\uffff\2\112\11\1\1\25\1\1\1\60"+
             "\1\1",
             "",
@@ -22403,7 +22778,7 @@ public class FanParser extends Parser {
             this.transition = DFA116_transition;
         }
         public String getDescription() {
-            return "()* loopback of 407:22: ( termChain )*";
+            return "()* loopback of 416:22: ( termChain )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -22448,7 +22823,7 @@ public class FanParser extends Parser {
                         s = -1;
                         if ( ((synpred180_Fan()&&(notAfterEol()))) ) {s = 74;}
 
-                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
+                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
 
                          
                         input.seek(index116_48);
@@ -22469,13 +22844,13 @@ public class FanParser extends Parser {
     static final String DFA117_minS =
         "\1\46\1\uffff\1\0\14\uffff\3\0\3\uffff";
     static final String DFA117_maxS =
-        "\1\161\1\uffff\1\0\14\uffff\3\0\3\uffff";
+        "\1\171\1\uffff\1\0\14\uffff\3\0\3\uffff";
     static final String DFA117_acceptS =
         "\1\uffff\1\1\1\uffff\1\2\17\uffff\1\3\1\4";
     static final String DFA117_specialS =
         "\2\uffff\1\0\14\uffff\1\1\1\2\1\3\3\uffff}>";
     static final String[] DFA117_transitionS = {
-            "\2\3\3\uffff\4\3\34\uffff\1\20\21\uffff\1\3\1\1\11\uffff\1\2"+
+            "\2\3\3\uffff\4\3\44\uffff\1\20\21\uffff\1\3\1\1\11\uffff\1\2"+
             "\4\3\1\21\1\3\1\uffff\1\3\1\17",
             "",
             "\1\uffff",
@@ -22529,7 +22904,7 @@ public class FanParser extends Parser {
             this.transition = DFA117_transition;
         }
         public String getDescription() {
-            return "409:1: termBase : ( idExprReq | literal | typeBase | id );";
+            return "419:1: termBase : ( idExprReq | literal | typeBase | id );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -22612,9 +22987,9 @@ public class FanParser extends Parser {
     static final String DFA118_eofS =
         "\14\uffff";
     static final String DFA118_minS =
-        "\1\113\3\0\10\uffff";
+        "\1\123\3\0\10\uffff";
     static final String DFA118_maxS =
-        "\1\161\3\0\10\uffff";
+        "\1\171\3\0\10\uffff";
     static final String DFA118_acceptS =
         "\4\uffff\1\2\1\1\1\4\1\7\1\10\1\6\1\3\1\5";
     static final String DFA118_specialS =
@@ -22664,7 +23039,7 @@ public class FanParser extends Parser {
             this.transition = DFA118_transition;
         }
         public String getDescription() {
-            return "410:1: typeBase : ( typeLiteral | slotLiteral | namedSuper | staticCall | dsl | closure | simple | ctorBlock );";
+            return "420:1: typeBase : ( typeLiteral | slotLiteral | namedSuper | staticCall | dsl | closure | simple | ctorBlock );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -22747,6 +23122,151 @@ public class FanParser extends Parser {
             throw nvae;
         }
     }
+    static final String DFA119_eotS =
+        "\22\uffff";
+    static final String DFA119_eofS =
+        "\1\uffff\1\10\1\uffff\1\15\16\uffff";
+    static final String DFA119_minS =
+        "\1\113\1\4\1\uffff\1\4\5\uffff\1\46\1\0\1\46\1\0\1\uffff\1\0\1\uffff"+
+        "\1\0\1\uffff";
+    static final String DFA119_maxS =
+        "\1\173\1\174\1\uffff\1\174\5\uffff\1\173\1\0\1\173\1\0\1\uffff\1"+
+        "\0\1\uffff\1\0\1\uffff";
+    static final String DFA119_acceptS =
+        "\2\uffff\1\2\1\uffff\1\4\1\5\1\6\1\7\1\10\4\uffff\1\11\1\uffff\1"+
+        "\1\1\uffff\1\3";
+    static final String DFA119_specialS =
+        "\12\uffff\1\0\1\uffff\1\2\1\uffff\1\1\1\uffff\1\3\1\uffff}>";
+    static final String[] DFA119_transitionS = {
+            "\1\1\1\7\7\uffff\1\2\31\uffff\1\3\1\4\11\uffff\1\5\1\uffff\1"+
+            "\6",
+            "\15\10\1\uffff\11\10\1\uffff\23\10\34\uffff\3\10\1\uffff\3"+
+            "\10\1\uffff\23\10\1\11\6\10\1\uffff\2\10\1\12\14\10",
+            "",
+            "\15\15\1\uffff\11\15\1\uffff\23\15\34\uffff\3\15\1\uffff\3"+
+            "\15\1\uffff\23\15\1\13\6\15\1\uffff\2\15\1\14\14\15",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "\2\10\3\uffff\4\10\44\uffff\1\10\15\uffff\1\10\2\uffff\3\10"+
+            "\2\uffff\4\10\3\uffff\1\16\6\10\1\uffff\2\10\1\uffff\1\10",
+            "\1\uffff",
+            "\2\15\3\uffff\4\15\44\uffff\1\15\15\uffff\1\15\2\uffff\3\15"+
+            "\2\uffff\4\15\3\uffff\1\20\6\15\1\uffff\2\15\1\uffff\1\15",
+            "\1\uffff",
+            "",
+            "\1\uffff",
+            "",
+            "\1\uffff",
+            ""
+    };
+
+    static final short[] DFA119_eot = DFA.unpackEncodedString(DFA119_eotS);
+    static final short[] DFA119_eof = DFA.unpackEncodedString(DFA119_eofS);
+    static final char[] DFA119_min = DFA.unpackEncodedStringToUnsignedChars(DFA119_minS);
+    static final char[] DFA119_max = DFA.unpackEncodedStringToUnsignedChars(DFA119_maxS);
+    static final short[] DFA119_accept = DFA.unpackEncodedString(DFA119_acceptS);
+    static final short[] DFA119_special = DFA.unpackEncodedString(DFA119_specialS);
+    static final short[][] DFA119_transition;
+
+    static {
+        int numStates = DFA119_transitionS.length;
+        DFA119_transition = new short[numStates][];
+        for (int i=0; i<numStates; i++) {
+            DFA119_transition[i] = DFA.unpackEncodedString(DFA119_transitionS[i]);
+        }
+    }
+
+    class DFA119 extends DFA {
+
+        public DFA119(BaseRecognizer recognizer) {
+            this.recognizer = recognizer;
+            this.decisionNumber = 119;
+            this.eot = DFA119_eot;
+            this.eof = DFA119_eof;
+            this.min = DFA119_min;
+            this.max = DFA119_max;
+            this.accept = DFA119_accept;
+            this.special = DFA119_special;
+            this.transition = DFA119_transition;
+        }
+        public String getDescription() {
+            return "426:1: termChain : ( dotCall | dynCall | safeDotCall | safeDynCall | indexExpr | callOp | itBlock | incDotCall | incSafeDotCall );";
+        }
+        public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
+            TokenStream input = (TokenStream)_input;
+        	int _s = s;
+            switch ( s ) {
+                    case 0 : 
+                        int LA119_10 = input.LA(1);
+
+                         
+                        int index119_10 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred191_Fan()) ) {s = 15;}
+
+                        else if ( (synpred198_Fan()) ) {s = 8;}
+
+                         
+                        input.seek(index119_10);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
+                        int LA119_14 = input.LA(1);
+
+                         
+                        int index119_14 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred191_Fan()) ) {s = 15;}
+
+                        else if ( (synpred198_Fan()) ) {s = 8;}
+
+                         
+                        input.seek(index119_14);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
+                        int LA119_12 = input.LA(1);
+
+                         
+                        int index119_12 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred193_Fan()) ) {s = 17;}
+
+                        else if ( (true) ) {s = 13;}
+
+                         
+                        input.seek(index119_12);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
+                        int LA119_16 = input.LA(1);
+
+                         
+                        int index119_16 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred193_Fan()) ) {s = 17;}
+
+                        else if ( (true) ) {s = 13;}
+
+                         
+                        input.seek(index119_16);
+                        if ( s>=0 ) return s;
+                        break;
+            }
+            if (state.backtracking>0) {state.failed=true; return -1;}
+            NoViableAltException nvae =
+                new NoViableAltException(getDescription(), 119, _s, input);
+            error(nvae);
+            throw nvae;
+        }
+    }
     static final String DFA124_eotS =
         "\117\uffff";
     static final String DFA124_eofS =
@@ -22754,13 +23274,13 @@ public class FanParser extends Parser {
     static final String DFA124_minS =
         "\1\4\5\uffff\1\0\110\uffff";
     static final String DFA124_maxS =
-        "\1\164\5\uffff\1\0\110\uffff";
+        "\1\174\5\uffff\1\0\110\uffff";
     static final String DFA124_acceptS =
         "\1\uffff\1\2\114\uffff\1\1";
     static final String DFA124_specialS =
         "\6\uffff\1\0\110\uffff}>";
     static final String[] DFA124_transitionS = {
-            "\15\1\1\uffff\11\1\1\uffff\23\1\24\uffff\3\1\1\uffff\3\1\1\uffff"+
+            "\15\1\1\uffff\11\1\1\uffff\23\1\34\uffff\3\1\1\uffff\3\1\1\uffff"+
             "\1\6\31\1\1\uffff\17\1",
             "",
             "",
@@ -22872,7 +23392,7 @@ public class FanParser extends Parser {
             this.transition = DFA124_transition;
         }
         public String getDescription() {
-            return "()* loopback of 427:45: ( closure )*";
+            return "()* loopback of 445:45: ( closure )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -22885,7 +23405,7 @@ public class FanParser extends Parser {
                         int index124_6 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred201_Fan()) ) {s = 78;}
+                        if ( (synpred203_Fan()) ) {s = 78;}
 
                         else if ( (true) ) {s = 1;}
 
@@ -22908,14 +23428,14 @@ public class FanParser extends Parser {
     static final String DFA130_minS =
         "\1\46\14\uffff\3\0\7\uffff";
     static final String DFA130_maxS =
-        "\1\161\14\uffff\3\0\7\uffff";
+        "\1\171\14\uffff\3\0\7\uffff";
     static final String DFA130_acceptS =
         "\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\uffff\1\10\1\11\1\uffff\1"+
         "\12\3\uffff\1\14\1\20\1\13\1\15\1\16\1\17\1\21";
     static final String DFA130_specialS =
         "\15\uffff\1\0\1\1\1\2\7\uffff}>";
     static final String[] DFA130_transitionS = {
-            "\1\2\1\3\3\uffff\1\1\1\4\1\5\1\6\34\uffff\1\17\21\uffff\1\12"+
+            "\1\2\1\3\3\uffff\1\1\1\4\1\5\1\6\44\uffff\1\17\21\uffff\1\12"+
             "\12\uffff\1\15\1\11\1\14\2\7\1\20\1\21\1\uffff\1\12\1\16",
             "",
             "",
@@ -22971,7 +23491,7 @@ public class FanParser extends Parser {
             this.transition = DFA130_transition;
         }
         public String getDescription() {
-            return "442:1: literal : ( KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | URI | number | CHAR | namedSuper | slotLiteral | typeLiteral | list | map | symbLiteral | simple );";
+            return "461:1: literal : ( KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | URI | number | CHAR | namedSuper | slotLiteral | typeLiteral | list | map | symbLiteral | simple );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -22984,15 +23504,15 @@ public class FanParser extends Parser {
                         int index130_13 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred218_Fan()) ) {s = 18;}
+                        if ( (synpred220_Fan()) ) {s = 18;}
 
-                        else if ( (synpred219_Fan()) ) {s = 16;}
+                        else if ( (synpred221_Fan()) ) {s = 16;}
 
-                        else if ( (synpred220_Fan()) ) {s = 19;}
+                        else if ( (synpred222_Fan()) ) {s = 19;}
 
-                        else if ( (synpred221_Fan()) ) {s = 20;}
+                        else if ( (synpred223_Fan()) ) {s = 20;}
 
-                        else if ( (synpred222_Fan()) ) {s = 21;}
+                        else if ( (synpred224_Fan()) ) {s = 21;}
 
                         else if ( (true) ) {s = 22;}
 
@@ -23007,13 +23527,13 @@ public class FanParser extends Parser {
                         int index130_14 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred219_Fan()) ) {s = 16;}
+                        if ( (synpred221_Fan()) ) {s = 16;}
 
-                        else if ( (synpred220_Fan()) ) {s = 19;}
+                        else if ( (synpred222_Fan()) ) {s = 19;}
 
-                        else if ( (synpred221_Fan()) ) {s = 20;}
+                        else if ( (synpred223_Fan()) ) {s = 20;}
 
-                        else if ( (synpred222_Fan()) ) {s = 21;}
+                        else if ( (synpred224_Fan()) ) {s = 21;}
 
                         else if ( (true) ) {s = 22;}
 
@@ -23028,13 +23548,13 @@ public class FanParser extends Parser {
                         int index130_15 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (synpred219_Fan()) ) {s = 16;}
+                        if ( (synpred221_Fan()) ) {s = 16;}
 
-                        else if ( (synpred220_Fan()) ) {s = 19;}
+                        else if ( (synpred222_Fan()) ) {s = 19;}
 
-                        else if ( (synpred221_Fan()) ) {s = 20;}
+                        else if ( (synpred223_Fan()) ) {s = 20;}
 
-                        else if ( (synpred222_Fan()) ) {s = 21;}
+                        else if ( (synpred224_Fan()) ) {s = 21;}
 
                         else if ( (true) ) {s = 22;}
 
@@ -23052,632 +23572,639 @@ public class FanParser extends Parser {
     }
  
 
-    public static final BitSet FOLLOW_using_in_prog409 = new BitSet(new long[]{0x0000000FF4320000L,0x0000C10000000000L});
-    public static final BitSet FOLLOW_podDef_in_prog413 = new BitSet(new long[]{0x0000000000000000L,0x0000800000000000L});
-    public static final BitSet FOLLOW_typeDef_in_prog417 = new BitSet(new long[]{0x0000000FF4300000L,0x0000C00000000000L});
-    public static final BitSet FOLLOW_docs_in_prog421 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_prog423 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_usingPod_in_using443 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_usingType_in_using447 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_usingAs_in_using451 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_USING_in_usingPod461 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_podSpec_in_usingPod463 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_usingPod465 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_USING_in_usingType475 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_podSpec_in_usingType477 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000004L});
-    public static final BitSet FOLLOW_SP_COLCOL_in_usingType479 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_usingType481 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_usingType483 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_USING_in_usingAs492 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_podSpec_in_usingAs494 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000004L});
-    public static final BitSet FOLLOW_SP_COLCOL_in_usingAs496 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_usingAs498 = new BitSet(new long[]{0x0000000000040000L,0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_141_in_usingAs501 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_usingAs503 = new BitSet(new long[]{0x0000000000040000L,0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_KW_AS_in_usingAs507 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_usingAs509 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_usingAs511 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ffi_in_podSpec519 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_podSpec522 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000008L});
-    public static final BitSet FOLLOW_DOT_in_podSpec525 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_podSpec527 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000008L});
-    public static final BitSet FOLLOW_sq_bracketL_in_ffi538 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_ffi540 = new BitSet(new long[]{0x0000000000000000L,0x0004000000000000L});
-    public static final BitSet FOLLOW_sq_bracketR_in_ffi542 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_podHeader_in_podDef551 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});
-    public static final BitSet FOLLOW_BRACKET_L_in_podDef553 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_symbolDef_in_podDef555 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_BRACKET_R_in_podDef558 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_podHeader565 = new BitSet(new long[]{0x0000000000000000L,0x0000C10000000000L});
-    public static final BitSet FOLLOW_facet_in_podHeader567 = new BitSet(new long[]{0x0000000000000000L,0x0000C10000000000L});
-    public static final BitSet FOLLOW_pod_in_podHeader570 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_podHeader572 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_symbolDef579 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000800L});
-    public static final BitSet FOLLOW_facet_in_symbolDef581 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000800L});
-    public static final BitSet FOLLOW_symbolFlag_in_symbolDef584 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000800L});
-    public static final BitSet FOLLOW_typeId_in_symbolDef587 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000040L});
-    public static final BitSet FOLLOW_AS_INIT_VAL_in_symbolDef589 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_symbolDef591 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_symbolDef593 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_VIRTUAL_in_symbolFlag600 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_typeDef610 = new BitSet(new long[]{0x0000000FF4300000L,0x0000C00000000000L});
-    public static final BitSet FOLLOW_facet_in_typeDef612 = new BitSet(new long[]{0x0000000FF4300000L,0x0000C00000000000L});
-    public static final BitSet FOLLOW_classDef_in_typeDef623 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_enumDef_in_typeDef637 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_mixinDef_in_typeDef641 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_classHeader_in_classDef663 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});
-    public static final BitSet FOLLOW_classBody_in_classDef665 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_classHeader688 = new BitSet(new long[]{0x0000000F94300000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_facet_in_classHeader690 = new BitSet(new long[]{0x0000000F94300000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_classFlags_in_classHeader695 = new BitSet(new long[]{0x0000000F94300000L});
-    public static final BitSet FOLLOW_KW_CLASS_in_classHeader698 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_classHeader702 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000080L});
-    public static final BitSet FOLLOW_inheritance_in_classHeader704 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_protection_in_classFlags740 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_ABSTRACT_in_classFlags744 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_FINAL_in_classFlags748 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_CONST_in_classFlags752 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_STATIC_in_classFlags756 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_bracketL_in_classBody765 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_slotDef_in_classBody767 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_bracketR_in_classBody770 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_using_in_prog434 = new BitSet(new long[]{0x0000000FF4320000L,0x00C1000000000000L});
+    public static final BitSet FOLLOW_podDef_in_prog438 = new BitSet(new long[]{0x0000000000000000L,0x0080000000000000L});
+    public static final BitSet FOLLOW_typeDef_in_prog442 = new BitSet(new long[]{0x0000000FF4300000L,0x00C0000000000000L});
+    public static final BitSet FOLLOW_docs_in_prog446 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_prog448 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_usingPod_in_using468 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_usingType_in_using472 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_usingAs_in_using476 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_USING_in_usingPod486 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_podSpec_in_usingPod488 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_usingPod490 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_USING_in_usingType500 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_podSpec_in_usingType502 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000400L});
+    public static final BitSet FOLLOW_SP_COLCOL_in_usingType504 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_usingType506 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_usingType508 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_USING_in_usingAs517 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_podSpec_in_usingAs519 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000400L});
+    public static final BitSet FOLLOW_SP_COLCOL_in_usingAs521 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_usingAs523 = new BitSet(new long[]{0x0000000000040000L,0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_149_in_usingAs526 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_usingAs528 = new BitSet(new long[]{0x0000000000040000L,0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_KW_AS_in_usingAs532 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_usingAs534 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_usingAs536 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ffi_in_podSpec544 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_podSpec547 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
+    public static final BitSet FOLLOW_DOT_in_podSpec550 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_podSpec552 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
+    public static final BitSet FOLLOW_sq_bracketL_in_ffi563 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_ffi565 = new BitSet(new long[]{0x0000000000000000L,0x0400000000000000L});
+    public static final BitSet FOLLOW_sq_bracketR_in_ffi567 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_podHeader_in_podDef576 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_BRACKET_L_in_podDef578 = new BitSet(new long[]{0x0000000002000000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_symbolDef_in_podDef580 = new BitSet(new long[]{0x0000000002000000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_BRACKET_R_in_podDef583 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_podHeader590 = new BitSet(new long[]{0x0000000000000000L,0x00C1000000000000L});
+    public static final BitSet FOLLOW_facet_in_podHeader592 = new BitSet(new long[]{0x0000000000000000L,0x00C1000000000000L});
+    public static final BitSet FOLLOW_pod_in_podHeader595 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_podHeader597 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_symbolDef604 = new BitSet(new long[]{0x0000000002000000L,0x02C1000000080000L});
+    public static final BitSet FOLLOW_facet_in_symbolDef606 = new BitSet(new long[]{0x0000000002000000L,0x02C1000000080000L});
+    public static final BitSet FOLLOW_symbolFlag_in_symbolDef609 = new BitSet(new long[]{0x0000000002000000L,0x02C1000000080000L});
+    public static final BitSet FOLLOW_typeId_in_symbolDef612 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
+    public static final BitSet FOLLOW_AS_INIT_VAL_in_symbolDef614 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_symbolDef616 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_symbolDef618 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_VIRTUAL_in_symbolFlag625 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_typeDef635 = new BitSet(new long[]{0x0000000FF4300000L,0x00C0000000000000L});
+    public static final BitSet FOLLOW_facet_in_typeDef637 = new BitSet(new long[]{0x0000000FF4300000L,0x00C0000000000000L});
+    public static final BitSet FOLLOW_classDef_in_typeDef648 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_enumDef_in_typeDef662 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_mixinDef_in_typeDef666 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_classHeader_in_classDef688 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_classBody_in_classDef690 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_classHeader713 = new BitSet(new long[]{0x0000000F94300000L,0x0040000000000000L});
+    public static final BitSet FOLLOW_facet_in_classHeader715 = new BitSet(new long[]{0x0000000F94300000L,0x0040000000000000L});
+    public static final BitSet FOLLOW_classFlags_in_classHeader720 = new BitSet(new long[]{0x0000000F94300000L});
+    public static final BitSet FOLLOW_KW_CLASS_in_classHeader723 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_classHeader727 = new BitSet(new long[]{0x0000000000000002L,0x0000000000008000L});
+    public static final BitSet FOLLOW_inheritance_in_classHeader729 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_protection_in_classFlags765 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_ABSTRACT_in_classFlags769 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_FINAL_in_classFlags773 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_CONST_in_classFlags777 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_STATIC_in_classFlags781 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_bracketL_in_classBody790 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_slotDef_in_classBody792 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_bracketR_in_classBody795 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_set_in_protection0 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_mixinHeader_in_mixinDef822 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});
-    public static final BitSet FOLLOW_mixinBody_in_mixinDef824 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_mixinHeader847 = new BitSet(new long[]{0x0000000F44300000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_facet_in_mixinHeader849 = new BitSet(new long[]{0x0000000F44300000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_mixinFlags_in_mixinHeader854 = new BitSet(new long[]{0x0000000F44300000L});
-    public static final BitSet FOLLOW_KW_MIXIN_in_mixinHeader857 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_mixinHeader861 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000080L});
-    public static final BitSet FOLLOW_inheritance_in_mixinHeader863 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_protection_in_mixinFlags898 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_CONST_in_mixinFlags902 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_STATIC_in_mixinFlags906 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_FINAL_in_mixinFlags910 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_bracketL_in_mixinBody917 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_slotDef_in_mixinBody919 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_bracketR_in_mixinBody922 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_enumHeader_in_enumDef955 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});
-    public static final BitSet FOLLOW_enumBody_in_enumDef957 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_enumHeader983 = new BitSet(new long[]{0x0000000F20000000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_facet_in_enumHeader985 = new BitSet(new long[]{0x0000000F20000000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_protection_in_enumHeader990 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_KW_ENUM_in_enumHeader993 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_enumHeader997 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000080L});
-    public static final BitSet FOLLOW_inheritance_in_enumHeader999 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_bracketL_in_enumBody1034 = new BitSet(new long[]{0x0000000000000000L,0x0002810000000000L});
-    public static final BitSet FOLLOW_enumValDefs_in_enumBody1036 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_slotDef_in_enumBody1038 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_bracketR_in_enumBody1041 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_COLON_in_inheritance1066 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_typeList_in_inheritance1068 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_enumValDef_in_enumValDefs1078 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002100L});
-    public static final BitSet FOLLOW_SP_COMMA_in_enumValDefs1081 = new BitSet(new long[]{0x0000000000000000L,0x0002810000000000L});
-    public static final BitSet FOLLOW_enumValDef_in_enumValDefs1084 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002100L});
-    public static final BitSet FOLLOW_eos_in_enumValDefs1088 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_enumValDef1096 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_enumValDef1098 = new BitSet(new long[]{0x0000000000000002L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_enumValDef1101 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_args_in_enumValDef1103 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_enumValDef1106 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_typeList1117 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_SP_COMMA_in_typeList1120 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_type_in_typeList1122 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_typeRoot_in_type1142 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000600L});
-    public static final BitSet FOLLOW_SP_QMARK_in_type1145 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000400L});
-    public static final BitSet FOLLOW_LIST_TYPE_in_type1149 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000600L});
-    public static final BitSet FOLLOW_SP_QMARK_in_type1151 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000400L});
-    public static final BitSet FOLLOW_funcType_in_nonMapType1162 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_simpleType_in_nonMapType1166 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_mapType_in_typeRoot1173 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_nonMapType_in_typeRoot1177 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_id_in_simpleType1191 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000004L});
-    public static final BitSet FOLLOW_SP_COLCOL_in_simpleType1194 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_simpleType1196 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_sq_bracketL_in_mapType1207 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_nonMapType_in_mapType1210 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000680L});
-    public static final BitSet FOLLOW_SP_QMARK_in_mapType1212 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000480L});
-    public static final BitSet FOLLOW_LIST_TYPE_in_mapType1216 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000680L});
-    public static final BitSet FOLLOW_SP_QMARK_in_mapType1218 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000480L});
-    public static final BitSet FOLLOW_SP_COLON_in_mapType1230 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_type_in_mapType1234 = new BitSet(new long[]{0x0000000000000002L,0x0004000000000080L});
-    public static final BitSet FOLLOW_sq_bracketR_in_mapType1238 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_PIPE_in_funcType1247 = new BitSet(new long[]{0x0000000000000000L,0x0002010000001900L});
-    public static final BitSet FOLLOW_SP_COMMA_in_funcType1250 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_formals_in_funcType1255 = new BitSet(new long[]{0x0000000000000000L,0x0002010000001900L});
-    public static final BitSet FOLLOW_assignedType_in_funcType1262 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_assignedType_in_funcType1274 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_SP_PIPE_in_funcType1278 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_OP_ARROW_in_assignedType1285 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_type_in_assignedType1287 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_formal_in_formals1297 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_SP_COMMA_in_formals1300 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_formal_in_formals1302 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_formalFull_in_formal1312 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_formalTypeOnly_in_formal1316 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_formalInferred_in_formal1320 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_formalFull1332 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_formalFull1334 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_formalTypeOnly1344 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_id_in_formalInferred1354 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_staticBlock_in_slotDef1370 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_slotDef1378 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000800L});
-    public static final BitSet FOLLOW_facet_in_slotDef1380 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000800L});
-    public static final BitSet FOLLOW_ctorDef_in_slotDef1403 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_methodDef_in_slotDef1430 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_fieldDef_in_slotDef1440 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_fieldDef1476 = new BitSet(new long[]{0x0000000F87F80000L,0x0002C10000000800L});
-    public static final BitSet FOLLOW_facet_in_fieldDef1478 = new BitSet(new long[]{0x0000000F87F80000L,0x0002C10000000800L});
-    public static final BitSet FOLLOW_fieldFlags_in_fieldDef1483 = new BitSet(new long[]{0x0000000002000000L,0x0002C10000000800L});
-    public static final BitSet FOLLOW_typeId_in_fieldDef1485 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002050L});
-    public static final BitSet FOLLOW_AS_INIT_VAL_in_fieldDef1488 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_fieldDef1490 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002010L});
-    public static final BitSet FOLLOW_bracketL_in_fieldDef1505 = new BitSet(new long[]{0x0000000F00000000L,0x0000010000000000L});
-    public static final BitSet FOLLOW_protection_in_fieldDef1508 = new BitSet(new long[]{0x0000000F00000000L,0x0000010000000000L});
-    public static final BitSet FOLLOW_getter_in_fieldDef1512 = new BitSet(new long[]{0x000078FF87F81FF0L,0x000BFF1E72002830L});
-    public static final BitSet FOLLOW_setter_in_fieldDef1516 = new BitSet(new long[]{0x000078FF87F81FF0L,0x000BFF1E72002830L});
-    public static final BitSet FOLLOW_SP_SEMI_in_fieldDef1519 = new BitSet(new long[]{0x000078FF87F81FF0L,0x000BFF1E72000830L});
-    public static final BitSet FOLLOW_block_in_fieldDef1522 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_bracketR_in_fieldDef1527 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_eos_in_fieldDef1536 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeAndId_in_typeId1574 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_fieldId_in_typeId1578 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_id_in_fieldId1587 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_typeAndId1608 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_typeAndId1610 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_ABSTRACT_in_fieldFlags1638 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_KW_RD_ONLY_in_fieldFlags1642 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_KW_CONST_in_fieldFlags1646 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_KW_STATIC_in_fieldFlags1650 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_KW_NATIVE_in_fieldFlags1654 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_KW_VOLATILE_in_fieldFlags1658 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_KW_OVERRIDE_in_fieldFlags1662 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_KW_VIRTUAL_in_fieldFlags1666 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_KW_FINAL_in_fieldFlags1670 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_protection_in_fieldFlags1674 = new BitSet(new long[]{0x0000000F87F80002L});
-    public static final BitSet FOLLOW_docs_in_methodDef1694 = new BitSet(new long[]{0x0000002F87600000L,0x0002410000000800L});
-    public static final BitSet FOLLOW_facet_in_methodDef1696 = new BitSet(new long[]{0x0000002F87600000L,0x0002410000000800L});
-    public static final BitSet FOLLOW_methodFlags_in_methodDef1701 = new BitSet(new long[]{0x0000002F87600000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_type_in_methodDef1706 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_methodDef1712 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_methodDef1714 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_params_in_methodDef1716 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_methodDef1718 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002010L});
-    public static final BitSet FOLLOW_methodBody_in_methodDef1720 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_protection_in_methodFlags1771 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_VIRTUAL_in_methodFlags1775 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_OVERRIDE_in_methodFlags1779 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_ABSTRACT_in_methodFlags1783 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_STATIC_in_methodFlags1787 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_ONCE_in_methodFlags1791 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_NATIVE_in_methodFlags1799 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_FINAL_in_methodFlags1803 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_param_in_params1812 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_SP_COMMA_in_params1815 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_param_in_params1817 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_type_in_param1830 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_param1832 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_AS_INIT_VAL_in_param1835 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_param1837 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_multiStmt_in_methodBody1851 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_eos_in_methodBody1855 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_docs_in_ctorDef1875 = new BitSet(new long[]{0x0000001F00000000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_facet_in_ctorDef1877 = new BitSet(new long[]{0x0000001F00000000L,0x0000400000000000L});
-    public static final BitSet FOLLOW_ctorFlags_in_ctorDef1882 = new BitSet(new long[]{0x0000001F00000000L});
-    public static final BitSet FOLLOW_KW_NEW_in_ctorDef1885 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_ctorDef1889 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_ctorDef1891 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_params_in_ctorDef1893 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_ctorDef1895 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002090L});
-    public static final BitSet FOLLOW_ctorChain_in_ctorDef1904 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002010L});
-    public static final BitSet FOLLOW_methodBody_in_ctorDef1908 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_protection_in_ctorFlags1961 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_COLON_in_ctorChain1968 = new BitSet(new long[]{0x000000C000000000L});
-    public static final BitSet FOLLOW_ctorChainThis_in_ctorChain1971 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ctorChainSuper_in_ctorChain1975 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_THIS_in_ctorChainThis1984 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_DOT_in_ctorChainThis1986 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_ctorChainThis1988 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_ctorChainThis1990 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_args_in_ctorChainThis1992 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_ctorChainThis1995 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_SUPER_in_ctorChainSuper2002 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000008L});
-    public static final BitSet FOLLOW_DOT_in_ctorChainSuper2005 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_ctorChainSuper2007 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_ctorChainSuper2011 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_args_in_ctorChainSuper2013 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_ctorChainSuper2016 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_STATIC_in_staticBlock2024 = new BitSet(new long[]{0x000078C002001FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_block_in_staticBlock2026 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_multiStmt_in_block2051 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_stmt_in_block2055 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_bracketL_in_multiStmt2063 = new BitSet(new long[]{0x000078FF87F81FF0L,0x000BFF1E72000830L});
-    public static final BitSet FOLLOW_stmt_in_multiStmt2065 = new BitSet(new long[]{0x000078FF87F81FF0L,0x000BFF1E72000830L});
-    public static final BitSet FOLLOW_bracketR_in_multiStmt2068 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_g_if_in_stmt2103 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_g_for_in_stmt2107 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_g_while_in_stmt2111 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_g_break_in_stmt2115 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_g_continue_in_stmt2122 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_g_return_in_stmt2126 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_g_switch_in_stmt2130 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_g_throw_in_stmt2137 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_g_try_in_stmt2141 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_exprStmt_in_stmt2145 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_localDef_in_stmt2149 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_stmt_in_stmtList2162 = new BitSet(new long[]{0x000078C002001FF2L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_KW_BREAK_in_g_break2184 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_g_break2186 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_CONTINUE_in_g_continue2193 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_g_continue2195 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_FOR_in_g_for2203 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_g_for2205 = new BitSet(new long[]{0x000078C002000000L,0x000BFF1E72002800L});
-    public static final BitSet FOLLOW_forInit_in_g_for2207 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_SP_SEMI_in_g_for2210 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72002800L});
-    public static final BitSet FOLLOW_expr_in_g_for2212 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_SP_SEMI_in_g_for2215 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_g_for2217 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_g_for2220 = new BitSet(new long[]{0x000078C002001FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_block_in_g_for2223 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_IF_in_g_if2231 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_g_if2233 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_g_if2235 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_g_if2237 = new BitSet(new long[]{0x000078C002001FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_block_in_g_if2239 = new BitSet(new long[]{0x0000010000000002L});
-    public static final BitSet FOLLOW_KW_ELSE_in_g_if2246 = new BitSet(new long[]{0x000078C002001FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_block_in_g_if2248 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_RETURN_in_g_return2257 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72002800L});
-    public static final BitSet FOLLOW_eos_in_g_return2260 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expr_in_g_return2264 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_g_return2266 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_SWITCH_in_g_switch2274 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_g_switch2276 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_g_switch2278 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_g_switch2280 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});
-    public static final BitSet FOLLOW_bracketL_in_g_switch2282 = new BitSet(new long[]{0x0000003F87F86000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_g_case_in_g_switch2285 = new BitSet(new long[]{0x0000003F87F86000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_g_default_in_g_switch2290 = new BitSet(new long[]{0x0000003F87F80000L,0x0002C10000000820L});
-    public static final BitSet FOLLOW_bracketR_in_g_switch2294 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_THROW_in_g_throw2302 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_g_throw2304 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_g_throw2306 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_WHILE_in_g_while2314 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_g_while2316 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_g_while2318 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_g_while2320 = new BitSet(new long[]{0x000078C002001FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_block_in_g_while2322 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_TRY_in_g_try2330 = new BitSet(new long[]{0x000078C002019FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_try_long_in_g_try2337 = new BitSet(new long[]{0x0000000000018002L});
-    public static final BitSet FOLLOW_stmtList_in_g_try2341 = new BitSet(new long[]{0x0000000000018002L});
-    public static final BitSet FOLLOW_g_catch_in_g_try2349 = new BitSet(new long[]{0x0000000000018002L});
-    public static final BitSet FOLLOW_g_finally_in_g_try2358 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_multiStmt_in_try_long2367 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expr_in_exprStmt2374 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_exprStmt2376 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeId_in_localDef2383 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002040L});
-    public static final BitSet FOLLOW_AS_INIT_VAL_in_localDef2386 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_localDef2388 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_eos_in_localDef2392 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_forInitDef_in_forInit2400 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expr_in_forInit2404 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeId_in_forInitDef2411 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_AS_INIT_VAL_in_forInitDef2414 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_forInitDef2416 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_CATCH_in_g_catch2427 = new BitSet(new long[]{0x000078C002001FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_catchDef_in_g_catch2429 = new BitSet(new long[]{0x000078C002001FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_catch_long_in_g_catch2437 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_stmtList_in_g_catch2441 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_multiStmt_in_catch_long2449 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parL_in_catchDef2457 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_type_in_catchDef2459 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_catchDef2461 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_catchDef2463 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_FINALLY_in_g_finally2471 = new BitSet(new long[]{0x000078C002001FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_finally_long_in_g_finally2478 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_stmtList_in_g_finally2482 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_multiStmt_in_finally_long2490 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_CASE_in_g_case2498 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_g_case2500 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000080L});
-    public static final BitSet FOLLOW_SP_COLON_in_g_case2502 = new BitSet(new long[]{0x000078C002001FF2L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_stmt_in_g_case2504 = new BitSet(new long[]{0x000078C002001FF2L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_KW_DEFAULT_in_g_default2512 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000080L});
-    public static final BitSet FOLLOW_SP_COLON_in_g_default2514 = new BitSet(new long[]{0x000078C002001FF2L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_stmt_in_g_default2516 = new BitSet(new long[]{0x000078C002001FF2L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_assignExpr_in_expr2537 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ternaryExpr_in_assignExpr2544 = new BitSet(new long[]{0x0000000000000002L,0x000000000000C000L});
-    public static final BitSet FOLLOW_assignOp_in_assignExpr2547 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_assignExpr_in_assignExpr2549 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_condOrExpr_in_ternaryExpr2558 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000200L});
-    public static final BitSet FOLLOW_ternaryTail_in_ternaryExpr2561 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_QMARK_in_ternaryTail2571 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_condOrExpr_in_ternaryTail2573 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000080L});
-    public static final BitSet FOLLOW_SP_COLON_in_ternaryTail2575 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_condOrExpr_in_ternaryTail2577 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_mixinHeader_in_mixinDef847 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_mixinBody_in_mixinDef849 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_mixinHeader872 = new BitSet(new long[]{0x0000000F44300000L,0x0040000000000000L});
+    public static final BitSet FOLLOW_facet_in_mixinHeader874 = new BitSet(new long[]{0x0000000F44300000L,0x0040000000000000L});
+    public static final BitSet FOLLOW_mixinFlags_in_mixinHeader879 = new BitSet(new long[]{0x0000000F44300000L});
+    public static final BitSet FOLLOW_KW_MIXIN_in_mixinHeader882 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_mixinHeader886 = new BitSet(new long[]{0x0000000000000002L,0x0000000000008000L});
+    public static final BitSet FOLLOW_inheritance_in_mixinHeader888 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_protection_in_mixinFlags923 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_CONST_in_mixinFlags927 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_STATIC_in_mixinFlags931 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_FINAL_in_mixinFlags935 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_bracketL_in_mixinBody942 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_slotDef_in_mixinBody944 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_bracketR_in_mixinBody947 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_enumHeader_in_enumDef980 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_enumBody_in_enumDef982 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_enumHeader1008 = new BitSet(new long[]{0x0000000F20000000L,0x0040000000000000L});
+    public static final BitSet FOLLOW_facet_in_enumHeader1010 = new BitSet(new long[]{0x0000000F20000000L,0x0040000000000000L});
+    public static final BitSet FOLLOW_protection_in_enumHeader1015 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_KW_ENUM_in_enumHeader1018 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_enumHeader1022 = new BitSet(new long[]{0x0000000000000002L,0x0000000000008000L});
+    public static final BitSet FOLLOW_inheritance_in_enumHeader1024 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_bracketL_in_enumBody1059 = new BitSet(new long[]{0x0000000000000000L,0x0281000000000000L});
+    public static final BitSet FOLLOW_enumValDefs_in_enumBody1061 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_slotDef_in_enumBody1063 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_bracketR_in_enumBody1066 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_COLON_in_inheritance1091 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_typeList_in_inheritance1093 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_enumValDef_in_enumValDefs1103 = new BitSet(new long[]{0x0000000000000000L,0x0000000000210000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_enumValDefs1106 = new BitSet(new long[]{0x0000000000000000L,0x0281000000000000L});
+    public static final BitSet FOLLOW_enumValDef_in_enumValDefs1109 = new BitSet(new long[]{0x0000000000000000L,0x0000000000210000L});
+    public static final BitSet FOLLOW_eos_in_enumValDefs1113 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_enumValDef1121 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_enumValDef1123 = new BitSet(new long[]{0x0000000000000002L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_enumValDef1126 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_args_in_enumValDef1128 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_enumValDef1131 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_typeList1142 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_typeList1145 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_type_in_typeList1147 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_typeRoot_in_type1167 = new BitSet(new long[]{0x0000000000000002L,0x0000000000060000L});
+    public static final BitSet FOLLOW_SP_QMARK_in_type1170 = new BitSet(new long[]{0x0000000000000002L,0x0000000000040000L});
+    public static final BitSet FOLLOW_LIST_TYPE_in_type1174 = new BitSet(new long[]{0x0000000000000002L,0x0000000000060000L});
+    public static final BitSet FOLLOW_SP_QMARK_in_type1176 = new BitSet(new long[]{0x0000000000000002L,0x0000000000040000L});
+    public static final BitSet FOLLOW_funcType_in_nonMapType1187 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_simpleType_in_nonMapType1191 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_mapType_in_typeRoot1198 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_nonMapType_in_typeRoot1202 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_id_in_simpleType1216 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000400L});
+    public static final BitSet FOLLOW_SP_COLCOL_in_simpleType1219 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_simpleType1221 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_sq_bracketL_in_mapType1232 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_nonMapType_in_mapType1235 = new BitSet(new long[]{0x0000000000000000L,0x0000000000068000L});
+    public static final BitSet FOLLOW_SP_QMARK_in_mapType1237 = new BitSet(new long[]{0x0000000000000000L,0x0000000000048000L});
+    public static final BitSet FOLLOW_LIST_TYPE_in_mapType1241 = new BitSet(new long[]{0x0000000000000000L,0x0000000000068000L});
+    public static final BitSet FOLLOW_SP_QMARK_in_mapType1243 = new BitSet(new long[]{0x0000000000000000L,0x0000000000048000L});
+    public static final BitSet FOLLOW_SP_COLON_in_mapType1255 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_type_in_mapType1259 = new BitSet(new long[]{0x0000000000000002L,0x0400000000008000L});
+    public static final BitSet FOLLOW_sq_bracketR_in_mapType1263 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_PIPE_in_funcType1272 = new BitSet(new long[]{0x0000000000000000L,0x0201000000190000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_funcType1275 = new BitSet(new long[]{0x0000000000000000L,0x0000000000080000L});
+    public static final BitSet FOLLOW_formals_in_funcType1280 = new BitSet(new long[]{0x0000000000000000L,0x0201000000190000L});
+    public static final BitSet FOLLOW_assignedType_in_funcType1287 = new BitSet(new long[]{0x0000000000000000L,0x0000000000080000L});
+    public static final BitSet FOLLOW_assignedType_in_funcType1299 = new BitSet(new long[]{0x0000000000000000L,0x0000000000080000L});
+    public static final BitSet FOLLOW_SP_PIPE_in_funcType1303 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_OP_ARROW_in_assignedType1310 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_type_in_assignedType1312 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_formal_in_formals1322 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_formals1325 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_formal_in_formals1327 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_formalFull_in_formal1337 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_formalTypeOnly_in_formal1341 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_formalInferred_in_formal1345 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_formalFull1357 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_formalFull1359 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_formalTypeOnly1369 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_id_in_formalInferred1379 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_staticBlock_in_slotDef1395 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_slotDef1403 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000080000L});
+    public static final BitSet FOLLOW_facet_in_slotDef1405 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000080000L});
+    public static final BitSet FOLLOW_ctorDef_in_slotDef1428 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_methodDef_in_slotDef1455 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_fieldDef_in_slotDef1465 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_fieldDef1501 = new BitSet(new long[]{0x0000000F87F80000L,0x02C1000000080000L});
+    public static final BitSet FOLLOW_facet_in_fieldDef1503 = new BitSet(new long[]{0x0000000F87F80000L,0x02C1000000080000L});
+    public static final BitSet FOLLOW_fieldFlags_in_fieldDef1508 = new BitSet(new long[]{0x0000000002000000L,0x02C1000000080000L});
+    public static final BitSet FOLLOW_typeId_in_fieldDef1510 = new BitSet(new long[]{0x0000000000000000L,0x0000000000205000L});
+    public static final BitSet FOLLOW_AS_INIT_VAL_in_fieldDef1513 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_fieldDef1515 = new BitSet(new long[]{0x0000000000000000L,0x0000000000201000L});
+    public static final BitSet FOLLOW_bracketL_in_fieldDef1530 = new BitSet(new long[]{0x0000000F00000000L,0x0001000000000000L});
+    public static final BitSet FOLLOW_protection_in_fieldDef1533 = new BitSet(new long[]{0x0000000F00000000L,0x0001000000000000L});
+    public static final BitSet FOLLOW_getter_in_fieldDef1537 = new BitSet(new long[]{0x000078FF87F81FF0L,0x0BFF1E7200283000L});
+    public static final BitSet FOLLOW_setter_in_fieldDef1541 = new BitSet(new long[]{0x000078FF87F81FF0L,0x0BFF1E7200283000L});
+    public static final BitSet FOLLOW_SP_SEMI_in_fieldDef1544 = new BitSet(new long[]{0x000078FF87F81FF0L,0x0BFF1E7200083000L});
+    public static final BitSet FOLLOW_block_in_fieldDef1547 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_bracketR_in_fieldDef1552 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_eos_in_fieldDef1561 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeAndId_in_typeId1599 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_fieldId_in_typeId1603 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_id_in_fieldId1612 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_typeAndId1633 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_typeAndId1635 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_ABSTRACT_in_fieldFlags1663 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_KW_RD_ONLY_in_fieldFlags1667 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_KW_CONST_in_fieldFlags1671 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_KW_STATIC_in_fieldFlags1675 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_KW_NATIVE_in_fieldFlags1679 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_KW_VOLATILE_in_fieldFlags1683 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_KW_OVERRIDE_in_fieldFlags1687 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_KW_VIRTUAL_in_fieldFlags1691 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_KW_FINAL_in_fieldFlags1695 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_protection_in_fieldFlags1699 = new BitSet(new long[]{0x0000000F87F80002L});
+    public static final BitSet FOLLOW_docs_in_methodDef1719 = new BitSet(new long[]{0x0000002F87600000L,0x0241000000080000L});
+    public static final BitSet FOLLOW_facet_in_methodDef1721 = new BitSet(new long[]{0x0000002F87600000L,0x0241000000080000L});
+    public static final BitSet FOLLOW_methodFlags_in_methodDef1726 = new BitSet(new long[]{0x0000002F87600000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_type_in_methodDef1731 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_methodDef1737 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_methodDef1739 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_params_in_methodDef1741 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_methodDef1743 = new BitSet(new long[]{0x0000000000000000L,0x0000000000201000L});
+    public static final BitSet FOLLOW_methodBody_in_methodDef1745 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_protection_in_methodFlags1796 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_VIRTUAL_in_methodFlags1800 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_OVERRIDE_in_methodFlags1804 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_ABSTRACT_in_methodFlags1808 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_STATIC_in_methodFlags1812 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_ONCE_in_methodFlags1816 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_NATIVE_in_methodFlags1824 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_FINAL_in_methodFlags1828 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_param_in_params1837 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_params1840 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_param_in_params1842 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_type_in_param1855 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_param1857 = new BitSet(new long[]{0x0000000000000002L,0x0000000000004000L});
+    public static final BitSet FOLLOW_AS_INIT_VAL_in_param1860 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_param1862 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_multiStmt_in_methodBody1876 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_eos_in_methodBody1880 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_docs_in_ctorDef1900 = new BitSet(new long[]{0x0000001F00000000L,0x0040000000000000L});
+    public static final BitSet FOLLOW_facet_in_ctorDef1902 = new BitSet(new long[]{0x0000001F00000000L,0x0040000000000000L});
+    public static final BitSet FOLLOW_ctorFlags_in_ctorDef1907 = new BitSet(new long[]{0x0000001F00000000L});
+    public static final BitSet FOLLOW_KW_NEW_in_ctorDef1910 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_ctorDef1914 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_ctorDef1916 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_params_in_ctorDef1918 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_ctorDef1920 = new BitSet(new long[]{0x0000000000000000L,0x0000000000209000L});
+    public static final BitSet FOLLOW_ctorChain_in_ctorDef1929 = new BitSet(new long[]{0x0000000000000000L,0x0000000000201000L});
+    public static final BitSet FOLLOW_methodBody_in_ctorDef1933 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_protection_in_ctorFlags1986 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_COLON_in_ctorChain1993 = new BitSet(new long[]{0x000000C000000000L});
+    public static final BitSet FOLLOW_ctorChainThis_in_ctorChain1996 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ctorChainSuper_in_ctorChain2000 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_THIS_in_ctorChainThis2009 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
+    public static final BitSet FOLLOW_DOT_in_ctorChainThis2011 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_ctorChainThis2013 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_ctorChainThis2015 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_args_in_ctorChainThis2017 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_ctorChainThis2020 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_SUPER_in_ctorChainSuper2027 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000800L});
+    public static final BitSet FOLLOW_DOT_in_ctorChainSuper2030 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_ctorChainSuper2032 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_ctorChainSuper2036 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_args_in_ctorChainSuper2038 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_ctorChainSuper2041 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_STATIC_in_staticBlock2049 = new BitSet(new long[]{0x000078C002001FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_block_in_staticBlock2051 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_multiStmt_in_block2076 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stmt_in_block2080 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_bracketL_in_multiStmt2088 = new BitSet(new long[]{0x000078FF87F81FF0L,0x0BFF1E7200083000L});
+    public static final BitSet FOLLOW_stmt_in_multiStmt2090 = new BitSet(new long[]{0x000078FF87F81FF0L,0x0BFF1E7200083000L});
+    public static final BitSet FOLLOW_bracketR_in_multiStmt2093 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_g_if_in_stmt2128 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_g_for_in_stmt2132 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_g_while_in_stmt2136 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_g_break_in_stmt2140 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_g_continue_in_stmt2147 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_g_return_in_stmt2151 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_g_switch_in_stmt2155 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_g_throw_in_stmt2162 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_g_try_in_stmt2166 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_exprStmt_in_stmt2170 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_localDef_in_stmt2174 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stmt_in_stmtList2187 = new BitSet(new long[]{0x000078C002001FF2L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_KW_BREAK_in_g_break2209 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_g_break2211 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_CONTINUE_in_g_continue2218 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_g_continue2220 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_FOR_in_g_for2228 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_g_for2230 = new BitSet(new long[]{0x000078C002000000L,0x0BFF1E7200280000L});
+    public static final BitSet FOLLOW_forInit_in_g_for2232 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_SP_SEMI_in_g_for2235 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200280000L});
+    public static final BitSet FOLLOW_expr_in_g_for2237 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_SP_SEMI_in_g_for2240 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_g_for2242 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_g_for2245 = new BitSet(new long[]{0x000078C002001FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_block_in_g_for2248 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_IF_in_g_if2256 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_g_if2258 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_g_if2260 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_g_if2262 = new BitSet(new long[]{0x000078C002001FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_block_in_g_if2264 = new BitSet(new long[]{0x0000010000000002L});
+    public static final BitSet FOLLOW_KW_ELSE_in_g_if2271 = new BitSet(new long[]{0x000078C002001FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_block_in_g_if2273 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_RETURN_in_g_return2282 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200280000L});
+    public static final BitSet FOLLOW_eos_in_g_return2285 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expr_in_g_return2289 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_g_return2291 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_SWITCH_in_g_switch2299 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_g_switch2301 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_g_switch2303 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_g_switch2305 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_bracketL_in_g_switch2307 = new BitSet(new long[]{0x0000003F87F86000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_g_case_in_g_switch2310 = new BitSet(new long[]{0x0000003F87F86000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_g_default_in_g_switch2315 = new BitSet(new long[]{0x0000003F87F80000L,0x02C1000000082000L});
+    public static final BitSet FOLLOW_bracketR_in_g_switch2319 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_THROW_in_g_throw2327 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_g_throw2329 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_g_throw2331 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_WHILE_in_g_while2339 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_g_while2341 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_g_while2343 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_g_while2345 = new BitSet(new long[]{0x000078C002001FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_block_in_g_while2347 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_TRY_in_g_try2355 = new BitSet(new long[]{0x000078C002019FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_try_long_in_g_try2362 = new BitSet(new long[]{0x0000000000018002L});
+    public static final BitSet FOLLOW_stmtList_in_g_try2366 = new BitSet(new long[]{0x0000000000018002L});
+    public static final BitSet FOLLOW_g_catch_in_g_try2374 = new BitSet(new long[]{0x0000000000018002L});
+    public static final BitSet FOLLOW_g_finally_in_g_try2383 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_multiStmt_in_try_long2392 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expr_in_exprStmt2399 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_exprStmt2401 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeId_in_localDef2408 = new BitSet(new long[]{0x0000000000000000L,0x0000000000204000L});
+    public static final BitSet FOLLOW_AS_INIT_VAL_in_localDef2411 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_localDef2413 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_eos_in_localDef2417 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_forInitDef_in_forInit2425 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expr_in_forInit2429 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeId_in_forInitDef2436 = new BitSet(new long[]{0x0000000000000002L,0x0000000000004000L});
+    public static final BitSet FOLLOW_AS_INIT_VAL_in_forInitDef2439 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_forInitDef2441 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_CATCH_in_g_catch2452 = new BitSet(new long[]{0x000078C002001FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_catchDef_in_g_catch2454 = new BitSet(new long[]{0x000078C002001FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_catch_long_in_g_catch2462 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stmtList_in_g_catch2466 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_multiStmt_in_catch_long2474 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parL_in_catchDef2482 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_type_in_catchDef2484 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_catchDef2486 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_catchDef2488 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_FINALLY_in_g_finally2496 = new BitSet(new long[]{0x000078C002001FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_finally_long_in_g_finally2503 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stmtList_in_g_finally2507 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_multiStmt_in_finally_long2515 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_CASE_in_g_case2523 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_g_case2525 = new BitSet(new long[]{0x0000000000000000L,0x0000000000008000L});
+    public static final BitSet FOLLOW_SP_COLON_in_g_case2527 = new BitSet(new long[]{0x000078C002001FF2L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_stmt_in_g_case2529 = new BitSet(new long[]{0x000078C002001FF2L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_KW_DEFAULT_in_g_default2537 = new BitSet(new long[]{0x0000000000000000L,0x0000000000008000L});
+    public static final BitSet FOLLOW_SP_COLON_in_g_default2539 = new BitSet(new long[]{0x000078C002001FF2L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_stmt_in_g_default2541 = new BitSet(new long[]{0x000078C002001FF2L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_assignExpr_in_expr2562 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ternaryExpr_in_assignExpr2569 = new BitSet(new long[]{0x0000000000000002L,0x0000000000C00000L});
+    public static final BitSet FOLLOW_assignOp_in_assignExpr2572 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_assignExpr_in_assignExpr2574 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_condOrExpr_in_ternaryExpr2583 = new BitSet(new long[]{0x0000000000000002L,0x0000000000020000L});
+    public static final BitSet FOLLOW_ternaryTail_in_ternaryExpr2586 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_QMARK_in_ternaryTail2596 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_condOrExpr_in_ternaryTail2598 = new BitSet(new long[]{0x0000000000000000L,0x0000000000008000L});
+    public static final BitSet FOLLOW_SP_COLON_in_ternaryTail2600 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_condOrExpr_in_ternaryTail2602 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_set_in_assignOp0 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_condAndExpr_in_condOrExpr2596 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
-    public static final BitSet FOLLOW_OP_OR_in_condOrExpr2600 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_condAndExpr_in_condOrExpr2603 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
-    public static final BitSet FOLLOW_equalityExpr_in_condAndExpr2613 = new BitSet(new long[]{0x0000000000000002L,0x0000000000020000L});
-    public static final BitSet FOLLOW_OP_AND_in_condAndExpr2616 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_equalityExpr_in_condAndExpr2619 = new BitSet(new long[]{0x0000000000000002L,0x0000000000020000L});
-    public static final BitSet FOLLOW_relationalExpr_in_equalityExpr2629 = new BitSet(new long[]{0x0000000000000002L,0x0000000000040000L});
-    public static final BitSet FOLLOW_CP_EQUALITY_in_equalityExpr2632 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_relationalExpr_in_equalityExpr2634 = new BitSet(new long[]{0x0000000000000002L,0x0000000000040000L});
-    public static final BitSet FOLLOW_elvisExpr_in_relationalExpr2647 = new BitSet(new long[]{0x0000060000040000L,0x0000000000080000L});
-    public static final BitSet FOLLOW_typeCheck_in_relationalExpr2650 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_compare_in_relationalExpr2654 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_typeCheck2665 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_typeRoot_in_typeCheck2677 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000600L});
-    public static final BitSet FOLLOW_SP_QMARK_in_typeCheck2680 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000400L});
-    public static final BitSet FOLLOW_LIST_TYPE_in_typeCheck2685 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000600L});
-    public static final BitSet FOLLOW_CP_COMPARATORS_in_compare2698 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_elvisExpr_in_compare2700 = new BitSet(new long[]{0x0000000000000002L,0x0000000000080000L});
-    public static final BitSet FOLLOW_rangeExpr_in_elvisExpr2711 = new BitSet(new long[]{0x0000000000000002L,0x0000000000100000L});
-    public static final BitSet FOLLOW_OP_ELVIS_in_elvisExpr2714 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_rangeExpr_in_elvisExpr2716 = new BitSet(new long[]{0x0000000000000002L,0x0000000000100000L});
-    public static final BitSet FOLLOW_bitOrExpr_in_rangeExpr2727 = new BitSet(new long[]{0x0000000000000002L,0x0000000000E00000L});
-    public static final BitSet FOLLOW_set_in_rangeExpr2730 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_bitOrExpr_in_rangeExpr2744 = new BitSet(new long[]{0x0000000000000002L,0x0000000000E00000L});
-    public static final BitSet FOLLOW_bitAndExpr_in_bitOrExpr2755 = new BitSet(new long[]{0x0000000000000002L,0x0000000001000800L});
-    public static final BitSet FOLLOW_set_in_bitOrExpr2758 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_bitAndExpr_in_bitOrExpr2766 = new BitSet(new long[]{0x0000000000000002L,0x0000000001000800L});
-    public static final BitSet FOLLOW_shiftExpr_in_bitAndExpr2777 = new BitSet(new long[]{0x0000000000000002L,0x0000000002000000L});
-    public static final BitSet FOLLOW_OP_CURRY_in_bitAndExpr2780 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_shiftExpr_in_bitAndExpr2782 = new BitSet(new long[]{0x0000000000000002L,0x0000000002000000L});
-    public static final BitSet FOLLOW_addExpr_in_shiftExpr2794 = new BitSet(new long[]{0x0000000000000002L,0x000000000C000000L});
-    public static final BitSet FOLLOW_set_in_shiftExpr2797 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_addExpr_in_shiftExpr2805 = new BitSet(new long[]{0x0000000000000002L,0x000000000C000000L});
-    public static final BitSet FOLLOW_multExpr_in_addExpr2816 = new BitSet(new long[]{0x0000000000000002L,0x0000000030000000L});
-    public static final BitSet FOLLOW_set_in_addExpr2819 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_multExpr_in_addExpr2827 = new BitSet(new long[]{0x0000000000000002L,0x0000000030000000L});
-    public static final BitSet FOLLOW_set_in_addAppend2837 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_parenExpr_in_addAppend2845 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parenExpr_in_multExpr2853 = new BitSet(new long[]{0x0000000000000002L,0x00000001C0000000L});
-    public static final BitSet FOLLOW_set_in_multExpr2856 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_parenExpr_in_multExpr2868 = new BitSet(new long[]{0x0000000000000002L,0x00000001C0000000L});
-    public static final BitSet FOLLOW_castExpr_in_parenExpr2879 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_groupedExpr_in_parenExpr2883 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_unaryExpr_in_parenExpr2887 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parL_in_castExpr2898 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_type_in_castExpr2900 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_castExpr2902 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_parenExpr_in_castExpr2904 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parL_in_groupedExpr2913 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_groupedExpr2915 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_groupedExpr2917 = new BitSet(new long[]{0x0000000000000002L,0x000A00C000001018L});
-    public static final BitSet FOLLOW_termChain_in_groupedExpr2919 = new BitSet(new long[]{0x0000000000000002L,0x000A00C000001018L});
-    public static final BitSet FOLLOW_prefixExpr_in_unaryExpr2928 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_postfixExpr_in_unaryExpr2932 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_termExpr_in_unaryExpr2936 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_prefixExpr2944 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_parenExpr_in_prefixExpr2972 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_termExpr_in_postfixExpr2981 = new BitSet(new long[]{0x0000000000000000L,0x0000000C00000000L});
-    public static final BitSet FOLLOW_set_in_postfixExpr2983 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_termBase_in_termExpr2998 = new BitSet(new long[]{0x0000000000000002L,0x000A00C000001018L});
-    public static final BitSet FOLLOW_termChain_in_termExpr3000 = new BitSet(new long[]{0x0000000000000002L,0x000A00C000001018L});
-    public static final BitSet FOLLOW_idExprReq_in_termBase3010 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_literal_in_termBase3014 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeBase_in_termBase3018 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_id_in_termBase3022 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeLiteral_in_typeBase3029 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_slotLiteral_in_typeBase3033 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_namedSuper_in_typeBase3037 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_staticCall_in_typeBase3041 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_dsl_in_typeBase3063 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_closure_in_typeBase3067 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_simple_in_typeBase3071 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ctorBlock_in_typeBase3075 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_ctorBlock3082 = new BitSet(new long[]{0x0000000000000000L,0x000A00C000001018L});
-    public static final BitSet FOLLOW_itBlock_in_ctorBlock3084 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_staticCall3091 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_DOT_in_staticCall3093 = new BitSet(new long[]{0x0000000000000000L,0x0002010040000000L});
-    public static final BitSet FOLLOW_idExpr_in_staticCall3095 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_dotCall_in_termChain3104 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_dynCall_in_termChain3108 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_safeDotCall_in_termChain3112 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_safeDynCall_in_termChain3116 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_indexExpr_in_termChain3123 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_callOp_in_termChain3127 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_itBlock_in_termChain3131 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_simpleType_in_dsl3146 = new BitSet(new long[]{0x0000000000000000L,0x0000002000000000L});
-    public static final BitSet FOLLOW_DSL_in_dsl3148 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_bracketL_in_itBlock3158 = new BitSet(new long[]{0x000078FF87F81FF0L,0x000BFF1E72000830L});
-    public static final BitSet FOLLOW_stmt_in_itBlock3161 = new BitSet(new long[]{0x000078FF87F81FF0L,0x000BFF1E72002930L});
-    public static final BitSet FOLLOW_SP_COMMA_in_itBlock3163 = new BitSet(new long[]{0x000078FF87F81FF0L,0x000BFF1E72002830L});
-    public static final BitSet FOLLOW_SP_SEMI_in_itBlock3166 = new BitSet(new long[]{0x000078FF87F81FF0L,0x000BFF1E72000830L});
-    public static final BitSet FOLLOW_bracketR_in_itBlock3171 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_DOT_in_dotCall3179 = new BitSet(new long[]{0x0000000000000000L,0x0002010040000000L});
-    public static final BitSet FOLLOW_idExpr_in_dotCall3181 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_OP_ARROW_in_dynCall3189 = new BitSet(new long[]{0x0000000000000000L,0x0002010040000000L});
-    public static final BitSet FOLLOW_idExpr_in_dynCall3191 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_OP_SAFE_CALL_in_safeDotCall3199 = new BitSet(new long[]{0x0000000000000000L,0x0002010040000000L});
-    public static final BitSet FOLLOW_idExpr_in_safeDotCall3201 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_OP_SAFEDYN_CALL_in_safeDynCall3208 = new BitSet(new long[]{0x0000000000000000L,0x0002010040000000L});
-    public static final BitSet FOLLOW_idExpr_in_safeDynCall3210 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_sq_bracketL_in_indexExpr3220 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_indexExpr3222 = new BitSet(new long[]{0x0000000000000000L,0x0004000000000000L});
-    public static final BitSet FOLLOW_sq_bracketR_in_indexExpr3224 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parL_in_callOp3235 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_args_in_callOp3237 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_callOp3241 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
-    public static final BitSet FOLLOW_closure_in_callOp3243 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
-    public static final BitSet FOLLOW_funcType_in_closure3265 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});
-    public static final BitSet FOLLOW_multiStmt_in_closure3267 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_idExprReq_in_idExpr3277 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_id_in_idExpr3281 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_field_in_idExprReq3289 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_call_in_idExprReq3293 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_OP_MULTI_in_field3302 = new BitSet(new long[]{0x0000000000000000L,0x0000010000000000L});
-    public static final BitSet FOLLOW_ID_in_field3304 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_id_in_call3315 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000800L});
-    public static final BitSet FOLLOW_callParams_in_call3319 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_closure_in_call3321 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_callParams_in_call3326 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_closure_in_call3330 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parL_in_callParams3341 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_args_in_callParams3343 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_callParams3346 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expr_in_args3355 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_SP_COMMA_in_args3358 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_args3361 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_KW_NULL_in_literal3372 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_THIS_in_literal3376 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_SUPER_in_literal3380 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_IT_in_literal3384 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_TRUE_in_literal3388 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_FALSE_in_literal3392 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_strs_in_literal3396 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_URI_in_literal3400 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_number_in_literal3407 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_CHAR_in_literal3411 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_namedSuper_in_literal3415 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_slotLiteral_in_literal3422 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeLiteral_in_literal3426 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_list_in_literal3430 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_map_in_literal3434 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_symbLiteral_in_literal3438 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_simple_in_literal3442 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_QUOTSTR_in_strs3453 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STR_in_strs3459 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_typeLiteral3491 = new BitSet(new long[]{0x0000000000000000L,0x0000200000000000L});
-    public static final BitSet FOLLOW_OP_POUND_in_typeLiteral3495 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_slotLiteral3504 = new BitSet(new long[]{0x0000000000000000L,0x0000200000000000L});
-    public static final BitSet FOLLOW_OP_POUND_in_slotLiteral3507 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_slotLiteral3511 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_AT_in_symbLiteral3520 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_symbLiteral3523 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000080L});
-    public static final BitSet FOLLOW_SP_COLON_in_symbLiteral3525 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000080L});
-    public static final BitSet FOLLOW_SP_COLON_in_symbLiteral3527 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_symbLiteral3531 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_simpleType_in_namedSuper3539 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_DOT_in_namedSuper3541 = new BitSet(new long[]{0x0000008000000000L});
-    public static final BitSet FOLLOW_KW_SUPER_in_namedSuper3543 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_list3553 = new BitSet(new long[]{0x0000000000000000L,0x0002000000000000L});
-    public static final BitSet FOLLOW_sq_bracketL_in_list3559 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000900L});
-    public static final BitSet FOLLOW_listItems_in_list3561 = new BitSet(new long[]{0x0000000000000000L,0x0004000000000000L});
-    public static final BitSet FOLLOW_sq_bracketR_in_list3563 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expr_in_listItems3572 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_SP_COMMA_in_listItems3575 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_listItems3577 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_SP_COMMA_in_listItems3582 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_COMMA_in_listItems3588 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_mapType_in_map3598 = new BitSet(new long[]{0x0000000000000000L,0x0002000000000000L});
-    public static final BitSet FOLLOW_sq_bracketL_in_map3604 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000880L});
-    public static final BitSet FOLLOW_mapItems_in_map3606 = new BitSet(new long[]{0x0000000000000000L,0x0004000000000000L});
-    public static final BitSet FOLLOW_sq_bracketR_in_map3608 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_mapPair_in_mapItems3617 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_SP_COMMA_in_mapItems3620 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_mapPair_in_mapItems3622 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_SP_COMMA_in_mapItems3626 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_COLON_in_mapItems3632 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expr_in_mapPair3640 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000080L});
-    public static final BitSet FOLLOW_SP_COLON_in_mapPair3642 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_mapPair3644 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_simple3652 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_simple3654 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_simple3656 = new BitSet(new long[]{0x000078C000000000L,0x001B7F1E72000800L});
-    public static final BitSet FOLLOW_parR_in_simple3658 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_DOC_in_docs3670 = new BitSet(new long[]{0x0000000000000002L,0x0000800000000000L});
-    public static final BitSet FOLLOW_OP_MINUS_in_number3692 = new BitSet(new long[]{0x0000000000000000L,0x0001000000000000L});
-    public static final BitSet FOLLOW_NUMBER_in_number3695 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_AT_in_facet3703 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_facet3705 = new BitSet(new long[]{0x0000000000000002L,0x0000000000004000L});
-    public static final BitSet FOLLOW_AS_EQUAL_in_facet3708 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_expr_in_facet3710 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_SEMI_in_eos3732 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_id3756 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_getter3769 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_setter3782 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ID_in_pod3796 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BRACKET_L_in_bracketL3818 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BRACKET_R_in_bracketR3836 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SQ_BRACKET_L_in_sq_bracketL3854 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SQ_BRACKET_R_in_sq_bracketR3872 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PAR_L_in_parL3890 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_PAR_R_in_parR3908 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_podDef_in_synpred2_Fan413 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_facet_in_synpred13_Fan612 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_classFlags_in_synpred15_Fan617 = new BitSet(new long[]{0x0000000F94300000L});
-    public static final BitSet FOLLOW_KW_CLASS_in_synpred15_Fan620 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_protection_in_synpred17_Fan631 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_KW_ENUM_in_synpred17_Fan634 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_QMARK_in_synpred44_Fan1145 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_QMARK_in_synpred45_Fan1151 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_LIST_TYPE_in_synpred46_Fan1149 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000200L});
-    public static final BitSet FOLLOW_SP_QMARK_in_synpred46_Fan1151 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_mapType_in_synpred48_Fan1173 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_COLON_in_synpred54_Fan1230 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_type_in_synpred54_Fan1234 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_sq_bracketR_in_synpred55_Fan1238 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_OP_ARROW_in_synpred57_Fan1259 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_OP_ARROW_in_synpred59_Fan1271 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_formalFull_in_synpred61_Fan1312 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_formalTypeOnly_in_synpred62_Fan1316 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_STATIC_in_synpred63_Fan1364 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});
-    public static final BitSet FOLLOW_bracketL_in_synpred63_Fan1366 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_facet_in_synpred64_Fan1380 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ctorFlags_in_synpred66_Fan1397 = new BitSet(new long[]{0x0000001F00000000L});
-    public static final BitSet FOLLOW_KW_NEW_in_synpred66_Fan1400 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_methodFlags_in_synpred69_Fan1414 = new BitSet(new long[]{0x0000002F8F600000L,0x0002010000000800L});
-    public static final BitSet FOLLOW_type_in_synpred69_Fan1418 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_KW_VOID_in_synpred69_Fan1422 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_synpred69_Fan1425 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-    public static final BitSet FOLLOW_parL_in_synpred69_Fan1427 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_getter_in_synpred73_Fan1512 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_block_in_synpred75_Fan1522 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_synpred78_Fan1569 = new BitSet(new long[]{0x0000000000000000L,0x0002010000000000L});
-    public static final BitSet FOLLOW_id_in_synpred78_Fan1571 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_multiStmt_in_synpred101_Fan1848 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_bracketL_in_synpred110_Fan2048 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_exprStmt_in_synpred121_Fan2145 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_stmt_in_synpred122_Fan2162 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_ELSE_in_synpred126_Fan2246 = new BitSet(new long[]{0x000078C002001FF0L,0x000BFF1E72000810L});
-    public static final BitSet FOLLOW_block_in_synpred126_Fan2248 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_eos_in_synpred127_Fan2260 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_bracketL_in_synpred130_Fan2334 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_CATCH_in_synpred131_Fan2346 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_KW_FINALLY_in_synpred132_Fan2355 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_forInitDef_in_synpred134_Fan2400 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_catchDef_in_synpred136_Fan2429 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_bracketL_in_synpred137_Fan2434 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_bracketL_in_synpred138_Fan2475 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_synpred158_Fan2758 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_bitAndExpr_in_synpred158_Fan2766 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_OP_CURRY_in_synpred159_Fan2780 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_shiftExpr_in_synpred159_Fan2782 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_synpred163_Fan2819 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_multExpr_in_synpred163_Fan2827 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_set_in_synpred167_Fan2856 = new BitSet(new long[]{0x000078C000000000L,0x000B7F1E72000800L});
-    public static final BitSet FOLLOW_parenExpr_in_synpred167_Fan2868 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_castExpr_in_synpred168_Fan2879 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_groupedExpr_in_synpred169_Fan2883 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_termChain_in_synpred170_Fan2919 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_prefixExpr_in_synpred171_Fan2928 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_postfixExpr_in_synpred172_Fan2932 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_termChain_in_synpred180_Fan3000 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_idExprReq_in_synpred181_Fan3010 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_literal_in_synpred182_Fan3014 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeBase_in_synpred183_Fan3018 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeLiteral_in_synpred184_Fan3029 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_slotLiteral_in_synpred185_Fan3033 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_namedSuper_in_synpred186_Fan3037 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_staticCall_in_synpred187_Fan3041 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_dsl_in_synpred188_Fan3063 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_closure_in_synpred189_Fan3067 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_simple_in_synpred190_Fan3071 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_closure_in_synpred201_Fan3243 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_idExprReq_in_synpred202_Fan3277 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_callParams_in_synpred204_Fan3319 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_closure_in_synpred204_Fan3321 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_callParams_in_synpred205_Fan3326 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_namedSuper_in_synpred218_Fan3415 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_slotLiteral_in_synpred219_Fan3422 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeLiteral_in_synpred220_Fan3426 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_list_in_synpred221_Fan3430 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_map_in_synpred222_Fan3434 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_in_synpred227_Fan3553 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_mapType_in_synpred231_Fan3598 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_DOC_in_synpred235_Fan3670 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_SP_SEMI_in_synpred238_Fan3732 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_condAndExpr_in_condOrExpr2621 = new BitSet(new long[]{0x0000000000000002L,0x0000000001000000L});
+    public static final BitSet FOLLOW_OP_OR_in_condOrExpr2625 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_condAndExpr_in_condOrExpr2628 = new BitSet(new long[]{0x0000000000000002L,0x0000000001000000L});
+    public static final BitSet FOLLOW_equalityExpr_in_condAndExpr2638 = new BitSet(new long[]{0x0000000000000002L,0x0000000002000000L});
+    public static final BitSet FOLLOW_OP_AND_in_condAndExpr2641 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_equalityExpr_in_condAndExpr2644 = new BitSet(new long[]{0x0000000000000002L,0x0000000002000000L});
+    public static final BitSet FOLLOW_relationalExpr_in_equalityExpr2654 = new BitSet(new long[]{0x0000000000000002L,0x0000000004000000L});
+    public static final BitSet FOLLOW_CP_EQUALITY_in_equalityExpr2657 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_relationalExpr_in_equalityExpr2659 = new BitSet(new long[]{0x0000000000000002L,0x0000000004000000L});
+    public static final BitSet FOLLOW_elvisExpr_in_relationalExpr2672 = new BitSet(new long[]{0x0000060000040000L,0x0000000008000000L});
+    public static final BitSet FOLLOW_typeCheck_in_relationalExpr2675 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_compare_in_relationalExpr2679 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_typeCheck2690 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_typeRoot_in_typeCheck2702 = new BitSet(new long[]{0x0000000000000002L,0x0000000000060000L});
+    public static final BitSet FOLLOW_SP_QMARK_in_typeCheck2705 = new BitSet(new long[]{0x0000000000000000L,0x0000000000040000L});
+    public static final BitSet FOLLOW_LIST_TYPE_in_typeCheck2710 = new BitSet(new long[]{0x0000000000000002L,0x0000000000060000L});
+    public static final BitSet FOLLOW_CP_COMPARATORS_in_compare2723 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_elvisExpr_in_compare2725 = new BitSet(new long[]{0x0000000000000002L,0x0000000008000000L});
+    public static final BitSet FOLLOW_rangeExpr_in_elvisExpr2736 = new BitSet(new long[]{0x0000000000000002L,0x0000000010000000L});
+    public static final BitSet FOLLOW_OP_ELVIS_in_elvisExpr2739 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_rangeExpr_in_elvisExpr2741 = new BitSet(new long[]{0x0000000000000002L,0x0000000010000000L});
+    public static final BitSet FOLLOW_bitOrExpr_in_rangeExpr2752 = new BitSet(new long[]{0x0000000000000002L,0x00000000E0000000L});
+    public static final BitSet FOLLOW_set_in_rangeExpr2755 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_bitOrExpr_in_rangeExpr2769 = new BitSet(new long[]{0x0000000000000002L,0x00000000E0000000L});
+    public static final BitSet FOLLOW_bitAndExpr_in_bitOrExpr2780 = new BitSet(new long[]{0x0000000000000002L,0x0000000100080000L});
+    public static final BitSet FOLLOW_set_in_bitOrExpr2783 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_bitAndExpr_in_bitOrExpr2791 = new BitSet(new long[]{0x0000000000000002L,0x0000000100080000L});
+    public static final BitSet FOLLOW_shiftExpr_in_bitAndExpr2802 = new BitSet(new long[]{0x0000000000000002L,0x0000000200000000L});
+    public static final BitSet FOLLOW_OP_CURRY_in_bitAndExpr2805 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_shiftExpr_in_bitAndExpr2807 = new BitSet(new long[]{0x0000000000000002L,0x0000000200000000L});
+    public static final BitSet FOLLOW_addExpr_in_shiftExpr2819 = new BitSet(new long[]{0x0000000000000002L,0x0000000C00000000L});
+    public static final BitSet FOLLOW_set_in_shiftExpr2822 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_addExpr_in_shiftExpr2830 = new BitSet(new long[]{0x0000000000000002L,0x0000000C00000000L});
+    public static final BitSet FOLLOW_multExpr_in_addExpr2841 = new BitSet(new long[]{0x0000000000000002L,0x0000003000000000L});
+    public static final BitSet FOLLOW_set_in_addExpr2844 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_multExpr_in_addExpr2852 = new BitSet(new long[]{0x0000000000000002L,0x0000003000000000L});
+    public static final BitSet FOLLOW_set_in_addAppend2862 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_parenExpr_in_addAppend2870 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parenExpr_in_multExpr2878 = new BitSet(new long[]{0x0000000000000002L,0x000001C000000000L});
+    public static final BitSet FOLLOW_set_in_multExpr2881 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_parenExpr_in_multExpr2893 = new BitSet(new long[]{0x0000000000000002L,0x000001C000000000L});
+    public static final BitSet FOLLOW_castExpr_in_parenExpr2904 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_groupedExpr_in_parenExpr2908 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_unaryExpr_in_parenExpr2912 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parL_in_castExpr2923 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_type_in_castExpr2925 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_castExpr2927 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_parenExpr_in_castExpr2929 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parL_in_groupedExpr2938 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_groupedExpr2940 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_groupedExpr2942 = new BitSet(new long[]{0x0000000000000002L,0x0A00C00000101800L});
+    public static final BitSet FOLLOW_termChain_in_groupedExpr2944 = new BitSet(new long[]{0x0000000000000002L,0x0A00C00000101800L});
+    public static final BitSet FOLLOW_prefixExpr_in_unaryExpr2953 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_postfixExpr_in_unaryExpr2957 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_termExpr_in_unaryExpr2961 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_prefixExpr2969 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_parenExpr_in_prefixExpr2997 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_termExpr_in_postfixExpr3006 = new BitSet(new long[]{0x0000000000000000L,0x00000C0000000000L});
+    public static final BitSet FOLLOW_set_in_postfixExpr3008 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_termBase_in_termExpr3023 = new BitSet(new long[]{0x0000000000000002L,0x0A00C00000101800L});
+    public static final BitSet FOLLOW_termChain_in_termExpr3025 = new BitSet(new long[]{0x0000000000000002L,0x0A00C00000101800L});
+    public static final BitSet FOLLOW_idExprReq_in_termBase3049 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_literal_in_termBase3053 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeBase_in_termBase3057 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_id_in_termBase3061 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeLiteral_in_typeBase3068 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_slotLiteral_in_typeBase3072 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_namedSuper_in_typeBase3076 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_staticCall_in_typeBase3080 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_dsl_in_typeBase3102 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_closure_in_typeBase3106 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_simple_in_typeBase3110 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ctorBlock_in_typeBase3114 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_ctorBlock3121 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_itBlock_in_ctorBlock3123 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_staticCall3130 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
+    public static final BitSet FOLLOW_DOT_in_staticCall3132 = new BitSet(new long[]{0x0000000000000000L,0x0201004000000000L});
+    public static final BitSet FOLLOW_idExpr_in_staticCall3134 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_dotCall_in_termChain3157 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_dynCall_in_termChain3161 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_safeDotCall_in_termChain3165 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_safeDynCall_in_termChain3169 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_indexExpr_in_termChain3176 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_callOp_in_termChain3180 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_itBlock_in_termChain3184 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_incDotCall_in_termChain3188 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_incSafeDotCall_in_termChain3192 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_simpleType_in_dsl3207 = new BitSet(new long[]{0x0000000000000000L,0x0000200000000000L});
+    public static final BitSet FOLLOW_DSL_in_dsl3209 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_DOT_in_incDotCall3217 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_OP_SAFE_CALL_in_incSafeDotCall3233 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_bracketL_in_itBlock3253 = new BitSet(new long[]{0x000078FF87F81FF0L,0x0BFF1E7200083000L});
+    public static final BitSet FOLLOW_stmt_in_itBlock3256 = new BitSet(new long[]{0x000078FF87F81FF0L,0x0BFF1E7200293000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_itBlock3258 = new BitSet(new long[]{0x000078FF87F81FF0L,0x0BFF1E7200283000L});
+    public static final BitSet FOLLOW_SP_SEMI_in_itBlock3261 = new BitSet(new long[]{0x000078FF87F81FF0L,0x0BFF1E7200083000L});
+    public static final BitSet FOLLOW_bracketR_in_itBlock3266 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_DOT_in_dotCall3274 = new BitSet(new long[]{0x0000000000000000L,0x0201004000000000L});
+    public static final BitSet FOLLOW_idExpr_in_dotCall3276 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_OP_ARROW_in_dynCall3296 = new BitSet(new long[]{0x0000000000000000L,0x0201004000000000L});
+    public static final BitSet FOLLOW_idExpr_in_dynCall3298 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_OP_SAFE_CALL_in_safeDotCall3306 = new BitSet(new long[]{0x0000000000000000L,0x0201004000000000L});
+    public static final BitSet FOLLOW_idExpr_in_safeDotCall3308 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_OP_SAFEDYN_CALL_in_safeDynCall3327 = new BitSet(new long[]{0x0000000000000000L,0x0201004000000000L});
+    public static final BitSet FOLLOW_idExpr_in_safeDynCall3329 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_sq_bracketL_in_indexExpr3339 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_indexExpr3341 = new BitSet(new long[]{0x0000000000000000L,0x0400000000000000L});
+    public static final BitSet FOLLOW_sq_bracketR_in_indexExpr3343 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parL_in_callOp3354 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_args_in_callOp3356 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_callOp3360 = new BitSet(new long[]{0x0000000000000002L,0x0000000000080000L});
+    public static final BitSet FOLLOW_closure_in_callOp3362 = new BitSet(new long[]{0x0000000000000002L,0x0000000000080000L});
+    public static final BitSet FOLLOW_funcType_in_closure3384 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_multiStmt_in_closure3386 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_idExprReq_in_idExpr3396 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_id_in_idExpr3400 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_field_in_idExprReq3408 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_call_in_idExprReq3412 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_OP_MULTI_in_field3421 = new BitSet(new long[]{0x0000000000000000L,0x0001000000000000L});
+    public static final BitSet FOLLOW_ID_in_field3423 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_id_in_call3434 = new BitSet(new long[]{0x0000000000000000L,0x0800000000080000L});
+    public static final BitSet FOLLOW_callParams_in_call3438 = new BitSet(new long[]{0x0000000000000000L,0x0000000000080000L});
+    public static final BitSet FOLLOW_closure_in_call3440 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_callParams_in_call3445 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_closure_in_call3449 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parL_in_callParams3471 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_args_in_callParams3473 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_callParams3476 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expr_in_args3485 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_args3488 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_args3491 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_KW_NULL_in_literal3502 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_THIS_in_literal3506 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_SUPER_in_literal3510 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_IT_in_literal3514 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_TRUE_in_literal3518 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_FALSE_in_literal3522 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_strs_in_literal3526 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_URI_in_literal3530 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_number_in_literal3537 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CHAR_in_literal3541 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_namedSuper_in_literal3545 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_slotLiteral_in_literal3552 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeLiteral_in_literal3556 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_list_in_literal3560 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_map_in_literal3564 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_symbLiteral_in_literal3568 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_simple_in_literal3572 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_QUOTSTR_in_strs3583 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STR_in_strs3589 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_typeLiteral3621 = new BitSet(new long[]{0x0000000000000000L,0x0020000000000000L});
+    public static final BitSet FOLLOW_OP_POUND_in_typeLiteral3625 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_slotLiteral3634 = new BitSet(new long[]{0x0000000000000000L,0x0020000000000000L});
+    public static final BitSet FOLLOW_OP_POUND_in_slotLiteral3637 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_slotLiteral3641 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_AT_in_symbLiteral3650 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_symbLiteral3653 = new BitSet(new long[]{0x0000000000000000L,0x0000000000008000L});
+    public static final BitSet FOLLOW_SP_COLON_in_symbLiteral3655 = new BitSet(new long[]{0x0000000000000000L,0x0000000000008000L});
+    public static final BitSet FOLLOW_SP_COLON_in_symbLiteral3657 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_symbLiteral3661 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_simpleType_in_namedSuper3669 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
+    public static final BitSet FOLLOW_DOT_in_namedSuper3671 = new BitSet(new long[]{0x0000008000000000L});
+    public static final BitSet FOLLOW_KW_SUPER_in_namedSuper3673 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_list3683 = new BitSet(new long[]{0x0000000000000000L,0x0200000000000000L});
+    public static final BitSet FOLLOW_sq_bracketL_in_list3689 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200090000L});
+    public static final BitSet FOLLOW_listItems_in_list3691 = new BitSet(new long[]{0x0000000000000000L,0x0400000000000000L});
+    public static final BitSet FOLLOW_sq_bracketR_in_list3693 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expr_in_listItems3702 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_listItems3705 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_listItems3707 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_listItems3712 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_COMMA_in_listItems3718 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_mapType_in_map3728 = new BitSet(new long[]{0x0000000000000000L,0x0200000000000000L});
+    public static final BitSet FOLLOW_sq_bracketL_in_map3734 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200088000L});
+    public static final BitSet FOLLOW_mapItems_in_map3736 = new BitSet(new long[]{0x0000000000000000L,0x0400000000000000L});
+    public static final BitSet FOLLOW_sq_bracketR_in_map3738 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_mapPair_in_mapItems3747 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_mapItems3750 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_mapPair_in_mapItems3752 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
+    public static final BitSet FOLLOW_SP_COMMA_in_mapItems3756 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_COLON_in_mapItems3762 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expr_in_mapPair3770 = new BitSet(new long[]{0x0000000000000000L,0x0000000000008000L});
+    public static final BitSet FOLLOW_SP_COLON_in_mapPair3772 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_mapPair3774 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_simple3782 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_simple3784 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_simple3786 = new BitSet(new long[]{0x000078C000000000L,0x1B7F1E7200080000L});
+    public static final BitSet FOLLOW_parR_in_simple3788 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_DOC_in_docs3800 = new BitSet(new long[]{0x0000000000000002L,0x0080000000000000L});
+    public static final BitSet FOLLOW_OP_MINUS_in_number3822 = new BitSet(new long[]{0x0000000000000000L,0x0100000000000000L});
+    public static final BitSet FOLLOW_NUMBER_in_number3825 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_AT_in_facet3833 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_facet3835 = new BitSet(new long[]{0x0000000000000002L,0x0000000000400000L});
+    public static final BitSet FOLLOW_AS_EQUAL_in_facet3838 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_expr_in_facet3840 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_SEMI_in_eos3862 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_id3886 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_getter3899 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_setter3912 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ID_in_pod3926 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_BRACKET_L_in_bracketL3948 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_BRACKET_R_in_bracketR3966 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SQ_BRACKET_L_in_sq_bracketL3984 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SQ_BRACKET_R_in_sq_bracketR4002 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_PAR_L_in_parL4020 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_PAR_R_in_parR4038 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_podDef_in_synpred2_Fan438 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_facet_in_synpred13_Fan637 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_classFlags_in_synpred15_Fan642 = new BitSet(new long[]{0x0000000F94300000L});
+    public static final BitSet FOLLOW_KW_CLASS_in_synpred15_Fan645 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_protection_in_synpred17_Fan656 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_KW_ENUM_in_synpred17_Fan659 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_QMARK_in_synpred44_Fan1170 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_QMARK_in_synpred45_Fan1176 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_LIST_TYPE_in_synpred46_Fan1174 = new BitSet(new long[]{0x0000000000000002L,0x0000000000020000L});
+    public static final BitSet FOLLOW_SP_QMARK_in_synpred46_Fan1176 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_mapType_in_synpred48_Fan1198 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_COLON_in_synpred54_Fan1255 = new BitSet(new long[]{0x0000000000000000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_type_in_synpred54_Fan1259 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_sq_bracketR_in_synpred55_Fan1263 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_OP_ARROW_in_synpred57_Fan1284 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_OP_ARROW_in_synpred59_Fan1296 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_formalFull_in_synpred61_Fan1337 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_formalTypeOnly_in_synpred62_Fan1341 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_STATIC_in_synpred63_Fan1389 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_bracketL_in_synpred63_Fan1391 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_facet_in_synpred64_Fan1405 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ctorFlags_in_synpred66_Fan1422 = new BitSet(new long[]{0x0000001F00000000L});
+    public static final BitSet FOLLOW_KW_NEW_in_synpred66_Fan1425 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_methodFlags_in_synpred69_Fan1439 = new BitSet(new long[]{0x0000002F8F600000L,0x0201000000080000L});
+    public static final BitSet FOLLOW_type_in_synpred69_Fan1443 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_KW_VOID_in_synpred69_Fan1447 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_synpred69_Fan1450 = new BitSet(new long[]{0x0000000000000000L,0x0800000000000000L});
+    public static final BitSet FOLLOW_parL_in_synpred69_Fan1452 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_getter_in_synpred73_Fan1537 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_block_in_synpred75_Fan1547 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_synpred78_Fan1594 = new BitSet(new long[]{0x0000000000000000L,0x0201000000000000L});
+    public static final BitSet FOLLOW_id_in_synpred78_Fan1596 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_multiStmt_in_synpred101_Fan1873 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_bracketL_in_synpred110_Fan2073 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_exprStmt_in_synpred121_Fan2170 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_stmt_in_synpred122_Fan2187 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_ELSE_in_synpred126_Fan2271 = new BitSet(new long[]{0x000078C002001FF0L,0x0BFF1E7200081000L});
+    public static final BitSet FOLLOW_block_in_synpred126_Fan2273 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_eos_in_synpred127_Fan2285 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_bracketL_in_synpred130_Fan2359 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_CATCH_in_synpred131_Fan2371 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_KW_FINALLY_in_synpred132_Fan2380 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_forInitDef_in_synpred134_Fan2425 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_catchDef_in_synpred136_Fan2454 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_bracketL_in_synpred137_Fan2459 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_bracketL_in_synpred138_Fan2500 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_synpred158_Fan2783 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_bitAndExpr_in_synpred158_Fan2791 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_OP_CURRY_in_synpred159_Fan2805 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_shiftExpr_in_synpred159_Fan2807 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_synpred163_Fan2844 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_multExpr_in_synpred163_Fan2852 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_set_in_synpred167_Fan2881 = new BitSet(new long[]{0x000078C000000000L,0x0B7F1E7200080000L});
+    public static final BitSet FOLLOW_parenExpr_in_synpred167_Fan2893 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_castExpr_in_synpred168_Fan2904 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_groupedExpr_in_synpred169_Fan2908 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_termChain_in_synpred170_Fan2944 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_prefixExpr_in_synpred171_Fan2953 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_postfixExpr_in_synpred172_Fan2957 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_termChain_in_synpred180_Fan3025 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_idExprReq_in_synpred181_Fan3049 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_literal_in_synpred182_Fan3053 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeBase_in_synpred183_Fan3057 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeLiteral_in_synpred184_Fan3068 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_slotLiteral_in_synpred185_Fan3072 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_namedSuper_in_synpred186_Fan3076 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_staticCall_in_synpred187_Fan3080 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_dsl_in_synpred188_Fan3102 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_closure_in_synpred189_Fan3106 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_simple_in_synpred190_Fan3110 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_dotCall_in_synpred191_Fan3157 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_safeDotCall_in_synpred193_Fan3165 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_incDotCall_in_synpred198_Fan3188 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_closure_in_synpred203_Fan3362 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_idExprReq_in_synpred204_Fan3396 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_callParams_in_synpred206_Fan3438 = new BitSet(new long[]{0x0000000000000000L,0x0000000000080000L});
+    public static final BitSet FOLLOW_closure_in_synpred206_Fan3440 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_callParams_in_synpred207_Fan3445 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_namedSuper_in_synpred220_Fan3545 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_slotLiteral_in_synpred221_Fan3552 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeLiteral_in_synpred222_Fan3556 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_list_in_synpred223_Fan3560 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_map_in_synpred224_Fan3564 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_type_in_synpred229_Fan3683 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_mapType_in_synpred233_Fan3728 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_DOC_in_synpred237_Fan3800 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_SP_SEMI_in_synpred240_Fan3862 = new BitSet(new long[]{0x0000000000000002L});
 
 }
