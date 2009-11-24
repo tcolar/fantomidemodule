@@ -9,9 +9,6 @@ import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.LexerUtils;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
@@ -42,7 +39,8 @@ public class FanCompletionContext
 	public static enum completionTypes
 	{
 
-		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, BASE_TYPE, DOTCALL};
+		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, BASE_TYPE, DOTCALL
+	};
 	private final CodeCompletionContext context;
 	FanParserResult result;
 	private String preamble = "";
@@ -53,7 +51,7 @@ public class FanCompletionContext
 		result = (FanParserResult) context.getParserResult();
 		result.dumpTree();
 
-		offset = context.getCaretOffset();//>0?context.getCaretOffset()-1:0;
+		offset = context.getCaretOffset();
 		String prefix = context.getPrefix();
 		if (prefix == null)
 		{
@@ -69,6 +67,7 @@ public class FanCompletionContext
 
 		completionType = completionTypes.UNKNOWN;
 		determineCompletionType();
+		System.out.println("Compl. type:" + completionType.toString());
 	}
 
 	/**
@@ -122,8 +121,6 @@ public class FanCompletionContext
 	 */
 	private void determineCompletionType()
 	{
-		completionType = completionTypes.BASE_TYPE;
-
 		tokenStream.move(offset);
 		if (curNode.isNil())
 		{
@@ -159,13 +156,27 @@ public class FanCompletionContext
 			CommonTree node = LexerUtils.findASTNodeAt(result, tokenStream.offset());
 			int ord = node.getType();
 			// expression completion after a '.' or '?.'
-			if (ord == FanParser.INC_DOTCALL || ord == FanParser.INC_SAFEDOTCALL)
+			System.out.println("Node :" + node.toString() + " " + node.getType());
+			switch (ord)
 			{
-				completionType = completionType.DOTCALL;
 				// Start at the . or ?. node.
-				System.out.println("Node :" + node.toStringTree());
+				case FanParser.AST_INC_DOTCALL:
+				case FanParser.AST_INC_SAFEDOTCALL:
+				case FanParser.AST_STATIC_CALL:
+					completionType = completionType.DOTCALL;
+					break;
+				case FanParser.ID:
+					CommonTree parent = (CommonTree) node.getParent();
+					if (parent != null)
+					{
+						if (parent.getType() == FanParser.AST_SAFE_DOT_CALL ||
+							parent.getType() == FanParser.AST_DOT_CALL)
+						{
+							completionType = completionType.DOTCALL;
+						}
+					}
+					break;
 			}
-			//TODO: id / method completion
 		}
 		// restore ts offset
 		tokenStream.move(offset);

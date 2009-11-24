@@ -19,6 +19,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 
 /**
  * Utilities for lexer
+ * Some for the parser too
  * For example helps finding the Token at a given position in the text ddocument.
  * @author tcolar
  */
@@ -392,4 +393,23 @@ public class LexerUtils
 		return result;
 	}
 
+	/**
+	 * Try to find a parent node matching the given type.
+	 * @param curNode
+	 * @return null if not found
+	 */
+	public static CommonTree findParentNode(final CommonTree theNode, int parentType)
+	{
+		// don't want to mess with the original node.
+		CommonTree node = theNode;
+		while(node!=null && !node.isNil())
+		{
+			//System.out.println(""+node.getType()+" VS "+parentType+" "+node.toStringTree());
+			if(node.getType() == parentType)
+				return node;
+			node = (CommonTree)node.getParent();
+		}
+		// not found
+		return null;
+	}
 }

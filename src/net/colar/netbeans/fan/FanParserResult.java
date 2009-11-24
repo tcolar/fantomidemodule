@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.ast.FanAstParser;
+import net.colar.netbeans.fan.ast.FanAstScope;
+import net.colar.netbeans.fan.ast.FanRootScope;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.EarlyExitException;
@@ -39,12 +42,16 @@ public class FanParserResult extends ParserResult
 	private final String sourceName;
 	private ParserRuleReturnScope antlrScope = null;
 	private CommonTokenStream tokenStream;
-
+	
+	private FanAstScope rootScope;
+	
 	public FanParserResult(Snapshot snapshot, CommonTokenStream tokenStream)
 	{
 		super(snapshot);
 		this.sourceName = snapshot.getSource().getFileObject().getName();
 		this.tokenStream = tokenStream;
+
+		this.rootScope = FanAstParser.parseScope(this);
 	}
 
 	/**
@@ -105,7 +112,7 @@ public class FanParserResult extends ParserResult
 			if (inserted != null && inserted instanceof Token)
 			{
 				Token tk = (Token) inserted;
-				desc = "Was expecting :'" + loc + "', but got '" + token.getText() + "' instead." + "\n" + desc;
+				desc = "Was expecting :'" + loc + "', but got '" + tk.getText() + "' instead." + "\n" + desc;
 			}
 		} else if (e instanceof FailedPredicateException)
 		{ // tested
@@ -123,7 +130,6 @@ public class FanParserResult extends ParserResult
 		} else if (e instanceof NoViableAltException)
 		{//tested
 			desc = "Unexpected token: '" + token.getText() + "'";
-			;
 		} else if (e instanceof UnwantedTokenException)
 		{// tested
 			desc = "Unwanted token: '" + token.getText() + "' before '" + loc + "'";
@@ -198,4 +204,12 @@ public class FanParserResult extends ParserResult
 	{
 		return getSnapshot().getSource().getDocument(true);
 	}
+
+
+	public FanAstScope getRootScope()
+	{
+		return rootScope;
+	}
+
+	
 }

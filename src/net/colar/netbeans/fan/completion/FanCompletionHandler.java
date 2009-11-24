@@ -7,11 +7,16 @@ import fan.sys.Slot;
 import fan.sys.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.text.JTextComponent;
+import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.antlr.FanParser;
+import net.colar.netbeans.fan.antlr.LexerUtils;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanDummyElementHandle;
+import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
@@ -60,7 +65,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		ArrayList<CompletionProposal> proposals = new ArrayList();
 		int anchor = context.getCaretOffset();
 		preamble = cpl.getPreamble();
-		System.out.println("preamb: "+preamble);
+		System.out.println("preamb: " + preamble);
 
 		switch (cpl.getCompletionType())
 		{
@@ -85,29 +90,11 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				//TODO
 				break;
 			case BASE_TYPE:
-				if (preamble.contains("."))
-				{
-					String type = "Actor";
-					String pod = "Sys";
-					proposeSlots(pod, type, proposals, anchor, prefix.toLowerCase());
-					//docType = DocTypes.TYPE;
-				} else
-				{
-					proposeTypes(null, proposals, anchor, prefix.toLowerCase());
-					docType = DocTypes.TYPE;
-				}
-				/*if (preamble.contains("."))
-				{
-				// propose fields
-				// propose methods
-				// TODO: this is not right
-				String type = preamble.substring(0, preamble.lastIndexOf("."));
-				//proposeTypes(pod, proposals, anchor, prefix.toLowerCase());
-				} else
-				{
-				addtoTypeProposals(proposals, FanIndexHelper.findRootTypes(fo, prefix));
+				proposeTypes(null, proposals, anchor, prefix.toLowerCase());
 				docType = DocTypes.TYPE;
-				}*/
+				break;
+			case DOTCALL:
+				proposeCalls(proposals, context);
 				break;
 		}
 
@@ -253,6 +240,13 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 	}
 
+	/**
+	 * Propose Typoes (class, enum, mixin)
+	 * @param podName null means all
+	 * @param proposals
+	 * @param anchor
+	 * @param prefix
+	 */
 	private void proposeTypes(String podName, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
 		Set<Type> types;
@@ -261,7 +255,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			types = FanPodIndexer.getInstance().getAllTypes();
 		} else
 		{
-			types = FanPodIndexer.getInstance().getImportTypes(podName);
+			types = FanPodIndexer.getInstance().getPodTypes(podName);
 		}
 		for (Type type : types)
 		{
@@ -275,6 +269,14 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		docType = DocTypes.POD_TYPE;
 	}
 
+	/**
+	 * Propose slots(functions, methods etc...) of a specific types.
+	 * @param pod
+	 * @param type
+	 * @param proposals
+	 * @param anchor
+	 * @param prefix
+	 */
 	private void proposeSlots(String pod, String type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
 		Set<Slot> slots = FanPodIndexer.getInstance().getSlots(pod, type);
@@ -287,5 +289,59 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				docType = DocTypes.POD_TYPE; // TODO
 			}
 		}
+	}
+
+	/**
+	 * Propose options for a DOT_CALL ex:
+	 * SomeClass._
+	 * SomeClass.get_
+	 * object.method()._
+	 * Window{title="a"}._
+	 * @param proposals
+	 * @param context
+	 */
+	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
+	{
+		FanParserResult result = (FanParserResult) context.getParserResult();
+		int offset = context.getCaretOffset();
+		// we want to look at offset -1 (ie: before the caret) so we are IN the expression, not just after.
+		if (offset > 0)
+		{
+			offset--;
+		}
+		CommonTree curNode = LexerUtils.findASTNodeAt(result, offset);
+		CommonTree exprNode = LexerUtils.findParentNode(curNode, FanParser.AST_TERM_EXPR);
+		if (exprNode != null)
+		{
+			System.out.println("Expr Node: " + exprNode.toStringTree());
+			String type = resolveTypeOfExpr(exprNode);
+			System.out.println("Type: " + type);
+		}
+	}
+
+	/**
+	 * Given an expression try to resolve the type we are trying to complete
+	 * Return null if can't figure the type out.
+	 * @param exprNode
+	 * @return
+	 */
+	private String resolveTypeOfExpr(CommonTree exprNode)
+	{
+		String type = null;
+		List<CommonTree> children = exprNode.getChildren();
+		for (CommonTree node : children)
+		{
+			switch (node.getType())
+			{
+				case FanParser.AST_STATIC_CALL:
+					CommonTree tNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
+					if (tNode != null && tNode.getChildCount()>0)
+					{
+						type = tNode.getChild(0).getText();
+					}
+			}
+
+		}
+		return type;
 	}
 }

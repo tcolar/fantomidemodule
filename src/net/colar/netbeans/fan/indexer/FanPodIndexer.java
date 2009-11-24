@@ -130,10 +130,10 @@ public class FanPodIndexer implements FileChangeListener
 
 	/**
 	 *
-	 * @param podName null = all pods
+	 * @param podName
 	 * @return
 	 */
-	public Set<Type> getImportTypes(String podName)
+	public Set<Type> getPodTypes(String podName)
 	{
 		Set<Type> result = new HashSet();
 		if (allPods.containsKey(podName))
@@ -143,6 +143,7 @@ public class FanPodIndexer implements FileChangeListener
 			{
 				Type type = (Type) types.get(i);
 				String name = type.name();
+				// ignore closures internal classes
 				if(!CLOSURECLASS.matcher(name).matches())
 					result.add(type);
 			}
@@ -155,7 +156,7 @@ public class FanPodIndexer implements FileChangeListener
 		Set<Type> result = new HashSet();
 		for (String podName : allPods.keySet())
 		{
-			result.addAll(getImportTypes(podName));
+			result.addAll(getPodTypes(podName));
 		}
 		return result;
 	}

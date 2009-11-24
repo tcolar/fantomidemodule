@@ -85,9 +85,6 @@ INC_URI;
 INC_COMMENT;
 INC_DSL;
 INC_CALL;
-// help getting valid AST fro completion:
-INC_DOTCALL;
-INC_SAFEDOTCALL;
 
 // AST elements
 AST_CLASS;
@@ -105,6 +102,9 @@ AST_TERM_EXPR;
 AST_DOT_CALL;
 AST_SAFE_DOT_CALL;
 AST_STATIC_CALL;
+// help getting valid AST for completion:
+AST_INC_DOTCALL;
+AST_INC_SAFEDOTCALL;
 // generic items
 AST_ID;
 AST_MODIFIER;
@@ -421,16 +421,16 @@ typeBase	:	typeLiteral | slotLiteral | namedSuper | staticCall |
  	                dsl | closure | simple | ctorBlock;
 ctorBlock	:	type itBlock;
 staticCall	:	type DOT idExpr
-				-> ^(AST_STATIC_CALL type idExpr);
+				-> ^(AST_STATIC_CALL ^(AST_TYPE type) idExpr);
 
 termChain 	:	dotCall | dynCall | safeDotCall | safeDynCall |
 			indexExpr | callOp | itBlock | incDotCall | incSafeDotCall;
 dsl	        :	simpleType DSL;
 
 incDotCall	: DOT
-				-> ^(INC_DOTCALL);
+				-> ^(AST_INC_DOTCALL);
 incSafeDotCall: OP_SAFE_CALL
-				-> ^(INC_SAFEDOTCALL);
+				-> ^(AST_INC_SAFEDOTCALL);
 
 // itBlocks can have a COMMA after statements, which means to call it.add(expr).
 itBlock 	:	bracketL (stmt SP_COMMA? SP_SEMI?)* bracketR;
