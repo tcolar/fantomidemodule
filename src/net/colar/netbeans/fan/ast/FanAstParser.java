@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
+import net.colar.netbeans.fan.antlr.LexerUtils;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import org.antlr.runtime.tree.CommonTree;
 
@@ -72,21 +73,23 @@ public class FanAstParser
 		switch (usingNode.getChildCount())
 		{
 			case 1: // using Sys
-				type = usingNode.getChild(0).getText().trim();
+				type = LexerUtils.getNodeContent(result, usingNode.getChild(0)).trim();
 				name = type;
 				break;
 			case 2: // using Sys::Time
-				name = usingNode.getChild(1).getText().trim();
-				type = usingNode.getChild(0).getText().trim() + "::" + name;
+				name = LexerUtils.getNodeContent(result, usingNode.getChild(1)).trim();
+				type = LexerUtils.getNodeContent(result, usingNode.getChild(0)).trim() + "::" + name;
 				break;
 			case 3: // using Sys::Time as Ti  or using [java] Sys::Time as Ti
-				type = usingNode.getChild(0).getText().trim() + "::" + usingNode.getChild(1).getText().trim();
-				name = usingNode.getChild(2).getText().trim();
+				type = LexerUtils.getNodeContent(result, usingNode.getChild(0)).trim() + "::" + LexerUtils.getNodeContent(result, usingNode.getChild(1)).trim();
+				name = LexerUtils.getNodeContent(result, usingNode.getChild(2)).trim();
 				break;
 		}
+		System.out.println("name: " + name);
+		System.out.println("type:" + type);
 		if (name != null && type != null)
 		{
-			if (type.trim().startsWith("["))
+			if (type.startsWith("["))
 			{
 				System.out.println("TODO: Using FFI AST support.");
 			} else
@@ -95,13 +98,12 @@ public class FanAstParser
 				{
 					// Adding a specific type
 					String[] data = type.split("::");
-					if( ! FanPodIndexer.getInstance().hasPod(data[0]))
+					if (!FanPodIndexer.getInstance().hasPod(data[0]))
 					{
-						rootScope.addError(result, "Unresolvable Pod: "+data[0], usingNode);
-					}
-					else if( ! FanPodIndexer.getInstance().hasPodType(data[0], data[1]))
+						rootScope.addError(result, "Unresolvable Pod: " + data[0], usingNode);
+					} else if (!FanPodIndexer.getInstance().hasPodType(data[0], data[1]))
 					{
-						rootScope.addError(result, "Unresolvable Type: "+data[0]+"::"+data[1], usingNode);
+						rootScope.addError(result, "Unresolvable Type: " + data[0] + "::" + data[1], usingNode);
 					}
 
 					Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
@@ -112,9 +114,9 @@ public class FanAstParser
 				} else
 				{
 					// Adding all the types of a Pod
-					if(!FanPodIndexer.getInstance().hasPod(name))
+					if (!FanPodIndexer.getInstance().hasPod(name))
 					{
-						rootScope.addError(result, "Unresolvable Pod: "+name, usingNode);
+						rootScope.addError(result, "Unresolvable Pod: " + name, usingNode);
 					}
 					Set<Type> types = FanPodIndexer.getInstance().getPodTypes(name);
 					for (Type t : types)

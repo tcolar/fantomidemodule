@@ -12,6 +12,7 @@ import net.colar.netbeans.fan.FanTokenID;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.Tree;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -177,7 +178,7 @@ public class LexerUtils
 	}
 
 	/**
-	 * Get the range ofthe whole node content (not just the node itself)
+	 * Get the range of the whole node content (not just the node itself)
 	 * @param fanParserResult
 	 * @param idNode
 	 * @return
@@ -327,7 +328,7 @@ public class LexerUtils
 			if( ! matchType(tokenType, FanGrammarHelper.WS_TOKENS))
 			{
 				// put it back BEFORE the token
-				//seq.movePrevious();
+				seq.movePrevious();
 				return true;
 			}
 		}
@@ -416,4 +417,20 @@ public class LexerUtils
 		// not found
 		return null;
 	}
+
+	public static String getNodeContent(FanParserResult result, Tree node)
+	{
+		OffsetRange range=getContentNodeRange(result, (CommonTree)node);
+		String text="";
+		try
+		{
+			if(range!=null)
+				text = result.getDocument().getText(range.getStart(), range.getLength());
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return text;
+	}
+
 }

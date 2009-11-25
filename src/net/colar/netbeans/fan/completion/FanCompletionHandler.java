@@ -41,6 +41,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 	private static enum DocTypes
 	{
+
 		NA,
 		POD,
 		TYPE,
@@ -287,39 +288,35 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		int anchor = context.getCaretOffset();
 		// we want to look at offset -1 (ie: before the caret) so we are IN the expression, not just after.
 		LexerUtils.moveToPrevNonWSToken(ts, offset, 0);
-		offset=ts.offset();
-		CommonTree curNode = LexerUtils.findASTNodeAt(result, offset);
-		if (curNode.getType() == FanLexer.ID ||
-				curNode.getType() == FanLexer.KW_USING)
+		offset = ts.offset();
+		CommonTree baseNode = LexerUtils.findASTNodeAt(result, offset);
+		CommonTree curNode = LexerUtils.findParentNode(baseNode, FanParser.AST_USING_POD);
+		if (curNode == null)
 		{
-			curNode = (CommonTree) curNode.getParent();
+			curNode = LexerUtils.findParentNode(baseNode, FanParser.AST_INC_USING);
 		}
-		// should be a AST_USING_POD node
 		if (curNode.getType() == FanParser.AST_USING_POD)
 		{
-			switch (curNode.getChildCount())
-			{
-				case 1:
-					proposePods(proposals, anchor, curNode.getChild(0).getText());
-					break;
-				case 2:
-					proposeTypes(curNode.getChild(0).getText(), proposals, anchor, curNode.getChild(1).getText());
-					break;
+			String pod = LexerUtils.getNodeContent(result, curNode.getChild(0));
+			String type = curNode.getChildCount()==1?null:LexerUtils.getNodeContent(result, curNode.getChild(1));
 
-			}
-		}
-		if (curNode.getType() == FanParser.AST_INC_USING)
-		{
-			switch (curNode.getChildCount())
+			if (type == null || type.length() == 0)
 			{
-				case 1:
-					// all pods
-					proposePods(proposals, anchor, "");
-					break;
-				case 2:
-					// all types of the pod
-					proposeTypes(curNode.getChild(1).getText(), proposals, anchor, "");
-					break;
+				proposePods(proposals, anchor, pod);
+			} else
+			{
+				proposeTypes(pod, proposals, anchor, type);
+			}
+
+		} else if (curNode.getType() == FanParser.AST_INC_USING)
+		{
+			String pod = LexerUtils.getNodeContent(result, curNode.getChild(1));
+			if (pod == null || pod.length() == 0)
+			{
+				proposePods(proposals, anchor, "");
+			} else
+			{
+				proposeTypes(pod, proposals, anchor, "");
 			}
 		}
 	}

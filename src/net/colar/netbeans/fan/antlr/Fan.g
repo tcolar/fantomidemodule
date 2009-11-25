@@ -112,6 +112,8 @@ AST_MODIFIER;
 AST_INHERITANCE;
 AST_PARAMS;
 AST_TYPE;
+// used to "group" generic stuff together
+AST_CHILD;
 }
 
 // ########################## code.
@@ -245,16 +247,16 @@ using		@init {paraphrase.push("Using statements");} @after{paraphrase.pop();}
 		:	(usingPod | usingType | usingAs | incUsing);
 usingPod
 		:	KW_USING podSpec eos
-			-> ^(AST_USING_POD podSpec);
+			-> ^(AST_USING_POD ^(AST_CHILD podSpec));
 usingType
 		:	KW_USING podSpec SP_COLCOL id eos
-			-> ^(AST_USING_POD podSpec id);
+			-> ^(AST_USING_POD ^(AST_CHILD podSpec) ^(AST_CHILD id));
 // pod id can have a $ in it(java ffi) but then "as" is required
 usingAs		:	KW_USING podSpec SP_COLCOL podid=(id ('$' id)*) KW_AS as=id eos
-			-> ^(AST_USING_POD podSpec $podid? $as?);
+			-> ^(AST_USING_POD ^(AST_CHILD podSpec) ^(AST_CHILD $podid?) ^(AST_CHILD $as?));
 // incomplete using -> for Completion
 incUsing	:   ((KW_USING eos) | (KW_USING podSpec (':' | SP_COLCOL) eos))
-			-> ^(AST_INC_USING KW_USING podSpec?);
+			-> ^(AST_INC_USING ^(AST_CHILD KW_USING) ^(AST_CHILD podSpec?));
 podSpec		:	ffi? id (DOT id)*;
 ffi 		:	sq_bracketL id sq_bracketR;
 // pod support

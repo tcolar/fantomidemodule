@@ -63,8 +63,7 @@ public class FanCompletionContext
 		rootNode = result.getTree();
 		curNode = LexerUtils.findASTNodeAt(result, offset);
 
-		completionType = completionTypes.UNKNOWN;
-		determineCompletionType();
+		completionType = determineCompletionType();
 		System.out.println("Compl. type:" + completionType.toString());
 	}
 
@@ -117,7 +116,7 @@ public class FanCompletionContext
 	 * - Propose protected slots only within "subtypes"
 	 *
 	 */
-	private void determineCompletionType()
+	private completionTypes determineCompletionType()
 	{
 		// We want the significant node before the cursor
 		LexerUtils.moveToPrevNonWSToken(tokenStream, offset, 0);
@@ -126,9 +125,25 @@ public class FanCompletionContext
 		{
 			System.out.println("Node : Nill !");
 			// Root level (not in type) default
-			completionType = completionTypes.ROOT_LEVEL;
+			return completionTypes.ROOT_LEVEL;
 		} else
 		{
+			CommonTree usingNode = LexerUtils.findParentNode(node, FanParser.AST_USING_POD);
+			if (usingNode == null)
+			{
+				usingNode = LexerUtils.findParentNode(node, FanParser.AST_INC_USING);
+			}
+			if (usingNode != null)
+			{
+				/*if (usingNode.getChildCount() > 2)
+				{
+				return completionTypes.IMPORT_FFI_JAVA;
+				}
+				else
+				{*/
+				return completionTypes.IMPORT_POD;
+				//}
+			}
 			int ord = node.getType();
 			// expression completion after a '.' or '?.'
 			System.out.println("Node :" + node.toString() + " " + node.getType());
@@ -138,8 +153,7 @@ public class FanCompletionContext
 				case FanParser.AST_INC_DOTCALL:
 				case FanParser.AST_INC_SAFEDOTCALL:
 				case FanParser.AST_STATIC_CALL:
-					completionType = completionType.DOTCALL;
-					break;
+					return completionType.DOTCALL;
 				case FanParser.ID:
 					CommonTree parent = (CommonTree) node.getParent();
 					if (parent != null)
@@ -147,27 +161,15 @@ public class FanCompletionContext
 						if (parent.getType() == FanParser.AST_SAFE_DOT_CALL ||
 							parent.getType() == FanParser.AST_DOT_CALL)
 						{
-							completionType = completionType.DOTCALL;
-						}
-						if (parent.getType() == FanParser.AST_USING_POD ||
-								parent.getType() == FanParser.AST_INC_USING)
-						{
-							completionType = completionTypes.IMPORT_POD;
-							if (parent.getChildCount() > 2)
-							{
-								completionType = completionTypes.IMPORT_FFI_JAVA;
-							}
+							return completionType.DOTCALL;
 						}
 					}
-					break;
-				case FanParser.AST_INC_USING:
-				case FanParser.KW_USING:
-					completionType = completionTypes.IMPORT_POD;
 					break;
 			}
 		}
 		// restore ts offset
 		tokenStream.move(offset);
+		return completionTypes.UNKNOWN;
 	}
 
 	public boolean isCaseSensitive()
