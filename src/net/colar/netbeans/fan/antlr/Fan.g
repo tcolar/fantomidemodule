@@ -251,7 +251,7 @@ usingType
 			-> ^(AST_USING_POD podSpec id);
 // pod id can have a $ in it(java ffi) but then "as" is required
 usingAs		:	KW_USING podSpec SP_COLCOL podid=(id ('$' id)*) KW_AS as=id eos
-			-> ^(AST_USING_POD podSpec $podid $as);
+			-> ^(AST_USING_POD podSpec $podid? $as?);
 // incomplete using -> for Completion
 incUsing	:   ((KW_USING eos) | (KW_USING podSpec (':' | SP_COLCOL) eos))
 			-> ^(AST_INC_USING KW_USING podSpec?);
