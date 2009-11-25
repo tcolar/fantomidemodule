@@ -124,6 +124,7 @@ public class FanCompletionContext
 		CommonTree node = LexerUtils.findASTNodeAt(result, tokenStream.offset());
 		if (node.isNil())
 		{
+			System.out.println("Node : Nill !");
 			// Root level (not in type) default
 			completionType = completionTypes.ROOT_LEVEL;
 		} else
@@ -160,6 +161,7 @@ public class FanCompletionContext
 					}
 					break;
 				case FanParser.AST_INC_USING:
+				case FanParser.KW_USING:
 					completionType = completionTypes.IMPORT_POD;
 					break;
 			}

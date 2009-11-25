@@ -290,7 +290,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		LexerUtils.moveToPrevNonWSToken(ts, offset, 0);
 		offset=ts.offset();
 		CommonTree curNode = LexerUtils.findASTNodeAt(result, offset);
-		if (curNode.getType() == FanLexer.ID)
+		if (curNode.getType() == FanLexer.ID ||
+				curNode.getType() == FanLexer.KW_USING)
 		{
 			curNode = (CommonTree) curNode.getParent();
 		}

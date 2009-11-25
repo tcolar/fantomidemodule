@@ -91,14 +91,14 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		if (node != null /*&& !cancelled*/)
 		{
 			// DEBUGGING - inneficient
-			String par = "";
+			/*String par = "";
 			Tree parNode=node;
 			while((parNode=parNode.getParent()) != null)
 			{
 				par += "  ";// nesting level
 			}
 			System.out.println("Node: " + par + node.getText());
-			
+			*/
 			switch (node.getType())
 			{
 				case FanParser.AST_INC_DOTCALL:

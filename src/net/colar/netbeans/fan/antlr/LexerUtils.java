@@ -327,7 +327,7 @@ public class LexerUtils
 			if( ! matchType(tokenType, FanGrammarHelper.WS_TOKENS))
 			{
 				// put it back BEFORE the token
-				seq.movePrevious();
+				//seq.movePrevious();
 				return true;
 			}
 		}
