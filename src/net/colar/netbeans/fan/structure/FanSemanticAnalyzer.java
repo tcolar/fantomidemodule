@@ -101,11 +101,6 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			*/
 			switch (node.getType())
 			{
-				case FanParser.AST_INC_DOTCALL:
-				case FanParser.AST_INC_SAFEDOTCALL:
-				case FanParser.AST_INC_USING:
-					addToHighlights(result, newHighlights, node, ColoringAttributes.METHOD_SET);
-					break;
 				case FanParser.AST_STR:
 					addInterpolationHighlights(result, newHighlights, node);
 					break;

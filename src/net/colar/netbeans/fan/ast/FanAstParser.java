@@ -21,9 +21,10 @@ public class FanAstParser
 	/**
 	 * Go through the AST and create the scope
 	 * ie: find defined variables, used pods and so on.
+	 * Also track errors (unresolvable imports, undefined vars and so on)
 	 * @return
 	 */
-	public static FanAstScope parseScope(FanParserResult result)
+	public static FanRootScope parseScope(FanParserResult result)
 	{
 		FanRootScope rootScope = new FanRootScope();
 		CommonTree ast = result.getTree();
@@ -34,8 +35,11 @@ public class FanAstParser
 			{
 				switch (child.getType())
 				{
+					case FanParser.AST_INC_USING:
+						rootScope.addError(result, "Incomplete import statement.", child);
+						break;
 					case FanParser.AST_USING_POD:
-						addUsing(rootScope, child);
+						addUsing(result, rootScope, child);
 						break;
 					case FanParser.AST_CLASS:
 					case FanParser.AST_ENUM:
@@ -61,7 +65,7 @@ public class FanAstParser
 		return null;
 	}
 
-	private static void addUsing(FanRootScope rootScope, CommonTree usingNode)
+	private static void addUsing(FanParserResult result, FanRootScope rootScope, CommonTree usingNode)
 	{
 		String name = null;
 		String type = null;
@@ -91,6 +95,15 @@ public class FanAstParser
 				{
 					// Adding a specific type
 					String[] data = type.split("::");
+					if( ! FanPodIndexer.getInstance().hasPod(data[0]))
+					{
+						rootScope.addError(result, "Unresolvable Pod: "+data[0], usingNode);
+					}
+					else if( ! FanPodIndexer.getInstance().hasPodType(data[0], data[1]))
+					{
+						rootScope.addError(result, "Unresolvable Type: "+data[0]+"::"+data[1], usingNode);
+					}
+
 					Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
 					if (t != null)
 					{
@@ -99,6 +112,10 @@ public class FanAstParser
 				} else
 				{
 					// Adding all the types of a Pod
+					if(!FanPodIndexer.getInstance().hasPod(name))
+					{
+						rootScope.addError(result, "Unresolvable Pod: "+name, usingNode);
+					}
 					Set<Type> types = FanPodIndexer.getInstance().getPodTypes(name);
 					for (Type t : types)
 					{

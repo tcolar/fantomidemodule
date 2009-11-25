@@ -185,6 +185,7 @@ SP_COLCOL=75
 'mixin'=30
 'continue'=5
 'if'=7
+':'=80
 'it'=44
 'while'=11
 'public'=34

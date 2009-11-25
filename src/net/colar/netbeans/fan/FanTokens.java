@@ -427,6 +427,9 @@ static{ // initializes tokens
 	token=tokens.get(new Integer(7));
 	token.setFixedText("if");
 	tokens.put(new Integer(7), token);
+	token=tokens.get(new Integer(80));
+	token.setFixedText(":");
+	tokens.put(new Integer(80), token);
 	token=tokens.get(new Integer(44));
 	token.setFixedText("it");
 	tokens.put(new Integer(44), token);

@@ -11,6 +11,7 @@ import java.util.Vector;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.ast.FanAstParser;
 import net.colar.netbeans.fan.ast.FanAstScope;
+import net.colar.netbeans.fan.ast.FanRootScope;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.EarlyExitException;
@@ -41,7 +42,7 @@ public class FanParserResult extends ParserResult
 	private final String sourceName;
 	private ParserRuleReturnScope antlrScope = null;
 	private CommonTokenStream tokenStream;
-	private FanAstScope rootScope;
+	private FanRootScope rootScope;
 
 	public FanParserResult(Snapshot snapshot, CommonTokenStream tokenStream)
 	{
@@ -201,7 +202,11 @@ public class FanParserResult extends ParserResult
 		return getSnapshot().getSource().getDocument(true);
 	}
 
-	public FanAstScope getRootScope()
+	/**
+	 * The root scope gets fille in by FanAstParser
+	 * @return
+	 */
+	public FanRootScope getRootScope()
 	{
 		return rootScope;
 	}

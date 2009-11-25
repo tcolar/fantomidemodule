@@ -231,7 +231,7 @@ import net.colar.netbeans.fan.FanParserResult;
 		else
 			parsingResult.addAntlrError(e,paraphrase);
     }
-    
+
     Stack<String> paraphrase = new Stack<String>();
 
 }
@@ -253,7 +253,7 @@ usingType
 usingAs		:	KW_USING podSpec SP_COLCOL podid=(id ('$' id)*) KW_AS as=id eos
 			-> ^(AST_USING_POD podSpec $podid $as);
 // incomplete using -> for Completion
-incUsing	:   ((KW_USING eos) | (KW_USING podSpec SP_COLCOL eos))
+incUsing	:   ((KW_USING eos) | (KW_USING podSpec (':' | SP_COLCOL) eos))
 			-> ^(AST_INC_USING KW_USING podSpec?);
 podSpec		:	ffi? id (DOT id)*;
 ffi 		:	sq_bracketL id sq_bracketR;

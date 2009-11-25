@@ -18,7 +18,6 @@ import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.LexerUtils;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanDummyElementHandle;
-import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.lexer.TokenSequence;
@@ -197,7 +196,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			//if (item.toLowerCase().startsWith(prefix))
 			{
-				proposals.add(new FanKeywordProposal(item.substring(prefix.length()), anchor));
+				proposals.add(new FanKeywordProposal(item, anchor - prefix.length()));
 			}
 		}
 	}
@@ -221,7 +220,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			if (name.toLowerCase().startsWith(prefix))
 			{
-				proposals.add(new FanImportProposal(name, anchor, false));
+				proposals.add(new FanImportProposal(name, anchor - prefix.length(), false));
 				docType = DocTypes.POD;
 			}
 		}
@@ -250,7 +249,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			if (//!type.isInternal() &&
 				type.name().startsWith(prefix))
 			{
-				proposals.add(new FanTypeProposal(type.name(), anchor, podName));
+				proposals.add(new FanTypeProposal(type.name(), anchor - prefix.length(), podName));
 			}
 		}
 		docType = DocTypes.TYPE;
@@ -272,7 +271,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			if (slot.name().toLowerCase().startsWith(prefix))
 			{
 				//TODO: FanSlotProposal
-				proposals.add(new FanKeywordProposal(slot.name(), anchor));
+				proposals.add(new FanKeywordProposal(slot.name(), anchor - prefix.length()));
 				docType = DocTypes.NA; // TODO
 			}
 		}

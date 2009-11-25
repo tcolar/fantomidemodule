@@ -122,12 +122,7 @@ public class FanPodIndexer implements FileChangeListener
 
 	public boolean hasPodType(String pod, String type)
 	{
-		FPod fpod = allPods.get(pod);
-		if (fpod == null)
-		{
-			return false;
-		}
-		return fpod.type(type) != null;
+		return getPodType(pod, type)!=null;
 	}
 
 	public Type getPodType(String pod, String type)
