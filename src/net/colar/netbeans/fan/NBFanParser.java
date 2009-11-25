@@ -42,7 +42,8 @@ public class NBFanParser extends Parser
 		result = new FanParserResult(snapshot, tokens);
 		try
 		{
-			result = parser.parse(result);
+			result = parser.parse(result);			
+			result.parseAstScope();
 		} catch (Exception e)
 		{
 			throw new ParseException("Parser Exception.", e);

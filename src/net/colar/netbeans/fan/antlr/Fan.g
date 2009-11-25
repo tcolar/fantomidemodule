@@ -102,6 +102,7 @@ AST_TERM_EXPR;
 AST_DOT_CALL;
 AST_SAFE_DOT_CALL;
 AST_STATIC_CALL;
+AST_USING_POD;
 // help getting valid AST for completion:
 AST_INC_DOTCALL;
 AST_INC_SAFEDOTCALL;
@@ -243,11 +244,14 @@ prog		: 	 using* (podDef | typeDef*) docs EOF;
 using		@init {paraphrase.push("Using statements");} @after{paraphrase.pop();}
 		:	(usingPod | usingType | usingAs);
 usingPod
-		:	KW_USING podSpec eos ;
+		:	KW_USING podSpec eos
+			-> ^(AST_USING_POD podSpec);
 usingType
-		:	KW_USING podSpec SP_COLCOL id eos;
+		:	KW_USING podSpec SP_COLCOL id eos
+			-> ^(AST_USING_POD podSpec id);
 // pod id can have a $ in it(java ffi) but then "as" is required
-usingAs		:	KW_USING podSpec SP_COLCOL id ('$' id)* KW_AS id eos;
+usingAs		:	KW_USING podSpec SP_COLCOL pod=(id ('$' id)*) KW_AS as=id eos
+			-> ^(AST_USING_POD podSpec $pod $as);
 podSpec		:	ffi? id (DOT id)*;
 ffi 		:	sq_bracketL id sq_bracketR;
 // pod support

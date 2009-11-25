@@ -71,6 +71,7 @@ public class FanStructureAnalyzer implements StructureScanner
 
 	/**
 	 * Scan down the tree for structure items, and add them to the tree if necesary
+	 * TODO: make use of the ASTParser instead ??
 	 * Recursive.
 	 * @param list
 	 * @param node

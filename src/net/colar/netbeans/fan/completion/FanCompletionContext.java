@@ -6,11 +6,9 @@ package net.colar.netbeans.fan.completion;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanTokenID;
-import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.LexerUtils;
 import org.antlr.runtime.tree.CommonTree;
-import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler.QueryType;
@@ -121,39 +119,16 @@ public class FanCompletionContext
 	 */
 	private void determineCompletionType()
 	{
+		// We want the node before the cursor
 		tokenStream.move(offset);
-		if (curNode.isNil())
+		tokenStream.movePrevious();
+		CommonTree node = LexerUtils.findASTNodeAt(result, tokenStream.offset());
+		if (node.isNil())
 		{
 			// Root level (not in type) default
 			completionType = completionTypes.ROOT_LEVEL;
-			int begin = LexerUtils.getLineBeginOffset(tokenStream, offset, true);
-			if (LexerUtils.moveToNextNonWSToken(tokenStream, begin, offset))
-			{
-				Token tk = tokenStream.token();
-				int tkType = tk.id().ordinal();
-				if (tkType == FanLexer.KW_USING)
-				{
-					// Using statement
-					completionType = completionTypes.IMPORT_POD;
-					tokenStream.moveNext();
-					while (LexerUtils.moveToNextNonWSToken(tokenStream, tokenStream.offset(), offset))
-					{
-						Token t = tokenStream.token();
-						preamble += t.toString();
-						tokenStream.moveNext();
-						if (preamble.startsWith("[java]"))
-						{
-							completionType = completionTypes.IMPORT_FFI_JAVA;
-							preamble = "";
-						}
-					}
-				}
-				System.out.println("Preamble:" + preamble);
-			}
 		} else
 		{
-			tokenStream.movePrevious();
-			CommonTree node = LexerUtils.findASTNodeAt(result, tokenStream.offset());
 			int ord = node.getType();
 			// expression completion after a '.' or '?.'
 			System.out.println("Node :" + node.toString() + " " + node.getType());
@@ -174,8 +149,23 @@ public class FanCompletionContext
 						{
 							completionType = completionType.DOTCALL;
 						}
+						if (parent.getType() == FanParser.AST_USING_POD)
+						{
+							completionType = completionTypes.IMPORT_POD;
+							if (parent.getChildCount() > 2)
+							{
+								completionType = completionTypes.IMPORT_FFI_JAVA;
+							}
+						}
 					}
 					break;
+				/*case FanParser.AST_USING_POD:
+					completionType = completionTypes.IMPORT_POD;
+					if (node.getChildCount() > 2)
+					{
+						completionType = completionTypes.IMPORT_FFI_JAVA;
+					}
+					break;*/
 			}
 		}
 		// restore ts offset

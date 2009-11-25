@@ -15,36 +15,37 @@ import java.util.Vector;
 public class FanRootScope extends FanAstScope
 {
 	// using statements. type=null means unresolvable
-	private Hashtable<String, Type> usedPods;
-	// types
-	private Vector<FanAstScope> types;
+	private Hashtable<String, Type> usedTypes = new Hashtable<String, Type>();
+	// types (classes/enums/mixins)
+	private Vector<FanAstScope> types = new Vector<FanAstScope>();
 
 	public FanRootScope()
 	{
 		super(null);
 	}
 
-	public void addUsedPod(String name, Type type)
+	public void addUsedType(String name, Type type)
 	{
-		usedPods.put(name, type);
+		usedTypes.put(name, type);
 	}
 
 	public void addType(FanAstScope type)
 	{
-		types.add(type);
+		if(type!=null)
+			types.add(type);
 	}
 
-	public Hashtable<String, Type> getUsedPods()
+	public Hashtable<String, Type> getUsedTypes()
 	{
-		return usedPods;
+		return usedTypes;
 	}
 
 	public void dump()
 	{
 		System.out.println("---Root Scope---");
-		for(String key : usedPods.keySet())
+		for(String key : usedTypes.keySet())
 		{
-			System.out.println("Using: "+key+" ("+usedPods.get(key)+")");
+			System.out.println("Using: "+key+" ("+usedTypes.get(key)+")");
 		}
 		for(FanAstScope node : types)
 		{

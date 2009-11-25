@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.LexerUtils;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
@@ -73,18 +74,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				proposeRootItems(proposals, anchor, prefix.toLowerCase());
 				break;
 			case IMPORT_POD:
-				if (preamble.contains("::"))
-				{
-					String pod = preamble.substring(0, preamble.indexOf("::"));
-					proposeTypes(pod, proposals, anchor, prefix.toLowerCase());
-				} else
-				{
-					// Propose [java] then all pods
-					FanImportProposal prop = new FanImportProposal("[java]", anchor, true);
-					prop.setSortPrio(1);
-					proposals.add(prop);
-					proposePods(proposals, anchor, prefix.toLowerCase());
-				}
+				proposePods(proposals, context);
 				break;
 			case IMPORT_FFI_JAVA:
 				//TODO
@@ -291,6 +281,38 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 	}
 
+	private void proposePods(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
+	{
+		FanParserResult result = (FanParserResult) context.getParserResult();
+		int offset = context.getCaretOffset();
+		//String prefix = context.getPrefix();
+		int anchor = context.getCaretOffset();
+		// we want to look at offset -1 (ie: before the caret) so we are IN the expression, not just after.
+		if (offset > 0)
+		{
+			offset--;
+		}
+		CommonTree curNode = LexerUtils.findASTNodeAt(result, offset);
+		if (curNode.getType() == FanLexer.ID)
+		{
+			curNode = (CommonTree) curNode.getParent();
+		}
+		// should be a AST_USING_POD node
+		if (curNode.getType() == FanParser.AST_USING_POD)
+		{
+			switch (curNode.getChildCount())
+			{
+				case 1:
+					proposePods(proposals, anchor, curNode.getChild(0).getText());
+					break;
+				case 2:
+					proposeTypes(curNode.getChild(0).getText(), proposals, anchor, curNode.getChild(1).getText());
+					break;
+
+			}
+		}
+	}
+
 	/**
 	 * Propose options for a DOT_CALL ex:
 	 * SomeClass._
@@ -316,6 +338,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			System.out.println("Expr Node: " + exprNode.toStringTree());
 			String type = resolveTypeOfExpr(exprNode);
 			System.out.println("Type: " + type);
+			//TODO: continue this
 		}
 	}
 
@@ -335,7 +358,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			{
 				case FanParser.AST_STATIC_CALL:
 					CommonTree tNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
-					if (tNode != null && tNode.getChildCount()>0)
+					if (tNode != null && tNode.getChildCount() > 0)
 					{
 						type = tNode.getChild(0).getText();
 					}
