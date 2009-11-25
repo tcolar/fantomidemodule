@@ -119,9 +119,8 @@ public class FanCompletionContext
 	 */
 	private void determineCompletionType()
 	{
-		// We want the node before the cursor
-		tokenStream.move(offset);
-		tokenStream.movePrevious();
+		// We want the significant node before the cursor
+		LexerUtils.moveToPrevNonWSToken(tokenStream, offset, 0);
 		CommonTree node = LexerUtils.findASTNodeAt(result, tokenStream.offset());
 		if (node.isNil())
 		{
@@ -149,7 +148,8 @@ public class FanCompletionContext
 						{
 							completionType = completionType.DOTCALL;
 						}
-						if (parent.getType() == FanParser.AST_USING_POD)
+						if (parent.getType() == FanParser.AST_USING_POD ||
+								parent.getType() == FanParser.AST_INC_USING)
 						{
 							completionType = completionTypes.IMPORT_POD;
 							if (parent.getChildCount() > 2)
@@ -159,13 +159,9 @@ public class FanCompletionContext
 						}
 					}
 					break;
-				/*case FanParser.AST_USING_POD:
+				case FanParser.AST_INC_USING:
 					completionType = completionTypes.IMPORT_POD;
-					if (node.getChildCount() > 2)
-					{
-						completionType = completionTypes.IMPORT_FFI_JAVA;
-					}
-					break;*/
+					break;
 			}
 		}
 		// restore ts offset

@@ -4,7 +4,6 @@
 package net.colar.netbeans.fan.indexer;
 
 import fan.sys.Buf;
-import fan.sys.Err;
 import fan.sys.FanObj;
 import fan.sys.List;
 import fan.sys.Pod;

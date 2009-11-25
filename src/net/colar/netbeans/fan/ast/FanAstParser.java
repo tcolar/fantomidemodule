@@ -28,18 +28,21 @@ public class FanAstParser
 		FanRootScope rootScope = new FanRootScope();
 		CommonTree ast = result.getTree();
 		List<CommonTree> children = ast.getChildren();
-		for (CommonTree child : children)
+		if (children != null)
 		{
-			switch (child.getType())
+			for (CommonTree child : children)
 			{
-				case FanParser.AST_USING_POD:
-					addUsing(rootScope, child);
-					break;
-				case FanParser.AST_CLASS:
-				case FanParser.AST_ENUM:
-				case FanParser.AST_MIXIN:
-					rootScope.addType(parseType(child));
-					break;
+				switch (child.getType())
+				{
+					case FanParser.AST_USING_POD:
+						addUsing(rootScope, child);
+						break;
+					case FanParser.AST_CLASS:
+					case FanParser.AST_ENUM:
+					case FanParser.AST_MIXIN:
+						rootScope.addType(parseType(child));
+						break;
+				}
 			}
 		}
 		return rootScope;
@@ -60,52 +63,54 @@ public class FanAstParser
 
 	private static void addUsing(FanRootScope rootScope, CommonTree usingNode)
 	{
-		String name=null;
-		String type=null;
+		String name = null;
+		String type = null;
 		switch (usingNode.getChildCount())
 		{
 			case 1: // using Sys
-				type=usingNode.getChild(0).getText().trim();
-				name=type;
+				type = usingNode.getChild(0).getText().trim();
+				name = type;
 				break;
 			case 2: // using Sys::Time
-				name=usingNode.getChild(1).getText().trim();
-				type=usingNode.getChild(0).getText().trim()+"::"+name;
+				name = usingNode.getChild(1).getText().trim();
+				type = usingNode.getChild(0).getText().trim() + "::" + name;
 				break;
 			case 3: // using Sys::Time as Ti  or using [java] Sys::Time as Ti
-				type=usingNode.getChild(0).getText().trim()+"::"+usingNode.getChild(1).getText().trim();
-				name=usingNode.getChild(2).getText().trim();
+				type = usingNode.getChild(0).getText().trim() + "::" + usingNode.getChild(1).getText().trim();
+				name = usingNode.getChild(2).getText().trim();
 				break;
 		}
-		if(name!=null && type!=null)
+		if (name != null && type != null)
 		{
-			if(type.trim().startsWith("["))
+			if (type.trim().startsWith("["))
 			{
 				System.out.println("TODO: Using FFI AST support.");
-			}
-			else
+			} else
 			{
-				if(type.indexOf("::")>0)
+				if (type.indexOf("::") > 0)
 				{
 					// Adding a specific type
 					String[] data = type.split("::");
 					Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
-					if(t!=null)
+					if (t != null)
+					{
 						rootScope.addUsedType(name, t);
-				}
-				else
+					}
+				} else
 				{
 					// Adding all the types of a Pod
 					Set<Type> types = FanPodIndexer.getInstance().getPodTypes(name);
-					for(Type t : types)
+					for (Type t : types)
 					{
 						//TODO: There could be duplicates (says Sys.Time and My.Time) .. should we deal with that ?
-						if(rootScope.getUsedTypes().containsKey(t.name()))
-							System.out.println("Duplicated using: "+t.name()+" ("+name+")");
+						if (rootScope.getUsedTypes().containsKey(t.name()))
+						{
+							System.out.println("Duplicated using: " + t.name() + " (" + name + ")");
+						}
 						rootScope.addUsedType(t.name(), t);
 					}
 				}
-				
+
 			}
 		}
 	}

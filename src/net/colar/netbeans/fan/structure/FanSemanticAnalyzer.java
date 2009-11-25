@@ -4,6 +4,7 @@
  */
 package net.colar.netbeans.fan.structure;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
  */
 public class FanSemanticAnalyzer extends SemanticAnalyzer
 {
-	
+	private static final Set<ColoringAttributes> ErrorSet = Collections.singleton(ColoringAttributes.UNDEFINED);
 	private volatile boolean cancelled = false;
 	private Map<OffsetRange, Set<ColoringAttributes>> highlights = null;
 	private static final Pattern INTERPOLATION = Pattern.compile("[^\\\\]\\$\\{?[a-zA-Z0-9\\.]*\\}?");
@@ -56,7 +57,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			highlights = newHighlights.size() == 0 ? null : newHighlights;
 		} else
 		{
-			//System.out.println("AST TREE HAS ERRORS");
+			System.out.println("AST TREE HAS ERRORS");
 		}
 	}
 
@@ -90,16 +91,21 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		if (node != null /*&& !cancelled*/)
 		{
 			// DEBUGGING - inneficient
-			/*String par = "";
+			String par = "";
 			Tree parNode=node;
 			while((parNode=parNode.getParent()) != null)
 			{
 				par += "  ";// nesting level
 			}
 			System.out.println("Node: " + par + node.getText());
-			*/
+			
 			switch (node.getType())
 			{
+				case FanParser.AST_INC_DOTCALL:
+				case FanParser.AST_INC_SAFEDOTCALL:
+				case FanParser.AST_INC_USING:
+					addToHighlights(result, newHighlights, node, ColoringAttributes.METHOD_SET);
+					break;
 				case FanParser.AST_STR:
 					addInterpolationHighlights(result, newHighlights, node);
 					break;

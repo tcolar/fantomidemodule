@@ -325,7 +325,11 @@ public class LexerUtils
 		{
 			int tokenType=seq.token().id().ordinal();
 			if( ! matchType(tokenType, FanGrammarHelper.WS_TOKENS))
+			{
+				// put it back BEFORE the token
+				seq.movePrevious();
 				return true;
+			}
 		}
 		return false;
 	}

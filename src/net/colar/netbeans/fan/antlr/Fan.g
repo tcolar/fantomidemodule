@@ -84,7 +84,6 @@ INC_STR;
 INC_URI;
 INC_COMMENT;
 INC_DSL;
-INC_CALL;
 
 // AST elements
 AST_CLASS;
@@ -103,7 +102,8 @@ AST_DOT_CALL;
 AST_SAFE_DOT_CALL;
 AST_STATIC_CALL;
 AST_USING_POD;
-// help getting valid AST for completion:
+// help getting valid AST for completion: (INC means incomplete)
+AST_INC_USING;
 AST_INC_DOTCALL;
 AST_INC_SAFEDOTCALL;
 // generic items
@@ -242,7 +242,7 @@ import net.colar.netbeans.fan.FanParserResult;
 // allow extra "docs" at the end of file, as seen in some files (last slot commented out)
 prog		: 	 using* (podDef | typeDef*) docs EOF;
 using		@init {paraphrase.push("Using statements");} @after{paraphrase.pop();}
-		:	(usingPod | usingType | usingAs);
+		:	(usingPod | usingType | usingAs | incUsing);
 usingPod
 		:	KW_USING podSpec eos
 			-> ^(AST_USING_POD podSpec);
@@ -250,8 +250,11 @@ usingType
 		:	KW_USING podSpec SP_COLCOL id eos
 			-> ^(AST_USING_POD podSpec id);
 // pod id can have a $ in it(java ffi) but then "as" is required
-usingAs		:	KW_USING podSpec SP_COLCOL pod=(id ('$' id)*) KW_AS as=id eos
-			-> ^(AST_USING_POD podSpec $pod $as);
+usingAs		:	KW_USING podSpec SP_COLCOL podid=(id ('$' id)*) KW_AS as=id eos
+			-> ^(AST_USING_POD podSpec $podid $as);
+// incomplete using -> for Completion
+incUsing	:   ((KW_USING eos) | (KW_USING podSpec SP_COLCOL eos))
+			-> ^(AST_INC_USING KW_USING podSpec?);
 podSpec		:	ffi? id (DOT id)*;
 ffi 		:	sq_bracketL id sq_bracketR;
 // pod support

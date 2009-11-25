@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanLexer;
@@ -17,8 +18,10 @@ import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.LexerUtils;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanDummyElementHandle;
+import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -39,10 +42,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 	private static enum DocTypes
 	{
-
 		NA,
 		POD,
-		POD_TYPE,
 		TYPE,
 	};
 	DocTypes docType = DocTypes.NA;
@@ -125,10 +126,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				{
 					doc = FanPodIndexer.getInstance().getPodTypeDoc(pod, handle.getName());
 				}
-				break;
-			case POD_TYPE:
-				pod = preamble.substring(0, preamble.indexOf("::"));
-				doc = FanPodIndexer.getInstance().getPodTypeDoc(pod, handle.getName());
 				break;
 		}
 		return doc;
@@ -251,12 +248,12 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			// TODO: filter out internals / private ?
 			if (//!type.isInternal() &&
-				type.name().toLowerCase().startsWith(prefix))
+				type.name().startsWith(prefix))
 			{
-				proposals.add(new FanImportProposal(type.name(), anchor, false));
+				proposals.add(new FanTypeProposal(type.name(), anchor, podName));
 			}
 		}
-		docType = DocTypes.POD_TYPE;
+		docType = DocTypes.TYPE;
 	}
 
 	/**
@@ -276,7 +273,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			{
 				//TODO: FanSlotProposal
 				proposals.add(new FanKeywordProposal(slot.name(), anchor));
-				docType = DocTypes.POD_TYPE; // TODO
+				docType = DocTypes.NA; // TODO
 			}
 		}
 	}
@@ -284,14 +281,14 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	private void proposePods(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
 	{
 		FanParserResult result = (FanParserResult) context.getParserResult();
+		Document doc = result.getSnapshot().getSource().getDocument(true);
+		TokenSequence ts = LexerUtils.getFanTokenSequence(doc);
 		int offset = context.getCaretOffset();
 		//String prefix = context.getPrefix();
 		int anchor = context.getCaretOffset();
 		// we want to look at offset -1 (ie: before the caret) so we are IN the expression, not just after.
-		if (offset > 0)
-		{
-			offset--;
-		}
+		LexerUtils.moveToPrevNonWSToken(ts, offset, 0);
+		offset=ts.offset();
 		CommonTree curNode = LexerUtils.findASTNodeAt(result, offset);
 		if (curNode.getType() == FanLexer.ID)
 		{
@@ -309,6 +306,20 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					proposeTypes(curNode.getChild(0).getText(), proposals, anchor, curNode.getChild(1).getText());
 					break;
 
+			}
+		}
+		if (curNode.getType() == FanParser.AST_INC_USING)
+		{
+			switch (curNode.getChildCount())
+			{
+				case 1:
+					// all pods
+					proposePods(proposals, anchor, "");
+					break;
+				case 2:
+					// all types of the pod
+					proposeTypes(curNode.getChild(1).getText(), proposals, anchor, "");
+					break;
 			}
 		}
 	}
