@@ -299,7 +299,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			String pod = LexerUtils.getNodeContent(result, curNode.getChild(0));
 			String type = curNode.getChildCount()==1?null:LexerUtils.getNodeContent(result, curNode.getChild(1));
-
+ 
 			if (type == null || type.length() == 0)
 			{
 				proposePods(proposals, anchor, pod);

@@ -149,7 +149,7 @@ public class FanCompletionContext
 			System.out.println("Node :" + node.toString() + " " + node.getType());
 			switch (ord)
 			{
-				// Start at the . or ?. node.
+				// Start at the . or ?. node. 
 				case FanParser.AST_INC_DOTCALL:
 				case FanParser.AST_INC_SAFEDOTCALL:
 				case FanParser.AST_STATIC_CALL:
