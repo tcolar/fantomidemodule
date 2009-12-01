@@ -46,7 +46,6 @@ public class FanPodIndexer implements FileChangeListener
 	private FanPodIndexer()
 	{
 		initializeIndex();
-		FanJavaIndexer.getInstance();
 	}
 
 	public void initializeIndex()
@@ -66,6 +65,7 @@ public class FanPodIndexer implements FileChangeListener
 		{
 			indexPod(pods.get(key));
 		}
+		FanJavaIndexer.getInstance();
 	}
 
 	private void indexPod(java.io.File pod)

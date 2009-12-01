@@ -25,7 +25,7 @@ public class FanJavaIndexer
 	private FanJavaClassLoader cl;
 	private static FanJavaIndexer instance;
 	ArrayList<String> packages = new ArrayList();
-	ArrayList classes = new ArrayList();
+	ArrayList<String> classes = new ArrayList();
 	ArrayList interfaces = new ArrayList();
 	ArrayList enums = new ArrayList();
 	ArrayList annotations = new ArrayList();
@@ -54,7 +54,7 @@ public class FanJavaIndexer
 
 	public Class findClass(String name) throws ClassNotFoundException
 	{
-		return cl.findClass(name);
+		return cl.find(name);
 	}
 
 	/**
@@ -71,11 +71,11 @@ public class FanJavaIndexer
 			urls.add(url);
 		}
 		// JVM cp
-		String[] cps=System.getProperty("java.class.path", "").split(File.pathSeparator);
+		String[] cps = System.getProperty("java.class.path", "").split(File.pathSeparator);
 		for (String cp : cps)
 		{
 			//System.out.println("cp: "+cp);
-			urls.add(new URL("file://"+cp));
+			urls.add(new URL("file://" + cp));
 		}
 
 
@@ -83,30 +83,41 @@ public class FanJavaIndexer
 		for (URL url : urls)
 		{
 			String f = url.getFile();
-			System.out.println("F   "+f);
+			System.out.println("F   " + f);
 			if (f.toLowerCase().endsWith(".jar"))
 			{
 				// skip those large resources jars to save time.
-				if (f.equals("deploy.jar") || f.equals("charsets.jar") || f.equals("javaws.jar")) continue;
-
-				JarFile jar=new JarFile(f);
-				Enumeration<JarEntry> jarEntries = jar.entries();
-				while(jarEntries.hasMoreElements())
+				if (f.equals("deploy.jar") || f.equals("charsets.jar") || f.equals("javaws.jar"))
 				{
-					JarEntry entry=jarEntries.nextElement();
+					continue;
+				}
+
+				JarFile jar = new JarFile(f);
+				Enumeration<JarEntry> jarEntries = jar.entries();
+				while (jarEntries.hasMoreElements())
+				{
+					JarEntry entry = jarEntries.nextElement();
 					String ename = entry.getName();
 					if (ename.toLowerCase().endsWith(".class"))
 					{
-						String cname=ename.substring(0,ename.length()-6).replaceAll(File.separator, ".");
-						System.out.println("CP item: " + cname);
+						String cname = ename.substring(0, ename.length() - 6).replaceAll(File.separator, ".");
 						try
 						{
-							Class c = Class.forName(cname);//findClass(cname);
-							if(c.isInterface())
-								System.out.println("Is interface");
-						}catch(ClassNotFoundException ce)
+							// trying to findclass same class twice = no good !
+							if (!classes.contains(cname))
+							{
+								//System.out.println("CP item: " + cname);
+								classes.add(cname);
+								Class c = findClass(cname);
+								if (c != null && c.isInterface())
+								{
+									System.out.println("Is interface");
+									findClass(cname);
+								}
+							}
+						} catch (ClassNotFoundException ce)
 						{
-							System.out.println("Not found: "+ename);
+							System.out.println("Not found: " + ename);
 						}
 					}
 				}

@@ -17,6 +17,7 @@ import java.util.ArrayList;
  */
 public class FanJavaClassLoader extends URLClassLoader
 {
+
 	public FanJavaClassLoader()
 	{
 		// create with the standard jars + the fan jars
@@ -57,21 +58,21 @@ public class FanJavaClassLoader extends URLClassLoader
 		}
 	}
 
-	@Override
-	protected Class findClass(String name) throws ClassNotFoundException
+	protected Class find(String name) throws ClassNotFoundException
 	{
-		try
+		Class c = findLoadedClass(name);
+		if (c == null)
 		{
-			return super.findClass(name);
-		} catch (NoClassDefFoundError e)
-		{
-			String s = e.toString();
-			if (s.contains("eclipse") && s.contains("swt"))
+			try
 			{
-				System.out.println("ERROR: cannot load SWT library - see `http://fantom.org/doc/docTools/Setup.html#swt`");
+				System.out.println("find class: " + name);
+				c = findClass(name);
+			} catch (Throwable t)
+			{
+				t.printStackTrace();
 			}
-			throw e;
 		}
+		return c;
 	}
 }
 
