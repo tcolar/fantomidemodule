@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.zip.ZipException;
 
 /**
  * Indexer for the Java classes / jars
@@ -70,14 +71,35 @@ public class FanJavaIndexer
 		{
 			urls.add(url);
 		}
-		// JVM cp
-		String[] cps = System.getProperty("java.class.path", "").split(File.pathSeparator);
+		// JVM boot cp
+		String lib = System.getProperty("java.home", "") + File.separator + File.separator + "lib" + File.separator;
+		String[] cps = System.getProperty("sun.boot.class.path", "").split(File.pathSeparator);
 		for (String cp : cps)
 		{
-			//System.out.println("cp: "+cp);
+			String f = new File(cp).getName();
+			// skip those large resources jars to save time.
+			if (f.equals("deploy.jar") || f.equals("charsets.jar") || f.equals("javaws.jar"))
+			{
+				continue;
+			}
+			System.out.println("jbcp: " + cp);
 			urls.add(new URL("file://" + cp));
 		}
-
+		// use lib/rt.jar as the backup
+		if (cps.length == 0)
+		{
+			String cp = lib + "rt.jar";
+			System.out.println("jrtcp: " + cp);
+			urls.add(new URL("file://" + cp));
+		}
+		// lib/ext/*
+		File[] ext = new File(lib + "ext").listFiles();
+		for (File jar : ext)
+		{
+			System.out.println("jecp: " + jar.getAbsolutePath());
+			urls.add(new URL("file://" + jar.getAbsolutePath()));
+		}
+		// Not adding java.classpath because it has all kind of Netbeans stuff we don't want
 
 		// Browsing and finidng items
 		for (URL url : urls)
@@ -86,38 +108,39 @@ public class FanJavaIndexer
 			System.out.println("F   " + f);
 			if (f.toLowerCase().endsWith(".jar"))
 			{
-				// skip those large resources jars to save time.
-				if (f.equals("deploy.jar") || f.equals("charsets.jar") || f.equals("javaws.jar"))
+				if (new File(f).exists())
 				{
-					continue;
-				}
+					JarFile jar = new JarFile(f);
 
-				JarFile jar = new JarFile(f);
-				Enumeration<JarEntry> jarEntries = jar.entries();
-				while (jarEntries.hasMoreElements())
-				{
-					JarEntry entry = jarEntries.nextElement();
-					String ename = entry.getName();
-					if (ename.toLowerCase().endsWith(".class"))
+					Enumeration<JarEntry> jarEntries = jar.entries();
+					while (jarEntries.hasMoreElements())
 					{
-						String cname = ename.substring(0, ename.length() - 6).replaceAll(File.separator, ".");
-						try
+						JarEntry entry = jarEntries.nextElement();
+						String ename = entry.getName();
+						if (ename.toLowerCase().endsWith(".class"))
 						{
-							// trying to findclass same class twice = no good !
-							if (!classes.contains(cname))
+							String cname = ename.substring(0, ename.length() - 6).replaceAll(File.separator, ".");
+							try
 							{
-								//System.out.println("CP item: " + cname);
-								classes.add(cname);
-								Class c = findClass(cname);
-								if (c != null && c.isInterface())
+								// trying to findclass same class twice = no good !
+								// also not bothering with sun internal classes
+								if (!classes.contains(cname) &&
+										!cname.startsWith("sun.") &&
+										!cname.startsWith("com.sun."))
 								{
-									System.out.println("Is interface");
-									findClass(cname);
+									//System.out.println("CP item: " + cname);
+									classes.add(cname);
+									Class c = findClass(cname);
+									if (c != null && c.isInterface())
+									{
+										System.out.println("Is interface");
+										findClass(cname);
+									}
 								}
+							} catch (ClassNotFoundException ce)
+							{
+								System.out.println("Not found: " + ename);
 							}
-						} catch (ClassNotFoundException ce)
-						{
-							System.out.println("Not found: " + ename);
 						}
 					}
 				}

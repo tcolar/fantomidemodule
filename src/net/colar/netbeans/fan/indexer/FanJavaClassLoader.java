@@ -69,7 +69,7 @@ public class FanJavaClassLoader extends URLClassLoader
 				c = findClass(name);
 			} catch (Throwable t)
 			{
-				t.printStackTrace();
+				System.err.println("Warning, couldn't load class: "+name+" : "+t);
 			}
 		}
 		return c;
