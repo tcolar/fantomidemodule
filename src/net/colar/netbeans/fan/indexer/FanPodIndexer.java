@@ -6,7 +6,6 @@ package net.colar.netbeans.fan.indexer;
 import fan.sys.Buf;
 import fan.sys.FanObj;
 import fan.sys.List;
-import fan.sys.Map;
 import fan.sys.Pod;
 import fan.sys.Repo;
 import fan.sys.Slot;
@@ -15,7 +14,6 @@ import fan.sys.Type;
 import fanx.fcode.FPod;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
@@ -48,8 +46,7 @@ public class FanPodIndexer implements FileChangeListener
 	private FanPodIndexer()
 	{
 		initializeIndex();
-		//TODO: for testing
-		readJavaTypes();
+		FanJavaIndexer.getInstance();
 	}
 
 	public void initializeIndex()
@@ -250,38 +247,6 @@ public class FanPodIndexer implements FileChangeListener
 			}
 		}
 		return result;
-	}
-
-	/*public void getJavaTypes()
-	{
-		if(javaTypes==null)
-			javaTypes=readJavaTypes();
-		return javaTypes;
-	}*/
-	public String readJavaTypes()
-	{
-		FanPlatform platform = FanPlatform.getInstance(false);
-		if (platform == null)
-		{
-			return null;
-		}
-		try
-		{
-			//TODO: make those Fan names constants somewhere
-			FanObj classPath = (FanObj) Type.find("compilerJava::ClassPath").method("makeForCurrent").call();
-			Map map = (Map)classPath.type().field("classes").get(classPath);
-			String[] packages=(String[])map.keys().asArray(String.class);
-			for(String pack : packages)
-			{
-				String[] classes=(String[])((List)map.get(pack)).asArray(String.class);
-				for(String clazz: classes)
-					System.out.println(pack+"."+clazz);
-			}
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 }

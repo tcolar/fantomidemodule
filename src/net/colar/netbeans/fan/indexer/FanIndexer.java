@@ -12,6 +12,7 @@ import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
+
 /**
  *
  * Update: Will not be using lucerne anymore ...
@@ -42,17 +43,17 @@ public class FanIndexer extends EmbeddingIndexer
 		System.err.println("Indexing requested for: " + indexable.getURL());
 		/*try
 		{
-			IndexingSupport support = IndexingSupport.getInstance(context);
-			IndexDocument doc = support.createDocument(indexable);
+		IndexingSupport support = IndexingSupport.getInstance(context);
+		IndexDocument doc = support.createDocument(indexable);
 
-			FanParserResult fanResult = (FanParserResult) parserResult;
-			CommonTree ast = fanResult.getTree();
-			parseTree(doc, indexable, ast);
+		FanParserResult fanResult = (FanParserResult) parserResult;
+		CommonTree ast = fanResult.getTree();
+		parseTree(doc, indexable, ast);
 
-			support.addDocument(doc);
+		support.addDocument(doc);
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+		e.printStackTrace();
 		}*/
 	}
 
@@ -107,7 +108,7 @@ public class FanIndexer extends EmbeddingIndexer
 		StringBuilder infos = new StringBuilder(item.toString(FanIndexItem.TYPE.ID));
 		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.MODIFIERS));
 		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.INHERITANCE));
-		System.out.println("Indexing "+type+" : "+infos.toString());
+		System.out.println("Indexing " + type + " : " + infos.toString());
 		doc.addPair(type, infos.toString(), true, true);
 	}
 
@@ -123,7 +124,9 @@ public class FanIndexer extends EmbeddingIndexer
 		StringBuilder infos = new StringBuilder(item.toString(FanIndexItem.TYPE.ID));
 		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.TYPE));
 		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.MODIFIERS));
-		System.out.println("Indexing "+type+" : "+infos.toString());
+		System.out.println("Indexing " + type + " : " + infos.toString());
 		doc.addPair(type, infos.toString(), true, true);
 	}
+
+
 }
