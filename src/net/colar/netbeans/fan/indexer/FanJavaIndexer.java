@@ -101,7 +101,7 @@ public class FanJavaIndexer
 						System.out.println("CP item: " + cname);
 						try
 						{
-							Class c = findClass(cname);
+							Class c = Class.forName(cname);//findClass(cname);
 							if(c.isInterface())
 								System.out.println("Is interface");
 						}catch(ClassNotFoundException ce)
