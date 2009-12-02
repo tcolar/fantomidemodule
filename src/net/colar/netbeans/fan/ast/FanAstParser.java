@@ -69,6 +69,7 @@ public class FanAstParser
 
 	private static void addUsing(FanParserResult result, FanRootScope rootScope, CommonTree usingNode)
 	{
+		//TODO: warn/highlight if duplicated using
 		String name = null;
 		String type = null;
 		switch (usingNode.getChildCount())

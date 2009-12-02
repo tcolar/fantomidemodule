@@ -12,13 +12,13 @@ import fan.sys.Slot;
 import fan.sys.Sys;
 import fan.sys.Type;
 import fanx.fcode.FPod;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
-import net.colar.netbeans.fan.antlr.FanParser.finally_long_return;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -57,10 +57,6 @@ public class FanPodIndexer implements FileChangeListener
 
 	private void indexPod(java.io.File pod)
 	{
-		if (running)
-		{
-			return;
-		}
 		try
 		{
 			ZipFile zpod = new ZipFile(pod);
@@ -244,8 +240,10 @@ public class FanPodIndexer implements FileChangeListener
 	{
 		// Initialize the index in a thread
 
+		@Override
 		public void run()
 		{
+			long start = new Date().getTime();
 			try
 			{
 				// If fan.home not set yet (no fan platform yet), skip
@@ -271,13 +269,13 @@ public class FanPodIndexer implements FileChangeListener
 				// Index the java too if not yet done.
 				FanJavaIndexer.getInstance();
 
-
 			} catch (Throwable t)
 			{
 				t.printStackTrace();
 			} finally
 			{
 				instance.running = false;
+				System.out.println("Pod Indexer completed, ellapsed time: " + (new Date().getTime() - start) + " Items: " + instance.allPods.size());
 			}
 		}
 	}

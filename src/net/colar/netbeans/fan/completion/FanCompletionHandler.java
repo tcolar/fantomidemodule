@@ -217,6 +217,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	private void proposePods(ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
 		Set<String> names = FanPodIndexer.getInstance().getAllPodNames();
+		if (prefix.length() == 0)
+		{
+			proposals.add(new FanImportProposal("[java] ", anchor - prefix.length(), true));
+		}
 		for (String name : names)
 		{
 			if (name.toLowerCase().startsWith(prefix))
@@ -228,7 +232,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	}
 
 	/**
-	 * Propose Typoes (class, enum, mixin)
+	 * Propose Types (class, enum, mixin)
 	 * @param podName null means all
 	 * @param proposals
 	 * @param anchor
@@ -284,19 +288,27 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param anchor
 	 * @param pod
 	 */
-	private void proposeJava(ArrayList<CompletionProposal> proposals, int anchor, String basePack)
+	private void proposeJavaPacks(ArrayList<CompletionProposal> proposals, int anchor, String basePack)
 	{
-		String base = basePack.substring(6).trim().replaceAll("::", "\\.");
-		FanJavaIndexer idx = FanJavaIndexer.getInstance();
-		String pack = idx.parsePackage(base);
-		String type = idx.parseItem(base);
-		System.out.println("pack: "+pack);
-		System.out.println("type: "+type);
-		List<String> items = FanJavaIndexer.getInstance().listChildren(pack, type);
+		String base = basePack.substring(6).trim();
+		List<String> items = FanJavaIndexer.getInstance().listSubPackages(base);
 		for (String s : items)
 		{
+			System.out.println("Proposal: " + s);
 			// TODO: JavaProps
-			proposals.add(new FanImportProposal(s, anchor - basePack.length(), true));
+			proposals.add(new FanImportProposal(s, anchor - base.length(), true));
+		}
+	}
+
+	private void proposeJavaTypes(ArrayList<CompletionProposal> proposals, int anchor, String basePack, String type)
+	{
+		String base = basePack.substring(6).trim();
+		List<String> items = FanJavaIndexer.getInstance().listItems(base, type);
+		for (String s : items)
+		{
+			System.out.println("Proposal: " + s);
+			// TODO: JavaProps
+			proposals.add(new FanImportProposal(s, anchor - type.length(), true));
 		}
 	}
 
@@ -329,14 +341,20 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			{
 				if (pod.startsWith("[java]"))
 				{
-					proposeJava(proposals, anchor, pod);
+					proposeJavaPacks(proposals, anchor, pod);
 				} else
 				{
 					proposePods(proposals, anchor, pod);
 				}
 			} else
 			{
-				proposeTypes(pod, proposals, anchor, type);
+				if (pod.startsWith("[java]"))
+				{
+					proposeJavaTypes(proposals, anchor, pod, type);
+				} else
+				{
+					proposeTypes(pod, proposals, anchor, type);
+				}
 			}
 
 		} else if (curNode.getType() == FanParser.AST_INC_USING)
@@ -350,9 +368,16 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			{
 				if (pod.startsWith("[java]"))
 				{
-					proposeJava(proposals, anchor, pod);
-				}
-				else
+					if (pod.trim().endsWith("::"))
+					{
+						String p = pod.trim();
+						p = p.substring(0,pod.length()-2);
+						proposeJavaTypes(proposals, anchor, p, "");
+					} else
+					{
+						proposeJavaPacks(proposals, anchor, pod);
+					}
+				} else
 				{
 					proposeTypes(pod, proposals, anchor, "");
 				}

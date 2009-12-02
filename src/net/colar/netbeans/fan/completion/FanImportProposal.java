@@ -34,4 +34,10 @@ public class FanImportProposal extends FanCompletionProposal
 		return new FanDummyElementHandle(name, kind);
 	}
 
+	@Override
+	public String getInsertPrefix()
+	{
+		return name;
+	}
+
 }

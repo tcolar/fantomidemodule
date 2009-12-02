@@ -51,24 +51,26 @@ public class FanJavaIndexer
 			instance.running = true;
 			instance.cl = new FanJavaClassLoader();
 			new FanJavaIndexerThread().start();
+			// Strta pod indexing too, if needed
+			FanPodIndexer.getInstance();
 		}
 		return instance;
 	}
 
 	/**
-	 * List packages within this package (1 level)
+	 * List packages starting with base (1 level)
 	 * @param packroot
 	 * @return
 	 */
-	public List<String> listSubPackages(String packroot)
+	public List<String> listSubPackages(String packbase)
 	{
 		ArrayList<String> packs = new ArrayList<String>();
 		for (String s : packages)
 		{
-			if (s.toLowerCase().startsWith(packroot) &&
-				(s.lastIndexOf(".") == -1 || s.lastIndexOf(".") == packroot.length() + 1))
+			if (s.toLowerCase().startsWith(packbase) &&
+				s.indexOf(".", packbase.length() + 1) == -1)
 			{
-				packs.add(s.substring(packroot.length() + 1));
+				packs.add(s);
 			}
 		}
 		return packs;
@@ -92,15 +94,16 @@ public class FanJavaIndexer
 	}
 
 	/**
-	 * List all childrens: sub packages & items
+	 * List all childrens: sub packages & items (1 evel)
 	 * @param pack
 	 * @param prefix
 	 * @return
 	 */
 	public List<String> listChildren(String pack, String prefix)
 	{
+		String p = pack.length() == 0 ? prefix : pack + "." + prefix;
 		ArrayList<String> items = new ArrayList<String>();
-		items.addAll(listSubPackages(pack));
+		items.addAll(listSubPackages(p));
 		items.addAll(listItems(pack, prefix));
 		Collections.sort(items);
 		return items;
@@ -137,9 +140,9 @@ public class FanJavaIndexer
 		{
 			String name = parseItem(s);
 			String pack = parsePackage(s);
-			if (packName == null || pack.startsWith(packName))
+			if (packName == null || (pack.startsWith(packName) && pack.indexOf(".", packName.length()) == -1))
 			{
-				if (name.toLowerCase().startsWith(prefix))
+				if (name.toLowerCase().startsWith(prefix.toLowerCase()) && name.indexOf("$")==-1)
 				{
 					items.add(name);
 				}
@@ -301,9 +304,9 @@ public class FanJavaIndexer
 		@Override
 		public void run()
 		{
+			long start = new Date().getTime();
 			try
 			{
-				long start = new Date().getTime();
 				ArrayList<URL> urls = new ArrayList<URL>();
 				// adding Fan jars
 				URL[] fanUrls = FanJavaClassLoader.getExtUrls();
@@ -394,13 +397,26 @@ public class FanJavaIndexer
 												!cname.startsWith("com.sun."))
 											{
 												//System.out.println("CP item: " + cname);
-												instance.classes.add(cname);
 												String pack = instance.parsePackage(cname);
 												indexPackages(pack);
 
 												Class c = instance.findClass(cname);
 												if (c != null)
 												{
+													if (c.isAnnotation())
+													{
+														instance.annotations.add(cname);
+													} else if (c.isEnum())
+													{
+														instance.enums.add(cname);
+													} else if (c.isInterface())
+													{
+														instance.interfaces.add(cname);
+													} else
+													{
+														instance.classes.add(cname);
+													}
+
 													//System.out.println("Is interface");
 												}
 											}
@@ -429,13 +445,13 @@ public class FanJavaIndexer
 				Collections.sort(instance.enums);
 				Collections.sort(instance.interfaces);
 				Collections.sort(instance.annotations);
-				System.out.println("CP ellapsed time: " + (new Date().getTime() - start) + " Items: " + instance.classes.size() + " (" + instance.packages.size() + " packages)");
 			} catch (Throwable t)
 			{
 				t.printStackTrace();
 			} finally
 			{
 				instance.running = false;
+				System.out.println("Java Indexer completed, ellapsed time: " + (new Date().getTime() - start) + " Items: " + instance.classes.size() + " (" + instance.packages.size() + " packages)");
 			}
 		}
 
@@ -450,7 +466,7 @@ public class FanJavaIndexer
 			String packList = "";
 			for (String p : packs)
 			{
-				packList += packList.length()==0?p:"."+p;
+				packList += packList.length() == 0 ? p : "." + p;
 				if (!instance.packages.contains(packList))
 				{
 					instance.packages.add(packList);
