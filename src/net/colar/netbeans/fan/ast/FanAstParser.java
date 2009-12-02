@@ -99,10 +99,6 @@ public class FanAstParser
 				{
 					rootScope.addError(result, "Unresolvable Java Item: " + qname, usingNode);
 				}
-				/*else
-				{
-				rootScope.addUsedType(name, );
-				}*/
 			} else
 			{
 				if (type.indexOf("::") > 0)
