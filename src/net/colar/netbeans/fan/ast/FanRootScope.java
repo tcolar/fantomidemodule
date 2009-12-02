@@ -57,6 +57,7 @@ public class FanRootScope extends FanAstScope
 		return usedTypes;
 	}
 
+	@Override
 	public void dump()
 	{
 		System.out.println("---Root Scope---");

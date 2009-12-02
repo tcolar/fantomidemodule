@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
+import net.colar.netbeans.fan.antlr.FanParser.finally_long_return;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -35,41 +36,31 @@ public class FanPodIndexer implements FileChangeListener
 
 	private final static Pattern CLOSURECLASS = Pattern.compile(".*?\\$\\d+\\z");
 	private static final FanPodIndexer instance = new FanPodIndexer();
+	private boolean running;
 	// treemap is sorted
 	TreeMap<String, FPod> allPods = new TreeMap<String, FPod>();
+	private boolean indexed = false;
 
-	public static FanPodIndexer getInstance()
+	public static synchronized FanPodIndexer getInstance()
 	{
+		if (!instance.indexed && !instance.running)
+		{
+			instance.running = true;
+			new FanPodIndexerThread().start();
+		}
 		return instance;
 	}
 
 	private FanPodIndexer()
 	{
-		initializeIndex();
-	}
-
-	public void initializeIndex()
-	{
-		// If fan.home not set yet (no fan platform yet), skip
-		FanPlatform platform = FanPlatform.getInstance(false);
-		if (platform == null)
-		{
-			return;
-		}
-
-		FileUtil.addFileChangeListener(this, Sys.PodsDir);
-
-		allPods = new TreeMap<String, FPod>();
-		HashMap<String, java.io.File> pods = Repo.findAllPods();
-		for (String key : pods.keySet())
-		{
-			indexPod(pods.get(key));
-		}
-		FanJavaIndexer.getInstance();
 	}
 
 	private void indexPod(java.io.File pod)
 	{
+		if (running)
+		{
+			return;
+		}
 		try
 		{
 			ZipFile zpod = new ZipFile(pod);
@@ -123,7 +114,7 @@ public class FanPodIndexer implements FileChangeListener
 
 	public boolean hasPodType(String pod, String type)
 	{
-		return getPodType(pod, type)!=null;
+		return getPodType(pod, type) != null;
 	}
 
 	public Type getPodType(String pod, String type)
@@ -249,4 +240,46 @@ public class FanPodIndexer implements FileChangeListener
 		return result;
 	}
 
+	private static class FanPodIndexerThread extends Thread implements Runnable
+	{
+		// Initialize the index in a thread
+
+		public void run()
+		{
+			try
+			{
+				// If fan.home not set yet (no fan platform yet), skip
+				try
+				{
+					FanPlatform.getInstance(true);
+				} catch (RuntimeException e)
+				{
+					return;
+				}
+
+				instance.indexed = true;
+
+				FileUtil.addFileChangeListener(instance, Sys.PodsDir);
+
+				instance.allPods = new TreeMap<String, FPod>();
+				HashMap<String, java.io.File> pods = Repo.findAllPods();
+				for (String key : pods.keySet())
+				{
+					instance.indexPod(pods.get(key));
+				}
+
+				// Index the java too if not yet done.
+				FanJavaIndexer.getInstance();
+
+
+			} catch (Throwable t)
+			{
+				t.printStackTrace();
+			} finally
+			{
+				instance.running = false;
+			}
+		}
+	}
 }
+

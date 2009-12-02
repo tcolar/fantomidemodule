@@ -13,9 +13,9 @@ import java.util.Set;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanDummyElementHandle;
 import org.antlr.runtime.tree.CommonTree;
@@ -77,9 +77,9 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			case IMPORT_POD:
 				proposePods(proposals, context);
 				break;
-			case IMPORT_FFI_JAVA:
-				//TODO
-				break;
+			/*case IMPORT_FFI_JAVA:
+			//TODO
+			break;*/
 			case BASE_TYPE:
 				proposeTypes(null, proposals, anchor, prefix.toLowerCase());
 				docType = DocTypes.TYPE;
@@ -278,6 +278,28 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 	}
 
+	/**
+	 * Java packages
+	 * @param proposals
+	 * @param anchor
+	 * @param pod
+	 */
+	private void proposeJava(ArrayList<CompletionProposal> proposals, int anchor, String basePack)
+	{
+		String base = basePack.substring(6).trim().replaceAll("::", "\\.");
+		FanJavaIndexer idx = FanJavaIndexer.getInstance();
+		String pack = idx.parsePackage(base);
+		String type = idx.parseItem(base);
+		System.out.println("pack: "+pack);
+		System.out.println("type: "+type);
+		List<String> items = FanJavaIndexer.getInstance().listChildren(pack, type);
+		for (String s : items)
+		{
+			// TODO: JavaProps
+			proposals.add(new FanImportProposal(s, anchor - basePack.length(), true));
+		}
+	}
+
 	private void proposePods(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
 	{
 		FanParserResult result = (FanParserResult) context.getParserResult();
@@ -298,11 +320,20 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		if (curNode.getType() == FanParser.AST_USING_POD)
 		{
 			String pod = LexerUtils.getNodeContent(result, curNode.getChild(0));
-			String type = curNode.getChildCount()==1?null:LexerUtils.getNodeContent(result, curNode.getChild(1));
- 
+			String type = curNode.getChildCount() == 1 ? null : LexerUtils.getNodeContent(result, curNode.getChild(1));
+
+			System.out.println("Pod: " + pod);
+			System.out.println("Type: " + type);
+
 			if (type == null || type.length() == 0)
 			{
-				proposePods(proposals, anchor, pod);
+				if (pod.startsWith("[java]"))
+				{
+					proposeJava(proposals, anchor, pod);
+				} else
+				{
+					proposePods(proposals, anchor, pod);
+				}
 			} else
 			{
 				proposeTypes(pod, proposals, anchor, type);
@@ -311,12 +342,20 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		} else if (curNode.getType() == FanParser.AST_INC_USING)
 		{
 			String pod = LexerUtils.getNodeContent(result, curNode.getChild(1));
+			System.out.println("Pod: " + pod);
 			if (pod == null || pod.length() == 0)
 			{
 				proposePods(proposals, anchor, "");
 			} else
 			{
-				proposeTypes(pod, proposals, anchor, "");
+				if (pod.startsWith("[java]"))
+				{
+					proposeJava(proposals, anchor, pod);
+				}
+				else
+				{
+					proposeTypes(pod, proposals, anchor, "");
+				}
 			}
 		}
 	}

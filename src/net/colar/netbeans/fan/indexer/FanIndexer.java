@@ -40,7 +40,7 @@ public class FanIndexer extends EmbeddingIndexer
 	@Override
 	protected void index(Indexable indexable, Result parserResult, Context context)
 	{
-		System.err.println("Indexing requested for: " + indexable.getURL());
+		//System.err.println("Indexing requested for: " + indexable.getURL());
 		/*try
 		{
 		IndexingSupport support = IndexingSupport.getInstance(context);

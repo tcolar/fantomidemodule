@@ -7,151 +7,235 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.zip.ZipException;
+import org.netbeans.api.java.platform.JavaPlatform;
 
 /**
  * Indexer for the Java classes / jars
  * JVM + the ones in Fan repo.
  *
  * Helper method to find / resolve Java types
+ *
+ * //TODO: add file chnage listener like in FanPodIndexer to reindex chnaged jars
+ *
  * @author thibautc
  */
 public class FanJavaIndexer
 {
 
 	private FanJavaClassLoader cl;
-	private static FanJavaIndexer instance;
+	private static FanJavaIndexer instance = new FanJavaIndexer();
+	boolean indexed = false;
+	boolean running = false;
 	ArrayList<String> packages = new ArrayList();
 	ArrayList<String> classes = new ArrayList();
-	ArrayList interfaces = new ArrayList();
-	ArrayList enums = new ArrayList();
-	ArrayList annotations = new ArrayList();
+	ArrayList<String> interfaces = new ArrayList();
+	ArrayList<String> enums = new ArrayList();
+	ArrayList<String> annotations = new ArrayList();
 
 	private FanJavaIndexer()
 	{
 		super();
 	}
 
-	public static FanJavaIndexer getInstance()
+	public synchronized static FanJavaIndexer getInstance()
 	{
-		if (instance == null)
+		if (!instance.indexed && !instance.running)
 		{
-			instance = new FanJavaIndexer();
+			instance.indexed = true;
+			instance.running = true;
 			instance.cl = new FanJavaClassLoader();
-			try
-			{
-				instance.indexJavaItems();
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			new FanJavaIndexerThread().start();
 		}
 		return instance;
 	}
 
-	public Class findClass(String name) throws ClassNotFoundException
+	/**
+	 * List packages within this package (1 level)
+	 * @param packroot
+	 * @return
+	 */
+	public List<String> listSubPackages(String packroot)
 	{
-		return cl.find(name);
+		ArrayList<String> packs = new ArrayList<String>();
+		for (String s : packages)
+		{
+			if (s.toLowerCase().startsWith(packroot) &&
+				(s.lastIndexOf(".") == -1 || s.lastIndexOf(".") == packroot.length() + 1))
+			{
+				packs.add(s.substring(packroot.length() + 1));
+			}
+		}
+		return packs;
 	}
 
 	/**
-	 * Builds an index of all the java classes/interfaces and so on
+	 * List all of the items matching a package and the given item name prefix
+	 * @param pack if null - ignore which package.
+	 * @param prefix - prefix of the item name to match again. "" = any
+	 * @return
 	 */
-	private void indexJavaItems() throws IOException
+	public List<String> listItems(String pack, String prefix)
 	{
-		long start = new Date().getTime();
-		ArrayList<URL> urls = new ArrayList<URL>();
-		// adding Fan jars
-		URL[] fanUrls = FanJavaClassLoader.getExtUrls();
-		for (URL url : fanUrls)
-		{
-			urls.add(url);
-		}
-		// JVM boot cp
-		String lib = System.getProperty("java.home", "") + File.separator + File.separator + "lib" + File.separator;
-		String[] cps = System.getProperty("sun.boot.class.path", "").split(File.pathSeparator);
-		for (String cp : cps)
-		{
-			String f = new File(cp).getName();
-			// skip those large resources jars to save time.
-			if (f.equals("deploy.jar") || f.equals("charsets.jar") || f.equals("javaws.jar"))
-			{
-				continue;
-			}
-			System.out.println("jbcp: " + cp);
-			urls.add(new URL("file://" + cp));
-		}
-		// use lib/rt.jar as the backup
-		if (cps.length == 0)
-		{
-			String cp = lib + "rt.jar";
-			System.out.println("jrtcp: " + cp);
-			urls.add(new URL("file://" + cp));
-		}
-		// lib/ext/*
-		File[] ext = new File(lib + "ext").listFiles();
-		for (File jar : ext)
-		{
-			System.out.println("jecp: " + jar.getAbsolutePath());
-			urls.add(new URL("file://" + jar.getAbsolutePath()));
-		}
-		// Not adding java.classpath because it has all kind of Netbeans stuff we don't want
+		ArrayList<String> items = new ArrayList<String>();
+		items.addAll(listInterfaces(pack, prefix));
+		items.addAll(listEnums(pack, prefix));
+		items.addAll(listAnnotations(pack, prefix));
+		items.addAll(listClasses(pack, prefix));
+		Collections.sort(items);
+		return items;
+	}
 
-		// Browsing and finidng items
-		for (URL url : urls)
+	/**
+	 * List all childrens: sub packages & items
+	 * @param pack
+	 * @param prefix
+	 * @return
+	 */
+	public List<String> listChildren(String pack, String prefix)
+	{
+		ArrayList<String> items = new ArrayList<String>();
+		items.addAll(listSubPackages(pack));
+		items.addAll(listItems(pack, prefix));
+		Collections.sort(items);
+		return items;
+	}
+
+	public List<String> listInterfaces(String pack, String prefix)
+	{
+		return listItems(pack, prefix, interfaces);
+	}
+
+	public List<String> listEnums(String pack, String prefix)
+	{
+		return listItems(pack, prefix, enums);
+	}
+
+	public List<String> listAnnotations(String pack, String prefix)
+	{
+		return listItems(pack, prefix, annotations);
+	}
+
+	public List<String> listClasses(String pack, String prefix)
+	{
+		return listItems(pack, prefix, classes);
+	}
+
+	private List<String> listItems(String packName, String prefix, ArrayList<String> itemsList)
+	{
+		if (packName != null && !packages.contains(packName))
 		{
-			String f = url.getFile();
-			System.out.println("F   " + f);
-			if (f.toLowerCase().endsWith(".jar"))
+			return Collections.EMPTY_LIST;
+		}
+		ArrayList<String> items = new ArrayList<String>();
+		for (String s : itemsList)
+		{
+			String name = parseItem(s);
+			String pack = parsePackage(s);
+			if (packName == null || pack.startsWith(packName))
 			{
-				if (new File(f).exists())
+				if (name.toLowerCase().startsWith(prefix))
 				{
-					JarFile jar = new JarFile(f);
-
-					Enumeration<JarEntry> jarEntries = jar.entries();
-					while (jarEntries.hasMoreElements())
-					{
-						JarEntry entry = jarEntries.nextElement();
-						String ename = entry.getName();
-						if (ename.toLowerCase().endsWith(".class"))
-						{
-							String cname = ename.substring(0, ename.length() - 6).replaceAll(File.separator, ".");
-							try
-							{
-								// trying to findclass same class twice = no good !
-								// also not bothering with sun internal classes
-								if (!classes.contains(cname) &&
-										!cname.startsWith("sun.") &&
-										!cname.startsWith("com.sun."))
-								{
-									//System.out.println("CP item: " + cname);
-									classes.add(cname);
-									Class c = findClass(cname);
-									if (c != null && c.isInterface())
-									{
-										System.out.println("Is interface");
-										findClass(cname);
-									}
-								}
-							} catch (ClassNotFoundException ce)
-							{
-								System.out.println("Not found: " + ename);
-							}
-						}
-					}
+					items.add(name);
 				}
-			} else if (f.endsWith(File.separator))
-			{
-				File file = new File(f);
-				// Todo recure in dir to find class/packages
-				indexDirectory(file, "");
 			}
 		}
-		System.out.println("CP ellapsed time: " + (new Date().getTime() - start));
+		return items;
+	}
+
+	/**
+	 * Look if the item is indexed
+	 * @param qname - qualified item(ie: class) name
+	 * @return
+	 */
+	public boolean hasItem(String qname)
+	{
+		String pack = parsePackage(qname);
+		// if package not indexed, no point searching
+		if (!packages.contains(pack))
+		{
+			return false;
+		}
+		// checking smaller arrays first
+		if (enums.contains(qname) ||
+			annotations.contains(qname) ||
+			interfaces.contains(qname) ||
+			classes.contains(qname))
+		{
+			return true;
+		}
+		// not indexed
+		return false;
+	}
+
+	public String parsePackage(String qname)
+	{
+		if (qname == null)
+		{
+			return "";
+		}
+		String pack = "";
+		int dot = qname.lastIndexOf(".");
+		if (dot > -1)
+		{
+			pack = qname.substring(0, dot);
+		}
+		return pack;
+	}
+
+	public String parseItem(String qname)
+	{
+		if (qname == null)
+		{
+			return "";
+		}
+		String item = qname;
+		int dot = qname.lastIndexOf(".");
+		if (dot > -1)
+		{
+			if (qname.length() > dot + 1)
+			{
+				item = qname.substring(dot + 1);
+			}
+		}
+		return item;
+	}
+
+	private Class findClass(String name) throws ClassNotFoundException
+	{
+		// Try Fan classloader first (Fan classes)
+		Class c = null;
+		try
+		{
+			c = cl.find(name);
+		} catch (NoClassDefFoundError e)
+		{
+		} catch (ClassNotFoundException e)
+		{
+		}
+		if (c == null)
+		{
+			// try standard class loader (java)
+			try
+			{
+				c = getClass().getClassLoader().loadClass(name);
+			} catch (NoClassDefFoundError e)
+			{
+			} catch (ClassNotFoundException e)
+			{
+			}
+		}
+		if (c == null)
+		{
+			throw (new ClassNotFoundException("Class not found: " + name));
+		}
+		return c;
+		//return cl.find(name);
 	}
 
 	private void indexDirectory(File dir, String pack)
@@ -210,4 +294,168 @@ public class FanJavaIndexer
 	}
 	return null;
 	}*/
+
+	private static class FanJavaIndexerThread extends Thread implements Runnable
+	{
+
+		@Override
+		public void run()
+		{
+			try
+			{
+				long start = new Date().getTime();
+				ArrayList<URL> urls = new ArrayList<URL>();
+				// adding Fan jars
+				URL[] fanUrls = FanJavaClassLoader.getExtUrls();
+				for (URL url : fanUrls)
+				{
+					urls.add(url);
+				}
+				// JVM boot cp
+				String javaHome = JavaPlatform.getDefault().getSystemProperties().get("java.home");
+				String lib = javaHome + File.separator + "lib" + File.separator;
+				//File[] main = new File(javaHome).listFiles();
+				//File[] ext = new File(lib + "ext").listFiles();
+				String[] cps = JavaPlatform.getDefault().getSystemProperties().get("sun.boot.class.path").split(File.pathSeparator);
+				for (String cp : cps)
+				{
+					String f = new File(cp).getName();
+					// skip those large resources jars to save time.
+					if (f.equals("deploy.jar") || f.equals("charsets.jar") || f.equals("javaws.jar"))
+					{
+						continue;
+					}
+					//System.out.println("jbcp: " + cp);
+					try
+					{
+						urls.add(new URL("file://" + cp));
+					} catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				// use lib/rt.jar as the backup
+				if (cps.length == 0)
+				{
+					String cp = lib + "rt.jar";
+					System.out.println("jrtcp: " + cp);
+					try
+					{
+						urls.add(new URL("file://" + cp));
+					} catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				// lib/ext/*
+				File[] ext = new File(lib + "ext").listFiles();
+				for (File jar : ext)
+				{
+					//System.out.println("jecp: " + jar.getAbsolutePath());
+					try
+					{
+						urls.add(new URL("file://" + jar.getAbsolutePath()));
+					} catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				// Not adding java.classpath because it has all kind of Netbeans stuff we don't want
+
+				// Browsing and finidng items
+				for (URL url : urls)
+				{
+					String f = url.getFile();
+					if (f.toLowerCase().endsWith(".jar"))
+					{
+						// boot clasppath lists sme jars that do not necerally exists (optional)
+						if (new File(f).exists())
+						{
+							System.out.println("Indexing jar:  " + f);
+							try
+							{
+								JarFile jar = new JarFile(f);
+
+								Enumeration<JarEntry> jarEntries = jar.entries();
+								while (jarEntries.hasMoreElements())
+								{
+									JarEntry entry = jarEntries.nextElement();
+									String ename = entry.getName();
+									if (ename.toLowerCase().endsWith(".class"))
+									{
+										String cname = ename.substring(0, ename.length() - 6).replaceAll(File.separator, ".");
+										try
+										{
+											//System.out.println("cname: " + cname);
+											// trying to findclass same class twice = no good !
+											// also not bothering with sun internal classes
+											if (!instance.classes.contains(cname) &&
+												!cname.startsWith("sun.") &&
+												!cname.startsWith("com.sun."))
+											{
+												//System.out.println("CP item: " + cname);
+												instance.classes.add(cname);
+												String pack = instance.parsePackage(cname);
+												indexPackages(pack);
+
+												Class c = instance.findClass(cname);
+												if (c != null)
+												{
+													//System.out.println("Is interface");
+												}
+											}
+										} catch (ClassNotFoundException ce)
+										{
+											System.out.println(ce);
+										}
+									}
+								}
+							} catch (IOException e)
+							{
+								e.printStackTrace();
+							}
+						}
+					} else if (f.endsWith(File.separator))
+					{
+						// TODO
+						//File file = new File(f);
+						// Todo recure in dir to find class/packages
+						//indexDirectory(file, "");
+					}
+				}
+				// sort in alpha order.
+				Collections.sort(instance.packages);
+				Collections.sort(instance.classes);
+				Collections.sort(instance.enums);
+				Collections.sort(instance.interfaces);
+				Collections.sort(instance.annotations);
+				System.out.println("CP ellapsed time: " + (new Date().getTime() - start) + " Items: " + instance.classes.size() + " (" + instance.packages.size() + " packages)");
+			} catch (Throwable t)
+			{
+				t.printStackTrace();
+			} finally
+			{
+				instance.running = false;
+			}
+		}
+
+		/**
+		 * 
+		 * @param pack
+		 */
+		private void indexPackages(String pack)
+		{
+			//TODO: Not very inneficient
+			String[] packs = pack.split("\\.");
+			String packList = "";
+			for (String p : packs)
+			{
+				packList += packList.length()==0?p:"."+p;
+				if (!instance.packages.contains(packList))
+				{
+					instance.packages.add(packList);
+				}
+			}
+		}
+	}
 }

@@ -10,7 +10,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 
 /**
- * Classloader made of the java jars plus the fan jars
+ * Classloader made of the fan jars
  *
  * TODO: have this update when jars chnages in getExtUrls() are modified.
  * @author thibautc
@@ -21,7 +21,7 @@ public class FanJavaClassLoader extends URLClassLoader
 	public FanJavaClassLoader()
 	{
 		// create with the standard jars + the fan jars
-		super(getExtUrls(), FanJavaClassLoader.class.getClassLoader());
+		super(getExtUrls(), ClassLoader.getSystemClassLoader());
 	}
 
 	/**
@@ -63,14 +63,7 @@ public class FanJavaClassLoader extends URLClassLoader
 		Class c = findLoadedClass(name);
 		if (c == null)
 		{
-			try
-			{
-				System.out.println("find class: " + name);
-				c = findClass(name);
-			} catch (Throwable t)
-			{
-				System.err.println("Warning, couldn't load class: "+name+" : "+t);
-			}
+			c = findClass(name);
 		}
 		return c;
 	}

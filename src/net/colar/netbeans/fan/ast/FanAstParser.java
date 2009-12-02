@@ -9,6 +9,7 @@ import java.util.Set;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import org.antlr.runtime.tree.CommonTree;
 
@@ -89,9 +90,17 @@ public class FanAstParser
 		System.out.println("type:" + type);
 		if (name != null && type != null)
 		{
-			if (type.startsWith("["))
+			if (type.toLowerCase().startsWith("[java]"))
 			{
-				System.out.println("TODO: Using FFI AST support.");
+				String qname=type.substring(6).trim().replaceAll("::", "\\.");
+				if( ! FanJavaIndexer.getInstance().hasItem(qname))
+				{
+					rootScope.addError(result, "Unresolvable Java Item: " + qname, usingNode);
+				}
+				/*else
+				{
+					rootScope.addUsedType(name, );
+				}*/
 			} else
 			{
 				if (type.indexOf("::") > 0)
