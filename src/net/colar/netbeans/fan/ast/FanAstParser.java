@@ -91,16 +91,17 @@ public class FanAstParser
 		System.out.println("type:" + type);
 		if (name != null && type != null)
 		{
+			//TODO: what about other FFI types ?
 			if (type.toLowerCase().startsWith("[java]"))
 			{
-				String qname=type.substring(6).trim().replaceAll("::", "\\.");
-				if( ! FanJavaIndexer.getInstance().hasItem(qname))
+				String qname = type.substring(6).trim().replaceAll("::", "\\.");
+				if (!FanJavaIndexer.getInstance().hasItem(qname))
 				{
 					rootScope.addError(result, "Unresolvable Java Item: " + qname, usingNode);
 				}
 				/*else
 				{
-					rootScope.addUsedType(name, );
+				rootScope.addUsedType(name, );
 				}*/
 			} else
 			{
