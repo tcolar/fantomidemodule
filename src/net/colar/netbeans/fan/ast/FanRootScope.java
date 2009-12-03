@@ -25,7 +25,6 @@ import org.netbeans.modules.csl.spi.DefaultError;
 public class FanRootScope extends FanAstScope
 {
 	// using statements. type=null means unresolvable
-
 	private Hashtable<String, Type> usedTypes = new Hashtable<String, Type>();
 	// types (classes/enums/mixins)
 	private Vector<FanAstScope> types = new Vector<FanAstScope>();
