@@ -47,12 +47,13 @@ public class FanRootScope extends FanAstScope
 		parse(ast);
 	}
 
-	public void addUsing(String name, Type type)
+	private void addUsing(String name, Type type)
 	{
+		System.out.println("- Using "+name+" : "+type);
 		using.put(name, type);
 	}
 
-	public void addType(FanAstScope type)
+	private void addType(FanAstScope type)
 	{
 		if (type != null)
 		{
@@ -120,8 +121,8 @@ public class FanRootScope extends FanAstScope
 				name = LexerUtils.getNodeContent(parserResult, usingNode.getChild(2)).trim();
 				break;
 		}
-		System.out.println("name: " + name);
-		System.out.println("type:" + type);
+		//System.out.println("name: " + name);
+		//System.out.println("type:" + type);
 		if (name != null && type != null)
 		{
 			//TODO: what about other FFI types ?
@@ -179,7 +180,7 @@ public class FanRootScope extends FanAstScope
 		List<CommonTree> children = ast.getChildren();
 		if (children != null)
 		{
-			// check user statement first
+			// check using statement first
 			for (CommonTree child : children)
 			{
 				switch (child.getType())
@@ -207,6 +208,13 @@ public class FanRootScope extends FanAstScope
 			}
 		}
 	}
+
+	public FanParserResult getParserResult()
+	{
+		return parserResult;
+	}
+
+	
 }
 
 

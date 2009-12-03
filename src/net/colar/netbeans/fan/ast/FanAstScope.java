@@ -26,4 +26,16 @@ public class FanAstScope
 	{
 		return parent;
 	}
+
+	/**
+	 * Return the root node
+	 * @return
+	 */
+	public FanRootScope getRoot()
+	{
+		FanAstScope current=this;
+		while(current.parent!=null)
+			current=current.getParent();
+		return (FanRootScope)current;
+	}
 }

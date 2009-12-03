@@ -214,6 +214,6 @@ public class FanParserResult extends ParserResult
 	void parseAstScope()
 	{
 		rootScope = FanAstParser.parseScope(this);
-		rootScope.dump();
+		//rootScope.dump();
 	}
 }
