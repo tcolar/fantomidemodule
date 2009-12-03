@@ -1,4 +1,4 @@
-// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-12-02 14:30:57
+// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2009-12-02 17:29:53
 package net.colar.netbeans.fan.antlr;
 import net.colar.netbeans.fan.FanParserResult;
 
@@ -719,7 +719,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: id, podSpec
+            // elements: podSpec, id
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -906,7 +906,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: as, podSpec, podid
+            // elements: podSpec, podid, as
             // token labels: podid
             // rule labels: retval, as
             // token list labels: 
@@ -1162,7 +1162,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: ffi, SP_COLCOL, DOT, KW_USING, podSpec
+            // elements: DOT, KW_USING, ffi, SP_COLCOL, podSpec
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -2243,7 +2243,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: cname, m, inheritance
+            // elements: m, cname, inheritance
             // token labels: 
             // rule labels: retval, m, cname
             // token list labels: 
@@ -2557,7 +2557,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: slotDef, bracketR, bracketL
+            // elements: bracketL, bracketR, slotDef
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -3193,7 +3193,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketL, slotDef, bracketR
+            // elements: bracketR, slotDef, bracketL
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -6673,7 +6673,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: returnType, mname, params, methodBody, m
+            // elements: params, mname, methodBody, returnType, m
             // token labels: 
             // rule labels: mname, retval, m, returnType
             // token list labels: 
@@ -7477,7 +7477,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: methodBody, cchain, cname, params, m
+            // elements: cname, m, params, methodBody, cchain
             // token labels: cchain
             // rule labels: retval, m, cname
             // token list labels: 
@@ -8212,7 +8212,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: bracketR, stmt, bracketL
+            // elements: stmt, bracketL, bracketR
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -13265,7 +13265,7 @@ public class FanParser extends Parser {
 
 
             // AST REWRITE
-            // elements: idExpr, type
+            // elements: type, idExpr
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -21589,7 +21589,7 @@ public class FanParser extends Parser {
                         int index84_31 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( ((((synpred131_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred131_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred131_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred131_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred131_Fan()&&(lookupNL()))&&(notAfterEol()))||(synpred131_Fan()&&(lookupNL())))) ) {s = 1;}
+                        if ( ((((synpred131_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred131_Fan()&&(lookupNL()))&&(notAfterEol()))||(synpred131_Fan()&&(lookupNL()))||((synpred131_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred131_Fan()&&(lookupNL()))&&(notAfterEol()))||((synpred131_Fan()&&(lookupNL()))&&(notAfterEol())))) ) {s = 1;}
 
                         else if ( (true) ) {s = 52;}
 
@@ -22808,7 +22808,7 @@ public class FanParser extends Parser {
                         s = -1;
                         if ( ((synpred174_Fan()&&(notAfterEol()))) ) {s = 73;}
 
-                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL()))) ) {s = 1;}
+                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
 
                          
                         input.seek(index115_48);
@@ -23348,7 +23348,7 @@ public class FanParser extends Parser {
                         s = -1;
                         if ( ((synpred184_Fan()&&(notAfterEol()))) ) {s = 74;}
 
-                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
+                        else if ( ((((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||(lookupNL())||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol()))||((lookupNL())&&(notAfterEol())))) ) {s = 1;}
 
                          
                         input.seek(index117_48);

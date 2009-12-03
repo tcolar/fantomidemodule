@@ -75,7 +75,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				proposeRootItems(proposals, anchor, prefix.toLowerCase());
 				break;
 			case IMPORT_POD:
-				proposePods(proposals, context);
+				proposeUsing(proposals, context);
 				break;
 			/*case IMPORT_FFI_JAVA:
 			//TODO
@@ -312,7 +312,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 	}
 
-	private void proposePods(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
+	// TODO: setup nice icons(package/class etc..) in importproposals
+	private void proposeUsing(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
 	{
 		FanParserResult result = (FanParserResult) context.getParserResult();
 		Document doc = result.getSnapshot().getSource().getDocument(true);
@@ -379,7 +380,16 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					}
 				} else
 				{
-					proposeTypes(pod, proposals, anchor, "");
+					if (pod.trim().endsWith("::"))
+					{
+						String p = pod.trim();
+						p = p.substring(0,pod.length()-2);
+						proposeTypes(p, proposals, anchor, "");
+					}
+					else
+					{
+						proposeTypes(pod, proposals, anchor, "");
+					}
 				}
 			}
 		}
