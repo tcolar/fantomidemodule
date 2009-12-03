@@ -252,7 +252,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			// TODO: filter out internals / private ?
 			if (//!type.isInternal() &&
-				type.name().startsWith(prefix))
+					type.name().startsWith(prefix))
 			{
 				proposals.add(new FanTypeProposal(type.name(), anchor - prefix.length(), podName));
 			}
@@ -372,7 +372,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					if (pod.trim().endsWith("::"))
 					{
 						String p = pod.trim();
-						p = p.substring(0,pod.length()-2);
+						p = p.substring(0, pod.length() - 2);
 						proposeJavaTypes(proposals, anchor, p, "");
 					} else
 					{
@@ -383,10 +383,9 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					if (pod.trim().endsWith("::"))
 					{
 						String p = pod.trim();
-						p = p.substring(0,pod.length()-2);
+						p = p.substring(0, pod.length() - 2);
 						proposeTypes(p, proposals, anchor, "");
-					}
-					else
+					} else
 					{
 						proposeTypes(pod, proposals, anchor, "");
 					}
@@ -444,6 +443,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					{
 						type = tNode.getChild(0).getText();
 					}
+				break;
 			}
 
 		}

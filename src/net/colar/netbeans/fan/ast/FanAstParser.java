@@ -140,4 +140,14 @@ public class FanAstParser
 			}
 		}
 	}
+
+	private static void addField(FanParserResult result, FanRootScope rootScope, CommonTree node)
+	{
+		String name = null;
+		String type = null;
+		type = LexerUtils.getNodeContent(result, node.getChild(0)).trim();
+		name = LexerUtils.getNodeContent(result, node.getChild(1)).trim();
+		System.out.println("name: " + name);
+		System.out.println("type:" + type);
+	}
 }
