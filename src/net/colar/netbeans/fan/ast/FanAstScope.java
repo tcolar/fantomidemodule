@@ -21,4 +21,9 @@ public class FanAstScope
 	{
 		System.out.println("Ast Scope Node: "+toString());
 	}
+
+	public FanAstScope getParent()
+	{
+		return parent;
+	}
 }

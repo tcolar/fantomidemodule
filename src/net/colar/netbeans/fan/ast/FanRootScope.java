@@ -7,9 +7,13 @@ import fan.sys.Type;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.indexer.FanJavaIndexer;
+import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
@@ -25,22 +29,28 @@ import org.netbeans.modules.csl.spi.DefaultError;
 public class FanRootScope extends FanAstScope
 {
 	// using statements. type=null means unresolvable
-	private Hashtable<String, Type> usedTypes = new Hashtable<String, Type>();
+
+	private Hashtable<String, Type> using = new Hashtable<String, Type>();
 	// types (classes/enums/mixins)
 	private Vector<FanAstScope> types = new Vector<FanAstScope>();
 	// Root node holds errors and hints, to be used by HintsProvider
 	// For example unesolvable pods, undefined vars and so on
 	List<Error> errors = new ArrayList();
 	List<Hint> hints = new ArrayList();
+	private final FanParserResult parserResult;
 
-	public FanRootScope()
+	public FanRootScope(FanParserResult result)
 	{
 		super(null);
+		this.parserResult = result;
+		CommonTree ast = result.getTree();
+		parse(ast);
+
 	}
 
-	public void addUsedType(String name, Type type)
+	public void addUsing(String name, Type type)
 	{
-		usedTypes.put(name, type);
+		using.put(name, type);
 	}
 
 	public void addType(FanAstScope type)
@@ -51,18 +61,18 @@ public class FanRootScope extends FanAstScope
 		}
 	}
 
-	public Hashtable<String, Type> getUsedTypes()
+	public Hashtable<String, Type> getUsing()
 	{
-		return usedTypes;
+		return using;
 	}
 
 	@Override
 	public void dump()
 	{
 		System.out.println("---Root Scope---");
-		for (String key : usedTypes.keySet())
+		for (String key : using.keySet())
 		{
-			System.out.println("Using: " + key + " (" + usedTypes.get(key) + ")");
+			System.out.println("Using: " + key + " (" + using.get(key) + ")");
 		}
 		for (FanAstScope node : types)
 		{
@@ -80,14 +90,116 @@ public class FanRootScope extends FanAstScope
 		return hints;
 	}
 
-	public void addError(FanParserResult result, String info, CommonTree node)
+	public void addError(String info, CommonTree node)
 	{
 		String key = "FanASTParser";
-		OffsetRange range = LexerUtils.getNodeRange(result, node);
+		OffsetRange range = LexerUtils.getNodeRange(parserResult, node);
 		int start = range.getStart();
 		int end = range.getEnd();
 		//System.out.println("Start: "+start+"End:"+end);
 		Error error = DefaultError.createDefaultError(key, info, "Syntax Error", null, start, end, false, Severity.ERROR);
 		errors.add(error);
+	}
+
+	private void addUsing(CommonTree usingNode)
+	{
+		//TODO: warn/highlight if duplicated using
+		String name = null;
+		String type = null;
+		switch (usingNode.getChildCount())
+		{
+			case 1: // using Sys
+				type = LexerUtils.getNodeContent(parserResult, usingNode.getChild(0)).trim();
+				name = type;
+				break;
+			case 2: // using Sys::Time
+				name = LexerUtils.getNodeContent(parserResult, usingNode.getChild(1)).trim();
+				type = LexerUtils.getNodeContent(parserResult, usingNode.getChild(0)).trim() + "::" + name;
+				break;
+			case 3: // using Sys::Time as Ti  or using [java] Sys::Time as Ti
+				type = LexerUtils.getNodeContent(parserResult, usingNode.getChild(0)).trim() + "::" + LexerUtils.getNodeContent(parserResult, usingNode.getChild(1)).trim();
+				name = LexerUtils.getNodeContent(parserResult, usingNode.getChild(2)).trim();
+				break;
+		}
+		System.out.println("name: " + name);
+		System.out.println("type:" + type);
+		if (name != null && type != null)
+		{
+			//TODO: what about other FFI types ?
+			if (type.toLowerCase().startsWith("[java]"))
+			{
+				String qname = type.substring(6).trim().replaceAll("::", "\\.");
+				if (!FanJavaIndexer.getInstance().hasItem(qname))
+				{
+					addError("Unresolvable Java Item: " + qname, usingNode);
+				}
+			} else
+			{
+				if (type.indexOf("::") > 0)
+				{
+					// Adding a specific type
+					String[] data = type.split("::");
+					if (!FanPodIndexer.getInstance().hasPod(data[0]))
+					{
+						addError("Unresolvable Pod: " + data[0], usingNode);
+					} else if (!FanPodIndexer.getInstance().hasPodType(data[0], data[1]))
+					{
+						addError("Unresolvable Type: " + data[0] + "::" + data[1], usingNode);
+					}
+
+					Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
+					if (t != null)
+					{
+						addUsing(name, t);
+					}
+				} else
+				{
+					// Adding all the types of a Pod
+					if (!FanPodIndexer.getInstance().hasPod(name))
+					{
+						addError("Unresolvable Pod: " + name, usingNode);
+					}
+					Set<Type> types = FanPodIndexer.getInstance().getPodTypes(name);
+					for (Type t : types)
+					{
+						//TODO: There could be duplicates (says Sys.Time and My.Time) .. should we deal with that ?
+						if (using.containsKey(t.name()))
+						{
+							System.out.println("Duplicated using: " + t.name() + " (" + name + ")");
+						}
+						addUsing(t.name(), t);
+					}
+				}
+
+			}
+		}
+	}
+
+	private void parse(CommonTree ast)
+	{
+		List<CommonTree> children = ast.getChildren();
+		if (children != null)
+		{
+			for (CommonTree child : children)
+			{
+				//TODO: All the using first
+				//TODO: Then all the types
+				switch (child.getType())
+				{
+					case FanParser.AST_INC_USING:
+						addError("Incomplete import statement.", child);
+						break;
+					case FanParser.AST_USING_POD:
+						addUsing(child);
+						break;
+					/*case FanParser.AST_CLASS:
+					case FanParser.AST_ENUM:
+					case FanParser.AST_MIXIN:
+					addType(parseType(child));
+					break;*/
+				}
+				// todo: pass2 look for fields, types
+			}
+		}
 	}
 }
