@@ -45,7 +45,6 @@ public class FanRootScope extends FanAstScope
 		this.parserResult = result;
 		CommonTree ast = result.getTree();
 		parse(ast);
-
 	}
 
 	public void addUsing(String name, Type type)
@@ -180,10 +179,9 @@ public class FanRootScope extends FanAstScope
 		List<CommonTree> children = ast.getChildren();
 		if (children != null)
 		{
+			// check user statement first
 			for (CommonTree child : children)
 			{
-				//TODO: All the using first
-				//TODO: Then all the types
 				switch (child.getType())
 				{
 					case FanParser.AST_INC_USING:
@@ -192,14 +190,23 @@ public class FanRootScope extends FanAstScope
 					case FanParser.AST_USING_POD:
 						addUsing(child);
 						break;
-					/*case FanParser.AST_CLASS:
+				}
+			}
+			// Second pass, look for types
+			for (CommonTree child : children)
+			{
+				switch (child.getType())
+				{
+					case FanParser.AST_CLASS:
 					case FanParser.AST_ENUM:
 					case FanParser.AST_MIXIN:
-					addType(parseType(child));
-					break;*/
+						// will parse and add the type
+						addType(new FanTypeScope(this, child));
+						break;
 				}
-				// todo: pass2 look for fields, types
 			}
 		}
 	}
 }
+
+

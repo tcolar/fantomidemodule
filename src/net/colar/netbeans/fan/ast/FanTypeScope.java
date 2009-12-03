@@ -5,9 +5,8 @@
 
 package net.colar.netbeans.fan.ast;
 
-import java.lang.reflect.Type;
-import java.util.Hashtable;
 import java.util.Vector;
+import org.antlr.runtime.tree.CommonTree;
 
 /**
  * Scope for a type, maybe contains fields and other scopes -> slots
@@ -17,9 +16,11 @@ public class FanTypeScope extends FanAstScope
 {
 	private Vector<FanAstScope> slots = new Vector<FanAstScope>();
 
-	public FanTypeScope(FanRootScope parent)
+	public FanTypeScope(FanRootScope parent, CommonTree ast)
 	{
 		super(parent);
+
+		//TODO: parse(ast);
 	}
 /*
 		private static FanAstScope parseType(CommonTree node)
