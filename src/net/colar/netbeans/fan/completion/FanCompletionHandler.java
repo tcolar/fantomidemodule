@@ -15,6 +15,7 @@ import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.ast.FanAstParser;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanDummyElementHandle;
@@ -417,36 +418,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		if (exprNode != null)
 		{
 			System.out.println("Expr Node: " + exprNode.toStringTree());
-			String type = resolveTypeOfExpr(exprNode);
+			String type = FanAstParser.resolveTypeOfExpr(exprNode);
 			System.out.println("Type: " + type);
 			//TODO: continue this
 		}
 	}
 
-	/**
-	 * Given an expression try to resolve the type we are trying to complete
-	 * Return null if can't figure the type out.
-	 * @param exprNode
-	 * @return
-	 */
-	private String resolveTypeOfExpr(CommonTree exprNode)
-	{
-		String type = null;
-		List<CommonTree> children = exprNode.getChildren();
-		for (CommonTree node : children)
-		{
-			switch (node.getType())
-			{
-				case FanParser.AST_STATIC_CALL:
-					CommonTree tNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
-					if (tNode != null && tNode.getChildCount() > 0)
-					{
-						type = tNode.getChild(0).getText();
-					}
-				break;
-			}
-
-		}
-		return type;
-	}
 }
