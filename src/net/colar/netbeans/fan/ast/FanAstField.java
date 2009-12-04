@@ -50,9 +50,9 @@ public class FanAstField extends FanAstScopeVar
 	@Override
 	public String toString()
 	{
-		StringBuilder sb=new StringBuilder("Field : ").append(name).append(" -> ").append(type.toString()).append("\n");
+		StringBuilder sb=new StringBuilder("Field : ").append(name).append(" -> ").append(type.toString()).append(" [");
 		for(FanAstScopeVar.modifs m : modifiers)
-			sb=sb.append("Field modifier: ").append(m.toString());
-		return sb.toString();
+			sb=sb.append(m.toString()).append(", ");
+		return sb.append("]").toString();
 	}
 }
