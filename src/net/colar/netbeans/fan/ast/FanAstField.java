@@ -19,13 +19,13 @@ public class FanAstField extends FanAstScopeVar
 {
 	private FanAstResolvedType type;
 	private ArrayList<FanAstScopeVar.modifs> modifiers = new ArrayList<FanAstScopeVar.modifs>();
-
-	public FanAstField(FanRootScope rootScope, CommonTree node)
+	
+	public FanAstField(FanAstScope scope, CommonTree node)
 	{
-		super(rootScope, node);
-		FanParserResult result = rootScope.getParserResult();
+		super(scope, node);
+		FanParserResult result = scope.getRoot().getParserResult();
 		name = FanLexAstUtils.getNodeContent(result, node.getFirstChildWithType(FanParser.AST_ID)).trim();
-		type = FanAstResolvedType.makeFromExpr(result, (CommonTree)node.getFirstChildWithType(FanParser.AST_TYPE));
+		type = FanAstResolvedType.makeFromSimpleType(scope, (CommonTree)node.getFirstChildWithType(FanParser.AST_TYPE));
 		// modifiers ??
 		List<CommonTree> modifs = FanLexAstUtils.getAllChildrenWithType(node, FanParser.AST_MODIFIER);
 		for(CommonTree m : modifs)
@@ -34,7 +34,6 @@ public class FanAstField extends FanAstScopeVar
 			if(modif!=null)
 				modifiers.add(modif);
 		}
-		System.out.println("- Field " + name + " : " + type);
 	}
 
 	public ArrayList<FanAstScopeVar.modifs> getModifiers()

@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.indexer;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +57,17 @@ public class FanJavaIndexer
 			FanPodIndexer.getInstance();
 		}
 		return instance;
+	}
+
+	public Type resolveType(String cname)
+	{
+		Class c = null;
+		try
+		{
+			c = findClass(cname);
+		}
+		catch(Exception e){e.printStackTrace();}
+		return (java.lang.reflect.Type) c;
 	}
 
 	/**
@@ -143,13 +155,18 @@ public class FanJavaIndexer
 			String pack = parsePackage(s);
 			if (packName == null || (pack.startsWith(packName) && pack.indexOf(".", packName.length()) == -1))
 			{
-				if (name.toLowerCase().startsWith(prefix.toLowerCase()) && name.indexOf("$")==-1)
+				if (name.toLowerCase().startsWith(prefix.toLowerCase()) && name.indexOf("$") == -1)
 				{
 					items.add(name);
 				}
 			}
 		}
 		return items;
+	}
+
+	public boolean hasPackage(String pack)
+	{
+		return packages.contains(pack);
 	}
 
 	/**

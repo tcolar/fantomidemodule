@@ -13,15 +13,15 @@ import org.antlr.runtime.tree.CommonTree;
 public class FanAstScopeVar
 {
 	protected String name;
-	protected FanRootScope rootScope;
+	protected FanAstScope scope;
 	protected CommonTree node;
 
 	// Modifiers
 	public enum modifs{PRIVATE,PROTECTED,INTERNAL,PUBLIC}
 
-	public FanAstScopeVar(FanRootScope rootScope, CommonTree node)
+	public FanAstScopeVar(FanAstScope scope, CommonTree node)
 	{
-		this.rootScope=rootScope;
+		this.scope=scope;
 		this.node=node;
 	}
 
@@ -35,9 +35,9 @@ public class FanAstScopeVar
 		return node;
 	}
 
-	public FanRootScope getRootScope()
+	public FanAstScope getScope()
 	{
-		return rootScope;
+		return scope;
 	}
 
 	/**

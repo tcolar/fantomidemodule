@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.FanLexAstUtils;
+import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import org.antlr.runtime.tree.CommonTree;
@@ -29,7 +29,8 @@ import org.netbeans.modules.csl.spi.DefaultError;
 public class FanRootScope extends FanAstScope
 {
 	// using statements. type=null means unresolvable
-	private Hashtable<String, Type> using = new Hashtable<String, Type>();
+
+	private Hashtable<String, FanAstResolvedType> using = new Hashtable<String, FanAstResolvedType>();
 	// types (classes/enums/mixins)
 	private Vector<FanAstScope> types = new Vector<FanAstScope>();
 	// Root node holds errors and hints, to be used by HintsProvider
@@ -42,14 +43,32 @@ public class FanRootScope extends FanAstScope
 	{
 		super(null);
 		this.parserResult = result;
-		CommonTree ast = result.getTree();
+		CommonTree ast = parserResult.getTree();
 		parse(ast);
 	}
 
-	private void addUsing(String name, Type type)
+	private void addFanUsing(String name, fan.sys.Type type, CommonTree node)
 	{
-		System.out.println("- Using "+name+" : "+type);
-		using.put(name, type);
+		FanAstResolvedType resolved = FanAstResolvedType.makeFromFanType(parserResult, type);
+		System.out.println("- Using " + resolved.toString());
+		//TODO: There could be duplicates (says Sys.Time and My.Time) .. should we deal with that ?
+		if (using.containsKey(name))
+		{
+			addError("Duplicated using: " + resolved + " / " + using.get(name), node);
+		}
+		using.put(name, resolved);
+	}
+
+	private void addJavaUsing(String name, java.lang.reflect.Type type, CommonTree node)
+	{
+		FanAstResolvedType resolved = FanAstResolvedType.makeFromJavaType(parserResult, type);
+		System.out.println("- Using " + resolved.toString());
+		//TODO: There could be duplicates (says Sys.Time and My.Time) .. should we deal with that ?
+		if (using.containsKey(name))
+		{
+			addError("Duplicated using: " + resolved + "  / " + using.get(name), node);
+		}
+		using.put(name, resolved);
 	}
 
 	private void addType(FanAstScope type)
@@ -60,7 +79,7 @@ public class FanRootScope extends FanAstScope
 		}
 	}
 
-	public Hashtable<String, Type> getUsing()
+	public Hashtable<String, FanAstResolvedType> getUsing()
 	{
 		return using;
 	}
@@ -128,12 +147,38 @@ public class FanRootScope extends FanAstScope
 			if (type.toLowerCase().startsWith("[java]"))
 			{
 				String qname = type.substring(6).trim().replaceAll("::", "\\.");
-				if (!FanJavaIndexer.getInstance().hasItem(qname))
+				/*   Syntax not possible with Fan grammar
+				if (qname.endsWith(".*"))
 				{
-					addError("Unresolvable Java Item: " + qname, usingNode);
+				//  Whole package
+				String pack = qname.substring(0, qname.length() - 2);
+				if (!FanJavaIndexer.getInstance().hasPackage(pack))
+				{
+				addError("Unresolvable Java Package: " + qname, usingNode);
+				} else
+				{
+				List<String> items = FanJavaIndexer.getInstance().listItems(pack, "");
+				for (String s : items)
+				{
+				java.lang.reflect.Type t = FanJavaIndexer.getInstance().resolveType(s);
+				addJavaUsing(name, t);
+				}
+				}
+				} else*/
+				{
+					// Individual Item
+					if (!FanJavaIndexer.getInstance().hasItem(qname))
+					{
+						addError("Unresolvable Java Item: " + qname, usingNode);
+					} else
+					{
+						java.lang.reflect.Type t = FanJavaIndexer.getInstance().resolveType(qname);
+						addJavaUsing(name, t, usingNode);
+					}
 				}
 			} else
 			{
+				// ! FFI type -> Fan Pod
 				if (type.indexOf("::") > 0)
 				{
 					// Adding a specific type
@@ -147,36 +192,29 @@ public class FanRootScope extends FanAstScope
 					}
 
 					Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
-					if (t != null)
-					{
-						addUsing(name, t);
-					}
+					addFanUsing(name, t, usingNode);
 				} else
 				{
 					// Adding all the types of a Pod
 					if (!FanPodIndexer.getInstance().hasPod(name))
 					{
 						addError("Unresolvable Pod: " + name, usingNode);
-					}
-					Set<Type> types = FanPodIndexer.getInstance().getPodTypes(name);
-					for (Type t : types)
+					} else
 					{
-						//TODO: There could be duplicates (says Sys.Time and My.Time) .. should we deal with that ?
-						if (using.containsKey(t.name()))
+						Set<Type> items = FanPodIndexer.getInstance().getPodTypes(name);
+						for (Type t : items)
 						{
-							System.out.println("Duplicated using: " + t.name() + " (" + name + ")");
+							addFanUsing(t.name(), t, usingNode);
 						}
-						addUsing(t.name(), t);
 					}
 				}
-
 			}
 		}
 	}
 
 	private void parse(CommonTree ast)
 	{
-		List<CommonTree> children = (List<CommonTree>)ast.getChildren();
+		List<CommonTree> children = (List<CommonTree>) ast.getChildren();
 		if (children != null)
 		{
 			// check using statement first
@@ -187,9 +225,11 @@ public class FanRootScope extends FanAstScope
 					case FanParser.AST_INC_USING:
 						addError("Incomplete import statement.", child);
 						break;
+
 					case FanParser.AST_USING_POD:
 						addUsing(child);
 						break;
+
 				}
 			}
 			// Second pass, look for types
@@ -203,6 +243,7 @@ public class FanRootScope extends FanAstScope
 						// will parse and add the type
 						addType(new FanTypeScope(this, child));
 						break;
+
 				}
 			}
 		}
@@ -213,7 +254,21 @@ public class FanRootScope extends FanAstScope
 		return parserResult;
 	}
 
-	
+	public FanAstResolvedType lookupUsing(String type)
+	{
+		if (using.containsKey(type))
+		{
+			return using.get(type);
+		}
+		// Try Fan standrad API's
+		if (FanPodIndexer.getInstance().hasPodType("sys", type))
+		{
+			Type t = FanPodIndexer.getInstance().getPodType("sys", type);
+			return FanAstResolvedType.makeFromFanType(parserResult, t);
+		}
+		// Try Java standrad API's -> No: not avail by defalt in Fan
+		// Unresolvable
+		return FanAstResolvedType.makeUnresolved();
+	}
 }
-
 

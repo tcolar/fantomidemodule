@@ -419,6 +419,8 @@ public class FanLexAstUtils
 
 	public static String getNodeContent(FanParserResult result, Tree node)
 	{
+		if(node==null)
+			return "";
 		OffsetRange range=getContentNodeRange(result, (CommonTree)node);
 		String text="";
 		try

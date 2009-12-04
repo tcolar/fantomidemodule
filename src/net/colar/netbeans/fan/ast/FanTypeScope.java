@@ -45,8 +45,13 @@ public class FanTypeScope extends FanAstScope
 			{
 				case FanParser.AST_FIELD:
 					FanLexAstUtils.dumpTree(child, 0);
-					FanAstField field=new FanAstField(getRoot(), child);
-					addScopeVar(field, true);
+					FanAstField field=new FanAstField(this, child);
+					if(field.getType().isUnresolved())
+					{
+						//TODO: Propose to auto-add using statements (Hints)
+						getRoot().addError("Unresolveable field type", child);
+					}
+					addScopeVar(field, false);
 					break;
 				case FanParser.AST_CODE_BLOCK:
 					// recurse because field might be in a code block or other sublevels

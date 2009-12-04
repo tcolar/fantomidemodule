@@ -59,15 +59,16 @@ public abstract class FanAstScope
 		String name = var.getName();
 		// Can't have duplicated slot name in scope no matter what ?
 		FanAstScope scope = this;
-		while ((scope = scope.getParent()) != null)
+		while (scope != null)
 		{
 			if (scope.hasScopevar(name))
 			{
-				getRoot().addError("Duplicated slot name: " + name, var.getNode());
+				getRoot().addError("Duplicated var name: " + name, var.getNode());
 				return;
 			}
+			scope = scope.getParent();
 		}
-		//TODO: check inherited(type) vars (slots)
+		//TODO: check inherited(type) vars (slots) using allowOverride
 		scopeVars.put(name, var);
 	}
 

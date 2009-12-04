@@ -296,8 +296,8 @@ enumValDef 	:	docs id (parL args? parR)?;
 typeList	:  	type (SP_COMMA type)*;
 
 type	        :  	typeRoot  SP_QMARK? (LIST_TYPE SP_QMARK?)* ;
-nonMapType	:	funcType | simpleType;
 typeRoot	:	mapType | nonMapType;
+nonMapType	:	funcType | simpleType;
 simpleType     	:  	id (SP_COLCOL id)?;
 // this was left recursive -> changed into tail recursive
 mapType		:	sq_bracketL? nonMapType SP_QMARK? (LIST_TYPE SP_QMARK?)*
