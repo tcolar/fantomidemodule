@@ -28,6 +28,9 @@ import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 /**
  * Primary Fan language definition
  * Provides "hooks" into various language support implementation
+ *
+ * TODO: Global: proper logging rather than sys.out
+ *
  * * @author thibautc
  */
 public class FanLanguage extends DefaultLanguageConfig

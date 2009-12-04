@@ -5,10 +5,8 @@
 package net.colar.netbeans.fan.ast;
 
 import java.util.List;
-import java.util.Vector;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.antlr.LexerUtils;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -17,8 +15,7 @@ import org.antlr.runtime.tree.CommonTree;
  */
 public class FanTypeScope extends FanAstScope
 {
-
-	private Vector<FanAstScope> slots = new Vector<FanAstScope>();
+	String name="";
 
 	public FanTypeScope(FanRootScope parent, CommonTree ast)
 	{
@@ -32,7 +29,12 @@ public class FanTypeScope extends FanAstScope
 		{
 			return;
 		}
-		List<CommonTree> children = ast.getChildren();
+		List<CommonTree> children = (List<CommonTree>)ast.getChildren();
+		CommonTree nameNode=(CommonTree)ast.getFirstChildWithType(FanParser.AST_ID);
+		if(nameNode!=null)
+		{
+			name=FanLexAstUtils.getNodeContent(getRoot().getParserResult(), nameNode);
+		}
 		if (children == null)
 		{
 			return;
@@ -42,7 +44,9 @@ public class FanTypeScope extends FanAstScope
 			switch (child.getType())
 			{
 				case FanParser.AST_FIELD:
-					addField(child);
+					FanLexAstUtils.dumpTree(child, 0);
+					FanAstField field=new FanAstField(getRoot(), child);
+					addScopeVar(field, true);
 					break;
 				case FanParser.AST_CODE_BLOCK:
 					// recurse because field might be in a code block or other sublevels
@@ -52,38 +56,15 @@ public class FanTypeScope extends FanAstScope
 		}
 	}
 
-	private void addField(CommonTree node)
+	public String getName()
 	{
-		FanParserResult result = getRoot().getParserResult();
-		String name = LexerUtils.getNodeContent(result, node.getChild(0)).trim();
-		String type = LexerUtils.getNodeContent(result, node.getChild(1)).trim();
-		//String val = LexerUtils.getNodeContent(result, node.getChild(2)).trim();
-		System.out.println("- Field " + name + " : " + type);
+		return name;
 	}
 
-	/*
-	private static FanAstScope parseType(CommonTree node)
+	@Override
+	public String toString()
 	{
-	item = new FanStructureItem(node, ElementKind.FIELD, result);
-	String name = getSubChildTextByType(node, FanParser.AST_ID, -1);
-	String modif = getSubChildTextByType(node, FanParser.AST_MODIFIER, -1);
-	String type = getSubChildTextByType(node, FanParser.AST_TYPE, -1);
-	handleModifiers(item, modif);
-	item.setName(name);
-	return null;
+		StringBuilder sb=new StringBuilder("Type : ").append(name);
+		return sb.toString();
 	}
-	 */
-	/*@Override
-	public void dump()
-	{
-	System.out.println("---Type Scope---");
-	for (String key : u)
-	{
-	System.out.println("Using: " + key + " (" + using.get(key) + ")");
-	}
-	for (FanAstScope node : types)
-	{
-	node.dump();
-	}
-	}*/
 }

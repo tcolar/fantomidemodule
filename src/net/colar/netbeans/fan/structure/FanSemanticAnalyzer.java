@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.netbeans.modules.csl.api.ColoringAttributes;
@@ -31,6 +31,8 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
  */
 public class FanSemanticAnalyzer extends SemanticAnalyzer
 {
+	// TODO: Rewrite using the AstParser / scopes
+
 	private static final Set<ColoringAttributes> ErrorSet = Collections.singleton(ColoringAttributes.UNDEFINED);
 	private volatile boolean cancelled = false;
 	private Map<OffsetRange, Set<ColoringAttributes>> highlights = null;
@@ -160,7 +162,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	{
 		if (node != null && !node.isNil() && node.getChildCount() > 0)
 		{
-			OffsetRange range = LexerUtils.getContentNodeRange((FanParserResult) result, node);
+			OffsetRange range = FanLexAstUtils.getContentNodeRange((FanParserResult) result, node);
 			if (range != null)
 			{
 				newHighlights.put(range, colorAttributes);
@@ -199,7 +201,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			return; // shouldn't happen but being safe
 		}
 		CommonTree textNode = (CommonTree) node.getChild(0);
-		OffsetRange strRange = LexerUtils.getContentNodeRange((FanParserResult) result, node);
+		OffsetRange strRange = FanLexAstUtils.getContentNodeRange((FanParserResult) result, node);
 		String str = textNode.getText();
 		//System.out.println("interpolation : " + str);
 		Matcher matcher = INTERPOLATION.matcher(str);

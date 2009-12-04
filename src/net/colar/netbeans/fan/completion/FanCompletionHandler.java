@@ -14,8 +14,9 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanAstParser;
+import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanDummyElementHandle;
@@ -57,6 +58,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public CodeCompletionResult complete(CodeCompletionContext context)
 	{
+		//TODO: Maybe have the completion methods on the AST Ndes iteslf ? (scope node)
 		FileObject fo = context.getParserResult().getSnapshot().getSource().getFileObject();
 		String prefix = context.getPrefix();
 		if (prefix == null)
@@ -318,23 +320,23 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	{
 		FanParserResult result = (FanParserResult) context.getParserResult();
 		Document doc = result.getSnapshot().getSource().getDocument(true);
-		TokenSequence ts = LexerUtils.getFanTokenSequence(doc);
+		TokenSequence ts = FanLexAstUtils.getFanTokenSequence(doc);
 		int offset = context.getCaretOffset();
 		//String prefix = context.getPrefix();
 		int anchor = context.getCaretOffset();
 		// we want to look at offset -1 (ie: before the caret) so we are IN the expression, not just after.
-		LexerUtils.moveToPrevNonWSToken(ts, offset, 0);
+		FanLexAstUtils.moveToPrevNonWSToken(ts, offset, 0);
 		offset = ts.offset();
-		CommonTree baseNode = LexerUtils.findASTNodeAt(result, offset);
-		CommonTree curNode = LexerUtils.findParentNode(baseNode, FanParser.AST_USING_POD);
+		CommonTree baseNode = FanLexAstUtils.findASTNodeAt(result, offset);
+		CommonTree curNode = FanLexAstUtils.findParentNode(baseNode, FanParser.AST_USING_POD);
 		if (curNode == null)
 		{
-			curNode = LexerUtils.findParentNode(baseNode, FanParser.AST_INC_USING);
+			curNode = FanLexAstUtils.findParentNode(baseNode, FanParser.AST_INC_USING);
 		}
 		if (curNode.getType() == FanParser.AST_USING_POD)
 		{
-			String pod = LexerUtils.getNodeContent(result, curNode.getChild(0));
-			String type = curNode.getChildCount() == 1 ? null : LexerUtils.getNodeContent(result, curNode.getChild(1));
+			String pod = FanLexAstUtils.getNodeContent(result, curNode.getChild(0));
+			String type = curNode.getChildCount() == 1 ? null : FanLexAstUtils.getNodeContent(result, curNode.getChild(1));
 
 			System.out.println("Pod: " + pod);
 			System.out.println("Type: " + type);
@@ -361,7 +363,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 		} else if (curNode.getType() == FanParser.AST_INC_USING)
 		{
-			String pod = LexerUtils.getNodeContent(result, curNode.getChild(1));
+			String pod = FanLexAstUtils.getNodeContent(result, curNode.getChild(1));
 			System.out.println("Pod: " + pod);
 			if (pod == null || pod.length() == 0)
 			{
@@ -413,13 +415,13 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			offset--;
 		}
-		CommonTree curNode = LexerUtils.findASTNodeAt(result, offset);
-		CommonTree exprNode = LexerUtils.findParentNode(curNode, FanParser.AST_TERM_EXPR);
+		CommonTree curNode = FanLexAstUtils.findASTNodeAt(result, offset);
+		CommonTree exprNode = FanLexAstUtils.findParentNode(curNode, FanParser.AST_TERM_EXPR);
 		if (exprNode != null)
 		{
 			System.out.println("Expr Node: " + exprNode.toStringTree());
-			String type = FanAstParser.resolveTypeOfExpr(exprNode);
-			System.out.println("Type: " + type);
+			FanAstResolvedType type = FanAstResolvedType.makeFromExpr(result, exprNode);
+			System.out.println("Type: " + type.toString());
 			//TODO: continue this
 		}
 	}

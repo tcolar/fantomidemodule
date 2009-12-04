@@ -9,7 +9,9 @@ import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
- * Use as fanParserResult and create the scope tree from it
+ * Use as fanParserResult(ANTLR tree) and create the scope AST tree from it
+ * The Antlr ast/tree is not all that good to use directly so we create our own cleaner AST from it
+ * Also it has scope builtin so we can use it find variables/fields etc... for a given node/token.
  * @author thibautc
  */
 public class FanAstParser
@@ -23,36 +25,10 @@ public class FanAstParser
 	 */
 	public static FanRootScope parseScope(FanParserResult result)
 	{
+		//result.dumpTree();
 		FanRootScope rootScope = new FanRootScope(result);
 		rootScope.dump();
 		return rootScope;
-	}
-
-	/**
-	 * Given an expression try to resolve the type we are trying to complete
-	 * Return null if can't figure the type out.
-	 * @param exprNode
-	 * @return
-	 */
-	public static String resolveTypeOfExpr(CommonTree exprNode)
-	{
-		String type = null;
-		List<CommonTree> children = exprNode.getChildren();
-		for (CommonTree node : children)
-		{
-			switch (node.getType())
-			{
-				case FanParser.AST_STATIC_CALL:
-					CommonTree tNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
-					if (tNode != null && tNode.getChildCount() > 0)
-					{
-						type = tNode.getChild(0).getText();
-					}
-					break;
-			}
-
-		}
-		return type;
 	}
 
 	/**
@@ -60,7 +36,7 @@ public class FanAstParser
 	 * @param node
 	 * @return
 	 */
-	public static CommonTree findClosestScope(CommonTree node)
+	public static CommonTree findClosestScope(CommonTree node/*maybe Token instead ??*/)
 	{
 		//TODO findClosestScope
 		return null;

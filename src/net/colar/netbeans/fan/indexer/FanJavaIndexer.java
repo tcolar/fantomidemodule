@@ -21,7 +21,8 @@ import org.netbeans.api.java.platform.JavaPlatform;
  *
  * Helper method to find / resolve Java types
  *
- * //TODO: add file chnage listener like in FanPodIndexer to reindex chnaged jars
+ * //TODO: add file change listener like in FanPodIndexer to reindex chnaged jars
+ * //TODO: add persistant caching
  *
  * @author thibautc
  */

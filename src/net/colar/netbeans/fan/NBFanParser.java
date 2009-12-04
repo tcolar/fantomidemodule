@@ -48,8 +48,6 @@ public class NBFanParser extends Parser
 		{
 			throw new ParseException("Parser Exception.", e);
 		}
-
-		//result.dumpTree();
 	}
 
 	@Override

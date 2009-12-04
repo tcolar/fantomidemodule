@@ -7,7 +7,7 @@ import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
@@ -59,9 +59,9 @@ public class FanCompletionContext
 		caseSensitive = context.isCaseSensitive();
 		isPrefixMatch = context.isPrefixMatch(); // ?
 		doc = result.getSnapshot().getSource().getDocument(true);
-		tokenStream = LexerUtils.getFanTokenSequence(doc);
+		tokenStream = FanLexAstUtils.getFanTokenSequence(doc);
 		rootNode = result.getTree();
-		curNode = LexerUtils.findASTNodeAt(result, offset);
+		curNode = FanLexAstUtils.findASTNodeAt(result, offset);
 
 		completionType = determineCompletionType();
 		System.out.println("Compl. type:" + completionType.toString());
@@ -119,8 +119,8 @@ public class FanCompletionContext
 	private completionTypes determineCompletionType()
 	{
 		// We want the significant node before the cursor
-		LexerUtils.moveToPrevNonWSToken(tokenStream, offset, 0);
-		CommonTree node = LexerUtils.findASTNodeAt(result, tokenStream.offset());
+		FanLexAstUtils.moveToPrevNonWSToken(tokenStream, offset, 0);
+		CommonTree node = FanLexAstUtils.findASTNodeAt(result, tokenStream.offset());
 		if (node.isNil())
 		{
 			System.out.println("Node : Nill !");
@@ -128,10 +128,10 @@ public class FanCompletionContext
 			return completionTypes.ROOT_LEVEL;
 		} else
 		{
-			CommonTree usingNode = LexerUtils.findParentNode(node, FanParser.AST_USING_POD);
+			CommonTree usingNode = FanLexAstUtils.findParentNode(node, FanParser.AST_USING_POD);
 			if (usingNode == null)
 			{
-				usingNode = LexerUtils.findParentNode(node, FanParser.AST_INC_USING);
+				usingNode = FanLexAstUtils.findParentNode(node, FanParser.AST_INC_USING);
 			}
 			if (usingNode != null)
 			{

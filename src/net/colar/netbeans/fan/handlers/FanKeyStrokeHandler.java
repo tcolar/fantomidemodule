@@ -14,7 +14,7 @@ import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.antlr.FanLexer;
-import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -97,7 +97,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		{
 			next = doc.getText(caretOffset, 1).charAt(0);
 		}
-		Token<? extends FanTokenID> token = LexerUtils.getFanTokenAt(document, caretOffset);
+		Token<? extends FanTokenID> token = FanLexAstUtils.getFanTokenAt(document, caretOffset);
 
 		// If User types "over" closing item we closed automaticaly, skip it
 		if (token != null)
@@ -289,10 +289,10 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	@Override
 	public int beforeBreak(Document document, int caretOffset, JTextComponent target) throws BadLocationException
 	{
-		Token tkNext = LexerUtils.getFanTokenAt(document, caretOffset);
+		Token tkNext = FanLexAstUtils.getFanTokenAt(document, caretOffset);
 		int offset=caretOffset==0?0:caretOffset-1;
 		// Get token BEFORE line break
-		Token tk = LexerUtils.getFanTokenAt(document, offset);
+		Token tk = FanLexAstUtils.getFanTokenAt(document, offset);
 		//If within DSL, STR, URI don't indent anything as they can be multiline
 		// unless they are complete (next token is !=)
 		if (tkNext!=null && tk != null)
@@ -393,15 +393,15 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	public OffsetRange findMatching(
 			Document document, int caretOffset)
 	{
-		TokenSequence ts = LexerUtils.getFanTokenSequence(document);
+		TokenSequence ts = FanLexAstUtils.getFanTokenSequence(document);
 		int searchOffset = 2; // start after rightToken
 
 		// Prefer matching the token to the right of caret
-		Token token = LexerUtils.getFanTokenAt(document, caretOffset + 1);
+		Token token = FanLexAstUtils.getFanTokenAt(document, caretOffset + 1);
 		if (token == null)
 		{
 			// if rightToken is null, use left token
-			token = LexerUtils.getFanTokenAt(document, caretOffset);
+			token = FanLexAstUtils.getFanTokenAt(document, caretOffset);
 			searchOffset =
 					1; // start after leftToken
 		} else
@@ -412,7 +412,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 					ord != FanLexer.SQ_BRACKET_L && ord != FanLexer.SQ_BRACKET_R &&
 					ord != FanLexer.BRACKET_L && ord != FanLexer.BRACKET_R)
 			{
-				token = LexerUtils.getFanTokenAt(document, caretOffset);
+				token = FanLexAstUtils.getFanTokenAt(document, caretOffset);
 				searchOffset =
 						1; // start after leftToken
 			}
@@ -427,22 +427,22 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			{
 				case FanLexer.PAR_L:
 					ts.move(caretOffset + searchOffset);// start after opening char
-					return LexerUtils.findRangeFromOpening(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
+					return FanLexAstUtils.findRangeFromOpening(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
 				case FanLexer.PAR_R:
 					ts.move(caretOffset + searchOffset - 1);// start before opening char (since going backward)
-					return LexerUtils.findRangeFromClosing(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
+					return FanLexAstUtils.findRangeFromClosing(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
 				case FanLexer.BRACKET_L:
 					ts.move(caretOffset + searchOffset);
-					return LexerUtils.findRangeFromOpening(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
+					return FanLexAstUtils.findRangeFromOpening(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
 				case FanLexer.BRACKET_R:
 					ts.move(caretOffset + searchOffset - 1);
-					return LexerUtils.findRangeFromClosing(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
+					return FanLexAstUtils.findRangeFromClosing(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
 				case FanLexer.SQ_BRACKET_L:
 					ts.move(caretOffset + searchOffset);
-					return LexerUtils.findRangeFromOpening(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
+					return FanLexAstUtils.findRangeFromOpening(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
 				case FanLexer.SQ_BRACKET_R:
 					ts.move(caretOffset + searchOffset - 1);
-					return LexerUtils.findRangeFromClosing(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
+					return FanLexAstUtils.findRangeFromClosing(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
 			}
 
 		}

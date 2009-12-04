@@ -10,7 +10,7 @@ import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.antlr.FanGrammarHelper;
 import net.colar.netbeans.fan.antlr.FanLexer;
-import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -64,7 +64,7 @@ public class FanFormatter implements Formatter
 	/** Compute the initial balance of brackets at the given offset. */
 	private int getFormatStableStart(BaseDocument doc, int offset)
 	{
-		TokenSequence<? extends FanTokenID> ts = LexerUtils.getFanTokenSequence(doc, offset);
+		TokenSequence<? extends FanTokenID> ts = FanLexAstUtils.getFanTokenSequence(doc, offset);
 		if (ts == null)
 		{
 			return 0;
@@ -140,7 +140,7 @@ public class FanFormatter implements Formatter
 	{
 		int balance = 0;
 
-		TokenSequence<? extends FanTokenID> ts = LexerUtils.getFanTokenSequence(doc, begin);
+		TokenSequence<? extends FanTokenID> ts = FanLexAstUtils.getFanTokenSequence(doc, begin);
 		if (ts == null)
 		{
 			return 0;
@@ -170,7 +170,7 @@ public class FanFormatter implements Formatter
 
 		if (pos != -1)
 		{
-			Token<? extends FanTokenID> token = LexerUtils.getFanTokenAt(doc, pos);
+			Token<? extends FanTokenID> token = FanLexAstUtils.getFanTokenAt(doc, pos);
 
 			if (token != null)
 			{
@@ -191,14 +191,14 @@ public class FanFormatter implements Formatter
 		} else
 		{
 			// Empty line inside a string, documentation etc. literal?
-			Token<? extends FanTokenID> token = LexerUtils.getFanTokenAt(doc, offset);
+			Token<? extends FanTokenID> token = FanLexAstUtils.getFanTokenAt(doc, offset);
 
 			if (token != null)
 			{
 				TokenId id = token.id();
 				// If we're in a string literal (or regexp or documentation) leave
 				// indentation alone!
-				if (LexerUtils.matchType(id.ordinal(), FanGrammarHelper.INSIGNIFICANT_TOKENS) ||
+				if (FanLexAstUtils.matchType(id.ordinal(), FanGrammarHelper.INSIGNIFICANT_TOKENS) ||
 					id.ordinal() == FanLexer.DSL || id.ordinal() == FanLexer.QUOTSTR ||
 					id.ordinal() == FanLexer.STR)
 				{
@@ -219,7 +219,7 @@ public class FanFormatter implements Formatter
 
 		if (lineBegin != -1)
 		{
-			return LexerUtils.getFanTokenAt(doc, lineBegin);
+			return FanLexAstUtils.getFanTokenAt(doc, lineBegin);
 		}
 
 		return null;
@@ -258,7 +258,7 @@ public class FanFormatter implements Formatter
 			return false;
 		}
 
-		TokenSequence<? extends FanTokenID> ts = LexerUtils.getFanTokenSequence(doc, offset);
+		TokenSequence<? extends FanTokenID> ts = FanLexAstUtils.getFanTokenSequence(doc, offset);
 
 		if (ts == null)
 		{
@@ -302,7 +302,7 @@ public class FanFormatter implements Formatter
 				//    alias eql? ==
 				// or
 				//    def ==
-				token = LexerUtils.getFanTokenAt(doc, Utilities.getRowFirstNonWhite(doc, offset));
+				token = FanLexAstUtils.getFanTokenAt(doc, Utilities.getRowFirstNonWhite(doc, offset));
 				if (token != null)
 				{
 					id = token.id();

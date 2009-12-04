@@ -31,6 +31,8 @@ import org.netbeans.modules.csl.spi.ParserResult;
  */
 public class FanStructureAnalyzer implements StructureScanner
 {
+	// TODO: Rewrite using the AstParser / scopes
+
 
 	public static final String CODE_FOLDS = "codeblocks";
 	public static final String DOC_FOLDS = "comments";
@@ -217,6 +219,7 @@ public class FanStructureAnalyzer implements StructureScanner
 		return text;
 	}
 
+	// TODO: use FanAstVar.modifiers instead of hardcoded
 	private void handleModifiers(FanStructureItem item, String modif)
 	{
 		if (modif.indexOf("private") != -1)

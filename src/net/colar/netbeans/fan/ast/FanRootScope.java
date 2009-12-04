@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.Vector;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import org.antlr.runtime.tree.CommonTree;
@@ -29,14 +29,13 @@ import org.netbeans.modules.csl.spi.DefaultError;
 public class FanRootScope extends FanAstScope
 {
 	// using statements. type=null means unresolvable
-
 	private Hashtable<String, Type> using = new Hashtable<String, Type>();
 	// types (classes/enums/mixins)
 	private Vector<FanAstScope> types = new Vector<FanAstScope>();
 	// Root node holds errors and hints, to be used by HintsProvider
 	// For example unesolvable pods, undefined vars and so on
-	List<Error> errors = new ArrayList();
-	List<Hint> hints = new ArrayList();
+	List<Error> errors = new ArrayList<Error>();
+	List<Hint> hints = new ArrayList<Hint>();
 	private final FanParserResult parserResult;
 
 	public FanRootScope(FanParserResult result)
@@ -93,7 +92,7 @@ public class FanRootScope extends FanAstScope
 	public void addError(String info, CommonTree node)
 	{
 		String key = "FanASTParser";
-		OffsetRange range = LexerUtils.getNodeRange(parserResult, node);
+		OffsetRange range = FanLexAstUtils.getNodeRange(parserResult, node);
 		int start = range.getStart();
 		int end = range.getEnd();
 		//System.out.println("Start: "+start+"End:"+end);
@@ -109,16 +108,16 @@ public class FanRootScope extends FanAstScope
 		switch (usingNode.getChildCount())
 		{
 			case 1: // using Sys
-				type = LexerUtils.getNodeContent(parserResult, usingNode.getChild(0)).trim();
+				type = FanLexAstUtils.getNodeContent(parserResult, usingNode.getChild(0)).trim();
 				name = type;
 				break;
 			case 2: // using Sys::Time
-				name = LexerUtils.getNodeContent(parserResult, usingNode.getChild(1)).trim();
-				type = LexerUtils.getNodeContent(parserResult, usingNode.getChild(0)).trim() + "::" + name;
+				name = FanLexAstUtils.getNodeContent(parserResult, usingNode.getChild(1)).trim();
+				type = FanLexAstUtils.getNodeContent(parserResult, usingNode.getChild(0)).trim() + "::" + name;
 				break;
 			case 3: // using Sys::Time as Ti  or using [java] Sys::Time as Ti
-				type = LexerUtils.getNodeContent(parserResult, usingNode.getChild(0)).trim() + "::" + LexerUtils.getNodeContent(parserResult, usingNode.getChild(1)).trim();
-				name = LexerUtils.getNodeContent(parserResult, usingNode.getChild(2)).trim();
+				type = FanLexAstUtils.getNodeContent(parserResult, usingNode.getChild(0)).trim() + "::" + FanLexAstUtils.getNodeContent(parserResult, usingNode.getChild(1)).trim();
+				name = FanLexAstUtils.getNodeContent(parserResult, usingNode.getChild(2)).trim();
 				break;
 		}
 		//System.out.println("name: " + name);
@@ -177,7 +176,7 @@ public class FanRootScope extends FanAstScope
 
 	private void parse(CommonTree ast)
 	{
-		List<CommonTree> children = ast.getChildren();
+		List<CommonTree> children = (List<CommonTree>)ast.getChildren();
 		if (children != null)
 		{
 			// check using statement first

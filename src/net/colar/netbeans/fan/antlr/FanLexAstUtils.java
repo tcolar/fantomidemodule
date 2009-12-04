@@ -4,6 +4,7 @@
  */
 package net.colar.netbeans.fan.antlr;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.text.Document;
@@ -19,12 +20,10 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.OffsetRange;
 
 /**
- * Utilities for lexer
- * Some for the parser too
- * For example helps finding the Token at a given position in the text ddocument.
+ * Utilities for lexer / parser / ast trees
  * @author tcolar
  */
-public class LexerUtils
+public class FanLexAstUtils
 {
 	
 	/**
@@ -433,4 +432,38 @@ public class LexerUtils
 		return text;
 	}
 
+	public static List<CommonTree> getAllChildrenWithType(CommonTree node, int type)
+	{
+		List<CommonTree> children = new ArrayList<CommonTree>();
+		for(CommonTree child : (List<CommonTree>)node.getChildren())
+		{
+			if(child.getType() == type)
+			{
+				children.add(child);
+			}
+		}
+		return children;
+	}
+
+		/**
+	 * Dump a CommonTree node to system.out
+	 * @param t
+	 * @param indent 0 - used in recusrion.
+	 */
+	public static void dumpTree(CommonTree t, int indent)
+	{
+		if (t != null)
+		{
+			StringBuffer sb = new StringBuffer(indent);
+			for (int i = 0; i < indent; i++)
+			{
+				sb = sb.append("  ");
+			}
+			for (int i = 0; i < t.getChildCount(); i++)
+			{
+				System.err.println(sb.toString() + t.getChild(i).toString());
+				dumpTree((CommonTree) t.getChild(i), indent + 1);
+			}
+		}
+	}
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanAstParser;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanRootScope;
@@ -161,26 +162,9 @@ public class FanParserResult extends ParserResult
 		CommonTree tree = getTree();
 		if (tree != null)
 		{
-			dumpTree(tree, 0);
+			FanLexAstUtils.dumpTree(tree, 0);
 		}
 		System.err.println("-------------------End AST Tree dump-----------------------");
-	}
-
-	public static void dumpTree(CommonTree t, int indent)
-	{
-		if (t != null)
-		{
-			StringBuffer sb = new StringBuffer(indent);
-			for (int i = 0; i < indent; i++)
-			{
-				sb = sb.append("  ");
-			}
-			for (int i = 0; i < t.getChildCount(); i++)
-			{
-				System.err.println(sb.toString() + t.getChild(i).toString());
-				dumpTree((CommonTree) t.getChild(i), indent + 1);
-			}
-		}
 	}
 
 	public CommonTokenStream getTokenStream()
@@ -214,6 +198,5 @@ public class FanParserResult extends ParserResult
 	void parseAstScope()
 	{
 		rootScope = FanAstParser.parseScope(this);
-		//rootScope.dump();
 	}
 }

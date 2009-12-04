@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.antlr.LexerUtils;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.csl.api.ElementHandle;
@@ -48,7 +48,7 @@ public class FanStructureItem implements StructureItem
 		// node gives up index of 1st and last token part of this struct. item
 		// then we finx those tokens by index in tokenStream (from lexer)
 		// from that we can find start and end location of struct. text in source file.
-		OffsetRange range = LexerUtils.getNodeRange((FanParserResult) result, node);
+		OffsetRange range = FanLexAstUtils.getNodeRange((FanParserResult) result, node);
 		start = range.getStart();
 		stop = range.getEnd();
 		this.handle = new FanElementHandle(kind, (CommonToken) node.getToken(), result, range);

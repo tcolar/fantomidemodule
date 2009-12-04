@@ -28,6 +28,7 @@ import org.openide.filesystems.FileUtil;
 
 /**
  * Index (and watch for changes) Fan pods.
+ * //TODO: add persistant caching
  * @author thibautc
  */
 public class FanPodIndexer implements FileChangeListener
