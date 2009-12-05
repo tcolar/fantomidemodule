@@ -9,6 +9,7 @@ method
 Type
 -> check if all abstract/virtual overidden
 
+Closure / it blocks
 
 ===== Indexing ====
 2 Index: "compiled" and "new"
