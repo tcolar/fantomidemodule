@@ -102,6 +102,7 @@ AST_DOT_CALL;
 AST_SAFE_DOT_CALL;
 AST_STATIC_CALL;
 AST_USING_POD;
+AST_MAP;
 // help getting valid AST for completion: (INC means incomplete)
 AST_INC_USING;
 AST_INC_DOTCALL;
@@ -301,7 +302,8 @@ nonMapType	:	funcType | simpleType;
 simpleType     	:  	id (SP_COLCOL id)?;
 // this was left recursive -> changed into tail recursive
 mapType		:	sq_bracketL? nonMapType SP_QMARK? (LIST_TYPE SP_QMARK?)*
-				({notAfterEol()}? SP_COLON {notAfterEol()}? type)+ sq_bracketR?;
+				({notAfterEol()}? SP_COLON {notAfterEol()}? type)+ sq_bracketR?
+			-> ^(AST_MAP ^(AST_CHILD nonMapType) ^(AST_CHILD type));
 funcType 	:	SP_PIPE (SP_COMMA | (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType)) SP_PIPE;
 assignedType	:	OP_ARROW type;
 formals 	:  	formal (SP_COMMA formal)*;
