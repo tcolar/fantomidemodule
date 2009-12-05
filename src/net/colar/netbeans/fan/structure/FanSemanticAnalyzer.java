@@ -31,7 +31,8 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
  */
 public class FanSemanticAnalyzer extends SemanticAnalyzer
 {
-	// TODO: Rewrite using the AstParser / scopes
+	// TODO: Rewrite using the AstParser /
+	// should not do much here anymore but use rootscope astparser result
 
 	private static final Set<ColoringAttributes> ErrorSet = Collections.singleton(ColoringAttributes.UNDEFINED);
 	private volatile boolean cancelled = false;

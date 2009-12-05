@@ -1,15 +1,65 @@
+Deal with shortcut operators:
+http://fantom.org/doc/docLang/Expressions.html#shortcuts
+
+for all check protection: private, internal etc...
+
+Type(class)
+-> check name is unique (or marked override)
+-> check if all abstract overidden and marked override execpt if type is abstract
+-> final cant be subclassed
+-> const ????
+
+Type(mixin)
+# Mixins cannot declare concrete instance fields
+# Mixins cannot declare constructors
+# Mixins cannot declare once methods
+# const ????
+
+Type(Enum)
+# Enums must have private constructors -> check if they are
+
+Fields
+-> Check name is unique
+-> check value matches type
+-> const fields (hard to check) can only be set in constructors and it blocks
+-> readonly marked fields
+-> in mixin only const/static or abstract fields
+
+Variables:
+-> check name unique
+-> check was set with := before using =
+-> check value matches type if present
+
+static block
+-> no 'this'
+
 constructor
--> check required super call
--> parameters.
+-> check constructor chain ('this' or 'super'), check that chained constructor exists
+-> same as method (no this)
 
 method
+-> 'this' available
 -> parameters
 -> if static : no super
+-> no 'this' in static
+-> not using non static slots froma static one
+-> check for virtual/abstract/override
+-> Fantom supports covariance - which allows an overridden method to narrow the return type of the inherited method:
+-> A method declared to return This is a special case of covariance which always returns the type being used
 
-Type
--> check if all abstract/virtual overidden
+once method
+-> meh
+    * Must not be declared within a const class
+    * Must not be declared within a mixin
+    * Must not be a constructor
+    * Must not be static
+    * Must not be abstract
+    * Must return non-Void
+    * Must have no parameters
 
 Closure / it blocks
+-> it / this
+-> check for variable conflict where either it or this is required
 
 ===== Indexing ====
 2 Index: "compiled" and "new"
