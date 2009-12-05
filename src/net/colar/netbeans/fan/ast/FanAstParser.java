@@ -3,9 +3,7 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
