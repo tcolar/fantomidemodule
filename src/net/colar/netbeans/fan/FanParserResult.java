@@ -11,7 +11,6 @@ import java.util.Vector;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanAstParser;
-import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
