@@ -1,3 +1,15 @@
+constructor
+-> check required super call
+-> parameters.
+
+method
+-> parameters
+-> if static : no super
+
+Type
+-> check if all abstract/virtual overidden
+
+
 ===== Indexing ====
 2 Index: "compiled" and "new"
 
