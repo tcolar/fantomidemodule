@@ -16,8 +16,9 @@
 
 	<property name="classpath" value="build/classes;../Fan_antlr/lib/antlrworks-1.2.3.jar"/>
 
-	<target name="test" depends="compile" description="Test parser on files in 'test_failing' folder">
-		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="../../fan/src/"/>
+	<target name="test" depends="compile" description="Test parser on files in 'fantom/src' folder">
+		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="../../fantom/src/"/>
+		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="../../fantom/test/"/>
 	</target>
 	<target name="test-light" depends="compile" description="Test parser on files in 'test_failing' folder">
 		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="test"/>
