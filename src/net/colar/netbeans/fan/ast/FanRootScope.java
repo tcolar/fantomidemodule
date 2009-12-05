@@ -47,26 +47,13 @@ public class FanRootScope extends FanAstScope
 		parse(ast);
 	}
 
-	private void addFanUsing(String name, fan.sys.Type type, CommonTree node)
+	private void addUsing(String name, fan.sys.Type type, CommonTree node)
 	{
 		FanAstResolvedType resolved = FanAstResolvedType.makeFromFanType(parserResult, type);
 		System.out.println("- Using " + resolved.toString());
-		//TODO: There could be duplicates (says Sys.Time and My.Time) .. should we deal with that ?
 		if (using.containsKey(name))
 		{
 			addError("Duplicated using: " + resolved + " / " + using.get(name), node);
-		}
-		using.put(name, resolved);
-	}
-
-	private void addJavaUsing(String name, java.lang.reflect.Type type, CommonTree node)
-	{
-		FanAstResolvedType resolved = FanAstResolvedType.makeFromJavaType(parserResult, type);
-		System.out.println("- Using " + resolved.toString());
-		//TODO: There could be duplicates (says Sys.Time and My.Time) .. should we deal with that ?
-		if (using.containsKey(name))
-		{
-			addError("Duplicated using: " + resolved + "  / " + using.get(name), node);
 		}
 		using.put(name, resolved);
 	}
@@ -172,8 +159,8 @@ public class FanRootScope extends FanAstScope
 						addError("Unresolvable Java Item: " + qname, usingNode);
 					} else
 					{
-						java.lang.reflect.Type t = FanJavaIndexer.getInstance().resolveType(qname);
-						addJavaUsing(name, t, usingNode);
+						fan.sys.Type t = FanJavaIndexer.getInstance().resolveType(qname);
+						addUsing(name, t, usingNode);
 					}
 				}
 			} else
@@ -192,7 +179,7 @@ public class FanRootScope extends FanAstScope
 					}
 
 					Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
-					addFanUsing(name, t, usingNode);
+					addUsing(name, t, usingNode);
 				} else
 				{
 					// Adding all the types of a Pod
@@ -204,7 +191,7 @@ public class FanRootScope extends FanAstScope
 						Set<Type> items = FanPodIndexer.getInstance().getPodTypes(name);
 						for (Type t : items)
 						{
-							addFanUsing(t.name(), t, usingNode);
+							addUsing(t.name(), t, usingNode);
 						}
 					}
 				}

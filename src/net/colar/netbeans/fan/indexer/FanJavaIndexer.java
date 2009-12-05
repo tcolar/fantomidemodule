@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import fanx.util.FanUtil;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -14,6 +15,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import org.netbeans.api.java.platform.JavaPlatform;
 
 /**
@@ -59,15 +61,16 @@ public class FanJavaIndexer
 		return instance;
 	}
 
-	public Type resolveType(String cname)
+	public fan.sys.Type resolveType(String cname)
 	{
-		Class c = null;
 		try
 		{
-			c = findClass(cname);
+			Class c = findClass(cname);
+			fan.sys.Type type=FanUtil.toFanType(c, true);
+			return type;
 		}
 		catch(Exception e){e.printStackTrace();}
-		return (java.lang.reflect.Type) c;
+		return null;
 	}
 
 	/**
