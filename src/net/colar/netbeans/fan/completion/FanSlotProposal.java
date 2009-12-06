@@ -36,7 +36,7 @@ public class FanSlotProposal extends FanCompletionProposal
 		{
 			this.kind = ElementKind.FIELD;
 			html = slot.name();
-			rHtml += "<font color='#aaaaaa'>" + ((Field)slot).type().name() + "</font>";
+			rHtml += ((Field)slot).type().name();
 		} else if(slot.isMethod() || slot.isCtor())
 		{
 			this.kind = ElementKind.METHOD;
@@ -61,10 +61,10 @@ public class FanSlotProposal extends FanCompletionProposal
 				{
 					nm="<font color='#AA2222'>" + p.name()+"</font>";
 				}
-				args += p.type().name() + "" +nm;
+				args += p.type().name() + " " +nm;
 			}
 			html+=args+")";
-			rHtml = "<font color='#aaaaaa'>"+m.returns().name()+"</font>";
+			rHtml = m.returns().name();
 
 		}
 		FanBasicElementHandle handle = new FanBasicElementHandle(name, kind);
