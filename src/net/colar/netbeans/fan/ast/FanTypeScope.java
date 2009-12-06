@@ -19,7 +19,7 @@ public class FanTypeScope extends FanAstScope
 
 	public FanTypeScope(FanRootScope parent, CommonTree ast)
 	{
-		super(parent);
+		super(parent, ast);
 		parse(ast);
 	}
 

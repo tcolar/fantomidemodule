@@ -468,4 +468,17 @@ public class FanLexAstUtils
 			}
 		}
 	}
+
+	public static boolean isParentNodeOf(CommonTree parent, CommonTree node)
+	{
+		if(node==null)
+			// we went back to the root and it did not match
+			return false;
+		if(node == parent)
+			// match
+			return true;
+		else
+			// recurse to keep looking in uper levels
+			return isParentNodeOf(parent, (CommonTree)node.getParent());
+	}
 }

@@ -17,8 +17,6 @@ import org.antlr.runtime.tree.CommonTree;
  */
 public class FanAstField extends FanAstScopeVar
 {
-	private FanAstResolvedType type;
-	private ArrayList<FanAstScopeVar.modifs> modifiers = new ArrayList<FanAstScopeVar.modifs>();
 	
 	public FanAstField(FanAstScope scope, CommonTree node)
 	{
@@ -36,22 +34,5 @@ public class FanAstField extends FanAstScopeVar
 		}
 	}
 
-	public ArrayList<FanAstScopeVar.modifs> getModifiers()
-	{
-		return modifiers;
-	}
 
-	public FanAstResolvedType getType()
-	{
-		return type;
-	}
-
-	@Override
-	public String toString()
-	{
-		StringBuilder sb=new StringBuilder("Field : ").append(name).append(" -> ").append(type.toString()).append(" [");
-		for(FanAstScopeVar.modifs m : modifiers)
-			sb=sb.append(m.toString()).append(", ");
-		return sb.append("]").toString();
-	}
 }

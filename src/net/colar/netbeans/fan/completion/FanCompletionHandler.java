@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.completion;
 
 import fan.sys.Slot;
 import fan.sys.Type;
+import fanx.util.FanUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +16,6 @@ import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.FanLexAstUtils;
-import net.colar.netbeans.fan.ast.FanAstParser;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
@@ -271,15 +271,14 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param anchor
 	 * @param prefix
 	 */
-	private void proposeSlots(String pod, String type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
+	private void proposeSlots(FanAstResolvedType type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		Set<Slot> slots = FanPodIndexer.getInstance().getSlots(pod, type);
+		Slot[] slots = (Slot[]) type.getType().slots().asArray(Slot.class);
 		for (Slot slot : slots)
 		{
 			if (slot.name().toLowerCase().startsWith(prefix))
 			{
-				//TODO: FanSlotProposal
-				proposals.add(new FanKeywordProposal(slot.name(), anchor - prefix.length()));
+				proposals.add(new FanKeywordProposal(slot.signature(), anchor - prefix.length()));
 				docType = DocTypes.NA; // TODO
 			}
 		}
@@ -422,8 +421,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			System.out.println("Expr Node: " + exprNode.toStringTree());
 			FanAstResolvedType type = FanAstResolvedType.makeFromExpr(result, exprNode);
 			System.out.println("Type: " + type.toString());
-			//TODO: continue this
+			if (type.isFanType())
+			{
+				proposeSlots(type, proposals, offset, "");
+			}
 		}
 	}
-
 }

@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.ast;
 
 import fan.sys.MapType;
+import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.antlr.FanParser;
@@ -67,23 +68,35 @@ public class FanAstResolvedType
 	public static FanAstResolvedType makeFromExpr(FanParserResult result, CommonTree exprNode)
 	{
 		//TODO
-		/*String type = null;
-		List<CommonTree> children = exprNode.getChildren();
-		for (CommonTree node : children)
+		//String type = null;
+		//List<CommonTree> children = exprNode.getChildren();
+		/*for (CommonTree node : children)
 		{
-		switch (node.getType())
-		{
-		case FanParser.AST_STATIC_CALL:
-		CommonTree tNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
-		if (tNode != null && tNode.getChildCount() > 0)
-		{
-		type = tNode.getChild(0).getText();
-		}
-		break;
-		}
+			System.out.println("Node type: "+node.getType());
+			switch (node.getType())
+			{
+				case FanParser.AST_INC_DOTCALL:
+					break;
+				case FanParser.AST_STATIC_CALL:
+					CommonTree tNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
+					if (tNode != null && tNode.getChildCount() > 0)
+					{
+						type = tNode.getChild(0).getText();
+					}
+					break;
+			}
 
 		}*/
-		return new FanAstResolvedType(null);
+		String type = FanLexAstUtils.getNodeContent(result, exprNode);
+		//TODO: yuk (call end with .)
+		if(type.endsWith("."))
+			type=type.substring(0, type.length() -1 );
+		System.out.println("** type: "+type);
+		FanAstScope scope = result.getRootScope().findClosestScope(exprNode);
+		System.out.println("** scope: "+scope);
+		FanAstResolvedType resolvedType = scope.resolveVar(type);
+		System.out.println("** resolvedType: "+resolvedType);
+		return resolvedType;
 	}
 
 	/***
@@ -132,7 +145,7 @@ public class FanAstResolvedType
 				// Find key / value type
 				FanAstResolvedType keyType = makeFromSimpleType(scope, keyNode);
 				FanAstResolvedType valueType = makeFromSimpleType(scope, valueNode);
-				if(! keyType.isUnresolved() && ! valueType.isUnresolved())
+				if (!keyType.isUnresolved() && !valueType.isUnresolved())
 				{
 					MapType mapType = new MapType(keyType.getType(), valueType.getType());
 					resolved = FanAstResolvedType.makeFromFanType(root.getParserResult(), mapType);
@@ -156,7 +169,7 @@ public class FanAstResolvedType
 			}
 		}
 
-		System.out.println("Type: "+type+" resolved to: "+resolved);
+		System.out.println("Type: " + type + " resolved to: " + resolved);
 		return resolved;
 	}
 

@@ -3,7 +3,10 @@
  */
 package net.colar.netbeans.fan.ast;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+import org.antlr.runtime.tree.CommonTree;
 
 /**
  * Base object for scope.
@@ -11,20 +14,27 @@ import java.util.Hashtable;
  */
 public abstract class FanAstScope
 {
+	// the AST node this scope is for
+	private CommonTree astNode = null;
 	// parent scope -> If root scope: null
 	private FanAstScope parent = null;
 	// Lits of defined/named items in this (local) scope
 	private Hashtable<String, FanAstScopeVar> scopeVars = new Hashtable<String, FanAstScopeVar>();
+	// root scope of the tree - lazy inited
+	private FanRootScope root;
+	// Node childs
+	private List<FanAstScope> children= new ArrayList<FanAstScope>();
 
-	public FanAstScope(FanAstScope parent)
+	public FanAstScope(FanAstScope parent, CommonTree astNode)
 	{
 		this.parent = parent;
+		this.astNode = astNode;
 	}
 
 	public void dump()
 	{
 		System.out.println("Ast Scope Node: " + toString());
-		for(FanAstScopeVar var : scopeVars.values())
+		for (FanAstScopeVar var : scopeVars.values())
 		{
 			System.out.println("Scope Var: " + var.toString());
 		}
@@ -36,17 +46,24 @@ public abstract class FanAstScope
 	}
 
 	/**
-	 * Return the root node
+	 * Return the root node .. lazily cached
 	 * @return
 	 */
 	public FanRootScope getRoot()
 	{
-		FanAstScope current = this;
-		while (current.parent != null)
+		if (root == null)
 		{
-			current = current.getParent();
+			synchronized (this)
+			{
+				FanAstScope current = this;
+				while (current.parent != null)
+				{
+					current = current.getParent();
+				}
+				root = (FanRootScope) current;
+			}
 		}
-		return (FanRootScope) current;
+		return root;
 	}
 
 	/**
@@ -58,13 +75,17 @@ public abstract class FanAstScope
 	{
 		String name = var.getName();
 		// Can't have duplicated slot name in scope no matter what ?
+		// no could be if overriden virtual slot etc..
 		FanAstScope scope = this;
 		while (scope != null)
 		{
 			if (scope.hasScopevar(name))
 			{
-				getRoot().addError("Duplicated var name: " + name, var.getNode());
-				return;
+				if (!allowOverride)
+				{
+					getRoot().addError("Duplicated var name: " + name, var.getNode());
+					return;
+				}
 			}
 			scope = scope.getParent();
 		}
@@ -80,5 +101,34 @@ public abstract class FanAstScope
 	public FanAstScopeVar getScopeVar(String name)
 	{
 		return scopeVars.get(name);
+	}
+
+	public CommonTree getAstNode()
+	{
+		return astNode;
+	}
+
+	public List<FanAstScope> getChildren()
+	{
+		return children;
+	}
+
+	public void addChild(FanAstScope child)
+	{
+		children.add(child);
+	}
+
+	FanAstResolvedType resolveVar(String type)
+	{
+		FanAstScope scope = this;
+		do
+		{
+			if(scope.hasScopevar(type))
+				return scope.getScopeVar(type).getType();
+			scope=scope.getParent();
+		}
+		while(scope!=null);
+		// Not found
+		return FanAstResolvedType.makeUnresolved();
 	}
 }

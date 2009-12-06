@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.Tree;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -31,8 +31,6 @@ public class FanRootScope extends FanAstScope
 	// using statements. type=null means unresolvable
 
 	private Hashtable<String, FanAstResolvedType> using = new Hashtable<String, FanAstResolvedType>();
-	// types (classes/enums/mixins)
-	private Vector<FanAstScope> types = new Vector<FanAstScope>();
 	// Root node holds errors and hints, to be used by HintsProvider
 	// For example unesolvable pods, undefined vars and so on
 	List<Error> errors = new ArrayList<Error>();
@@ -41,7 +39,7 @@ public class FanRootScope extends FanAstScope
 
 	public FanRootScope(FanParserResult result)
 	{
-		super(null);
+		super(null, result.getTree());
 		this.parserResult = result;
 		CommonTree ast = parserResult.getTree();
 		parse(ast);
@@ -62,7 +60,7 @@ public class FanRootScope extends FanAstScope
 	{
 		if (type != null)
 		{
-			types.add(type);
+			addChild(type);
 		}
 	}
 
@@ -79,7 +77,7 @@ public class FanRootScope extends FanAstScope
 		{
 			System.out.println("Using: " + key + " (" + using.get(key) + ")");
 		}
-		for (FanAstScope node : types)
+		for (FanAstScope node : getChildren())
 		{
 			node.dump();
 		}
@@ -256,6 +254,43 @@ public class FanRootScope extends FanAstScope
 		// Try Java standrad API's -> No: not avail by defalt in Fan
 		// Unresolvable
 		return FanAstResolvedType.makeUnresolved();
+	}
+
+	/**
+	 * Find the smallest enclosing scope fro a given AST node
+	 * TODO: maybe save(lazy cache) this into the node(commontree) ?
+	 * this is quite expensive
+	 * @param node
+	 * @return
+	 */
+	public FanAstScope findClosestScope(CommonTree node)
+	{
+		// start at the root node (this) and scan down
+		FanAstScope scope = findClosestScope(this, node);
+		return scope==null?this:scope;
+	}
+
+	/**
+	 * recursive
+	 * @param scope
+	 * @param node
+	 */
+	private FanAstScope findClosestScope(FanAstScope scope, CommonTree node)
+	{
+		CommonTree scopeNode=scope.getAstNode();
+		if(FanLexAstUtils.isParentNodeOf(scopeNode, node))
+		{
+			for(FanAstScope child: scope.getChildren())
+			{
+				FanAstScope found = findClosestScope(child, node);
+				if(found!=null)
+				{
+					return found;
+				}
+			}
+			return scope;
+		}
+		return null;
 	}
 }
 
