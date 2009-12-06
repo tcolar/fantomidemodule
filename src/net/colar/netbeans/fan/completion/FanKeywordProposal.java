@@ -5,7 +5,7 @@
 package net.colar.netbeans.fan.completion;
 
 import java.util.Collections;
-import net.colar.netbeans.fan.structure.FanDummyElementHandle;
+import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 
@@ -21,11 +21,7 @@ public class FanKeywordProposal extends FanCompletionProposal
 		this.anchor=anchor;
 		this.modifiers=Collections.EMPTY_SET;
 		this.kind=ElementKind.KEYWORD;
+		this.element = new FanBasicElementHandle(name, kind);
 	}
 
-	@Override
-	public ElementHandle getElement()
-	{
-		return new FanDummyElementHandle(name, kind);
-	}
 }

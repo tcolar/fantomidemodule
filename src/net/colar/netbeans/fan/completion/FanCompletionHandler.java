@@ -19,7 +19,7 @@ import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
-import net.colar.netbeans.fan.structure.FanDummyElementHandle;
+import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.lexer.TokenSequence;
@@ -47,6 +47,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		NA,
 		POD,
 		TYPE,
+		SLOT,
 	};
 	DocTypes docType = DocTypes.NA;
 	String preamble = "";
@@ -117,18 +118,16 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	public String document(ParserResult result, ElementHandle handle)
 	{
 		String doc = "";
-		String pod = "";
 		switch (docType)
 		{
 			case POD:
 				doc = FanPodIndexer.getInstance().getPodDoc(handle.getName());
 				break;
 			case TYPE:
-				pod = ((FanDummyElementHandle) handle).getCustomParams().get(FanDummyElementHandle.params.POD);
-				if (pod != null)
-				{
-					doc = FanPodIndexer.getInstance().getPodTypeDoc(pod, handle.getName());
-				}
+				doc = ((FanBasicElementHandle) handle).getDoc();
+				break;
+			case SLOT:
+				doc = ((FanBasicElementHandle) handle).getDoc();
 				break;
 		}
 		return doc;
@@ -257,7 +256,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			if (//!type.isInternal() &&
 					type.name().startsWith(prefix))
 			{
-				proposals.add(new FanTypeProposal(type.name(), anchor - prefix.length(), podName));
+				proposals.add(new FanTypeProposal(type, anchor - prefix.length()));
 			}
 		}
 		docType = DocTypes.TYPE;
@@ -278,8 +277,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			if (slot.name().toLowerCase().startsWith(prefix))
 			{
-				proposals.add(new FanKeywordProposal(slot.signature(), anchor - prefix.length()));
-				docType = DocTypes.NA; // TODO
+				proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
+				docType = DocTypes.SLOT; // TODO
 			}
 		}
 	}

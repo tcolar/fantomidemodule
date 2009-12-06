@@ -5,7 +5,7 @@
 package net.colar.netbeans.fan.completion;
 
 import java.util.Collections;
-import net.colar.netbeans.fan.structure.FanDummyElementHandle;
+import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.openide.util.ImageUtilities;
@@ -22,16 +22,11 @@ public class FanImportProposal extends FanCompletionProposal
 		this.anchor=anchor;
 		this.modifiers=Collections.EMPTY_SET;
 		this.kind=ElementKind.PACKAGE;
+		this.element=new FanBasicElementHandle(name, kind);
 		if( ! isJava)
 			icon = ImageUtilities.loadImageIcon("net/colar/netbeans/fan/fan.png", false);
 		else
 			icon = ImageUtilities.loadImageIcon("net/colar/netbeans/fan/project/resources/java.png", false);
-	}
-
-	@Override
-	public ElementHandle getElement()
-	{
-		return new FanDummyElementHandle(name, kind);
 	}
 
 	@Override

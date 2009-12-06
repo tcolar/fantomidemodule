@@ -83,4 +83,5 @@ public class FanElementHandle implements ElementHandle
 	{
 		return offsetRange;
 	}
+
 }
