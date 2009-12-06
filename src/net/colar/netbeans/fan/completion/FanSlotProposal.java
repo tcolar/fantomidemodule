@@ -20,7 +20,7 @@ import org.netbeans.modules.csl.api.HtmlFormatter;
  */
 public class FanSlotProposal extends FanCompletionProposal
 {
-
+//TODO : != icon for static slots
 	private final Slot slot;
 	private String html="";
 	private String rHtml="";
