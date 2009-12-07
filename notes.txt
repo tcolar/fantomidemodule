@@ -1,3 +1,12 @@
+
+============= TODO Completion ===============================
+- Fully resolve type of expressions (as much as I can)
+- Add inherited slots (if not already defined - inherited)
+- Filter proposals (sont show innacessible items, private etc...
+- Highlight when a slot is static (icon)
+- Allow completion of type(static) like Str._
+
+============= TODO semantic checks =====================
 Deal with shortcut operators:
 http://fantom.org/doc/docLang/Expressions.html#shortcuts
 
