@@ -24,6 +24,7 @@ public class FanSlotProposal extends FanCompletionProposal
 	private final Slot slot;
 	private String html="";
 	private String rHtml="";
+	private String prefix="";
 
 	public FanSlotProposal(Slot slot, int anchor)
 	{
@@ -36,6 +37,7 @@ public class FanSlotProposal extends FanCompletionProposal
 		{
 			this.kind = ElementKind.FIELD;
 			html = slot.name();
+			prefix=slot.name();
 			rHtml += ((Field)slot).type().name();
 		} else if(slot.isMethod() || slot.isCtor())
 		{
@@ -45,6 +47,7 @@ public class FanSlotProposal extends FanCompletionProposal
 			String args = "";
 			Method m = (Method) slot;
 			html=m.name()+"(";
+			prefix=slot.name()+"(";
 			Param[] params = (Param[]) m.params().asArray(Param.class);
 			for (Param p : params)
 			{
@@ -60,9 +63,18 @@ public class FanSlotProposal extends FanCompletionProposal
 				else
 				{
 					nm="<font color='#AA2222'>" + p.name()+"</font>";
+					// only list non-defaulted parameters by default
+					if(!prefix.endsWith("("))
+						prefix+=", ";
+					prefix+=p.name();
 				}
 				args += p.type().name() + " " +nm;
 			}
+			// remove optional parenthesis when no parameters
+			if(prefix.endsWith("("))
+				prefix=prefix.substring(0,prefix.length() - 1);
+			else
+				prefix+=")";
 			html+=args+")";
 			rHtml = m.returns().name();
 
@@ -70,6 +82,12 @@ public class FanSlotProposal extends FanCompletionProposal
 		FanBasicElementHandle handle = new FanBasicElementHandle(name, kind);
 		handle.setDoc(FanPodIndexer.fanDocToHtml(slot.doc()));
 		element=handle;
+	}
+
+	@Override
+	public String getInsertPrefix()
+	{
+		return prefix;
 	}
 
 	/**

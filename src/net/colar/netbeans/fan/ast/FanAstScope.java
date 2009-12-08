@@ -120,6 +120,8 @@ public abstract class FanAstScope
 
 	FanAstResolvedType resolveVar(String type)
 	{
+		if(type==null)
+			return FanAstResolvedType.makeUnresolved();
 		FanAstScope scope = this;
 		do
 		{

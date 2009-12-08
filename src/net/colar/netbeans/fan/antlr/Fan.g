@@ -273,7 +273,7 @@ classDef 	@init {paraphrase.push("Class definition");} @after{paraphrase.pop();}
 		:  	classHeader classBody
 		    -> ^(AST_CLASS classHeader classBody);
 classHeader	:	docs facet* m=classFlags* KW_CLASS cname=id inheritance?
-			-> ^(AST_ID $cname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
+			-> ^($cname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
 classBody 	:	(bracketL slotDef* bracketR)  -> ^(AST_CODE_BLOCK bracketL slotDef* bracketR);
 protection	:	KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL;
@@ -281,14 +281,14 @@ mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
 		:	mixinHeader mixinBody
 		    -> ^(AST_MIXIN mixinHeader mixinBody);
 mixinHeader	:	docs facet* m=mixinFlags* KW_MIXIN mname=id inheritance?
-			-> ^(AST_ID $mname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
+			-> ^($mname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 mixinFlags	:	protection | KW_CONST | KW_STATIC | KW_FINAL;
 mixinBody	:	bracketL slotDef* bracketR  -> ^(AST_CODE_BLOCK bracketL slotDef* bracketR);
 enumDef		@init {paraphrase.push("Enumeration definition");} @after{paraphrase.pop();}
 		:	enumHeader enumBody
 		    -> ^(AST_ENUM enumHeader enumBody);
 enumHeader	:   	docs facet* m=protection? KW_ENUM ename=id inheritance?
-			-> ^(AST_ID $ename) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
+			-> ^($ename) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 enumBody	:	bracketL enumValDefs slotDef* bracketR   -> ^(AST_CODE_BLOCK bracketL enumValDefs slotDef* bracketR);
 inheritance 	:	SP_COLON typeList;
 	//	    -> ^(AST_INHERITANCE typeList);
@@ -327,14 +327,13 @@ fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
 				| eos)
 			-> ^(AST_FIELD typeId ^(AST_MODIFIER $m)* expr?);
 typeId		:	((type id)=>typeAndId | fieldId);
-fieldId		:	id
-			   -> ^(AST_ID id);
+fieldId		:	id;
 typeAndId	:	type id
-			   -> ^(AST_ID id) ^(AST_TYPE type);
+			   -> ^(id) ^(AST_TYPE type);
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
 methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
 		:	docs facet* m=methodFlags* returnType=type /*| KW_VOID*/ mname=id parL params parR methodBody
-		    -> ^(AST_METHOD methodBody? ^(AST_ID $mname) ^(AST_TYPE $returnType) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)*);
+		    -> ^(AST_METHOD methodBody? ^($mname) ^(AST_TYPE $returnType) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)*);
 methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE |
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;
@@ -342,7 +341,7 @@ param 		:	type id (AS_INIT_VAL expr)?;
 methodBody	:	((multiStmt)=>multiStmt | eos);
 ctorDef		@init {paraphrase.push("Constructor definition");} @after{paraphrase.pop();}
 		:	docs facet* m=ctorFlags* KW_NEW cname=id parL params parR cchain=((SP_COLON)=>ctorChain)? methodBody
-		    -> ^(AST_CONSTRUCTOR methodBody? ^(AST_ID $cname) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)* ^(AST_CONSTRUCTOR_CHAIN $cchain)* );
+		    -> ^(AST_CONSTRUCTOR methodBody? ^($cname) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)* ^(AST_CONSTRUCTOR_CHAIN $cchain)* );
 ctorFlags	:	protection;
 ctorChain	:	SP_COLON (ctorChainThis | ctorChainSuper);
 
@@ -425,14 +424,14 @@ unaryExpr 	:	prefixExpr | postfixExpr | termExpr;
 prefixExpr 	:	(OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS) parenExpr ;
 postfixExpr 	:	termExpr (OP_2PLUS | OP_2MINUS) ;
 termExpr 	:	termBase termChain*
-			-> ^(AST_TERM_EXPR termBase termChain*);
+			-> ^(AST_TERM_EXPR ^(AST_CHILD termBase) ^(AST_CHILD termChain*));
 // check for ID alone last (and not as part of idExpr) otherwise it would never check literals !
 termBase 	:	idExprReq | literal | typeBase | id;
 typeBase	:	typeLiteral | slotLiteral | namedSuper | staticCall |
  	                dsl | closure | simple | ctorBlock;
 ctorBlock	:	type itBlock;
 staticCall	:	type DOT idExpr
-				-> ^(AST_STATIC_CALL ^(AST_TYPE type) idExpr);
+				-> ^(AST_STATIC_CALL ^(AST_TYPE type) ^(AST_CHILD idExpr));
 
 termChain 	:	dotCall | dynCall | safeDotCall | safeDynCall |
 			indexExpr | callOp | itBlock | incDotCall | incSafeDotCall;
@@ -497,7 +496,7 @@ eos
 
 id
 @init {paraphrase.push("Identifier");} @after{paraphrase.pop();}
-		: 	ID;
+		: 	ID -> ^(AST_ID ID);
 /*Those are a bit special, they can't be a lexer rule, because they can be a valid ID as well 
 (or part of one) and they can't be just parsed as 'get' or 'set' because they are Tokens of type ID
  so I check them as ID's an look if the content matches. 

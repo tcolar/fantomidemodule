@@ -47,7 +47,8 @@ public class FanCompletionContext
 	{
 		this.context = context;
 		result = (FanParserResult) context.getParserResult();
-		result.dumpTree();
+
+		//result.dumpTree();
 
 		offset = context.getCaretOffset();
 		String prefix = context.getPrefix();
@@ -133,42 +134,20 @@ public class FanCompletionContext
 			{
 				usingNode = FanLexAstUtils.findParentNode(node, FanParser.AST_INC_USING);
 			}
-			if (usingNode != null)
+			else
 			{
-				/*if (usingNode.getChildCount() > 2)
-				{
-				return completionTypes.IMPORT_FFI_JAVA;
-				}
-				else
-				{*/
 				return completionTypes.IMPORT_POD;
-				//}
 			}
-			int ord = node.getType();
 			// expression completion after a '.' or '?.'
-			System.out.println("Node :" + node.toString() + " " + node.getType());
-			switch (ord)
+			System.out.println("Node :" + node.toString() + " " + node.toStringTree());
+			if(FanLexAstUtils.findParentNode(node, FanParser.AST_TERM_EXPR)!=null)
 			{
-				// Start at the . or ?. node. 
-				case FanParser.AST_INC_DOTCALL:
-				case FanParser.AST_INC_SAFEDOTCALL:
-				case FanParser.AST_STATIC_CALL:
-					return completionType.DOTCALL;
-				case FanParser.ID:
-					CommonTree parent = (CommonTree) node.getParent();
-					if (parent != null)
-					{
-						if (parent.getType() == FanParser.AST_SAFE_DOT_CALL ||
-							parent.getType() == FanParser.AST_DOT_CALL)
-						{
-							return completionType.DOTCALL;
-						}
-					}
-					break;
+				// TODO: check if it's a dot call or another kind of call. -> ?. ?-> etc...
+				return completionType.DOTCALL;
 			}
 		}
 		// restore ts offset
-		tokenStream.move(offset);
+		//tokenStream.move(offset);
 		return completionTypes.UNKNOWN;
 	}
 

@@ -183,7 +183,7 @@ public class FanProjectProperties
 
 		public void fileChanged(FileEvent event)
 		{
-			System.out.println("Props file changed :" + event.getFile().getPath());
+			//System.out.println("Props file changed :" + event.getFile().getPath());
 			// refresh
 			load();
 		}
@@ -207,7 +207,7 @@ public class FanProjectProperties
 
 		public void fileAttributeChanged(FileAttributeEvent event)
 		{
-			System.out.println("Props file attr changed :" + event.getFile().getPath() + event.toString());
+			//System.out.println("Props file attr changed :" + event.getFile().getPath() + event.toString());
 		}
 	}
 }

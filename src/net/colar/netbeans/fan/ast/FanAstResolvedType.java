@@ -65,38 +65,88 @@ public class FanAstResolvedType
 	 * @param exprNode
 	 * @return
 	 */
-	public static FanAstResolvedType makeFromExpr(FanParserResult result, CommonTree exprNode)
+	public static FanAstResolvedType makeFromExpr(FanParserResult result, CommonTree exprNode, int lastGoodTokenIndex)
 	{
-		//TODO
-		//String type = null;
-		//List<CommonTree> children = exprNode.getChildren();
-		/*for (CommonTree node : children)
-		{
-			System.out.println("Node type: "+node.getType());
-			switch (node.getType())
-			{
-				case FanParser.AST_INC_DOTCALL:
-					break;
-				case FanParser.AST_STATIC_CALL:
-					CommonTree tNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
-					if (tNode != null && tNode.getChildCount() > 0)
-					{
-						type = tNode.getChild(0).getText();
-					}
-					break;
-			}
-
-		}*/
-		String type = FanLexAstUtils.getNodeContent(result, exprNode);
-		//TODO: yuk (call end with .)
-		if(type.endsWith("."))
-			type=type.substring(0, type.length() -1 );
-		System.out.println("** type: "+type);
 		FanAstScope scope = result.getRootScope().findClosestScope(exprNode);
-		System.out.println("** scope: "+scope);
-		FanAstResolvedType resolvedType = scope.resolveVar(type);
-		System.out.println("** resolvedType: "+resolvedType);
-		return resolvedType;
+		System.out.println("** scope: " + scope);
+		FanAstResolvedType type = resolveExpr(result, scope, null, exprNode, lastGoodTokenIndex);
+		if (type == null)
+		{
+			type = makeUnresolved();
+		}
+		System.out.println("** resolvedType: " + type);
+		return type;
+	}
+
+	/**
+	 * Start recursion with baseType=null;
+	 * @param result
+	 * @param baseType
+	 * @param node
+	 * @return
+	 */
+	private static FanAstResolvedType resolveExpr(FanParserResult result, FanAstScope scope,
+		FanAstResolvedType baseType, CommonTree node, int index)
+	{
+		// if unresolveable no point searching further
+		if (baseType != null && baseType.isUnresolved())
+		{
+			return baseType;
+		}
+		//System.out.println("Node type: " + node.getType());
+		String t = FanLexAstUtils.getNodeContent(result, node);
+		//System.out.println("** type: " + t + " " + node.toStringTree());
+		//System.out.println("Index: " + FanLexAstUtils.getTokenStart(node) + " VS " + index);
+		// Skip the imcomplete part past what we care about
+		if (!isValidTokenStart(node, index))
+		{
+			return baseType;
+		}
+		List<CommonTree> children = node.getChildren();
+		switch (node.getType())
+		{
+			case FanParser.AST_TERM_EXPR:
+				CommonTree termBase = children.get(0);
+				CommonTree termChain = children.get(1);
+				baseType = resolveExpr(result, scope, null, termBase, index);
+				baseType = resolveExpr(result, scope, baseType, termChain, index);
+			case FanParser.AST_STATIC_CALL:
+				CommonTree type = children.get(0);
+				CommonTree idExpr = children.get(1);
+				baseType = resolveExpr(result, scope, null, type, index);
+				baseType = resolveExpr(result, scope, baseType, idExpr, index);
+				break;
+			case FanParser.AST_ID:
+				if (baseType == null)
+				{
+					baseType = scope.resolveVar(t);
+				} else
+				{
+					baseType = makeFromFanType(result, baseType.getType().slot(t).type());
+				}
+				break;
+			// TODO case itBlock :  skip;
+			default:
+				// "Meaningless" nodes (interm of expression resolving)
+				if (node.getChildCount() > 0)
+				{
+					baseType = resolveExpr(result, scope, baseType, (CommonTree) node.getChild(0), index);
+				} else
+				{
+					//System.out.println("Don't know how to resolve: " + t + " " + node.toStringTree());
+					baseType = makeUnresolved();
+				}
+				break;
+		}
+		//System.out.println("** End type: " + baseType);
+		return baseType;
+	}
+
+	private static boolean isValidTokenStart(CommonTree node, int maxIndex)
+	{
+		int index = FanLexAstUtils.getTokenStart(node);
+		// will be -1 for a Nill node
+		return index >= 0 && index <= maxIndex;
 	}
 
 	/***

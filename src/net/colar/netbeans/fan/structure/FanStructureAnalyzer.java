@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
@@ -49,7 +50,7 @@ public class FanStructureAnalyzer implements StructureScanner
 			CommonTree ast = fanResult.getTree();
 
 			String trace = "";
-			scanTree(list, ast, result, trace);
+			scanTree(list, ast, fanResult, trace);
 		}
 		catch (Exception e)
 		{
@@ -78,7 +79,7 @@ public class FanStructureAnalyzer implements StructureScanner
 	 * @param list
 	 * @param node
 	 */
-	public void scanTree(List<StructureItem> list, CommonTree node, ParserResult result, String trace)
+	public void scanTree(List<StructureItem> list, CommonTree node, FanParserResult result, String trace)
 	{
 		if (node != null && result != null)
 		{
@@ -88,9 +89,9 @@ public class FanStructureAnalyzer implements StructureScanner
 			{
 				case FanParser.AST_FIELD:
 					item = new FanStructureItem(node, ElementKind.FIELD, result);
-					String name = getSubChildTextByType(node, FanParser.AST_ID, -1);
-					String modif = getSubChildTextByType(node, FanParser.AST_MODIFIER, -1);
-					String type = getSubChildTextByType(node, FanParser.AST_TYPE, -1);
+					String name = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_ID);
+					String modif = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_MODIFIER);
+					String type = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_TYPE);
 					handleModifiers(item, modif);
 					item.setName(name);
 					String html = name;
@@ -105,8 +106,8 @@ public class FanStructureAnalyzer implements StructureScanner
 				case FanParser.AST_MIXIN:
 				case FanParser.AST_ENUM:
 					item = new FanStructureItem(node, ElementKind.CLASS, result);
-					name = getSubChildTextByType(node, FanParser.AST_ID, -1);
-					String inheritance = getSubChildTextByType(node, FanParser.AST_INHERITANCE, -1);
+					name = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_ID);
+					String inheritance = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_INHERITANCE);
 					item.setName(name);
 					html = name;
 					if (inheritance.length() > 0)
@@ -121,15 +122,15 @@ public class FanStructureAnalyzer implements StructureScanner
 					ElementKind kind = node.getType() == FanParser.AST_METHOD ? ElementKind.METHOD : ElementKind.CONSTRUCTOR;
 
 					item = new FanStructureItem(node, kind, result);
-					String returnType = getSubChildTextByType(node, FanParser.AST_TYPE, -1);
+					String returnType = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_TYPE);
 					if (returnType.equalsIgnoreCase("void"))
 					{
 						returnType = "";
 					}
-					String constChain = getSubChildTextByType(node, FanParser.AST_CONSTRUCTOR_CHAIN, -1);
-					name = getSubChildTextByType(node, FanParser.AST_ID, -1);
-					String params = getSubChildTextByType(node, FanParser.AST_PARAMS, -1);
-					modif = getSubChildTextByType(node, FanParser.AST_MODIFIER, -1);
+					String constChain = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_CONSTRUCTOR_CHAIN);
+					name = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_ID);
+					String params = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_PARAMS);
+					modif = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_MODIFIER);
 					handleModifiers(item, modif);
 					item.setName(name);
 					html = name + "(<font color='#aaaaaa'>" + params + "</font>)";
@@ -175,49 +176,6 @@ public class FanStructureAnalyzer implements StructureScanner
 		return null;
 	}
 
-	public static String getChildTextByType(CommonTree node, int itemIndex)
-	{
-		String text = "";
-		if (node != null)
-		{
-			if (itemIndex != -1 && itemIndex < node.getChildCount())
-			{
-				CommonTree node2 = (CommonTree) node.getChild(itemIndex);
-				if (node2 != null)
-				{
-					text = node2.getText();
-				}
-			} else
-			{
-				Iterator children = node.getChildren().iterator();
-				while (children.hasNext())
-				{
-					CommonTree node3 = (CommonTree) children.next();
-					if (text.length() > 0)
-					{
-						text += " ";
-					}
-					text += node3.getText();
-				}
-			}
-		}
-		if (text == null)
-		{
-			text = "";
-		}
-		return text;
-	}
-
-	public static String getSubChildTextByType(CommonTree node, int astType, int itemIndex)
-	{
-		String text = "";
-		if (node != null)
-		{
-			CommonTree node2 = (CommonTree) node.getFirstChildWithType(astType);
-			text = getChildTextByType(node2, itemIndex);
-		}
-		return text;
-	}
 
 	// TODO: use FanAstVar.modifiers instead of hardcoded
 	private void handleModifiers(FanStructureItem item, String modif)

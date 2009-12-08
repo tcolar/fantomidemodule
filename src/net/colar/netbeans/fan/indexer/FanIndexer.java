@@ -4,14 +4,10 @@
  */
 package net.colar.netbeans.fan.indexer;
 
-import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
-import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
-import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 
 /**
  *
@@ -57,7 +53,7 @@ public class FanIndexer extends EmbeddingIndexer
 		}*/
 	}
 
-	private IndexDocument parseTree(IndexDocument doc, Indexable indexable, CommonTree node)
+	/*private IndexDocument parseTree(IndexDocument doc, Indexable indexable, CommonTree node)
 	{
 		if (node != null)
 		{
@@ -88,7 +84,7 @@ public class FanIndexer extends EmbeddingIndexer
 			}
 		}
 		return doc;
-	}
+	}*/
 
 	/**
 	 * Add a type (mixin, class, enum)
@@ -96,12 +92,12 @@ public class FanIndexer extends EmbeddingIndexer
 	 * @param doc
 	 * @param node
 	 */
-	private void addType(String type, IndexDocument doc, CommonTree node)
+	/*private void addType(String type, IndexDocument doc, CommonTree node)
 	{
 		FanIndexItem item = new FanIndexItem();
-		String id = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_ID, -1);
-		String modifs = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_MODIFIER, -1);
-		String inheritance = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_INHERITANCE, -1);
+		String id = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_ID);
+		String modifs = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_MODIFIER);
+		String inheritance = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_INHERITANCE);
 		item.addItem(FanIndexItem.TYPE.ID, id);
 		item.addItem(FanIndexItem.TYPE.MODIFIERS, modifs);
 		item.addItem(FanIndexItem.TYPE.INHERITANCE, inheritance);
@@ -110,14 +106,14 @@ public class FanIndexer extends EmbeddingIndexer
 		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.INHERITANCE));
 		System.out.println("Indexing " + type + " : " + infos.toString());
 		doc.addPair(type, infos.toString(), true, true);
-	}
+	}*/
 
-	private void addField(String type, IndexDocument doc, CommonTree node)
+	/*private void addField(String type, IndexDocument doc, CommonTree node)
 	{
 		FanIndexItem item = new FanIndexItem();
-		String id = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_ID, -1);
-		String modifs = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_MODIFIER, -1);
-		String fieldType = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_TYPE, -1);
+		String id = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_ID);
+		String modifs = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_MODIFIER);
+		String fieldType = FanStructureAnalyzer.getSubChildTextByType(node, FanParser.AST_TYPE);
 		item.addItem(FanIndexItem.TYPE.ID, id);
 		item.addItem(FanIndexItem.TYPE.TYPE, fieldType);
 		item.addItem(FanIndexItem.TYPE.MODIFIERS, modifs);
@@ -126,7 +122,7 @@ public class FanIndexer extends EmbeddingIndexer
 		infos = infos.append(";").append(item.toString(FanIndexItem.TYPE.MODIFIERS));
 		System.out.println("Indexing " + type + " : " + infos.toString());
 		doc.addPair(type, infos.toString(), true, true);
-	}
+	}*/
 
 
 }

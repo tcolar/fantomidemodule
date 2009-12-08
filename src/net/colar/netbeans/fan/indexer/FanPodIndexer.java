@@ -196,6 +196,8 @@ public class FanPodIndexer implements FileChangeListener
 	 */
 	public static String fanDocToHtml(String fandoc)
 	{
+		if(fandoc==null)
+			return null;
 		FanPlatform platform = FanPlatform.getInstance(false);
 		if (platform == null)
 		{

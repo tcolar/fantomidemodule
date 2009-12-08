@@ -25,7 +25,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
  */
 public class FanLexAstUtils
 {
-	
+
 	/**
 	 * Return the Actual token at the given caret position in the document.
 	 * @param doc
@@ -53,11 +53,12 @@ public class FanLexAstUtils
 		//System.err.println("hierarchy: " + th);
 		return getFanTokenSequence(th, offset);
 	}
-	
+
 	public static TokenSequence<? extends FanTokenID> getFanTokenSequence(Document doc)
 	{
 		return getFanTokenSequence(doc, 0);
 	}
+
 	/**
 	 * Returns the tokensequence from th tokenhierarchy
 	 * @param th
@@ -66,8 +67,10 @@ public class FanLexAstUtils
 	public static TokenSequence<? extends FanTokenID> getFanTokenSequence(TokenHierarchy<?> th, int offset)
 	{
 		TokenSequence<? extends FanTokenID> ts = th.tokenSequence(FanTokenID.language());
-		if(offset!=0)
-			ts=ts.subSequence(offset);
+		if (offset != 0)
+		{
+			ts = ts.subSequence(offset);
+		}
 		return ts;
 	}
 
@@ -226,13 +229,15 @@ public class FanLexAstUtils
 			while (it.hasNext())
 			{
 				CommonTree subNode = it.next();
-				if(subNode.getTokenStartIndex()==-1 || subNode.getTokenStartIndex()==-1)
-					// incomplete token return the parent
+				if (subNode.getTokenStartIndex() == -1 || subNode.getTokenStartIndex() == -1)
+				// incomplete token return the parent
+				{
 					continue;
+				}
 
 				CommonTokenStream tokenStream = pResult.getTokenStream();
-				int start= ((CommonToken)tokenStream.get(subNode.getTokenStartIndex())).getStartIndex();
-				int stop = ((CommonToken)tokenStream.get(subNode.getTokenStopIndex())).getStopIndex();
+				int start = ((CommonToken) tokenStream.get(subNode.getTokenStartIndex())).getStartIndex();
+				int stop = ((CommonToken) tokenStream.get(subNode.getTokenStopIndex())).getStopIndex();
 				// <= >= ??
 				if (start <= lexerIndex && stop >= lexerIndex)
 				{
@@ -250,28 +255,30 @@ public class FanLexAstUtils
 	public static int getLineEndOffset(TokenSequence seq, int offset, boolean semiIsNL)
 	{
 		//System.out.println(">gleo " + offset);
-		int result=-1;
+		int result = -1;
 		seq.move(offset);
 		// check if mve failed -> =~ end of stream
-		if(!seq.moveNext() || seq.offset() < offset)
+		if (!seq.moveNext() || seq.offset() < offset)
+		{
 			return -1;
+		}
 		do
 		{
 			//System.out.println("seq: "+seq.offset());
 			// If this happens, we reached end of stream
-			int tokenType=seq.token().id().ordinal();
-			if(tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
+			int tokenType = seq.token().id().ordinal();
+			if (tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
 			{
 				result = seq.offset();
 				break;
 			}
-		}
-		while(seq.moveNext());
+		} while (seq.moveNext());
 		// put it back where it was.
 		seq.move(offset);
 		//System.out.println("<gleo "+result);
 		return result;
 	}
+
 	/**
 	 * Return the offset of the beginiing of this line (after a LineBreak or beginning of file)
 	 * @param seq
@@ -282,14 +289,16 @@ public class FanLexAstUtils
 	public static int getLineBeginOffset(TokenSequence seq, int offset, boolean semiIsNL)
 	{
 		seq.move(offset);
-		while(seq.movePrevious())
+		while (seq.movePrevious())
 		{
 			//System.out.println("seq2: "+seq.offset());
-			int tokenType=seq.token().id().ordinal();
-			if(tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
+			int tokenType = seq.token().id().ordinal();
+			if (tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
+			{
 				break;
+			}
 		}
-		int result = seq.offset()+1;
+		int result = seq.offset() + 1;
 		// put it back where it was.
 		seq.move(offset);
 		return result;
@@ -304,27 +313,33 @@ public class FanLexAstUtils
 	 */
 	public static boolean moveToNextNonWSToken(TokenSequence seq, int fromOfset, int maxOffset)
 	{
-		if(fromOfset>maxOffset || fromOfset>seq.tokenCount())
-			return false;
-		seq.move(fromOfset);
-		while(seq.moveNext() && seq.offset()<=maxOffset)
+		if (fromOfset > maxOffset || fromOfset > seq.tokenCount())
 		{
-			int tokenType=seq.token().id().ordinal();
-			if( ! matchType(tokenType, FanGrammarHelper.WS_TOKENS))
+			return false;
+		}
+		seq.move(fromOfset);
+		while (seq.moveNext() && seq.offset() <= maxOffset)
+		{
+			int tokenType = seq.token().id().ordinal();
+			if (!matchType(tokenType, FanGrammarHelper.WS_TOKENS))
+			{
 				return true;
+			}
 		}
 		return false;
 	}
 
 	public static boolean moveToPrevNonWSToken(TokenSequence seq, int fromOfset, int minOffset)
 	{
-		if(fromOfset<minOffset || fromOfset<0)
-			return false;
-		seq.move(fromOfset);
-		while(seq.movePrevious() && seq.offset()>=minOffset)
+		if (fromOfset < minOffset || fromOfset < 0)
 		{
-			int tokenType=seq.token().id().ordinal();
-			if( ! matchType(tokenType, FanGrammarHelper.WS_TOKENS))
+			return false;
+		}
+		seq.move(fromOfset);
+		while (seq.movePrevious() && seq.offset() >= minOffset)
+		{
+			int tokenType = seq.token().id().ordinal();
+			if (!matchType(tokenType, FanGrammarHelper.WS_TOKENS))
 			{
 				// put it back BEFORE the token
 				//seq.movePrevious();
@@ -343,22 +358,30 @@ public class FanLexAstUtils
 	 */
 	public static boolean moveToNextSignificantToken(TokenSequence seq, int fromOfset, int maxOffset)
 	{
-		if(fromOfset>maxOffset || fromOfset>seq.tokenCount())
-			return false;
-		while(seq.offset()<=maxOffset && seq.moveNext() && seq.offset()<=maxOffset)
+		if (fromOfset > maxOffset || fromOfset > seq.tokenCount())
 		{
-			int tokenType=seq.token().id().ordinal();
-			if( ! matchType(tokenType, FanGrammarHelper.INSIGNIFICANT_TOKENS))
+			return false;
+		}
+		while (seq.offset() <= maxOffset && seq.moveNext() && seq.offset() <= maxOffset)
+		{
+			int tokenType = seq.token().id().ordinal();
+			if (!matchType(tokenType, FanGrammarHelper.INSIGNIFICANT_TOKENS))
+			{
 				return true;
+			}
 		}
 		return false;
 	}
 
 	public static boolean matchType(int type, int[] array)
 	{
-		for(int i=0; i!=array.length; i++)
-			if(array[i]==type)
+		for (int i = 0; i != array.length; i++)
+		{
+			if (array[i] == type)
+			{
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -373,27 +396,31 @@ public class FanLexAstUtils
 	{
 		//System.out.println(">nlso");
 		int of = getLineEndOffset(seq, offset, false);
-		if(of > -1)
-			of+=1;
+		if (of > -1)
+		{
+			of += 1;
+		}
 		//System.out.println("of: "+of);
 		/*if(of > seq.)
-			return -1;*/
+		return -1;*/
 		return of;
 	}
 
 	public static int getPrevLineOffset(Document document, int startOfLine)
 	{
-		int result=-1;
+		int result = -1;
 		TokenSequence seq = getFanTokenSequence(document);
 		seq.move(startOfLine);
-		while(seq.movePrevious())
+		while (seq.movePrevious())
 		{
-			System.out.println("seq3: "+seq.offset());
+			System.out.println("seq3: " + seq.offset());
 
-			if(seq.token().id().ordinal() == FanLexer.LB)
+			if (seq.token().id().ordinal() == FanLexer.LB)
+			{
 				break;
+			}
 		}
-		result=seq.offset();
+		result = seq.offset();
 		return result;
 	}
 
@@ -406,12 +433,14 @@ public class FanLexAstUtils
 	{
 		// don't want to mess with the original node.
 		CommonTree node = theNode;
-		while(node!=null && !node.isNil())
+		while (node != null && !node.isNil())
 		{
 			//System.out.println(""+node.getType()+" VS "+parentType+" "+node.toStringTree());
-			if(node.getType() == parentType)
+			if (node.getType() == parentType)
+			{
 				return node;
-			node = (CommonTree)node.getParent();
+			}
+			node = (CommonTree) node.getParent();
 		}
 		// not found
 		return null;
@@ -419,15 +448,19 @@ public class FanLexAstUtils
 
 	public static String getNodeContent(FanParserResult result, Tree node)
 	{
-		if(node==null)
+		if (node == null)
+		{
 			return "";
-		OffsetRange range=getContentNodeRange(result, (CommonTree)node);
-		String text="";
+		}
+		OffsetRange range = getContentNodeRange(result, (CommonTree) node);
+		String text = "";
 		try
 		{
-			if(range!=null)
+			if (range != null)
+			{
 				text = result.getDocument().getText(range.getStart(), range.getLength());
-		}catch(Exception e)
+			}
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -436,18 +469,33 @@ public class FanLexAstUtils
 
 	public static List<CommonTree> getAllChildrenWithType(CommonTree node, int type)
 	{
+		return getAllChildrenWithType(node, type, false);
+	}
+
+	public static CommonTree getFirstChildrenWithType(CommonTree node, int type)
+	{
+		List<CommonTree> children = getAllChildrenWithType(node, type, true);
+		return children.size() == 0 ? null : children.get(0);
+	}
+
+	private static List<CommonTree> getAllChildrenWithType(CommonTree node, int type, boolean returnFirst)
+	{
 		List<CommonTree> children = new ArrayList<CommonTree>();
-		for(CommonTree child : (List<CommonTree>)node.getChildren())
+		for (CommonTree child : (List<CommonTree>) node.getChildren())
 		{
-			if(child.getType() == type)
+			if (child.getType() == type)
 			{
 				children.add(child);
+				if (returnFirst)
+				{
+					return children;
+				}
 			}
 		}
 		return children;
 	}
 
-		/**
+	/**
 	 * Dump a CommonTree node to system.out
 	 * @param t
 	 * @param indent 0 - used in recusrion.
@@ -471,14 +519,141 @@ public class FanLexAstUtils
 
 	public static boolean isParentNodeOf(CommonTree parent, CommonTree node)
 	{
-		if(node==null)
-			// we went back to the root and it did not match
+		if (node == null)
+		// we went back to the root and it did not match
+		{
 			return false;
-		if(node == parent)
-			// match
+		}
+		if (node == parent)
+		// match
+		{
 			return true;
-		else
-			// recurse to keep looking in uper levels
-			return isParentNodeOf(parent, (CommonTree)node.getParent());
+		} else
+		// recurse to keep looking in uper levels
+		{
+			return isParentNodeOf(parent, (CommonTree) node.getParent());
+		}
+	}
+
+	public static String getChildTextByType(FanParserResult result, CommonTree node)
+	{
+		return getChildTextByType(result, node, -1);
+	}
+
+	/**
+	 * - if itemIndex==-1 return the whole content of the node
+	 * - if itemIndex!=-1 return the content of the subchild of the node at the given index
+	 */
+	public static String getChildTextByType(FanParserResult result, CommonTree node, int itemIndex)
+	{
+		String text = "";
+		if (node != null)
+		{
+			if (itemIndex != -1 && itemIndex < node.getChildCount())
+			{
+				// return a specific child content (by index)
+				CommonTree node2 = (CommonTree) node.getChild(itemIndex);
+				if (node2 != null)
+				{
+					text = getNodeContent(result, node2);
+				}
+			} else
+			{
+				// return whole node content
+				text = getNodeContent(result, node);
+			}
+		}
+		if (text == null)
+		{
+			text = "";
+		}
+		return text;
+	}
+
+	public static String getSubChildTextByType(FanParserResult result, CommonTree node, int astType)
+	{
+		return getSubChildTextByType(result, node, astType, -1);
+	}
+
+	/**
+	 * Return the content of the first subchild of given type
+	 * - Find the suchild node of the first matching type
+	 * - if itemIndex==-1 return the whole content of the node
+	 * - if itemIndex!=-1 return the content of the subchild of the node at the given index
+	 */
+	public static String getSubChildTextByType(FanParserResult result, CommonTree node, int astType, int itemIndex)
+	{
+		String text = "";
+		if (node != null)
+		{
+			CommonTree node2 = (CommonTree) node.getFirstChildWithType(astType);
+			text = getChildTextByType(result, node2, itemIndex);
+		}
+		return text;
+	}
+
+	/**
+	 * Find the index of the last token of the given type
+	 * -1 if not found
+	 * @param result
+	 * @param node
+	 * @param type
+	 * @return
+	 */
+	public static int findLastTokenIndexByType(FanParserResult result, CommonTree node, int type)
+	{
+		int first = node.getTokenStartIndex();
+		int last = node.getTokenStopIndex();
+		CommonTokenStream ts = result.getTokenStream();
+		for (int i = last; i >= first; i--)
+		{
+			if (ts.get(i).getType() == type)
+			{
+				System.out.println("Matched token:" + ts.get(i).getText());
+				return i;
+			} else
+			{
+				System.out.println("Skipping token:" + ts.get(i).getText());
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Return the start index of a node
+	 * If a node has no start index check the first children with a startindex
+	 * @param termBase
+	 * @return
+	 */
+	public static int getTokenStart(CommonTree node)
+	{
+		int index = node.getTokenStartIndex();
+		if (index == -1)
+		{
+			if (!node.isNil() && node.getChildCount() > 0)
+			{
+				for (CommonTree child : (List<CommonTree>) node.getChildren())
+				{
+					index = getTokenStart(child);
+					if (index != -1)
+					{
+						return index;
+					}
+				}
+			}
+		}
+		return index;
+	}
+
+	public static String getTokenStreamSlice(CommonTokenStream tokenStream, int start, int stop)
+	{
+		//TODO: is that good, this wil not have WS etc ...
+		List<CommonToken> tokens = tokenStream.getTokens(start, stop);
+		StringBuffer text=new StringBuffer();
+		for(CommonToken tk : tokens)
+		{
+			text.append(tk.getText());
+		}
+		return text.toString();
 	}
 }

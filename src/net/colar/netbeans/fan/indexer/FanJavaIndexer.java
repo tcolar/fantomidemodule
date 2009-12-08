@@ -6,7 +6,6 @@ package net.colar.netbeans.fan.indexer;
 import fanx.util.FanUtil;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +14,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import org.netbeans.api.java.platform.JavaPlatform;
 
 /**
@@ -54,9 +52,13 @@ public class FanJavaIndexer
 			instance.indexed = true;
 			instance.running = true;
 			instance.cl = new FanJavaClassLoader();
-			new FanJavaIndexerThread().start();
-			// Strta pod indexing too, if needed
+			// Start pod indexing too, if needed
 			FanPodIndexer.getInstance();
+			// Start java indexing
+			FanJavaIndexerThread indexer = new FanJavaIndexerThread();
+			indexer.start();
+			// It's more confusing than anyhting if partially indexed, so wait for.
+			indexer.waitFor();
 		}
 		return instance;
 	}
@@ -66,10 +68,12 @@ public class FanJavaIndexer
 		try
 		{
 			Class c = findClass(cname);
-			fan.sys.Type type=FanUtil.toFanType(c, true);
+			fan.sys.Type type = FanUtil.toFanType(c, true);
 			return type;
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
-		catch(Exception e){e.printStackTrace();}
 		return null;
 	}
 
@@ -322,9 +326,12 @@ public class FanJavaIndexer
 	private static class FanJavaIndexerThread extends Thread implements Runnable
 	{
 
+		boolean done = false;
+
 		@Override
 		public void run()
 		{
+			done = false;
 			long start = new Date().getTime();
 			try
 			{
@@ -471,8 +478,23 @@ public class FanJavaIndexer
 				t.printStackTrace();
 			} finally
 			{
+				done = true;
 				instance.running = false;
 				System.out.println("Java Indexer completed, ellapsed time: " + (new Date().getTime() - start) + " Items: " + instance.classes.size() + " (" + instance.packages.size() + " packages)");
+			}
+
+		}
+
+		public void waitFor()
+		{
+			while (!done)
+			{
+				try
+				{
+					sleep(100);
+				} catch (Exception e)
+				{
+				}
 			}
 		}
 

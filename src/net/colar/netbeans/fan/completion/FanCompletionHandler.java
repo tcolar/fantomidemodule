@@ -5,7 +5,6 @@ package net.colar.netbeans.fan.completion;
 
 import fan.sys.Slot;
 import fan.sys.Type;
-import fanx.util.FanUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -89,7 +88,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				docType = DocTypes.TYPE;
 				break;
 			case DOTCALL:
-				proposeCalls(proposals, context);
+				proposeCalls(proposals, context, FanParser.DOT);
 				break;
 		}
 
@@ -254,7 +253,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			// TODO: filter out internals / private ?
 			if (//!type.isInternal() &&
-					type.name().startsWith(prefix))
+				type.name().startsWith(prefix))
 			{
 				proposals.add(new FanTypeProposal(type, anchor - prefix.length()));
 			}
@@ -404,7 +403,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param proposals
 	 * @param context
 	 */
-	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
+	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, int callTokenType)
 	{
 		FanParserResult result = (FanParserResult) context.getParserResult();
 		int offset = context.getCaretOffset();
@@ -418,11 +417,25 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		if (exprNode != null)
 		{
 			System.out.println("Expr Node: " + exprNode.toStringTree());
-			FanAstResolvedType type = FanAstResolvedType.makeFromExpr(result, exprNode);
-			System.out.println("Type: " + type.toString());
-			if (type.isFanType())
+
+			//TODO: or OP_ARROW ??
+			int index = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, callTokenType);
+			// TODO: prefix is leftover from index to end of exprNode
+			String prefix = FanLexAstUtils.getTokenStreamSlice(result.getTokenStream(), index+1,exprNode.getTokenStopIndex());
+			System.out.println("Prefix: "+prefix);
+			// we want to stop just before the Call token
+			index--;
+			if (index < 0)
 			{
-				proposeSlots(type, proposals, offset, "");
+				// should not happen ?
+				System.out.println("Call separator not found !");
+				return;
+			}
+			FanAstResolvedType type = FanAstResolvedType.makeFromExpr(result, exprNode, index);
+			System.out.println("Type: " + type.toString());
+			if (!type.isUnresolved())
+			{
+				proposeSlots(type, proposals, offset + 1, prefix);
 			}
 		}
 	}
