@@ -209,9 +209,12 @@ public class FanLexAstUtils
 	public static CommonTree findASTNodeAt(FanParserResult pResult, int lexerIndex)
 	{
 		int offset = offsetToTokenIndex(pResult, lexerIndex);
-		CommonTree node=findASTNodeAt(pResult, pResult.getTree(), offset);
+		CommonTree node = findASTNodeAt(pResult, pResult.getTree(), offset);
 		// If not found, return the root
-		if(node==null) node=pResult.getRootScope().getAstNode();
+		if (node == null)
+		{
+			node = pResult.getRootScope().getAstNode();
+		}
 		return node;
 	}
 
@@ -225,34 +228,37 @@ public class FanLexAstUtils
 	 */
 	private static CommonTree findASTNodeAt(FanParserResult pResult, CommonTree node, int tokenIndex)
 	{
-		List<CommonTree> children = node.getChildren();
-		if (children != null)
+		CommonTree result = null;
+		int start = getTokenStart(node);
+		int stop = getTokenStop(node);
+		//System.out.println("li:" + tokenIndex + " start:" + start + " stop:" + stop + " " + node.getType() + " " + getNodeContent(pResult, node));
+		if (start == -1 || stop == -1)
 		{
-			Iterator<CommonTree> it = children.iterator();
-			while (it.hasNext())
+			// incomplete token
+			return null;
+		}
+		// <= >= ??
+		if (start <= tokenIndex && stop >= tokenIndex)
+		{
+			result=node;
+			List<CommonTree> children = node.getChildren();
+			if (children != null)
 			{
-				CommonTree subNode = it.next();
-				int start = getTokenStart(subNode);
-				int stop = getTokenStop(subNode);
-				System.out.println("li:" + tokenIndex + " start:" + start + " stop:" + stop + " " + subNode.getType() + " " + getNodeContent(pResult, subNode));
-				if (start == -1 || stop == -1)
-				// incomplete token return the parent
+				Iterator<CommonTree> it = children.iterator();
+				while (it.hasNext())
 				{
-					continue;
-				}
-
-				// <= >= ??
-				if (start <= tokenIndex && stop >= tokenIndex)
-				{
+					CommonTree subNode = it.next();
 					CommonTree nextNode = findASTNodeAt(pResult, subNode, tokenIndex);
-					// tokenIndex was in Node Range but is NOT in subnode
-					// then node was the node we where looking for
-					return nextNode != null ? nextNode : node;
+					if(nextNode != null)
+					{
+						return nextNode;
+					}
 				}
 			}
 		}
-		// Not found.
-		return null;
+		//System.out.println("Result: " + result);
+
+		return result;
 	}
 
 	public static int getLineEndOffset(TokenSequence seq, int offset, boolean semiIsNL)
@@ -432,11 +438,11 @@ public class FanLexAstUtils
 	 * @param curNode
 	 * @return null if not found
 	 */
-	public static CommonTree findParentNode(final CommonTree theNode, int parentType)
+	public static CommonTree findParentNodeWithin(final CommonTree theNode, int parentType, CommonTree within)
 	{
 		// don't want to mess with the original node.
 		CommonTree node = theNode;
-		while (node != null && !node.isNil())
+		while (node != within && node!=null && !node.isNil())
 		{
 			//System.out.println(""+node.getType()+" VS "+parentType+" "+node.toStringTree());
 			if (node.getType() == parentType)
@@ -612,11 +618,11 @@ public class FanLexAstUtils
 		{
 			if (ts.get(i).getType() == type)
 			{
-				System.out.println("Matched token:" + ts.get(i).getText());
+				//System.out.println("Matched token:" + ts.get(i).getText());
 				return i;
 			} else
 			{
-				System.out.println("Skipping token:" + ts.get(i).getText());
+				//System.out.println("Skipping token:" + ts.get(i).getText());
 			}
 		}
 		return -1;
@@ -698,10 +704,26 @@ public class FanLexAstUtils
 		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
 		int saved = ts.index();
 		ts.move(index);
-		ts.movePrevious();
+		ts.moveNext();
 		int result = ts.index();
 		// restore
 		ts.move(saved);
+		return result;
+	}
+
+	public static CommonTree findParentNode(CommonTree node, int AST_INC_DOTCALL)
+	{
+		return findParentNodeWithin(node, AST_INC_DOTCALL, getRootNode(node));
+	}
+
+	public static CommonTree getRootNode(CommonTree node)
+	{
+		CommonTree result=null;
+		while(node!=null)
+		{
+			result=node;
+			node=(CommonTree)node.getParent();
+		}
 		return result;
 	}
 }

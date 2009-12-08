@@ -47,7 +47,7 @@ public class FanRootScope extends FanAstScope
 
 	private void addUsing(String name, fan.sys.Type type, CommonTree node)
 	{
-		FanAstResolvedType resolved = FanAstResolvedType.makeFromFanType(parserResult, type);
+		FanAstResolvedType resolved = FanAstResolvedType.makeFromFanType(type);
 		System.out.println("- Using " + resolved.toString());
 		if (using.containsKey(name))
 		{
@@ -249,7 +249,7 @@ public class FanRootScope extends FanAstScope
 		if (FanPodIndexer.getInstance().hasPodType("sys", type))
 		{
 			Type t = FanPodIndexer.getInstance().getPodType("sys", type);
-			return FanAstResolvedType.makeFromFanType(parserResult, t);
+			return FanAstResolvedType.makeFromFanType(t);
 		}
 		// Try Java standrad API's -> No: not avail by defalt in Fan
 		// Unresolvable

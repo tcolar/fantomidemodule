@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.ast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import org.antlr.runtime.tree.CommonTree;
@@ -132,5 +133,32 @@ public abstract class FanAstScope
 		while(scope!=null);
 		// Not found
 		return FanAstResolvedType.makeUnresolved();
+	}
+
+	/**
+	 * return all the vars defined in this scope and all the parent scopes
+	 * Note: If a var is overriden only return the one from the narrowest scope
+	 */
+	public Collection<FanAstScopeVar> getScopeVarsRecursive()
+	{
+		Hashtable<String, FanAstScopeVar> vars = new Hashtable<String, FanAstScopeVar>();
+		FanAstScope scope = this;
+		while(scope!=null)
+		{
+			for(FanAstScopeVar var : scope.getScopeVars())
+			{
+				if(!vars.containsKey(var.getName()))
+					vars.put(var.getName(), var);
+			}
+			scope = scope.getParent();
+		}
+		return vars.values();
+	}
+	/**
+	 * Return the vars defined in this scope
+	 */
+	public Collection<FanAstScopeVar> getScopeVars()
+	{
+		return scopeVars.values();
 	}
 }

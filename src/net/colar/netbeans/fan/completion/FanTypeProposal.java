@@ -8,10 +8,11 @@ import java.util.Collections;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
+import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.openide.util.ImageUtilities;
 
 /**
- *
+ * Propose a Type such as Str or Int
  * @author thibautc
  */
 public class FanTypeProposal extends FanCompletionProposal
@@ -38,9 +39,10 @@ public class FanTypeProposal extends FanCompletionProposal
 	}
 
 	@Override
-	public String getName()
+	public String getRhsHtml(HtmlFormatter formater)
 	{
-		return name+" ["+(pod==null?"??":pod)+"]";
+		return "["+(pod==null?"??":pod)+"]";
 	}
+
 
 }

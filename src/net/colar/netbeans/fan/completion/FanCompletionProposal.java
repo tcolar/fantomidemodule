@@ -80,7 +80,6 @@ public abstract class FanCompletionProposal implements CompletionProposal
 				formater.appendText(null);
 			}
 		}
-		formater.appendText("!");
 		return formater.getText();
 	}
 

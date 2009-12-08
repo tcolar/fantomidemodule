@@ -37,7 +37,7 @@ public class FanCompletionContext
 	public static enum completionTypes
 	{
 
-		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, BASE_TYPE, DOTCALL
+		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, DOTCALL, ID
 	};
 	private final CodeCompletionContext context;
 	FanParserResult result;
@@ -134,16 +134,24 @@ public class FanCompletionContext
 			{
 				usingNode = FanLexAstUtils.findParentNode(node, FanParser.AST_INC_USING);
 			}
-			else
+			if (usingNode != null)
 			{
 				return completionTypes.IMPORT_POD;
 			}
 			// expression completion after a '.' or '?.'
 			System.out.println("Node :" + node.toString() + " " + node.toStringTree());
-			if(FanLexAstUtils.findParentNode(node, FanParser.AST_TERM_EXPR)!=null)
+			CommonTree termExpr=FanLexAstUtils.findParentNode(node, FanParser.AST_TERM_EXPR);
+			if(termExpr!=null)
 			{
-				// TODO: check if it's a dot call or another kind of call. -> ?. ?-> etc...
-				return completionType.DOTCALL;
+				if(FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_STATIC_CALL, termExpr)!=null ||
+					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_DOT_CALL, termExpr)!=null ||
+					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_INC_DOTCALL, termExpr)!=null)
+					return completionType.DOTCALL;
+			}
+			// Default proposal for ID's (local vars etc..)
+			if(FanLexAstUtils.findParentNode(node, FanParser.AST_ID)!=null)
+			{
+				return completionType.ID;
 			}
 		}
 		// restore ts offset

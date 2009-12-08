@@ -23,7 +23,7 @@ public class FanAstScopeVar
 	public enum modifs
 	{
 
-		PRIVATE, PROTECTED, INTERNAL, PUBLIC
+		PRIVATE, PROTECTED, INTERNAL, PUBLIC, STATIC
 	}
 
 	public FanAstScopeVar(FanAstScope scope, CommonTree node)
@@ -88,10 +88,19 @@ public class FanAstScopeVar
 		} else if (m.toLowerCase().equalsIgnoreCase("internal"))
 		{
 			return modifs.INTERNAL;
+		}
+		else if (m.toLowerCase().equalsIgnoreCase("static"))
+		{
+			return modifs.STATIC;
 		} else
 		{
 			System.out.println("Unrecognized modifier: " + m);
 		}
 		return null;
+	}
+
+	public boolean hasModifier(modifs modifier)
+	{
+		return modifiers.contains(modifier);
 	}
 }

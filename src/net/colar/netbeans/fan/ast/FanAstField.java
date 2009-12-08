@@ -4,7 +4,6 @@
 
 package net.colar.netbeans.fan.ast;
 
-import java.util.ArrayList;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
@@ -23,7 +22,7 @@ public class FanAstField extends FanAstScopeVar
 		super(scope, node);
 		FanParserResult result = scope.getRoot().getParserResult();
 		name = FanLexAstUtils.getNodeContent(result, node.getFirstChildWithType(FanParser.AST_ID)).trim();
-		type = FanAstResolvedType.makeFromSimpleType(scope, (CommonTree)node.getFirstChildWithType(FanParser.AST_TYPE));
+		type = FanAstResolvResult.makeFromSimpleType(scope, (CommonTree)node.getFirstChildWithType(FanParser.AST_TYPE)).getType();
 		// modifiers ??
 		List<CommonTree> modifs = FanLexAstUtils.getAllChildrenWithType(node, FanParser.AST_MODIFIER);
 		for(CommonTree m : modifs)

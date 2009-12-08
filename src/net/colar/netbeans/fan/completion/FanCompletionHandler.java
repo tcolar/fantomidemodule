@@ -15,7 +15,10 @@ import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.antlr.FanLexAstUtils;
+import net.colar.netbeans.fan.ast.FanAstResolvResult;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
+import net.colar.netbeans.fan.ast.FanAstScope;
+import net.colar.netbeans.fan.ast.FanAstScopeVar;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
@@ -59,7 +62,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	public CodeCompletionResult complete(CodeCompletionContext context)
 	{
 		//TODO: Maybe have the completion methods on the AST Ndes iteslf ? (scope node)
-		FileObject fo = context.getParserResult().getSnapshot().getSource().getFileObject();
+		//FileObject fo = context.getParserResult().getSnapshot().getSource().getFileObject();
 		String prefix = context.getPrefix();
 		if (prefix == null)
 		{
@@ -80,11 +83,9 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			case IMPORT_POD:
 				proposeUsing(proposals, context);
 				break;
-			/*case IMPORT_FFI_JAVA:
-			//TODO
-			break;*/
-			case BASE_TYPE:
-				proposeTypes(null, proposals, anchor, prefix.toLowerCase());
+			case ID:
+				proposeVars(proposals, context, prefix);
+				proposeTypes(null, proposals, anchor, prefix);
 				docType = DocTypes.TYPE;
 				break;
 			case DOTCALL:
@@ -253,7 +254,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			// TODO: filter out internals / private ?
 			if (//!type.isInternal() &&
-					type.name().startsWith(prefix))
+				type.name().startsWith(prefix))
 			{
 				proposals.add(new FanTypeProposal(type, anchor - prefix.length()));
 			}
@@ -269,15 +270,18 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param anchor
 	 * @param prefix
 	 */
-	private void proposeSlots(FanAstResolvedType type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
+	private void proposeSlots(FanAstResolvResult type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		Slot[] slots = (Slot[]) type.getType().slots().asArray(Slot.class);
+		Slot[] slots = (Slot[]) type.getType().getType().slots().asArray(Slot.class);
 		for (Slot slot : slots)
 		{
 			if (slot.name().toLowerCase().startsWith(prefix))
 			{
-				proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
-				docType = DocTypes.SLOT; // TODO
+				if (type.isStaticContext() == slot.isStatic())
+				{
+					proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
+					docType = DocTypes.SLOT; // TODO
+				}
 			}
 		}
 	}
@@ -413,7 +417,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			offset--;
 		}
 		CommonTree curNode = FanLexAstUtils.findASTNodeAt(result, offset);
-System.out.println("Cur Node: " + curNode.toStringTree());
+		System.out.println("Cur Node: " + curNode.toStringTree());
 		CommonTree exprNode = FanLexAstUtils.findParentNode(curNode, FanParser.AST_TERM_EXPR);
 		if (exprNode != null)
 		{
@@ -438,11 +442,26 @@ System.out.println("Cur Node: " + curNode.toStringTree());
 				System.out.println("Call separator not found !");
 				return;
 			}
-			FanAstResolvedType type = FanAstResolvedType.makeFromExpr(result, exprNode, index);
+			FanAstResolvResult type = FanAstResolvResult.makeFromExpr(result, exprNode, index);
 			System.out.println("Type: " + type.toString());
-			if (!type.isUnresolved())
+			if (!type.getType().isUnresolved())
 			{
 				proposeSlots(type, proposals, offset + 1, prefix);
+			}
+		}
+	}
+
+	private void proposeVars(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, String prefix)
+	{
+		FanParserResult result = (FanParserResult) context.getParserResult();
+		CommonTree node = FanLexAstUtils.findASTNodeAt(result, context.getCaretOffset());
+		FanAstScope scope = result.getRootScope().findClosestScope(node);
+		for (FanAstScopeVar var : scope.getScopeVarsRecursive())
+		{
+			if (var.getName().startsWith(prefix))
+			{
+				FanVarProposal prop = new FanVarProposal(var, context.getCaretOffset() - prefix.length());
+				proposals.add(prop);
 			}
 		}
 	}

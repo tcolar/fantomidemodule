@@ -11,10 +11,13 @@
 class IDETest
 {
         Str string := "blah"
+        Str somestr := ""
+        Int i := 23
+        Int j := 2
 
 	Void myMethod()
 	{
-                string.ea
+           Str.compare(IOErr.cause).decrement
 	}
 }
 
