@@ -208,10 +208,11 @@ public class FanLexAstUtils
 	 */
 	public static CommonTree findASTNodeAt(FanParserResult pResult, int lexerIndex)
 	{
-		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
-		ts.move(lexerIndex);
-		ts.movePrevious();
-		return findASTNodeAt(pResult, pResult.getTree(), ts.index());
+		int offset = offsetToTokenIndex(pResult);
+		CommonTree node=findASTNodeAt(pResult, pResult.getTree(), offset);
+		// If not found, return the root
+		if(node==null) node=pResult.getRootScope().getAstNode();
+		return node;
 	}
 
 	/**
@@ -220,11 +221,10 @@ public class FanLexAstUtils
 	 * @param pResult
 	 * @param node
 	 * @param lexerIndex
-	 * @return
+	 * @return Null if not found
 	 */
 	private static CommonTree findASTNodeAt(FanParserResult pResult, CommonTree node, int tokenIndex)
 	{
-		CommonTree result=null;
 		List<CommonTree> children = node.getChildren();
 		if (children != null)
 		{
@@ -232,9 +232,9 @@ public class FanLexAstUtils
 			while (it.hasNext())
 			{
 				CommonTree subNode = it.next();
-				int start= getTokenStart(subNode);
+				int start = getTokenStart(subNode);
 				int stop = getTokenStop(subNode);
-				System.out.println("li:"+tokenIndex+" start:"+start+" stop:"+stop+" "+subNode.getType()+" "+getNodeContent(pResult, subNode));
+				System.out.println("li:" + tokenIndex + " start:" + start + " stop:" + stop + " " + subNode.getType() + " " + getNodeContent(pResult, subNode));
 				if (start == -1 || stop == -1)
 				// incomplete token return the parent
 				{
@@ -244,23 +244,15 @@ public class FanLexAstUtils
 				// <= >= ??
 				if (start <= tokenIndex && stop >= tokenIndex)
 				{
-					System.out.println("->");
-					CommonTree newResult = findASTNodeAt(pResult, subNode, tokenIndex);
-					if (newResult != null)
-					{
-						result=newResult;
-						return newResult;
-					}
-					else
-					{
-						System.out.println("<->");
-						return null;
-					}
+					CommonTree nextNode = findASTNodeAt(pResult, subNode, tokenIndex);
+					// tokenIndex was in Node Range but is NOT in subnode
+					// then node was the node we where looking for
+					return nextNode != null ? nextNode : node;
 				}
 			}
 		}
-		// default
-		return result;
+		// Not found.
+		return null;
 	}
 
 	public static int getLineEndOffset(TokenSequence seq, int offset, boolean semiIsNL)
@@ -670,7 +662,7 @@ public class FanLexAstUtils
 			if (!node.isNil() && node.getChildCount() > 0)
 			{
 				List<CommonTree> children = node.getChildren();
-				for(int i=children.size()-1;i>=0;i--)
+				for (int i = children.size() - 1; i >= 0; i--)
 				{
 					CommonTree child = children.get(i);
 					index = getTokenStop(child);
@@ -688,11 +680,28 @@ public class FanLexAstUtils
 	{
 		//TODO: is that good, this wil not have WS etc ...
 		List<CommonToken> tokens = tokenStream.getTokens(start, stop);
-		StringBuffer text=new StringBuffer();
-		for(CommonToken tk : tokens)
+		StringBuffer text = new StringBuffer();
+		for (CommonToken tk : tokens)
 		{
 			text.append(tk.getText());
 		}
 		return text.toString();
+	}
+
+	/**
+	 * Convert the document offset (text) to a token index
+	 * @param pResult
+	 * @return
+	 */
+	public static int offsetToTokenIndex(FanParserResult pResult, int index)
+	{
+		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
+		int saved = ts.index();
+		ts.move(index);
+		ts.movePrevious();
+		int result = ts.index();
+		// restore
+		ts.move(saved);
+		return result;
 	}
 }
