@@ -54,11 +54,12 @@ public class FanTypeScope extends FanAstScope
 					addScopeVar(field, false);
 					break;
 				case FanParser.AST_CODE_BLOCK:
-					// recurse because field might be in a code block or other sublevels
+					// Fields are inside code block
 					parse(child);
 					break;
 			}
 		}
+		//TODO: second pass (field might not be in order) ... variables
 	}
 
 	public String getName()
