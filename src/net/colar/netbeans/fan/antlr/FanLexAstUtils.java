@@ -208,7 +208,10 @@ public class FanLexAstUtils
 	 */
 	public static CommonTree findASTNodeAt(FanParserResult pResult, int lexerIndex)
 	{
-		return findASTNodeAt(pResult, pResult.getTree(), lexerIndex);
+		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
+		ts.move(lexerIndex);
+		ts.movePrevious();
+		return findASTNodeAt(pResult, pResult.getTree(), ts.index());
 	}
 
 	/**
@@ -219,9 +222,9 @@ public class FanLexAstUtils
 	 * @param lexerIndex
 	 * @return
 	 */
-	private static CommonTree findASTNodeAt(FanParserResult pResult, CommonTree node, int lexerIndex)
+	private static CommonTree findASTNodeAt(FanParserResult pResult, CommonTree node, int tokenIndex)
 	{
-		CommonTree result = node;
+		CommonTree result=null;
 		List<CommonTree> children = node.getChildren();
 		if (children != null)
 		{
@@ -229,26 +232,34 @@ public class FanLexAstUtils
 			while (it.hasNext())
 			{
 				CommonTree subNode = it.next();
-				if (subNode.getTokenStartIndex() == -1 || subNode.getTokenStartIndex() == -1)
+				int start= getTokenStart(subNode);
+				int stop = getTokenStop(subNode);
+				System.out.println("li:"+tokenIndex+" start:"+start+" stop:"+stop+" "+subNode.getType()+" "+getNodeContent(pResult, subNode));
+				if (start == -1 || stop == -1)
 				// incomplete token return the parent
 				{
 					continue;
 				}
 
-				CommonTokenStream tokenStream = pResult.getTokenStream();
-				int start = ((CommonToken) tokenStream.get(subNode.getTokenStartIndex())).getStartIndex();
-				int stop = ((CommonToken) tokenStream.get(subNode.getTokenStopIndex())).getStopIndex();
 				// <= >= ??
-				if (start <= lexerIndex && stop >= lexerIndex)
+				if (start <= tokenIndex && stop >= tokenIndex)
 				{
-					CommonTree newResult = findASTNodeAt(pResult, subNode, lexerIndex);
+					System.out.println("->");
+					CommonTree newResult = findASTNodeAt(pResult, subNode, tokenIndex);
 					if (newResult != null)
 					{
-						result = newResult;
+						result=newResult;
+						return newResult;
+					}
+					else
+					{
+						System.out.println("<->");
+						return null;
 					}
 				}
 			}
 		}
+		// default
 		return result;
 	}
 
@@ -635,6 +646,34 @@ public class FanLexAstUtils
 				for (CommonTree child : (List<CommonTree>) node.getChildren())
 				{
 					index = getTokenStart(child);
+					if (index != -1)
+					{
+						return index;
+					}
+				}
+			}
+		}
+		return index;
+	}
+
+	/**
+	 * Return the stop index of a node
+	 * If a node has no start index check the first children with a startindex
+	 * @param termBase
+	 * @return
+	 */
+	public static int getTokenStop(CommonTree node)
+	{
+		int index = node.getTokenStopIndex();
+		if (index == -1)
+		{
+			if (!node.isNil() && node.getChildCount() > 0)
+			{
+				List<CommonTree> children = node.getChildren();
+				for(int i=children.size()-1;i>=0;i--)
+				{
+					CommonTree child = children.get(i);
+					index = getTokenStop(child);
 					if (index != -1)
 					{
 						return index;

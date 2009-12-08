@@ -122,7 +122,7 @@ public class FanCompletionContext
 		// We want the significant node before the cursor
 		FanLexAstUtils.moveToPrevNonWSToken(tokenStream, offset, 0);
 		CommonTree node = FanLexAstUtils.findASTNodeAt(result, tokenStream.offset());
-		if (node.isNil())
+		if (node==null)
 		{
 			System.out.println("Node : Nill !");
 			// Root level (not in type) default

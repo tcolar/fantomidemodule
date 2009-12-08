@@ -98,7 +98,7 @@ public class FanAstResolvedType
 		}
 		//System.out.println("Node type: " + node.getType());
 		String t = FanLexAstUtils.getNodeContent(result, node);
-		//System.out.println("** type: " + t + " " + node.toStringTree());
+		System.out.println("** type: " + t + " " + node.toStringTree());
 		//System.out.println("Index: " + FanLexAstUtils.getTokenStart(node) + " VS " + index);
 		// Skip the imcomplete part past what we care about
 		if (!isValidTokenStart(node, index))

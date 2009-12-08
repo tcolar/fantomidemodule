@@ -413,6 +413,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			offset--;
 		}
 		CommonTree curNode = FanLexAstUtils.findASTNodeAt(result, offset);
+System.out.println("Cur Node: " + curNode.toStringTree());
 		CommonTree exprNode = FanLexAstUtils.findParentNode(curNode, FanParser.AST_TERM_EXPR);
 		if (exprNode != null)
 		{
