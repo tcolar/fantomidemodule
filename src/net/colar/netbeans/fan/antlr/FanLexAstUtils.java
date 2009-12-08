@@ -208,7 +208,7 @@ public class FanLexAstUtils
 	 */
 	public static CommonTree findASTNodeAt(FanParserResult pResult, int lexerIndex)
 	{
-		int offset = offsetToTokenIndex(pResult);
+		int offset = offsetToTokenIndex(pResult, lexerIndex);
 		CommonTree node=findASTNodeAt(pResult, pResult.getTree(), offset);
 		// If not found, return the root
 		if(node==null) node=pResult.getRootScope().getAstNode();
