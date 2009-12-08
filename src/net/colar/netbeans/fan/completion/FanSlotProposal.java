@@ -38,7 +38,7 @@ public class FanSlotProposal extends FanCompletionProposal
 			this.kind = ElementKind.FIELD;
 			html = slot.name();
 			prefix=slot.name();
-			rHtml += ((Field)slot).type().name();
+			rHtml += ((Field)slot).of().name();
 		} else if(slot.isMethod() || slot.isCtor())
 		{
 			this.kind = ElementKind.METHOD;

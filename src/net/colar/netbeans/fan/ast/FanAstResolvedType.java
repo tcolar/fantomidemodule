@@ -3,7 +3,10 @@
  */
 package net.colar.netbeans.fan.ast;
 
+import fan.sys.Field;
 import fan.sys.MapType;
+import fan.sys.Method;
+import fan.sys.Slot;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanLexAstUtils;
@@ -122,7 +125,11 @@ public class FanAstResolvedType
 					baseType = scope.resolveVar(t);
 				} else
 				{
-					baseType = makeFromFanType(result, baseType.getType().slot(t).type());
+					Slot slot =  baseType.getType().slot(t);
+					if(slot.isMethod() || slot.isCtor())
+						baseType = makeFromFanType(result, ((Method)slot).returns());
+					else if(slot.isField())
+						baseType = makeFromFanType(result, ((Field)slot).of());
 				}
 				break;
 			// TODO case itBlock :  skip;

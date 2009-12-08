@@ -253,7 +253,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			// TODO: filter out internals / private ?
 			if (//!type.isInternal() &&
-				type.name().startsWith(prefix))
+					type.name().startsWith(prefix))
 			{
 				proposals.add(new FanTypeProposal(type, anchor - prefix.length()));
 			}
@@ -421,8 +421,14 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			//TODO: or OP_ARROW ??
 			int index = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, callTokenType);
 			// TODO: prefix is leftover from index to end of exprNode
-			String prefix = FanLexAstUtils.getTokenStreamSlice(result.getTokenStream(), index+1,exprNode.getTokenStopIndex());
-			System.out.println("Prefix: "+prefix);
+			String prefix = "";
+			if (exprNode.getTokenStopIndex() > index)
+			{
+				//String prefix = FanLexAstUtils.getTokenStreamSlice(result.getTokenStream(), index+1,exprNode.getTokenStopIndex());
+				// should always be a simple token (ID)
+				prefix = result.getTokenStream().get(index + 1).getText();
+			}
+			System.out.println("Prefix: " + prefix);
 			// we want to stop just before the Call token
 			index--;
 			if (index < 0)
