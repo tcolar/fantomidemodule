@@ -49,7 +49,7 @@ public class FanSlotProposal extends FanCompletionProposal
 			{
 				this.kind=ElementKind.CONSTRUCTOR;
 				// m.returns says Void
-				rHtml = slot.parent().type().name();
+				rHtml = m.parent().name();
 			}
 			String args = "";
 			html=m.name()+"(";

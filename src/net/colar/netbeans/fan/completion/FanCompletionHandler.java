@@ -277,7 +277,9 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			if (slot.name().toLowerCase().startsWith(prefix))
 			{
-				if (type.isStaticContext() == slot.isStatic())
+				// constructor are nto marked as static ... but fot this purpose they are
+				boolean isStatic = slot.isStatic() || slot.isCtor();
+				if (type.isStaticContext() == isStatic)
 				{
 					proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
 					docType = DocTypes.SLOT; // TODO
