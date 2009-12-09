@@ -217,7 +217,7 @@ public class FanRootScope extends FanAstScope
 
 				}
 			}
-			// Second pass, look for types
+			// Second pass, look for types and their slots
 			for (CommonTree child : children)
 			{
 				switch (child.getType())
@@ -229,6 +229,15 @@ public class FanRootScope extends FanAstScope
 						addType(new FanTypeScope(this, child));
 						break;
 
+				}
+			}
+			// Now do all the local scopes / variables
+			for(FanAstScope child : getChildren())
+			{
+				// should be but check anyway in case of future change
+				if(child instanceof FanTypeScope)
+				{
+					
 				}
 			}
 		}

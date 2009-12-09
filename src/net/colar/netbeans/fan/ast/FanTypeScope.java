@@ -25,12 +25,15 @@ public class FanTypeScope extends FanAstScope
 
 	private void parse(CommonTree ast)
 	{
+		//TODO: Deal with inheritance 
 		if (ast == null)
 		{
 			return;
 		}
-		List<CommonTree> children = (List<CommonTree>)ast.getChildren();
 		CommonTree nameNode=(CommonTree)ast.getFirstChildWithType(FanParser.AST_ID);
+		// fields are within the code_block of the type
+		CommonTree content=(CommonTree)ast.getFirstChildWithType(FanParser.AST_CODE_BLOCK);
+		List<CommonTree> children = (List<CommonTree>)content.getChildren();
 		if(nameNode!=null)
 		{
 			name=FanLexAstUtils.getNodeContent(getRoot().getParserResult(), nameNode);
@@ -53,13 +56,19 @@ public class FanTypeScope extends FanAstScope
 					}
 					addScopeVar(field, false);
 					break;
-				case FanParser.AST_CODE_BLOCK:
-					// Fields are inside code block
-					parse(child);
-					break;
+				/*case FanParser.AST_METHOD:
+				case FanParser.AST_CONSTRUCTOR:
+					FanLexAstUtils.dumpTree(child, 0);
+					FanAstField field=new FanAstField(this, child);
+					if(field.getType().isUnresolved())
+					{
+						//TODO: Propose to auto-add using statements (Hints)
+						getRoot().addError("Unresolveable field type", child);
+					}
+					addScopeVar(field, false);
+					break;*/
 			}
 		}
-		//TODO: second pass (field might not be in order) ... variables
 	}
 
 	public String getName()
