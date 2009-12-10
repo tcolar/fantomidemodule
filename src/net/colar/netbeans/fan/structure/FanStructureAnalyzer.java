@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.antlr.FanLexAstUtils;
+import net.colar.netbeans.fan.ast.FanLexAstUtils;
 import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;

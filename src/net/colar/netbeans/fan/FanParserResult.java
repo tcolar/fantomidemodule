@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 import javax.swing.text.Document;
-import net.colar.netbeans.fan.antlr.FanLexAstUtils;
+import net.colar.netbeans.fan.ast.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanAstParser;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import org.antlr.runtime.CommonToken;

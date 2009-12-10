@@ -14,7 +14,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.antlr.FanLexAstUtils;
+import net.colar.netbeans.fan.ast.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanAstResolvResult;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.ast.FanAstScope;
@@ -327,11 +327,12 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		int offset = context.getCaretOffset();
 		//String prefix = context.getPrefix();
 		int anchor = context.getCaretOffset();
-		// we want to look at offset -1 (ie: before the caret) so we are IN the expression, not just after.
 		FanLexAstUtils.moveToPrevNonWSToken(ts, offset, 0);
 		offset = ts.offset();
 		CommonTree baseNode = FanLexAstUtils.findASTNodeAt(result, offset);
 		CommonTree curNode = FanLexAstUtils.findParentNode(baseNode, FanParser.AST_USING_POD);
+		System.out.println("Base node:"+baseNode.toString());
+		//System.out.println("Cur node:"+curNode.toString());
 		if (curNode == null)
 		{
 			curNode = FanLexAstUtils.findParentNode(baseNode, FanParser.AST_INC_USING);

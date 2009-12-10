@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.antlr.FanLexAstUtils;
+import net.colar.netbeans.fan.ast.FanLexAstUtils;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.csl.api.ElementHandle;

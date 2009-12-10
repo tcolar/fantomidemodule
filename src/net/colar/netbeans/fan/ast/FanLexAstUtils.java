@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.colar.netbeans.fan.antlr;
+package net.colar.netbeans.fan.ast;
 
+import net.colar.netbeans.fan.antlr.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -162,8 +163,9 @@ public class FanLexAstUtils
 		{
 			return null;
 		}
-		int start=getTokenStart(node);
-		int end=getTokenStop(node);
+		int start = getTokenStart(node);
+		int end = getTokenStop(node);
+		//System.out.println("Start: " + start + " End:" + end + " ");
 		CommonTokenStream tokenStream = result.getTokenStream();
 		CommonToken startToken = (CommonToken) tokenStream.get(start);
 		CommonToken endToken = (CommonToken) tokenStream.get(end);
@@ -232,7 +234,7 @@ public class FanLexAstUtils
 		// <= >= ??
 		if (start <= tokenIndex && stop >= tokenIndex)
 		{
-			result=node;
+			result = node;
 			List<CommonTree> children = node.getChildren();
 			if (children != null)
 			{
@@ -241,7 +243,7 @@ public class FanLexAstUtils
 				{
 					CommonTree subNode = it.next();
 					CommonTree nextNode = findASTNodeAt(pResult, subNode, tokenIndex);
-					if(nextNode != null)
+					if (nextNode != null)
 					{
 						return nextNode;
 					}
@@ -342,8 +344,6 @@ public class FanLexAstUtils
 			int tokenType = seq.token().id().ordinal();
 			if (!matchType(tokenType, FanGrammarHelper.WS_TOKENS))
 			{
-				// put it back BEFORE the token
-				//seq.movePrevious();
 				return true;
 			}
 		}
@@ -432,11 +432,13 @@ public class FanLexAstUtils
 	 */
 	public static CommonTree findParentNodeWithin(final CommonTree theNode, int parentType, CommonTree within)
 	{
-		if(theNode==within)
-			return theNode;
 		// don't want to mess with the original node.
 		CommonTree node = theNode;
-		while (node != within && node!=null && !node.isNil())
+		if (node.getType() == parentType)
+		{
+			return node;
+		}
+		while (node != null && node != within)
 		{
 			//System.out.println(""+node.getType()+" VS "+parentType+" "+node.toStringTree());
 			if (node.getType() == parentType)
@@ -630,22 +632,24 @@ public class FanLexAstUtils
 	 */
 	public static int getTokenStart(CommonTree node)
 	{
-		int index = node.getTokenStartIndex();
-		if (index == -1)
+		int index = -1;//node.getTokenStartIndex();
+		if (!node.isNil() && node.getChildCount() > 0)
 		{
-			if (!node.isNil() && node.getChildCount() > 0)
+			for (CommonTree child : (List<CommonTree>) node.getChildren())
 			{
-				for (CommonTree child : (List<CommonTree>) node.getChildren())
+				index = getTokenStart(child);
+				if (index != -1)
 				{
-					index = getTokenStart(child);
-					if (index != -1)
-					{
-						return index;
-					}
+					return index;
 				}
 			}
 		}
-		return index;
+		int index2 = node.getTokenStartIndex();
+		if (index == -1)
+		{
+			return index2;
+		}
+		return index2 < index ? index2 : index;
 	}
 
 	/**
@@ -656,24 +660,26 @@ public class FanLexAstUtils
 	 */
 	public static int getTokenStop(CommonTree node)
 	{
-		int index = node.getTokenStopIndex();
-		if (index == -1)
+		int index = -1;//node.getTokenStopIndex();
+		if (!node.isNil() && node.getChildCount() > 0)
 		{
-			if (!node.isNil() && node.getChildCount() > 0)
+			List<CommonTree> children = node.getChildren();
+			for (int i = children.size() - 1; i >= 0; i--)
 			{
-				List<CommonTree> children = node.getChildren();
-				for (int i = children.size() - 1; i >= 0; i--)
+				CommonTree child = children.get(i);
+				index = getTokenStop(child);
+				if (index != -1)
 				{
-					CommonTree child = children.get(i);
-					index = getTokenStop(child);
-					if (index != -1)
-					{
-						return index;
-					}
+					return index;
 				}
 			}
 		}
-		return index;
+		int index2 = node.getTokenStopIndex();
+		if (index2 == -1)
+		{
+			return index;
+		}
+		return index2 > index ? index2 : index;
 	}
 
 	public static String getTokenStreamSlice(CommonTokenStream tokenStream, int start, int stop)
@@ -704,7 +710,7 @@ public class FanLexAstUtils
 		ts.move(saved);
 		return result;
 	}
-	
+
 	/**
 	 * Opposite of offsetToTokenIndex
 	 * @param pResult
@@ -730,11 +736,11 @@ public class FanLexAstUtils
 
 	public static CommonTree getRootNode(CommonTree node)
 	{
-		CommonTree result=null;
-		while(node!=null)
+		CommonTree result = null;
+		while (node != null)
 		{
-			result=node;
-			node=(CommonTree)node.getParent();
+			result = node;
+			node = (CommonTree) node.getParent();
 		}
 		return result;
 	}

@@ -11,7 +11,6 @@ import fan.sys.Slot;
 import fan.sys.Type;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.tree.CommonTree;
 

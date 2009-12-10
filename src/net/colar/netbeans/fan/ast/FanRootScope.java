@@ -10,7 +10,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;

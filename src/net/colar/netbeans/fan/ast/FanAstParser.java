@@ -4,7 +4,6 @@
 package net.colar.netbeans.fan.ast;
 
 import net.colar.netbeans.fan.FanParserResult;
-import org.antlr.runtime.tree.CommonTree;
 
 /**
  * Use as fanParserResult(ANTLR tree) and create the scope AST tree from it
@@ -28,14 +27,4 @@ public class FanAstParser
 		return rootScope;
 	}
 
-	/**
-	 * Find the closest scope item for a given AST node.
-	 * @param node
-	 * @return
-	 */
-	public static CommonTree findClosestScope(CommonTree node/*maybe Token instead ??*/)
-	{
-		//TODO findClosestScope
-		return null;
-	}
 }

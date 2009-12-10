@@ -7,7 +7,7 @@ import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.antlr.FanLexAstUtils;
+import net.colar.netbeans.fan.ast.FanLexAstUtils;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
@@ -124,11 +124,12 @@ public class FanCompletionContext
 		CommonTree node = FanLexAstUtils.findASTNodeAt(result, tokenStream.offset());
 		if (node==null)
 		{
-			System.out.println("Node : Nill !");
+			System.out.println("Node : Null !");
 			// Root level (not in type) default
 			return completionTypes.ROOT_LEVEL;
 		} else
 		{
+			System.out.println("Node : "+node.toStringTree());
 			CommonTree usingNode = FanLexAstUtils.findParentNode(node, FanParser.AST_USING_POD);
 			if (usingNode == null)
 			{
@@ -136,10 +137,11 @@ public class FanCompletionContext
 			}
 			if (usingNode != null)
 			{
+				//System.out.println("usingNode :" + usingNode.toString() + " " + usingNode.toStringTree());
 				return completionTypes.IMPORT_POD;
 			}
 			// expression completion after a '.' or '?.'
-			System.out.println("Node :" + node.toString() + " " + node.toStringTree());
+			//System.out.println("Node :" + node.toString() + " " + node.toStringTree());
 			CommonTree termExpr=FanLexAstUtils.findParentNode(node, FanParser.AST_TERM_EXPR);
 			if(termExpr!=null)
 			{

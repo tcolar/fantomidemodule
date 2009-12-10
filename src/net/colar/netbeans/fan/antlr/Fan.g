@@ -249,16 +249,16 @@ using		@init {paraphrase.push("Using statements");} @after{paraphrase.pop();}
 		:	(usingPod | usingType | usingAs | incUsing);
 usingPod
 		:	KW_USING podSpec eos
-			-> ^(AST_USING_POD ^(AST_CHILD podSpec));
+			-> ^(AST_USING_POD ^(AST_CHILD podSpec) eos?);
 usingType
 		:	KW_USING podSpec SP_COLCOL id eos
-			-> ^(AST_USING_POD ^(AST_CHILD podSpec) ^(AST_CHILD id));
+			-> ^(AST_USING_POD ^(AST_CHILD podSpec) ^(AST_CHILD id)  eos?);
 // pod id can have a $ in it(java ffi) but then "as" is required
 usingAs		:	KW_USING podSpec SP_COLCOL podid=(id ('$' id)*) KW_AS as=id eos
-			-> ^(AST_USING_POD ^(AST_CHILD podSpec) ^(AST_CHILD $podid?) ^(AST_CHILD $as?));
+			-> ^(AST_USING_POD ^(AST_CHILD podSpec) ^(AST_CHILD $podid?) ^(AST_CHILD $as?)  eos?);
 // incomplete using -> Need good AST for Completion
 incUsing	:   ((KW_USING eos) | (KW_USING ffi eos) | (KW_USING podSpec DOT eos) | (KW_USING podSpec SP_COLCOL eos))
-			-> ^(AST_INC_USING ^(AST_CHILD KW_USING) ^(AST_CHILD ffi? podSpec? DOT? SP_COLCOL?));
+			-> ^(AST_INC_USING ^(AST_CHILD KW_USING) ^(AST_CHILD ffi? podSpec? DOT? SP_COLCOL?)  eos?);
 podSpec		:	ffi? id (DOT id)*;
 ffi 		:	sq_bracketL id sq_bracketR;
 // pod support
@@ -379,7 +379,7 @@ g_try		:	KW_TRY ((bracketL)=>try_long | stmtList) ((KW_CATCH)=>g_catch)* ((KW_FI
 try_long	:	multiStmt;
 exprStmt	:	expr eos;
 localDef	:	(typeId (AS_INIT_VAL expr)? eos)
-				-> ^(AST_LOCAL_DEF typeId (AS_INIT_VAL expr)?);
+				-> ^(AST_LOCAL_DEF typeId (AS_INIT_VAL expr)? eos?);
 forInit 	:	forInitDef | expr;
 forInitDef	:	typeId (AS_INIT_VAL expr)?;
 // catch is a reserved antlr keyword
