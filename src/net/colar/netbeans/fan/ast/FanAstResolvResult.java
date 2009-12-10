@@ -248,7 +248,7 @@ public class FanAstResolvResult
 		}
 
 		resolved.setNullableContext(nullable);
-		System.out.println("Type: " + type + " resolved to: " + resolved);
+		//System.out.println("Type: " + type + " resolved to: " + resolved);
 
 		return resolved;
 	}

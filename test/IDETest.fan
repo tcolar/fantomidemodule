@@ -1,22 +1,15 @@
-// To change this License template, choose Tools / Templates
-// and edit Licenses / FanDefaultLicense.txt
-//
-// History:
-//   Dec 7, 2009  thibautc  Creation
-//
 
-**
-** IDETest
-**
+using  compiler::Assemble
+
 class IDETest : Child
 {
         Str string := "blah"
-        Int toto := ""
+        Int number := 25
 
-        Void doit(Str s, Inta i)
+        Void doit(Str s, Int i)
 	{
-            string.all(c)
             tata := Test.make.hash
+            s.each(i.decrement.inverse).hash
  	}
 }
 

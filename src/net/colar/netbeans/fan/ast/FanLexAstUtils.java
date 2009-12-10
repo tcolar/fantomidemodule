@@ -197,13 +197,15 @@ public class FanLexAstUtils
 	}
 
 	/**
-	 * Finds the closest(smallest) AST node at given lexerIndex (position in source doc.)
+	 * Finds the closest(smallest) AST node at given token index
 	 * Returns root node if no better macth found.
 	 */
-	public static CommonTree findASTNodeAt(FanParserResult pResult, int lexerIndex)
+	public static CommonTree findASTNodeAt(FanParserResult pResult, int tokenIndex)
 	{
-		int offset = offsetToTokenIndex(pResult, lexerIndex);
-		CommonTree node = findASTNodeAt(pResult, pResult.getTree(), offset);
+		//System.out.println("AstNode token: "+pResult.getTokenStream().get(index).toString());
+		//System.out.println("AstNode token type: "+pResult.getTokenStream().get(index).getType());
+		//System.out.println("AstNode token text: '"+pResult.getTokenStream().get(index).getText()+"'");
+		CommonTree node = findASTNodeAt(pResult, pResult.getTree(), tokenIndex);
 		// If not found, return the root
 		if (node == null)
 		{
@@ -226,11 +228,6 @@ public class FanLexAstUtils
 		int start = getTokenStart(node);
 		int stop = getTokenStop(node);
 		//System.out.println("li:" + tokenIndex + " start:" + start + " stop:" + stop + " " + node.getType() + " " + getNodeContent(pResult, node));
-		if (start == -1 || stop == -1)
-		{
-			// incomplete token
-			return null;
-		}
 		// <= >= ??
 		if (start <= tokenIndex && stop >= tokenIndex)
 		{
@@ -332,7 +329,14 @@ public class FanLexAstUtils
 		return false;
 	}
 
-	public static boolean moveToPrevNonWSToken(TokenSequence seq, int fromOfset, int minOffset)
+	/**
+	 * This leaves us just BEFORE the last non WS token
+	 * @param seq
+	 * @param fromOfset
+	 * @param minOffset
+	 * @return
+	 */
+	public static boolean moveToPrevNonWsToken(TokenSequence seq, int fromOfset, int minOffset)
 	{
 		if (fromOfset < minOffset || fromOfset < 0)
 		{
@@ -341,6 +345,9 @@ public class FanLexAstUtils
 		seq.move(fromOfset);
 		while (seq.movePrevious() && seq.offset() >= minOffset)
 		{
+			Token tk = seq.token();
+			//System.out.println("nws: "+tk.id().name());
+			//System.out.println("nws type: "+tk.id().ordinal());
 			int tokenType = seq.token().id().ordinal();
 			if (!matchType(tokenType, FanGrammarHelper.WS_TOKENS))
 			{
@@ -376,9 +383,10 @@ public class FanLexAstUtils
 
 	public static boolean matchType(int type, int[] array)
 	{
-		for (int i = 0; i != array.length; i++)
+		for (int t : array)
 		{
-			if (array[i] == type)
+			//System.out.println("Matching type: "+t+" VS "+type);
+			if (t == type)
 			{
 				return true;
 			}
@@ -632,8 +640,8 @@ public class FanLexAstUtils
 	 */
 	public static int getTokenStart(CommonTree node)
 	{
-		int index = -1;//node.getTokenStartIndex();
-		if (!node.isNil() && node.getChildCount() > 0)
+		int index = -1;
+		if (node.getChildCount() > 0)
 		{
 			for (CommonTree child : (List<CommonTree>) node.getChildren())
 			{
@@ -649,7 +657,12 @@ public class FanLexAstUtils
 		{
 			return index2;
 		}
-		return index2 < index ? index2 : index;
+		if (index2 == -1)
+		{
+			return index;
+		}
+		// Ok they are not -1
+		return index < index2 ? index : index2;
 	}
 
 	/**
@@ -660,8 +673,8 @@ public class FanLexAstUtils
 	 */
 	public static int getTokenStop(CommonTree node)
 	{
-		int index = -1;//node.getTokenStopIndex();
-		if (!node.isNil() && node.getChildCount() > 0)
+		int index = -1;
+		if (node.getChildCount() > 0)
 		{
 			List<CommonTree> children = node.getChildren();
 			for (int i = children.size() - 1; i >= 0; i--)
@@ -678,6 +691,10 @@ public class FanLexAstUtils
 		if (index2 == -1)
 		{
 			return index;
+		}
+		if (index == -1)
+		{
+			return index2;
 		}
 		return index2 > index ? index2 : index;
 	}

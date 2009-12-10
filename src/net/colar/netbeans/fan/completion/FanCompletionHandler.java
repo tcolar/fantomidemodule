@@ -88,8 +88,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				proposeTypes(null, proposals, anchor, prefix);
 				docType = DocTypes.TYPE;
 				break;
-			case DOTCALL:
-				proposeCalls(proposals, context, FanParser.DOT);
+			case CALL:
+				proposeCalls(proposals, context);
 				break;
 		}
 
@@ -327,9 +327,9 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		int offset = context.getCaretOffset();
 		//String prefix = context.getPrefix();
 		int anchor = context.getCaretOffset();
-		FanLexAstUtils.moveToPrevNonWSToken(ts, offset, 0);
+		FanLexAstUtils.moveToPrevNonWsToken(ts, offset, 0);
+		CommonTree baseNode = FanLexAstUtils.findASTNodeAt(result, ts.index());
 		offset = ts.offset();
-		CommonTree baseNode = FanLexAstUtils.findASTNodeAt(result, offset);
 		CommonTree curNode = FanLexAstUtils.findParentNode(baseNode, FanParser.AST_USING_POD);
 		System.out.println("Base node:"+baseNode.toString());
 		//System.out.println("Cur node:"+curNode.toString());
@@ -410,7 +410,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param proposals
 	 * @param context
 	 */
-	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, int callTokenType)
+	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
 	{
 		FanParserResult result = (FanParserResult) context.getParserResult();
 		int offset = context.getCaretOffset();
@@ -419,15 +419,19 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			offset--;
 		}
-		CommonTree curNode = FanLexAstUtils.findASTNodeAt(result, offset);
+		int tkIndex = FanLexAstUtils.offsetToTokenIndex(result, offset);
+		CommonTree curNode = FanLexAstUtils.findASTNodeAt(result, tkIndex);
 		System.out.println("Cur Node: " + curNode.toStringTree());
 		CommonTree exprNode = FanLexAstUtils.findParentNode(curNode, FanParser.AST_TERM_EXPR);
 		if (exprNode != null)
 		{
 			System.out.println("Expr Node: " + exprNode.toStringTree());
 
-			//TODO: or OP_ARROW ??
-			int index = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, callTokenType);
+			//TODO:OP_ARROW ??
+			int index = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, FanParser.DOT);
+			int index2 = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, FanParser.OP_SAFE_CALL);
+			index=index2>index?index2:index;
+
 			// TODO: prefix is leftover from index to end of exprNode
 			String prefix = "";
 			if (exprNode.getTokenStopIndex() > index)
@@ -457,7 +461,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	private void proposeVars(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, String prefix)
 	{
 		FanParserResult result = (FanParserResult) context.getParserResult();
-		CommonTree node = FanLexAstUtils.findASTNodeAt(result, context.getCaretOffset());
+		int index = FanLexAstUtils.offsetToTokenIndex(result, context.getCaretOffset());
+		CommonTree node = FanLexAstUtils.findASTNodeAt(result, index);
 		FanAstScope scope = result.getRootScope().findClosestScope(node);
 		for (FanAstScopeVarBase var : scope.getScopeVarsRecursive())
 		{

@@ -37,7 +37,7 @@ public class FanCompletionContext
 	public static enum completionTypes
 	{
 
-		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, DOTCALL, ID
+		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, CALL, ID
 	};
 	private final CodeCompletionContext context;
 	FanParserResult result;
@@ -62,7 +62,7 @@ public class FanCompletionContext
 		doc = result.getSnapshot().getSource().getDocument(true);
 		tokenStream = FanLexAstUtils.getFanTokenSequence(doc);
 		rootNode = result.getTree();
-		curNode = FanLexAstUtils.findASTNodeAt(result, offset);
+		curNode = FanLexAstUtils.findASTNodeAt(result, FanLexAstUtils.offsetToTokenIndex(result, offset));
 
 		completionType = determineCompletionType();
 		System.out.println("Compl. type:" + completionType.toString());
@@ -120,8 +120,8 @@ public class FanCompletionContext
 	private completionTypes determineCompletionType()
 	{
 		// We want the significant node before the cursor
-		FanLexAstUtils.moveToPrevNonWSToken(tokenStream, offset, 0);
-		CommonTree node = FanLexAstUtils.findASTNodeAt(result, tokenStream.offset());
+		FanLexAstUtils.moveToPrevNonWsToken(tokenStream, offset, 0);
+		CommonTree node = FanLexAstUtils.findASTNodeAt(result, tokenStream.index());
 		if (node==null)
 		{
 			System.out.println("Node : Null !");
@@ -147,8 +147,10 @@ public class FanCompletionContext
 			{
 				if(FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_STATIC_CALL, termExpr)!=null ||
 					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_DOT_CALL, termExpr)!=null ||
-					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_INC_DOTCALL, termExpr)!=null)
-					return completionType.DOTCALL;
+					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_INC_DOTCALL, termExpr)!=null||
+					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_INC_SAFEDOTCALL, termExpr)!=null||
+					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_SAFE_DOT_CALL, termExpr)!=null)
+					return completionType.CALL;
 			}
 			// Default proposal for ID's (local vars etc..)
 			if(FanLexAstUtils.findParentNode(node, FanParser.AST_ID)!=null)

@@ -31,7 +31,7 @@ public class FanAstMethod extends FanAstField
 		List<CommonTree> params = FanLexAstUtils.getAllChildrenWithType(node, FanParser.AST_PARAM);
 		for (CommonTree param : params)
 		{
-			System.out.println("Param Node: " + param.toStringTree());
+			//System.out.println("Param Node: " + param.toStringTree());
 			CommonTree id = (CommonTree) param.getFirstChildWithType(FanParser.AST_ID);
 			CommonTree typeNode = (CommonTree) param.getFirstChildWithType(FanParser.AST_TYPE);
 			// shouldn;t be null, but we dont want to risk parser exceptions
