@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.ast;
 
 import java.util.Hashtable;
+import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -31,20 +32,9 @@ public class FanMethodScope extends FanBlockScope
 		{
 			FanAstResolvResult type = params.get(name);
 			FanAstScopeVar var = new FanAstScopeVar(this, node, name, type);
-			if(var.getResolvedType().isUnresolved())
-			{
-				getRoot().addError("Unresolvable parameter type for: "+name, var.getNode());
-			}
 			addScopeVar(var, true);
 		}
-		/*
-		// Doing normal codeblock parsing
-		CommonTree codeBlock = (CommonTree) node.getFirstChildWithType(FanParser.AST_CODE_BLOCK);
-		// parse the method code block and all it's internals
-		if (codeBlock != null)
-		{
-			super.parse(codeBlock);
-		}
-*/
+		// Do normal code block parsing
+		super.parse();
 	}
 }

@@ -162,24 +162,12 @@ public class FanLexAstUtils
 		{
 			return null;
 		}
-		int start=/*tokenIndexToOffset(result, */getTokenStart(node);
-		int end=/*tokenIndexToOffset(result, */getTokenStop(node);
-		result.getTokenStream().get(start);
-		OffsetRange range = new OffsetRange(start, end + 1);
-		// can't use the following because some "empty" nodes (subnodes only) have start/stopindex = -1
-		/*try
-		{
-			CommonTokenStream tokenStream = result.getTokenStream();
-			CommonToken startToken = (CommonToken) tokenStream.get(node.getTokenStartIndex());
-			CommonToken endToken = (CommonToken) tokenStream.get(node.getTokenStopIndex());
-			if (startToken.getStartIndex() >= 0 && endToken.getStopIndex() >= startToken.getStartIndex())
-			{
-				range = new OffsetRange(startToken.getStartIndex(), endToken.getStopIndex() + 1);
-			}
-		} catch (ArrayIndexOutOfBoundsException e)
-		{
-			System.err.println("Incomplete node ? " + node.getText());
-		}*/
+		int start=getTokenStart(node);
+		int end=getTokenStop(node);
+		CommonTokenStream tokenStream = result.getTokenStream();
+		CommonToken startToken = (CommonToken) tokenStream.get(start);
+		CommonToken endToken = (CommonToken) tokenStream.get(end);
+		OffsetRange range = new OffsetRange(startToken.getStartIndex(), endToken.getStopIndex() + 1);
 		return range;
 	}
 
@@ -444,6 +432,8 @@ public class FanLexAstUtils
 	 */
 	public static CommonTree findParentNodeWithin(final CommonTree theNode, int parentType, CommonTree within)
 	{
+		if(theNode==within)
+			return theNode;
 		// don't want to mess with the original node.
 		CommonTree node = theNode;
 		while (node != within && node!=null && !node.isNil())

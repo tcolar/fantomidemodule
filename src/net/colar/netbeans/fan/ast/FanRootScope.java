@@ -93,6 +93,8 @@ public class FanRootScope extends FanAstScope
 
 	public void addError(String info, CommonTree node)
 	{
+		if(node==null)
+			return;
 		String key = "FanASTParser";
 		OffsetRange range = FanLexAstUtils.getNodeRange(parserResult, node);
 		int start = range.getStart();

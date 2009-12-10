@@ -103,6 +103,7 @@ AST_SAFE_DOT_CALL;
 AST_STATIC_CALL;
 AST_USING_POD;
 AST_MAP;
+AST_LOCAL_DEF;
 // help getting valid AST for completion: (INC means incomplete)
 AST_INC_USING;
 AST_INC_DOTCALL;
@@ -377,7 +378,8 @@ g_while		:	KW_WHILE parL expr parR block;
 g_try		:	KW_TRY ((bracketL)=>try_long | stmtList) ((KW_CATCH)=>g_catch)* ((KW_FINALLY)=>g_finally)?;
 try_long	:	multiStmt;
 exprStmt	:	expr eos;
-localDef	:	typeId (AS_INIT_VAL expr)? eos;
+localDef	:	(typeId (AS_INIT_VAL expr)? eos)
+				-> ^(AST_LOCAL_DEF typeId (AS_INIT_VAL expr)?);
 forInit 	:	forInitDef | expr;
 forInitDef	:	typeId (AS_INIT_VAL expr)?;
 // catch is a reserved antlr keyword
