@@ -21,8 +21,6 @@ static{ // initializes tokens
 	tokens.put(new Integer(92),token);
 	token=new FanTokenID("KW_NATIVE", 22, "keyword");
 	tokens.put(new Integer(22),token);
-	token=new FanTokenID("AST_PARAMS", 74, "");
-	tokens.put(new Integer(74),token);
 	token=new FanTokenID("LETTER", 150, "");
 	tokens.put(new Integer(150),token);
 	token=new FanTokenID("HEXNB", 143, "");
@@ -303,6 +301,8 @@ static{ // initializes tokens
 	tokens.put(new Integer(17),token);
 	token=new FanTokenID("KW_NULL", 43, "keyword");
 	tokens.put(new Integer(43),token);
+	token=new FanTokenID("AST_PARAM", 74, "");
+	tokens.put(new Integer(74),token);
 	token=new FanTokenID("FRACTION", 147, "");
 	tokens.put(new Integer(147),token);
 	token=new FanTokenID("AST_INHERITANCE", 73, "");

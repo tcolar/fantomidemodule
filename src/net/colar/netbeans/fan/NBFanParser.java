@@ -32,6 +32,7 @@ public class NBFanParser extends Parser
 	@Override
 	public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException
 	{
+		//System.out.println("Starting parsing of: "+snapshot.getSource().getFileObject().getPath());
 		FanLexer lexer = new FanLexer(new ANTLRStringStream(snapshot.getText().toString()));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 

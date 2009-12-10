@@ -162,8 +162,12 @@ public class FanLexAstUtils
 		{
 			return null;
 		}
-		OffsetRange range = null;
-		try
+		int start=/*tokenIndexToOffset(result, */getTokenStart(node);
+		int end=/*tokenIndexToOffset(result, */getTokenStop(node);
+		result.getTokenStream().get(start);
+		OffsetRange range = new OffsetRange(start, end + 1);
+		// can't use the following because some "empty" nodes (subnodes only) have start/stopindex = -1
+		/*try
 		{
 			CommonTokenStream tokenStream = result.getTokenStream();
 			CommonToken startToken = (CommonToken) tokenStream.get(node.getTokenStartIndex());
@@ -175,7 +179,7 @@ public class FanLexAstUtils
 		} catch (ArrayIndexOutOfBoundsException e)
 		{
 			System.err.println("Incomplete node ? " + node.getText());
-		}
+		}*/
 		return range;
 	}
 
@@ -629,7 +633,7 @@ public class FanLexAstUtils
 	}
 
 	/**
-	 * Return the start index of a node
+	 * Return the start token index of a node
 	 * If a node has no start index check the first children with a startindex
 	 * @param termBase
 	 * @return
@@ -695,7 +699,7 @@ public class FanLexAstUtils
 	}
 
 	/**
-	 * Convert the document offset (text) to a token index
+	 * Convert the document offset (text location) to a token index
 	 * @param pResult
 	 * @return
 	 */
@@ -706,6 +710,24 @@ public class FanLexAstUtils
 		ts.move(index);
 		ts.moveNext();
 		int result = ts.index();
+		// restore
+		ts.move(saved);
+		return result;
+	}
+	
+	/**
+	 * Opposite of offsetToTokenIndex
+	 * @param pResult
+	 * @param index
+	 * @return
+	 */
+	public static int tokenIndexToOffset(FanParserResult pResult, int index)
+	{
+		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
+		int saved = ts.index();
+		ts.moveIndex(index);
+		ts.moveNext();
+		int result = ts.offset();
 		// restore
 		ts.move(saved);
 		return result;

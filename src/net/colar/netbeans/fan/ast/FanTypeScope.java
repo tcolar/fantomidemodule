@@ -20,11 +20,11 @@ public class FanTypeScope extends FanAstScope
 	public FanTypeScope(FanRootScope parent, CommonTree ast)
 	{
 		super(parent, ast);
-		parse(ast);
 	}
 
-	private void parse(CommonTree ast)
+	protected void parse()
 	{
+		CommonTree ast = getAstNode();
 		//TODO: Deal with inheritance 
 		if (ast == null)
 		{
@@ -47,26 +47,19 @@ public class FanTypeScope extends FanAstScope
 			switch (child.getType())
 			{
 				case FanParser.AST_FIELD:
-					FanLexAstUtils.dumpTree(child, 0);
 					FanAstField field=new FanAstField(this, child);
-					if(field.getType().isUnresolved())
+					if(field.getResolvedType().isUnresolved())
 					{
 						//TODO: Propose to auto-add using statements (Hints)
-						getRoot().addError("Unresolveable field type", child);
+						getRoot().addError("Unresolved field type", child);
 					}
 					addScopeVar(field, false);
 					break;
-				/*case FanParser.AST_METHOD:
+				case FanParser.AST_METHOD:
 				case FanParser.AST_CONSTRUCTOR:
-					FanLexAstUtils.dumpTree(child, 0);
-					FanAstField field=new FanAstField(this, child);
-					if(field.getType().isUnresolved())
-					{
-						//TODO: Propose to auto-add using statements (Hints)
-						getRoot().addError("Unresolveable field type", child);
-					}
-					addScopeVar(field, false);
-					break;*/
+					FanAstMethod method=new FanAstMethod(this, child, child.getType() == FanParser.AST_CONSTRUCTOR);
+					addScopeVar(method, false);
+					break;
 			}
 		}
 	}

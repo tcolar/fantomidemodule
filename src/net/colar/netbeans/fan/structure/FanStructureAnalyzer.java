@@ -128,7 +128,14 @@ public class FanStructureAnalyzer implements StructureScanner
 					}
 					String constChain = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_CONSTRUCTOR_CHAIN);
 					name = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_ID);
-					String params = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_PARAMS);
+					List<CommonTree> paramNodes=FanLexAstUtils.getAllChildrenWithType(node, FanParser.AST_PARAM);
+					String params="";
+					for(CommonTree paramNode : paramNodes)
+					{
+						if(params.length()>0)
+							params+=", ";
+						params += FanLexAstUtils.getNodeContent(result, paramNode);
+					}
 					modif = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_MODIFIER);
 					handleModifiers(item, modif);
 					item.setName(name);

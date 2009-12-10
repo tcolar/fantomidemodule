@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.ast;
 
 import fan.sys.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,6 @@ import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.Tree;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -41,8 +41,6 @@ public class FanRootScope extends FanAstScope
 	{
 		super(null, result.getTree());
 		this.parserResult = result;
-		CommonTree ast = parserResult.getTree();
-		parse(ast);
 	}
 
 	private void addUsing(String name, fan.sys.Type type, CommonTree node)
@@ -56,13 +54,13 @@ public class FanRootScope extends FanAstScope
 		using.put(name, resolved);
 	}
 
-	private void addType(FanAstScope type)
+	/*private void addType(FanAstScope type)
 	{
 		if (type != null)
 		{
 			addChild(type);
 		}
-	}
+	}*/
 
 	public Hashtable<String, FanAstResolvedType> getUsing()
 	{
@@ -197,8 +195,9 @@ public class FanRootScope extends FanAstScope
 		}
 	}
 
-	private void parse(CommonTree ast)
+	protected void parse()
 	{
+		CommonTree ast = getAstNode();
 		List<CommonTree> children = (List<CommonTree>) ast.getChildren();
 		if (children != null)
 		{
@@ -226,18 +225,30 @@ public class FanRootScope extends FanAstScope
 					case FanParser.AST_ENUM:
 					case FanParser.AST_MIXIN:
 						// will parse and add the type
-						addType(new FanTypeScope(this, child));
+						FanTypeScope scope = new FanTypeScope(this, child);
+						scope.parse();
+						addChild(scope);
 						break;
 
 				}
 			}
 			// Now do all the local scopes / variables
-			for(FanAstScope child : getChildren())
+			for (FanAstScope child : getChildren())
 			{
 				// should be but check anyway in case of future change
-				if(child instanceof FanTypeScope)
+				if (child instanceof FanTypeScope)
 				{
-					
+					Collection<FanAstScopeVarBase> vars = child.getScopeVars();
+					for (FanAstScopeVarBase slot : vars)
+					{
+						if (slot instanceof FanAstMethod)
+						{
+							FanMethodScope scope = new FanMethodScope(child, (FanAstMethod)slot);
+							scope.parse();
+							child.addChild(scope);
+						}
+						// otherwise it's a field, nothing to do with it
+					}
 				}
 			}
 		}
@@ -276,7 +287,7 @@ public class FanRootScope extends FanAstScope
 	{
 		// start at the root node (this) and scan down
 		FanAstScope scope = findClosestScope(this, node);
-		return scope==null?this:scope;
+		return scope == null ? this : scope;
 	}
 
 	/**
@@ -286,13 +297,13 @@ public class FanRootScope extends FanAstScope
 	 */
 	private FanAstScope findClosestScope(FanAstScope scope, CommonTree node)
 	{
-		CommonTree scopeNode=scope.getAstNode();
-		if(FanLexAstUtils.isParentNodeOf(scopeNode, node))
+		CommonTree scopeNode = scope.getAstNode();
+		if (FanLexAstUtils.isParentNodeOf(scopeNode, node))
 		{
-			for(FanAstScope child: scope.getChildren())
+			for (FanAstScope child : scope.getChildren())
 			{
 				FanAstScope found = findClosestScope(child, node);
-				if(found!=null)
+				if (found != null)
 				{
 					return found;
 				}

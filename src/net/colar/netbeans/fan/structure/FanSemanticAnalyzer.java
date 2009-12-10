@@ -7,6 +7,7 @@ package net.colar.netbeans.fan.structure;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -17,6 +18,7 @@ import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.netbeans.modules.csl.api.ColoringAttributes;
+import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.parsing.spi.Parser.Result;
@@ -61,6 +63,12 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		} else
 		{
 			System.out.println("AST TREE HAS ERRORS");
+			List<? extends Error> errors = res.getDiagnostics();
+			for(Error err: errors)
+			{
+				System.err.println(err);
+			}
+			FanLexAstUtils.dumpTree(res.getTree(), 0);
 		}
 	}
 
@@ -122,7 +130,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 					addIdToHighlights(result, newHighlights, node, ColoringAttributes.GLOBAL_SET);
 					break;
 				// static field ?
-				case FanParser.AST_PARAMS:
+				case FanParser.AST_PARAM:
 				case FanParser.AST_CONSTRUCTOR_CHAIN:
 					addToHighlights(result, newHighlights, node, ColoringAttributes.PARAMETER_SET);
 					break;

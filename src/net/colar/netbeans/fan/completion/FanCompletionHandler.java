@@ -18,7 +18,7 @@ import net.colar.netbeans.fan.antlr.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanAstResolvResult;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.ast.FanAstScope;
-import net.colar.netbeans.fan.ast.FanAstScopeVar;
+import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
@@ -458,7 +458,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		FanParserResult result = (FanParserResult) context.getParserResult();
 		CommonTree node = FanLexAstUtils.findASTNodeAt(result, context.getCaretOffset());
 		FanAstScope scope = result.getRootScope().findClosestScope(node);
-		for (FanAstScopeVar var : scope.getScopeVarsRecursive())
+		for (FanAstScopeVarBase var : scope.getScopeVarsRecursive())
 		{
 			if (var.getName().startsWith(prefix))
 			{

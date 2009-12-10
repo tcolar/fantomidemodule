@@ -23,9 +23,8 @@ public class FanAstParser
 	 */
 	public static FanRootScope parseScope(FanParserResult result)
 	{
-		//result.dumpTree();
 		FanRootScope rootScope = new FanRootScope(result);
-		rootScope.dump();
+		rootScope.parse();
 		return rootScope;
 	}
 

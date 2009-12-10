@@ -4,7 +4,7 @@
 package net.colar.netbeans.fan.completion;
 
 import java.util.HashSet;
-import net.colar.netbeans.fan.ast.FanAstScopeVar;
+import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -16,9 +16,9 @@ import org.netbeans.modules.csl.api.Modifier;
  */
 public class FanVarProposal extends FanCompletionProposal
 {
-	private final FanAstScopeVar var;
+	private final FanAstScopeVarBase var;
 
-	public FanVarProposal(FanAstScopeVar var, int anchor)
+	public FanVarProposal(FanAstScopeVarBase var, int anchor)
 	{
 		this.var=var;
 		this.name = var.getName();
@@ -28,13 +28,13 @@ public class FanVarProposal extends FanCompletionProposal
 		handle.setDoc(null);
 		element=handle;
 		this.modifiers = new HashSet<Modifier>();
-		if(var.hasModifier(FanAstScopeVar.modifs.PRIVATE))
+		if(var.hasModifier(FanAstScopeVarBase.modifs.PRIVATE))
 			modifiers.add(Modifier.PRIVATE);
-		else if(var.hasModifier(FanAstScopeVar.modifs.PROTECTED) || var.hasModifier(FanAstScopeVar.modifs.INTERNAL))
+		else if(var.hasModifier(FanAstScopeVarBase.modifs.PROTECTED) || var.hasModifier(FanAstScopeVarBase.modifs.INTERNAL))
 			modifiers.add(Modifier.PROTECTED);
-		else if(var.hasModifier(FanAstScopeVar.modifs.PUBLIC))
+		else if(var.hasModifier(FanAstScopeVarBase.modifs.PUBLIC))
 			modifiers.add(Modifier.PUBLIC);
-		if(var.hasModifier(FanAstScopeVar.modifs.STATIC))
+		if(var.hasModifier(FanAstScopeVarBase.modifs.STATIC))
 			modifiers.add(Modifier.STATIC);
 	}
 
@@ -47,8 +47,8 @@ public class FanVarProposal extends FanCompletionProposal
 	@Override
 	public String getRhsHtml(HtmlFormatter formater)
 	{
-		if(var.getType().isUnresolved())
+		if(var.getResolvedType().isUnresolved())
 			return "N/A";
-		return var.getType().getType().name();
+		return var.getResolvedType().getType().name();
 	}
 }

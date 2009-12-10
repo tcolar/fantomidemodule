@@ -14,7 +14,7 @@ import org.antlr.runtime.tree.CommonTree;
  * Type field
  * @author thibautc
  */
-public class FanAstField extends FanAstScopeVar
+public class FanAstField extends FanAstScopeVarBase
 {
 	
 	public FanAstField(FanAstScope scope, CommonTree node)
@@ -22,16 +22,15 @@ public class FanAstField extends FanAstScopeVar
 		super(scope, node);
 		FanParserResult result = scope.getRoot().getParserResult();
 		name = FanLexAstUtils.getNodeContent(result, node.getFirstChildWithType(FanParser.AST_ID)).trim();
-		type = FanAstResolvResult.makeFromSimpleType(scope, (CommonTree)node.getFirstChildWithType(FanParser.AST_TYPE)).getType();
+		CommonTree typeNode = (CommonTree)node.getFirstChildWithType(FanParser.AST_TYPE);
+		type = FanAstResolvResult.makeFromSimpleTypeWithWarning(scope, typeNode);
 		// modifiers ??
 		List<CommonTree> modifs = FanLexAstUtils.getAllChildrenWithType(node, FanParser.AST_MODIFIER);
 		for(CommonTree m : modifs)
 		{
-			FanAstScopeVar.modifs modif = FanAstScopeVar.parseModifier(FanLexAstUtils.getNodeContent(result, m).trim());
+			FanAstScopeVarBase.modifs modif = FanAstScopeVarBase.parseModifier(FanLexAstUtils.getNodeContent(result, m).trim());
 			if(modif!=null)
 				modifiers.add(modif);
 		}
 	}
-
-
 }

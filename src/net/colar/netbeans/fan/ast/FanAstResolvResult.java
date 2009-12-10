@@ -165,6 +165,20 @@ public class FanAstResolvResult
 		//System.out.println("** End type: " + baseType);
 		return baseType;
 	}
+
+	public static FanAstResolvResult makeFromSimpleTypeWithWarning(FanAstScope scope, CommonTree node)
+	{
+		FanAstResolvResult result=makeFromSimpleType(scope, node);
+		if (result.getType().isUnresolved())
+		{
+			String type=FanLexAstUtils.getNodeContent(scope.getRoot().getParserResult(), node);
+			//TODO: Propose to auto-add using statements (Hints)
+			scope.getRoot().addError("Unresolved type: "+type, node);
+		}
+		return result;
+	}
+
+
 	/***
 	 * CommonTree is an AST_TYPE node
 	 * @param scope
@@ -236,6 +250,7 @@ public class FanAstResolvResult
 
 		resolved.setNullableContext(nullable);
 		System.out.println("Type: " + type + " resolved to: " + resolved);
+
 		return resolved;
 	}
 

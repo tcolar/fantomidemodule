@@ -8,17 +8,21 @@
 **
 ** IDETest
 **
-class IDETest
+class IDETest : Child
 {
         Str string := "blah"
-        Str somestr := ""
-        Int i := 23
-        Int j := 2
+        Int toto := ""
 
-	Void myMethod()
+        Void doit(Str s, Inta i)
 	{
-           Str.compare(IOErr.cause).decrement
-	}
+            string.all(c)
+            tata := Test.make.hash
+ 	}
+}
+
+class Child
+{
+    Int toto := 24
 }
 
 

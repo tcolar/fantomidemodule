@@ -111,7 +111,7 @@ AST_INC_SAFEDOTCALL;
 AST_ID;
 AST_MODIFIER;
 AST_INHERITANCE;
-AST_PARAMS;
+AST_PARAM;
 AST_TYPE;
 // used to "group" generic stuff together
 AST_CHILD;
@@ -333,15 +333,16 @@ typeAndId	:	type id
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
 methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
 		:	docs facet* m=methodFlags* returnType=type /*| KW_VOID*/ mname=id parL params parR methodBody
-		    -> ^(AST_METHOD methodBody? ^($mname) ^(AST_TYPE $returnType) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)*);
+		    -> ^(AST_METHOD ^($mname) ^(AST_TYPE $returnType) params? ^(AST_MODIFIER $m)* methodBody? );
 methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE |
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;
-param 		:	type id (AS_INIT_VAL expr)?;
+param 		:	(type id (AS_INIT_VAL expr)?)
+			-> ^(AST_PARAM ^(AST_TYPE type) id (AS_INIT_VAL expr)?);
 methodBody	:	((multiStmt)=>multiStmt | eos);
 ctorDef		@init {paraphrase.push("Constructor definition");} @after{paraphrase.pop();}
 		:	docs facet* m=ctorFlags* KW_NEW cname=id parL params parR cchain=((SP_COLON)=>ctorChain)? methodBody
-		    -> ^(AST_CONSTRUCTOR methodBody? ^($cname) ^(AST_PARAMS params)? ^(AST_MODIFIER $m)* ^(AST_CONSTRUCTOR_CHAIN $cchain)* );
+		    -> ^(AST_CONSTRUCTOR ^($cname) params? ^(AST_MODIFIER $m)* ^(AST_CONSTRUCTOR_CHAIN $cchain)* methodBody? );
 ctorFlags	:	protection;
 ctorChain	:	SP_COLON (ctorChainThis | ctorChainSuper);
 
