@@ -74,7 +74,7 @@ public class FanSlotProposal extends FanCompletionProposal
 						prefix+=", ";
 					prefix+=p.name();
 				}
-				args += p.type().name() + " " +nm;
+				args += p.of().name() + " " +nm;
 			}
 
 			// remove optional parenthesis when no parameters

@@ -165,7 +165,14 @@ public class FanLexAstUtils
 		}
 		int start = getTokenStart(node);
 		int end = getTokenStop(node);
-		//System.out.println("Start: " + start + " End:" + end + " ");
+		System.out.println("Start: " + start + " End:" + end + " ");
+		// Cant figure why this happens, something must be wrong but no clue so far.
+		if(start>end)
+		{
+			int tmp=start;
+			start=end;
+			end=tmp;
+		}
 		CommonTokenStream tokenStream = result.getTokenStream();
 		CommonToken startToken = (CommonToken) tokenStream.get(start);
 		CommonToken endToken = (CommonToken) tokenStream.get(end);
@@ -640,19 +647,20 @@ public class FanLexAstUtils
 	 */
 	public static int getTokenStart(CommonTree node)
 	{
-		int index = -1;
+		int index =node.getTokenStartIndex();
 		if (node.getChildCount() > 0)
 		{
 			for (CommonTree child : (List<CommonTree>) node.getChildren())
 			{
-				index = getTokenStart(child);
-				if (index != -1)
+				int index2 = getTokenStart(child);
+				if (index2!=-1 && (index == -1 || index2 < index))
 				{
-					return index;
+					index=index2;
 				}
 			}
 		}
-		int index2 = node.getTokenStartIndex();
+		return index;
+		/*int index2 = node.getTokenStartIndex();
 		if (index == -1)
 		{
 			return index2;
@@ -662,7 +670,7 @@ public class FanLexAstUtils
 			return index;
 		}
 		// Ok they are not -1
-		return index < index2 ? index : index2;
+		return index < index2 ? index : index2;*/
 	}
 
 	/**
@@ -673,21 +681,22 @@ public class FanLexAstUtils
 	 */
 	public static int getTokenStop(CommonTree node)
 	{
-		int index = -1;
+		int index = node.getTokenStopIndex();
 		if (node.getChildCount() > 0)
 		{
 			List<CommonTree> children = node.getChildren();
 			for (int i = children.size() - 1; i >= 0; i--)
 			{
 				CommonTree child = children.get(i);
-				index = getTokenStop(child);
-				if (index != -1)
+				int index2 = getTokenStop(child);
+				if (index2!=-1 && (index==-1 || index2>index))
 				{
-					return index;
+					index=index2;
 				}
 			}
 		}
-		int index2 = node.getTokenStopIndex();
+		return index;
+		/*int index2 = node.getTokenStopIndex();
 		if (index2 == -1)
 		{
 			return index;
@@ -696,7 +705,7 @@ public class FanLexAstUtils
 		{
 			return index2;
 		}
-		return index2 > index ? index2 : index;
+		return index2 > index ? index2 : index;*/
 	}
 
 	public static String getTokenStreamSlice(CommonTokenStream tokenStream, int start, int stop)

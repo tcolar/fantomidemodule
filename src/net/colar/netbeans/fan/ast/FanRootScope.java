@@ -105,6 +105,7 @@ public class FanRootScope extends FanAstScope
 
 	private void addUsing(CommonTree usingNode)
 	{
+		System.out.println("Usingnode: "+usingNode.toStringTree());
 		//TODO: warn/highlight if duplicated using
 		String name = null;
 		String type = null;
@@ -123,8 +124,8 @@ public class FanRootScope extends FanAstScope
 				name = FanLexAstUtils.getNodeContent(parserResult, usingNode.getChild(2)).trim();
 				break;
 		}
-		//System.out.println("name: " + name);
-		//System.out.println("type:" + type);
+		System.out.println("name: " + name);
+		System.out.println("type:" + type);
 		if (name != null && type != null)
 		{
 			//TODO: what about other FFI types ?
@@ -153,7 +154,7 @@ public class FanRootScope extends FanAstScope
 					// Individual Item
 					if (!FanJavaIndexer.getInstance().hasItem(qname))
 					{
-						addError("Unresolvable Java Item: " + qname, usingNode);
+						addError("Unresolved Java Item: " + qname, usingNode);
 					} else
 					{
 						fan.sys.Type t = FanJavaIndexer.getInstance().resolveType(qname);
@@ -169,10 +170,10 @@ public class FanRootScope extends FanAstScope
 					String[] data = type.split("::");
 					if (!FanPodIndexer.getInstance().hasPod(data[0]))
 					{
-						addError("Unresolvable Pod: " + data[0], usingNode);
+						addError("Unresolved Pod: " + data[0], usingNode);
 					} else if (!FanPodIndexer.getInstance().hasPodType(data[0], data[1]))
 					{
-						addError("Unresolvable Type: " + data[0] + "::" + data[1], usingNode);
+						addError("Unresolved Type: " + data[0] + "::" + data[1], usingNode);
 					}
 
 					Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
@@ -182,7 +183,7 @@ public class FanRootScope extends FanAstScope
 					// Adding all the types of a Pod
 					if (!FanPodIndexer.getInstance().hasPod(name))
 					{
-						addError("Unresolvable Pod: " + name, usingNode);
+						addError("Unresolved Pod: " + name, usingNode);
 					} else
 					{
 						Set<Type> items = FanPodIndexer.getInstance().getPodTypes(name);
