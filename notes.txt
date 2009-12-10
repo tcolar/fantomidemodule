@@ -3,6 +3,8 @@ Do it, super completion
 Deal with inheritance (all slots)
 Do expression resolving for vars without type
 -> use resolveExpr ... add support fro "primitives" numbers, string etc...
+loop variables (for Int i...)
+... caching ...
 
 ============= TODO Completion ===============================
 - Fully resolve type of expressions (as much as I can)
