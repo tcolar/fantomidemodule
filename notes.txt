@@ -1,4 +1,6 @@
-Do it, super
+Do it, super completion
+-> if super. at type level, ovveride methods (fields?)
+Deal with inheritance (all slots)
 Do expression resolving for vars without type
 -> use resolveExpr ... add support fro "primitives" numbers, string etc...
 
