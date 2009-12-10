@@ -1,4 +1,4 @@
-Do it, super, this completion
+Do it, super(!= in method VS in type), namedSuper, this completion
 -> if super. at type level, ovveride methods (fields?)
 Deal with inheritance (all slots)
 Do expression resolving for vars without type
