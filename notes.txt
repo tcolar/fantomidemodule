@@ -1,26 +1,15 @@
-Do it, super(!= in method VS in type), namedSuper, this completion
--> if super. at type level, ovveride methods (fields?)
-Deal with inheritance (all slots)
-Do expression resolving for vars without type
--> use resolveExpr ... add support fro "primitives" numbers, string etc...
-loop variables (for Int i...)
-... caching ...
-
-=====BUGS=====
-- completion after using _ broken again !
-- error at startup
-java.lang.AssertionError
-        at org.netbeans.modules.csl.api.OffsetRange.<init>(OffsetRange.java:63)
-        at net.colar.netbeans.fan.antlr.FanLexAstUtils.getNodeRange(FanLexAstUtils.java:170)
-        at net.colar.netbeans.fan.ast.FanRootScope.addError(FanRootScope.java:99)
-
-
 ============= TODO Completion ===============================
 - Fully resolve type of expressions (as much as I can)
 - Add inherited slots (if not already defined - inherited)
 - Filter proposals (sont show innacessible items, private etc...
-- Highlight when a slot is static (icon)
-- Allow completion of type(static) like Str._
+- Do it, super(!= in method VS in type), namedSuper, this completion
+if super. at type level, ovveride methods (fields?)
+- Do expression resolving for vars without type
+use resolveExpr ... add support fro "litterals" numbers, string etc...
+when expression with + etc.. just resolve lefthandside TERM_EXPR? (should work)
+- loop/throw variables (for Int i...)
+- complete things like 2.times()
+- ... caching ...
 
 ============= TODO semantic checks =====================
 Deal with shortcut operators:
