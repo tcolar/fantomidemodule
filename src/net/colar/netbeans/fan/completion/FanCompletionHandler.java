@@ -347,7 +347,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				FanAstResolvedType type = usings.get(key);
 				if (!type.isUnresolved())
 				{
-					props.add(new FanTypeProposal(type.getType(), anchor));
+					props.add(new FanTypeProposal(type.getType(), anchor - prefix.length()));
 				}
 			}
 		}
