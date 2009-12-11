@@ -248,15 +248,16 @@ prog		: 	 using* (podDef | typeDef*) docs EOF;
 using		@init {paraphrase.push("Using statements");} @after{paraphrase.pop();}
 		:	(usingPod | usingType | usingAs | incUsing);
 usingPod
-		:	KW_USING podSpec eos
+		:	(KW_USING podSpec eos)
 			-> ^(AST_USING_POD ^(AST_CHILD podSpec) eos?);
 usingType
-		:	KW_USING podSpec SP_COLCOL id eos
+		:	(KW_USING podSpec SP_COLCOL id eos)
 			-> ^(AST_USING_POD ^(AST_CHILD podSpec) ^(AST_CHILD id));
 // pod id can have a $ in it(java ffi) but then "as" is required
-usingAs		:	KW_USING podSpec SP_COLCOL podid=(id ('$' id)*) KW_AS as=id eos
-			-> ^(AST_USING_POD ^(AST_CHILD podSpec) ^(AST_CHILD $podid?) ^(AST_CHILD $as?));
+usingAs		:	(KW_USING podSpec SP_COLCOL podId KW_AS as=id eos)
+			-> ^(AST_USING_POD ^(AST_CHILD podSpec) ^(AST_CHILD podId) ^(AST_CHILD $as));
 // incomplete using -> Need good AST for Completion
+podId		:	id ('$' id)*;
 incUsing	:   ((KW_USING eos) | (KW_USING ffi eos) | (KW_USING podSpec DOT eos) | (KW_USING podSpec SP_COLCOL eos))
 			-> ^(AST_INC_USING ^(AST_CHILD KW_USING) ^(AST_CHILD ffi? podSpec? DOT? SP_COLCOL?));
 podSpec		:	ffi? id (DOT id)*;
@@ -271,24 +272,24 @@ symbolFlag	:	'virtual';
 typeDef 	:	docs facet* ((classFlags* KW_CLASS)=>classDef |
 			(protection? KW_ENUM)=>enumDef | mixinDef);
 classDef 	@init {paraphrase.push("Class definition");} @after{paraphrase.pop();}
-		:  	classHeader classBody
+		:  	(classHeader classBody)
 		    -> ^(AST_CLASS classHeader classBody);
-classHeader	:	docs facet* m=classFlags* KW_CLASS cname=id inheritance?
+classHeader	:	(docs facet* m=classFlags* KW_CLASS cname=id inheritance?)
 			-> ^($cname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
 classBody 	:	(bracketL slotDef* bracketR)  -> ^(AST_CODE_BLOCK bracketL slotDef* bracketR);
 protection	:	KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL;
 mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
-		:	mixinHeader mixinBody
+		:	(mixinHeader mixinBody)
 		    -> ^(AST_MIXIN mixinHeader mixinBody);
-mixinHeader	:	docs facet* m=mixinFlags* KW_MIXIN mname=id inheritance?
+mixinHeader	:	(docs facet* m=mixinFlags* KW_MIXIN mname=id inheritance?)
 			-> ^($mname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 mixinFlags	:	protection | KW_CONST | KW_STATIC | KW_FINAL;
 mixinBody	:	bracketL slotDef* bracketR  -> ^(AST_CODE_BLOCK bracketL slotDef* bracketR);
 enumDef		@init {paraphrase.push("Enumeration definition");} @after{paraphrase.pop();}
-		:	enumHeader enumBody
+		:	(enumHeader enumBody)
 		    -> ^(AST_ENUM enumHeader enumBody);
-enumHeader	:   	docs facet* m=protection? KW_ENUM ename=id inheritance?
+enumHeader	:   	(docs facet* m=protection? KW_ENUM ename=id inheritance?)
 			-> ^($ename) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
 enumBody	:	bracketL enumValDefs slotDef* bracketR   -> ^(AST_CODE_BLOCK bracketL enumValDefs slotDef* bracketR);
 inheritance 	:	SP_COLON typeList;

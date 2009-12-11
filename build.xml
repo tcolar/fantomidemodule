@@ -29,7 +29,7 @@
 			args="src/net/colar/netbeans/fan/antlr/Fan.g -Xconversiontimeout 95000 -report"/>
 	</target>
 
-	<target name="antlr-tokens-to-nb" depends="clean, compile-grammar">
+	<target name="antlr-tokens-to-nb" depends="clean, compile, compile-grammar">
 	    <java classpath="${classpath}" classname="net.colar.netbeans.fan.antlr.AntlrTokensToNetbeans"
 		args="src/net/colar/netbeans/fan/antlr/Fan.tokens src/net/colar/netbeans/fan/FanTokens.java net.colar.netbeans.fan"/>
 	</target>

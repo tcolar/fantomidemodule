@@ -266,7 +266,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			if (//!type.isInternal() &&
 				type.name().startsWith(prefix))
 			{
-				proposals.add(new FanTypeProposal(type, anchor - prefix.length()));
+				proposals.add(new FanTypeProposal(type, anchor - prefix.length(), null));
 			}
 		}
 		docType = DocTypes.TYPE;
@@ -353,7 +353,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				FanAstResolvedType type = usings.get(key);
 				if (!type.isUnresolved())
 				{
-					props.add(new FanTypeProposal(type.getType(), anchor - prefix.length()));
+					props.add(new FanTypeProposal(type.getType(), anchor - prefix.length(), key));
 				}
 			}
 		}
