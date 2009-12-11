@@ -113,7 +113,7 @@ public class FanRootScope extends FanAstScope
 
 	private void addUsing(CommonTree usingNode)
 	{
-		System.out.println("Usingnode: " + usingNode.toStringTree());
+		//System.out.println("Usingnode: " + usingNode.toStringTree());
 		//TODO: warn/highlight if duplicated using
 		String name = null;
 		String type = null;
@@ -132,8 +132,8 @@ public class FanRootScope extends FanAstScope
 				name = FanLexAstUtils.getNodeContent(parserResult, usingNode.getChild(2)).trim();
 				break;
 		}
-		System.out.println("name: " + name);
-		System.out.println("type:" + type);
+		//System.out.println("name: " + name);
+		//System.out.println("type:" + type);
 		if (name != null && type != null)
 		{
 			//TODO: what about other FFI types ?
