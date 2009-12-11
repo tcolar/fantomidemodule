@@ -165,7 +165,7 @@ public class FanLexAstUtils
 		}
 		int start = getTokenStart(node);
 		int end = getTokenStop(node);
-		System.out.println("Start: " + start + " End:" + end + " ");
+		//System.out.println("Start: " + start + " End:" + end + " ");
 		// Cant figure why this happens, something must be wrong but no clue so far.
 		if(start>end)
 		{

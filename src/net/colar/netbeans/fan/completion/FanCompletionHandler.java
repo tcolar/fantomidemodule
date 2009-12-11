@@ -7,6 +7,7 @@ import fan.sys.Slot;
 import fan.sys.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,7 @@ import net.colar.netbeans.fan.ast.FanAstResolvResult;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
+import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
@@ -74,6 +76,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		int anchor = context.getCaretOffset();
 		preamble = cpl.getPreamble();
 		System.out.println("preamb: " + preamble);
+		FanParserResult result = (FanParserResult) context.getParserResult();
+		FanRootScope rootScope = result.getRootScope();
 
 		switch (cpl.getCompletionType())
 		{
@@ -85,7 +89,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				break;
 			case ID:
 				proposeVars(proposals, context, prefix);
-				proposeTypes(null, proposals, anchor, prefix);
+				proposeDefinedTypes(proposals, anchor, prefix, rootScope);
 				docType = DocTypes.TYPE;
 				break;
 			case CALL:
@@ -277,7 +281,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			if (slot.name().toLowerCase().startsWith(prefix))
 			{
-				// constructor are nto marked as static ... but fot this purpose they are
+				// constructor are not marked as static ... but fot this purpose they are
 				boolean isStatic = slot.isStatic() || slot.isCtor();
 				if (type.isStaticContext() == isStatic)
 				{
@@ -306,9 +310,20 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 	}
 
+	/**
+	 *
+	 * @param proposals
+	 * @param anchor
+	 * @param basePack   null means from any package
+	 * @param type  type (starts with "[java]")
+	 */
 	private void proposeJavaTypes(ArrayList<CompletionProposal> proposals, int anchor, String basePack, String type)
 	{
-		String base = basePack.substring(6).trim();
+		String base = null;
+		if (basePack != null)
+		{
+			base = basePack.substring(6).trim();
+		}
 		List<String> items = FanJavaIndexer.getInstance().listItems(base, type);
 		for (String s : items)
 		{
@@ -316,6 +331,28 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			// TODO: JavaProps
 			proposals.add(new FanImportProposal(s, anchor - type.length(), true));
 		}
+	}
+
+	/**
+	 * Propose defined types (fan.sys) + whatever listed in using
+	 */
+	private void proposeDefinedTypes(ArrayList<CompletionProposal> proposals, int anchor, String prefix, FanRootScope rootScope)
+	{
+		ArrayList<CompletionProposal> props = new ArrayList<CompletionProposal>();
+		Hashtable<String, FanAstResolvedType> usings = rootScope.getUsing();
+		for (String key : usings.keySet())
+		{
+			if (key.startsWith(prefix))
+			{
+				FanAstResolvedType type = usings.get(key);
+				if (!type.isUnresolved())
+				{
+					props.add(new FanTypeProposal(type.getType(), anchor));
+				}
+			}
+		}
+		proposeTypes("sys", props, anchor, prefix);
+		proposals.addAll(props);
 	}
 
 	// TODO: setup nice icons(package/class etc..) in importproposals
@@ -331,7 +368,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		CommonTree baseNode = FanLexAstUtils.findASTNodeAt(result, ts.index());
 		offset = ts.offset();
 		CommonTree curNode = FanLexAstUtils.findParentNode(baseNode, FanParser.AST_USING_POD);
-		System.out.println("Base node:"+baseNode.toString());
+		System.out.println("Base node:" + baseNode.toString());
 		//System.out.println("Cur node:"+curNode.toString());
 		if (curNode == null)
 		{
@@ -430,14 +467,11 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			//TODO:OP_ARROW ??
 			int index = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, FanParser.DOT);
 			int index2 = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, FanParser.OP_SAFE_CALL);
-			index=index2>index?index2:index;
+			index = index2 > index ? index2 : index;
 
-			// TODO: prefix is leftover from index to end of exprNode
 			String prefix = "";
 			if (exprNode.getTokenStopIndex() > index)
 			{
-				//String prefix = FanLexAstUtils.getTokenStreamSlice(result.getTokenStream(), index+1,exprNode.getTokenStopIndex());
-				// should always be a simple token (ID)
 				prefix = result.getTokenStream().get(index + 1).getText();
 			}
 			System.out.println("Prefix: " + prefix);

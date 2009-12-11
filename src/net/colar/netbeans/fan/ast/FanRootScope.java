@@ -50,17 +50,23 @@ public class FanRootScope extends FanAstScope
 		{
 			addError("Duplicated using: " + resolved + " / " + using.get(name), node);
 		}
+		if (type != null && FanPodIndexer.getInstance().hasPodType("sys", name))
+		{
+			if (type.pod() == null || !type.pod().name().equals("sys"))
+			{
+				addError("Duplicated using: " + resolved + " / " + "sys::" + name, node);
+			}
+		}
 		using.put(name, resolved);
 	}
 
 	/*private void addType(FanAstScope type)
 	{
-		if (type != null)
-		{
-			addChild(type);
-		}
+	if (type != null)
+	{
+	addChild(type);
+	}
 	}*/
-
 	public Hashtable<String, FanAstResolvedType> getUsing()
 	{
 		return using;
@@ -92,8 +98,10 @@ public class FanRootScope extends FanAstScope
 
 	public void addError(String info, CommonTree node)
 	{
-		if(node==null)
+		if (node == null)
+		{
 			return;
+		}
 		String key = "FanASTParser";
 		OffsetRange range = FanLexAstUtils.getNodeRange(parserResult, node);
 		int start = range.getStart();
@@ -105,7 +113,7 @@ public class FanRootScope extends FanAstScope
 
 	private void addUsing(CommonTree usingNode)
 	{
-		System.out.println("Usingnode: "+usingNode.toStringTree());
+		System.out.println("Usingnode: " + usingNode.toStringTree());
 		//TODO: warn/highlight if duplicated using
 		String name = null;
 		String type = null;
@@ -132,34 +140,14 @@ public class FanRootScope extends FanAstScope
 			if (type.toLowerCase().startsWith("[java]"))
 			{
 				String qname = type.substring(6).trim().replaceAll("::", "\\.");
-				/*   Syntax not possible with Fan grammar
-				if (qname.endsWith(".*"))
+				// Individual Item
+				if (!FanJavaIndexer.getInstance().hasItem(qname))
 				{
-				//  Whole package
-				String pack = qname.substring(0, qname.length() - 2);
-				if (!FanJavaIndexer.getInstance().hasPackage(pack))
-				{
-				addError("Unresolvable Java Package: " + qname, usingNode);
+					addError("Unresolved Java Item: " + qname, usingNode);
 				} else
 				{
-				List<String> items = FanJavaIndexer.getInstance().listItems(pack, "");
-				for (String s : items)
-				{
-				java.lang.reflect.Type t = FanJavaIndexer.getInstance().resolveType(s);
-				addJavaUsing(name, t);
-				}
-				}
-				} else*/
-				{
-					// Individual Item
-					if (!FanJavaIndexer.getInstance().hasItem(qname))
-					{
-						addError("Unresolved Java Item: " + qname, usingNode);
-					} else
-					{
-						fan.sys.Type t = FanJavaIndexer.getInstance().resolveType(qname);
-						addUsing(name, t, usingNode);
-					}
+					fan.sys.Type t = FanJavaIndexer.getInstance().resolveType(qname);
+					addUsing(name, t, usingNode);
 				}
 			} else
 			{
@@ -245,7 +233,7 @@ public class FanRootScope extends FanAstScope
 					{
 						if (slot instanceof FanAstMethod)
 						{
-							FanMethodScope scope = new FanMethodScope(child, (FanAstMethod)slot);
+							FanMethodScope scope = new FanMethodScope(child, (FanAstMethod) slot);
 							scope.parse();
 							child.addChild(scope);
 						}

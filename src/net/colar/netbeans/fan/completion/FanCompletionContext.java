@@ -119,6 +119,7 @@ public class FanCompletionContext
 	 */
 	private completionTypes determineCompletionType()
 	{
+		//result.dumpTree();
 		// We want the significant node before the cursor
 		FanLexAstUtils.moveToPrevNonWsToken(tokenStream, offset, 0);
 		CommonTree node = FanLexAstUtils.findASTNodeAt(result, tokenStream.index());
