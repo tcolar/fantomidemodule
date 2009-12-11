@@ -1,6 +1,17 @@
 ============= TODO Completion ===============================
 - Fully resolve type of expressions (as much as I can)
 - Add inherited slots (if not already defined - inherited)
+	Mixin  can inherit 0 .. n mixins
+	Enum ALWAYS inherit sys:ENUM and 0..n mixins
+	Class can inherit 0..1 superclass and 0..n mixins
+	
+	Find parent slots:
+	For Enum : check sys::Enum and inherited mixins
+	For Mixin: check inherited mixins
+	for Class: check supeclass, inherited mixins
+	Ned to note which pod, protection, const final and so on and wether virtual, abstract etc... (if duplicate, only keep closest definition)
+-> Check local slot names against parents to see if all abstract are present, and if all "override" are overriding something and wether the one overriden is virtual
+
 - Filter proposals (sont show innacessible items, private etc...
 - Do it, super(!= in method VS in type), namedSuper, this completion
 if super. at type level, ovveride methods (fields?)
