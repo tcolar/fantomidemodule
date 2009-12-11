@@ -51,16 +51,16 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	public void run(Result result, SchedulerEvent event)
 	{
 		FanParserResult res = (FanParserResult) result;
-		Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap();
-		// If there where parsing error, we skip semantic analysis (better than breaking previous run)
-		if (res.getDiagnostics().isEmpty())
+		Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap<OffsetRange, Set<ColoringAttributes>>();
+		//if (res.getDiagnostics().isEmpty())
 		{
 			CommonTree ast = res.getTree();
 			//System.out.println("AST TREE: " + ast.toStringTree());
 			//res.dumpTree();
 			scanTree(res, ast, newHighlights);
 			highlights = newHighlights.size() == 0 ? null : newHighlights;
-		} else
+		}
+		/*else
 		{
 			System.out.println("AST TREE HAS ERRORS");
 			List<? extends Error> errors = res.getDiagnostics();
@@ -69,7 +69,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 				System.err.println(err);
 			}
 			FanLexAstUtils.dumpTree(res.getTree(), 0);
-		}
+		}*/
 	}
 
 	@Override

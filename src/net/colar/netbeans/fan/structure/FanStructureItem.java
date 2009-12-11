@@ -46,7 +46,7 @@ public class FanStructureItem implements StructureItem
 		//TODO: modifiers
 		this.name = node.getText();
 		// node gives up index of 1st and last token part of this struct. item
-		// then we finx those tokens by index in tokenStream (from lexer)
+		// then we find those tokens by index in tokenStream (from lexer)
 		// from that we can find start and end location of struct. text in source file.
 		OffsetRange range = FanLexAstUtils.getNodeRange((FanParserResult) result, node);
 		start = range.getStart();

@@ -45,9 +45,11 @@ public class NBFanParser extends Parser
 		{
 			result = parser.parse(result);			
 			result.parseAstScope();
-		} catch (Exception e)
+		} catch (Throwable t)
 		{
-			throw new ParseException("Parser Exception.", e);
+			//throw new ParseException("Parser Exception.", e);
+			result.addError("Parsing Error", t);
+			t.printStackTrace();
 		}
 	}
 

@@ -1,5 +1,4 @@
-
-using  compiler::Assemble
+using [java] java.io::File as JFile
 
 class IDETest : Child
 {
@@ -8,14 +7,7 @@ class IDETest : Child
 
         Void doit(Str s, Int i)
 	{
-            tata := Test.make.hash
-            s.each(i.decrement.inverse).hash
  	}
-}
-
-class Child
-{
-    Int toto := 24
 }
 
 

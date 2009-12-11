@@ -63,8 +63,9 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public CodeCompletionResult complete(CodeCompletionContext context)
 	{
-		//TODO: Maybe have the completion methods on the AST Ndes iteslf ? (scope node)
-		//FileObject fo = context.getParserResult().getSnapshot().getSource().getFileObject();
+		ArrayList<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
+		try
+		{
 		String prefix = context.getPrefix();
 		if (prefix == null)
 		{
@@ -72,7 +73,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 
 		FanCompletionContext cpl = new FanCompletionContext(context);
-		ArrayList<CompletionProposal> proposals = new ArrayList();
 		int anchor = context.getCaretOffset();
 		preamble = cpl.getPreamble();
 		System.out.println("preamb: " + preamble);
@@ -96,7 +96,13 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				proposeCalls(proposals, context);
 				break;
 		}
-
+		}
+		catch(Exception e)
+		{	e.printStackTrace();
+			FanParserResult result=(FanParserResult)context.getParserResult();
+			if(result!=null)
+				result.addError("Completion error",e);
+		}
 		DefaultCompletionResult completionResult = new DefaultCompletionResult(proposals, false);
 		return completionResult;
 	}

@@ -173,6 +173,10 @@ public class FanLexAstUtils
 			start=end;
 			end=tmp;
 		}
+		if(start==-1)
+		{
+			return OffsetRange.NONE;
+		}
 		CommonTokenStream tokenStream = result.getTokenStream();
 		CommonToken startToken = (CommonToken) tokenStream.get(start);
 		CommonToken endToken = (CommonToken) tokenStream.get(end);
@@ -684,7 +688,7 @@ public class FanLexAstUtils
 		int index = node.getTokenStopIndex();
 		if (node.getChildCount() > 0)
 		{
-			List<CommonTree> children = node.getChildren();
+			List<CommonTree> children = (List<CommonTree>)node.getChildren();
 			for (int i = children.size() - 1; i >= 0; i--)
 			{
 				CommonTree child = children.get(i);
@@ -711,7 +715,7 @@ public class FanLexAstUtils
 	public static String getTokenStreamSlice(CommonTokenStream tokenStream, int start, int stop)
 	{
 		//TODO: is that good, this wil not have WS etc ...
-		List<CommonToken> tokens = tokenStream.getTokens(start, stop);
+		List<CommonToken> tokens = (List<CommonToken>)tokenStream.getTokens(start, stop);
 		StringBuffer text = new StringBuffer();
 		for (CommonToken tk : tokens)
 		{

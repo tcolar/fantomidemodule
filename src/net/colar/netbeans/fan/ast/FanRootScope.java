@@ -45,7 +45,7 @@ public class FanRootScope extends FanAstScope
 	private void addUsing(String name, fan.sys.Type type, CommonTree node)
 	{
 		FanAstResolvedType resolved = FanAstResolvedType.makeFromFanType(type);
-		System.out.println("- Using " + resolved.toString());
+		//System.out.println("- Using " + resolved.toString());
 		if (using.containsKey(name))
 		{
 			addError("Duplicated using: " + resolved + " / " + using.get(name), node);
