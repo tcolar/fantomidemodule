@@ -1,5 +1,16 @@
 convert rootscope or typescope to serailizable form
 type name, slots etc....
+Example FanRootScope.index() - save socument,ttimestamp, type name,slots,fields etc...
+	-> reindex/update when document is modified or moved(update doc url)
+	-> remove all doc refs when doc deleted
+	-> also save list of what's being used for quick where-used lookups ?
+	-> and for refactor as well
+	-> whereused table: Document - usedName - location (line# and/or range ?)
+	-> at startup check DB and delete all documents that don't exist anymore
+	-> then reindex all docs(source roots) with new timestamps (pob. chnaged outside of IDE)
+		-> no?: source listener should detect that and invoke reindexing by itself
+		-> should also detect a chnage froma  subversion pool -> test
+	-> what if java document ? -> index by java indexer ?
 then save -> json ? hsqldb/javadb ?
 then use with indexer.
 
