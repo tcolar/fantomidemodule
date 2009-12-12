@@ -11,7 +11,7 @@ import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
- * Scope for a type, maybe contains fields and other scopes -> slots
+ * Scope for a Type (class, enum, mixin)
  * @author tcolar
  */
 public class FanTypeScope extends FanAstScope
@@ -107,7 +107,7 @@ public class FanTypeScope extends FanAstScope
 						if (fanType.isFinal())
 						{
 							// this covers enums too
-							getRoot().addError("Can't Inherit from a final class!", child);
+							getRoot().addError("Can't inherit from a final class!", child);
 						} else if (fanType.isClass())
 						{
 							if (superClass == null)
