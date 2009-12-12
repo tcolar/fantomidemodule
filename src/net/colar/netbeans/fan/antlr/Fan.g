@@ -306,8 +306,9 @@ simpleType     	:  	id (SP_COLCOL id)?;
 mapType		:	sq_bracketL? nonMapType SP_QMARK? (LIST_TYPE SP_QMARK?)*
 				({notAfterEol()}? SP_COLON {notAfterEol()}? type)+ sq_bracketR?
 			-> ^(AST_MAP ^(AST_CHILD nonMapType) ^(AST_CHILD type));
+// TODO: SP_COMMA syntax to go away in Fan 1.0.49
 funcType 	:	SP_PIPE (SP_COMMA | (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType)) SP_PIPE;
-assignedType	:	OP_ARROW type;
+assignedType	:	OP_ARROW type?;
 formals 	:  	formal (SP_COMMA formal)*;
 formal		:	formalFull | formalTypeOnly | formalInferred;
 formalFull      :	type id;
