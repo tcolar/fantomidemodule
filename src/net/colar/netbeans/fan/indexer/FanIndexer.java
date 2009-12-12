@@ -21,13 +21,6 @@ import org.netbeans.modules.parsing.spi.indexing.Indexable;
 public class FanIndexer extends EmbeddingIndexer
 {
 
-	public static final String INDEX_POD = "INDEX_POD";
-	public static final String INDEX_CLASS = "INDEX_CLASS";
-	public static final String INDEX_MIXIN = "INDEX_MIXIN";
-	public static final String INDEX_ENUM = "INDEX_ENUM";
-	public static final String INDEX_FUNCTION = "INDEX_FUNCTION";
-	public static final String INDEX_FIELD = "INDEX_FIELD";
-
 	public FanIndexer()
 	{
 		super();
@@ -36,6 +29,8 @@ public class FanIndexer extends EmbeddingIndexer
 	@Override
 	protected void index(Indexable indexable, Result parserResult, Context context)
 	{
+
+		System.err.println("Indexing requested for: " + indexable.getURL());
 		//System.err.println("Indexing requested for: " + indexable.getURL());
 		/*try
 		{

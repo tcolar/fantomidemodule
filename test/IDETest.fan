@@ -1,7 +1,7 @@
 using [java] java.io::File as BFile
 using fwt
 
-class IDETest : Child
+class IDETest : Childi
 {
   Str string := "blah"
   Int number := 25
