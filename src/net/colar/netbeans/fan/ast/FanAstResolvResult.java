@@ -196,7 +196,7 @@ public class FanAstResolvResult
 
 		// TODO: Only works for super simple basic types
 		FanRootScope root = scope.getRoot();
-		String type = FanLexAstUtils.getNodeContent(root.getParserResult(), node);
+		String type = FanLexAstUtils.getNodeContent(root.getParserResult(), node).trim();
 
 		boolean nullable = true;
 		boolean list = false;
