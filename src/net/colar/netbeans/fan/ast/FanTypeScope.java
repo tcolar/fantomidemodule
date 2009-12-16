@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan.ast;
 
 import fan.sys.Type;
+import fanx.serial.ObjEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import net.colar.netbeans.fan.antlr.FanParser;
@@ -89,6 +90,8 @@ public class FanTypeScope extends FanAstScope
 					break;
 			}
 		}
+
+		//serialize();
 	}
 
 	private void parseInheitance(CommonTree inheritance)
@@ -147,5 +150,10 @@ public class FanTypeScope extends FanAstScope
 	public TypeKind getKind()
 	{
 		return kind;
+	}
+
+	public void serialize()
+	{
+		//System.out.println("Encoded: "+FanCustomObjEncoder.encode(this));
 	}
 }
