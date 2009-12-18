@@ -8,7 +8,7 @@ import java.util.logging.LogManager;
 
 /**
  * Class used for setting up temporary special Netbeans log levels (for debugging)
- * SetupLogging Called from FanLanguage
+ * SetupLogging Called from FanModuleInstall
  * @author thibautc
  */
 public class FanNBLogging
