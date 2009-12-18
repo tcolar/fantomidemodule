@@ -10,14 +10,14 @@ package net.colar.netbeans.fan.ast;
  */
 public class FanAstResolvedType
 {
+	fan.sys.Type typeObj;
+	types kind = types.FAN;
 
 	public enum types
 	{
 
 		UNRESOLVED, FAN
 	}
-	fan.sys.Type typeObj;
-	types kind = types.FAN;
 
 	/**
 	 * @param obj

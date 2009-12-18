@@ -5,7 +5,6 @@
 package net.colar.netbeans.fan.ast;
 
 import fan.sys.Type;
-import fanx.serial.ObjEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import net.colar.netbeans.fan.antlr.FanParser;

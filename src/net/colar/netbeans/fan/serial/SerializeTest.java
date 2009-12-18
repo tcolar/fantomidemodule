@@ -1,13 +1,12 @@
 /*
  * Thibaut Colar Dec 16, 2009
  */
-package net.colar.netbeans.fan;
+package net.colar.netbeans.fan.serial;
 
 import fan.sys.StrBufOutStream;
-import net.colar.netbeans.fan.ast.FanCustomObjEncoder;
 
 /**
- *
+ * Test Serialization of java object using Fantom
  * @author thibautc
  */
 public class SerializeTest
@@ -15,16 +14,17 @@ public class SerializeTest
 
 	public int num1 = 27;
 	public String str1 = "blah";
-
-	public void serialize()
-	{
-		System.out.println("Encoded: " + FanCustomObjEncoder.encode(this));
-	}
+	public transient String str2 = "blup";
+	public String[] strArray = {"str1", "str2", "str3"};
 
 	public static void main(String[] args)
 	{
 		SerializeTest test = new SerializeTest();
-		System.out.println(encode(test.num1));
+		String text = encode(test);
+		System.out.println(text);
+		System.out.println("---");
+		Object obj = FanCustomObjDecoder.decode(text);
+		System.out.println(encode(obj));
 	}
 
 	public static String encode(Object obj)

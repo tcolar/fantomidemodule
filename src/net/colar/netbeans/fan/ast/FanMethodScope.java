@@ -4,7 +4,6 @@
 package net.colar.netbeans.fan.ast;
 
 import java.util.Hashtable;
-import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
