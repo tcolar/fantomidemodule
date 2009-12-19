@@ -36,7 +36,7 @@ public class FanIndexerFactory extends EmbeddingIndexerFactory
 	}
 
 	@Override
-	public void filesDeleted(Collection<? extends Indexable> deleted, Context context)
+	public void filesDeleted(Iterable<? extends Indexable> deleted, Context context)
 	{
 		try
 		{
@@ -53,12 +53,12 @@ public class FanIndexerFactory extends EmbeddingIndexerFactory
 	}
 
 	@Override
-	public void filesDirty(Collection<? extends Indexable> dirty, Context context)
+	public void filesDirty(Iterable<? extends Indexable> iterable, Context context)
 	{
 		try
 		{
 			IndexingSupport is = IndexingSupport.getInstance(context);
-			Iterator<? extends Indexable> it = dirty.iterator();
+			Iterator<? extends Indexable> it = iterable.iterator();
 			while (it.hasNext())
 			{
 				is.markDirtyDocuments(it.next());
@@ -80,8 +80,6 @@ public class FanIndexerFactory extends EmbeddingIndexerFactory
 	{
 		return VERSION;
 	}
-
-
 
 }
 
