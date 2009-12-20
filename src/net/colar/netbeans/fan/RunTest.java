@@ -6,7 +6,7 @@ package net.colar.netbeans.fan;
 import net.colar.netbeans.fan.indexer.model.FanTypeModel;
 
 /**
- * Just a main for quicly testing something
+ * Just a main for quickly testing something
  * @author thibautc
  */
 public class RunTest

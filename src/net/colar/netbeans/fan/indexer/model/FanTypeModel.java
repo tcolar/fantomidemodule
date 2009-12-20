@@ -8,7 +8,7 @@ import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
 
 /**
- *
+ * Test
  * @author thibautc
  */
 public class FanTypeModel extends JOTModel

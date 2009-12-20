@@ -104,4 +104,14 @@ public class FanUtilities
 		//for(int i=0;i!=children.length;i++)
 		//    dumpFileObject(children[i],indent);
 	}
+
+	public static File getFanUserHome()
+	{
+		// netbeans.user: ex ~/.netbeans/fantom/
+		String nbHome=System.getProperty("netbeans.user");
+		String fantomHome = nbHome + File.separator + "fantom" + File.separator;
+		File f = new File(fantomHome);
+		f.mkdirs();
+		return f;
+	}
 }
