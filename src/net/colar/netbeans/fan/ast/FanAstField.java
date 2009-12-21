@@ -23,7 +23,6 @@ public class FanAstField extends FanAstScopeVarBase
 		name = FanLexAstUtils.getNodeContent(result, node.getFirstChildWithType(FanParser.AST_ID)).trim();
 		CommonTree typeNode = (CommonTree)node.getFirstChildWithType(FanParser.AST_TYPE);
 		type = FanAstResolvResult.makeFromSimpleTypeWithWarning(scope, typeNode);
-		// modifiers ??
 		List<CommonTree> modifs = FanLexAstUtils.getAllChildrenWithType(node, FanParser.AST_MODIFIER);
 		for(CommonTree m : modifs)
 		{
