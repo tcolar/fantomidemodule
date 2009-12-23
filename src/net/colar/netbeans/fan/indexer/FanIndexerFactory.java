@@ -66,6 +66,13 @@ public class FanIndexerFactory extends CustomIndexerFactory
 		indexer.index(itrbl, cntxt);
 	}
 
+	@Override
+	public void scanFinished(Context cntxt)
+	{
+		// TODO: csna the db to highlight unreolved items / errors ?
+		super.scanFinished(cntxt);
+	}
+
 }
 
 

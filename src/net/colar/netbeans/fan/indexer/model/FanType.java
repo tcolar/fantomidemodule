@@ -19,10 +19,7 @@ public class FanType extends JOTModel
 	public String simpleName="";
 	public String pod=""; // name of the pod it's in (or package for java ffi)
 	public Integer kind = -1; // class, enum, mixin
-	public Integer ffiKind = -1; // none, java
-	public Integer documentId = -1; // id of the document(source) it's found in - can be null;
-
-	public String superClass = ""; // qualified
+	public Long documentId = -1L; // id of the document(source) it's found in - can be null;
 
 	// modifiers / protection
 	public Integer protection = -1; // private, public(default), internal, protected
@@ -38,31 +35,21 @@ public class FanType extends JOTModel
 	@Override
 	protected void customize(JOTModelMapping mapping)
 	{
-		mapping.setPrimaryKey("qualifiedName");
+		mapping.requestIndex("qualifiedName");
 		mapping.defineFieldSize("qualifiedName", 255);
 		mapping.defineFieldSize("superClass", 255);
 		mapping.defineFieldSize("simpleName", 80);
 		mapping.defineFieldSize("pod", 80);
 	}
 
-	public int getDocumentId()
+	public long getDocumentId()
 	{
 		return documentId;
 	}
 
-	public void setDocumentId(int documentId)
+	public void setDocumentId(long documentId)
 	{
 		this.documentId = documentId;
-	}
-
-	public int getFfiKind()
-	{
-		return ffiKind;
-	}
-
-	public void setFfiKind(int ffiKind)
-	{
-		this.ffiKind = ffiKind;
 	}
 
 	public boolean isIsAbstract()
@@ -185,15 +172,4 @@ public class FanType extends JOTModel
 		this.simpleName = simpleName;
 	}
 
-	public String getSuperClass()
-	{
-		return superClass;
-	}
-
-	public void setSuperClass(String superClass)
-	{
-		this.superClass = superClass;
-	}
-
-	
 }

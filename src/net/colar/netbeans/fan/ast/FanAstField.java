@@ -15,20 +15,30 @@ import org.antlr.runtime.tree.CommonTree;
  */
 public class FanAstField extends FanAstScopeVarBase
 {
-	
+	// the string the type was resolved from
+	protected String typeString;
+
 	public FanAstField(FanAstScope scope, CommonTree node)
 	{
 		super(scope, node);
 		FanParserResult result = scope.getRoot().getParserResult();
 		name = FanLexAstUtils.getNodeContent(result, node.getFirstChildWithType(FanParser.AST_ID)).trim();
 		CommonTree typeNode = (CommonTree)node.getFirstChildWithType(FanParser.AST_TYPE);
+		typeString = FanLexAstUtils.getNodeContent(result, typeNode);
 		type = FanAstResolvResult.makeFromSimpleTypeWithWarning(scope, typeNode);
 		List<CommonTree> modifs = FanLexAstUtils.getAllChildrenWithType(node, FanParser.AST_MODIFIER);
 		for(CommonTree m : modifs)
 		{
-			FanAstScopeVarBase.modifs modif = FanAstScopeVarBase.parseModifier(FanLexAstUtils.getNodeContent(result, m).trim());
+			FanAstScopeVarBase.ModifEnum modif = FanAstScopeVarBase.parseModifier(FanLexAstUtils.getNodeContent(result, m).trim());
 			if(modif!=null)
 				modifiers.add(modif);
 		}
 	}
+
+	public String getTypeString()
+	{
+		return typeString;
+	}
+
+
 }

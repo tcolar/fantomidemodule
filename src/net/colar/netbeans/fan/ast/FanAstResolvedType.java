@@ -12,6 +12,8 @@ public class FanAstResolvedType
 {
 	fan.sys.Type typeObj;
 	Types kind = Types.FAN;
+	// might contain the simple type this was craeted from.
+	String typeText;
 
 	public enum Types
 	{
@@ -74,4 +76,16 @@ public class FanAstResolvedType
 	{
 		return kind == Types.UNRESOLVED;
 	}
+
+	public String getTypeText()
+	{
+		return typeText;
+	}
+
+	public void setTypeText(String typeText)
+	{
+		this.typeText = typeText;
+	}
+
+	
 }

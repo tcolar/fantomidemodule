@@ -6,6 +6,9 @@ package net.colar.netbeans.fan;
 
 import java.io.File;
 import java.util.StringTokenizer;
+import net.colar.netbeans.fan.project.FanProject;
+import net.jot.logger.JOTLogger;
+import net.jot.logger.JOTLoggerLocation;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -18,6 +21,7 @@ import org.openide.loaders.DataObjectNotFoundException;
  */
 public class FanUtilities
 {
+	public static final JOTLoggerLocation GENERIC_LOGGER = new JOTLoggerLocation("Generic (FanUtilities)");
 
 	/**
 	 * Opens the given file in the editor.
@@ -113,5 +117,38 @@ public class FanUtilities
 		File f = new File(fantomHome);
 		f.mkdirs();
 		return f;
+	}
+
+	/**
+	 * Try to resolve the pod name given a source path
+	 * @param path
+	 * @return
+	 */
+	public static String getPodForPath(String path)
+	{
+		FanProject prj = FanProject.findSourceProject(path);
+		if(prj!=null)
+			return prj.getName();
+
+		GENERIC_LOGGER.debug("Could not find project for: "+path);
+		// tryitng the 'stupid' way
+		File f = new File(path);
+		if(f.exists())
+		{
+			File fanFolder = f.getParentFile();
+			if(fanFolder.exists())
+			{
+				if( ! fanFolder.getName().equals("fan"))
+					GENERIC_LOGGER.info("Resolving pod name could be wrong, file not in 'fan' folder: "+path);
+				File podFolder = fanFolder.getParentFile();
+				if(podFolder.exists())
+				{
+					GENERIC_LOGGER.debug("Resolved pod to "+podFolder.getName()+" for: "+path);
+					return podFolder.getName();
+				}
+			}
+		}
+
+		return null;
 	}
 }

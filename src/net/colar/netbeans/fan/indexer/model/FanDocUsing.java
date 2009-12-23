@@ -29,7 +29,7 @@ public class FanDocUsing extends JOTModel
 	public static Vector<FanDocUsing> findAllForDoc(JOTTransaction transaction, long doc) throws Exception
 	{
 		JOTSQLCondition cond = new JOTSQLCondition("documentId", JOTSQLCondition.IS_EQUAL, doc);
-		return (Vector<FanDocUsing>)JOTQueryBuilder.selectQuery(FanDocUsing.class).where(cond).find(transaction).getAllResults();
+		return (Vector<FanDocUsing>)JOTQueryBuilder.selectQuery(transaction, FanDocUsing.class).where(cond).find().getAllResults();
 	}
 
 	public long getDocumentId()

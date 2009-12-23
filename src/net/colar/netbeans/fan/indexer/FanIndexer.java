@@ -7,15 +7,26 @@ package net.colar.netbeans.fan.indexer;
 import java.io.File;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.NBFanParser;
+import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
+import net.colar.netbeans.fan.ast.FanAstScope;
+import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
 import net.colar.netbeans.fan.ast.FanRootScope;
+import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanDocUsing;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
+import net.colar.netbeans.fan.indexer.model.FanType;
+import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
 import net.jot.logger.JOTLoggerLocation;
+import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.JOTTransaction;
+import net.jot.persistance.builders.JOTQueryBuilder;
+import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.spi.Parser.Result;
@@ -99,74 +110,116 @@ public class FanIndexer extends CustomIndexer
 					doc.setPath(docUrl.getPath());
 					doc.save(transaction);
 				}
+
+				// TODO: Do I need the usings ? mostly for where used -> later ?
+				// Also needed to resolve qualified types
+
 				// Update the  "using" / try to be smart as to not delete / recreate all everytime.
-				/*Vector<FanDocUsing> usings = FanDocUsing.findAllForDoc(transaction, doc.getId());
+				Vector<FanDocUsing> usings = FanDocUsing.findAllForDoc(transaction, doc.getId());
 				for (FanAstResolvedType type : rootScope.getUsing().values())
 				{
 					//TODO: unresolved should work too
- 					if (!type.isUnresolved())
+					String sig = type.getTypeText();
+					int foundIdx = -1;
+					for (int i = 0; i != usings.size(); i++)
 					{
-						String sig = type.getType().signature();
-						int foundIdx = -1;
-						for (int i = 0; i != usings.size(); i++)
+						FanDocUsing using = usings.get(i);
+						if (using.getType().equals(sig))
 						{
-							FanDocUsing using = usings.get(i);
-							if (using.getType().equals(sig))
-							{
-								foundIdx = i;
-								break;
-							}
-						}
-						if (foundIdx != -1)
-						{
-							// already in there, leave it alone
-							usings.remove(foundIdx);
-						} else
-						{
-							// new one, creating it
-							FanDocUsing using = new FanDocUsing();
-							using.setDocumentId(doc.getId());
-							using.setType(sig);
-							using.save(transaction);
+							foundIdx = i;
+							break;
 						}
 					}
+					if (foundIdx != -1)
+					{
+						// already in there, leave it alone
+						usings.remove(foundIdx);
+					} else
+					{
+						// new one, creating it
+						FanDocUsing using = new FanDocUsing();
+						using.setDocumentId(doc.getId());
+						using.setType(sig);
+						using.save(transaction);
+					}
 				}
-
-				// Whatever wasn't removed from the vector is old or unresolved, so we remove them.
+				// Whatever type wasn't removed from the vector is old or unresolved, so we remove them.
 				for (FanDocUsing using : usings)
 				{
 					using.delete(transaction);
 				}
-				*/
 
 				// types
-			/*for (FanAstScope child : rootScope.getChildren())
+				for (FanAstScope child : rootScope.getChildren())
 				{
-				// should be but check anyway in case of future change
-				if (child instanceof FanTypeScope)
-				{
-				FanTypeScope typeScope = (FanTypeScope) child;
-				typeScope.getName();
-				typeScope.getKind();
-				typeScope.getModifiers();
-				typeScope.getInheritedMixins();
-				typeScope.getSuperClass();
-				JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, typeScope.get);
-				FanType dbType = (FanType)JOTQueryBuilder.selectQuery(FanType.class).where(cond).findOne(transaction);
+					// should be but check anyway in case of future change
+					if (child instanceof FanTypeScope)
+					{
+						FanTypeScope typeScope = (FanTypeScope) child;
+						JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, typeScope.getQName());
+						FanType dbType = (FanType) JOTQueryBuilder.selectQuery(transaction, FanType.class).where(cond).findOrCreateOne();
+						dbType.setDocumentId(doc.getId());
+						dbType.setKind(typeScope.getKind().value());
+						dbType.setIsAbstract(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.ABSTRACT));
+						dbType.setIsConst(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.CONST));
+						dbType.setIsNative(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.NATIVE));
+						dbType.setIsOverride(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.OVERRIDE));
+						dbType.setIsReadonly(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.READONLY));
+						dbType.setIsStatic(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.STATIC));
+						dbType.setIsVirtual(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.VIRTUAL));
+						dbType.setQualifiedName(typeScope.getQName());
+						dbType.setSimpleName(typeScope.getName());
+						dbType.setPod(typeScope.getPod());
+						dbType.setProtection(typeScope.getProtection());
+						
+						dbType.save(transaction);
 
-				/*Collection<FanAstScopeVarBase> vars = child.getScopeVars();
-				for (FanAstScopeVarBase slot : vars)
-				{
-				if (slot instanceof FanAstMethod)
-				{
-				FanMethodScope scope = new FanMethodScope(child, (FanAstMethod) slot);
-				scope.parse();
-				child.addChild(scope);
+						// Try to reuse existing db entries.
+						Vector<FanTypeInheritance> currentInh = FanTypeInheritance.findAllForMainType(transaction, typeScope.getQName());
+						for (FanAstResolvedType item : typeScope.getAllInheritedItems())
+						{
+							String mainType = typeScope.getQName();
+							String inhType = item.getTypeText();
+							int foundIdx = -1;
+							for (int i = 0; i != currentInh.size(); i++)
+							{
+								FanTypeInheritance cur = currentInh.get(i);
+								if (cur.getMainType().equals("mainType") && cur.getInheritedType().equals(inhType))
+								{
+									foundIdx = i;
+									break;
+								}
+							}
+							if (foundIdx != -1)
+							{
+								// already in there, leave it alone
+								currentInh.remove(foundIdx);
+							} else
+							{
+								// new one, creating it
+								FanTypeInheritance inh = new FanTypeInheritance();
+								inh.setMainType(mainType);
+								inh.setInheritedType(inhType);
+								inh.save(transaction);
+							}
+						}
+						// Whatever wasn't removed from the vector is not needed anymore.
+						for (FanTypeInheritance inh : currentInh)
+						{
+							inh.delete(transaction);
+						}
+						// TODO: Do the slots.
+
+						/*Collection<FanAstScopeVarBase> vars = child.getScopeVars();
+						for (FanAstScopeVarBase slot : vars)
+						{
+						if (slot instanceof FanAstMethod)
+						{
+						}
+						// otherwise it's a field, nothing to do with it
+						}*/
+					}
 				}
-				// otherwise it's a field, nothing to do with it
-				}
-				}
-				}*/
 
 			}
 

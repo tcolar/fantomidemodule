@@ -28,13 +28,13 @@ public class FanVarProposal extends FanCompletionProposal
 		handle.setDoc(null);
 		element=handle;
 		this.modifiers = new HashSet<Modifier>();
-		if(var.hasModifier(FanAstScopeVarBase.modifs.PRIVATE))
+		if(var.hasModifier(FanAstScopeVarBase.ModifEnum.PRIVATE))
 			modifiers.add(Modifier.PRIVATE);
-		else if(var.hasModifier(FanAstScopeVarBase.modifs.PROTECTED) || var.hasModifier(FanAstScopeVarBase.modifs.INTERNAL))
+		else if(var.hasModifier(FanAstScopeVarBase.ModifEnum.PROTECTED) || var.hasModifier(FanAstScopeVarBase.ModifEnum.INTERNAL))
 			modifiers.add(Modifier.PROTECTED);
-		else if(var.hasModifier(FanAstScopeVarBase.modifs.PUBLIC))
+		else if(var.hasModifier(FanAstScopeVarBase.ModifEnum.PUBLIC))
 			modifiers.add(Modifier.PUBLIC);
-		if(var.hasModifier(FanAstScopeVarBase.modifs.STATIC))
+		if(var.hasModifier(FanAstScopeVarBase.ModifEnum.STATIC))
 			modifiers.add(Modifier.STATIC);
 	}
 

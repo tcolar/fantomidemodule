@@ -4,8 +4,12 @@
 
 package net.colar.netbeans.fan.indexer.model;
 
+import java.util.Vector;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
+import net.jot.persistance.JOTSQLCondition;
+import net.jot.persistance.JOTTransaction;
+import net.jot.persistance.builders.JOTQueryBuilder;
 
 /**
  * DB model for a Type inherance
@@ -13,6 +17,7 @@ import net.jot.persistance.JOTModelMapping;
  */
 public class FanTypeInheritance extends JOTModel
 {
+
 	public String mainType = ""; // fully qualified
 	public String inheritedType = ""; // fully qualified
 
@@ -43,5 +48,10 @@ public class FanTypeInheritance extends JOTModel
 		this.mainType = mainType;
 	}
 
+	public static Vector<FanTypeInheritance> findAllForMainType(JOTTransaction transaction, String mainType) throws Exception
+	{
+		JOTSQLCondition cond = new JOTSQLCondition("mainType", JOTSQLCondition.IS_EQUAL, mainType);
+		return (Vector<FanTypeInheritance>)JOTQueryBuilder.selectQuery(transaction, FanTypeInheritance.class).where(cond).find().getAllResults();
+	}
 	
 }

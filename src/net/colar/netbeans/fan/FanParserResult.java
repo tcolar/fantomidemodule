@@ -39,15 +39,19 @@ public class FanParserResult extends ParserResult
 {
 
 	List<Error> errors = new Vector<Error>();
-	private final String sourceName;
 	private ParserRuleReturnScope antlrScope = null;
 	private CommonTokenStream tokenStream;
 	private FanRootScope rootScope;
+	// full path of the source file
+	private final String sourcePath;
+	// simple name of the source file
+	private final String sourceName;
 
 	public FanParserResult(Snapshot snapshot, CommonTokenStream tokenStream)
 	{
 		super(snapshot);
 		this.sourceName = snapshot.getSource().getFileObject().getName();
+		this.sourcePath = snapshot.getSource().getFileObject().getPath();
 		this.tokenStream = tokenStream;
 	}
 
@@ -204,4 +208,11 @@ public class FanParserResult extends ParserResult
 	{
 		rootScope = FanAstParser.parseScope(this);
 	}
+
+	public String getSourcePath()
+	{
+		return sourcePath;
+	}
+
+	
 }

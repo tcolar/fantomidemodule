@@ -15,15 +15,22 @@ public abstract class FanAstScopeVarBase
 
 	protected String name;
 	protected FanAstResolvResult type = FanAstResolvResult.makeUnresolved();
-	protected ArrayList<FanAstScopeVarBase.modifs> modifiers = new ArrayList<FanAstScopeVarBase.modifs>();
+	protected ArrayList<FanAstScopeVarBase.ModifEnum> modifiers = new ArrayList<FanAstScopeVarBase.ModifEnum>();
 	protected FanAstScope scope;
 	protected CommonTree node;
 
 	// Modifiers
-	public enum modifs
+	public enum ModifEnum
 	{
-
-PRIVATE, PROTECTED, INTERNAL, PUBLIC, STATIC, CONST}
+		PRIVATE(1), PROTECTED(2), INTERNAL(3), PUBLIC(4), STATIC(5), CONST(6),
+		ABSTRACT(7), NATIVE(8), OVERRIDE(9), VIRTUAL(10), READONLY(11);
+		int val;
+		ModifEnum(int i)
+		{
+			val=i;
+		}
+		public int value() {return val;}
+	}
 
 	public FanAstScopeVarBase(FanAstScope scope, CommonTree node)
 	{
@@ -46,7 +53,7 @@ PRIVATE, PROTECTED, INTERNAL, PUBLIC, STATIC, CONST}
 		return scope;
 	}
 
-	public ArrayList<FanAstScopeVarBase.modifs> getModifiers()
+	public ArrayList<FanAstScopeVarBase.ModifEnum> getModifiers()
 	{
 		return modifiers;
 	}
@@ -65,7 +72,7 @@ PRIVATE, PROTECTED, INTERNAL, PUBLIC, STATIC, CONST}
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append(" :").append(name).append(" -> ").append(type.toString()).append(" [");
-		for (FanAstScopeVarBase.modifs m : modifiers)
+		for (FanAstScopeVarBase.ModifEnum m : modifiers)
 		{
 			sb = sb.append(m.toString()).append(", ");
 		}
@@ -77,27 +84,27 @@ PRIVATE, PROTECTED, INTERNAL, PUBLIC, STATIC, CONST}
 	 * @param m
 	 * @return
 	 */
-	public static modifs parseModifier(String m)
+	public static ModifEnum parseModifier(String m)
 	{
 		//TODO: const ?
 		if (m.toLowerCase().equalsIgnoreCase("private"))
 		{
-			return modifs.PRIVATE;
+			return ModifEnum.PRIVATE;
 		} else if (m.toLowerCase().equalsIgnoreCase("public"))
 		{
-			return modifs.PUBLIC;
+			return ModifEnum.PUBLIC;
 		} else if (m.toLowerCase().equalsIgnoreCase("protected"))
 		{
-			return modifs.PROTECTED;
+			return ModifEnum.PROTECTED;
 		} else if (m.toLowerCase().equalsIgnoreCase("internal"))
 		{
-			return modifs.INTERNAL;
+			return ModifEnum.INTERNAL;
 		} else if (m.toLowerCase().equalsIgnoreCase("const"))
 		{
-			return modifs.CONST;
+			return ModifEnum.CONST;
 		} else if (m.toLowerCase().equalsIgnoreCase("static"))
 		{
-			return modifs.STATIC;
+			return ModifEnum.STATIC;
 		} else
 		{
 			System.out.println("Unrecognized modifier: " + m);
@@ -105,7 +112,7 @@ PRIVATE, PROTECTED, INTERNAL, PUBLIC, STATIC, CONST}
 		return null;
 	}
 
-	public boolean hasModifier(modifs modifier)
+	public boolean hasModifier(ModifEnum modifier)
 	{
 		return modifiers.contains(modifier);
 	}

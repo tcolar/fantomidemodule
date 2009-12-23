@@ -106,6 +106,16 @@ public class FanProject implements Project, ProjectInformation
 		return projectDirectory.getFileObject(FanProjectFactory.FAN_BUILD_FILE) != null;
 	}
 
+	// Find the project for a given path
+	public static FanProject findSourceProject(String sourcePath)
+	{
+		Lookup lookup = Lookups.forPath(sourcePath);
+		if(lookup ==null)
+			return null;
+		return lookup.lookup(FanProject.class);
+	}
+
+
 	private final class ProjectOpenedHookImpl extends ProjectOpenedHook
 	{
 

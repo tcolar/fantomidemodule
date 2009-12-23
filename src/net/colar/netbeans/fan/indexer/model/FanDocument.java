@@ -27,7 +27,7 @@ public class FanDocument extends JOTModel
 	public static FanDocument findOrCreateOne(JOTTransaction transaction, String path) throws Exception
 	{
 		JOTSQLCondition cond = new JOTSQLCondition("path", JOTSQLCondition.IS_EQUAL, path);
-		FanDocument doc = (FanDocument)JOTQueryBuilder.selectQuery(FanDocument.class).where(cond).findOrCreateOne(transaction);
+		FanDocument doc = (FanDocument)JOTQueryBuilder.selectQuery(transaction, FanDocument.class).where(cond).findOrCreateOne();
 		return doc;
 	}
 

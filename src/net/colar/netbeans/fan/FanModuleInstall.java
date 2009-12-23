@@ -97,7 +97,7 @@ public class FanModuleInstall extends ModuleInstall
 		Properties props = new Properties();
 		props.load(fis);
 		fis.close();
-		props.setProperty("db.jdbc.url", "jdbc:h2:file:" + dbFolder.getAbsolutePath() + File.separator+"default;TRACE_LEVEL_FILE=2");
+		props.setProperty("db.jdbc.url", "jdbc:h2:file:" + dbFolder.getAbsolutePath() + File.separator+"default;TRACE_LEVEL_FILE=2;LOCK_TIMEOUT=15000");
 		FileOutputStream fos = new FileOutputStream(dbFile);
 		props.store(fos,"");
 		fos.close();

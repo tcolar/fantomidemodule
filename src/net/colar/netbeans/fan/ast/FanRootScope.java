@@ -10,6 +10,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanPodIndexer;
@@ -35,16 +36,20 @@ public class FanRootScope extends FanAstScope
 	List<Error> errors = new ArrayList<Error>();
 	List<Hint> hints = new ArrayList<Hint>();
 	private final FanParserResult parserResult;
+	private final String pod;
 
 	public FanRootScope(FanParserResult result)
 	{
 		super(null, result.getTree());
 		this.parserResult = result;
+		pod = FanUtilities.getPodForPath(result.getSourcePath());
 	}
 
-	private void addUsing(String name, fan.sys.Type type, CommonTree node)
+	private void addUsing(String name, fan.sys.Type type, CommonTree node, String text)
 	{
 		FanAstResolvedType resolved = FanAstResolvedType.makeFromFanType(type);
+		// WARNING: it can be something like sys, or sys::fwt or even a java type etc ...
+		resolved.setTypeText(text);
 		//System.out.println("- Using " + resolved.toString());
 		if (using.containsKey(name))
 		{
@@ -147,7 +152,7 @@ public class FanRootScope extends FanAstScope
 				} else
 				{
 					fan.sys.Type t = FanJavaIndexer.getInstance().resolveType(qname);
-					addUsing(name, t, usingNode);
+					addUsing(name, t, usingNode, type);
 				}
 			} else
 			{
@@ -165,7 +170,7 @@ public class FanRootScope extends FanAstScope
 					}
 
 					Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
-					addUsing(name, t, usingNode);
+					addUsing(name, t, usingNode, type);
 				} else
 				{
 					// Adding all the types of a Pod
@@ -177,7 +182,7 @@ public class FanRootScope extends FanAstScope
 						Set<Type> items = FanPodIndexer.getInstance().getPodTypes(name);
 						for (Type t : items)
 						{
-							addUsing(t.name(), t, usingNode);
+							addUsing(t.name(), t, usingNode, type);
 						}
 					}
 				}
@@ -302,5 +307,12 @@ public class FanRootScope extends FanAstScope
 		}
 		return null;
 	}
+
+	public String getPod()
+	{
+		return pod;
+	}
+
+
 }
 
