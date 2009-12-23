@@ -8,6 +8,7 @@ import fan.sys.Type;
 import java.util.ArrayList;
 import java.util.List;
 import net.colar.netbeans.fan.antlr.FanParser;
+import net.colar.netbeans.fan.ast.FanAstScopeVarBase.modifs;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -19,15 +20,18 @@ public class FanTypeScope extends FanAstScope
 
 	public enum TypeKind
 	{
-
-		CLASS, MIXIN, ENUM
-	};
+		CLASS(1), MIXIN(2), ENUM(3);
+		int val;
+		private TypeKind(int i){val=i;}
+	}
 	String name = "";
 	List<FanAstResolvedType> inheritedMixins = new ArrayList<FanAstResolvedType>();
 	// TODO: inherited superclass if any (there can be only one)
 	FanAstResolvedType superClass = null;
 	// kind of type
 	TypeKind kind = TypeKind.CLASS;
+	// modifiers
+	protected ArrayList<FanAstScopeVarBase.modifs> modifiers = new ArrayList<FanAstScopeVarBase.modifs>();
 
 	public FanTypeScope(FanRootScope parent, CommonTree ast)
 	{
@@ -60,8 +64,16 @@ public class FanTypeScope extends FanAstScope
 			name = FanLexAstUtils.getNodeContent(getRoot().getParserResult(), nameNode);
 		}
 
+		List<CommonTree> modifs = FanLexAstUtils.getAllChildrenWithType(ast, FanParser.AST_MODIFIER);
+		for(CommonTree m : modifs)
+		{
+			FanAstScopeVarBase.modifs modif = FanAstScopeVarBase.parseModifier(FanLexAstUtils.getNodeContent(getRoot().getParserResult(), m).trim());
+			if(modif!=null)
+				modifiers.add(modif);
+		}
+
 		// Deal with ineritance
-		parseInheitance(inheritance);
+		parseInheritance(inheritance);
 
 		// DEal with children - slots
 		List<CommonTree> children = (List<CommonTree>) content.getChildren();
@@ -93,7 +105,7 @@ public class FanTypeScope extends FanAstScope
 		//serialize();
 	}
 
-	private void parseInheitance(CommonTree inheritance)
+	private void parseInheritance(CommonTree inheritance)
 	{
 		if (inheritance != null && inheritance.getChildCount() > 0)
 		{
@@ -155,4 +167,21 @@ public class FanTypeScope extends FanAstScope
 	{
 		//System.out.println("Encoded: "+FanCustomObjEncoder.encode(this));
 	}
+
+	public List<FanAstResolvedType> getInheritedMixins()
+	{
+		return inheritedMixins;
+	}
+
+	public ArrayList<modifs> getModifiers()
+	{
+		return modifiers;
+	}
+
+	public FanAstResolvedType getSuperClass()
+	{
+		return superClass;
+	}
+
+	
 }

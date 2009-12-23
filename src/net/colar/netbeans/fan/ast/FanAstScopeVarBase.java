@@ -23,8 +23,7 @@ public abstract class FanAstScopeVarBase
 	public enum modifs
 	{
 
-		PRIVATE, PROTECTED, INTERNAL, PUBLIC, STATIC
-	}
+PRIVATE, PROTECTED, INTERNAL, PUBLIC, STATIC, CONST}
 
 	public FanAstScopeVarBase(FanAstScope scope, CommonTree node)
 	{
@@ -93,6 +92,9 @@ public abstract class FanAstScopeVarBase
 		} else if (m.toLowerCase().equalsIgnoreCase("internal"))
 		{
 			return modifs.INTERNAL;
+		} else if (m.toLowerCase().equalsIgnoreCase("const"))
+		{
+			return modifs.CONST;
 		} else if (m.toLowerCase().equalsIgnoreCase("static"))
 		{
 			return modifs.STATIC;

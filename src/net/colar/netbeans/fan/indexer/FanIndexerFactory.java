@@ -3,71 +3,40 @@
  */
 package net.colar.netbeans.fan.indexer;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.indexing.Context;
-import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
-import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
+import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
+import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
-import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
 
 /**
  * Indexer Factory impl.
  * @author thibautc
  */
-public class FanIndexerFactory extends EmbeddingIndexerFactory
+
+// Registered through layer.xml
+public class FanIndexerFactory extends CustomIndexerFactory
 {
 
-	static{System.err.println("Fantom - Init indexer Factory");}
-
+	static
+	{
+		System.err.println("Fantom - Init indexer Factory");
+	}
 	public static final String NAME = "FanIndexer";
 	public static final int VERSION = 1;
 
 	@Override
-	public EmbeddingIndexer createIndexer(Indexable indexable, Snapshot snapshot)
+	public CustomIndexer createIndexer()
 	{
-		if (snapshot.getSource().getFileObject() != null)
-		{
-			return new FanIndexer();
-		}
-		return null;
+		return new FanIndexer();
 	}
 
 	@Override
-	public void filesDeleted(Iterable<? extends Indexable> deleted, Context context)
+	public boolean supportsEmbeddedIndexers()
 	{
-		try
-		{
-			IndexingSupport is = IndexingSupport.getInstance(context);
-			Iterator<? extends Indexable> it = deleted.iterator();
-			while (it.hasNext())
-			{
-				is.removeDocuments(it.next());
-			}
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		// TODO: ??
+		return false;
 	}
 
-	@Override
-	public void filesDirty(Iterable<? extends Indexable> iterable, Context context)
-	{
-		try
-		{
-			IndexingSupport is = IndexingSupport.getInstance(context);
-			Iterator<? extends Indexable> it = iterable.iterator();
-			while (it.hasNext())
-			{
-				is.markDirtyDocuments(it.next());
-			}
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
 
 	@Override
 	public String getIndexerName()
@@ -79,6 +48,19 @@ public class FanIndexerFactory extends EmbeddingIndexerFactory
 	public int getIndexVersion()
 	{
 		return VERSION;
+	}
+
+	@Override
+	public void filesDeleted(Iterable<? extends Indexable> itrbl, Context cntxt)
+	{
+		//TODO
+	}
+
+	@Override
+	public void filesDirty(Iterable<? extends Indexable> itrbl, Context cntxt)
+	{
+		FanIndexer indexer = (FanIndexer) createIndexer();
+		indexer.index(itrbl, cntxt);
 	}
 
 }
