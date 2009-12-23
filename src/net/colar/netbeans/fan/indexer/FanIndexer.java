@@ -15,7 +15,6 @@ import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.indexer.model.FanDocUsing;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.jot.logger.JOTLoggerLocation;
-import net.jot.persistance.JOTPersistanceManager;
 import net.jot.persistance.JOTTransaction;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
