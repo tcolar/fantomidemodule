@@ -59,6 +59,9 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	@Override
 	public void filesDirty(Iterable<? extends Indexable> itrbl, Context cntxt)
 	{
+		//TODO: maymbe use a queue or a thread or something and not reindex at very single chnage
+		// of tghe source file
+		// ie: if changed but not in last 1500ms
 		FanIndexer indexer = (FanIndexer) createIndexer();
 		indexer.index(itrbl, cntxt);
 	}
