@@ -11,9 +11,9 @@ package net.colar.netbeans.fan.ast;
 public class FanAstResolvedType
 {
 	fan.sys.Type typeObj;
-	types kind = types.FAN;
+	Types kind = Types.FAN;
 
-	public enum types
+	public enum Types
 	{
 
 		UNRESOLVED, FAN
@@ -46,7 +46,7 @@ public class FanAstResolvedType
 		return typeObj;
 	}
 
-	public types getKind()
+	public Types getKind()
 	{
 		return kind;
 	}
@@ -72,6 +72,6 @@ public class FanAstResolvedType
 
 	public boolean isUnresolved()
 	{
-		return kind == types.UNRESOLVED;
+		return kind == Types.UNRESOLVED;
 	}
 }

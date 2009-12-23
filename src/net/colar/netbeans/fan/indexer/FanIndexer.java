@@ -100,9 +100,10 @@ public class FanIndexer extends CustomIndexer
 					doc.save(transaction);
 				}
 				// Update the  "using" / try to be smart as to not delete / recreate all everytime.
-				Vector<FanDocUsing> usings = FanDocUsing.findAllForDoc(transaction, doc.getId());
+				/*Vector<FanDocUsing> usings = FanDocUsing.findAllForDoc(transaction, doc.getId());
 				for (FanAstResolvedType type : rootScope.getUsing().values())
 				{
+					//TODO: unresolved should work too
  					if (!type.isUnresolved())
 					{
 						String sig = type.getType().signature();
@@ -131,11 +132,12 @@ public class FanIndexer extends CustomIndexer
 					}
 				}
 
-				// Whatever wan't removed from the vector is old or unresolved, so we remove them.
+				// Whatever wasn't removed from the vector is old or unresolved, so we remove them.
 				for (FanDocUsing using : usings)
 				{
 					using.delete(transaction);
 				}
+				*/
 
 				// types
 			/*for (FanAstScope child : rootScope.getChildren())
@@ -168,7 +170,7 @@ public class FanIndexer extends CustomIndexer
 
 			}
 
-			// Only commit if everyhting went well.
+			// Only commit if everything went well.
 			transaction.commit();
 		} catch (Exception e)
 		{
