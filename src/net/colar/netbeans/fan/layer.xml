@@ -80,6 +80,9 @@
 					<attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.FanTokenID.language"/>
 					<attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
 				</file>
+                <file name="FanIndexerFactory.instance">
+                    <attr name="instanceClass" stringvalue="net.colar.netbeans.fan.indexer.FanIndexerFactory"/>
+                </file>
 				<folder name="GlyphGutterActions">
 					<file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
 						<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>

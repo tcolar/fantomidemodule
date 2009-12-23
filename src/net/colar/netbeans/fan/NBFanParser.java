@@ -32,18 +32,23 @@ public class NBFanParser extends Parser
 	@Override
 	public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException
 	{
-		//System.out.println("Starting parsing of: "+snapshot.getSource().getFileObject().getPath());
+		parse(snapshot);
+	}
+
+	public void parse(Snapshot snapshot)
+	{
+		System.out.println("Starting parsing of: " + snapshot.getSource().getFileObject().getPath());
 		FanLexer lexer = new FanLexer(new ANTLRStringStream(snapshot.getText().toString()));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 		FanParser parser = new FanParser(tokens);
-		parser.nbErrors=true;
+		parser.nbErrors = true;
 		parser.setTreeAdaptor(FAN_TREE_ADAPTOR);
 
 		result = new FanParserResult(snapshot, tokens);
 		try
 		{
-			result = parser.parse(result);			
+			result = parser.parse(result);
 			result.parseAstScope();
 		} catch (Throwable t)
 		{
@@ -51,10 +56,15 @@ public class NBFanParser extends Parser
 			result.addError("Parsing Error", t);
 			t.printStackTrace();
 		}
+
 	}
 
 	@Override
 	public Result getResult(Task task) throws ParseException
+	{
+		return getResult();
+	}
+	public Result getResult()
 	{
 		return result;
 	}
@@ -79,7 +89,7 @@ public class NBFanParser extends Parser
 	/**
 	 * Static ANTLR tree adaptor.
 	 */
-	static final TreeAdaptor FAN_TREE_ADAPTOR = new CommonTreeAdaptor()
+	public static final TreeAdaptor FAN_TREE_ADAPTOR = new CommonTreeAdaptor()
 	{
 
 		@Override

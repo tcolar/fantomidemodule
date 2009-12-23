@@ -9,7 +9,6 @@ import java.util.Set;
 import net.colar.netbeans.fan.completion.FanCompletionHandler;
 import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
 import net.colar.netbeans.fan.hints.FanHintsProvider;
-import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.structure.FanFormatter;
 import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
@@ -23,7 +22,6 @@ import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.parsing.spi.Parser;
-import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 
 /**
  * Primary Fan language definition
@@ -115,12 +113,6 @@ public class FanLanguage extends DefaultLanguageConfig
 	public CodeCompletionHandler getCompletionHandler()
 	{
 		return new FanCompletionHandler();
-	}
-
-	@Override
-	public EmbeddingIndexerFactory getIndexerFactory()
-	{
-		return new FanIndexerFactory();
 	}
 
 	@Override

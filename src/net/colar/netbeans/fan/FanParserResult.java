@@ -200,7 +200,7 @@ public class FanParserResult extends ParserResult
 		return rootScope;
 	}
 
-	void parseAstScope()
+	public void parseAstScope()
 	{
 		rootScope = FanAstParser.parseScope(this);
 	}

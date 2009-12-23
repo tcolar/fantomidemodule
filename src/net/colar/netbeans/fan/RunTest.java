@@ -3,7 +3,7 @@
  */
 package net.colar.netbeans.fan;
 
-import net.colar.netbeans.fan.indexer.model.FanTypeModel;
+import net.colar.netbeans.fan.indexer.model.FanType;
 
 /**
  * Just a main for quickly testing something
@@ -16,7 +16,7 @@ public class RunTest
 	{
 		try
 		{
-			FanTypeModel model = new FanTypeModel();
+			FanType model = new FanType();
 			model.save();
 		} catch (Exception e)
 		{
