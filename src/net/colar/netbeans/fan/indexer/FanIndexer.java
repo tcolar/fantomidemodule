@@ -60,6 +60,8 @@ public class FanIndexer extends CustomIndexer
 		}
 	}
 
+	// TODO: It would be MUCH faster to just parse what we need (types/slots)
+	// Might need a separte ANTLR grammar though.
 	public void index(String path)
 	{
 		long then = new Date().getTime();
