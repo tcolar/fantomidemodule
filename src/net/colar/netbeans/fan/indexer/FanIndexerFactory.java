@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.platform.FanPlatform;
+import net.jot.logger.JOTLogger;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
@@ -118,20 +119,22 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	@Override
 	public boolean scanStarted(Context context)
 	{
+		JOTLogger.info(this, "Starting indexing of: "+ context.getRoot());
 		FileObject root = context.getRoot();
-		scanFolder(root);
+		int nb=scanFolder(root, 0);
 		// what does the return mean ?
+		JOTLogger.info(this, "Done indexing "+nb+" files for: "+ context.getRoot());
 		return true;
 	}
 
-	private void scanFolder(FileObject root)
+	private int scanFolder(FileObject root, int nb)
 	{
 		FanPlatform platform = FanPlatform.getInstance(false);
 		if(platform !=null)
 		{
 			// don't do Fantom distro sources since we have (faster) binaries
 			if(FileUtil.isParentOf(platform.getFanHome(), root))
-				return;
+				return nb;
 		}
 		FileObject[] children = root.getChildren();
 		for (FileObject child : children)
@@ -139,13 +142,14 @@ public class FanIndexerFactory extends CustomIndexerFactory
 			if (child.isFolder())
 			{
 				//recurse
-				scanFolder(child);
+				nb = scanFolder(child, nb);
 			} else
 			{
 				if(child.hasExt("fan") || child.hasExt("fwt"))
 				{
 					if(FanIndexer.checkIfNeedsReindexing(child.getPath(), child.lastModified().getTime()))
 					{
+						nb++;
 						new FanIndexer().index(child.getPath());
 					}
 				}
@@ -154,6 +158,7 @@ public class FanIndexerFactory extends CustomIndexerFactory
 				// index if it is.
 			}
 		}
+		return nb;
 	}
 
 	@Override
