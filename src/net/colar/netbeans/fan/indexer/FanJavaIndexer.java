@@ -72,7 +72,7 @@ public class FanJavaIndexer
 			return type;
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return null;
 	}
