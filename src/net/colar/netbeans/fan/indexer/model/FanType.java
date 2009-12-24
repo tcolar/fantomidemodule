@@ -4,8 +4,12 @@
 
 package net.colar.netbeans.fan.indexer.model;
 
+import java.util.Vector;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
+import net.jot.persistance.JOTSQLCondition;
+import net.jot.persistance.JOTTransaction;
+import net.jot.persistance.builders.JOTQueryBuilder;
 
 /**
  * DB Model for a "Type" (class, enum, mixin)
@@ -13,6 +17,7 @@ import net.jot.persistance.JOTModelMapping;
  */
 public class FanType extends JOTModel
 {
+
 	// Primary key
 	public String qualifiedName=""; // net.colar.jco -> Unique !
 	
@@ -170,6 +175,12 @@ public class FanType extends JOTModel
 	public void setSimpleName(String simpleName)
 	{
 		this.simpleName = simpleName;
+	}
+
+	public static Vector<FanType> findAllForDoc(JOTTransaction transaction, long doc) throws Exception
+	{
+		JOTSQLCondition cond = new JOTSQLCondition("documentId", JOTSQLCondition.IS_EQUAL, doc);
+		return (Vector<FanType>)JOTQueryBuilder.selectQuery(transaction, FanType.class).where(cond).find().getAllResults();
 	}
 
 }

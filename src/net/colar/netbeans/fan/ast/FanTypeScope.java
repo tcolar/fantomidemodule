@@ -38,9 +38,7 @@ public class FanTypeScope extends FanAstScope
 	String name = "";
 	// qualified Name
 	String qName = "";
-	List<FanAstResolvedType> inheritedMixins = new ArrayList<FanAstResolvedType>();
-	// TODO: inherited superclass if any (there can be only one)
-	FanAstResolvedType superClass = null;
+	List<FanAstResolvedType> inheritedItems = new ArrayList<FanAstResolvedType>();
 	// kind of type
 	TypeKind kind = TypeKind.CLASS;
 	// modifiers
@@ -121,6 +119,26 @@ public class FanTypeScope extends FanAstScope
 		//serialize();
 	}
 
+	private boolean hasInheritedClass()
+	{
+		for(FanAstResolvedType type : inheritedItems)
+		{
+			if(! type.isUnresolved() && type.getType().isClass())
+				return true;
+		}
+		return false;
+	}
+	private boolean hasInheritedItem(String text)
+	{
+		for(FanAstResolvedType type : inheritedItems)
+		{
+			if(type.getTypeText().equals(text))
+				return true;
+		}
+		return false;
+	}
+
+
 	private void parseInheritance(CommonTree inheritance)
 	{
 		if (inheritance != null && inheritance.getChildCount() > 0)
@@ -131,8 +149,12 @@ public class FanTypeScope extends FanAstScope
 				if (child != null && child.getType() == FanParser.AST_ID)
 				{
 					FanAstResolvedType inhType = FanAstResolvResult.makeFromSimpleType(this, child).getType();
-					inhType.setTypeText(child.getText());
-					if (!inhType.isUnresolved())
+					String text = FanLexAstUtils.getNodeContent(getRoot().getParserResult(), child);
+					inhType.setTypeText(text);
+					if (inhType.isUnresolved())
+					{
+						getRoot().addError("Unresolved inherited item!", child);
+					} else
 					{
 						Type fanType = inhType.getType();
 						if (fanType.isFinal())
@@ -141,21 +163,15 @@ public class FanTypeScope extends FanAstScope
 							getRoot().addError("Can't inherit from a final class!", child);
 						} else if (fanType.isClass())
 						{
-							if (superClass == null)
-							{
-								superClass = inhType;
-							} else
+							if (hasInheritedClass())
 							{
 								getRoot().addError("Can only inherit from one class!", inheritance);
 							}
-						} else
-						{
-							// must be a mixin
-							inheritedMixins.add(inhType);
 						}
-					} else
+					}
+					if (!hasInheritedItem(text))
 					{
-						getRoot().addError("Unresolved inherited item!", child);
+						inheritedItems.add(inhType);
 					}
 				}
 			}
@@ -184,19 +200,14 @@ public class FanTypeScope extends FanAstScope
 		//System.out.println("Encoded: "+FanCustomObjEncoder.encode(this));
 	}
 
-	public List<FanAstResolvedType> getInheritedMixins()
+	public List<FanAstResolvedType> getInheritedItems()
 	{
-		return inheritedMixins;
+		return inheritedItems;
 	}
 
 	public ArrayList<ModifEnum> getModifiers()
 	{
 		return modifiers;
-	}
-
-	public FanAstResolvedType getSuperClass()
-	{
-		return superClass;
 	}
 
 	/**
@@ -220,24 +231,20 @@ public class FanTypeScope extends FanAstScope
 
 	public int getProtection()
 	{
-		if(hasModifier(ModifEnum.PRIVATE))
+		if (hasModifier(ModifEnum.PRIVATE))
+		{
 			return ModifEnum.PRIVATE.value();
-		if(hasModifier(ModifEnum.PROTECTED))
+		}
+		if (hasModifier(ModifEnum.PROTECTED))
+		{
 			return ModifEnum.PROTECTED.value();
-		if(hasModifier(ModifEnum.INTERNAL))
+		}
+		if (hasModifier(ModifEnum.INTERNAL))
+		{
 			return ModifEnum.INTERNAL.value();
+		}
 		// default is public
 		return ModifEnum.PUBLIC.value();
 	}
-
-	public Iterable<FanAstResolvedType> getAllInheritedItems()
-	{
-		// TODO: lazy cache ?
-		List items = new ArrayList(getInheritedMixins());
-		if(superClass!=null)
-			items.add(superClass);
-		return items;
-	}
-
 
 }

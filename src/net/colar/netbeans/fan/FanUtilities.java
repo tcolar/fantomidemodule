@@ -7,7 +7,6 @@ package net.colar.netbeans.fan;
 import java.io.File;
 import java.util.StringTokenizer;
 import net.colar.netbeans.fan.project.FanProject;
-import net.jot.logger.JOTLogger;
 import net.jot.logger.JOTLoggerLocation;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;

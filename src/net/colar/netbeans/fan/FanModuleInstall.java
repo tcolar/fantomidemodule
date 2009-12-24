@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTPersistanceManager;
 import net.jot.prefs.JOTPreferences;
@@ -67,6 +68,7 @@ public class FanModuleInstall extends ModuleInstall
 		System.out.println("Shutting down Fantom plugin.");
 		try
 		{
+			FanIndexerFactory.shutdown();
 			JOTPersistanceManager.getInstance().destroy();
 			JOTLogger.destroy();
 		} catch (Exception e)
@@ -97,8 +99,8 @@ public class FanModuleInstall extends ModuleInstall
 		Properties props = new Properties();
 		props.load(fis);
 		fis.close();
-		// MVVC needed for some transactions (allow read/write) in transaction
-		props.setProperty("db.jdbc.url", "jdbc:h2:file:" + dbFolder.getAbsolutePath() + File.separator+"default;MVCC=TRUE;TRACE_LEVEL_FILE=2;LOCK_TIMEOUT=8000");
+		// MVVC needed for some transactions (allow read/write) in transaction MVCC=TRUE;
+		props.setProperty("db.jdbc.url", "jdbc:h2:file:" + dbFolder.getAbsolutePath() + File.separator+"default;TRACE_LEVEL_FILE=2;LOCK_TIMEOUT=8000");
 		FileOutputStream fos = new FileOutputStream(dbFile);
 		props.store(fos,"");
 		fos.close();

@@ -23,6 +23,7 @@ import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
 import net.jot.logger.JOTLoggerLocation;
+import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.JOTTransaction;
 import net.jot.persistance.builders.JOTQueryBuilder;
@@ -60,32 +61,37 @@ public class FanIndexer extends CustomIndexer
 	{
 		for (Indexable indexable : iterable)
 		{
-			long then = new Date().getTime();
-			log.info("Indexing requested for: " + indexable.getURL());
-			// Get a snaphost of the source
-			File f = new File(indexable.getURL().getFile());
-			FileObject fo = FileUtil.toFileObject(f);
-			Source source = Source.create(fo);
-			Snapshot snapshot = source.createSnapshot();
-			// Parse the snaphot
-			NBFanParser parser = new NBFanParser();
-			parser.parse(snapshot);
-			Result result = parser.getResult();
-			long now = new Date().getTime();
-			log.debug("Indexing - parsing done in " + (now - then) + " ms for: " + indexable.getURL());
-			// Index the parsed doc
-			index(indexable, result, context);
-			now = new Date().getTime();
-			log.debug("Indexing completed in " + (now - then) + " ms for: " + indexable.getURL());
+			index(indexable.getURL().getPath());
 		}
 	}
 
-	public void index(Indexable indexable, Result parserResult, Context context)
+	public void index(String path)
 	{
-		log.debug("Indexing parsed result for : " + indexable.getURL());
+		long then = new Date().getTime();
+		log.info("Indexing requested for: " + path);
+		// Get a snaphost of the source
+		File f = new File(path);
+		FileObject fo = FileUtil.toFileObject(f);
+		Source source = Source.create(fo);
+		Snapshot snapshot = source.createSnapshot();
+		// Parse the snaphot
+		NBFanParser parser = new NBFanParser();
+		parser.parse(snapshot);
+		Result result = parser.getResult();
+		long now = new Date().getTime();
+		log.debug("Indexing - parsing done in " + (now - then) + " ms for: " + path);
+		// Index the parsed doc
+		index(path, result);
+		now = new Date().getTime();
+		log.debug("Indexing completed in " + (now - then) + " ms for: " + path);
+	}
+
+	public void index(String path, Result parserResult)
+	{
+		log.debug("Indexing parsed result for : " + path);
 
 		FanParserResult fanResult = (FanParserResult) parserResult;
-		indexDoc(indexable.getURL(), fanResult.getRootScope());
+		indexDoc(path, fanResult.getRootScope());
 	}
 
 	/**
@@ -94,7 +100,7 @@ public class FanIndexer extends CustomIndexer
 	 * @param indexable
 	 * @param rootScope
 	 */
-	public void indexDoc(URL docUrl, FanRootScope rootScope)
+	public void indexDoc(String path, FanRootScope rootScope)
 	{
 		//TODO: does this need to be synchronized or is NB taking care of that ?
 		JOTTransaction transaction = null;
@@ -104,21 +110,22 @@ public class FanIndexer extends CustomIndexer
 			if (rootScope != null)
 			{
 				// create / update the doument
-				FanDocument doc = FanDocument.findOrCreateOne(transaction, docUrl.getPath());
+				FanDocument doc = FanDocument.findOrCreateOne(transaction, path);
 				if (doc.isNew())
 				{
-					doc.setPath(docUrl.getPath());
+					doc.setPath(path);
+					doc.setTstamp(new Date().getTime());
 					doc.save(transaction);
 				}
 
-				// TODO: Do I need the usings ? mostly for where used -> later ?
-				// Also needed to resolve qualified types
-
 				// Update the  "using" / try to be smart as to not delete / recreate all everytime.
 				Vector<FanDocUsing> usings = FanDocUsing.findAllForDoc(transaction, doc.getId());
+				Vector<FanType> types = FanType.findAllForDoc(transaction, doc.getId());
+				Vector<Long> inh2Delete = new Vector<Long>();
+
+				Vector<String> addedUsings = new Vector();
 				for (FanAstResolvedType type : rootScope.getUsing().values())
 				{
-					//TODO: unresolved should work too
 					String sig = type.getTypeText();
 					int foundIdx = -1;
 					for (int i = 0; i != usings.size(); i++)
@@ -136,20 +143,21 @@ public class FanIndexer extends CustomIndexer
 						usings.remove(foundIdx);
 					} else
 					{
-						// new one, creating it
-						FanDocUsing using = new FanDocUsing();
-						using.setDocumentId(doc.getId());
-						using.setType(sig);
-						using.save(transaction);
+						// there can be duplicates because of the way rootscope usings works
+						if (!addedUsings.contains(sig))
+						{
+							addedUsings.add(sig);
+							// new one, creating it
+							FanDocUsing using = new FanDocUsing();
+							using.setDocumentId(doc.getId());
+							using.setType(sig);
+							using.save(transaction);
+						}
 					}
-				}
-				// Whatever type wasn't removed from the vector is old or unresolved, so we remove them.
-				for (FanDocUsing using : usings)
-				{
-					using.delete(transaction);
 				}
 
 				// types
+				// TODO: remove the old ones too
 				for (FanAstScope child : rootScope.getChildren())
 				{
 					// should be but check anyway in case of future change
@@ -158,6 +166,18 @@ public class FanIndexer extends CustomIndexer
 						FanTypeScope typeScope = (FanTypeScope) child;
 						JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, typeScope.getQName());
 						FanType dbType = (FanType) JOTQueryBuilder.selectQuery(transaction, FanType.class).where(cond).findOrCreateOne();
+						if (!dbType.isNew())
+						{
+							for (int i = 0; i != types.size(); i++)
+							{
+								FanType t = types.get(i);
+								if (t.getId() == dbType.getId())
+								{
+									types.remove(i);
+									break;
+								}
+							}
+						}
 						dbType.setDocumentId(doc.getId());
 						dbType.setKind(typeScope.getKind().value());
 						dbType.setIsAbstract(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.ABSTRACT));
@@ -171,12 +191,12 @@ public class FanIndexer extends CustomIndexer
 						dbType.setSimpleName(typeScope.getName());
 						dbType.setPod(typeScope.getPod());
 						dbType.setProtection(typeScope.getProtection());
-						
+
 						dbType.save(transaction);
 
 						// Try to reuse existing db entries.
 						Vector<FanTypeInheritance> currentInh = FanTypeInheritance.findAllForMainType(transaction, typeScope.getQName());
-						for (FanAstResolvedType item : typeScope.getAllInheritedItems())
+						for (FanAstResolvedType item : typeScope.getInheritedItems())
 						{
 							String mainType = typeScope.getQName();
 							String inhType = item.getTypeText();
@@ -184,7 +204,7 @@ public class FanIndexer extends CustomIndexer
 							for (int i = 0; i != currentInh.size(); i++)
 							{
 								FanTypeInheritance cur = currentInh.get(i);
-								if (cur.getMainType().equals("mainType") && cur.getInheritedType().equals(inhType))
+								if (cur.getMainType().equals(mainType) && cur.getInheritedType().equals(inhType))
 								{
 									foundIdx = i;
 									break;
@@ -206,7 +226,7 @@ public class FanIndexer extends CustomIndexer
 						// Whatever wasn't removed from the vector is not needed anymore.
 						for (FanTypeInheritance inh : currentInh)
 						{
-							inh.delete(transaction);
+							inh2Delete.add(inh.getId());
 						}
 						// TODO: Do the slots.
 
@@ -220,24 +240,47 @@ public class FanIndexer extends CustomIndexer
 						}*/
 					}
 				}
+				// Only commit if everything went well.
+				transaction.commit();
 
+				// the delete can be done now.
+				// remove old usings
+				for (FanDocUsing using : usings)
+				{
+					using.delete();
+				}
+				// old inherited types
+				for(Long inh : inh2Delete)
+				{
+					JOTQueryBuilder.deleteByID(null, FanTypeInheritance.class, inh);
+				}
+				// remove old types
+				for (FanType t : types)
+				{
+					JOTTransaction trans = new JOTTransaction(JOTModel.DEFAULT_STORAGE);
+					// delete associated inheroted types
+					String name = t.getQualifiedName();
+					JOTSQLCondition cond = new JOTSQLCondition("mainType", JOTSQLCondition.IS_EQUAL, name);
+					JOTQueryBuilder.deleteQuery(trans, FanTypeInheritance.class).where(cond).delete();
+					// delete main type
+					t.delete(trans);
+					trans.commit();
+				}
 			}
 
-			// Only commit if everything went well.
-			transaction.commit();
 		} catch (Exception e)
 		{
-			log.exception("Indexing of: " + docUrl, e);
+			log.exception("Indexing of: " + path, e);
 			try
 			{
 				if (transaction != null)
 				{
-					log.info("Rolling back failed indexing of: " + docUrl);
+					log.info("Rolling back failed indexing of: " + path);
 					transaction.rollBack();
 				}
 			} catch (Exception e2)
 			{
-				log.exception("Indexing rollback failed for: " + docUrl, e);
+				log.exception("Indexing rollback failed for: " + path, e);
 			}
 		}
 	}
