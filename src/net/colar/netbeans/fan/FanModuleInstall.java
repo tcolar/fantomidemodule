@@ -97,7 +97,8 @@ public class FanModuleInstall extends ModuleInstall
 		Properties props = new Properties();
 		props.load(fis);
 		fis.close();
-		props.setProperty("db.jdbc.url", "jdbc:h2:file:" + dbFolder.getAbsolutePath() + File.separator+"default;TRACE_LEVEL_FILE=2;LOCK_TIMEOUT=15000");
+		// MVVC needed fro some transactions (allow read/write) in transaction
+		props.setProperty("db.jdbc.url", "jdbc:h2:file:" + dbFolder.getAbsolutePath() + File.separator+"default;MVCC=TRUE;TRACE_LEVEL_FILE=2;LOCK_TIMEOUT=8000");
 		FileOutputStream fos = new FileOutputStream(dbFile);
 		props.store(fos,"");
 		fos.close();
