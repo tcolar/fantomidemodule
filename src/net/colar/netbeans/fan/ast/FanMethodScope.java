@@ -24,7 +24,7 @@ public class FanMethodScope extends FanBlockScope
 	protected void parse()
 	{
 		CommonTree node=getAstNode();
-		System.out.println(getClass().getName()+" -> "+node.toStringTree());
+		//System.out.println(getClass().getName()+" -> "+node.toStringTree());
 		//This is mostly a regular codeBlock but we need to add the method params as scope variables
 		Hashtable<String, FanAstResolvResult> params = methodSlot.getParameters();
 		for(String name : params.keySet())

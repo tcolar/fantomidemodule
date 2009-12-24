@@ -467,7 +467,7 @@ idExprReq	:	field | call;
 // require '*' otherwise it's just and ID (this would prevent termbase from checking literals)
 field		:	OP_MULTI ID; // changed from @ to *
  // require params or/and closure, otherwise it's just and ID (this would prevent termbase from checking literals)
-call		:	(id (p=callParams c=closure) | p=callParams | c=closure)
+call		:	(id ((p=callParams c=closure) | p=callParams | c=closure))
 			-> ^(AST_CALL id ^(AST_CHILD $p? $c?));
 
 callParams	:	{notAfterEol()}? parL args? parR;

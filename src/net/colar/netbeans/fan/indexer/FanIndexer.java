@@ -5,13 +5,10 @@
 package net.colar.netbeans.fan.indexer;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Date;
-import java.util.List;
 import java.util.Vector;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.NBFanParser;
-import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
@@ -19,7 +16,6 @@ import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanDocUsing;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
-import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
 import net.jot.logger.JOTLoggerLocation;
@@ -27,7 +23,6 @@ import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.JOTTransaction;
 import net.jot.persistance.builders.JOTQueryBuilder;
-import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.spi.Parser.Result;
@@ -49,7 +44,7 @@ import org.openide.filesystems.FileUtil;
 public class FanIndexer extends CustomIndexer
 {
 
-	JOTLoggerLocation log = new JOTLoggerLocation(getClass());
+	static JOTLoggerLocation log = new JOTLoggerLocation(FanIndexer.class);
 
 	public FanIndexer()
 	{
@@ -76,7 +71,15 @@ public class FanIndexer extends CustomIndexer
 		Snapshot snapshot = source.createSnapshot();
 		// Parse the snaphot
 		NBFanParser parser = new NBFanParser();
-		parser.parse(snapshot);
+		try
+		{
+			parser.parse(snapshot);
+		}
+		catch(Throwable e)
+		{
+			log.exception("Parsing failed for: "+path, e);
+			return;
+		}
 		Result result = parser.getResult();
 		long now = new Date().getTime();
 		log.debug("Indexing - parsing done in " + (now - then) + " ms for: " + path);
@@ -283,5 +286,23 @@ public class FanIndexer extends CustomIndexer
 				log.exception("Indexing rollback failed for: " + path, e);
 			}
 		}
+	}
+
+	static boolean checkIfNeedsReindexing(String path, long tstamp)
+	{
+		JOTSQLCondition cond = new JOTSQLCondition("path", JOTSQLCondition.IS_EQUAL, path);
+		try
+		{
+		FanDocument doc = (FanDocument)JOTQueryBuilder.selectQuery(null, FanDocument.class).where(cond).findOne();
+		if(doc!=null)
+		{
+			long indexedTime = doc.getTstamp();
+			if(indexedTime >= tstamp)
+			{
+				return false;
+			}
+		}
+		}catch(Exception e){log.exception("FanDocument search exception", e);}
+		return true;
 	}
 }
