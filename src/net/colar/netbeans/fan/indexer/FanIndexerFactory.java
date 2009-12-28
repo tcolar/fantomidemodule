@@ -116,6 +116,18 @@ public class FanIndexerFactory extends CustomIndexerFactory
 		}
 	}
 
+	// Index fantom libs (fantomHome/lib/fan)
+	// TODO: redo, when fanHome is changed.
+	// TODO: index java libs in lib/java ??
+	public void indexFantomBinaries()
+	{
+		FanPlatform platform = FanPlatform.getInstance(false);
+		if(platform != null)
+		{
+			
+		}
+	}
+
 	@Override
 	public boolean scanStarted(Context context)
 	{
@@ -164,6 +176,7 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	@Override
 	public void scanFinished(Context cntxt)
 	{
+		// TODO: remove all non existing FanDocuments
 		// TODO: scan the db to highlight unreolved items / errors ?
 	}
 

@@ -16,8 +16,14 @@ import net.jot.persistance.builders.JOTQueryBuilder;
  */
 public class FanDocument extends JOTModel
 {
-
-	public String path = ""; // filesystem path
+	/**
+	 * Filesystem path
+	 * Source path for sources
+	 * LIBRARY/POD PATH for pods (libs)
+	 */
+	public String path = "";
+	// source or binary/lib ?
+	public Boolean isSource = true;
 	public Long tstamp = new Date().getTime();
 
 	@Override
@@ -52,5 +58,16 @@ public class FanDocument extends JOTModel
 	{
 		this.tstamp = tstamp;
 	}
-	
+
+	public Boolean isSource()
+	{
+		return isSource;
+	}
+
+	public void setIsSource(Boolean isSource)
+	{
+		this.isSource = isSource;
+	}
+
+
 }
