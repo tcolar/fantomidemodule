@@ -130,6 +130,7 @@ public abstract class FanAstScopeVarBase
 		} else
 		{
 			System.out.println("Unrecognized modifier: " + m);
+			//throw new RuntimeException();
 		}
 		return null;
 	}
