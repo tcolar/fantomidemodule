@@ -5,7 +5,9 @@
 
 package net.colar.netbeans.fan;
 
+import net.jot.db.JOTDBManager;
 import net.jot.persistance.JOTDBUpgrader;
+import net.jot.persistance.JOTPersistanceManager;
 
 /**
  * Handles DB upgrades
@@ -18,6 +20,7 @@ public class FanDbUpgrader extends JOTDBUpgrader
 	@Override
 	public void upgradeDb(int fromVersion) throws Exception
 	{
+		// TODO: For now just whipeout the DB and let it rebuild ?
 	}
 
 	@Override

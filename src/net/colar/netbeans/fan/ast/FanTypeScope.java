@@ -6,7 +6,6 @@ package net.colar.netbeans.fan.ast;
 
 import fan.sys.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;

@@ -21,6 +21,9 @@ import org.openide.modules.ModuleInstall;
  */
 public class FanModuleInstall extends ModuleInstall
 {
+	// IF a breaking change is made to the prefs files compare to a previous vcersion, bump up the bumber
+	public static final String PROP_PREF_FILE_VERSION = "nb.fantom.prefs.version";
+	public static final int PREF_VERSION = 2;
 
 	/**
 	 * Startup
@@ -39,7 +42,7 @@ public class FanModuleInstall extends ModuleInstall
 		try
 		{
 			//TODO: not only check if it exists but alos if up to date
-			//if ( ! prefFile.exists())
+			if (!prefFile.exists() || isOutdated(prefFile))
 			{
 				prefFile = createPrefFiles(fantomHome);
 			}
@@ -95,25 +98,27 @@ public class FanModuleInstall extends ModuleInstall
 		// Set the DB file path in the db props file
 		File dbFolder = new File(fantomHome.getAbsolutePath() + File.separator + "db" + File.separator);
 		dbFolder.mkdirs();
-		FileInputStream fis= new FileInputStream(dbFile);
+		FileInputStream fis = new FileInputStream(dbFile);
 		Properties props = new Properties();
 		props.load(fis);
 		fis.close();
-		// MVVC needed for some transactions (allow read/write) in transaction MVCC=TRUE;
-		props.setProperty("db.jdbc.url", "jdbc:h2:file:" + dbFolder.getAbsolutePath() + File.separator+"default;TRACE_LEVEL_FILE=2;LOCK_TIMEOUT=8000");
+		// H2 JDBC
+		props.setProperty("db.jdbc.url", "jdbc:h2:file:" + dbFolder.getAbsolutePath() + File.separator + "default;TRACE_LEVEL_FILE=1;LOCK_TIMEOUT=8000");
 		FileOutputStream fos = new FileOutputStream(dbFile);
-		props.store(fos,"");
+		props.store(fos, "");
 		fos.close();
 
 		// Set the DB path in the main props file
-		FileInputStream fis2= new FileInputStream(prefFile);
+		FileInputStream fis2 = new FileInputStream(prefFile);
 		Properties props2 = new Properties();
 		props2.load(fis2);
 		fis2.close();
 		props2.setProperty("db.fs.root_folder.windows", dbFolder.getAbsolutePath() + File.separator);
 		props2.setProperty("db.fs.root_folder.others", dbFolder.getAbsolutePath() + File.separator);
+		// VERSION
+		props2.setProperty(PROP_PREF_FILE_VERSION, ""+PREF_VERSION);
 		FileOutputStream fos2 = new FileOutputStream(prefFile);
-		props2.store(fos2,"");
+		props2.store(fos2, "");
 		fos2.close();
 
 		return prefFile;
@@ -131,4 +136,21 @@ public class FanModuleInstall extends ModuleInstall
 		out.close();
 		is.close();
 	}
+
+	private boolean isOutdated(File prefFile)
+	{
+		try
+		{
+			FileInputStream fis = new FileInputStream(prefFile);
+			Properties props = new Properties();
+			props.load(fis);
+			String version = props.getProperty(PROP_PREF_FILE_VERSION);
+			if(version!=null && version.compareTo(""+PREF_VERSION) >= 0)
+				return false;
+		} catch (Exception e)
+		{
+		}
+		return true;
+	}
+
 }

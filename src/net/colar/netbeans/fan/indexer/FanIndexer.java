@@ -74,7 +74,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		long then = new Date().getTime();
 		indexFantomPods();
 		long now = new Date().getTime();
-		log.debug("Fantom Pod Parsing completed in " + (now - then) + " ms.");
+		log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");
 		// index Fantom jars + standrad java jars ?
 		//indexJava();
 		// sources indexes will be called  through scanStarted()
@@ -404,7 +404,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						}
 					}
 					dbType.setDocumentId(doc.getId());
-					//dbType.setKind(typeRef.);
+					dbType.setKind(getKind(type));
 					dbType.setIsAbstract(hasFlag(flags, FConst.Abstract));
 					dbType.setIsConst(hasFlag(flags, FConst.Const));
 					dbType.setIsFinal(hasFlag(flags, FConst.Final));
@@ -438,6 +438,16 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				}
 			}
 		}
+	}
+
+	private int getKind(FType type)
+	{
+		if(hasFlag(type.flags, FConst.Mixin))
+			return FanTypeScope.TypeKind.MIXIN.value();
+		if(hasFlag(type.flags, FConst.Enum))
+			return FanTypeScope.TypeKind.ENUM.value();
+		// class is default
+		return FanTypeScope.TypeKind.CLASS.value();
 	}
 
 	public boolean hasFlag(int flags, int flag)

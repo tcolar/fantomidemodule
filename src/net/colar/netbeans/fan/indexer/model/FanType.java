@@ -194,7 +194,7 @@ public class FanType extends JOTModel
 		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, qualifiedName);
 		for(FanTypeInheritance inh : inhs)
 			inh.delete(trans);
-		super.delete();
+		super.delete(trans);
 	}
 
 }
