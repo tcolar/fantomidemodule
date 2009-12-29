@@ -15,9 +15,9 @@ import org.openide.filesystems.FileUtil;
 
 /**
  * Indexer Factory impl.
+ * Registered through layer.xml
  * @author thibautc
  */
-// Registered through layer.xml
 public class FanIndexerFactory extends CustomIndexerFactory
 {
 
