@@ -39,7 +39,7 @@ public class FanLanguage extends DefaultLanguageConfig
 	public FanLanguage()
 	{
 		super();
-		System.err.println("Fantom - init FanLanguage");
+		FanUtilities.GENERIC_LOGGER.info("Fantom - init FanLanguage");
 	}
 
 	@Override

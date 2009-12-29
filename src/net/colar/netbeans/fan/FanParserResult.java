@@ -167,13 +167,13 @@ public class FanParserResult extends ParserResult
 	 */
 	public void dumpTree()
 	{
-		System.err.println("-------------------Start AST Tree dump-----------------------");
+		FanUtilities.GENERIC_LOGGER.trace("-------------------Start AST Tree dump-----------------------");
 		CommonTree tree = getTree();
 		if (tree != null)
 		{
 			FanLexAstUtils.dumpTree(tree, 0);
 		}
-		System.err.println("-------------------End AST Tree dump-----------------------");
+		FanUtilities.GENERIC_LOGGER.trace("-------------------End AST Tree dump-----------------------");
 	}
 
 	public CommonTokenStream getTokenStream()

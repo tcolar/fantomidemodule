@@ -11,6 +11,7 @@ import fan.sys.Slot;
 import fan.sys.Type;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import org.antlr.runtime.tree.CommonTree;
 
@@ -74,13 +75,13 @@ public class FanAstResolvResult
 	public static FanAstResolvResult makeFromExpr(FanParserResult result, CommonTree exprNode, int lastGoodTokenIndex)
 	{
 		FanAstScope scope = result.getRootScope().findClosestScope(exprNode);
-		System.out.println("** scope: " + scope);
+		FanUtilities.GENERIC_LOGGER.debug("** scope: " + scope);
 		FanAstResolvResult type = resolveExpr(result, scope, null, exprNode, lastGoodTokenIndex);
 		if (type == null)
 		{
 			type = makeUnresolved();
 		}
-		System.out.println("** resolvedType: " + type);
+		FanUtilities.GENERIC_LOGGER.debug("** resolvedType: " + type);
 		return type;
 	}
 
@@ -101,7 +102,7 @@ public class FanAstResolvResult
 		}
 		//System.out.println("Node type: " + node.getType());
 		String t = FanLexAstUtils.getNodeContent(result, node);
-		System.out.println("** type: " + t + " " + node.toStringTree()+" "+baseType);
+		FanUtilities.GENERIC_LOGGER.debug("** type: " + t + " " + node.toStringTree()+" "+baseType);
 		//System.out.println("Index: " + FanLexAstUtils.getTokenStart(node) + " VS " + index);
 		// Skip the imcomplete part past what we care about
 		if (!isValidTokenStart(node, index))
@@ -156,7 +157,7 @@ public class FanAstResolvResult
 					baseType = resolveExpr(result, scope, baseType, (CommonTree) node.getChild(0), index);
 				} else
 				{
-					System.out.println("Don't know how to resolve: " + t + " " + node.toStringTree());
+					FanUtilities.GENERIC_LOGGER.info("Don't know how to resolve: " + t + " " + node.toStringTree());
 					//baseType = makeUnresolved();
 				}
 				break;

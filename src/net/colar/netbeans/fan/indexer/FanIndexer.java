@@ -15,6 +15,7 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
 import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.ast.FanAstScope;
@@ -29,7 +30,6 @@ import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
-import net.jot.persistance.JOTTransaction;
 import net.jot.persistance.builders.JOTQueryBuilder;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
@@ -387,7 +387,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					{
 						continue;
 					}
-					System.out.println("Pod Type: " + sig);
+					FanUtilities.GENERIC_LOGGER.debug("Indexing Pod Type: " + sig);
 
 					JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, sig);
 					FanType dbType = (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOrCreateOne();

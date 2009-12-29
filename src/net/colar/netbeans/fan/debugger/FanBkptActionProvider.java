@@ -8,6 +8,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.Set;
 import net.colar.netbeans.fan.FanLanguage;
+import net.colar.netbeans.fan.FanUtilities;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -61,7 +62,7 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 		}
 		Line line = EditorContextDispatcher.getDefault().getCurrentLine();
 		String url = EditorContextDispatcher.getDefault().getCurrentURLAsString();
-		System.out.println(line);
+		FanUtilities.GENERIC_LOGGER.debug("Dbg line:"+line);
 		if (line == null)
 		{
 			return;

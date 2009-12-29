@@ -4,6 +4,7 @@
 
 package net.colar.netbeans.fan.debugger;
 
+import net.colar.netbeans.fan.FanUtilities;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.spi.viewmodel.ModelListener;
@@ -25,7 +26,7 @@ public class FanDebugViewModel implements NodeModel
 	public static final String ICON_FWT="net/colar/netbeans/fan/project/resources/fanFwt.png";
 	public static final String ICON_JAVA="net/colar/netbeans/fan/project/resources/java.png";
 
-	static{System.err.println("Fantom - Init "+FanDebugViewModel.class);}
+	static{FanUtilities.GENERIC_LOGGER.info("Fantom - Init "+FanDebugViewModel.class);}
 
 	public String getDisplayName(Object node) throws UnknownTypeException
 	{

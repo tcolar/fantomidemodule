@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -63,7 +64,7 @@ public class FanPodIndexer implements FileChangeListener
 			ZipFile zpod = new ZipFile(pod);
 			FPod fpod = new FPod(null, zpod, null);
 			fpod.readFully();
-			System.out.println("### Adding pod: " + pod.getPath() + " " + fpod.podName);
+			FanUtilities.GENERIC_LOGGER.debug("### Adding pod: " + pod.getPath() + " " + fpod.podName);
 			allPods.put(fpod.podName, fpod);
 		} catch (Exception e)
 		{

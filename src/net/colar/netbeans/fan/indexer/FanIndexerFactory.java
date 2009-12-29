@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.jot.logger.JOTLogger;
@@ -27,7 +28,7 @@ public class FanIndexerFactory extends CustomIndexerFactory
 
 	public FanIndexerFactory()
 	{
-		System.err.println("Fantom - Init indexer Factory");
+		FanUtilities.GENERIC_LOGGER.info("Fantom - Inited indexer Factory");
 		// TODO: cleanup, non-existing anymore sources
 	}
 

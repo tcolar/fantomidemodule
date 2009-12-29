@@ -4,6 +4,7 @@
 
 package net.colar.netbeans.fan.debugger;
 
+import net.colar.netbeans.fan.FanUtilities;
 import org.netbeans.api.debugger.DebuggerEngine.Destructor;
 import org.netbeans.spi.debugger.DebuggerEngineProvider;
 
@@ -17,7 +18,7 @@ import org.netbeans.spi.debugger.DebuggerEngineProvider;
 //@DebuggerEngineProvider.Registration // TODO: doesn't work
 public class FanDebuggerEngineProvider extends DebuggerEngineProvider 
 {
-	static{System.err.println("### Registering: "+FanDebuggerEngineProvider.class.getName());}
+	static{FanUtilities.GENERIC_LOGGER.info("### Registering: "+FanDebuggerEngineProvider.class.getName());}
 
 	public static final String ID="FanDebuggerEngine";
 	public static final String[] langs = new String[] {"fan"};

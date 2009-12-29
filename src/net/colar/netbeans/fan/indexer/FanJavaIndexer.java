@@ -14,6 +14,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import net.colar.netbeans.fan.FanUtilities;
 import org.netbeans.api.java.platform.JavaPlatform;
 
 /**
@@ -274,11 +275,11 @@ public class FanJavaIndexer
 			if (f.isDirectory())
 			{
 				pack = pack.length() == 0 ? dir.getName() : pack + "." + dir.getName();
-				System.out.println("Pack: " + pack);
+				FanUtilities.GENERIC_LOGGER.debug("Pack: " + pack);
 				indexDirectory(dir, pack);
 			} else if (f.getName().toLowerCase().endsWith(".class"))
 			{
-				System.out.println("CP item: " + f.getName());
+				FanUtilities.GENERIC_LOGGER.debug("CP item: " + f.getName());
 			}
 		}
 	}
@@ -369,7 +370,7 @@ public class FanJavaIndexer
 				if (cps.length == 0)
 				{
 					String cp = lib + "rt.jar";
-					System.out.println("jrtcp: " + cp);
+					FanUtilities.GENERIC_LOGGER.debug("jrtcp: " + cp);
 					try
 					{
 						urls.add(new URL("file://" + cp));
@@ -402,7 +403,7 @@ public class FanJavaIndexer
 						// boot clasppath lists sme jars that do not necerally exists (optional)
 						if (new File(f).exists())
 						{
-							System.out.println("Indexing jar:  " + f);
+							FanUtilities.GENERIC_LOGGER.debug("Indexing jar:  " + f);
 							try
 							{
 								JarFile jar = new JarFile(f);
@@ -450,7 +451,7 @@ public class FanJavaIndexer
 											}
 										} catch (ClassNotFoundException ce)
 										{
-											System.out.println(ce);
+											FanUtilities.GENERIC_LOGGER.debug(ce.getMessage());
 										}
 									}
 								}
@@ -480,7 +481,7 @@ public class FanJavaIndexer
 			{
 				done = true;
 				instance.running = false;
-				System.out.println("Java Indexer completed, ellapsed time: " + (new Date().getTime() - start) + " Items: " + instance.classes.size() + " (" + instance.packages.size() + " packages)");
+				FanUtilities.GENERIC_LOGGER.info("Java Indexer completed, ellapsed time: " + (new Date().getTime() - start) + " Items: " + instance.classes.size() + " (" + instance.packages.size() + " packages)");
 			}
 
 		}

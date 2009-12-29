@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanTokenID;
+import net.colar.netbeans.fan.FanUtilities;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
@@ -433,7 +434,7 @@ public class FanLexAstUtils
 		seq.move(startOfLine);
 		while (seq.movePrevious())
 		{
-			System.out.println("seq3: " + seq.offset());
+			FanUtilities.GENERIC_LOGGER.debug("seq3: " + seq.offset());
 
 			if (seq.token().id().ordinal() == FanLexer.LB)
 			{
@@ -535,7 +536,7 @@ public class FanLexAstUtils
 			}
 			for (int i = 0; i < t.getChildCount(); i++)
 			{
-				System.err.println(sb.toString() + t.getChild(i).toString());
+				FanUtilities.GENERIC_LOGGER.debug(sb.toString() + t.getChild(i).toString());
 				dumpTree((CommonTree) t.getChild(i), indent + 1);
 			}
 		}

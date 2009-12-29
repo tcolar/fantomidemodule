@@ -80,10 +80,10 @@ public class FanRootScope extends FanAstScope
 	@Override
 	public void dump()
 	{
-		System.out.println("---Root Scope---");
+		FanUtilities.GENERIC_LOGGER.debug("---Root Scope---");
 		for (String key : using.keySet())
 		{
-			System.out.println("Using: " + key + " (" + using.get(key) + ")");
+			FanUtilities.GENERIC_LOGGER.debug("Using: " + key + " (" + using.get(key) + ")");
 		}
 		for (FanAstScope node : getChildren())
 		{

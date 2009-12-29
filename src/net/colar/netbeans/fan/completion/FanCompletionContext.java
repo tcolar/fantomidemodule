@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.completion;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanTokenID;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanLexAstUtils;
 import org.antlr.runtime.tree.CommonTree;
@@ -65,7 +66,7 @@ public class FanCompletionContext
 		curNode = FanLexAstUtils.findASTNodeAt(result, FanLexAstUtils.offsetToTokenIndex(result, offset));
 
 		completionType = determineCompletionType();
-		System.out.println("Compl. type:" + completionType.toString());
+		FanUtilities.GENERIC_LOGGER.debug("Compl. type:" + completionType.toString());
 	}
 
 	/**
@@ -125,12 +126,12 @@ public class FanCompletionContext
 		CommonTree node = FanLexAstUtils.findASTNodeAt(result, tokenStream.index());
 		if (node==null)
 		{
-			System.out.println("Node : Null !");
+			FanUtilities.GENERIC_LOGGER.info("Node : Null !");
 			// Root level (not in type) default
 			return completionTypes.ROOT_LEVEL;
 		} else
 		{
-			System.out.println("Node : "+node.toStringTree());
+			FanUtilities.GENERIC_LOGGER.debug("Node : "+node.toStringTree());
 			CommonTree usingNode = FanLexAstUtils.findParentNode(node, FanParser.AST_USING_POD);
 			if (usingNode == null)
 			{

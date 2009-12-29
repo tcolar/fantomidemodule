@@ -7,6 +7,7 @@ package net.colar.netbeans.fan.ast;
 import fan.sys.Type;
 import java.util.ArrayList;
 import java.util.List;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
 import org.antlr.runtime.tree.CommonTree;
@@ -63,7 +64,7 @@ public class FanTypeScope extends FanAstScope
 			kind = TypeKind.ENUM;
 		}
 
-		System.out.println("Type node: " + ast.toStringTree());
+		FanUtilities.GENERIC_LOGGER.debug("Type node: " + ast.toStringTree());
 		CommonTree nameNode = (CommonTree) ast.getFirstChildWithType(FanParser.AST_ID);
 		CommonTree inheritance = (CommonTree) ast.getFirstChildWithType(FanParser.AST_INHERITANCE);
 		// fields are within the code_block of the type

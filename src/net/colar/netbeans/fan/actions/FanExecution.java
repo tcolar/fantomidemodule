@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.Future;
+import net.colar.netbeans.fan.FanUtilities;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory;
 import org.netbeans.api.extexecution.ExecutionDescriptor.LineConvertorFactory;
@@ -103,7 +104,7 @@ public class FanExecution
 		}
 		cmdStr+="]";
 
-		System.err.println("will execute: " + command + " " + cmdStr +" from: "+workingDirectory);
+		FanUtilities.GENERIC_LOGGER.info("will execute: " + command + " " + cmdStr +" from: "+workingDirectory);
 
 		processBuilder = processBuilder.redirectErrorStream(redirect);
 		return processBuilder;

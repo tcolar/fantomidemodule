@@ -84,11 +84,11 @@ public class FanUtilities
 	 */
 	public static void dumpFileObject(FileObject fo)
 	{
-		System.err.println("---- FileObject DUMP -----");
+		FanUtilities.GENERIC_LOGGER.debug("---- FileObject DUMP -----");
 		try
 		{
 			dumpFileObject(fo, "");
-			System.err.println("**---- FileObject root dump -----");
+			FanUtilities.GENERIC_LOGGER.debug("**---- FileObject root dump -----");
 			//dumpFileObject(fo.getFileSystem().getRoot(),"**");
 		} catch (Exception e)
 		{
@@ -98,10 +98,10 @@ public class FanUtilities
 
 	private static void dumpFileObject(FileObject fo, String indent) throws Exception
 	{
-		System.err.println(indent + "toStr: " + fo.toString());
-		System.err.println(indent + "Name: " + fo.getNameExt());
-		System.err.println(indent + "Path: " + fo.getPath());
-		System.err.println(indent + "URL: " + fo.getURL());
+		FanUtilities.GENERIC_LOGGER.debug(indent + "toStr: " + fo.toString());
+		FanUtilities.GENERIC_LOGGER.debug(indent + "Name: " + fo.getNameExt());
+		FanUtilities.GENERIC_LOGGER.debug(indent + "Path: " + fo.getPath());
+		FanUtilities.GENERIC_LOGGER.debug(indent + "URL: " + fo.getURL());
 		FileObject[] children = fo.getChildren();
 		//indent+="  ";
 		//for(int i=0;i!=children.length;i++)

@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
-import net.colar.netbeans.fan.project.path.FanClassPathProvider;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.GlobalPathRegistryEvent;
@@ -133,22 +133,22 @@ public class FanDebugPathProvider extends SourcePathProvider
 		// debugging
 		if (projectSources != null)
 		{
-			System.out.println("===========Prj roots=============");
+			FanUtilities.GENERIC_LOGGER.info("===========Prj roots=============");
 			dump(projectSources);
 		}
 		if (customSources != null)
 		{
-			System.out.println("===========Custom roots=============");
+			FanUtilities.GENERIC_LOGGER.info("===========Custom roots=============");
 			dump(customSources);
 		}
 		if (fanSources != null)
 		{
-			System.out.println("===========Fan roots=============");
+			FanUtilities.GENERIC_LOGGER.info("===========Fan roots=============");
 			dump(fanSources);
 		}
 		if (jdkSources != null)
 		{
-			System.out.println("===========Jdk roots=============");
+			FanUtilities.GENERIC_LOGGER.info("===========Jdk roots=============");
 			dump(jdkSources);
 		}
 	}
@@ -165,7 +165,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getURL(String relativePath, boolean global)
 	{
-		System.out.println("+++ Initial path: " + relativePath);
+		FanUtilities.GENERIC_LOGGER.debug("+++ Initial path: " + relativePath);
 		String path = null;
 		if (relativePath != null && (relativePath.endsWith(".fan") || relativePath.endsWith(".fwt")))
 		{
@@ -223,7 +223,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 		if (fo == null)
 		{
-			System.out.println(getClass().getName() + " Url not found for "+relativePath);
+			FanUtilities.GENERIC_LOGGER.debug(getClass().getName() + " Url not found for "+relativePath);
 			return null;
 		}
 
@@ -485,6 +485,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 		{
 			for (ClassPath.Entry entry : cp.entries())
 			{
+				FanUtilities.GENERIC_LOGGER.debug(entry.toString());
 				System.out.println(entry);
 			}
 		}
@@ -527,7 +528,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 				while (it.hasNext())
 				{
 					FileObject fob = it.next();
-					System.out.println("---- Checking " + fob.getPath() + " vs " + tail);
+					FanUtilities.GENERIC_LOGGER.debug("---- Checking " + fob.getPath() + " vs " + tail);
 					if (fob.getPath().endsWith(tail))
 					{
 						fo = fob;

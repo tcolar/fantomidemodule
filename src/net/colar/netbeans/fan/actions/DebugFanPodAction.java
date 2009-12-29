@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
@@ -57,7 +58,7 @@ public class DebugFanPodAction extends FanAction
 				runPodAction(context, true);
 		}
 		// start JPDA
-		System.out.println("Starting JPDA");
+		FanUtilities.GENERIC_LOGGER.info("Starting JPDA");
 		String portStr=FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT,"8000");
 		int port=new Integer(portStr).intValue();
 		try

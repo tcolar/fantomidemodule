@@ -51,6 +51,7 @@ public class FanModuleInstall extends ModuleInstall
 			JOTPreferences prefs = JOTPreferences.getInstance();
 			// Initializing the Logger
 			JOTLogger.init(prefs, logHome.getAbsolutePath(), "jot.log");
+			JOTLogger.setPrintToConcole(true);
 			// Initialize the persistance / databases(s).
 			JOTPersistanceManager.getInstance().init(prefs);
 

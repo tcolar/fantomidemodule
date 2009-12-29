@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanAstResolvResult;
@@ -75,7 +76,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		FanCompletionContext cpl = new FanCompletionContext(context);
 		int anchor = context.getCaretOffset();
 		preamble = cpl.getPreamble();
-		System.out.println("preamb: " + preamble);
+		FanUtilities.GENERIC_LOGGER.debug("preamb: " + preamble);
 		FanParserResult result = (FanParserResult) context.getParserResult();
 		FanRootScope rootScope = result.getRootScope();
 
@@ -310,7 +311,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		List<String> items = FanJavaIndexer.getInstance().listSubPackages(base);
 		for (String s : items)
 		{
-			System.out.println("Proposal: " + s);
+			FanUtilities.GENERIC_LOGGER.debug("Proposal: " + s);
 			// TODO: JavaProps
 			proposals.add(new FanImportProposal(s, anchor - base.length(), true));
 		}
@@ -333,7 +334,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		List<String> items = FanJavaIndexer.getInstance().listItems(base, type);
 		for (String s : items)
 		{
-			System.out.println("Proposal: " + s);
+			FanUtilities.GENERIC_LOGGER.debug("Proposal: " + s);
 			// TODO: JavaProps
 			proposals.add(new FanImportProposal(s, anchor - type.length(), true));
 		}
@@ -374,7 +375,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		CommonTree baseNode = FanLexAstUtils.findASTNodeAt(result, ts.index());
 		offset = ts.offset();
 		CommonTree curNode = FanLexAstUtils.findParentNode(baseNode, FanParser.AST_USING_POD);
-		System.out.println("Base node:" + baseNode.toString());
+		FanUtilities.GENERIC_LOGGER.debug("Base node:" + baseNode.toString());
 		//System.out.println("Cur node:"+curNode.toString());
 		if (curNode == null)
 		{
@@ -385,8 +386,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			String pod = FanLexAstUtils.getNodeContent(result, curNode.getChild(0));
 			String type = curNode.getChildCount() == 1 ? null : FanLexAstUtils.getNodeContent(result, curNode.getChild(1));
 
-			System.out.println("Pod: " + pod);
-			System.out.println("Type: " + type);
+			FanUtilities.GENERIC_LOGGER.debug("Pod: " + pod);
+			FanUtilities.GENERIC_LOGGER.debug("Type: " + type);
 
 			if (type == null || type.length() == 0)
 			{
@@ -411,7 +412,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		} else if (curNode.getType() == FanParser.AST_INC_USING)
 		{
 			String pod = FanLexAstUtils.getNodeContent(result, curNode.getChild(1));
-			System.out.println("Pod: " + pod);
+			FanUtilities.GENERIC_LOGGER.debug("Pod: " + pod);
 			if (pod == null || pod.length() == 0)
 			{
 				proposePods(proposals, anchor, "");
@@ -464,11 +465,11 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 		int tkIndex = FanLexAstUtils.offsetToTokenIndex(result, offset);
 		CommonTree curNode = FanLexAstUtils.findASTNodeAt(result, tkIndex);
-		System.out.println("Cur Node: " + curNode.toStringTree());
+		FanUtilities.GENERIC_LOGGER.debug("Cur Node: " + curNode.toStringTree());
 		CommonTree exprNode = FanLexAstUtils.findParentNode(curNode, FanParser.AST_TERM_EXPR);
 		if (exprNode != null)
 		{
-			System.out.println("Expr Node: " + exprNode.toStringTree());
+			FanUtilities.GENERIC_LOGGER.debug("Expr Node: " + exprNode.toStringTree());
 
 			//TODO:OP_ARROW ??
 			int index = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, FanParser.DOT);
@@ -480,17 +481,17 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			{
 				prefix = result.getTokenStream().get(index + 1).getText();
 			}
-			System.out.println("Prefix: " + prefix);
+			FanUtilities.GENERIC_LOGGER.debug("Prefix: " + prefix);
 			// we want to stop just before the Call token
 			index--;
 			if (index < 0)
 			{
 				// should not happen ?
-				System.out.println("Call separator not found !");
+				FanUtilities.GENERIC_LOGGER.info("Call separator not found !");
 				return;
 			}
 			FanAstResolvResult type = FanAstResolvResult.makeFromExpr(result, exprNode, index);
-			System.out.println("Type: " + type.toString());
+			FanUtilities.GENERIC_LOGGER.debug("Type: " + type.toString());
 			if (!type.getType().isUnresolved())
 			{
 				proposeSlots(type, proposals, offset + 1, prefix);

@@ -37,7 +37,7 @@ public class NBFanParser extends Parser
 
 	public void parse(Snapshot snapshot)
 	{
-		System.out.println("Starting parsing of: " + snapshot.getSource().getFileObject().getPath());
+		FanUtilities.GENERIC_LOGGER.info("Starting parsing of: " + snapshot.getSource().getFileObject().getPath());
 		FanLexer lexer = new FanLexer(new ANTLRStringStream(snapshot.getText().toString()));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 

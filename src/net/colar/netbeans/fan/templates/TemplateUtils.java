@@ -18,21 +18,6 @@ import org.openide.filesystems.FileUtil;
  */
 public class TemplateUtils
 {
-	// JOT needs a logger setup.
-
-	public static File LOG_FILE;
-
-	static
-	{
-		try
-		{
-			LOG_FILE = File.createTempFile("jot", ".log");
-			System.out.println("Temp file: " + LOG_FILE.getAbsolutePath());
-		} catch (Exception e)
-		{
-		}
-	}
-
 	/**
 	 * Create a file using a template and a view.
 	 * @param view
@@ -41,8 +26,6 @@ public class TemplateUtils
 	 */
 	public static void createFromTemplate(JOTLightweightView view, String templateText, File destFile)
 	{
-		JOTLogger.initIfNecessary(TemplateUtils.LOG_FILE.getAbsolutePath(), new String[0], "");
-
 		String parsedFile = "";
 		try
 		{

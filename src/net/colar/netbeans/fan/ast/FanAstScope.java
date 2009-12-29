@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
+import net.colar.netbeans.fan.FanUtilities;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -35,10 +36,10 @@ public abstract class FanAstScope
 
 	public void dump()
 	{
-		System.out.println("Ast Scope Node: " + toString());
+		FanUtilities.GENERIC_LOGGER.debug("Ast Scope Node: " + toString());
 		for (FanAstScopeVarBase var : scopeVars.values())
 		{
-			System.out.println("Scope Var: " + var.toString());
+			FanUtilities.GENERIC_LOGGER.debug("Scope Var: " + var.toString());
 		}
 	}
 

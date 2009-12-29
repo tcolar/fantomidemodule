@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.ast;
 
 import java.util.ArrayList;
+import net.colar.netbeans.fan.FanUtilities;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -129,7 +130,7 @@ public abstract class FanAstScopeVarBase
 			return ModifEnum.FINAL;
 		} else
 		{
-			System.out.println("Unrecognized modifier: " + m);
+			FanUtilities.GENERIC_LOGGER.info("Unrecognized modifier: " + m);
 			//throw new RuntimeException();
 		}
 		return null;

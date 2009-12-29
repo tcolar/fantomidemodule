@@ -125,7 +125,6 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 			String buildText = buildTemplate.asText();
 			String podText = podTemplate.asText();
 
-			JOTLogger.initIfNecessary(TemplateUtils.LOG_FILE.getAbsolutePath(), new String[0], "");
 			// create build.fan and pod.fan
 			TemplateUtils.createFromTemplate(view, podText, podFile);
 			TemplateUtils.createFromTemplate(view, buildText, buildFile);
