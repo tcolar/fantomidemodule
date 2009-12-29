@@ -45,7 +45,11 @@ import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 
 /**
- * Index all the documents
+ * This indexer is backed by a DB(H2 database)
+ * This class does all the Index updates(write)
+ * Use FanIndexQyery to search it.
+ *
+ * Index all the documents:
  * fan/fwt sources
  * fantom distro pods/libs
  * jdk libs ?
@@ -446,6 +450,24 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		shutdown = true;
 	}
 
+	private int getProtection(FType type)
+	{
+		if (hasFlag(type.flags, FConst.Private))
+		{
+			return ModifEnum.PRIVATE.value();
+		}
+		if (hasFlag(type.flags, FConst.Protected))
+		{
+			return ModifEnum.PROTECTED.value();
+		}
+		if (hasFlag(type.flags, FConst.Internal))
+		{
+			return ModifEnum.INTERNAL.value();
+		}
+		// default is public
+		return ModifEnum.PUBLIC.value();
+	}
+
 	//*********** File listeners ****************************
 	public void fileFolderCreated(FileEvent fe)
 	{
@@ -487,24 +509,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	public void fileAttributeChanged(FileAttributeEvent fae)
 	{
 		// don't care
-	}
-
-	private int getProtection(FType type)
-	{
-		if (hasFlag(type.flags, FConst.Private))
-		{
-			return ModifEnum.PRIVATE.value();
-		}
-		if (hasFlag(type.flags, FConst.Protected))
-		{
-			return ModifEnum.PROTECTED.value();
-		}
-		if (hasFlag(type.flags, FConst.Internal))
-		{
-			return ModifEnum.INTERNAL.value();
-		}
-		// default is public
-		return ModifEnum.PUBLIC.value();
 	}
 
 	/*********************************************************************
