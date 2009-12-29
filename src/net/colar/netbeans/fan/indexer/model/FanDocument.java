@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Date;
+import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
 import net.jot.persistance.JOTSQLCondition;
@@ -16,6 +17,7 @@ import net.jot.persistance.builders.JOTQueryBuilder;
  */
 public class FanDocument extends JOTModel
 {
+
 	/**
 	 * Filesystem path
 	 * Source path for sources
@@ -69,5 +71,55 @@ public class FanDocument extends JOTModel
 		this.isSource = isSource;
 	}
 
+	public static void renameDoc(String oldPath, String newPath)
+	{
+		FanDocument doc = findByPath(oldPath);
+		try
+		{
+			if (doc != null)
+			{
+				doc.setPath(newPath);
+				doc.save();
+			}
+		} catch (Exception e)
+		{
+			JOTLogger.logException(FanDocument.class, "Failed renaming doc: " + oldPath, e);
+		}
+	}
 
+	public static void deleteForPath(JOTTransaction trans, String path)
+	{
+		FanDocument doc = findByPath(path);
+		try
+		{
+			if (doc != null)
+			{
+				doc.delete(trans);
+			}
+		} catch (Exception e)
+		{
+			JOTLogger.logException(FanDocument.class, "Failed deleting doc: " + path, e);
+		}
+	}
+
+	@Override
+	public void delete(JOTTransaction trans) throws Exception
+	{
+			FanType.deleteForDoc(trans, getId());
+			delete(trans);
+	}
+
+	public static FanDocument findByPath(String path)
+	{
+		FanDocument result = null;
+		try
+		{
+			JOTSQLCondition cond = new JOTSQLCondition("path", JOTSQLCondition.IS_EQUAL, path);
+			result = (FanDocument) JOTQueryBuilder.selectQuery(null, FanDocument.class).where(cond).findOne();
+		} catch (Exception e)
+		{
+			JOTLogger.logException(FanDocument.class, "Failed renaming doc: " + path, e);
+		}
+		return result;
+	}
 }

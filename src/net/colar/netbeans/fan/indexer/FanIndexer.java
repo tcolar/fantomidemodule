@@ -4,9 +4,16 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import fanx.fcode.FPod;
+import fanx.fcode.FType;
+import fanx.fcode.FTypeRef;
 import java.io.File;
+import java.lang.reflect.Modifier;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
+import java.util.regex.Pattern;
+import java.util.zip.ZipFile;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
@@ -18,8 +25,8 @@ import net.colar.netbeans.fan.indexer.model.FanDocUsing;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
+import net.colar.netbeans.fan.platform.FanPlatform;
 import net.jot.logger.JOTLoggerLocation;
-import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.JOTTransaction;
 import net.jot.persistance.builders.JOTQueryBuilder;
@@ -29,26 +36,38 @@ import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 
 /**
- *
- * Update: Will not be using lucerne anymore ...
- *
- * Index parsed files (used later for completion etc...)
- * I feel like it's not right to have the item data encoded into a string
- * This should probably be backed by a JavaDB instead ... but whatever
+ * Index Fan sources in DB.
  * @author tcolar
  */
-public class FanIndexer extends CustomIndexer
+public class FanIndexer extends CustomIndexer implements FileChangeListener
 {
 
+	private final static Pattern CLOSURECLASS = Pattern.compile(".*?\\$\\d+\\z");
 	static JOTLoggerLocation log = new JOTLoggerLocation(FanIndexer.class);
+	private final FanIndexerThread indexerThread;
+	public static volatile boolean shutdown = false;
+	Hashtable<String, Long> toBeIndexed = new Hashtable<String, Long>();
 
 	public FanIndexer()
 	{
 		super();
+		indexerThread = new FanIndexerThread();
+		indexerThread.start();
+		// start the indexing thread
+		// index Fantom libs right aways
+		indexFantomPods();
+		// index Fantom jars + standrad java jars ?
+		//indexJava();
+		// sources indexes will be called  through scanStarted()
+		// TODO: cleanup not existing any more docs (binaries & sources)?
 	}
 
 	@Override
@@ -64,10 +83,12 @@ public class FanIndexer extends CustomIndexer
 	// Might need a separte ANTLR grammar though.
 	public void index(String path)
 	{
+
 		long then = new Date().getTime();
 		log.info("Indexing requested for: " + path);
 		// Get a snaphost of the source
 		File f = new File(path);
+
 		FileObject fo = FileUtil.toFileObject(f);
 		Source source = Source.create(fo);
 		Snapshot snapshot = source.createSnapshot();
@@ -76,10 +97,9 @@ public class FanIndexer extends CustomIndexer
 		try
 		{
 			parser.parse(snapshot);
-		}
-		catch(Throwable e)
+		} catch (Throwable e)
 		{
-			log.exception("Parsing failed for: "+path, e);
+			log.exception("Parsing failed for: " + path, e);
 			return;
 		}
 		Result result = parser.getResult();
@@ -96,7 +116,7 @@ public class FanIndexer extends CustomIndexer
 		log.debug("Indexing parsed result for : " + path);
 
 		FanParserResult fanResult = (FanParserResult) parserResult;
-		indexDoc(path, fanResult.getRootScope());
+		indexSrcDoc(path, fanResult.getRootScope());
 	}
 
 	/**
@@ -105,7 +125,7 @@ public class FanIndexer extends CustomIndexer
 	 * @param indexable
 	 * @param rootScope
 	 */
-	public void indexDoc(String path, FanRootScope rootScope)
+	public void indexSrcDoc(String path, FanRootScope rootScope)
 	{
 		//TODO: does this need to be synchronized or is NB taking care of that ?
 		JOTTransaction transaction = null;
@@ -120,6 +140,7 @@ public class FanIndexer extends CustomIndexer
 				{
 					doc.setPath(path);
 					doc.setTstamp(new Date().getTime());
+					doc.setIsSource(true);
 					doc.save(transaction);
 				}
 
@@ -196,6 +217,7 @@ public class FanIndexer extends CustomIndexer
 						dbType.setSimpleName(typeScope.getName());
 						dbType.setPod(typeScope.getPod());
 						dbType.setProtection(typeScope.getProtection());
+						dbType.setIsFromSource(true);
 
 						dbType.save(transaction);
 
@@ -255,21 +277,14 @@ public class FanIndexer extends CustomIndexer
 					using.delete();
 				}
 				// old inherited types
-				for(Long inh : inh2Delete)
+				for (Long inh : inh2Delete)
 				{
 					JOTQueryBuilder.deleteByID(null, FanTypeInheritance.class, inh);
 				}
 				// remove old types
 				for (FanType t : types)
 				{
-					JOTTransaction trans = new JOTTransaction(JOTModel.DEFAULT_STORAGE);
-					// delete associated inheroted types
-					String name = t.getQualifiedName();
-					JOTSQLCondition cond = new JOTSQLCondition("mainType", JOTSQLCondition.IS_EQUAL, name);
-					JOTQueryBuilder.deleteQuery(trans, FanTypeInheritance.class).where(cond).delete();
-					// delete main type
-					t.delete(trans);
-					trans.commit();
+					t.delete();
 				}
 			}
 
@@ -295,16 +310,215 @@ public class FanIndexer extends CustomIndexer
 		JOTSQLCondition cond = new JOTSQLCondition("path", JOTSQLCondition.IS_EQUAL, path);
 		try
 		{
-		FanDocument doc = (FanDocument)JOTQueryBuilder.selectQuery(null, FanDocument.class).where(cond).findOne();
-		if(doc!=null)
-		{
-			long indexedTime = doc.getTstamp();
-			if(indexedTime >= tstamp)
+			FanDocument doc = (FanDocument) JOTQueryBuilder.selectQuery(null, FanDocument.class).where(cond).findOne();
+			if (doc != null)
 			{
-				return false;
+				long indexedTime = doc.getTstamp();
+				if (indexedTime >= tstamp)
+				{
+					return false;
+				}
+			}
+		} catch (Exception e)
+		{
+			log.exception("FanDocument search exception", e);
+		}
+		return true;
+	}
+
+	public void indexFantomPods()
+	{
+		FanPlatform platform = FanPlatform.getInstance(false);
+		if (platform != null)
+		{
+			String podsDir = platform.getPodsDir();
+			File f = new File(podsDir);
+			// listen to changes in pod folder
+			FileUtil.addFileChangeListener(this, f);
+			// index the pods if not up to date
+			File[] pods = f.listFiles();
+			for (File pod : pods)
+			{
+				String path = pod.getAbsolutePath();
+				if (checkIfNeedsReindexing(path, pod.lastModified()))
+				{
+					indexPod(path);
+				}
 			}
 		}
-		}catch(Exception e){log.exception("FanDocument search exception", e);}
-		return true;
+	}
+
+	private void indexPod(String pod)
+	{
+		if (pod.toLowerCase().endsWith(".pod"))
+		{
+			JOTTransaction trans = null;
+			try
+			{
+				trans = new JOTTransaction("default");
+
+				ZipFile zpod = new ZipFile(pod);
+				FPod fpod = new FPod(null, zpod, null);
+				fpod.readFully();
+				log.debug("Indexing pod: " + pod);
+				// Create the document
+				FanDocument doc = FanDocument.findOrCreateOne(trans, pod);
+				if (doc.isNew())
+				{
+					doc.setPath(pod);
+					doc.setTstamp(new Date().getTime());
+					doc.setIsSource(false);
+					doc.save(trans);
+				}
+				Vector<FanType> types = FanType.findAllForDoc(trans, doc.getId());
+
+				for (FType type : fpod.types)
+				{
+					FTypeRef typeRef = type.pod.typeRef(type.self);
+					String sig = typeRef.signature;
+					// Skipping "internal" classes - closures and the likes
+					if (CLOSURECLASS.matcher(typeRef.typeName).matches())
+					{
+						continue;
+					}
+					System.out.println("Pod Type: " + sig);
+
+					JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, sig);
+					FanType dbType = (FanType) JOTQueryBuilder.selectQuery(trans, FanType.class).where(cond).findOrCreateOne();
+					if (!dbType.isNew())
+					{
+						for (int i = 0; i != types.size(); i++)
+						{
+							FanType t = types.get(i);
+							if (t.getId() == dbType.getId())
+							{
+								types.remove(i);
+								break;
+							}
+						}
+					}
+					int flags = type.flags;
+					dbType.setDocumentId(doc.getId());
+					/*dbType.setKind();
+					dbType.setIsAbstract(Modifier.isAbstract(flags));
+					dbType.setIsConst(Modifier.is);
+					FConst.
+					dbType.setIsNative(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.NATIVE));
+					dbType.setIsOverride(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.OVERRIDE));
+					dbType.setIsReadonly(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.READONLY));
+					dbType.setIsStatic(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.STATIC));
+					dbType.setIsVirtual(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.VIRTUAL));
+					dbType.setQualifiedName(typeScope.getQName());
+					dbType.setSimpleName(typeScope.getName());
+					dbType.setPod(typeScope.getPod());
+					dbType.setProtection(typeScope.getProtection());
+					dbType.setIsFromSource(true);*/
+
+					dbType.save(trans);
+
+				}
+				// save -> commit
+				trans.commit();
+				for (FanType t : types)
+				{
+					t.delete();
+				}
+			} catch (Exception e)
+			{
+				log.exception("Indexing of: " + pod, e);
+				try
+				{
+					if (trans != null)
+					{
+						log.info("Rolling back failed indexing of: " + pod);
+						trans.rollBack();
+					}
+				} catch (Exception e2)
+				{
+					log.exception("Indexing rollback failed for: " + pod, e);
+				}
+			}
+		}
+	}
+
+	public static void shutdown()
+	{
+		shutdown = true;
+	}
+
+	//*********** File listeners ****************************
+	public void fileFolderCreated(FileEvent fe)
+	{
+		// Listen for changes
+		String path = fe.getFile().getPath();
+		log.debug("Folder created: " + path);
+		FileUtil.addFileChangeListener(this, FileUtil.toFile(fe.getFile()));
+	}
+
+	public void fileDataCreated(FileEvent fe)
+	{
+		String path = fe.getFile().getPath();
+		log.debug("File created: " + path);
+		indexPod(path);
+	}
+
+	public void fileChanged(FileEvent fe)
+	{
+		String path = fe.getFile().getPath();
+		log.debug("File changed: " + path);
+		indexPod(path);
+	}
+
+	public void fileDeleted(FileEvent fe)
+	{
+		String path = fe.getFile().getPath();
+		log.debug("File deleted: " + path);
+		FanDocument.deleteForPath(null, path);
+	}
+
+	public void fileRenamed(FileRenameEvent fre)
+	{
+		// TODO: not sure if that's good
+		FileObject src = (FileObject) fre.getSource();
+		log.debug("File renamed: " + src.getPath() + " -> " + fre.getFile().getPath());
+		FanDocument.renameDoc(src.getPath(), fre.getFile().getPath());
+	}
+
+	public void fileAttributeChanged(FileAttributeEvent fae)
+	{
+		// don't care
+	}
+
+	/*********************************************************************
+	 *  Indexer Thread class
+	 */
+	class FanIndexerThread extends Thread implements Runnable
+	{
+
+		@Override
+		public void run()
+		{
+			while (!shutdown)
+			{
+				try
+				{
+					sleep(1000);
+				} catch (Exception e)
+				{
+				}
+				;
+				long now = new Date().getTime();
+				for (String path : toBeIndexed.keySet())
+				{
+					Long l = toBeIndexed.get(path);
+					// Hasn't changed in acouple seconds
+					if (l.longValue() < now - 2000)
+					{
+						toBeIndexed.remove(path);
+						index(path);
+					}
+				}
+			}
+		}
 	}
 }

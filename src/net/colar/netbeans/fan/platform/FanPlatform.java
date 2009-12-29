@@ -4,10 +4,12 @@
  */
 package net.colar.netbeans.fan.platform;
 
+import fan.sys.Sys;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import net.colar.netbeans.fan.actions.FanExecution;
+import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.project.FanProject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
@@ -28,11 +30,12 @@ public class FanPlatform
 	private static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
 	private static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac");
 	private static FanPlatform instance = new FanPlatform();
-	private String fanHome;
 	public final static String FAN_CLASS = "fanx.tools.Fan";
 	public final static String FAN_SH = "fansh";
 	//private String fanBin;
 	//private String fanshBin;
+	private String fanHome;
+	private String podsDir;
 	private String fanSrc;
 
 	public FanPlatform()
@@ -52,6 +55,7 @@ public class FanPlatform
 			//fanBin = fanHome + "bin" + File.separator + (IS_WIN ? "fan.exe" : "fan");
 			//fanshBin = fanHome + "bin" + File.separator + (IS_WIN ? "fansh.exe" : "fansh");
 			fanSrc = fanHome + "src" + File.separator;
+			podsDir = fanHome + "lib" + File.separator + "fan" + File.separator;
 
 			// Set fan.home property, so we casn use Fan code later
 			System.setProperty("fan.home", fanHome);
@@ -270,5 +274,17 @@ public class FanPlatform
 	{
 		File f=new File(fanHome);
 		return FileUtil.toFileObject(f);
+	}
+
+	public void update()
+	{
+		// called when FAN_HOME is changed/updated.
+		readSettings();
+		FanIndexerFactory.getIndexer().indexFantomPods();
+	}
+
+	public String getPodsDir()
+	{
+		return podsDir;
 	}
 }

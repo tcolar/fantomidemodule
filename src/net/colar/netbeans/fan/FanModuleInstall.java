@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import net.colar.netbeans.fan.indexer.FanIndexerFactory;
+import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTPersistanceManager;
 import net.jot.prefs.JOTPreferences;
@@ -68,7 +68,7 @@ public class FanModuleInstall extends ModuleInstall
 		System.out.println("Shutting down Fantom plugin.");
 		try
 		{
-			FanIndexerFactory.shutdown();
+			FanIndexer.shutdown();
 			JOTPersistanceManager.getInstance().destroy();
 			JOTLogger.destroy();
 		} catch (Exception e)

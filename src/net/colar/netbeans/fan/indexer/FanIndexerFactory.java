@@ -3,9 +3,7 @@
  */
 package net.colar.netbeans.fan.indexer;
 
-import java.util.Date;
-import java.util.Hashtable;
-import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.jot.logger.JOTLogger;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -25,26 +23,23 @@ public class FanIndexerFactory extends CustomIndexerFactory
 
 	public static final String NAME = "FanIndexer";
 	public static final int VERSION = 1;
-	Hashtable<String, Long> toBeIndexed = new Hashtable<String, Long>();
-	private final FanIndexerThread indexerThread;
-	public static volatile boolean shutdown = false;
+	private static FanIndexer indexer = new FanIndexer();
 
 	public FanIndexerFactory()
 	{
 		System.err.println("Fantom - Init indexer Factory");
-		indexerThread = new FanIndexerThread();
-		indexerThread.start();
+		// TODO: cleanup, non-existing anymore sources
 	}
 
-	public static void shutdown()
+	public static FanIndexer getIndexer()
 	{
-		shutdown = true;
+		return indexer;
 	}
 
 	@Override
 	public CustomIndexer createIndexer()
 	{
-		return new FanIndexer();
+		return indexer;
 	}
 
 	@Override
@@ -69,85 +64,38 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	@Override
 	public void filesDeleted(Iterable<? extends Indexable> itrbl, Context cntxt)
 	{
-		//TODO
+		for (Indexable idx : itrbl)
+		{
+			String path = idx.getURL().getPath();
+			JOTLogger.debug(this, "File deleted: " + path);
+			FanDocument.deleteForPath(null, path);
+		}
 	}
 
 	@Override
 	public void filesDirty(Iterable<? extends Indexable> itrbl, Context cntxt)
 	{
-		//TODO: maybe use a queue or a thread or something and not reindex at very single chnage
-		// of tghe source file
-		// ie: if changed but not in last 1500ms
-		for (Indexable indexable : itrbl)
-		{
-			String doc = indexable.getURL().getPath();
-			toBeIndexed.put(doc, new Date().getTime());
-		}
+		indexer.index(itrbl, cntxt);
 	}
 
-	class FanIndexerThread extends Thread implements Runnable
-	{
-
-		@Override
-		public void run()
-		{
-			while (!shutdown)
-			{
-				try
-				{
-					sleep(1000);
-				} catch (Exception e)
-				{
-				}
-				;
-				long now = new Date().getTime();
-				for (String path : toBeIndexed.keySet())
-				{
-					Long l = toBeIndexed.get(path);
-					// Hasn't changed in acouple seconds
-					if (l.longValue() < now - 2000)
-					{
-						toBeIndexed.remove(path);
-						FanIndexer indexer = (FanIndexer) createIndexer();
-						indexer.index(path);
-					}
-				}
-			}
-		}
-	}
-
-	// Index fantom libs (fantomHome/lib/fan)
-	// TODO: redo, when fanHome is changed.
-	// TODO: index java libs in lib/java ??
-	public void indexFantomBinaries()
-	{
-		FanPlatform platform = FanPlatform.getInstance(false);
-		if(platform != null)
-		{
-			
-		}
-	}
-
-	@Override
-	public boolean scanStarted(Context context)
-	{
-		JOTLogger.info(this, "Starting indexing of: "+ context.getRoot());
-		FileObject root = context.getRoot();
-		int nb=scanFolder(root, 0);
-		// what does the return mean ?
-		JOTLogger.info(this, "Done indexing "+nb+" files for: "+ context.getRoot());
-		return true;
-	}
-
+	/**
+	 * recursive
+	 * @param root
+	 * @param nb
+	 * @return
+	 */
 	private int scanFolder(FileObject root, int nb)
 	{
 		FanPlatform platform = FanPlatform.getInstance(false);
-		if(platform !=null)
+		if (platform != null)
 		{
-			// don't do Fantom distro sources since we have (faster) binaries
-			if(FileUtil.isParentOf(platform.getFanHome(), root))
+			// Don't do Fantom distro sources since we have binaries (faster)
+			if (FileUtil.isParentOf(platform.getFanHome(), root))
+			{
 				return nb;
+			}
 		}
+
 		FileObject[] children = root.getChildren();
 		for (FileObject child : children)
 		{
@@ -157,17 +105,14 @@ public class FanIndexerFactory extends CustomIndexerFactory
 				nb = scanFolder(child, nb);
 			} else
 			{
-				if(child.hasExt("fan") || child.hasExt("fwt"))
+				if (child.hasExt("fan") || child.hasExt("fwt"))
 				{
-					if(FanIndexer.checkIfNeedsReindexing(child.getPath(), child.lastModified().getTime()))
+					if (FanIndexer.checkIfNeedsReindexing(child.getPath(), child.lastModified().getTime()))
 					{
 						nb++;
 						new FanIndexer().index(child.getPath());
 					}
 				}
-				// check if fan file
-				// check in DB if tstamp outdated
-				// index if it is.
 			}
 		}
 		return nb;
@@ -176,10 +121,18 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	@Override
 	public void scanFinished(Context cntxt)
 	{
-		// TODO: remove all non existing FanDocuments
-		// TODO: scan the db to highlight unreolved items / errors ?
 	}
 
+	@Override
+	public boolean scanStarted(Context context)
+	{
+		JOTLogger.info(this, "Starting indexing of: " + context.getRoot() + " " + context.isSourceForBinaryRootIndexing());
+		FileObject root = context.getRoot();
+		int nb = scanFolder(root, 0);
+		// what does the return mean ?
+		JOTLogger.info(this, "Done indexing " + nb + " files for: " + context.getRoot());
+		return true;
+	}
 }
 
 

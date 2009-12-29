@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
+import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
 import net.jot.persistance.JOTSQLCondition;
@@ -25,6 +26,8 @@ public class FanType extends JOTModel
 	public String pod=""; // name of the pod it's in (or package for java ffi)
 	public Integer kind = -1; // class, enum, mixin
 	public Long documentId = -1L; // id of the document(source) it's found in - can be null;
+	// wether defined ina  source or  a binary/lib
+	public Boolean fromSource = true;
 
 	// modifiers / protection
 	public Integer protection = -1; // private, public(default), internal, protected
@@ -177,10 +180,65 @@ public class FanType extends JOTModel
 		this.simpleName = simpleName;
 	}
 
+	/**
+	 * All types for a document
+	 * @param transaction
+	 * @param doc
+	 * @return
+	 * @throws Exception
+	 */
 	public static Vector<FanType> findAllForDoc(JOTTransaction transaction, long doc) throws Exception
 	{
 		JOTSQLCondition cond = new JOTSQLCondition("documentId", JOTSQLCondition.IS_EQUAL, doc);
 		return (Vector<FanType>)JOTQueryBuilder.selectQuery(transaction, FanType.class).where(cond).find().getAllResults();
+	}
+
+	public Boolean isFromSource()
+	{
+		return fromSource;
+	}
+
+	public void setIsFromSource(Boolean fromSource)
+	{
+		this.fromSource = fromSource;
+	}
+
+	/**
+	 * Get the list of unique sorted types for a document
+	 * @param transaction
+	 * @param doc
+	 * @return
+	 * @throws Exception
+	 */
+	/*public static Vector<FanType> findTypeList(JOTTransaction transaction, long doc) throws Exception
+	{
+		JOTSQLCondition cond = new JOTSQLCondition("documentId", JOTSQLCondition.IS_EQUAL, doc);
+		return (Vector<FanType>)JOTQueryBuilder.selectQuery(transaction, FanType.class).where(cond).
+			orderBy("fromSource",false).find().filterDistinct("qualifiedName").getAllResults();
+	}*/
+
+	public static void deleteForDoc(JOTTransaction trans, long id) throws Exception
+	{
+		try
+		{
+		Vector<FanType> types = findAllForDoc(trans, id);
+		for(FanType type : types)
+			type.delete(trans);
+		}
+		catch(Exception e)
+		{
+			JOTLogger.logException(FanDocument.class, "Failed deleting type: " + id, e);
+		}
+	}
+
+	@Override
+	public void delete(JOTTransaction trans) throws Exception
+	{
+		// TODO: delete slots
+		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, qualifiedName);
+		for(FanTypeInheritance inh : inhs)
+			inh.delete(trans);
+		super.delete();
 	}
 
 }

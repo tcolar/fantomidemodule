@@ -44,11 +44,11 @@ public class FanPodIndexer implements FileChangeListener
 
 	public static synchronized FanPodIndexer getInstance()
 	{
-		if (!instance.indexed && !instance.running)
+		/*if (!instance.indexed && !instance.running)
 		{
 			instance.running = true;
 			new FanPodIndexerThread().start();
-		}
+		}*/
 		return instance;
 	}
 
