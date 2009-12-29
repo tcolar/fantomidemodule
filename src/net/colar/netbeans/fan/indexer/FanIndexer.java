@@ -4,11 +4,11 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import fanx.fcode.FConst;
 import fanx.fcode.FPod;
 import fanx.fcode.FType;
 import fanx.fcode.FTypeRef;
 import java.io.File;
-import java.lang.reflect.Modifier;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -19,6 +19,7 @@ import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
+import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanDocUsing;
@@ -63,11 +64,15 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		indexerThread.start();
 		// start the indexing thread
 		// index Fantom libs right aways
+		long then = new Date().getTime();
 		indexFantomPods();
+		long now = new Date().getTime();
+		log.debug("Fantom Pod Parsing completed in " + (now - then) + " ms.");
 		// index Fantom jars + standrad java jars ?
 		//indexJava();
 		// sources indexes will be called  through scanStarted()
-		// TODO: cleanup not existing any more docs (binaries & sources)?
+		// TODO: cleanup docs that don't exist any more docs (binaries & sources)?
+		// TODO: Log db stats (# of docs, types, slots)
 	}
 
 	@Override
@@ -128,25 +133,25 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	public void indexSrcDoc(String path, FanRootScope rootScope)
 	{
 		//TODO: does this need to be synchronized or is NB taking care of that ?
-		JOTTransaction transaction = null;
+		//JOTTransaction transaction = null;
+		FanDocument doc = null;
 		try
 		{
-			transaction = new JOTTransaction("default");
 			if (rootScope != null)
 			{
 				// create / update the doument
-				FanDocument doc = FanDocument.findOrCreateOne(transaction, path);
+				doc = FanDocument.findOrCreateOne(null, path);
 				if (doc.isNew())
 				{
 					doc.setPath(path);
 					doc.setTstamp(new Date().getTime());
 					doc.setIsSource(true);
-					doc.save(transaction);
+					doc.save();
 				}
 
 				// Update the  "using" / try to be smart as to not delete / recreate all everytime.
-				Vector<FanDocUsing> usings = FanDocUsing.findAllForDoc(transaction, doc.getId());
-				Vector<FanType> types = FanType.findAllForDoc(transaction, doc.getId());
+				Vector<FanDocUsing> usings = FanDocUsing.findAllForDoc(null, doc.getId());
+				Vector<FanType> types = FanType.findAllForDoc(null, doc.getId());
 				Vector<Long> inh2Delete = new Vector<Long>();
 
 				Vector<String> addedUsings = new Vector();
@@ -177,7 +182,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							FanDocUsing using = new FanDocUsing();
 							using.setDocumentId(doc.getId());
 							using.setType(sig);
-							using.save(transaction);
+							using.save();
 						}
 					}
 				}
@@ -191,7 +196,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					{
 						FanTypeScope typeScope = (FanTypeScope) child;
 						JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, typeScope.getQName());
-						FanType dbType = (FanType) JOTQueryBuilder.selectQuery(transaction, FanType.class).where(cond).findOrCreateOne();
+						FanType dbType = (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOrCreateOne();
 						if (!dbType.isNew())
 						{
 							for (int i = 0; i != types.size(); i++)
@@ -208,21 +213,17 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						dbType.setKind(typeScope.getKind().value());
 						dbType.setIsAbstract(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.ABSTRACT));
 						dbType.setIsConst(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.CONST));
-						dbType.setIsNative(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.NATIVE));
-						dbType.setIsOverride(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.OVERRIDE));
-						dbType.setIsReadonly(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.READONLY));
-						dbType.setIsStatic(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.STATIC));
-						dbType.setIsVirtual(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.VIRTUAL));
+						dbType.setIsFinal(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.FINAL));
 						dbType.setQualifiedName(typeScope.getQName());
 						dbType.setSimpleName(typeScope.getName());
 						dbType.setPod(typeScope.getPod());
 						dbType.setProtection(typeScope.getProtection());
 						dbType.setIsFromSource(true);
 
-						dbType.save(transaction);
+						dbType.save();
 
 						// Try to reuse existing db entries.
-						Vector<FanTypeInheritance> currentInh = FanTypeInheritance.findAllForMainType(transaction, typeScope.getQName());
+						Vector<FanTypeInheritance> currentInh = FanTypeInheritance.findAllForMainType(null, typeScope.getQName());
 						for (FanAstResolvedType item : typeScope.getInheritedItems())
 						{
 							String mainType = typeScope.getQName();
@@ -247,7 +248,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 								FanTypeInheritance inh = new FanTypeInheritance();
 								inh.setMainType(mainType);
 								inh.setInheritedType(inhType);
-								inh.save(transaction);
+								inh.save();
 							}
 						}
 						// Whatever wasn't removed from the vector is not needed anymore.
@@ -267,10 +268,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						}*/
 					}
 				}
-				// Only commit if everything went well.
-				transaction.commit();
 
-				// the delete can be done now.
 				// remove old usings
 				for (FanDocUsing using : usings)
 				{
@@ -290,17 +288,17 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 		} catch (Exception e)
 		{
-			log.exception("Indexing of: " + path, e);
+			log.exception("Indexing Failed for: " + path, e);
 			try
 			{
-				if (transaction != null)
+				// remove the incomplete doc ... wil try again next time.
+				if (doc != null)
 				{
-					log.info("Rolling back failed indexing of: " + path);
-					transaction.rollBack();
+					doc.delete();
 				}
 			} catch (Exception e2)
 			{
-				log.exception("Indexing rollback failed for: " + path, e);
+				log.exception("Indexing 'rollback' failed for: " + path, e);
 			}
 		}
 	}
@@ -352,39 +350,40 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		if (pod.toLowerCase().endsWith(".pod"))
 		{
-			JOTTransaction trans = null;
+			FanDocument doc = null;
 			try
 			{
-				trans = new JOTTransaction("default");
 
 				ZipFile zpod = new ZipFile(pod);
 				FPod fpod = new FPod(null, zpod, null);
 				fpod.readFully();
 				log.debug("Indexing pod: " + pod);
 				// Create the document
-				FanDocument doc = FanDocument.findOrCreateOne(trans, pod);
+				doc = FanDocument.findOrCreateOne(null, pod);
 				if (doc.isNew())
 				{
 					doc.setPath(pod);
 					doc.setTstamp(new Date().getTime());
 					doc.setIsSource(false);
-					doc.save(trans);
+					doc.save();
 				}
-				Vector<FanType> types = FanType.findAllForDoc(trans, doc.getId());
+				Vector<FanType> types = FanType.findAllForDoc(null, doc.getId());
 
 				for (FType type : fpod.types)
 				{
 					FTypeRef typeRef = type.pod.typeRef(type.self);
 					String sig = typeRef.signature;
+					int flags = type.flags;
 					// Skipping "internal" classes - closures and the likes
-					if (CLOSURECLASS.matcher(typeRef.typeName).matches())
+					// synthetic means generated by compiler
+					if (hasFlag(flags, FConst.Synthetic) || CLOSURECLASS.matcher(typeRef.typeName).matches())
 					{
 						continue;
 					}
 					System.out.println("Pod Type: " + sig);
 
 					JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, sig);
-					FanType dbType = (FanType) JOTQueryBuilder.selectQuery(trans, FanType.class).where(cond).findOrCreateOne();
+					FanType dbType = (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOrCreateOne();
 					if (!dbType.isNew())
 					{
 						for (int i = 0; i != types.size(); i++)
@@ -397,48 +396,46 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							}
 						}
 					}
-					int flags = type.flags;
 					dbType.setDocumentId(doc.getId());
-					/*dbType.setKind();
-					dbType.setIsAbstract(Modifier.isAbstract(flags));
-					dbType.setIsConst(Modifier.is);
-					FConst.
-					dbType.setIsNative(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.NATIVE));
-					dbType.setIsOverride(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.OVERRIDE));
-					dbType.setIsReadonly(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.READONLY));
-					dbType.setIsStatic(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.STATIC));
-					dbType.setIsVirtual(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.VIRTUAL));
-					dbType.setQualifiedName(typeScope.getQName());
-					dbType.setSimpleName(typeScope.getName());
-					dbType.setPod(typeScope.getPod());
-					dbType.setProtection(typeScope.getProtection());
-					dbType.setIsFromSource(true);*/
+					//dbType.setKind(typeRef.);
+					dbType.setIsAbstract(hasFlag(flags, FConst.Abstract));
+					dbType.setIsConst(hasFlag(flags, FConst.Const));
+					dbType.setIsFinal(hasFlag(flags, FConst.Final));
+					dbType.setQualifiedName(sig);
+					dbType.setSimpleName(typeRef.typeName);
+					dbType.setPod(typeRef.podName);
+					dbType.setProtection(getProtection(type));
+					dbType.setIsFromSource(false);
 
-					dbType.save(trans);
+					dbType.save();
 
 				}
-				// save -> commit
-				trans.commit();
+
 				for (FanType t : types)
 				{
 					t.delete();
 				}
 			} catch (Exception e)
 			{
-				log.exception("Indexing of: " + pod, e);
+				log.exception("Indexing failed for: " + pod, e);
 				try
 				{
-					if (trans != null)
+					// remove broken enrty, will try again next time
+					if (doc != null)
 					{
-						log.info("Rolling back failed indexing of: " + pod);
-						trans.rollBack();
+						doc.delete();
 					}
 				} catch (Exception e2)
 				{
-					log.exception("Indexing rollback failed for: " + pod, e);
+					log.exception("Indexing 'rollback' failed for: " + pod, e);
 				}
 			}
 		}
+	}
+
+	public boolean hasFlag(int flags, int flag)
+	{
+		return (flags & flag) != 0;
 	}
 
 	public static void shutdown()
@@ -487,6 +484,24 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	public void fileAttributeChanged(FileAttributeEvent fae)
 	{
 		// don't care
+	}
+
+	private int getProtection(FType type)
+	{
+		if (hasFlag(type.flags, FConst.Private))
+		{
+			return ModifEnum.PRIVATE.value();
+		}
+		if (hasFlag(type.flags, FConst.Protected))
+		{
+			return ModifEnum.PROTECTED.value();
+		}
+		if (hasFlag(type.flags, FConst.Internal))
+		{
+			return ModifEnum.INTERNAL.value();
+		}
+		// default is public
+		return ModifEnum.PUBLIC.value();
 	}
 
 	/*********************************************************************
