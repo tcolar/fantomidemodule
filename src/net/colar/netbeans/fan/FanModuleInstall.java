@@ -41,7 +41,6 @@ public class FanModuleInstall extends ModuleInstall
 		File prefFile = new File(fantomHome, "jot.prefs");
 		try
 		{
-			//TODO: not only check if it exists but alos if up to date
 			if (!prefFile.exists() || isOutdated(prefFile))
 			{
 				prefFile = createPrefFiles(fantomHome);

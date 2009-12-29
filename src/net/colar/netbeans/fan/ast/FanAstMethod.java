@@ -54,4 +54,11 @@ public class FanAstMethod extends FanAstField
 	{
 		return parameters;
 	}
+
+	public boolean isCtor()
+	{
+		return isCtor;
+	}
+
+
 }

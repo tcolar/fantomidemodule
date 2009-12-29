@@ -16,22 +16,16 @@ public class FanModelConstants
 
 		final int val;
 		private SlotKind(int i) {val=i;}
+		public int value() {return val;}
 	}
 
-	public enum FfiKind
+	/*public enum FfiKind
 	{
 		NONE(1), JAVA(2);
 
 		final int val;
 		private FfiKind(int i) {val=i;}
-	}
-
-	// Protection types
-	public enum ProtectionKind
-	{
-		PUBLIC(1),INTERNAL(2), PROTECTED(3), PRIVATE(4);
-		final int val;
-		private ProtectionKind(int i) {val=i;}
-	}
+		public int value() {return val;}
+	}*/
 
 }

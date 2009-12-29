@@ -106,7 +106,7 @@ public class FanDocument extends JOTModel
 	public void delete(JOTTransaction trans) throws Exception
 	{
 			FanType.deleteForDoc(trans, getId());
-			delete(trans);
+			super.delete(trans);
 	}
 
 	public static FanDocument findByPath(String path)

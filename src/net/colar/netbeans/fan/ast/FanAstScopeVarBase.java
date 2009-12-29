@@ -15,6 +15,7 @@ public abstract class FanAstScopeVarBase
 {
 
 	protected String name;
+	// The type of the field / or returned type for a method
 	protected FanAstResolvResult type = FanAstResolvResult.makeUnresolved();
 	protected ArrayList<FanAstScopeVarBase.ModifEnum> modifiers = new ArrayList<FanAstScopeVarBase.ModifEnum>();
 	protected FanAstScope scope;
@@ -141,5 +142,22 @@ public abstract class FanAstScopeVarBase
 		return modifiers.contains(modifier);
 	}
 
+	public int getProtection()
+	{
+		if (hasModifier(ModifEnum.PRIVATE))
+		{
+			return ModifEnum.PRIVATE.value();
+		}
+		if (hasModifier(ModifEnum.PROTECTED))
+		{
+			return ModifEnum.PROTECTED.value();
+		}
+		if (hasModifier(ModifEnum.INTERNAL))
+		{
+			return ModifEnum.INTERNAL.value();
+		}
+		// default is public
+		return ModifEnum.PUBLIC.value();
+	}
 
 }

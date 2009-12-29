@@ -4,8 +4,11 @@
 
 package net.colar.netbeans.fan.indexer.model;
 
+import java.util.Vector;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
+import net.jot.persistance.JOTSQLCondition;
+import net.jot.persistance.builders.JOTQueryBuilder;
 
 /**
  * DB model for a method/constructor parameters
@@ -13,9 +16,11 @@ import net.jot.persistance.JOTModelMapping;
  */
 public class FanMethodParam extends JOTModel
 {
+
 	public Long slotId = -1L;
 	public String name = "";
-	public String qualifiedType = ""; // qualified type of the parameters
+	public String qualifiedType = ""; // qualified type of the parameter
+	public boolean isNullable = false;
 
 	@Override
 	protected void customize(JOTModelMapping mapping)
@@ -54,5 +59,21 @@ public class FanMethodParam extends JOTModel
 		this.slotId = slotId;
 	}
 
+	public boolean isNullable()
+	{
+		return isNullable;
+	}
+
+	public void setIsNullable(boolean isNullable)
+	{
+		this.isNullable = isNullable;
+	}
+
+
+	public static Vector<FanMethodParam> findAllForSlot(Object object, long id) throws Exception
+	{
+		JOTSQLCondition cond = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, id);
+		return (Vector<FanMethodParam>)JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond).find().getAllResults();
+	}
 	
 }

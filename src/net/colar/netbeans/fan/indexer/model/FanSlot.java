@@ -3,8 +3,13 @@
  */
 package net.colar.netbeans.fan.indexer.model;
 
+import java.util.Vector;
+import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
+import net.jot.persistance.JOTSQLCondition;
+import net.jot.persistance.JOTTransaction;
+import net.jot.persistance.builders.JOTQueryBuilder;
 
 /**
  * DB Model for a slot
@@ -14,30 +19,45 @@ import net.jot.persistance.JOTModelMapping;
 public class FanSlot extends JOTModel
 {
 
-	public String typeId = ""; // which type it's part of
+	public Long typeId = -1L; // which type it's part of
 	public String name = ""; // name of the slot
 	public Integer slotKind = -1; // field, method, constructor
+	// qualified type of a field or returntype for method/ctor
+	public String returnedType = FanIndexer.UNRESOLVED_TYPE;
+	public boolean isNullable = false;
 	// protection
 	public Integer protection = -1; // private, public(default), internal, protected
 	// flags / modifiers
 	public Boolean isStatic = false;
-	public Boolean isReadonly = false;
 	public Boolean isVirtual = false;
 	public Boolean isAbstract = false;
 	public Boolean isConst = false;
 	public Boolean isNative = false;
 	public Boolean isOverride = false;
-	public Boolean isOnce = false;
 
+	// Those two are not real attributes (syntaxic sugar)
+	// Maybe store privateSetter instead -> any use ??
+	//public Boolean isOnce = false;
+	//public Boolean isReadonly = false;
 
 	@Override
 	protected void customize(JOTModelMapping mapping)
 	{
-		mapping.defineFieldSize("typeId", 255);
 		mapping.defineFieldSize("name", 80);
+		mapping.defineFieldSize("returnedType", 255);
 	}
 
-	public boolean isIsAbstract()
+	public void setReturnedType(String type)
+	{
+		returnedType = type;
+	}
+
+	public String getReturnedType(String type)
+	{
+		return returnedType;
+	}
+
+	public boolean isAbstract()
 	{
 		return isAbstract;
 	}
@@ -47,7 +67,7 @@ public class FanSlot extends JOTModel
 		this.isAbstract = isAbstract;
 	}
 
-	public boolean isIsNative()
+	public boolean isNative()
 	{
 		return isNative;
 	}
@@ -57,17 +77,7 @@ public class FanSlot extends JOTModel
 		this.isNative = isNative;
 	}
 
-	public boolean isIsOnce()
-	{
-		return isOnce;
-	}
-
-	public void setIsOnce(boolean isOnce)
-	{
-		this.isOnce = isOnce;
-	}
-
-	public boolean isIsOverride()
+	public boolean isOverride()
 	{
 		return isOverride;
 	}
@@ -77,7 +87,7 @@ public class FanSlot extends JOTModel
 		this.isOverride = isOverride;
 	}
 
-	public boolean isIsStatic()
+	public boolean isStatic()
 	{
 		return isStatic;
 	}
@@ -87,7 +97,7 @@ public class FanSlot extends JOTModel
 		this.isStatic = isStatic;
 	}
 
-	public boolean isIsVirtual()
+	public boolean isVirtual()
 	{
 		return isVirtual;
 	}
@@ -127,25 +137,50 @@ public class FanSlot extends JOTModel
 		this.slotKind = slotKind;
 	}
 
-	public String getTypeId()
+	public Long getTypeId()
 	{
 		return typeId;
 	}
 
-	public void setTypeId(String typeId)
+	public void setTypeId(Long typeId)
 	{
 		this.typeId = typeId;
 	}
 
-	public Boolean issReadonly()
+	public Boolean isConst()
 	{
-		return isReadonly;
+		return isConst;
 	}
 
-	public void setIsReadonly(Boolean isReadonly)
+	public void setIsConst(Boolean isConst)
 	{
-		this.isReadonly = isReadonly;
+		this.isConst = isConst;
 	}
 
+	public void setIsNullable(boolean nullable)
+	{
+		this.isNullable = nullable;
+	}
 
+	public Boolean isNullable()
+	{
+		return isNullable;
+	}
+
+	public static Vector<FanSlot> findAllForType(Object object, long type) throws Exception
+	{
+		JOTSQLCondition cond = new JOTSQLCondition("typeId", JOTSQLCondition.IS_EQUAL, type);
+		return (Vector<FanSlot>) JOTQueryBuilder.selectQuery(null, FanSlot.class).where(cond).find().getAllResults();
+	}
+
+	@Override
+	public void delete(JOTTransaction trans) throws Exception
+	{
+		Vector<FanMethodParam> params = FanMethodParam.findAllForSlot(null, getId());
+		for (FanMethodParam param : params)
+		{
+			param.delete(trans);
+		}
+		super.delete(trans);
+	}
 }

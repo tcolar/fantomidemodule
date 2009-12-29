@@ -110,8 +110,10 @@ public class FanIndexerFactory extends CustomIndexerFactory
 				{
 					if (FanIndexer.checkIfNeedsReindexing(child.getPath(), child.lastModified().getTime()))
 					{
+						JOTLogger.info(this, "ReIndexing: " + root);
+
 						nb++;
-						new FanIndexer().index(child.getPath());
+						indexer.index(child.getPath());
 					}
 				}
 			}
@@ -127,11 +129,9 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	@Override
 	public boolean scanStarted(Context context)
 	{
-		JOTLogger.info(this, "Starting indexing of: " + context.getRoot() + " " + context.isSourceForBinaryRootIndexing());
 		FileObject root = context.getRoot();
-		int nb = scanFolder(root, 0);
+		scanFolder(root, 0);
 		// what does the return mean ?
-		JOTLogger.info(this, "Done indexing " + nb + " files for: " + context.getRoot());
 		return true;
 	}
 }
