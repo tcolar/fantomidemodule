@@ -12,7 +12,7 @@ import net.jot.persistance.JOTTransaction;
 import net.jot.persistance.builders.JOTQueryBuilder;
 
 /**
- * DB Model for a document's using statements
+ * DB Model for a source document's using statements
  * @author thibautc
  */
 public class FanDocUsing extends JOTModel

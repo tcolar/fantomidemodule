@@ -45,7 +45,10 @@ import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 
 /**
- * Index Fan sources in DB.
+ * Index all the documents
+ * fan/fwt sources
+ * fantom distro pods/libs
+ * jdk libs ?
  * @author tcolar
  */
 public class FanIndexer extends CustomIndexer implements FileChangeListener
