@@ -63,6 +63,7 @@ public class FanLanguage extends DefaultLanguageConfig
 	@Override
 	public Parser getParser()
 	{
+		int bkpt=1;
 		return new NBFanParser();
 	}
 

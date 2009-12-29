@@ -23,7 +23,8 @@ public abstract class FanAstScopeVarBase
 	public enum ModifEnum
 	{
 		PRIVATE(1), PROTECTED(2), INTERNAL(3), PUBLIC(4), STATIC(5), CONST(6),
-		ABSTRACT(7), NATIVE(8), OVERRIDE(9), VIRTUAL(10), READONLY(11), ONCE(12);
+		ABSTRACT(7), NATIVE(8), OVERRIDE(9), VIRTUAL(10), READONLY(11), ONCE(12),
+		FINAL (13);
 		int val;
 		ModifEnum(int i)
 		{
@@ -123,6 +124,9 @@ public abstract class FanAstScopeVarBase
 		} else if (m.toLowerCase().equalsIgnoreCase("virtual"))
 		{
 			return ModifEnum.VIRTUAL;
+		} else if (m.toLowerCase().equalsIgnoreCase("final"))
+		{
+			return ModifEnum.FINAL;
 		} else
 		{
 			System.out.println("Unrecognized modifier: " + m);

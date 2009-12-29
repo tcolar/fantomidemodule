@@ -32,13 +32,9 @@ public class FanType extends JOTModel
 	// modifiers / protection
 	public Integer protection = -1; // private, public(default), internal, protected
 	public Boolean isConst = false;
-	public Boolean isReadonly = false;
 	// flags / modifiers
-	public Boolean isStatic = false;
-	public Boolean isVirtual = false;
 	public Boolean isAbstract = false;
-	public Boolean isNative = false;
-	public Boolean isOverride = false;
+	public Boolean isFinal = false;
 
 	@Override
 	protected void customize(JOTModelMapping mapping)
@@ -80,56 +76,6 @@ public class FanType extends JOTModel
 		this.isConst = isConst;
 	}
 
-	public boolean isIsNative()
-	{
-		return isNative;
-	}
-
-	public void setIsNative(boolean isNative)
-	{
-		this.isNative = isNative;
-	}
-
-	public boolean isIsOverride()
-	{
-		return isOverride;
-	}
-
-	public void setIsOverride(boolean isOverride)
-	{
-		this.isOverride = isOverride;
-	}
-
-	public boolean isIsReadonly()
-	{
-		return isReadonly;
-	}
-
-	public void setIsReadonly(boolean isReadonly)
-	{
-		this.isReadonly = isReadonly;
-	}
-
-	public boolean isIsStatic()
-	{
-		return isStatic;
-	}
-
-	public void setIsStatic(boolean isStatic)
-	{
-		this.isStatic = isStatic;
-	}
-
-	public boolean isIsVirtual()
-	{
-		return isVirtual;
-	}
-
-	public void setIsVirtual(boolean isVirtual)
-	{
-		this.isVirtual = isVirtual;
-	}
-
 	public int getKind()
 	{
 		return kind;
@@ -158,6 +104,16 @@ public class FanType extends JOTModel
 	public void setProtection(int protection)
 	{
 		this.protection = protection;
+	}
+
+	public Boolean isFinal()
+	{
+		return isFinal;
+	}
+
+	public void setIsFinal(Boolean isFinal)
+	{
+		this.isFinal = isFinal;
 	}
 
 	public String getQualifiedName()
