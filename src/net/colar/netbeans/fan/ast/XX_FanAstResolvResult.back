@@ -21,7 +21,8 @@ import org.antlr.runtime.tree.CommonTree;
  * Hold results of resolvig an expression type
  * @author thibautc
  */
-public class FanAstResolvResult
+
+public class XX_FanAstResolvResult
 {
 	private final FanAstResolvedType type;
 	// whether it's used in a  nullable context : ex: Str? vs Str

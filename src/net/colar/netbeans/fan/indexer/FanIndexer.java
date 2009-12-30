@@ -28,8 +28,6 @@ import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.ast.FanAstField;
 import net.colar.netbeans.fan.ast.FanAstMethod;
-import net.colar.netbeans.fan.ast.FanAstResolvResult;
-import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
@@ -282,7 +280,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 						// Slots
 						// Try to reuse existing db entries.
-						Vector<FanSlot> currentSlots = FanSlot.findAllForType(null, dbType.getId());
+						Vector<FanSlot> currentSlots = FanSlot.findAllForType(dbType.getId());
 						for (FanAstScopeVarBase slot : typeScope.getScopeVars())
 						{
 							// determine kind of slot
@@ -349,7 +347,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 								Hashtable<String, FanResolvedType> parameters = method.getParameters();
 
 								// Try to reuse existing db entries.
-								Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(null, dbSlot.getId());
+								Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
 								for (String paramName : parameters.keySet())
 								{
 									FanResolvedType paramResult = parameters.get(paramName);
@@ -536,7 +534,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					dbType.save();
 					// Slots
 					// Try to reuse existing db entries.
-					Vector<FanSlot> currentSlots = FanSlot.findAllForType(null, dbType.getId());
+					Vector<FanSlot> currentSlots = FanSlot.findAllForType(dbType.getId());
 					Vector<FSlot> slots = new Vector();
 					slots.addAll(Arrays.asList(type.fields));
 					slots.addAll(Arrays.asList(type.methods));
@@ -603,7 +601,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							FMethod method = (FMethod) slot;
 							FMethodVar[] parameters = method.params();
 							// Try to reuse existing db entries.
-							Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(null, dbSlot.getId());
+							Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
 							for (FMethodVar param : parameters)
 							{
 								JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
