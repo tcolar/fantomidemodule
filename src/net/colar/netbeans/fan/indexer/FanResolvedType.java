@@ -5,6 +5,7 @@
 
 package net.colar.netbeans.fan.indexer;
 
+import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanType;
@@ -16,6 +17,7 @@ import org.antlr.runtime.tree.CommonTree;
  */
 public class FanResolvedType
 {
+
 
 	private final String qualifiedType;
 	private final FanType dbType;
@@ -74,6 +76,10 @@ public class FanResolvedType
 	boolean isNullable()
 	{
 
+	}
+	public static FanResolvedType makeFromExpr(FanParserResult result, CommonTree exprNode, int index)
+	{
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
 	public boolean isStaticContext()

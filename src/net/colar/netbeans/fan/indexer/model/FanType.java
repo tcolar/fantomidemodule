@@ -201,7 +201,7 @@ public class FanType extends JOTModel
 		{
 			inh.delete(trans);
 		}
-		Vector<FanSlot> slots = FanSlot.findAllForType(null, getId());
+		Vector<FanSlot> slots = FanSlot.findAllForType(getId());
 		for (FanSlot slot : slots)
 		{
 			slot.delete(trans);

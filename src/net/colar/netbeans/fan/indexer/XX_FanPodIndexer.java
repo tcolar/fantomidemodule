@@ -32,12 +32,12 @@ import org.openide.filesystems.FileUtil;
  * //TODO: add persistant caching
  * @author thibautc
  */
-public class FanPodIndexer implements FileChangeListener
+public class XX_FanPodIndexer implements FileChangeListener
 {
 	// closures are compiled into classes with names ending by $ and a number
 
 	private final static Pattern CLOSURECLASS = Pattern.compile(".*?\\$\\d+\\z");
-	private static final FanPodIndexer instance = new FanPodIndexer();
+	private static final XX_FanPodIndexer instance = new XX_FanPodIndexer();
 
 	private boolean running;
 	// treemap is sorted
@@ -49,7 +49,7 @@ public class FanPodIndexer implements FileChangeListener
 		return instance;
 	}*/
 
-	private FanPodIndexer()
+	private XX_FanPodIndexer()
 	{
 	}
 

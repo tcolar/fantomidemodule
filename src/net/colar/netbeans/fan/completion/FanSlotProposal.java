@@ -4,12 +4,11 @@
  */
 package net.colar.netbeans.fan.completion;
 
-import fan.sys.Field;
-import fan.sys.Method;
-import fan.sys.Param;
-import fan.sys.Slot;
 import java.util.HashSet;
-import net.colar.netbeans.fan.indexer.FanPodIndexer;
+import java.util.Vector;
+import net.colar.netbeans.fan.indexer.FanIndexer;
+import net.colar.netbeans.fan.indexer.model.FanMethodParam;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -22,59 +21,51 @@ import org.netbeans.modules.csl.api.Modifier;
 public class FanSlotProposal extends FanCompletionProposal
 {
 //TODO : != icon for static slots
-	private final Slot slot;
+	private final FanSlot slot;
 	private String html="";
 	private String rHtml="";
 	private String prefix="";
 
-	public FanSlotProposal(Slot slot, int anchor)
+	public FanSlotProposal(FanSlot slot, int anchor)
 	{
 		this.kind = ElementKind.OTHER;
-		this.name=slot.name();
+		this.name=slot.getName();
 		this.anchor=anchor;
 		this.slot = slot;
 		this.modifiers = new HashSet<Modifier>();
 		if (slot.isField())
 		{
 			this.kind = ElementKind.FIELD;
-			html = slot.name();
-			prefix=slot.name();
-			rHtml += ((Field)slot).of().name();
+			html = name;
+			prefix = name;
+			rHtml += slot.getReturnedType();
 		} else if(slot.isMethod() || slot.isCtor())
 		{
-			Method m = (Method) slot;
-			this.kind = ElementKind.METHOD;
-			rHtml = m.returns().name();
-			if(slot.isCtor())
-			{
-				this.kind=ElementKind.CONSTRUCTOR;
-				// m.returns says Void
-				rHtml = m.parent().name();
-			}
 			String args = "";
-			html=m.name()+"(";
-			prefix=slot.name()+"(";
-			Param[] params = (Param[]) m.params().asArray(Param.class);
-			for (Param p : params)
+			html = name+"(";
+			prefix = name+"(";
+			Vector<FanMethodParam> params = FanMethodParam.findAllForSlot(slot.getId());
+			//Param[] params = (Param[]) slot.m.params().asArray(Param.class);
+			for (FanMethodParam p : params)
 			{
 				if (args.length() > 0)
 				{
 					args += " ,";
 				}
-				String nm=p.name();
+				String nm=p.getName();
 				if(p.hasDefault())
 				{
-					nm="<font color='#662222'><i>" + p.name()+"</i></font>";
+					nm="<font color='#662222'><i>" + p.getName()+"</i></font>";
 				}
 				else
 				{
-					nm="<font color='#AA2222'>" + p.name()+"</font>";
+					nm="<font color='#AA2222'>" + p.getName()+"</font>";
 					// only list non-defaulted parameters by default
 					if(!prefix.endsWith("("))
 						prefix+=", ";
-					prefix+=p.name();
+					prefix+=p.getName();
 				}
-				args += p.of().name() + " " +nm;
+				args += p.getQualifiedType() + " " +nm;
 			}
 
 			// remove optional parenthesis when no parameters
@@ -85,7 +76,7 @@ public class FanSlotProposal extends FanCompletionProposal
 			html+=args+")";
 		}
 		FanBasicElementHandle handle = new FanBasicElementHandle(name, kind);
-		handle.setDoc(FanPodIndexer.fanDocToHtml(slot.doc()));
+		handle.setDoc(FanIndexer.getSlotDoc(slot));
 		element=handle;
 
 		if(slot.isPrivate())

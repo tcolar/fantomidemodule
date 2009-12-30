@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
+import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
@@ -51,7 +52,7 @@ public class FanSlot extends JOTModel
 		returnedType = type;
 	}
 
-	public String getReturnedType(String type)
+	public String getReturnedType()
 	{
 		return returnedType;
 	}
@@ -200,7 +201,7 @@ public class FanSlot extends JOTModel
 	@Override
 	public void delete(JOTTransaction trans) throws Exception
 	{
-		Vector<FanMethodParam> params = FanMethodParam.findAllForSlot(null, getId());
+		Vector<FanMethodParam> params = FanMethodParam.findAllForSlot(getId());
 		for (FanMethodParam param : params)
 		{
 			param.delete(trans);
@@ -219,5 +220,22 @@ public class FanSlot extends JOTModel
 	public boolean isField()
 	{
 		return slotKind == FanModelConstants.SlotKind.FIELD.value();
+	}
+
+	public boolean isPrivate()
+	{
+		return protection == ModifEnum.PRIVATE.value();
+	}
+	public boolean isPublic()
+	{
+		return protection == ModifEnum.PUBLIC.value();
+	}
+	public boolean isProtected()
+	{
+		return protection == ModifEnum.PROTECTED.value();
+	}
+	public boolean isInternal()
+	{
+		return protection == ModifEnum.INTERNAL.value();
 	}
 }

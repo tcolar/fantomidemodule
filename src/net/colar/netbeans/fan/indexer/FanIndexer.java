@@ -794,6 +794,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		return null;
 	}
 
+	public static String getSlotDoc(FanSlot slot)
+	{
+		// TODO: slot doc !
+		return null;
+	}
+
 	public static String getDoc(FanType type)
 	{
 		Pod pod = Pod.find(type.getPod());

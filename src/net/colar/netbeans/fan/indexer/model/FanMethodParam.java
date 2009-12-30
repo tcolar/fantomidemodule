@@ -70,10 +70,17 @@ public class FanMethodParam extends JOTModel
 	}
 
 
-	public static Vector<FanMethodParam> findAllForSlot(Object object, long id) throws Exception
+	public static Vector<FanMethodParam> findAllForSlot(long id)
 	{
-		JOTSQLCondition cond = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, id);
-		return (Vector<FanMethodParam>)JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond).find().getAllResults();
+		try
+		{
+			JOTSQLCondition cond = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, id);
+			return (Vector<FanMethodParam>)JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond).find().getAllResults();
+		}
+		catch(Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 	
 }

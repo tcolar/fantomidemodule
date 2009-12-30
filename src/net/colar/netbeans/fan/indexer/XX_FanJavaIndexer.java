@@ -28,11 +28,11 @@ import org.netbeans.api.java.platform.JavaPlatform;
  *
  * @author thibautc
  */
-public class FanJavaIndexer
+public class XX_FanJavaIndexer
 {
 
 	private FanJavaClassLoader cl;
-	private static FanJavaIndexer instance = new FanJavaIndexer();
+	private static XX_FanJavaIndexer instance = new XX_FanJavaIndexer();
 	boolean indexed = false;
 	boolean running = false;
 	ArrayList<String> packages = new ArrayList();
@@ -41,7 +41,7 @@ public class FanJavaIndexer
 	ArrayList<String> enums = new ArrayList();
 	ArrayList<String> annotations = new ArrayList();
 
-	private FanJavaIndexer()
+	private XX_FanJavaIndexer()
 	{
 		super();
 	}

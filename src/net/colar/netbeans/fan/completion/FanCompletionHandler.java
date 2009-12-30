@@ -3,11 +3,9 @@
  */
 package net.colar.netbeans.fan.completion;
 
-import fan.sys.Slot;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -17,13 +15,10 @@ import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanLexAstUtils;
-import net.colar.netbeans.fan.ast.FanAstResolvResult;
-import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.indexer.FanIndexer;
-import net.colar.netbeans.fan.indexer.FanJavaIndexer;
 import net.colar.netbeans.fan.indexer.FanResolvedType;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
@@ -304,7 +299,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param anchor
 	 * @param pod
 	 */
-	private void proposeJavaPacks(ArrayList<CompletionProposal> proposals, int anchor, String basePack)
+	/*private void proposeJavaPacks(ArrayList<CompletionProposal> proposals, int anchor, String basePack)
 	{
 		String base = basePack.substring(6).trim();
 		List<String> items = FanJavaIndexer.getInstance().listSubPackages(base);
@@ -314,7 +309,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			// TODO: JavaProps
 			proposals.add(new FanImportProposal(s, anchor - base.length(), true));
 		}
-	}
+	}*/
 
 	/**
 	 *
@@ -323,7 +318,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param basePack   null means from any package
 	 * @param type  type (starts with "[java]")
 	 */
-	private void proposeJavaTypes(ArrayList<CompletionProposal> proposals, int anchor, String basePack, String type)
+	/*private void proposeJavaTypes(ArrayList<CompletionProposal> proposals, int anchor, String basePack, String type)
 	{
 		String base = null;
 		if (basePack != null)
@@ -337,7 +332,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			// TODO: JavaProps
 			proposals.add(new FanImportProposal(s, anchor - type.length(), true));
 		}
-	}
+	}*/
 
 	/**
 	 * Propose defined types (fan.sys) + whatever listed in using
@@ -390,19 +385,19 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 			if (type == null || type.length() == 0)
 			{
-				if (pod.startsWith("[java]"))
+				/*if (pod.startsWith("[java]"))
 				{
 					proposeJavaPacks(proposals, anchor, pod);
-				} else
+				} else*/
 				{
 					proposePods(proposals, anchor, pod);
 				}
 			} else
 			{
-				if (pod.startsWith("[java]"))
+				/*if (pod.startsWith("[java]"))
 				{
 					proposeJavaTypes(proposals, anchor, pod, type);
-				} else
+				} else*/
 				{
 					proposeTypes(pod, proposals, anchor, type);
 				}
@@ -417,7 +412,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				proposePods(proposals, anchor, "");
 			} else
 			{
-				if (pod.startsWith("[java]"))
+				/*if (pod.startsWith("[java]"))
 				{
 					if (pod.trim().endsWith("::"))
 					{
@@ -428,7 +423,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					{
 						proposeJavaPacks(proposals, anchor, pod);
 					}
-				} else
+				} else*/
 				{
 					if (pod.trim().endsWith("::"))
 					{
@@ -489,9 +484,9 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				FanUtilities.GENERIC_LOGGER.info("Call separator not found !");
 				return;
 			}
-			FanAstResolvResult type = FanAstResolvResult.makeFromExpr(result, exprNode, index);
+			FanResolvedType type = FanResolvedType.makeFromExpr(result, exprNode, index);
 			FanUtilities.GENERIC_LOGGER.debug("Type: " + type.toString());
-			if (!type.getType().isUnresolved())
+			if (type.isResolved())
 			{
 				proposeSlots(type, proposals, offset + 1, prefix);
 			}

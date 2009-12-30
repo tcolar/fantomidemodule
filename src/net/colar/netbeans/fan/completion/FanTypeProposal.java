@@ -6,7 +6,6 @@ package net.colar.netbeans.fan.completion;
 import fan.sys.Type;
 import java.util.Collections;
 import net.colar.netbeans.fan.indexer.FanIndexer;
-import net.colar.netbeans.fan.indexer.FanPodIndexer;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -43,7 +42,7 @@ public class FanTypeProposal extends FanCompletionProposal
 			icon = ImageUtilities.loadImageIcon("net/colar/netbeans/fan/project/resources/java.png", false);
 		}
 		FanBasicElementHandle handle = new FanBasicElementHandle(name, kind);
-		handle.setDoc(FanPodIndexer.fanDocToHtml(FanIndexer.getDoc(type)));
+		handle.setDoc(FanIndexer.getDoc(type));
 		element = handle;
 	}
 	public FanTypeProposal(Type type, int anchor, String forcedName)
@@ -71,7 +70,7 @@ public class FanTypeProposal extends FanCompletionProposal
 			icon = ImageUtilities.loadImageIcon("net/colar/netbeans/fan/project/resources/java.png", false);
 		}
 		FanBasicElementHandle handle = new FanBasicElementHandle(name, kind);
-		handle.setDoc(FanPodIndexer.fanDocToHtml(type.doc()));
+		handle.setDoc(FanIndexer.fanDocToHtml(type.doc()));
 		element = handle;
 	}
 
