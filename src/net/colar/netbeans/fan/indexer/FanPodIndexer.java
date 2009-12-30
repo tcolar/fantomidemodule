@@ -38,20 +38,16 @@ public class FanPodIndexer implements FileChangeListener
 
 	private final static Pattern CLOSURECLASS = Pattern.compile(".*?\\$\\d+\\z");
 	private static final FanPodIndexer instance = new FanPodIndexer();
+
 	private boolean running;
 	// treemap is sorted
 	TreeMap<String, FPod> allPods = new TreeMap<String, FPod>();
 	private boolean indexed = false;
 
-	public static synchronized FanPodIndexer getInstance()
+	/*public static synchronized FanPodIndexer getInstance()
 	{
-		/*if (!instance.indexed && !instance.running)
-		{
-			instance.running = true;
-			new FanPodIndexerThread().start();
-		}*/
 		return instance;
-	}
+	}*/
 
 	private FanPodIndexer()
 	{
@@ -270,8 +266,6 @@ public class FanPodIndexer implements FileChangeListener
 					instance.indexPod(pods.get(key));
 				}
 
-				// Index the java too if not yet done.
-				FanJavaIndexer.getInstance();
 
 			} catch (Throwable t)
 			{

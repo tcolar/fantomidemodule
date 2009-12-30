@@ -4,6 +4,10 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import fan.sys.Buf;
+import fan.sys.FanObj;
+import fan.sys.Pod;
+import fan.sys.Type;
 import fanx.fcode.FConst;
 import fanx.fcode.FField;
 import fanx.fcode.FMethod;
@@ -70,7 +74,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 {
 
 	public static final String UNRESOLVED_TYPE = "!!UNRESOLVED!!";
-
 	private final static Pattern CLOSURECLASS = Pattern.compile(".*?\\$\\d+\\z");
 	static JOTLoggerLocation log = new JOTLoggerLocation(FanIndexer.class);
 	private final FanIndexerThread indexerThread;
@@ -779,5 +782,59 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				}
 			}
 		}
+	}
+
+	public static String getPodDoc(String podName)
+	{
+		Pod pod = Pod.find(podName);
+		if (pod != null)
+		{
+			return fanDocToHtml(pod.doc());
+		}
+		return null;
+	}
+
+	public static String getDoc(FanType type)
+	{
+		Pod pod = Pod.find(type.getPod());
+		Type t = pod.findType(type.getSimpleName());
+		if (t != null)
+		{
+			return fanDocToHtml(t.doc());
+		}
+		return null;
+	}
+
+	/**
+	 * Parse Fandoc text into HTML using fan's builtin parser.
+	 * @param fandoc
+	 * @return
+	 */
+	public static String fanDocToHtml(String fandoc)
+	{
+		if (fandoc == null)
+		{
+			return null;
+		}
+		FanPlatform platform = FanPlatform.getInstance(false);
+		if (platform == null)
+		{
+			return fandoc;
+		}
+		String html = fandoc;
+		try
+		{
+			FanObj parser = (FanObj) Type.find("fandoc::FandocParser").make();
+			FanObj doc = (FanObj) parser.type().method("parseStr").call(parser, fandoc);
+			Buf buf = Buf.make();
+			FanObj writer = (FanObj) Type.find("fandoc::HtmlDocWriter").method("make").call(buf.out());
+			doc.type().method("write").call(doc, writer);
+			html = buf.flip().readAllStr();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		//System.out.println("Html doc: "+html);
+		return html;
 	}
 }

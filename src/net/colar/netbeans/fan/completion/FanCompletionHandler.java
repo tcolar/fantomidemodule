@@ -4,13 +4,13 @@
 package net.colar.netbeans.fan.completion;
 
 import fan.sys.Slot;
-import fan.sys.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanParserResult;
@@ -22,8 +22,9 @@ import net.colar.netbeans.fan.ast.FanAstResolvedType;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
 import net.colar.netbeans.fan.ast.FanRootScope;
+import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
-import net.colar.netbeans.fan.indexer.FanPodIndexer;
+import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
@@ -132,7 +133,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		switch (docType)
 		{
 			case POD:
-				doc = FanPodIndexer.getInstance().getPodDoc(handle.getName());
+				doc = FanIndexer.getPodDoc(handle.getName());
 				break;
 			case TYPE:
 				doc = ((FanBasicElementHandle) handle).getDoc();
@@ -229,7 +230,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposePods(ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		Set<String> names = FanPodIndexer.getInstance().getAllPodNames();
+		Vector<String> names = FanType.findAllPodNames();
 		if (prefix.length() == 0)
 		{
 			proposals.add(new FanImportProposal("[java] ", anchor - prefix.length(), true));
@@ -253,22 +254,18 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposeTypes(String podName, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		Set<Type> types;
+		Vector<FanType> types;
 		if (podName == null)
 		{
-			types = FanPodIndexer.getInstance().getAllTypes();
+			types = FanType.findAllTypes(prefix);
 		} else
 		{
-			types = FanPodIndexer.getInstance().getPodTypes(podName);
+			types = FanType.findPodTypes(podName, prefix);
 		}
-		for (Type type : types)
+		for (FanType type : types)
 		{
 			// TODO: filter out internals / private ?
-			if (//!type.isInternal() &&
-				type.name().startsWith(prefix))
-			{
-				proposals.add(new FanTypeProposal(type, anchor - prefix.length(), null));
-			}
+			proposals.add(new FanTypeProposal(type, anchor - prefix.length(), null));
 		}
 		docType = DocTypes.TYPE;
 	}

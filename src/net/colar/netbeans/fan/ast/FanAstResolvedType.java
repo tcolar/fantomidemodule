@@ -33,7 +33,7 @@ public class FanAstResolvedType
 		}
 	}
 
-	static FanAstResolvedType makeUnresolved()
+	/*static FanAstResolvedType makeUnresolved()
 	{
 		return new FanAstResolvedType(null);
 	}
@@ -41,17 +41,17 @@ public class FanAstResolvedType
 	public static FanAstResolvedType makeFromFanType(fan.sys.Type fanType)
 	{
 		return  new FanAstResolvedType(fanType);
-	}
+	}*/
 
 	public fan.sys.Type getType()
 	{
 		return typeObj;
 	}
 
-	public Types getKind()
+	/*public Types getKind()
 	{
 		return kind;
-	}
+	}*/
 
 
 	@Override

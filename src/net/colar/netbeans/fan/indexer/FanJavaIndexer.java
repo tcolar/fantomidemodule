@@ -46,15 +46,13 @@ public class FanJavaIndexer
 		super();
 	}
 
-	public synchronized static FanJavaIndexer getInstance()
+	/*public synchronized static FanJavaIndexer getInstance()
 	{
 		if (!instance.indexed && !instance.running)
 		{
 			instance.indexed = true;
 			instance.running = true;
 			instance.cl = new FanJavaClassLoader();
-			// Start pod indexing too, if needed
-			FanPodIndexer.getInstance();
 			// Start java indexing
 			FanJavaIndexerThread indexer = new FanJavaIndexerThread();
 			indexer.start();
@@ -62,7 +60,7 @@ public class FanJavaIndexer
 			indexer.waitFor();
 		}
 		return instance;
-	}
+	}*/
 
 	public fan.sys.Type resolveType(String cname)
 	{

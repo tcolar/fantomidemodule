@@ -5,10 +5,18 @@
 
 package net.colar.netbeans.fan.indexer;
 
+import java.util.Vector;
+import net.colar.netbeans.fan.indexer.model.FanType;
+import net.jot.persistance.JOTQueryResult;
+import net.jot.persistance.query.JOTQueryManager;
+
 /**
- * TODO: static methods to quey the indexer.
+ * Indexer queries
  * @author tcolar
  */
-public class FanIndexQuery {
+public class FanIndexQuery
+{
+
+
 
 }

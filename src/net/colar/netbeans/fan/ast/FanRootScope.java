@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
+import java.util.Vector;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
-import net.colar.netbeans.fan.indexer.FanPodIndexer;
+import net.colar.netbeans.fan.indexer.model.FanType;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
@@ -29,8 +29,8 @@ import org.netbeans.modules.csl.spi.DefaultError;
 public class FanRootScope extends FanAstScope
 {
 	// using statements. type=null means unresolvable
-
-	private Hashtable<String, FanAstResolvedType> using = new Hashtable<String, FanAstResolvedType>();
+	// name -> qualifiedType
+	private Hashtable<String, String> using = new Hashtable<String, String>();
 	// Root node holds errors and hints, to be used by HintsProvider
 	// For example unesolvable pods, undefined vars and so on
 	List<Error> errors = new ArrayList<Error>();
@@ -45,24 +45,21 @@ public class FanRootScope extends FanAstScope
 		pod = FanUtilities.getPodForPath(result.getSourcePath());
 	}
 
-	private void addUsing(String name, fan.sys.Type type, CommonTree node, String text)
+	private void addUsing(String name, String qType, CommonTree node, String text)
 	{
-		FanAstResolvedType resolved = FanAstResolvedType.makeFromFanType(type);
-		// WARNING: it can be something like sys, or sys::fwt or even a java type etc ...
-		resolved.setTypeText(text);
-		//System.out.println("- Using " + resolved.toString());
 		if (using.containsKey(name))
 		{
-			addError("Duplicated using: " + resolved + " / " + using.get(name), node);
+			addError("Duplicated using: " + qType + " / " + using.get(name), node);
 		}
-		if (type != null && FanPodIndexer.getInstance().hasPodType("sys", name))
+		FanType type=FanType.findByPodAndType("sys", name);
+		if (type!=null)
 		{
-			if (type.pod() == null || !type.pod().name().equals("sys"))
+			if (type.getPod().equals("sys"))
 			{
-				addError("Duplicated using: " + resolved + " / " + "sys::" + name, node);
+				addError("Duplicated using: " + qType + " / " + "sys::" + name, node);
 			}
 		}
-		using.put(name, resolved);
+		using.put(name, qType);
 	}
 
 	/*private void addType(FanAstScope type)
@@ -72,7 +69,7 @@ public class FanRootScope extends FanAstScope
 	addChild(type);
 	}
 	}*/
-	public Hashtable<String, FanAstResolvedType> getUsing()
+	public Hashtable<String, String> getUsing()
 	{
 		return using;
 	}
@@ -146,13 +143,12 @@ public class FanRootScope extends FanAstScope
 			{
 				String qname = type.substring(6).trim().replaceAll("::", "\\.");
 				// Individual Item
-				if (!FanJavaIndexer.getInstance().hasItem(qname))
+				if (FanType.findByQualifiedName(qname)==null)
 				{
 					addError("Unresolved Java Item: " + qname, usingNode);
 				} else
 				{
-					fan.sys.Type t = FanJavaIndexer.getInstance().resolveType(qname);
-					addUsing(name, t, usingNode, type);
+					addUsing(name, type, usingNode, type);
 				}
 			} else
 			{
@@ -161,28 +157,28 @@ public class FanRootScope extends FanAstScope
 				{
 					// Adding a specific type
 					String[] data = type.split("::");
-					if (!FanPodIndexer.getInstance().hasPod(data[0]))
+					if (!FanType.findAllPodNames().contains(data[0]))
 					{
 						addError("Unresolved Pod: " + data[0], usingNode);
-					} else if (!FanPodIndexer.getInstance().hasPodType(data[0], data[1]))
+					} else if (FanType.findByQualifiedName(type) == null)
 					{
-						addError("Unresolved Type: " + data[0] + "::" + data[1], usingNode);
+						addError("Unresolved Type: " + type, usingNode);
 					}
 
-					Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
-					addUsing(name, t, usingNode, type);
+					//Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
+					addUsing(name, type, usingNode, type);
 				} else
 				{
 					// Adding all the types of a Pod
-					if (!FanPodIndexer.getInstance().hasPod(name))
+					if (!FanType.findAllPodNames().contains(name))
 					{
 						addError("Unresolved Pod: " + name, usingNode);
 					} else
 					{
-						Set<Type> items = FanPodIndexer.getInstance().getPodTypes(name);
-						for (Type t : items)
+						Vector<FanType> items = FanType.findPodTypes(pod, "");
+						for (FanType t : items)
 						{
-							addUsing(t.name(), t, usingNode, type);
+							addUsing(t.getSimpleName(), t.getQualifiedName(), usingNode, type);
 						}
 					}
 				}
@@ -254,21 +250,21 @@ public class FanRootScope extends FanAstScope
 		return parserResult;
 	}
 
-	public FanAstResolvedType lookupUsing(String type)
+	public String lookupUsing(String type)
 	{
 		if (using.containsKey(type))
 		{
 			return using.get(type);
 		}
-		// Try Fan standrad API's
-		if (FanPodIndexer.getInstance().hasPodType("sys", type))
+		// Try Fan standard API's
+		FanType t = FanType.findByPodAndType("sys", type);
+		if (t!=null)
 		{
-			Type t = FanPodIndexer.getInstance().getPodType("sys", type);
-			return FanAstResolvedType.makeFromFanType(t);
+			return t.getQualifiedName();
 		}
 		// Try Java standrad API's -> No: not avail by defalt in Fan
 		// Unresolvable
-		return FanAstResolvedType.makeUnresolved();
+		return null;
 	}
 
 	/**
