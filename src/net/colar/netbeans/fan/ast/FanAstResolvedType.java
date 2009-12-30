@@ -3,6 +3,9 @@
  */
 package net.colar.netbeans.fan.ast;
 
+import net.colar.netbeans.fan.indexer.FanIndexer;
+import net.colar.netbeans.fan.indexer.model.FanType;
+
 /**
  * Value of a resolved type (Fan or Java)
  * Maybe use an interface/abstract class later.
@@ -10,43 +13,33 @@ package net.colar.netbeans.fan.ast;
  */
 public class FanAstResolvedType
 {
-	fan.sys.Type typeObj;
-	Types kind = Types.FAN;
-	// might contain the simple type this was craeted from.
-	String typeText;
-
-	public enum Types
-	{
-
-		UNRESOLVED, FAN
-	}
+	String qualifiedType = FanIndexer.UNRESOLVED_TYPE;
+	boolean unresolved=true;
 
 	/**
 	 * @param obj
 	 */
-	private FanAstResolvedType(fan.sys.Type obj)
+	private FanAstResolvedType(String qType, boolean resolved)
 	{
-		typeObj = obj;
-		if (obj == null)
-		{
-			kind = kind.UNRESOLVED;
-		}
+		qualifiedType = qType;
+		this.unresolved = ! resolved;
 	}
 
 	/*static FanAstResolvedType makeUnresolved()
 	{
-		return new FanAstResolvedType(null);
-	}
-
-	public static FanAstResolvedType makeFromFanType(fan.sys.Type fanType)
-	{
-		return  new FanAstResolvedType(fanType);
+		return new FanAstResolvedType(FanIndexer.UNRESOLVED_TYPE, false);
 	}*/
 
-	public fan.sys.Type getType()
+	public static FanAstResolvedType makeFromQualifiedType(String qName)
+	{
+		FanType type = FanType.findByQualifiedName(qName);
+		return new FanAstResolvedType(qName, type!=null);
+	}
+
+	/*public fan.sys.Type getType()
 	{
 		return typeObj;
-	}
+	}*/
 
 	/*public Types getKind()
 	{
@@ -65,27 +58,14 @@ public class FanAstResolvedType
 		return sb.toString();
 	}
 
-	public boolean isNullable()
-	{
-		if(isUnresolved())
-			return false;
-		return typeObj.isNullable();
-	}
-
 	public boolean isUnresolved()
 	{
-		return kind == Types.UNRESOLVED;
+		return unresolved;
 	}
 
-	public String getTypeText()
+	public String getTQualifiedType()
 	{
-		return typeText;
+		return qualifiedType;
 	}
 
-	public void setTypeText(String typeText)
-	{
-		this.typeText = typeText;
-	}
-
-	
 }
