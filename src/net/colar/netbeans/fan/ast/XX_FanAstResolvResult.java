@@ -13,6 +13,8 @@ import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
+import net.colar.netbeans.fan.indexer.model.FanModelConstants;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -21,18 +23,17 @@ import org.antlr.runtime.tree.CommonTree;
  */
 public class FanAstResolvResult
 {
-
 	private final FanAstResolvedType type;
-	// wether it's used in a  nullable context : ex: Str? vs Str
+	// whether it's used in a  nullable context : ex: Str? vs Str
 	private boolean nullableContext=false;
-	// wether it's used in a static context: ex Str. vs str.
+	// whether it's used in a static context: ex Str. vs str.
 	private boolean staticContext=false;
 
-	/*public FanAstResolvResult(FanAstResolvedType type)
+	public FanAstResolvResult(FanAstResolvedType type)
 	{
 		this.type=type;
 		this.nullableContext = type.isNullable();
-	}*/
+	}
 
 	
 
@@ -69,12 +70,7 @@ public class FanAstResolvResult
 		return sb.toString();
 	}
 
-		/**
-	 * Given an expression try to resolve the type we are trying to complete and create a ResolvedType object
-	 * @param exprNode
-	 * @return
-	 */
-	/*public static FanAstResolvResult makeFromExpr(FanParserResult result, CommonTree exprNode, int lastGoodTokenIndex)
+	public static FanAstResolvResult makeFromExpr(FanParserResult result, CommonTree exprNode, int lastGoodTokenIndex)
 	{
 		FanAstScope scope = result.getRootScope().findClosestScope(exprNode);
 		FanUtilities.GENERIC_LOGGER.debug("** scope: " + scope);
@@ -85,16 +81,9 @@ public class FanAstResolvResult
 		}
 		FanUtilities.GENERIC_LOGGER.debug("** resolvedType: " + type);
 		return type;
-	}*/
+	}
 
-	/**
-	 * Start recursion with baseType=null;
-	 * @param result
-	 * @param baseType
-	 * @param node
-	 * @return
-	 */
-	/*private static FanAstResolvResult resolveExpr(FanParserResult result, FanAstScope scope,
+	private static FanAstResolvResult resolveExpr(FanParserResult result, FanAstScope scope,
 		FanAstResolvResult baseType, CommonTree node, int index)
 	{
 		// if unresolveable no point searching further
@@ -137,13 +126,10 @@ public class FanAstResolvResult
 					}
 				} else
 				{
-					Slot slot =  baseType.getType().getType().slot(t, false);
+					FanSlot slot = FanSlot.findByTypeAndName(baseType.getType().getQualifiedType(), t);
 					if(slot!=null)
 					{
-					if(slot.isMethod() || slot.isCtor())
-						baseType = makeFromFanType(((Method)slot).returns());
-					else if(slot.isField())
-						baseType = makeFromFanType(((Field)slot).of());
+						baseType = makeFromFanType(slot.returnedType);
 					}
 					else
 					{
@@ -178,16 +164,10 @@ public class FanAstResolvResult
 			scope.getRoot().addError("Unresolved type: "+type, node);
 		}
 		return result;
-	}*/
+	}
 
 
-	/**
-	 * CommonTree is an AST_TYPE node
-	 * @param scope
-	 * @param commonTree
-	 * @return
-	 */
-	/*public static FanAstResolvResult makeFromSimpleType(FanAstScope scope, CommonTree node)
+	public static FanAstResolvResult makeFromSimpleType(FanAstScope scope, CommonTree node)
 	{
 		if(node==null)
 			return makeUnresolved();
@@ -259,7 +239,7 @@ public class FanAstResolvResult
 	public static FanAstResolvResult makeUnresolved()
 	{
 		return new FanAstResolvResult(FanAstResolvedType.makeUnresolved());
-	}*/
+	}
 
 	private static boolean isValidTokenStart(CommonTree node, int maxIndex)
 	{
@@ -268,9 +248,9 @@ public class FanAstResolvResult
 		return index >= 0 && index <= maxIndex;
 	}
 
-	/*private static FanAstResolvResult makeFromFanType(Type type)
+	private static FanAstResolvResult makeFromFanType(String qualifiedType)
 	{
-		return new FanAstResolvResult(FanAstResolvedType.makeFromFanType(type));
-	}*/
+		return new FanAstResolvResult(FanAstResolvedType.makeFromQualifiedType(qualifiedType));
+	}
 
 }

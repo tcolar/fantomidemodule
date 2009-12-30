@@ -4,12 +4,13 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import fan.sys.Type;
 import java.util.ArrayList;
 import java.util.List;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
+import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.indexer.model.FanType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -38,7 +39,7 @@ public class FanTypeScope extends FanAstScope
 	String name = "";
 	// qualified Name
 	String qName = "";
-	List<FanAstResolvedType> inheritedItems = new ArrayList<FanAstResolvedType>();
+	List<FanResolvedType> inheritedItems = new ArrayList<FanResolvedType>();
 	// kind of type
 	TypeKind kind = TypeKind.CLASS;
 	// modifiers
@@ -100,7 +101,7 @@ public class FanTypeScope extends FanAstScope
 			{
 				case FanParser.AST_FIELD:
 					FanAstField field = new FanAstField(this, child);
-					if (field.getResolvedType().isUnresolved())
+					if ( ! field.getType().isResolved())
 					{
 						//TODO: Propose to auto-add using statements (Hints)
 						getRoot().addError("Unresolved field type", child);
@@ -121,18 +122,18 @@ public class FanTypeScope extends FanAstScope
 
 	private boolean hasInheritedClass()
 	{
-		for(FanAstResolvedType type : inheritedItems)
+		for(FanResolvedType type : inheritedItems)
 		{
-			if(! type.isUnresolved() && type.getType().isClass())
+			if(! type.isResolved() && type.getDbType().isClass())
 				return true;
 		}
 		return false;
 	}
-	private boolean hasInheritedItem(String text)
+	private boolean hasInheritedItem(String qualifiedName)
 	{
-		for(FanAstResolvedType type : inheritedItems)
+		for(FanResolvedType type : inheritedItems)
 		{
-			if(type.getTypeText().equals(text))
+			if(type.getQualifiedType().equals(qualifiedName))
 				return true;
 		}
 		return false;
@@ -148,15 +149,15 @@ public class FanTypeScope extends FanAstScope
 			{
 				if (child != null && child.getType() == FanParser.AST_ID)
 				{
-					FanAstResolvedType inhType = FanAstResolvResult.makeFromSimpleType(this, child).getType();
+					FanResolvedType inhType = FanResolvedType.makeFromSimpleType(this, child);
 					String text = FanLexAstUtils.getNodeContent(getRoot().getParserResult(), child);
-					inhType.setTypeText(text);
-					if (inhType.isUnresolved())
+					// WATCHME inhType.setTypeText(text);
+					if ( ! inhType.isResolved())
 					{
 						getRoot().addError("Unresolved inherited item!", child);
 					} else
 					{
-						Type fanType = inhType.getType();
+						FanType fanType = inhType.getDbType();
 						if (fanType.isFinal())
 						{
 							// this covers enums too
@@ -200,7 +201,7 @@ public class FanTypeScope extends FanAstScope
 		//System.out.println("Encoded: "+FanCustomObjEncoder.encode(this));
 	}
 
-	public List<FanAstResolvedType> getInheritedItems()
+	public List<FanResolvedType> getInheritedItems()
 	{
 		return inheritedItems;
 	}

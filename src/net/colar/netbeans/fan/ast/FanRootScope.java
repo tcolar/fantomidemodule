@@ -3,7 +3,6 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import fan.sys.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -12,7 +11,7 @@ import java.util.Vector;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.indexer.FanJavaIndexer;
+import net.colar.netbeans.fan.indexer.FanResolvedType;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.csl.api.Error;
@@ -30,7 +29,7 @@ public class FanRootScope extends FanAstScope
 {
 	// using statements. type=null means unresolvable
 	// name -> qualifiedType
-	private Hashtable<String, String> using = new Hashtable<String, String>();
+	private Hashtable<String, FanResolvedType> using = new Hashtable<String, FanResolvedType>();
 	// Root node holds errors and hints, to be used by HintsProvider
 	// For example unesolvable pods, undefined vars and so on
 	List<Error> errors = new ArrayList<Error>();
@@ -59,7 +58,7 @@ public class FanRootScope extends FanAstScope
 				addError("Duplicated using: " + qType + " / " + "sys::" + name, node);
 			}
 		}
-		using.put(name, qType);
+		using.put(name, new FanResolvedType(qType));
 	}
 
 	/*private void addType(FanAstScope type)
@@ -69,7 +68,7 @@ public class FanRootScope extends FanAstScope
 	addChild(type);
 	}
 	}*/
-	public Hashtable<String, String> getUsing()
+	public Hashtable<String, FanResolvedType> getUsing()
 	{
 		return using;
 	}
@@ -250,7 +249,7 @@ public class FanRootScope extends FanAstScope
 		return parserResult;
 	}
 
-	public String lookupUsing(String type)
+	public FanResolvedType lookupUsing(String type)
 	{
 		if (using.containsKey(type))
 		{
@@ -260,7 +259,7 @@ public class FanRootScope extends FanAstScope
 		FanType t = FanType.findByPodAndType("sys", type);
 		if (t!=null)
 		{
-			return t.getQualifiedName();
+			return new FanResolvedType(t.getQualifiedName());
 		}
 		// Try Java standrad API's -> No: not avail by defalt in Fan
 		// Unresolvable

@@ -178,9 +178,9 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				Vector<Long> inh2Delete = new Vector<Long>();
 
 				Vector<String> addedUsings = new Vector();
-				for (FanAstResolvedType type : rootScope.getUsing().values())
+				for (FanResolvedType type : rootScope.getUsing().values())
 				{
-					String sig = type.getTypeText();
+					String sig = type.getQualifiedType();
 					int foundIdx = -1;
 					for (int i = 0; i != usings.size(); i++)
 					{
@@ -247,10 +247,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 						// Try to reuse existing db entries.
 						Vector<FanTypeInheritance> currentInh = FanTypeInheritance.findAllForMainType(null, typeScope.getQName());
-						for (FanAstResolvedType item : typeScope.getInheritedItems())
+						for (FanResolvedType item : typeScope.getInheritedItems())
 						{
 							String mainType = typeScope.getQName();
-							String inhType = item.getTypeText();
+							String inhType = item.getQualifiedType();
 							int foundIdx = -1;
 							for (int i = 0; i != currentInh.size(); i++)
 							{
@@ -322,10 +322,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							dbSlot.setTypeId(dbType.getId());
 							dbSlot.setSlotKind(kind.value());
 							String type = UNRESOLVED_TYPE; // can that happen ?
-							FanAstResolvedType slotType = slot.getType().getType();
-							if (!slotType.isUnresolved())
+							FanResolvedType slotType = slot.getType();
+							if (slotType.isResolved())
 							{
-								type = slotType.getType().signature();
+								type = slotType.getDbType().getQualifiedName();
 							}
 							dbSlot.setReturnedType(type);
 							dbSlot.setName(slot.getName());
@@ -346,13 +346,13 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							if (slot instanceof FanAstMethod)
 							{
 								FanAstMethod method = (FanAstMethod) slot;
-								Hashtable<String, FanAstResolvResult> parameters = method.getParameters();
+								Hashtable<String, FanResolvedType> parameters = method.getParameters();
 
 								// Try to reuse existing db entries.
 								Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(null, dbSlot.getId());
 								for (String paramName : parameters.keySet())
 								{
-									FanAstResolvResult paramResult = parameters.get(paramName);
+									FanResolvedType paramResult = parameters.get(paramName);
 									JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
 									FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).findOrCreateOne();
 									if (!dbParam.isNew())
@@ -370,12 +370,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 									dbParam.setSlotId(dbSlot.getId());
 									dbParam.setName(paramName);
 									String pType = UNRESOLVED_TYPE; // can that happen ?
-									if (!paramResult.getType().isUnresolved())
+									if (paramResult.isResolved())
 									{
-										pType = paramResult.getType().getType().signature();
+										pType = paramResult.getDbType().getQualifiedName();
 									}
 									dbParam.setQualifiedType(pType);
-									dbParam.setIsNullable(paramResult.getType().isNullable());
+									dbParam.setIsNullable(paramResult.isNullable());
 
 									dbParam.save();
 

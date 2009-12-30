@@ -39,7 +39,6 @@ public class FanSlot extends JOTModel
 	// Maybe store privateSetter instead -> any use ??
 	//public Boolean isOnce = false;
 	//public Boolean isReadonly = false;
-
 	@Override
 	protected void customize(JOTModelMapping mapping)
 	{
@@ -167,10 +166,35 @@ public class FanSlot extends JOTModel
 		return isNullable;
 	}
 
-	public static Vector<FanSlot> findAllForType(Object object, long type) throws Exception
+	public static Vector<FanSlot> findAllForType(long type)
 	{
-		JOTSQLCondition cond = new JOTSQLCondition("typeId", JOTSQLCondition.IS_EQUAL, type);
-		return (Vector<FanSlot>) JOTQueryBuilder.selectQuery(null, FanSlot.class).where(cond).find().getAllResults();
+		try
+		{
+			JOTSQLCondition cond = new JOTSQLCondition("typeId", JOTSQLCondition.IS_EQUAL, type);
+			return (Vector<FanSlot>) JOTQueryBuilder.selectQuery(null, FanSlot.class).where(cond).find().getAllResults();
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		//return null;
+	}
+
+	public static FanSlot findByTypeAndName(String qualifiedType, String slotName)
+	{
+		try
+		{
+			FanType type = FanType.findByQualifiedName(qualifiedType);
+			if (type != null)
+			{
+				JOTSQLCondition cond = new JOTSQLCondition("typeId", JOTSQLCondition.IS_EQUAL, type.getId());
+				JOTSQLCondition cond2 = new JOTSQLCondition("name", JOTSQLCondition.IS_EQUAL, slotName);
+				return (FanSlot) JOTQueryBuilder.selectQuery(null, FanSlot.class).where(cond).where(cond2).findOne();
+			}
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		return null;
 	}
 
 	@Override
@@ -182,5 +206,18 @@ public class FanSlot extends JOTModel
 			param.delete(trans);
 		}
 		super.delete(trans);
+	}
+
+	public boolean isCtor()
+	{
+		return slotKind == FanModelConstants.SlotKind.CTOR.value();
+	}
+	public boolean isMethod()
+	{
+		return slotKind == FanModelConstants.SlotKind.METHOD.value();
+	}
+	public boolean isField()
+	{
+		return slotKind == FanModelConstants.SlotKind.FIELD.value();
 	}
 }

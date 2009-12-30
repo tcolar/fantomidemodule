@@ -13,22 +13,20 @@ import net.colar.netbeans.fan.indexer.model.FanType;
  */
 public class FanAstResolvedType
 {
+	/*
 	String qualifiedType = FanIndexer.UNRESOLVED_TYPE;
 	boolean unresolved=true;
 
-	/**
-	 * @param obj
-	 */
 	private FanAstResolvedType(String qType, boolean resolved)
 	{
 		qualifiedType = qType;
 		this.unresolved = ! resolved;
 	}
 
-	/*static FanAstResolvedType makeUnresolved()
+	public static FanAstResolvedType makeUnresolved()
 	{
 		return new FanAstResolvedType(FanIndexer.UNRESOLVED_TYPE, false);
-	}*/
+	}
 
 	public static FanAstResolvedType makeFromQualifiedType(String qName)
 	{
@@ -36,25 +34,10 @@ public class FanAstResolvedType
 		return new FanAstResolvedType(qName, type!=null);
 	}
 
-	/*public fan.sys.Type getType()
-	{
-		return typeObj;
-	}*/
-
-	/*public Types getKind()
-	{
-		return kind;
-	}*/
-
-
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(kind.toString());
-		if (typeObj != null)
-		{
-			sb = sb.append(" [").append(typeObj.toString()).append("]");
-		}
+		StringBuilder sb = new StringBuilder(qualifiedType).append(" resolved:").append( ! unresolved);
 		return sb.toString();
 	}
 
@@ -63,7 +46,7 @@ public class FanAstResolvedType
 		return unresolved;
 	}
 
-	public String getTQualifiedType()
+	public String getQualifiedType()
 	{
 		return qualifiedType;
 	}

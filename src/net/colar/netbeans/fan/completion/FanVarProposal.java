@@ -47,8 +47,8 @@ public class FanVarProposal extends FanCompletionProposal
 	@Override
 	public String getRhsHtml(HtmlFormatter formater)
 	{
-		if(var.getResolvedType().isUnresolved())
+		if( ! var.getType().isResolved())
 			return "N/A";
-		return var.getResolvedType().getType().name();
+		return var.getType().getDbType().getSimpleName();
 	}
 }

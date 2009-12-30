@@ -24,6 +24,8 @@ import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanJavaIndexer;
+import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.antlr.runtime.tree.CommonTree;
@@ -278,12 +280,12 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param anchor
 	 * @param prefix
 	 */
-	private void proposeSlots(FanAstResolvResult type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
+	private void proposeSlots(FanResolvedType type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		Slot[] slots = (Slot[]) type.getType().getType().slots().asArray(Slot.class);
-		for (Slot slot : slots)
+		Vector<FanSlot> slots = FanSlot.findAllForType(type.getDbType().getId());
+		for (FanSlot slot : slots)
 		{
-			if (slot.name().toLowerCase().startsWith(prefix))
+			if (slot.getName().toLowerCase().startsWith(prefix))
 			{
 				// constructor are not marked as static ... but fot this purpose they are
 				boolean isStatic = slot.isStatic() || slot.isCtor();
@@ -343,15 +345,15 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	private void proposeDefinedTypes(ArrayList<CompletionProposal> proposals, int anchor, String prefix, FanRootScope rootScope)
 	{
 		ArrayList<CompletionProposal> props = new ArrayList<CompletionProposal>();
-		Hashtable<String, FanAstResolvedType> usings = rootScope.getUsing();
+		Hashtable<String, FanResolvedType> usings = rootScope.getUsing();
 		for (String key : usings.keySet())
 		{
 			if (key.startsWith(prefix))
 			{
-				FanAstResolvedType type = usings.get(key);
-				if (!type.isUnresolved())
+				FanResolvedType type = usings.get(key);
+				if (type.isResolved())
 				{
-					props.add(new FanTypeProposal(type.getType(), anchor - prefix.length(), key));
+					props.add(new FanTypeProposal(type.getDbType(), anchor - prefix.length(), key));
 				}
 			}
 		}

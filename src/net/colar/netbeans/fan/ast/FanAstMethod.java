@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
+import net.colar.netbeans.fan.indexer.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -17,7 +18,7 @@ public class FanAstMethod extends FanAstField
 {
 
 	boolean isCtor = false;
-	Hashtable<String, FanAstResolvResult> parameters = new Hashtable<String, FanAstResolvResult>();
+	Hashtable<String, FanResolvedType> parameters = new Hashtable<String, FanResolvedType>();
 
 	public FanAstMethod(FanAstScope scope, CommonTree node, boolean isCtor)
 	{
@@ -38,7 +39,7 @@ public class FanAstMethod extends FanAstField
 			if (typeNode != null && id != null)
 			{
 				String pName = FanLexAstUtils.getNodeContent(result, id);
-				FanAstResolvResult pType = FanAstResolvResult.makeFromSimpleTypeWithWarning(scope, typeNode);
+				FanResolvedType pType = FanResolvedType.makeFromSimpleTypeWithWarning(scope, typeNode);
 				if (!parameters.containsKey(pName))
 				{
 					parameters.put(pName, pType);
@@ -50,7 +51,7 @@ public class FanAstMethod extends FanAstField
 		}
 	}
 
-	public Hashtable<String, FanAstResolvResult> getParameters()
+	public Hashtable<String, FanResolvedType> getParameters()
 	{
 		return parameters;
 	}

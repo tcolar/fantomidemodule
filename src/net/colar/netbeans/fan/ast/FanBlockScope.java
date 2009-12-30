@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.ast;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
+import net.colar.netbeans.fan.indexer.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -56,7 +57,7 @@ public class FanBlockScope extends FanAstScope
 						CommonTree name=(CommonTree)child.getFirstChildWithType(FanParser.AST_ID);
 						CommonTree type=(CommonTree)child.getFirstChildWithType(FanParser.AST_TYPE);
 						String nm=FanLexAstUtils.getNodeContent(result, name);
-						FanAstResolvResult resolved = FanAstResolvResult.makeFromSimpleTypeWithWarning(scope, type);
+						FanResolvedType resolved = FanResolvedType.makeFromSimpleTypeWithWarning(scope, type);
 						FanAstScopeVar var = new FanAstScopeVar(scope, node, nm, resolved);
 						scope.addScopeVar(var, true);
 						//if(type==null)

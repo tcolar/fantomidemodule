@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.ast;
 
 import java.util.Hashtable;
+import net.colar.netbeans.fan.indexer.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -26,10 +27,10 @@ public class FanMethodScope extends FanBlockScope
 		CommonTree node=getAstNode();
 		//System.out.println(getClass().getName()+" -> "+node.toStringTree());
 		//This is mostly a regular codeBlock but we need to add the method params as scope variables
-		Hashtable<String, FanAstResolvResult> params = methodSlot.getParameters();
+		Hashtable<String, FanResolvedType> params = methodSlot.getParameters();
 		for(String name : params.keySet())
 		{
-			FanAstResolvResult type = params.get(name);
+			FanResolvedType type = params.get(name);
 			FanAstScopeVar var = new FanAstScopeVar(this, node, name, type);
 			addScopeVar(var, true);
 		}

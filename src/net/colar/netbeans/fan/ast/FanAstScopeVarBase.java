@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.ast;
 
 import java.util.ArrayList;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.indexer.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -16,7 +17,7 @@ public abstract class FanAstScopeVarBase
 
 	protected String name;
 	// The type of the field / or returned type for a method
-	protected FanAstResolvResult type = FanAstResolvResult.makeUnresolved();
+	protected FanResolvedType type = FanResolvedType.makeUnresolved();
 	protected ArrayList<FanAstScopeVarBase.ModifEnum> modifiers = new ArrayList<FanAstScopeVarBase.ModifEnum>();
 	protected FanAstScope scope;
 	protected CommonTree node;
@@ -61,14 +62,9 @@ public abstract class FanAstScopeVarBase
 		return modifiers;
 	}
 
-	public FanAstResolvResult getType()
+	public FanResolvedType getType()
 	{
 		return type;
-	}
-
-	public FanAstResolvedType getResolvedType()
-	{
-		return type.getType();
 	}
 
 	@Override

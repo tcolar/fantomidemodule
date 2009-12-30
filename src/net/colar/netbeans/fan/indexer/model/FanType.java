@@ -8,6 +8,7 @@ import fan.sys.FanObj;
 import fan.sys.Pod;
 import fan.sys.Type;
 import java.util.Vector;
+import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
@@ -267,6 +268,19 @@ public class FanType extends JOTModel
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	public boolean isClass()
+	{
+		return getKind() == FanTypeScope.TypeKind.CLASS.value();
+	}
+	public boolean isMixin()
+	{
+		return getKind() == FanTypeScope.TypeKind.MIXIN.value();
+	}
+	public boolean isEnum()
+	{
+		return getKind() == FanTypeScope.TypeKind.ENUM.value();
 	}
 
 

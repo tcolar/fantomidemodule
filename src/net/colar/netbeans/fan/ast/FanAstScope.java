@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.indexer.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -128,23 +129,23 @@ public abstract class FanAstScope
 		children.add(child);
 	}
 
-	FanAstResolvedType resolveVar(String type)
+	FanResolvedType resolveVar(String type)
 	{
 		if (type == null)
 		{
-			return FanAstResolvedType.makeUnresolved();
+			return FanResolvedType.makeUnresolved();
 		}
 		FanAstScope scope = this;
 		do
 		{
 			if (scope.hasScopevar(type))
 			{
-				return scope.getScopeVar(type).getResolvedType();
+				return scope.getScopeVar(type).getType();
 			}
 			scope = scope.getParent();
 		} while (scope != null);
 		// Not found
-		return FanAstResolvedType.makeUnresolved();
+		return FanResolvedType.makeUnresolved();
 	}
 
 	/**
