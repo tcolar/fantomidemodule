@@ -156,7 +156,7 @@ public class FanRootScope extends FanAstScope
 				{
 					// Adding a specific type
 					String[] data = type.split("::");
-					if (!FanType.findAllPodNames().contains(data[0]))
+					if (!FanType.hasPod(data[0]))
 					{
 						addError("Unresolved Pod: " + data[0], usingNode);
 					} else if (FanType.findByQualifiedName(type) == null)
@@ -169,7 +169,7 @@ public class FanRootScope extends FanAstScope
 				} else
 				{
 					// Adding all the types of a Pod
-					if (!FanType.findAllPodNames().contains(name))
+					if (!FanType.hasPod(name))
 					{
 						addError("Unresolved Pod: " + name, usingNode);
 					} else

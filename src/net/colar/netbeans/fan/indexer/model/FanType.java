@@ -230,7 +230,7 @@ public class FanType extends JOTModel
 
 	public static Vector<String> findAllPodNames()
 	{
-		//TODO: lame and inneficient ....
+		//TODO: inneficient .... use DISTINCT ?
 		try
 		{
 			Vector<String> results = new Vector<String>();
@@ -243,6 +243,17 @@ public class FanType extends JOTModel
 				}
 			}
 			return results;
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	public static boolean hasPod(String podName)
+	{
+		try
+		{
+			JOTSQLCondition cond = new JOTSQLCondition("pod", JOTSQLCondition.IS_EQUAL, podName);
+			return JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOne() != null;
 		} catch (Exception e)
 		{
 			throw new RuntimeException(e);
