@@ -374,7 +374,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 									}
 									dbParam.setQualifiedType(pType);
 									dbParam.setIsNullable(paramResult.isNullable());
-
+									//dbParam.setHasDefault();
 									dbParam.save();
 
 								} // end param loop
@@ -623,6 +623,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 								dbParam.setName(param.name);
 								dbParam.setQualifiedType(tRef.signature);
 								dbParam.setIsNullable(tRef.isNullable());
+								dbParam.setHasDefault(param.def!=null);
 
 								dbParam.save();
 

@@ -129,7 +129,7 @@ public abstract class FanAstScope
 		children.add(child);
 	}
 
-	FanResolvedType resolveVar(String type)
+	public FanResolvedType resolveVar(String type)
 	{
 		if (type == null)
 		{

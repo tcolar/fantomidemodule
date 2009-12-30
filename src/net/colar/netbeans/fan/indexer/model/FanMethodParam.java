@@ -21,6 +21,7 @@ public class FanMethodParam extends JOTModel
 	public String name = "";
 	public String qualifiedType = ""; // qualified type of the parameter
 	public boolean isNullable = false;
+	private boolean hasDefault = false;
 
 	@Override
 	protected void customize(JOTModelMapping mapping)
@@ -82,5 +83,14 @@ public class FanMethodParam extends JOTModel
 			throw new RuntimeException(e);
 		}
 	}
-	
+
+	public void setHasDefault(boolean b)
+	{
+		hasDefault=true;
+	}
+
+	public boolean hasDefault()
+	{
+		return hasDefault;
+	}
 }
