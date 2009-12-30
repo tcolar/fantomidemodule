@@ -230,13 +230,17 @@ public class FanType extends JOTModel
 
 	public static Vector<String> findAllPodNames()
 	{
+		//TODO: lame and inneficient ....
 		try
 		{
 			Vector<String> results = new Vector<String>();
-			JOTQueryResult result = JOTQueryManager.executeSQL(null, FanType.class, "SELECT DISTINCT POD FROM FAN_TYPE", null, null);
+			JOTQueryResult result = JOTQueryBuilder.selectQuery(null, FanType.class).find();
 			for (FanType type : (Vector<FanType>) result.getAllResults())
 			{
-				results.add(type.getPod());
+				if (!results.contains(type.getPod()))
+				{
+					results.add(type.getPod());
+				}
 			}
 			return results;
 		} catch (Exception e)
@@ -274,14 +278,14 @@ public class FanType extends JOTModel
 	{
 		return getKind() == FanTypeScope.TypeKind.CLASS.value();
 	}
+
 	public boolean isMixin()
 	{
 		return getKind() == FanTypeScope.TypeKind.MIXIN.value();
 	}
+
 	public boolean isEnum()
 	{
 		return getKind() == FanTypeScope.TypeKind.ENUM.value();
 	}
-
-
 }

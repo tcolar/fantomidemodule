@@ -263,7 +263,7 @@ public class FanRootScope extends FanAstScope
 		}
 		// Try Java standrad API's -> No: not avail by defalt in Fan
 		// Unresolvable
-		return null;
+		return FanResolvedType.makeUnresolved();
 	}
 
 	/**
