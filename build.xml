@@ -6,15 +6,17 @@
     <description>Builds, tests, and runs the project net.colar.netbeans.fan.</description>
     <import file="nbproject/build-impl.xml"/>
 
+	<property name="classpath" value="build/classes;../Fan_antlr/lib/antlrworks-1.2.3.jar"/>
+	
+	<property name="all_jars_path" value="${nbplatform.active.dir}/ide12/modules/;NetBeansProjects/Fan/lib"/>
+
     <target name="jar" depends="init,compile,jar-prep" unless="is.jar.uptodate">
-	<echo message="${nbplatform.active.dir}"/>
-        <taskdef name="csljar" classname="org.netbeans.modules.csl.CslJar" classpath="ext/nbantext.jar:ext/cslanttask.jar:build/classes/"/>
+	<echo message="jar: ${nbplatform.active.dir}"/>
+        <taskdef name="csljar" classname="org.netbeans.modules.csl.CslJar" classpath="ext/nbantext.jar;ext/cslanttask.jar;${classpath}"/>
         <csljar jarfile="${cluster}/${module.jar}" compress="${build.package.compress}" index="${build.package.index}" manifest="${manifest.mf}" stamp="${cluster}/.lastModified">
             <fileset dir="${build.classes.dir}"/>
         </csljar>
     </target>
-
-	<property name="classpath" value="build/classes;../Fan_antlr/lib/antlrworks-1.2.3.jar"/>
 
 	<target name="test" depends="compile" description="Test parser on files in 'fantom/src' folder">
 		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="../../fantom/src/"/>

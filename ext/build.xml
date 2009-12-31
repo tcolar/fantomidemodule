@@ -1,0 +1,30 @@
+<project name="csl_anttask" default="jars" basedir=".">
+     
+       <target name="jars" depends="compile">
+         <mkdir dir="build"/>
+     	<jar jarfile="cslanttask.jar"
+     	  basedir="build/classes"
+     	  compress="false">
+     	</jar>
+       </target>
+     
+       <target name="compile">
+         <mkdir dir="build/classes"/>
+         <javac srcdir="cslanttask" destdir="build/classes" target="1.5" source="1.5" >
+     	  <classpath>
+                     <!-- cmdline Ant -->
+                     <!-- Ant in NB -->
+                     <!-- Note: in NB 4.0, ${ant.home}/lib/ant.jar will work as is -->
+                     <pathelement path="ant.jar"/>
+                     <pathelement location="nbantext.jar"/>
+     		<!--<pathelement location="${schema2beans.dir}/modules/org-netbeans-modules-schema2beans.jar" />-->
+     		<!--<pathelement location="${nb_all}/schema2beans/dev/schema2beansdev.jar" />-->
+     	  </classpath>
+     	</javac>
+       </target>
+     
+       <target name="clean">
+         <delete dir="build" quiet="true" />
+       </target>
+     
+     </project>
