@@ -238,4 +238,12 @@ public class FanSlot extends JOTModel
 	{
 		return protection == ModifEnum.INTERNAL.value();
 	}
+
+	@Override
+	public void save(JOTTransaction transaction) throws Exception
+	{
+		super.save(transaction);
+	}
+
+
 }

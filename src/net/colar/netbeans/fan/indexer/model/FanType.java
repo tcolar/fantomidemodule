@@ -3,10 +3,6 @@
  */
 package net.colar.netbeans.fan.indexer.model;
 
-import fan.sys.Buf;
-import fan.sys.FanObj;
-import fan.sys.Pod;
-import fan.sys.Type;
 import java.util.Vector;
 import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.jot.logger.JOTLogger;
@@ -16,8 +12,6 @@ import net.jot.persistance.JOTQueryResult;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.JOTTransaction;
 import net.jot.persistance.builders.JOTQueryBuilder;
-import net.jot.persistance.query.JOTQueryManager;
-import net.colar.netbeans.fan.platform.FanPlatform;
 
 /**
  * DB Model for a "Type" (class, enum, mixin)
@@ -248,6 +242,7 @@ public class FanType extends JOTModel
 			throw new RuntimeException(e);
 		}
 	}
+
 	public static boolean hasPod(String podName)
 	{
 		try
@@ -270,6 +265,16 @@ public class FanType extends JOTModel
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static String getShortName(String qualifiedType)
+	{
+		FanType type = findByQualifiedName(qualifiedType);
+		if (type != null)
+		{
+			return type.getSimpleName();
+		}
+		return qualifiedType;
 	}
 
 	public static Vector<FanType> findPodTypes(String pod, String prefix)
@@ -299,4 +304,5 @@ public class FanType extends JOTModel
 	{
 		return getKind() == FanTypeScope.TypeKind.ENUM.value();
 	}
+
 }

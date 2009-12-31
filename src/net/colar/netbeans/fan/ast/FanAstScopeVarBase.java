@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.ast;
 
 import java.util.ArrayList;
+import java.util.List;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
@@ -25,15 +26,21 @@ public abstract class FanAstScopeVarBase
 	// Modifiers
 	public enum ModifEnum
 	{
+
 		PRIVATE(1), PROTECTED(2), INTERNAL(3), PUBLIC(4), STATIC(5), CONST(6),
 		ABSTRACT(7), NATIVE(8), OVERRIDE(9), VIRTUAL(10), READONLY(11), ONCE(12),
-		FINAL (13);
+		FINAL(13);
 		int val;
+
 		ModifEnum(int i)
 		{
-			val=i;
+			val = i;
 		}
-		public int value() {return val;}
+
+		public int value()
+		{
+			return val;
+		}
 	}
 
 	public FanAstScopeVarBase(FanAstScope scope, CommonTree node)
@@ -103,10 +110,10 @@ public abstract class FanAstScopeVarBase
 			return ModifEnum.CONST;
 		} else if (m.toLowerCase().equalsIgnoreCase("static"))
 		{
-			return ModifEnum.ONCE;
+			return ModifEnum.STATIC;
 		} else if (m.toLowerCase().equalsIgnoreCase("once"))
 		{
-			return ModifEnum.STATIC;
+			return ModifEnum.ONCE;
 		} else if (m.toLowerCase().equalsIgnoreCase("abstract"))
 		{
 			return ModifEnum.ABSTRACT;
@@ -155,5 +162,4 @@ public abstract class FanAstScopeVarBase
 		// default is public
 		return ModifEnum.PUBLIC.value();
 	}
-
 }

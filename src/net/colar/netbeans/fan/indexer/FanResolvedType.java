@@ -198,6 +198,7 @@ public class FanResolvedType
 				CommonTree termChain = children.get(1);
 				baseType = resolveExpr(result, scope, null, termBase, index);
 				baseType = resolveExpr(result, scope, baseType, termChain, index);
+				break;
 			case FanParser.AST_STATIC_CALL:
 				CommonTree type = children.get(0);
 				CommonTree idExpr = children.get(1);

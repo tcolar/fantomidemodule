@@ -255,13 +255,19 @@ public class FanRootScope extends FanAstScope
 		{
 			return using.get(type);
 		}
-		// Try Fan standard API's
-		FanType t = FanType.findByPodAndType("sys", type);
+		// Try local pod types
+		FanType t = FanType.findByPodAndType(pod, type);
 		if (t!=null)
 		{
 			return new FanResolvedType(t.getQualifiedName());
 		}
-		// Try Java standrad API's -> No: not avail by defalt in Fan
+		// Try Fan standard API's
+		t = FanType.findByPodAndType("sys", type);
+		if (t!=null)
+		{
+			return new FanResolvedType(t.getQualifiedName());
+		}
+		// Try Java standrad API's -> No: not avail by defalt in Fan (must use 'using')
 		// Unresolvable
 		return FanResolvedType.makeUnresolved();
 	}

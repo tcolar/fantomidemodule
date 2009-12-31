@@ -335,7 +335,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	}*/
 
 	/**
-	 * Propose defined types (fan.sys) + whatever listed in using
+	 * Propose defined types (fan.sys) + whatever listed in using + current pod
 	 */
 	private void proposeDefinedTypes(ArrayList<CompletionProposal> proposals, int anchor, String prefix, FanRootScope rootScope)
 	{
@@ -352,9 +352,13 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				}
 			}
 		}
+		// propose all the types from the same pod (don't need a using)
+		proposeTypes(rootScope.getPod(), props, anchor, prefix);
+		// propose sys types, don't need a 'using'
 		proposeTypes("sys", props, anchor, prefix);
 		proposals.addAll(props);
 	}
+
 
 	// TODO: setup nice icons(package/class etc..) in importproposals
 	private void proposeUsing(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)

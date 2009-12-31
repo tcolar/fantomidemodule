@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan.indexer;
 
 import fan.sys.Buf;
+import fan.sys.Err;
 import fan.sys.FanObj;
 import fan.sys.Pod;
 import fan.sys.Type;
@@ -115,7 +116,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	public void index(String path)
 	{
 		long then = new Date().getTime();
-		log.info("Indexing requested for: " + path);
+		log.debug("Indexing requested for: " + path);
 		// Get a snaphost of the source
 		File f = new File(path);
 
@@ -289,10 +290,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						{
 							// determine kind of slot
 							FanModelConstants.SlotKind kind = FanModelConstants.SlotKind.FIELD;
-							if (slot instanceof FanAstField)
-							{
-								kind = FanModelConstants.SlotKind.FIELD;
-							} else if (slot instanceof FanAstMethod)
+							if (slot instanceof FanAstMethod)
 							{
 								if (((FanAstMethod) slot).isCtor())
 								{
@@ -301,6 +299,9 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 								{
 									kind = FanModelConstants.SlotKind.METHOD;
 								}
+							} else if (slot instanceof FanAstField)
+							{
+								kind = FanModelConstants.SlotKind.FIELD;
 							} else
 							{
 								throw new RuntimeException("Unexpected Slot kind: " + slot.getClass().getName());
@@ -333,9 +334,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							dbSlot.setName(slot.getName());
 							dbSlot.setIsAbstract(slot.hasModifier(ModifEnum.ABSTRACT));
 							dbSlot.setIsNative(slot.hasModifier(ModifEnum.NATIVE));
-							//dbSlot.setIsOnce(slot.hasModifier(ModifEnum.ONCE));
 							dbSlot.setIsOverride(slot.hasModifier(ModifEnum.OVERRIDE));
-							//dbSlot.setIsReadonly(slot.hasModifier(ModifEnum.READONLY));
 							dbSlot.setIsStatic(slot.hasModifier(ModifEnum.STATIC));
 							dbSlot.setIsVirtual(slot.hasModifier(ModifEnum.VIRTUAL));
 							dbSlot.setIsConst(slot.hasModifier(ModifEnum.CONST));
@@ -496,7 +495,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					{
 						continue;
 					}
-					FanUtilities.GENERIC_LOGGER.info("Indexing Pod Type: " + sig);
+					log.debug("Indexing Pod Type: " + sig);
 
 					JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, sig);
 					FanType dbType = (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOrCreateOne();
@@ -575,9 +574,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						dbSlot.setName(slot.name);
 						dbSlot.setIsAbstract(hasFlag(slot.flags, FConst.Abstract));
 						dbSlot.setIsNative(hasFlag(slot.flags, FConst.Native));
-						//dbSlot.setIsOnce(hasFlag(slot.flags, FConst.ONCE));
 						dbSlot.setIsOverride(hasFlag(slot.flags, FConst.Override));
-						//dbSlot.setIsReadonly(hasFlag(slot.flags, FConst.READONLY));
 						dbSlot.setIsStatic(hasFlag(slot.flags, FConst.Static));
 						dbSlot.setIsVirtual(hasFlag(slot.flags, FConst.Virtual));
 						dbSlot.setIsConst(hasFlag(slot.flags, FConst.Const));
@@ -701,10 +698,20 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public static String getPodDoc(String podName)
 	{
-		Pod pod = Pod.find(podName);
-		if (pod != null)
+		if (FanPlatform.getInstance(false).isConfigured())
 		{
-			return fanDocToHtml(pod.doc());
+			Pod pod = null;
+			try
+			{
+				pod = Pod.find(podName);
+			} catch (RuntimeException e)
+			{
+				log.debug("Pod doc not found for " + podName);
+			}
+			if (pod != null)
+			{
+				return fanDocToHtml(pod.doc());
+			}
 		}
 		return null;
 	}
@@ -717,11 +724,20 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public static String getDoc(FanType type)
 	{
-		Pod pod = Pod.find(type.getPod());
-		Type t = pod.findType(type.getSimpleName());
-		if (t != null)
+		if (FanPlatform.getInstance(false).isConfigured())
 		{
-			return fanDocToHtml(t.doc());
+			try
+			{
+				Pod pod = Pod.find(type.getPod());
+				Type t = pod.findType(type.getSimpleName());
+				if (t != null)
+				{
+					return fanDocToHtml(t.doc());
+				}
+			} catch (RuntimeException e)
+			{
+				log.debug("Type doc not found for " + type);
+			}
 		}
 		return null;
 	}
@@ -738,7 +754,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			return null;
 		}
 		FanPlatform platform = FanPlatform.getInstance(false);
-		if (platform.isConfigured())
+		if (!platform.isConfigured())
 		{
 			return fandoc;
 		}
