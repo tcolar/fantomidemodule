@@ -83,7 +83,7 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 		}*/
 		// Fan distro sources
 		FanPlatform fan = FanPlatform.getInstance(false);
-		if (fan != null)
+		if (fan.isConfigured())
 		{
 			Set<ClassPath> cps = fan.getSourceClassPaths();
 			if (cps != null)

@@ -63,7 +63,6 @@ public class FanLanguage extends DefaultLanguageConfig
 	@Override
 	public Parser getParser()
 	{
-		int bkpt=1;
 		return new NBFanParser();
 	}
 
@@ -113,7 +112,7 @@ public class FanLanguage extends DefaultLanguageConfig
 	@Override
 	public CodeCompletionHandler getCompletionHandler()
 	{
-		return new FanCompletionHandler();
+ 		return new FanCompletionHandler();
 	}
 
 	@Override

@@ -95,7 +95,7 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 			JOTLightweightView view = new TemplateView(buildTemplate, name);
 			view.addVariable("doClass", Boolean.TRUE);
 			view.addVariable("doMain", Boolean.TRUE);
-			FileObject newTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../Fan/FanFile");
+			FileObject newTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../Fantom/FantomFile");
 			String templateText = newTemplate.asText();
 			//open it in editor
 			TemplateUtils.createFromTemplate(view, templateText, mainFile);
@@ -113,7 +113,7 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		// NB will recognize this as a project, so we want everything(props) to be ready by then
 		if (createBuildFile)
 		{
-			FileObject podTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../../Fan/pod.html");
+			FileObject podTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../../Fantom/pod.html");
 
 			JOTLightweightView view = new TemplateView(buildTemplate, podName);
 

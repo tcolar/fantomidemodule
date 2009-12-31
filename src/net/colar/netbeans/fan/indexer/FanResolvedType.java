@@ -33,7 +33,7 @@ public class FanResolvedType
 	public FanResolvedType(String qualifiedType)
 	{
 		this.qualifiedType = qualifiedType;
-		if (qualifiedType != null)
+		if (qualifiedType != null && ! qualifiedType.equals(FanIndexer.UNRESOLVED_TYPE))
 		{
 			dbType = FanType.findByQualifiedName(qualifiedType);
 		} else
@@ -66,7 +66,7 @@ public class FanResolvedType
 
 	public static FanResolvedType makeUnresolved()
 	{
-		return new FanResolvedType(null);
+		return new FanResolvedType(FanIndexer.UNRESOLVED_TYPE);
 	}
 
 	public static FanResolvedType makeFromSimpleTypeWithWarning(FanAstScope scope, CommonTree node)

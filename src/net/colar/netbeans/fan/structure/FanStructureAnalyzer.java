@@ -33,11 +33,15 @@ public class FanStructureAnalyzer implements StructureScanner
 {
 	// TODO: Rewrite using the AstParser / scopes
 
-
 	public static final String CODE_FOLDS = "codeblocks";
 	public static final String DOC_FOLDS = "comments";
 	public static final String COMMENT_FOLDS = "comments";
 	public static final String IMPORT_FOLDS = "imports";
+
+	public FanStructureAnalyzer()
+	{
+		super();
+	}
 
 	@Override
 	public List<StructureItem> scan(ParserResult result)

@@ -86,7 +86,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		// start the indexing thread
 		// index Fantom libs right aways
 		long then = new Date().getTime();
-		indexFantomPods();
+		indexFantomPods(false);
 		long now = new Date().getTime();
 		log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");
 		// index Fantom jars + standrad java jars ?
@@ -101,15 +101,19 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		for (Indexable indexable : iterable)
 		{
-			index(indexable.getURL().getPath());
+			requestIndexing(indexable.getURL().getPath());
 		}
+	}
+
+	public void requestIndexing(String path)
+	{
+		toBeIndexed.put(path, new Date().getTime());
 	}
 
 	// TODO: It would be MUCH faster to just parse what we need (types/slots)
 	// Might need a separte ANTLR grammar though.
 	public void index(String path)
 	{
-
 		long then = new Date().getTime();
 		log.info("Indexing requested for: " + path);
 		// Get a snaphost of the source
@@ -448,25 +452,13 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		return true;
 	}
 
-	public void indexFantomPods()
+	public void indexFantomPods(boolean runInBackground)
 	{
-		FanPlatform platform = FanPlatform.getInstance(false);
-		if (platform != null)
+		FanPodIndexerThread thread = new FanPodIndexerThread();
+		thread.start();
+		if (!runInBackground)
 		{
-			String podsDir = platform.getPodsDir();
-			File f = new File(podsDir);
-			// listen to changes in pod folder
-			FileUtil.addFileChangeListener(this, f);
-			// index the pods if not up to date
-			File[] pods = f.listFiles();
-			for (File pod : pods)
-			{
-				String path = pod.getAbsolutePath();
-				if (checkIfNeedsReindexing(path, pod.lastModified()))
-				{
-					indexPod(path);
-				}
-			}
+			thread.waitFor();
 		}
 	}
 
@@ -623,7 +615,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 								dbParam.setName(param.name);
 								dbParam.setQualifiedType(tRef.signature);
 								dbParam.setIsNullable(tRef.isNullable());
-								dbParam.setHasDefault(param.def!=null);
+								dbParam.setHasDefault(param.def != null);
 
 								dbParam.save();
 
@@ -707,6 +699,66 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		return ModifEnum.PUBLIC.value();
 	}
 
+	public static String getPodDoc(String podName)
+	{
+		Pod pod = Pod.find(podName);
+		if (pod != null)
+		{
+			return fanDocToHtml(pod.doc());
+		}
+		return null;
+	}
+
+	public static String getSlotDoc(FanSlot slot)
+	{
+		// TODO: slot doc !
+		return null;
+	}
+
+	public static String getDoc(FanType type)
+	{
+		Pod pod = Pod.find(type.getPod());
+		Type t = pod.findType(type.getSimpleName());
+		if (t != null)
+		{
+			return fanDocToHtml(t.doc());
+		}
+		return null;
+	}
+
+	/**
+	 * Parse Fandoc text into HTML using fan's builtin parser.
+	 * @param fandoc
+	 * @return
+	 */
+	public static String fanDocToHtml(String fandoc)
+	{
+		if (fandoc == null)
+		{
+			return null;
+		}
+		FanPlatform platform = FanPlatform.getInstance(false);
+		if (platform.isConfigured())
+		{
+			return fandoc;
+		}
+		String html = fandoc;
+		try
+		{
+			FanObj parser = (FanObj) Type.find("fandoc::FandocParser").make();
+			FanObj doc = (FanObj) parser.type().method("parseStr").call(parser, fandoc);
+			Buf buf = Buf.make();
+			FanObj writer = (FanObj) Type.find("fandoc::HtmlDocWriter").method("make").call(buf.out());
+			doc.type().method("write").call(doc, writer);
+			html = buf.flip().readAllStr();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		//System.out.println("Html doc: "+html);
+		return html;
+	}
+
 	//*********** File listeners ****************************
 	public void fileFolderCreated(FileEvent fe)
 	{
@@ -783,63 +835,57 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		}
 	}
 
-	public static String getPodDoc(String podName)
+	class FanPodIndexerThread extends Thread implements Runnable
 	{
-		Pod pod = Pod.find(podName);
-		if (pod != null)
-		{
-			return fanDocToHtml(pod.doc());
-		}
-		return null;
-	}
 
-	public static String getSlotDoc(FanSlot slot)
-	{
-		// TODO: slot doc !
-		return null;
-	}
+		volatile boolean done = false;
 
-	public static String getDoc(FanType type)
-	{
-		Pod pod = Pod.find(type.getPod());
-		Type t = pod.findType(type.getSimpleName());
-		if (t != null)
+		@Override
+		public void run()
 		{
-			return fanDocToHtml(t.doc());
+			done = false;
+			FanPlatform platform = FanPlatform.getInstance(false);
+			if (platform.isConfigured())
+			{
+				try
+				{
+					String podsDir = platform.getPodsDir();
+					File f = new File(podsDir);
+					// listen to changes in pod folder
+					FileUtil.addFileChangeListener(FanIndexer.this, f);
+					// index the pods if not up to date
+					File[] pods = f.listFiles();
+					for (File pod : pods)
+					{
+						if (shutdown)
+						{
+							break;
+						}
+						String path = pod.getAbsolutePath();
+						if (checkIfNeedsReindexing(path, pod.lastModified()))
+						{
+							indexPod(path);
+						}
+					}
+				} catch (Throwable t)
+				{
+					log.exception("Pod indexing thread error", t);
+				}
+			}
+			done = true;
 		}
-		return null;
-	}
 
-	/**
-	 * Parse Fandoc text into HTML using fan's builtin parser.
-	 * @param fandoc
-	 * @return
-	 */
-	public static String fanDocToHtml(String fandoc)
-	{
-		if (fandoc == null)
+		private void waitFor()
 		{
-			return null;
+			while (!done)
+			{
+				try
+				{
+					sleep(50);
+				} catch (Exception e)
+				{
+				}
+			}
 		}
-		FanPlatform platform = FanPlatform.getInstance(false);
-		if (platform == null)
-		{
-			return fandoc;
-		}
-		String html = fandoc;
-		try
-		{
-			FanObj parser = (FanObj) Type.find("fandoc::FandocParser").make();
-			FanObj doc = (FanObj) parser.type().method("parseStr").call(parser, fandoc);
-			Buf buf = Buf.make();
-			FanObj writer = (FanObj) Type.find("fandoc::HtmlDocWriter").method("make").call(buf.out());
-			doc.type().method("write").call(doc, writer);
-			html = buf.flip().readAllStr();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		//System.out.println("Html doc: "+html);
-		return html;
 	}
 }

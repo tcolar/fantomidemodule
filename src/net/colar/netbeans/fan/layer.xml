@@ -122,10 +122,10 @@
 	</folder>
 
 	<folder name="Templates">
-		<folder name="Fan">
+		<folder name="Fantom">
 			<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
-			<file name="FanFile" url="nbresloc:/net/colar/netbeans/fan/templates/FanFile.html">
-				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+			<file name="FantomFile" url="nbresloc:/net/colar/netbeans/fan/templates/FanFile.html">
+				<!--<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>-->
 				<attr name="template" boolvalue="true"/>
 				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
 				<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
@@ -155,7 +155,7 @@
 		</folder>
 	</folder>
     <!-- Other custom resources used by Fan plugin-->
-	<folder name="Fan">
+	<folder name="Fantom">
 		<file name="pod.html" url="nbresloc:/net/colar/netbeans/fan/templates/pod.html"/>
 	</folder>
 

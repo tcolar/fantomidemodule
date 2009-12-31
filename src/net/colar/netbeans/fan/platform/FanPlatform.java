@@ -78,6 +78,11 @@ public class FanPlatform
 		return false;
 	}
 
+	public boolean isConfigured()
+	{
+		return fanHome != null;
+	}
+
 	public static FanPlatform getInstance()
 	{
 		return getInstance(true);
@@ -280,7 +285,7 @@ public class FanPlatform
 	{
 		// called when FAN_HOME is changed/updated.
 		readSettings();
-		FanIndexerFactory.getIndexer().indexFantomPods();
+		FanIndexerFactory.getIndexer().indexFantomPods(true);
 	}
 
 	public String getPodsDir()
