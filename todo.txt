@@ -1,3 +1,10 @@
+completion for local variables
+Resolve inferred variable types
+completion for inherited types/slots
+completion for super.
+java resolution/completion ?
+
+
 net/colar/netbeans/fan/project/FanProject.java:		//TODO: make src folders dynamic
 net/colar/netbeans/fan/project/FanProject.java:		//TODO: remove this
 net/colar/netbeans/fan/project/FanProject.java:		//TODO: is this enough ?
