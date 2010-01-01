@@ -1,3 +1,7 @@
+Review all the todos.
+
+Delete outdated documents.
+
 convert rootscope or typescope to serailizable form
 type name, slots etc....
 Example FanRootScope.index() - save socument,ttimestamp, type name,slots,fields etc...
