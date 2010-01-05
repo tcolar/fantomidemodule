@@ -5,7 +5,6 @@
 package net.colar.netbeans.fan.indexer;
 
 import fan.sys.Buf;
-import fan.sys.Err;
 import fan.sys.FanObj;
 import fan.sys.Pod;
 import fan.sys.Type;
@@ -25,7 +24,6 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
 import net.colar.netbeans.fan.FanParserResult;
-import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.ast.FanAstField;
 import net.colar.netbeans.fan.ast.FanAstMethod;
@@ -90,8 +88,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		indexFantomPods(false);
 		long now = new Date().getTime();
 		log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");
-		// index Fantom jars + standrad java jars ?
-		//indexJava();
 		// sources indexes will be called  through scanStarted()
 		// TODO: cleanup docs that don't exist any more docs (binaries & sources)?
 		// TODO: Log db stats (# of docs, types, slots)
@@ -430,7 +426,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		}
 	}
 
-	static boolean checkIfNeedsReindexing(String path, long tstamp)
+	public static boolean checkIfNeedsReindexing(String path, long tstamp)
 	{
 		JOTSQLCondition cond = new JOTSQLCondition("path", JOTSQLCondition.IS_EQUAL, path);
 		try
@@ -904,4 +900,5 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			}
 		}
 	}
+
 }
