@@ -3,9 +3,13 @@
  */
 package net.colar.netbeans.fan.completion;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -19,6 +23,8 @@ import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.indexer.FanIndexer;
+import net.colar.netbeans.fan.indexer.FanIndexerFactory;
+import net.colar.netbeans.fan.indexer.FanJarsIndexer;
 import net.colar.netbeans.fan.indexer.FanResolvedType;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
@@ -65,42 +71,44 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		ArrayList<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
 		try
 		{
-		String prefix = context.getPrefix();
-		if (prefix == null)
-		{
-			prefix = "";
-		}
+			String prefix = context.getPrefix();
+			if (prefix == null)
+			{
+				prefix = "";
+			}
 
-		FanCompletionContext cpl = new FanCompletionContext(context);
-		int anchor = context.getCaretOffset();
-		preamble = cpl.getPreamble();
-		FanUtilities.GENERIC_LOGGER.debug("preamb: " + preamble);
-		FanParserResult result = (FanParserResult) context.getParserResult();
-		FanRootScope rootScope = result.getRootScope();
+			FanCompletionContext cpl = new FanCompletionContext(context);
+			int anchor = context.getCaretOffset();
+			preamble = cpl.getPreamble();
+			FanUtilities.GENERIC_LOGGER.debug("preamb: " + preamble);
+			FanParserResult result = (FanParserResult) context.getParserResult();
+			FanRootScope rootScope = result.getRootScope();
 
-		switch (cpl.getCompletionType())
+			switch (cpl.getCompletionType())
+			{
+				case ROOT_LEVEL:
+					proposeRootItems(proposals, anchor, prefix.toLowerCase());
+					break;
+				case IMPORT_POD:
+					proposeUsing(proposals, context);
+					break;
+				case ID:
+					proposeVars(proposals, context, prefix);
+					proposeDefinedTypes(proposals, anchor, prefix, rootScope);
+					docType = DocTypes.TYPE;
+					break;
+				case CALL:
+					proposeCalls(proposals, context);
+					break;
+			}
+		} catch (Exception e)
 		{
-			case ROOT_LEVEL:
-				proposeRootItems(proposals, anchor, prefix.toLowerCase());
-				break;
-			case IMPORT_POD:
-				proposeUsing(proposals, context);
-				break;
-			case ID:
-				proposeVars(proposals, context, prefix);
-				proposeDefinedTypes(proposals, anchor, prefix, rootScope);
-				docType = DocTypes.TYPE;
-				break;
-			case CALL:
-				proposeCalls(proposals, context);
-				break;
-		}
-		}
-		catch(Exception e)
-		{	e.printStackTrace();
-			FanParserResult result=(FanParserResult)context.getParserResult();
-			if(result!=null)
-				result.addError("Completion error",e);
+			e.printStackTrace();
+			FanParserResult result = (FanParserResult) context.getParserResult();
+			if (result != null)
+			{
+				result.addError("Completion error", e);
+			}
 		}
 		DefaultCompletionResult completionResult = new DefaultCompletionResult(proposals, false);
 		return completionResult;
@@ -277,17 +285,37 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposeSlots(FanResolvedType type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		Vector<FanSlot> slots = FanSlot.findAllForType(type.getDbType().getId());
-		for (FanSlot slot : slots)
+		if (type.getDbType().isJava())
 		{
-			if (slot.getName().toLowerCase().startsWith(prefix))
+			FanJarsIndexer indexer = FanIndexerFactory.getJavaIndexer();
+			List<Member> slots = indexer.findTypeSlots(type.getQualifiedType());
+			for (Member slot : slots)
 			{
-				// constructor are not marked as static ... but fot this purpose they are
-				boolean isStatic = slot.isStatic() || slot.isCtor();
-				if (type.isStaticContext() == isStatic)
+				if(slot.getName().toLowerCase().startsWith(prefix))
 				{
-					proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
-					docType = DocTypes.SLOT; // TODO
+					boolean isStatic = Modifier.isStatic(slot.getModifiers()) || (slot instanceof Constructor);
+					if (type.isStaticContext() == isStatic)
+					{
+						proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
+						// no javadoc for now
+						docType = DocTypes.NA;
+					}
+				}
+			}
+		} else
+		{
+			Vector<FanSlot> slots = FanSlot.findAllForType(type.getDbType().getId());
+			for (FanSlot slot : slots)
+			{
+				if (slot.getName().toLowerCase().startsWith(prefix))
+				{
+					// constructor are not marked as static ... but fot this purpose they are
+					boolean isStatic = slot.isStatic() || slot.isCtor();
+					if (type.isStaticContext() == isStatic)
+					{
+						proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
+						docType = DocTypes.SLOT; // TODO
+					}
 				}
 			}
 		}
@@ -299,17 +327,17 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param anchor
 	 * @param pod
 	 */
-	/*private void proposeJavaPacks(ArrayList<CompletionProposal> proposals, int anchor, String basePack)
+	private void proposeJavaPacks(ArrayList<CompletionProposal> proposals, int anchor, String basePack)
 	{
 		String base = basePack.substring(6).trim();
-		List<String> items = FanJavaIndexer.getInstance().listSubPackages(base);
+		List<String> items = FanIndexerFactory.getJavaIndexer().listSubPackages(base);
 		for (String s : items)
 		{
 			FanUtilities.GENERIC_LOGGER.debug("Proposal: " + s);
 			// TODO: JavaProps
 			proposals.add(new FanImportProposal(s, anchor - base.length(), true));
 		}
-	}*/
+	}
 
 	/**
 	 *
@@ -318,21 +346,21 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param basePack   null means from any package
 	 * @param type  type (starts with "[java]")
 	 */
-	/*private void proposeJavaTypes(ArrayList<CompletionProposal> proposals, int anchor, String basePack, String type)
+	private void proposeJavaTypes(ArrayList<CompletionProposal> proposals, int anchor, String basePack, String type)
 	{
 		String base = null;
 		if (basePack != null)
 		{
 			base = basePack.substring(6).trim();
 		}
-		List<String> items = FanJavaIndexer.getInstance().listItems(base, type);
+		List<String> items = FanIndexerFactory.getJavaIndexer().listTypes(base, type);
 		for (String s : items)
 		{
 			FanUtilities.GENERIC_LOGGER.debug("Proposal: " + s);
 			// TODO: JavaProps
 			proposals.add(new FanImportProposal(s, anchor - type.length(), true));
 		}
-	}*/
+	}
 
 	/**
 	 * Propose defined types (fan.sys) + whatever listed in using + current pod
@@ -358,7 +386,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		proposeTypes("sys", props, anchor, prefix);
 		proposals.addAll(props);
 	}
-
 
 	// TODO: setup nice icons(package/class etc..) in importproposals
 	private void proposeUsing(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
@@ -389,10 +416,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 			if (type == null || type.length() == 0)
 			{
-				/*if (pod.startsWith("[java]"))
+				if (pod.startsWith("[java]"))
 				{
 					proposeJavaPacks(proposals, anchor, pod);
-				} else*/
+				} else
 				{
 					proposePods(proposals, anchor, pod);
 				}
@@ -400,7 +427,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			{
 				/*if (pod.startsWith("[java]"))
 				{
-					proposeJavaTypes(proposals, anchor, pod, type);
+				proposeJavaTypes(proposals, anchor, pod, type);
 				} else*/
 				{
 					proposeTypes(pod, proposals, anchor, type);
@@ -416,7 +443,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				proposePods(proposals, anchor, "");
 			} else
 			{
-				/*if (pod.startsWith("[java]"))
+				if (pod.startsWith("[java]"))
 				{
 					if (pod.trim().endsWith("::"))
 					{
@@ -427,7 +454,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					{
 						proposeJavaPacks(proposals, anchor, pod);
 					}
-				} else*/
+				} else
 				{
 					if (pod.trim().endsWith("::"))
 					{

@@ -2,9 +2,12 @@ package net.colar.netbeans.fan.indexer;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -21,6 +24,7 @@ import net.colar.netbeans.fan.indexer.model.FanType;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.builders.JOTQueryBuilder;
+import net.jot.prefs.JOTPreferences;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -30,7 +34,10 @@ import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 
 /**
- * ??TODO: do the file listnere to listen to jars changes and new/chnaged jars in Fantom lib folder. (and jdk ?? -> no, tsratup only)
+ * Index for Java classes.
+ * We only store and type sin DB (no slts etc...)
+ *
+ * We resolve classes on a as-needed basis (lazy cache).
  *
  * Index java jars - used through FanIndexer
  * @author tcolar
@@ -49,6 +56,7 @@ public class FanJarsIndexer implements FileChangeListener
 	// In memory caches
 	private List<String> packagesCache = new ArrayList<String>();
 	private Hashtable<String, Class> classesCache = new Hashtable<String, Class>();
+	String excludes = JOTPreferences.getInstance().getDefaultedString("fantomide.java.indexer.excludes", "sun.;com.sun.;javax.;org.xml.;org.omg.;org.w3c.;org.xml.;org.eclipse.swt.");
 
 	public FanJarsIndexer()
 	{
@@ -71,7 +79,6 @@ public class FanJarsIndexer implements FileChangeListener
 
 	private void indexJar(String j)
 	{
-		boolean success = false;
 		log.info("Indexing jar: " + j);
 		if (j.toLowerCase().endsWith(".jar"))
 		{
@@ -83,10 +90,11 @@ public class FanJarsIndexer implements FileChangeListener
 				if (doc.isNew())
 				{
 					doc.setPath(j);
-					doc.setTstamp(new Date().getTime());
+					doc.setTstamp(0L);
 					doc.setIsSource(false);
 					doc.save();
 				}
+				Vector<FanType> types = FanType.findAllForDoc(null, doc.getId());
 
 				JarFile jar = new JarFile(j);
 
@@ -98,30 +106,56 @@ public class FanJarsIndexer implements FileChangeListener
 					if (ename.toLowerCase().endsWith(".class"))
 					{
 						String cname = ename.substring(0, ename.length() - 6).replaceAll(File.separator, ".");
-						try
+						// also not bothering with classes matching exclude pattern
+						boolean excluded = false;
+						for (String exclude : excludes.split(";"))
 						{
-							//System.out.println("cname: " + cname);
-							// trying to findclass same class twice = no good !
-							// also not bothering with sun internal classes
-							if (!classes.contains(cname)
-									&& !cname.startsWith("org.eclipse.swt.internal.")
-									&& !cname.startsWith("sun.")
-									&& !cname.startsWith("com.sun."))
+							if (cname.startsWith(exclude))
 							{
+								excluded = true;
+								break;
+							}
+						}
+						if (excluded)
+						{
+							continue;
+						}
 
-								Class c = findClass(cname);
-								if (c != null)
+						// trying to findclass same class twice = no good !
+						if (!classes.contains(cname))
+						{
+
+							Class c = null;
+							try
+							{
+								c = findClass(cname);
+							} catch (ClassNotFoundException ce)
+							{
+							}
+							if (c != null)
+							{
+								classes.add(cname);
+								indexClass(doc, c, true);
+								for (int i = 0; i != types.size(); i++)
 								{
-									classes.add(cname);
-									indexClass(doc, c);
+									if (types.get(i).getQualifiedName().equals(cname))
+									{
+										types.remove(i);
+									}
+									break;
 								}
 							}
-						} catch (Exception ce)
-						{
-							FanUtilities.GENERIC_LOGGER.exception("Error indexing jar", ce);
 						}
 					}
 				}
+				// remove obsolete type entries
+				for (FanType type : types)
+				{
+					type.delete();
+				}
+				// only mark valid once done.
+				doc.setTstamp(new Date().getTime());
+				doc.save();
 				//TODO: delete outdated types (timestamp) ?
 			} catch (Exception e)
 			{
@@ -137,7 +171,6 @@ public class FanJarsIndexer implements FileChangeListener
 					{
 					}
 				}
-				;
 			}
 		}
 	}
@@ -192,7 +225,7 @@ public class FanJarsIndexer implements FileChangeListener
 		String path = fe.getFile().getPath();
 		log.debug("File created: " + path);
 		indexJar(
-				path);
+			path);
 	}
 
 	public void fileChanged(FileEvent fe)
@@ -200,7 +233,7 @@ public class FanJarsIndexer implements FileChangeListener
 		String path = fe.getFile().getPath();
 		log.debug("File changed: " + path);
 		indexJar(
-				path);
+			path);
 	}
 
 	public void fileDeleted(FileEvent fe)
@@ -286,8 +319,23 @@ public class FanJarsIndexer implements FileChangeListener
 		return urls;
 	}
 
-	private void indexClass(FanDocument doc, Class c)
+	private void indexClass(FanDocument doc, Class c, boolean delay)
 	{
+		int flags = c.getModifiers();
+		// Don't bother with classes not useable from fan
+		boolean usable = false;
+		if (Modifier.isPublic(flags)
+			|| Modifier.isProtected(flags)
+			|| (c.getPackage().getName().startsWith("fan") && !Modifier.isPrivate(flags))) // package private "fan" is ok.
+		{
+			usable = true;
+		}
+
+		if (!usable)
+		{
+			return;
+		}
+
 		String pack = c.getPackage().getName();
 		String qname = c.getName();
 		String name = c.getSimpleName();
@@ -318,7 +366,6 @@ public class FanJarsIndexer implements FileChangeListener
 					}
 				}
 			}
-			int flags = c.getModifiers();
 			dbType.setDocumentId(doc.getId());
 			dbType.setKind(getKind(c));
 			dbType.setIsAbstract(Modifier.isAbstract(flags));
@@ -331,6 +378,19 @@ public class FanJarsIndexer implements FileChangeListener
 			dbType.setIsFromSource(false);
 
 			dbType.save();
+
+			// Try to leave a little cpu for the IDE
+			if (delay)
+			{
+				try
+				{
+					Thread.sleep(10);
+				} catch (Exception e)
+				{
+				}
+			}
+
+
 			// Slots
 			// Try to reuse existing db entries.
 			/*Vector<FanSlot> currentSlots = FanSlot.findAllForType(dbType.getId());
@@ -342,108 +402,108 @@ public class FanJarsIndexer implements FileChangeListener
 			//slots.addAll(Arrays.asList(c.getDeclaredAnnotations()));
 			for (Member slot : slots)
 			{
-				// determine kind of slot
-				FanModelConstants.SlotKind kind = FanModelConstants.SlotKind.FIELD;
-				Class<?> retType = null;
-				if (slot instanceof Field)
-				{
-					kind = FanModelConstants.SlotKind.FIELD;
-					retType = ((Field) slot).getType();
-				} else if (slot instanceof Constructor)
-				{
-					retType = c.getClass();
-					kind = FanModelConstants.SlotKind.CTOR;
-				} else if (slot instanceof Method)
-				{
-					retType = ((Method) slot).getReturnType();
-					kind = FanModelConstants.SlotKind.METHOD;
-				} else
-				{
-					throw new RuntimeException("Unexpected Slot kind: " + slot.getClass().getName());
-				}
+			// determine kind of slot
+			FanModelConstants.SlotKind kind = FanModelConstants.SlotKind.FIELD;
+			Class<?> retType = null;
+			if (slot instanceof Field)
+			{
+			kind = FanModelConstants.SlotKind.FIELD;
+			retType = ((Field) slot).getType();
+			} else if (slot instanceof Constructor)
+			{
+			retType = c.getClass();
+			kind = FanModelConstants.SlotKind.CTOR;
+			} else if (slot instanceof Method)
+			{
+			retType = ((Method) slot).getReturnType();
+			kind = FanModelConstants.SlotKind.METHOD;
+			} else
+			{
+			throw new RuntimeException("Unexpected Slot kind: " + slot.getClass().getName());
+			}
 
-				JOTSQLCondition cond2 = new JOTSQLCondition("typeId", JOTSQLCondition.IS_EQUAL, dbType.getId());
-				JOTSQLCondition cond3 = new JOTSQLCondition("name", JOTSQLCondition.IS_EQUAL, slot.getName());
-				FanSlot dbSlot = (FanSlot) JOTQueryBuilder.selectQuery(null, FanSlot.class).where(cond2).where(cond3).findOrCreateOne();
-				if (!dbSlot.isNew())
-				{
-					for (int i = 0; i != currentSlots.size(); i++)
-					{
-						FanSlot s = currentSlots.get(i);
-						if (s.getId() == dbSlot.getId())
-						{
-							currentSlots.remove(i);
-							break;
-						}
-					}
-				}
-				int sflags = slot.getModifiers();
-				dbSlot.setTypeId(dbType.getId());
-				dbSlot.setSlotKind(kind.value());
-				dbSlot.setReturnedType(retType.getName());
-				dbSlot.setName(slot.getName());
-				dbSlot.setIsAbstract(Modifier.isAbstract(sflags));
-				dbSlot.setIsNative(Modifier.isNative(sflags));
-				// N/A
-				dbSlot.setIsOverride(false);
-				dbSlot.setIsStatic(Modifier.isStatic(sflags));
-				// java always true
-				dbSlot.setIsVirtual(true);
-				dbSlot.setIsConst(Modifier.isStatic(sflags) && Modifier.isFinal(sflags));
-				dbSlot.setProtection(getProtection(sflags));
-				// java always nullable
-				dbSlot.setIsNullable(true);
+			JOTSQLCondition cond2 = new JOTSQLCondition("typeId", JOTSQLCondition.IS_EQUAL, dbType.getId());
+			JOTSQLCondition cond3 = new JOTSQLCondition("name", JOTSQLCondition.IS_EQUAL, slot.getName());
+			FanSlot dbSlot = (FanSlot) JOTQueryBuilder.selectQuery(null, FanSlot.class).where(cond2).where(cond3).findOrCreateOne();
+			if (!dbSlot.isNew())
+			{
+			for (int i = 0; i != currentSlots.size(); i++)
+			{
+			FanSlot s = currentSlots.get(i);
+			if (s.getId() == dbSlot.getId())
+			{
+			currentSlots.remove(i);
+			break;
+			}
+			}
+			}
+			int sflags = slot.getModifiers();
+			dbSlot.setTypeId(dbType.getId());
+			dbSlot.setSlotKind(kind.value());
+			dbSlot.setReturnedType(retType.getName());
+			dbSlot.setName(slot.getName());
+			dbSlot.setIsAbstract(Modifier.isAbstract(sflags));
+			dbSlot.setIsNative(Modifier.isNative(sflags));
+			// N/A
+			dbSlot.setIsOverride(false);
+			dbSlot.setIsStatic(Modifier.isStatic(sflags));
+			// java always true
+			dbSlot.setIsVirtual(true);
+			dbSlot.setIsConst(Modifier.isStatic(sflags) && Modifier.isFinal(sflags));
+			dbSlot.setProtection(getProtection(sflags));
+			// java always nullable
+			dbSlot.setIsNullable(true);
 
-				dbSlot.save();
-//TODO: CTOR too !
-				// deal with parameters of method/ctor
-				if (slot instanceof Method)
-				{
+			dbSlot.save();
+			//TODO: CTOR too !
+			// deal with parameters of method/ctor
+			if (slot instanceof Method)
+			{
 
-					Method method = (Method) slot;
-					TypeVariable<Method>[] parameters = method.getTypeParameters();
-					// Try to reuse existing db entries.
-					Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
-					for (TypeVariable<Method> param : parameters)
-					{
-						JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
-						FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).findOrCreateOne();
-						if (!dbParam.isNew())
-						{
-							for (int i = 0; i != currentParams.size(); i++)
-							{
-								FanMethodParam p = currentParams.get(i);
-								if (p.getId() == dbParam.getId())
-								{
-									currentParams.remove(i);
-									break;
-								}
-							}
-						}
-						dbParam.setSlotId(dbSlot.getId());
-						dbParam.setName(param.getName());
-						dbParam.setQualifiedType((param.getBounds()[0]).toString());
-						// always true for java
-						dbParam.setIsNullable(true);
-						// always false for java
-						dbParam.setHasDefault(false);
+			Method method = (Method) slot;
+			TypeVariable<Method>[] parameters = method.getTypeParameters();
+			// Try to reuse existing db entries.
+			Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
+			for (TypeVariable<Method> param : parameters)
+			{
+			JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
+			FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).findOrCreateOne();
+			if (!dbParam.isNew())
+			{
+			for (int i = 0; i != currentParams.size(); i++)
+			{
+			FanMethodParam p = currentParams.get(i);
+			if (p.getId() == dbParam.getId())
+			{
+			currentParams.remove(i);
+			break;
+			}
+			}
+			}
+			dbParam.setSlotId(dbSlot.getId());
+			dbParam.setName(param.getName());
+			dbParam.setQualifiedType((param.getBounds()[0]).toString());
+			// always true for java
+			dbParam.setIsNullable(true);
+			// always false for java
+			dbParam.setHasDefault(false);
 
-						dbParam.save();
+			dbParam.save();
 
-					} // end param loop
-					// Whatever param wasn't removed from the vector is not needed anymore.
-					for (FanMethodParam param : currentParams)
-					{
-						param.delete();
-					}
-				}
+			} // end param loop
+			// Whatever param wasn't removed from the vector is not needed anymore.
+			for (FanMethodParam param : currentParams)
+			{
+			param.delete();
+			}
+			}
 			} // end slot loop
 			// Whatever slot wasn't removed from the vector is not needed anymore.
 			for (FanSlot s : currentSlots)
 			{
-				s.delete();
+			s.delete();
 			}
-*/
+			 */
 		} catch (Exception e)
 		{
 			log.exception("Indexing failed for: " + c, e);
@@ -458,8 +518,7 @@ public class FanJarsIndexer implements FileChangeListener
 			{
 				log.exception("Indexing 'rollback' failed for: " + c, e);
 			}
-		}
-		finally
+		} finally
 		{
 			// cache is dirty.
 			packagesCache.clear();
@@ -501,6 +560,70 @@ public class FanJarsIndexer implements FileChangeListener
 		}
 		// default is package private
 		return ModifEnum.INTERNAL.value();
+	}
+
+	public List<String> listSubPackages(String base)
+	{
+		base = base.toLowerCase();
+		readPackages();
+		List<String> results = new ArrayList<String>();
+		for (String pack : packagesCache)
+		{
+			if (pack.toLowerCase().startsWith(base))
+			{
+				results.add(pack);
+			}
+		}
+		return results;
+	}
+
+	public void readPackages()
+	{
+		if (packagesCache.isEmpty())
+		{
+			packagesCache = FanType.findAllPackagesNames();
+		}
+	}
+
+	public List<String> listTypes(String pack, String prefix)
+	{
+		readPackages();
+		if (pack != null && !packagesCache.contains(pack))
+		{
+			return Collections.EMPTY_LIST;
+		}
+		Vector<FanType> types = FanType.findPodTypes(pack, prefix);
+		ArrayList<String> items = new ArrayList<String>();
+		for (FanType type : types)
+		{
+			items.add(type.simpleName);
+		}
+		return items;
+	}
+
+	public List<Member> findTypeSlots(String qualifiedType)
+	{
+		List<Member> slots = new ArrayList<Member>();
+		if ( ! classesCache.containsKey(qualifiedType))
+		{
+			try
+			{
+				Class c = cl.loadClass(qualifiedType);
+				classesCache.put(qualifiedType, c);
+			} catch (ClassNotFoundException e)
+			{
+				log.info("ClassNotFound: " + qualifiedType);
+			}
+		}
+		Class c = classesCache.get(qualifiedType);
+		if (c != null)
+		{
+			slots.addAll(Arrays.asList(c.getDeclaredConstructors()));
+			slots.addAll(Arrays.asList(c.getDeclaredMethods()));
+			slots.addAll(Arrays.asList(c.getDeclaredFields()));
+			//c.getDeclaredAnnotations();
+		}
+		return slots;
 	}
 
 	/*********************************************************************

@@ -98,6 +98,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		jarsIndexer.indexJars(true);
 	}
 
+	public FanJarsIndexer getJarsIndexer()
+	{
+		return jarsIndexer;
+	}
+
 	@Override
 	protected void index(Iterable<? extends Indexable> iterable, Context context)
 	{
@@ -823,6 +828,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		// don't care
 	}
+
 
 	/*********************************************************************
 	 *  Indexer Thread class

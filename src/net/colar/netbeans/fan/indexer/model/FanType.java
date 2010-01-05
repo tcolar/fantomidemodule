@@ -222,13 +222,35 @@ public class FanType extends JOTModel
 		return findByQualifiedName(qname);
 	}
 
+	public static Vector<String> findAllPackagesNames()
+	{
+		try
+		{
+			Vector<String> results = new Vector<String>();
+			JOTSQLCondition cond = new JOTSQLCondition("kind", JOTSQLCondition.IS_GREATER, 20);
+			JOTQueryResult result = JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).find();
+			for (FanType type : (Vector<FanType>) result.getAllResults())
+			{
+				if (!results.contains(type.getPod()))
+				{
+					results.add(type.getPod());
+				}
+			}
+			return results;
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+
 	public static Vector<String> findAllPodNames()
 	{
 		//TODO: inneficient .... use DISTINCT ?
 		try
 		{
 			Vector<String> results = new Vector<String>();
-			JOTSQLCondition cond = new JOTSQLCondition("kind", JOTSQLCondition.IS_GREATER, 20);
+			JOTSQLCondition cond = new JOTSQLCondition("kind", JOTSQLCondition.IS_LOWER, 20);
 			JOTQueryResult result = JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).find();
 			for (FanType type : (Vector<FanType>) result.getAllResults())
 			{
@@ -261,7 +283,7 @@ public class FanType extends JOTModel
 		try
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("simpleName", JOTSQLCondition.IS_LIKE, prefix + "%");
-			JOTSQLCondition cond2 = new JOTSQLCondition("kind", JOTSQLCondition.IS_GREATER, 20);
+			JOTSQLCondition cond2 = new JOTSQLCondition("kind", JOTSQLCondition.IS_LOWER, 20);
 			return JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).where(cond2).find().getAllResults();
 		} catch (Exception e)
 		{
@@ -305,6 +327,11 @@ public class FanType extends JOTModel
 	public boolean isEnum()
 	{
 		return getKind() == FanTypeScope.TypeKind.ENUM.value();
+	}
+
+	public boolean isJava()
+	{
+		return kind >20 && kind <30;
 	}
 
 }

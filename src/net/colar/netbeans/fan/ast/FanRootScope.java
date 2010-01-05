@@ -147,7 +147,7 @@ public class FanRootScope extends FanAstScope
 					addError("Unresolved Java Item: " + qname, usingNode);
 				} else
 				{
-					addUsing(name, type, usingNode, type);
+					addUsing(name, qname, usingNode, type);
 				}
 			} else
 			{
