@@ -186,29 +186,6 @@ public class FanLexAstUtils
 	}
 
 	/**
-	 * Get the range of the whole node content (not just the node itself)
-	 * @param fanParserResult
-	 * @param idNode
-	 * @return
-	 */
-	public static OffsetRange getContentNodeRange(FanParserResult fanParserResult, CommonTree node)
-	{
-		OffsetRange range = null;
-		if (node.getChildCount() >= 0)
-		{
-			CommonTree startNode = (CommonTree) node.getChild(0);
-			CommonTree endNode = (CommonTree) node.getChild(node.getChildCount() - 1);
-			OffsetRange range1 = getNodeRange(fanParserResult, startNode);
-			OffsetRange range2 = getNodeRange(fanParserResult, endNode);
-			if (range1 != null && range2 != null)
-			{
-				range = new OffsetRange(range1.getStart(), range2.getEnd());
-			}
-		}
-		return range;
-	}
-
-	/**
 	 * Finds the closest(smallest) AST node at given token index
 	 * Returns root node if no better macth found.
 	 */
@@ -477,7 +454,7 @@ public class FanLexAstUtils
 		{
 			return "";
 		}
-		OffsetRange range = getContentNodeRange(result, (CommonTree) node);
+		OffsetRange range = getNodeRange(result, (CommonTree) node);
 		String text = "";
 		try
 		{
@@ -536,7 +513,7 @@ public class FanLexAstUtils
 			}
 			for (int i = 0; i < t.getChildCount(); i++)
 			{
-				FanUtilities.GENERIC_LOGGER.debug(sb.toString() + t.getChild(i).toString());
+				FanUtilities.GENERIC_LOGGER.info(sb.toString() + t.getChild(i).toString());
 				dumpTree((CommonTree) t.getChild(i), indent + 1);
 			}
 		}

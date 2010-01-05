@@ -95,7 +95,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		// TODO: cleanup docs that don't exist any more docs (binaries & sources)?
 		// TODO: Log db stats (# of docs, types, slots)
 		jarsIndexer = new FanJarsIndexer();
+		// Do this one in the background (might take a while and not needed for everyone)
 		jarsIndexer.indexJars(true);
+		// cleanup old docs
+		cleanupOldDocs();
 	}
 
 	public FanJarsIndexer getJarsIndexer()
@@ -115,7 +118,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	public void requestSrcIndexing(String path)
 	{
 		FileObject fo = FileUtil.toFileObject(new File(path));
-		if (! FileUtil.isParentOf(FanPlatform.getInstance().getFanHome(), fo))
+		if (!FileUtil.isParentOf(FanPlatform.getInstance().getFanHome(), fo))
 		{
 			toBeIndexed.put(path, new Date().getTime());
 		}
@@ -786,6 +789,26 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		return html;
 	}
 
+	private void cleanupOldDocs()
+	{
+		try
+		{
+			Vector<FanDocument> docs = JOTQueryBuilder.selectQuery(null, FanDocument.class).find().getAllResults();
+			for (FanDocument doc : docs)
+			{
+				String path = doc.getPath();
+				if (!new File(path).exists())
+				{
+					log.info("Removing entries for removed document: " + path);
+					doc.delete();
+				}
+			}
+		} catch (Exception e)
+		{
+			log.exception("Error deleting outdated docs", e);
+		}
+	}
+
 	//*********** File listeners ****************************
 	public void fileFolderCreated(FileEvent fe)
 	{
@@ -828,7 +851,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		// don't care
 	}
-
 
 	/*********************************************************************
 	 *  Indexer Thread class

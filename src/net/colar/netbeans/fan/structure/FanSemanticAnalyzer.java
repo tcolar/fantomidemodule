@@ -171,7 +171,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	{
 		if (node != null && !node.isNil() && node.getChildCount() > 0)
 		{
-			OffsetRange range = FanLexAstUtils.getContentNodeRange((FanParserResult) result, node);
+			OffsetRange range = FanLexAstUtils.getNodeRange((FanParserResult) result, node);
 			if (range != null)
 			{
 				newHighlights.put(range, colorAttributes);
@@ -210,7 +210,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			return; // shouldn't happen but being safe
 		}
 		CommonTree textNode = (CommonTree) node.getChild(0);
-		OffsetRange strRange = FanLexAstUtils.getContentNodeRange((FanParserResult) result, node);
+		OffsetRange strRange = FanLexAstUtils.getNodeRange((FanParserResult) result, node);
 		String str = textNode.getText();
 		//System.out.println("interpolation : " + str);
 		Matcher matcher = INTERPOLATION.matcher(str);

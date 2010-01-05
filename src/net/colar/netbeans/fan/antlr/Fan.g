@@ -381,7 +381,7 @@ g_try		:	KW_TRY ((bracketL)=>try_long | stmtList) ((KW_CATCH)=>g_catch)* ((KW_FI
 try_long	:	multiStmt;
 exprStmt	:	expr eos;
 localDef	:	(typeId (AS_INIT_VAL expr)? eos)
-				-> ^(AST_LOCAL_DEF typeId (AS_INIT_VAL expr)? eos?);
+				-> ^(AST_LOCAL_DEF typeId expr? eos?);
 forInit 	:	forInitDef | expr;
 forInitDef	:	typeId (AS_INIT_VAL expr)?;
 // catch is a reserved antlr keyword

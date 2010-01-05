@@ -2,7 +2,10 @@ package net.colar.netbeans.fan.indexer;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
@@ -618,12 +621,23 @@ public class FanJarsIndexer implements FileChangeListener
 		Class c = classesCache.get(qualifiedType);
 		if (c != null)
 		{
-			slots.addAll(Arrays.asList(c.getDeclaredConstructors()));
-			slots.addAll(Arrays.asList(c.getDeclaredMethods()));
-			slots.addAll(Arrays.asList(c.getDeclaredFields()));
+			slots.addAll(Arrays.asList(c.getConstructors()));
+			slots.addAll(Arrays.asList(c.getMethods()));
+			slots.addAll(Arrays.asList(c.getFields()));
 			//c.getDeclaredAnnotations();
 		}
 		return slots;
+	}
+
+	public String getReturnType(Member member)
+	{
+		if(member instanceof Constructor)
+			return member.getClass().getName();
+		if(member instanceof Method)
+			return ((Method)member).getReturnType().getName();
+		if(member instanceof Field)
+			return ((Field)member).getType().getName();
+		return FanIndexer.UNRESOLVED_TYPE;
 	}
 
 	/*********************************************************************

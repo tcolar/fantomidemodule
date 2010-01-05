@@ -134,7 +134,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public String document(ParserResult result, ElementHandle handle)
 	{
-		String doc = "";
+		String doc = null;
 		switch (docType)
 		{
 			case POD:
@@ -297,7 +297,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					if (type.isStaticContext() == isStatic)
 					{
 						proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
-						// no javadoc for now
+						// TODO: javadoc for types/slots
 						docType = DocTypes.NA;
 					}
 				}
@@ -515,7 +515,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				FanUtilities.GENERIC_LOGGER.info("Call separator not found !");
 				return;
 			}
-			FanResolvedType type = FanResolvedType.makeFromExpr(result, exprNode, index);
+			FanResolvedType type = FanResolvedType.makeFromExpr(result.getRootScope(), result, exprNode, index);
 			FanUtilities.GENERIC_LOGGER.debug("Type: " + type.toString());
 			if (type.isResolved())
 			{

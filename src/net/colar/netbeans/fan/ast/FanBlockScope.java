@@ -57,11 +57,21 @@ public class FanBlockScope extends FanAstScope
 						CommonTree name=(CommonTree)child.getFirstChildWithType(FanParser.AST_ID);
 						CommonTree type=(CommonTree)child.getFirstChildWithType(FanParser.AST_TYPE);
 						String nm=FanLexAstUtils.getNodeContent(result, name);
-						FanResolvedType resolved = FanResolvedType.makeFromSimpleTypeWithWarning(scope, type);
+						FanResolvedType resolved = FanResolvedType.makeUnresolved();
+						if(type==null || type.isNil())
+						{
+							//TODO: resolving infered types
+							CommonTree expr=(CommonTree)child.getFirstChildWithType(FanParser.AST_TERM_EXPR);
+							//FanLexAstUtils.dumpTree(child, 0);
+							if(expr != null)
+								resolved = FanResolvedType.makeFromExpr(scope.getRoot(), result, expr, expr.getTokenStartIndex()); // ??
+						}
+						else
+						{
+							resolved = FanResolvedType.makeFromSimpleTypeWithWarning(scope, type);
+						}
 						FanAstScopeVar var = new FanAstScopeVar(scope, node, nm, resolved);
 						scope.addScopeVar(var, true);
-						//if(type==null)
-						//TODO: resolve infered types
 						break;
 					// Warn of incomplete items
 					case FanParser.AST_INC_DOTCALL:

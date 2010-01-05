@@ -72,6 +72,7 @@ public class FanModuleInstall extends ModuleInstall
 		try
 		{
 			FanIndexer.shutdown();
+			Thread.sleep(250);
 			JOTPersistanceManager.getInstance().destroy();
 			JOTLogger.destroy();
 		} catch (Exception e)

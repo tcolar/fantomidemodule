@@ -4,6 +4,9 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import fan.sys.MapType;
+import fan.sys.Type;
+import java.lang.reflect.Member;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanUtilities;
@@ -33,7 +36,7 @@ public class FanResolvedType
 	public FanResolvedType(String qualifiedType)
 	{
 		this.qualifiedType = qualifiedType;
-		if (qualifiedType != null && ! qualifiedType.equals(FanIndexer.UNRESOLVED_TYPE))
+		if (qualifiedType != null && !qualifiedType.equals(FanIndexer.UNRESOLVED_TYPE))
 		{
 			dbType = FanType.findByQualifiedName(qualifiedType);
 		} else
@@ -87,13 +90,8 @@ public class FanResolvedType
 		{
 			return makeUnresolved();
 		}
-		// TODO: deal with whole grammar !
-		// can be complex: typeRoot  SP_QMARK? (LIST_TYPE SP_QMARK?)*
-		// typeRoot	:	mapType | nonMapType;
-		// nonMapType	:	funcType | simpleType;
 		//TODO: formals, functiontype, assignedType
 
-		// TODO: Only works for super simple basic types
 		FanRootScope root = scope.getRoot();
 		String type = FanLexAstUtils.getNodeContent(root.getParserResult(), node).trim();
 
@@ -116,34 +114,34 @@ public class FanResolvedType
 		CommonTree map = (CommonTree) node.getFirstChildWithType(FanParser.AST_MAP);
 		FanResolvedType resolved = makeUnresolved();
 		// TODO Deal with maps
-		/*if (map != null)
+		if (map != null)
 		{
-		CommonTree keyNode = (CommonTree) map.getChild(0);
-		CommonTree valueNode = (CommonTree) map.getChild(1);
-		if (keyNode != null && valueNode != null)
-		{
-		// Find key / value type
-		FanResolvedType keyType = makeFromSimpleType(scope, keyNode).getType();
-		FanResolvedType valueType = makeFromSimpleType(scope, valueNode).getType();
-		if (keyType.isResolved() && valueType.isResolved())
-		{
-		MapType mapType = new MapType(keyType, valueType);
-		resolved = new FanResolvedType(mapType.qname());
-		}
-		}
-		} else*/
+			CommonTree keyNode = (CommonTree) map.getChild(0);
+			CommonTree valueNode = (CommonTree) map.getChild(1);
+			if (keyNode != null && valueNode != null)
+			{
+				// Find key / value type
+				FanResolvedType keyType = makeFromSimpleType(scope, keyNode);
+				FanResolvedType valueType = makeFromSimpleType(scope, valueNode);
+				if (keyType.isResolved() && valueType.isResolved())
+				{
+					MapType mapType = new MapType(Type.find(keyType.getQualifiedType()), Type.find(valueType.getQualifiedType()));
+					resolved = new FanResolvedType(mapType.qname());
+				}
+			}
+		} else
 		{
 			// "regular" type
 			resolved = root.lookupUsing(type);
 		}
 		// TODO: list
-		/*if (list)
+		if (list)
 		{
-		if (resolved.isResolved())
-		{
-		resolved = makeFromFanType(resolved.getType().getType().toListOf());
+			if (resolved.isResolved())
+			{
+				resolved = new FanResolvedType(Type.find(resolved.getQualifiedType()).toListOf().qname());
+			}
 		}
-		}*/
 
 		resolved.setNullableContext(nullable);
 		//System.out.println("Type: " + type + " resolved to: " + resolved);
@@ -151,9 +149,9 @@ public class FanResolvedType
 		return resolved;
 	}
 
-	public static FanResolvedType makeFromExpr(FanParserResult result, CommonTree exprNode, int lastGoodTokenIndex)
+	public static FanResolvedType makeFromExpr(FanRootScope rootScope, FanParserResult result, CommonTree exprNode, int lastGoodTokenIndex)
 	{
-		FanAstScope scope = result.getRootScope().findClosestScope(exprNode);
+		FanAstScope scope = rootScope.findClosestScope(exprNode);
 		FanUtilities.GENERIC_LOGGER.debug("** scope: " + scope);
 		FanResolvedType type = resolveExpr(result, scope, null, exprNode, lastGoodTokenIndex);
 		if (type == null)
@@ -174,10 +172,10 @@ public class FanResolvedType
 	 * @return
 	 */
 	private static FanResolvedType resolveExpr(FanParserResult result, FanAstScope scope,
-			FanResolvedType baseType, CommonTree node, int index)
+		FanResolvedType baseType, CommonTree node, int index)
 	{
 		// if unresolveable no point searching further
-		if (baseType != null && ! baseType.isResolved())
+		if (baseType != null && !baseType.isResolved())
 		{
 			return baseType;
 		}
@@ -205,11 +203,14 @@ public class FanResolvedType
 				baseType = resolveExpr(result, scope, null, type, index);
 				baseType = resolveExpr(result, scope, baseType, idExpr, index);
 				break;
+			case FanParser.AST_STR:
+				baseType = new FanResolvedType("sys::Str");
+				break;
 			case FanParser.AST_ID:
 				if (baseType == null)
 				{
 					baseType = scope.resolveVar(t);
-					if ( ! baseType.isResolved())
+					if (!baseType.isResolved())
 					{
 						// Try a static type (ex: Str.)
 						baseType = makeFromSimpleType(scope, node);
@@ -217,13 +218,38 @@ public class FanResolvedType
 					}
 				} else
 				{
-					FanSlot slot = FanSlot.findByTypeAndName(baseType.getQualifiedType(), t);
-					if (slot != null)
+					if (baseType.isResolved() && baseType.getDbType().isJava())
 					{
-						baseType = new FanResolvedType(slot.returnedType);
+						// java slots
+						List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(baseType.getQualifiedType());
+						boolean found = false;
+						// Returrning the first match .. because java has overloading this could be wrong
+						// However i assume overloaded methods return the same type (If it doesn't too bad, it's ugly coe anyway :) )
+						for (Member member : members)
+						{
+							if (member.getName().equalsIgnoreCase(t))
+							{
+								baseType = new FanResolvedType(FanIndexerFactory.getJavaIndexer().getReturnType(member));
+								found = true;
+								break;
+							}
+						}
+						if (!found)
+						{
+							baseType = makeUnresolved();
+						}
+
 					} else
 					{
-						baseType = makeUnresolved();
+						// Fan slots
+						FanSlot slot = FanSlot.findByTypeAndName(baseType.getQualifiedType(), t);
+						if (slot != null)
+						{
+							baseType = new FanResolvedType(slot.returnedType);
+						} else
+						{
+							baseType = makeUnresolved();
+						}
 					}
 				}
 				break;
