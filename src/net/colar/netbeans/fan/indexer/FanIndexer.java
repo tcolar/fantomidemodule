@@ -55,6 +55,7 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
+//import org.netbeans.modules.java.source.indexing.JavaBinaryIndexer;
 
 /**
  * This indexer is backed by a DB(H2 database)
@@ -76,10 +77,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	private final FanIndexerThread indexerThread;
 	public static volatile boolean shutdown = false;
 	Hashtable<String, Long> toBeIndexed = new Hashtable<String, Long>();
+	private FanJarsIndexer jarsIndexer;
 
 	public FanIndexer()
 	{
 		super();
+
 		indexerThread = new FanIndexerThread();
 		indexerThread.start();
 		// start the indexing thread
@@ -91,6 +94,8 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		// sources indexes will be called  through scanStarted()
 		// TODO: cleanup docs that don't exist any more docs (binaries & sources)?
 		// TODO: Log db stats (# of docs, types, slots)
+		jarsIndexer = new FanJarsIndexer();
+		jarsIndexer.indexJars(true);
 	}
 
 	@Override
@@ -98,18 +103,22 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		for (Indexable indexable : iterable)
 		{
-			requestIndexing(indexable.getURL().getPath());
+			requestSrcIndexing(indexable.getURL().getPath());
 		}
 	}
 
-	public void requestIndexing(String path)
+	public void requestSrcIndexing(String path)
 	{
-		toBeIndexed.put(path, new Date().getTime());
+		FileObject fo = FileUtil.toFileObject(new File(path));
+		if (! FileUtil.isParentOf(FanPlatform.getInstance().getFanHome(), fo))
+		{
+			toBeIndexed.put(path, new Date().getTime());
+		}
 	}
 
 	// TODO: It would be MUCH faster to just parse what we need (types/slots)
 	// Might need a separte ANTLR grammar though.
-	public void index(String path)
+	public void indexSrc(String path)
 	{
 		long then = new Date().getTime();
 		log.debug("Indexing requested for: " + path);
@@ -133,12 +142,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		long now = new Date().getTime();
 		log.debug("Indexing - parsing done in " + (now - then) + " ms for: " + path);
 		// Index the parsed doc
-		index(path, result);
+		indexSrc(path, result);
 		now = new Date().getTime();
 		log.debug("Indexing completed in " + (now - then) + " ms for: " + path);
 	}
 
-	public void index(String path, Result parserResult)
+	public void indexSrc(String path, Result parserResult)
 	{
 		log.debug("Indexing parsed result for : " + path);
 
@@ -468,7 +477,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				ZipFile zpod = new ZipFile(pod);
 				FPod fpod = new FPod(null, zpod, null);
 				fpod.readFully();
-				log.debug("Indexing pod: " + pod);
+				log.info("Indexing pod: " + pod);
 				// Create the document
 				doc = FanDocument.findOrCreateOne(null, pod);
 				if (doc.isNew())
@@ -671,6 +680,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public static void shutdown()
 	{
+		FanJarsIndexer.shutdown();
 		shutdown = true;
 	}
 
@@ -840,7 +850,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					if (l.longValue() < now - 2000)
 					{
 						toBeIndexed.remove(path);
-						index(path);
+						indexSrc(path);
 					}
 				}
 			}
@@ -900,5 +910,4 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			}
 		}
 	}
-
 }

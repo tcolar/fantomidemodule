@@ -23,7 +23,8 @@ public class FanTypeScope extends FanAstScope
 	public enum TypeKind
 	{
 
-		CLASS(1), MIXIN(2), ENUM(3);
+		CLASS(1), MIXIN(2), ENUM(3),
+		JAVA_CLASS(21), JAVA_INTERFACE(22),	JAVA_ANNOTATION(23), JAVA_ENUM(24);
 		int val;
 
 		private TypeKind(int i)
@@ -101,7 +102,7 @@ public class FanTypeScope extends FanAstScope
 			{
 				case FanParser.AST_FIELD:
 					FanAstField field = new FanAstField(this, child);
-					if ( ! field.getType().isResolved())
+					if (!field.getType().isResolved())
 					{
 						//TODO: Propose to auto-add using statements (Hints)
 						getRoot().addError("Unresolved field type", child);
@@ -122,23 +123,27 @@ public class FanTypeScope extends FanAstScope
 
 	private boolean hasInheritedClass()
 	{
-		for(FanResolvedType type : inheritedItems)
+		for (FanResolvedType type : inheritedItems)
 		{
-			if(! type.isResolved() && type.getDbType().isClass())
+			if (!type.isResolved() && type.getDbType().isClass())
+			{
 				return true;
-		}
-		return false;
-	}
-	private boolean hasInheritedItem(String qualifiedName)
-	{
-		for(FanResolvedType type : inheritedItems)
-		{
-			if(type.getQualifiedType().equals(qualifiedName))
-				return true;
+			}
 		}
 		return false;
 	}
 
+	private boolean hasInheritedItem(String qualifiedName)
+	{
+		for (FanResolvedType type : inheritedItems)
+		{
+			if (type.getQualifiedType().equals(qualifiedName))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	private void parseInheritance(CommonTree inheritance)
 	{
@@ -152,7 +157,7 @@ public class FanTypeScope extends FanAstScope
 					FanResolvedType inhType = FanResolvedType.makeFromSimpleType(this, child);
 					String text = FanLexAstUtils.getNodeContent(getRoot().getParserResult(), child);
 					// WATCHME inhType.setTypeText(text);
-					if ( ! inhType.isResolved())
+					if (!inhType.isResolved())
 					{
 						getRoot().addError("Unresolved inherited item!", child);
 					} else
@@ -247,5 +252,4 @@ public class FanTypeScope extends FanAstScope
 		// default is public
 		return ModifEnum.PUBLIC.value();
 	}
-
 }

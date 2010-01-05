@@ -228,7 +228,8 @@ public class FanType extends JOTModel
 		try
 		{
 			Vector<String> results = new Vector<String>();
-			JOTQueryResult result = JOTQueryBuilder.selectQuery(null, FanType.class).find();
+			JOTSQLCondition cond = new JOTSQLCondition("kind", JOTSQLCondition.IS_GREATER, 20);
+			JOTQueryResult result = JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).find();
 			for (FanType type : (Vector<FanType>) result.getAllResults())
 			{
 				if (!results.contains(type.getPod()))
@@ -255,12 +256,13 @@ public class FanType extends JOTModel
 		}
 	}
 
-	public static Vector<FanType> findAllTypes(String prefix)
+	public static Vector<FanType> findAllFantomTypes(String prefix)
 	{
 		try
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("simpleName", JOTSQLCondition.IS_LIKE, prefix + "%");
-			return JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).find().getAllResults();
+			JOTSQLCondition cond2 = new JOTSQLCondition("kind", JOTSQLCondition.IS_GREATER, 20);
+			return JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).where(cond2).find().getAllResults();
 		} catch (Exception e)
 		{
 			throw new RuntimeException(e);

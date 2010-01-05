@@ -254,7 +254,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		Vector<FanType> types;
 		if (podName == null)
 		{
-			types = FanType.findAllTypes(prefix);
+			types = FanType.findAllFantomTypes(prefix);
 		} else
 		{
 			types = FanType.findPodTypes(podName, prefix);
