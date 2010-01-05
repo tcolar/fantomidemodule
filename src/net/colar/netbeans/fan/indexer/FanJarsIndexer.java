@@ -2,17 +2,12 @@ package net.colar.netbeans.fan.indexer;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.TypeVariable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -23,9 +18,6 @@ import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
-import net.colar.netbeans.fan.indexer.model.FanMethodParam;
-import net.colar.netbeans.fan.indexer.model.FanModelConstants;
-import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
@@ -53,7 +45,8 @@ public class FanJarsIndexer implements FileChangeListener
 	public static volatile boolean shutdown = false;
 	Hashtable<String, Long> toBeIndexed = new Hashtable<String, Long>();
 	private FanJavaClassLoader cl;
-	private List<String> classes = new ArrayList<String>();
+	private ArrayList<String> classes = new ArrayList<String>();
+	private HashMap<String, Class> classesCache = new HashMap<String, Class>();
 
 	public FanJarsIndexer()
 	{
@@ -338,7 +331,7 @@ public class FanJarsIndexer implements FileChangeListener
 			dbType.save();
 			// Slots
 			// Try to reuse existing db entries.
-			Vector<FanSlot> currentSlots = FanSlot.findAllForType(dbType.getId());
+			/*Vector<FanSlot> currentSlots = FanSlot.findAllForType(dbType.getId());
 			Vector<Member> slots = new Vector();
 			slots.addAll(Arrays.asList(c.getDeclaredFields()));
 			slots.addAll(Arrays.asList(c.getDeclaredMethods()));
@@ -448,7 +441,7 @@ public class FanJarsIndexer implements FileChangeListener
 			{
 				s.delete();
 			}
-
+*/
 		} catch (Exception e)
 		{
 			log.exception("Indexing failed for: " + c, e);
@@ -463,6 +456,10 @@ public class FanJarsIndexer implements FileChangeListener
 			{
 				log.exception("Indexing 'rollback' failed for: " + c, e);
 			}
+		}
+		finally
+		{
+			//classesCache.clear();
 		}
 	}
 
