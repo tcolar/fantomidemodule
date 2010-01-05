@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -45,7 +44,10 @@ public class FanJarsIndexer implements FileChangeListener
 	public static volatile boolean shutdown = false;
 	Hashtable<String, Long> toBeIndexed = new Hashtable<String, Long>();
 	private FanJavaClassLoader cl;
+	// temp.
 	private ArrayList<String> classes = new ArrayList<String>();
+	// In memory caches
+	private List<String> packagesCache = new ArrayList<String>();
 	private Hashtable<String, Class> classesCache = new Hashtable<String, Class>();
 
 	public FanJarsIndexer()
@@ -460,6 +462,7 @@ public class FanJarsIndexer implements FileChangeListener
 		finally
 		{
 			// cache is dirty.
+			packagesCache.clear();
 			classesCache.clear();
 		}
 	}
