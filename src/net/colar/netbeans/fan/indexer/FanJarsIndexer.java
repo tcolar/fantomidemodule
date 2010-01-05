@@ -46,7 +46,7 @@ public class FanJarsIndexer implements FileChangeListener
 	Hashtable<String, Long> toBeIndexed = new Hashtable<String, Long>();
 	private FanJavaClassLoader cl;
 	private ArrayList<String> classes = new ArrayList<String>();
-	private HashMap<String, Class> classesCache = new HashMap<String, Class>();
+	private Hashtable<String, Class> classesCache = new Hashtable<String, Class>();
 
 	public FanJarsIndexer()
 	{
@@ -459,7 +459,8 @@ public class FanJarsIndexer implements FileChangeListener
 		}
 		finally
 		{
-			//classesCache.clear();
+			// cache is dirty.
+			classesCache.clear();
 		}
 	}
 
