@@ -400,7 +400,7 @@ public class FanJarsIndexer implements FileChangeListener
 				dbSlot.setIsNullable(true);
 
 				dbSlot.save();
-
+//TODO: CTOR too !
 				// deal with parameters of method/ctor
 				if (slot instanceof Method)
 				{
