@@ -212,8 +212,8 @@ public class FanResolvedType
 				baseType = new FanResolvedType("sys::Bool");
 				break;
 			case FanParser.NUMBER:
-				// TODO: parse for Int, Float, Long, Duration etc...
-				baseType = new FanResolvedType("sys::Int");
+				String ftype = parseNumberType(node.getText());
+				baseType = new FanResolvedType(ftype);
 				break;
 			case FanParser.URI:
 				// TODO: parse for Int, Float, Long, Duration etc...
@@ -318,5 +318,18 @@ public class FanResolvedType
 		staticContext = b;
 	}
 
-	
+	/**
+	 * Parse number litterals
+	 * http://fantom.org/doc/docLang/Literals.html#int
+	 * @param text
+	 * @return
+	 */
+	private static String parseNumberType(String text)
+	{
+		// TODO: parse for Int, Float, Long, Duration etc...
+
+		return "sys::Int";
+	}
+
+
 }
