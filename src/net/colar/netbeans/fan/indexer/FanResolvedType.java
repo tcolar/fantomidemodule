@@ -192,7 +192,7 @@ public class FanResolvedType
 			return baseType;
 		}
 		List<CommonTree> children = node.getChildren();
-		System.out.println("Node type: "+t+" -> "+node.getText()+"("+node.getType()+")");
+		//System.out.println("Node type: "+t+" -> "+node.getText()+"("+node.getType()+")");
 		switch (node.getType())
 		{
 			case FanParser.AST_TERM_EXPR:
@@ -222,22 +222,35 @@ public class FanResolvedType
 				baseType = new FanResolvedType(ftype);
 				break;
 			case FanParser.URI:
-				// TODO: parse for Int, Float, Long, Duration etc...
 				baseType = new FanResolvedType("sys::Uri");
 				break;
-			//TODO: named super / this, it
 			case FanParser.KW_IT:
 				baseType = new FanResolvedType(resolveItType(scope));
 				break;
 			case FanParser.KW_THIS:
 				baseType = new FanResolvedType(resolveThisType(scope));
 				break;
-			case FanParser.KW_SUPER:
-				// TODO: != super VS namedSuper
-				//scope.getParentType();
-				// Do nothing
+			case FanParser.AST_NAMED_SUPER:
+				//TODO
 				break;
-			//TODO: list, map, range, symbol, slot, type
+			case FanParser.KW_SUPER:
+				//TODO
+				break;
+			case FanParser.AST_LIST:
+				//TODO
+				break;
+			case FanParser.AST_MAP:
+				//TODO
+				break;
+			case FanParser.AST_TYPE_LIT:
+				//TODO
+				break;
+			case FanParser.AST_SLOT_LIT:
+				//TODO
+				break;
+			case FanParser.AST_SYMBOL:
+				//TODO
+				break;
 			case FanParser.AST_ID:
 				if (baseType == null)
 				{
@@ -285,9 +298,8 @@ public class FanResolvedType
 					}
 				}
 				break;
-			// TODO case itBlock :  skip;
 			default:
-				// "Meaningless" nodes (interm of expression resolving)
+				// "Meaningless" nodes (in term of expression resolving)
 				if (node.getChildCount() > 0)
 				{
 					baseType = resolveExpr(result, scope, baseType, (CommonTree) node.getChild(0), index);

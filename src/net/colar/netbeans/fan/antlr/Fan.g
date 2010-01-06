@@ -104,6 +104,12 @@ AST_STATIC_CALL;
 AST_USING_POD;
 AST_MAP;
 AST_LOCAL_DEF;
+AST_TYPE_LIT;
+AST_SLOT_LIT;
+AST_SYMBOL;
+AST_NAMED_SUPER;
+AST_LIST;
+AST_MAP;
 // help getting valid AST for completion: (INC means incomplete)
 AST_INC_USING;
 AST_INC_DOTCALL;
@@ -478,13 +484,19 @@ literal 	:	KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | UR
 			slotLiteral | typeLiteral | list | map | symbLiteral | simple;
 strs		:	(qs=QUOTSTR | s=STR)
 				-> ^(AST_STR $s)? ^(AST_STR $qs)?;
-typeLiteral	:  	type {notAfterEol()}? OP_POUND;
-slotLiteral	:  	type? OP_POUND {notAfterEol()}? id;
-symbLiteral :   AT (id SP_COLON SP_COLON)? id;
-namedSuper 	:	simpleType DOT KW_SUPER;
-list 		:	(type {notAfterEol()}?)? sq_bracketL listItems sq_bracketR;
+typeLiteral	:  	(type {notAfterEol()}? OP_POUND)
+				-> ^(AST_TYPE_LIT type OP_POUND);
+slotLiteral	:  	(type? OP_POUND {notAfterEol()}? id)
+				-> ^(AST_SLOT_LIT type? OP_POUND id);
+symbLiteral :   (AT (id SP_COLON SP_COLON)? id)
+				-> ^(AST_SYMBOL AT (id SP_COLON SP_COLON)? id);
+namedSuper 	:	(simpleType DOT KW_SUPER)
+				-> ^(AST_NAMED_SUPER simpleType DOT KW_SUPER);
+list 		:	((type {notAfterEol()}?)? sq_bracketL listItems sq_bracketR)
+				-> ^(AST_LIST type sq_bracketL listItems sq_bracketR);
 listItems 	:	(expr (SP_COMMA expr )* SP_COMMA?) | SP_COMMA;
-map 		:	(mapType {notAfterEol()}?)? sq_bracketL mapItems sq_bracketR;
+map 		:	((mapType {notAfterEol()}?)? sq_bracketL mapItems sq_bracketR)
+				-> ^(AST_MAP mapType sq_bracketL mapItems sq_bracketR);
 mapItems 	:	(mapPair (SP_COMMA mapPair)* SP_COMMA?) | SP_COLON;
 mapPair		:	expr SP_COLON expr;
 simple		:	type parL expr parR;
