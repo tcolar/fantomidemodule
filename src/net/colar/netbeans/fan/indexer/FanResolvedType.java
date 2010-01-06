@@ -299,14 +299,13 @@ public class FanResolvedType
 				}
 				break;
 			default:
-				// "Meaningless" nodes (in term of expression resolving)
+				// "Meaningless" 'wrapper' nodes (in term of expression resolving)
 				if (node.getChildCount() > 0)
 				{
 					baseType = resolveExpr(result, scope, baseType, (CommonTree) node.getChild(0), index);
 				} else
 				{
 					FanUtilities.GENERIC_LOGGER.info("Don't know how to resolve: " + t + " " + node.toStringTree());
-					//baseType = makeUnresolved();
 				}
 				break;
 		}
