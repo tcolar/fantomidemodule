@@ -2,7 +2,7 @@ Review all the todos.
 
 Fan slot doc
 Inference
-super.
+super. / it / this (it blocks/closures)
 
 Indexing:
 	-> also save list of what's being used for quick where-used lookups ?

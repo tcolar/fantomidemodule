@@ -14,12 +14,15 @@ import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanRootScope;
+import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
  * Resolved type
+ * Store infos of a resolved type
+ * Also contains the factory methods / logic to resolve a type expr.
  * @author tcolar
  */
 public class FanResolvedType
@@ -211,6 +214,9 @@ public class FanResolvedType
 			case FanParser.KW_FALSE:
 				baseType = new FanResolvedType("sys::Bool");
 				break;
+			case FanParser.CHAR:
+				baseType = new FanResolvedType("sys::Int");
+				break;
 			case FanParser.NUMBER:
 				String ftype = parseNumberType(node.getText());
 				baseType = new FanResolvedType(ftype);
@@ -220,12 +226,17 @@ public class FanResolvedType
 				baseType = new FanResolvedType("sys::Uri");
 				break;
 			//TODO: named super / this, it
-			//case FanParser.KW_IT:
-			//case FanParser.KW_THIS:
-			//case FanParser.KW_SUPER:
+			case FanParser.KW_IT:
+				baseType = new FanResolvedType(resolveItType(scope));
+				break;
+			case FanParser.KW_THIS:
+				baseType = new FanResolvedType(resolveThisType(scope));
+				break;
+			case FanParser.KW_SUPER:
+				// TODO: != super VS namedSuper
 				//scope.getParentType();
 				// Do nothing
-				//break;
+				break;
 			//TODO: list, map, range, symbol, slot, type
 			case FanParser.AST_ID:
 				if (baseType == null)
@@ -326,9 +337,36 @@ public class FanResolvedType
 	 */
 	private static String parseNumberType(String text)
 	{
-		// TODO: parse for Int, Float, Long, Duration etc...
+		System.out.println("text: "+text);
+		text = text.toLowerCase();
+		if(text.endsWith("ns") || text.endsWith("ms")||
+				text.endsWith("sec") || text.endsWith("min")||
+				text.endsWith("hr") || text.endsWith("day"))
+			return "sys::Duration";
+		if(text.startsWith("0x")) // hex
+			return "sys::Int"; // char
+		if(text.endsWith("f"))
+			return "sys::Float";
+		if(text.endsWith("d") || text.indexOf(".")!=-1)
+			return "sys::Decimal";
 		return "sys::Int";
 	}
 
+	public static String resolveThisType(FanAstScope scope)
+	{
+		// TODO: does 'this' always refer to the type even when in it block ?
+		FanTypeScope tscope = scope.getTypeScope();
+		if(tscope==null)
+			return FanIndexer.UNRESOLVED_TYPE;
+		return tscope.getQName();
+	}
 
+	public static String resolveItType(FanAstScope scope)
+	{
+		// TODO: find the it block
+		//FanTypeScope tscope = scope.getTypeScope();
+		//if(tscope==null)
+		return FanIndexer.UNRESOLVED_TYPE;
+		//return tscope.getQName();
+	}
 }

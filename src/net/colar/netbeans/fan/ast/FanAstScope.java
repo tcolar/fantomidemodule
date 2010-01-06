@@ -80,7 +80,7 @@ public abstract class FanAstScope
 		//System.out.println("Adding scope var: " + var);
 		String name = var.getName();
 		// Can't have duplicated slot name in scope no matter what
-		if(hasScopevar(name))
+		if (hasScopevar(name))
 		{
 			getRoot().addError("Duplicated name in scope: " + name, var.getNode());
 			return;
@@ -179,4 +179,14 @@ public abstract class FanAstScope
 	}
 
 	protected abstract void parse();
+
+	public FanTypeScope getTypeScope()
+	{
+		FanAstScope current = this;
+		while (current !=null && !(current instanceof FanTypeScope))
+		{
+			current = current.getParent();
+		}
+		return (current instanceof FanTypeScope)?(FanTypeScope)current:null;
+	}
 }

@@ -1,39 +1,37 @@
-using docLang
-using fwt
-using flux::JumpNextCommand
-using [java] java.io::File as JFile
 
-class IDETest : File, TableModel, TreeModel, JFile
+class IDETest
 {
-  Str string := "blah"
-  Int number := 25
-
-
-  Void doit(Str s, Int i, Int s2)
+  Void doit(Str s, Int i)
   {
-     bool := true
+    bool := true
     string := "dfdff"
     uri := `fdsdfdsf`
     int := '\u1234'
     int2 := '\n'
-    float := 25.3f // f or F
-    decimal := 4.0 // anyhting with . but not a float
-    decimal2 := 4d // (D or d))
-    duration := 32ms // end with ns,ms,sec,min,hr,day
-    type1 := Str#
-    type2 := sys::Str#
-    symbol := @symbol
-    range := 0..5
-    range2 := 0..<5
+    float := 25.3f
+    decimal := 4.0
+    decimal2 := 4.53d
+    duration := 32ms
+    type1 := Str# // FIXME
+    type2 := sys::Str# // FIXME
+    symbol := @serializable //FIXME
+    range := 0..5 //FIXME -> Int
+    range2 := 0..<5 //FIXME -> Int
+    list := [,]//FIXME
+    list2 := [5,6]//FIXME
+    list3 := ["gg","xx"]//FIXME
+    map := [:]//FIXME
+    map2 := ["toto":25]//FIXME
+    this_ := this//FIXME
+    super_ := super//FIXME
+    super2_ := Obj.super
+
+    File f := File(``)
+    {
+        it_ := it//FIXME
+    }
     //TODO: list, map
 
-
-string.capitalize.contains(s2.abs).hash
-    Actor.sleep(i.inverse)
-    JFile.listRoots
-    number.div(i.decrement)
-    Int s := 23
-    s.abs
   }
 }
 
