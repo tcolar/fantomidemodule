@@ -327,7 +327,6 @@ public class FanResolvedType
 	private static String parseNumberType(String text)
 	{
 		// TODO: parse for Int, Float, Long, Duration etc...
-
 		return "sys::Int";
 	}
 
