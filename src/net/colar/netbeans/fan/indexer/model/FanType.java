@@ -222,6 +222,20 @@ public class FanType extends JOTModel
 		return findByQualifiedName(qname);
 	}
 
+	public static FanType findByID(long id)
+	{
+		try
+		{
+			JOTSQLCondition cond = new JOTSQLCondition("ID", JOTSQLCondition.IS_EQUAL, id);
+			return (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOne();
+		} catch (Exception e)
+		{
+			JOTLogger.logException(FanType.class, "findByID error", e);
+		}
+		return null;
+	}
+
+
 	public static Vector<String> findAllPackagesNames()
 	{
 		try

@@ -7,6 +7,7 @@ package net.colar.netbeans.fan.indexer;
 import fan.sys.Buf;
 import fan.sys.FanObj;
 import fan.sys.Pod;
+import fan.sys.Slot;
 import fan.sys.Type;
 import fanx.fcode.FConst;
 import fanx.fcode.FField;
@@ -732,7 +733,16 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public static String getSlotDoc(FanSlot slot)
 	{
-		// TODO: slot doc !
+		FanType type = FanType.findByID(slot.getTypeId());
+		if (type != null)
+		{
+			String sig = type.getQualifiedName() + "." + slot.getName();
+			Slot fslot = Slot.find(sig);
+			if (fslot != null)
+			{
+				return fanDocToHtml(fslot.doc());
+			}
+		}
 		return null;
 	}
 

@@ -189,6 +189,7 @@ public class FanResolvedType
 			return baseType;
 		}
 		List<CommonTree> children = node.getChildren();
+		System.out.println("Node type: "+t+" -> "+node.getText()+"("+node.getType()+")");
 		switch (node.getType())
 		{
 			case FanParser.AST_TERM_EXPR:
@@ -206,6 +207,26 @@ public class FanResolvedType
 			case FanParser.AST_STR:
 				baseType = new FanResolvedType("sys::Str");
 				break;
+			case FanParser.KW_TRUE:
+			case FanParser.KW_FALSE:
+				baseType = new FanResolvedType("sys::Bool");
+				break;
+			case FanParser.NUMBER:
+				// TODO: parse for Int, Float, Long, Duration etc...
+				baseType = new FanResolvedType("sys::Int");
+				break;
+			case FanParser.URI:
+				// TODO: parse for Int, Float, Long, Duration etc...
+				baseType = new FanResolvedType("sys::Uri");
+				break;
+			//TODO: named super / this, it
+			//case FanParser.KW_IT:
+			//case FanParser.KW_THIS:
+			//case FanParser.KW_SUPER:
+				//scope.getParentType();
+				// Do nothing
+				//break;
+			//TODO: list, map, range, symbol, slot, type
 			case FanParser.AST_ID:
 				if (baseType == null)
 				{
@@ -296,4 +317,6 @@ public class FanResolvedType
 	{
 		staticContext = b;
 	}
+
+	
 }
