@@ -28,6 +28,7 @@ import net.colar.netbeans.fan.indexer.FanJarsIndexer;
 import net.colar.netbeans.fan.indexer.FanResolvedType;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
+import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
@@ -305,7 +306,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			}
 		} else
 		{
-			Vector<FanSlot> slots = FanSlot.findAllForType(type.getDbType().getId());
+			// TODO: inherited types
+			Vector<FanSlot> slots = getAllSlotsForType(type.getDbType());
 			for (FanSlot slot : slots)
 			{
 				if (slot.getName().toLowerCase().startsWith(prefix))
@@ -542,5 +544,55 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				proposals.add(prop);
 			}
 		}
+	}
+
+	private Vector<FanSlot> getAllSlotsForType(FanType dbType)
+	{
+		Vector<String> types = new Vector<String>();
+		return getAllSlotsForType(dbType, types);
+	}
+	/**
+	 * Recursive
+	 * Get all slots, including inheritance
+	 * @param dbType
+	 * @return
+	 */
+	private Vector<FanSlot> getAllSlotsForType(FanType dbType, Vector<String> doneTypes)
+	{
+		doneTypes.add(dbType.getQualifiedName());
+		Vector<FanSlot> slots = FanSlot.findAllForType(dbType.getId());
+		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, dbType.getQualifiedName());
+		// get inherited slots
+		for (FanTypeInheritance inh : inhs)
+		{
+			String typeName =inh.getMainType();
+			System.out.println(dbType.getQualifiedName()+":"+typeName);
+			// If a type was already done, do not do again -> avoid cyclic dependencies etc...
+			if(doneTypes.contains(typeName))
+				continue;
+			FanType type = FanType.findByQualifiedName(typeName);
+			// add slots that are not already in
+			if(type!=null)
+			{
+				Vector<FanSlot> subSlots = getAllSlotsForType(type);
+				for(FanSlot s: subSlots)
+				{
+					boolean skip=false;
+					for(FanSlot slot : slots)
+					{
+						if(slot.name.equals(s.name))
+						{
+							skip=true;
+							break;
+						}
+					}
+					if( ! skip)
+					{
+						slots.add(s);
+					}
+				}
+			}
+		}
+		return slots;
 	}
 }

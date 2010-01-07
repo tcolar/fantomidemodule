@@ -6,8 +6,6 @@ Propose slots -> need to add inherited slots !
 
 closure vars .each |Str s| {s.blah} ?
 
-Some fileds are stored in the db as if they where methods !
-
 Unrecognized modifier: ublic
 
 ============= TODO Completion ===============================

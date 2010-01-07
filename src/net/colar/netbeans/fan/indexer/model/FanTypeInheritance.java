@@ -1,7 +1,6 @@
 /*
  * Thibaut Colar Dec 22, 2009
  */
-
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
@@ -48,10 +47,15 @@ public class FanTypeInheritance extends JOTModel
 		this.mainType = mainType;
 	}
 
-	public static Vector<FanTypeInheritance> findAllForMainType(JOTTransaction transaction, String mainType) throws Exception
+	public static Vector<FanTypeInheritance> findAllForMainType(JOTTransaction transaction, String mainType)
 	{
-		JOTSQLCondition cond = new JOTSQLCondition("mainType", JOTSQLCondition.IS_EQUAL, mainType);
-		return (Vector<FanTypeInheritance>)JOTQueryBuilder.selectQuery(transaction, FanTypeInheritance.class).where(cond).find().getAllResults();
+		try
+		{
+			JOTSQLCondition cond = new JOTSQLCondition("mainType", JOTSQLCondition.IS_EQUAL, mainType);
+			return (Vector<FanTypeInheritance>) JOTQueryBuilder.selectQuery(transaction, FanTypeInheritance.class).where(cond).find().getAllResults();
+		} catch (Exception e)
+		{
+		}
+		return new Vector<FanTypeInheritance>();
 	}
-	
 }
