@@ -4,7 +4,7 @@ Do a profiler session
 
 Deal with casting (Obj)   i as Obj
 Slot completion: for function propose toto.each |Str s->bool| {}   not toto.each(c)
-rewrite structure analyzer to use scope
+rewrite structure analyzer & scanner to use scope
 
 Unrecognized modifier: ublic
 
