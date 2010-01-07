@@ -83,13 +83,20 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	public FanIndexer()
 	{
 		super();
-
 		indexerThread = new FanIndexerThread();
 		indexerThread.start();
+		if (FanPlatform.getInstance(false).isConfigured())
+		{
+			indexAll(false);
+		}
+	}
+
+	public void indexAll(boolean background)
+	{
 		// start the indexing thread
 		// index Fantom libs right aways
 		long then = new Date().getTime();
-		indexFantomPods(false);
+		indexFantomPods(background);
 		long now = new Date().getTime();
 		log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");
 		// sources indexes will be called  through scanStarted()
@@ -542,9 +549,29 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					Vector<FanSlot> currentSlots = FanSlot.findAllForType(dbType.getId());
 					Vector<FSlot> slots = new Vector();
 					slots.addAll(Arrays.asList(type.fields));
-					slots.addAll(Arrays.asList(type.methods));
+					// It's a bit odd but type.methods has the fields in as well
+					// I guess because Fan creates "internal" field getter/setters ?
+					for (FMethod m : type.methods)
+					{
+						boolean isField = false;
+						for (FSlot s : slots)
+						{
+							if (s.name.equals(m.name))
+							{
+								isField = true;
+							}
+						}
+						if (!isField)
+						{
+							slots.add(m);
+						}
+					}
 					for (FSlot slot : slots)
 					{
+						if (typeRef.typeName.equals("Window") /*&& slot.name.endsWith("text")*/)
+						{
+							System.out.println(slot.name + "  " + slot.getClass().toString());
+						}
 						// determine kind of slot
 						FanModelConstants.SlotKind kind = FanModelConstants.SlotKind.FIELD;
 						FTypeRef retType = null;

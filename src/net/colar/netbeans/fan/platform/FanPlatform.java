@@ -4,7 +4,6 @@
  */
 package net.colar.netbeans.fan.platform;
 
-import fan.sys.Sys;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -283,9 +282,10 @@ public class FanPlatform
 
 	public void update()
 	{
+		//TODO: dialog to let the user it's gonna index for a while'
 		// called when FAN_HOME is changed/updated.
 		readSettings();
-		FanIndexerFactory.getIndexer().indexFantomPods(true);
+		FanIndexerFactory.getIndexer().indexAll(true);
 	}
 
 	public String getPodsDir()

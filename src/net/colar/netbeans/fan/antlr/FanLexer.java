@@ -1,4 +1,4 @@
-// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2010-01-06 15:32:06
+// $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2010-01-06 17:31:01
 package net.colar.netbeans.fan.antlr;
 import net.colar.netbeans.fan.FanParserResult;
 
