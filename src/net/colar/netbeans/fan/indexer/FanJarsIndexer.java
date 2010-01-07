@@ -82,6 +82,7 @@ public class FanJarsIndexer implements FileChangeListener
 
 	private void indexJar(String j)
 	{
+		FanIndexerFactory.getIndexer().warnIfNecessary();
 		log.info("Indexing jar: " + j);
 		if (j.toLowerCase().endsWith(".jar"))
 		{

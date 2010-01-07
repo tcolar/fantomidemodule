@@ -17,6 +17,7 @@ import fanx.fcode.FPod;
 import fanx.fcode.FSlot;
 import fanx.fcode.FType;
 import fanx.fcode.FTypeRef;
+import java.awt.Dialog;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
@@ -50,6 +51,8 @@ import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
@@ -79,6 +82,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	public static volatile boolean shutdown = false;
 	Hashtable<String, Long> toBeIndexed = new Hashtable<String, Long>();
 	private FanJarsIndexer jarsIndexer;
+	private boolean alreadyWarned;
 
 	public FanIndexer()
 	{
@@ -91,8 +95,20 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		}
 	}
 
+	synchronized void warnIfNecessary()
+	{
+		if (!alreadyWarned)
+		{
+			alreadyWarned = true;
+			NotifyDescriptor desc = new NotifyDescriptor.Message("Initial Fantom/Java API Indexing just started\nThis might take a while and use a lot of CPU (once).\nSome features such as completion will not be available until it's completed."
+				, NotifyDescriptor.WARNING_MESSAGE);
+			DialogDisplayer.getDefault().notify(desc);
+		}
+	}
+
 	public void indexAll(boolean background)
 	{
+		alreadyWarned = false;
 		// start the indexing thread
 		// index Fantom libs right aways
 		long then = new Date().getTime();
@@ -484,6 +500,8 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	private void indexPod(String pod)
 	{
+		warnIfNecessary();
+
 		if (pod.toLowerCase().endsWith(".pod"))
 		{
 			FanDocument doc = null;
@@ -568,10 +586,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					}
 					for (FSlot slot : slots)
 					{
-						if (typeRef.typeName.equals("Window") /*&& slot.name.endsWith("text")*/)
-						{
-							System.out.println(slot.name + "  " + slot.getClass().toString());
-						}
 						// determine kind of slot
 						FanModelConstants.SlotKind kind = FanModelConstants.SlotKind.FIELD;
 						FTypeRef retType = null;
@@ -672,15 +686,51 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						s.delete();
 					}
 
-					//inheritance
-					int base = type.base;
-					if(base!=0)
+					// Deal with Inheritance
+					Vector<FTypeRef> inhTypes = new Vector<FTypeRef>();
+					if (type.base >= 0 && type.base != 65535) // 65535 seem to eb value for a type with no base (Obj?)
 					{
-						FTypeRef ref = type.pod.typeRef(base);
-						//TODO: look for existing inh and add
+						inhTypes.add(type.pod.typeRef(type.base));
 					}
-					// TODO: mixins;
+					for (int t : type.mixins)
+					{
+						inhTypes.add(type.pod.typeRef(t));
+					}
+					// Try to reuse existing db entries.
+					Vector<FanTypeInheritance> currentInh = FanTypeInheritance.findAllForMainType(null, typeRef.signature);
+					for (FTypeRef item : inhTypes)
+					{
+						String mainType = typeRef.signature;
+						String inhType = item.signature;
+						int foundIdx = -1;
+						for (int i = 0; i != currentInh.size(); i++)
+						{
+							FanTypeInheritance cur = currentInh.get(i);
+							if (cur.getMainType().equals(mainType) && cur.getInheritedType().equals(inhType))
+							{
+								foundIdx = i;
+								break;
+							}
+						}
+						if (foundIdx != -1)
+						{
+							// already in there, leave it alone
+							currentInh.remove(foundIdx);
+						} else
+						{
+							// new one, creating it
+							FanTypeInheritance inh = new FanTypeInheritance();
+							inh.setMainType(mainType);
+							inh.setInheritedType(inhType);
+							inh.save();
+						}
+					} // end iinh
 
+					// Whatever wasn't removed from the vector is not needed anymore.
+					for (FanTypeInheritance inh : currentInh)
+					{
+						inh.delete();
+					}
 
 				} // end type
 

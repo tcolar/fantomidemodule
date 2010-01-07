@@ -195,18 +195,4 @@ public abstract class FanAstScope
 		return tscope;
 	}
 
-	public FanBlockScope findParentItBlock(FanAstScope scope)
-	{
-				while (scope !=null)
-		{
-			if(scope instanceof FanBlockScope)
-			{
-				if(((FanBlockScope)scope).isItBlock())
-					break;
-			}
-			scope = scope.getParent();
-		}
-		return (FanBlockScope) scope;
-	}
-
 }

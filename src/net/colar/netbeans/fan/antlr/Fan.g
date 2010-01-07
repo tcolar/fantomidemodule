@@ -112,11 +112,16 @@ AST_LIST;
 AST_MAP;
 AST_IT_BLOCK;
 AST_CTOR_BLOCK;
+AST_FOR_INIT;
+AST_CATCH_DEF;
+AST_FORMAL;
+AST_CAST;
 // help getting valid AST for completion: (INC means incomplete)
 AST_INC_USING;
 AST_INC_DOTCALL;
 AST_INC_SAFEDOTCALL;
 // generic items
+AST_SCOPE; // introduce a scope for thing like loops, catches, closures scopes
 AST_ID;
 AST_MODIFIER;
 AST_INHERITANCE;
@@ -306,7 +311,8 @@ enumValDefs 	:	enumValDef (SP_COMMA  enumValDef)* eos;
 enumValDef 	:	docs id (parL args? parR)?;
 typeList	:  	type (SP_COMMA type)*;
 
-type	        :  	typeRoot  SP_QMARK? (LIST_TYPE SP_QMARK?)* ;
+type	        :  	(typeRoot  SP_QMARK? more=(LIST_TYPE SP_QMARK?)*)
+					-> ^(AST_TYPE typeRoot SP_QMARK? $more*);
 typeRoot	:	mapType | nonMapType;
 nonMapType	:	funcType | simpleType;
 simpleType     	:  	id (SP_COLCOL id)?;
@@ -318,7 +324,9 @@ mapType		:	sq_bracketL? nonMapType SP_QMARK? (LIST_TYPE SP_QMARK?)*
 funcType 	:	SP_PIPE (SP_COMMA | (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType)) SP_PIPE;
 assignedType	:	OP_ARROW type?;
 formals 	:  	formal (SP_COMMA formal)*;
-formal		:	formalFull | formalTypeOnly | formalInferred;
+formal		:	(formal_content)
+					-> ^(AST_FORMAL formal_content);
+formal_content	: (formalFull | formalTypeOnly | formalInferred);
 formalFull      :	type id;
 formalTypeOnly  :  	type;
 formalInferred  :  	id;
@@ -339,17 +347,16 @@ fieldDef	@init {paraphrase.push("Field definition");} @after{paraphrase.pop();}
 			-> ^(AST_FIELD typeId ^(AST_MODIFIER $m)* expr?);
 typeId		:	((type id)=>typeAndId | fieldId);
 fieldId		:	id;
-typeAndId	:	type id
-			   -> ^(id) ^(AST_TYPE type);
+typeAndId	:	(type id);
 fieldFlags	:	(KW_ABSTRACT | KW_RD_ONLY | KW_CONST | KW_STATIC | KW_NATIVE | KW_VOLATILE | KW_OVERRIDE | KW_VIRTUAL | KW_FINAL | protection)*;
 methodDef	@init {paraphrase.push("Method definition");} @after{paraphrase.pop();}
 		:	docs facet* m=methodFlags* returnType=type /*| KW_VOID*/ mname=id parL params parR methodBody
-		    -> ^(AST_METHOD ^($mname) ^(AST_TYPE $returnType) params? ^(AST_MODIFIER $m)* methodBody? );
+		    -> ^(AST_METHOD ^($mname) $returnType params? ^(AST_MODIFIER $m)* methodBody? );
 methodFlags	:	protection | KW_VIRTUAL | KW_OVERRIDE | KW_ABSTRACT | KW_STATIC | KW_ONCE |
 			 KW_NATIVE | KW_FINAL;
 params		:	(param (SP_COMMA param)*)?;
 param 		:	(type id (AS_INIT_VAL expr)?)
-			-> ^(AST_PARAM ^(AST_TYPE type) id (AS_INIT_VAL expr)?);
+			-> ^(AST_PARAM type id (AS_INIT_VAL expr)?);
 methodBody	:	((multiStmt)=>multiStmt | eos);
 ctorDef		@init {paraphrase.push("Constructor definition");} @after{paraphrase.pop();}
 		:	docs facet* m=ctorFlags* KW_NEW cname=id parL params parR cchain=((SP_COLON)=>ctorChain)? methodBody
@@ -378,24 +385,29 @@ so I prepand "g_" to those if needed.
 */
 g_break		:	KW_BREAK eos;
 g_continue	:	KW_CONTINUE eos;
-g_for		:	KW_FOR parL forInit? SP_SEMI expr? SP_SEMI expr? parR  block;
+g_for		:	(KW_FOR parL forInit? SP_SEMI expr? SP_SEMI expr? parR  block)
+				-> ^(AST_SCOPE KW_FOR parL forInit? SP_SEMI expr? SP_SEMI expr? parR  block);
 g_if		:	KW_IF parL expr parR block
 				(KW_ELSE block)?;
 g_return	:	KW_RETURN (eos | expr eos);
 g_switch	:	KW_SWITCH parL expr parR bracketL (g_case)* (g_default)? bracketR;
 g_throw		:	KW_THROW expr eos;
 g_while		:	KW_WHILE parL expr parR block;
-g_try		:	KW_TRY ((bracketL)=>try_long | stmtList) ((KW_CATCH)=>g_catch)* ((KW_FINALLY)=>g_finally)?;
+g_try		:	(KW_TRY g_try_content)
+				-> ^(AST_SCOPE KW_TRY g_try_content);
+g_try_content: ((bracketL)=>try_long | stmtList) ((KW_CATCH)=>g_catch)* ((KW_FINALLY)=>g_finally)?;
 try_long	:	multiStmt;
 exprStmt	:	expr eos;
 localDef	:	(typeId (AS_INIT_VAL expr)? eos)
 				-> ^(AST_LOCAL_DEF typeId expr? eos?);
 forInit 	:	forInitDef | expr;
-forInitDef	:	typeId (AS_INIT_VAL expr)?;
+forInitDef	:	typeId (AS_INIT_VAL expr)?
+				-> ^(AST_FOR_INIT typeId (AS_INIT_VAL expr)?);
 // catch is a reserved antlr keyword
 g_catch		:	KW_CATCH catchDef? ((bracketL)=>catch_long | stmtList);
 catch_long	:	multiStmt;
-catchDef 	:	parL type id parR;
+catchDef 	:	parL type id parR
+				-> ^(AST_CATCH_DEF parL type id parR);
 // finally is a reserved antlr keyword
 g_finally	:	KW_FINALLY ((bracketL)=>finally_long | stmtList);
 finally_long	:	multiStmt;
@@ -430,7 +442,8 @@ addAppend	:	(OP_PLUS | OP_MINUS) parenExpr;
 multExpr 	:	parenExpr ((OP_MULTI | OP_DIV | OP_MOD) parenExpr)* ;
 parenExpr 	:	castExpr | groupedExpr | unaryExpr;
 // par_l on newline = end of expression
-castExpr 	:	{notAfterEol()}? parL type parR parenExpr;
+castExpr 	:	{notAfterEol()}? parL type parR parenExpr
+					-> ^(AST_CAST parL type parR parenExpr);
 // if PAR_l starts after newLine, this is a different exression
 groupedExpr 	:	parL expr parR termChain*;
 unaryExpr 	:	prefixExpr | postfixExpr | termExpr;
@@ -445,7 +458,7 @@ typeBase	:	typeLiteral | slotLiteral | namedSuper | staticCall |
 ctorBlock	:	type itBlock
 				-> ^(AST_CTOR_BLOCK type itBlock);
 staticCall	:	type DOT idExpr
-				-> ^(AST_STATIC_CALL ^(AST_TYPE type) ^(AST_CHILD idExpr));
+				-> ^(AST_STATIC_CALL type ^(AST_CHILD idExpr));
 
 termChain 	:	dotCall | dynCall | safeDotCall | safeDynCall |
 			indexExpr | callOp | itBlock | incDotCall | incSafeDotCall;
@@ -470,7 +483,8 @@ indexExpr 	:	{notAfterEol()}? sq_bracketL expr sq_bracketR;
 // eos = end of expression
 callOp		:	{notAfterEol()}? parL args?  parR closure*;
 closure 	@init {paraphrase.push("Closure");} @after{paraphrase.pop();}
-		:  	funcType multiStmt;
+		:  	(funcType multiStmt)
+				->^(AST_SCOPE funcType multiStmt);
 // this can be either a local def(toto.value) or a call(toto.getValue or toto.getValue(<params>)) + opt. closure
 idExpr 		:	idExprReq | id;
 // Same but without matching ID by itself (this would prevent termbase from checking literals).

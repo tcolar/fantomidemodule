@@ -306,7 +306,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			}
 		} else
 		{
-			// TODO: inherited types
 			Vector<FanSlot> slots = getAllSlotsForType(type.getDbType());
 			for (FanSlot slot : slots)
 			{
@@ -592,6 +591,17 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					}
 				}
 			}
+		}
+		// Add implicit super types
+		if(dbType.isClass() && ! doneTypes.contains("sys::Obj"))
+		{
+			FanType objType = FanType.findByQualifiedName("sys::Obj");
+			slots.addAll(getAllSlotsForType(objType));
+		}
+		else if(dbType.isEnum() && ! doneTypes.contains("sys::Enum"))
+		{
+			FanType objType = FanType.findByQualifiedName("sys::Enum");
+			slots.addAll(getAllSlotsForType(objType));
 		}
 		return slots;
 	}

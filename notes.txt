@@ -2,9 +2,9 @@ Review all the todos.
 
 Do a profiler session
 
-Indexing of pod -> do Inheritance !
-
-closure vars .each |Str s| {s.blah} ?
+Deal with casting (Obj)   i as Obj
+Slot completion: for function propose toto.each |Str s->bool| {}   not toto.each(c)
+rewrite structure analyzer to use scope
 
 Unrecognized modifier: ublic
 
