@@ -665,13 +665,24 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							}
 						}
 					} // end slot loop
+
 					// Whatever slot wasn't removed from the vector is not needed anymore.
 					for (FanSlot s : currentSlots)
 					{
 						s.delete();
 					}
 
-				}
+					//inheritance
+					int base = type.base;
+					if(base!=0)
+					{
+						FTypeRef ref = type.pod.typeRef(base);
+						//TODO: look for existing inh and add
+					}
+					// TODO: mixins;
+
+
+				} // end type
 
 				for (FanType t : types)
 				{

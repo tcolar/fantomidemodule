@@ -2,7 +2,7 @@ Review all the todos.
 
 Do a profiler session
 
-Propose slots -> need to add inherited slots !
+Indexing of pod -> do Inheritance !
 
 closure vars .each |Str s| {s.blah} ?
 
