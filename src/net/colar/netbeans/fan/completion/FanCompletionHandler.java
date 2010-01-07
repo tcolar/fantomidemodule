@@ -285,13 +285,14 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposeSlots(FanResolvedType type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
+		// TODO: propose all the supertypes slot (incl. Obj)
 		if (type.getDbType().isJava())
 		{
 			FanJarsIndexer indexer = FanIndexerFactory.getJavaIndexer();
 			List<Member> slots = indexer.findTypeSlots(type.getQualifiedType());
 			for (Member slot : slots)
 			{
-				if(slot.getName().toLowerCase().startsWith(prefix))
+				if (slot.getName().toLowerCase().startsWith(prefix))
 				{
 					boolean isStatic = Modifier.isStatic(slot.getModifiers()) || (slot instanceof Constructor);
 					if (type.isStaticContext() == isStatic)
@@ -400,11 +401,15 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		CommonTree baseNode = FanLexAstUtils.findASTNodeAt(result, ts.index());
 		offset = ts.offset();
 		CommonTree curNode = FanLexAstUtils.findParentNode(baseNode, FanParser.AST_USING_POD);
-		FanUtilities.GENERIC_LOGGER.debug("Base node:" + baseNode.toString());
+		//FanUtilities.GENERIC_LOGGER.debug("Base node:" + baseNode.toString());
 		//System.out.println("Cur node:"+curNode.toString());
 		if (curNode == null)
 		{
 			curNode = FanLexAstUtils.findParentNode(baseNode, FanParser.AST_INC_USING);
+		}
+		if (curNode == null)
+		{
+			return;
 		}
 		if (curNode.getType() == FanParser.AST_USING_POD)
 		{
@@ -496,9 +501,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			FanUtilities.GENERIC_LOGGER.debug("Expr Node: " + exprNode.toStringTree());
 
-			//TODO:OP_ARROW ??
-			int index = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, FanParser.DOT);
-			int index2 = FanLexAstUtils.findLastTokenIndexByType(result, exprNode, FanParser.OP_SAFE_CALL);
+			int index = FanLexAstUtils.findPrevTokenByType(result, exprNode, offset, FanParser.DOT);
+			int index2 = FanLexAstUtils.findPrevTokenByType(result, exprNode, offset, FanParser.OP_SAFE_CALL);
 			index = index2 > index ? index2 : index;
 
 			String prefix = "";

@@ -330,7 +330,8 @@ public class FanType extends JOTModel
 
 	public boolean isClass()
 	{
-		return getKind() == FanTypeScope.TypeKind.CLASS.value();
+		return getKind() == FanTypeScope.TypeKind.CLASS.value() ||
+			getKind() == FanTypeScope.TypeKind.JAVA_CLASS.value();
 	}
 
 	public boolean isMixin()
@@ -340,7 +341,8 @@ public class FanType extends JOTModel
 
 	public boolean isEnum()
 	{
-		return getKind() == FanTypeScope.TypeKind.ENUM.value();
+		return getKind() == FanTypeScope.TypeKind.ENUM.value() ||
+			getKind() == FanTypeScope.TypeKind.JAVA_ENUM.value();
 	}
 
 	public boolean isJava()

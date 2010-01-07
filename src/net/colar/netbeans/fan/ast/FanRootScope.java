@@ -41,6 +41,7 @@ public class FanRootScope extends FanAstScope
 	{
 		super(null, result.getTree());
 		this.parserResult = result;
+		//FanLexAstUtils.dumpTree(result.getTree(),0);
 		pod = FanUtilities.getPodForPath(result.getSourcePath());
 	}
 
@@ -174,7 +175,7 @@ public class FanRootScope extends FanAstScope
 						addError("Unresolved Pod: " + name, usingNode);
 					} else
 					{
-						Vector<FanType> items = FanType.findPodTypes(pod, "");
+						Vector<FanType> items = FanType.findPodTypes(name, "");
 						for (FanType t : items)
 						{
 							addUsing(t.getSimpleName(), t.getQualifiedName(), usingNode, type);
@@ -234,8 +235,8 @@ public class FanRootScope extends FanAstScope
 						if (slot instanceof FanAstMethod)
 						{
 							FanMethodScope scope = new FanMethodScope(child, (FanAstMethod) slot);
-							scope.parse();
 							child.addChild(scope);
+							scope.parse();
 						}
 						// otherwise it's a field, nothing to do with it
 					}
@@ -255,13 +256,18 @@ public class FanRootScope extends FanAstScope
 		{
 			return using.get(type);
 		}
+		// fully qualified
+		if(type.indexOf("::") != -1)
+		{
+			return new FanResolvedType(type);
+		}
 		// Try local pod types
 		FanType t = FanType.findByPodAndType(pod, type);
 		if (t!=null)
 		{
 			return new FanResolvedType(t.getQualifiedName());
 		}
-		// Try Fan standard API's
+		// Try Fan standard API's (not fully qualified)
 		t = FanType.findByPodAndType("sys", type);
 		if (t!=null)
 		{

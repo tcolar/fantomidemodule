@@ -604,21 +604,8 @@ public class FanLexAstUtils
 	 */
 	public static int findLastTokenIndexByType(FanParserResult result, CommonTree node, int type)
 	{
-		int first = node.getTokenStartIndex();
 		int last = node.getTokenStopIndex();
-		CommonTokenStream ts = result.getTokenStream();
-		for (int i = last; i >= first; i--)
-		{
-			if (ts.get(i).getType() == type)
-			{
-				//System.out.println("Matched token:" + ts.get(i).getText());
-				return i;
-			} else
-			{
-				//System.out.println("Skipping token:" + ts.get(i).getText());
-			}
-		}
-		return -1;
+		return findPrevTokenByType(result, node, last, type);
 	}
 
 	/**
@@ -751,5 +738,25 @@ public class FanLexAstUtils
 			node = (CommonTree) node.getParent();
 		}
 		return result;
+	}
+
+	public static int findPrevTokenByType(FanParserResult result, CommonTree node, int startOffset, int type)
+	{
+		int first = node.getTokenStartIndex();
+		int last = node.getTokenStopIndex();
+		if(startOffset < last)
+			last=startOffset;
+		CommonTokenStream ts = result.getTokenStream();
+		for (int i = last; i >= first; i--)
+		{
+			if (ts.get(i).getType() == type)
+			{
+				return i;
+			} else
+			{
+				//System.out.println("Skipping token:" + ts.get(i).getText());
+			}
+		}
+		return -1;
 	}
 }

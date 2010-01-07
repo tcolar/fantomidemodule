@@ -252,4 +252,17 @@ public class FanTypeScope extends FanAstScope
 		// default is public
 		return ModifEnum.PUBLIC.value();
 	}
+
+	public FanResolvedType getSuperClass()
+	{
+		for(FanResolvedType item :inheritedItems)
+		{
+			if(item.getDbType().isClass())
+				return item;
+		}
+		// default is Object
+		return new FanResolvedType("sys::Obj");
+	}
+
+
 }

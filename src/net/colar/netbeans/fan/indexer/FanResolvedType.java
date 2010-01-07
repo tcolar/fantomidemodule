@@ -12,6 +12,7 @@ import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanAstScope;
+import net.colar.netbeans.fan.ast.FanBlockScope;
 import net.colar.netbeans.fan.ast.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.ast.FanTypeScope;
@@ -137,7 +138,6 @@ public class FanResolvedType
 			// "regular" type
 			resolved = root.lookupUsing(type);
 		}
-		// TODO: list
 		if (list)
 		{
 			if (resolved.isResolved())
@@ -152,11 +152,11 @@ public class FanResolvedType
 		return resolved;
 	}
 
-	public static FanResolvedType makeFromExpr(FanRootScope rootScope, FanParserResult result, CommonTree exprNode, int lastGoodTokenIndex)
+	public static FanResolvedType makeFromExpr(FanAstScope sc, FanParserResult result, CommonTree exprNode, int lastGoodTokenIndex)
 	{
-		FanAstScope scope = rootScope.findClosestScope(exprNode);
+		FanAstScope scope = sc.getRoot().findClosestScope(exprNode);
 		FanUtilities.GENERIC_LOGGER.debug("** scope: " + scope);
-		FanResolvedType type = resolveExpr(result, scope, null, exprNode, lastGoodTokenIndex);
+		FanResolvedType type = resolveExpr(scope, null, exprNode, lastGoodTokenIndex);
 		if (type == null)
 		{
 			type = makeUnresolved();
@@ -174,9 +174,10 @@ public class FanResolvedType
 	 * @param index
 	 * @return
 	 */
-	private static FanResolvedType resolveExpr(FanParserResult result, FanAstScope scope,
+	private static FanResolvedType resolveExpr(FanAstScope scope,
 		FanResolvedType baseType, CommonTree node, int index)
 	{
+		FanParserResult result = scope.getRoot().getParserResult();
 		// if unresolveable no point searching further
 		if (baseType != null && !baseType.isResolved())
 		{
@@ -195,17 +196,20 @@ public class FanResolvedType
 		//System.out.println("Node type: "+t+" -> "+node.getText()+"("+node.getType()+")");
 		switch (node.getType())
 		{
+			//TODO: ranges (tricky)
+			//TODO: loop vars
+			//TODO: Exception vars
 			case FanParser.AST_TERM_EXPR:
 				CommonTree termBase = children.get(0);
 				CommonTree termChain = children.get(1);
-				baseType = resolveExpr(result, scope, null, termBase, index);
-				baseType = resolveExpr(result, scope, baseType, termChain, index);
+				baseType = resolveExpr(scope, null, termBase, index);
+				baseType = resolveExpr(scope, baseType, termChain, index);
 				break;
 			case FanParser.AST_STATIC_CALL:
 				CommonTree type = children.get(0);
 				CommonTree idExpr = children.get(1);
-				baseType = resolveExpr(result, scope, null, type, index);
-				baseType = resolveExpr(result, scope, baseType, idExpr, index);
+				baseType = resolveExpr(scope, null, type, index);
+				baseType = resolveExpr(scope, baseType, idExpr, index);
 				break;
 			case FanParser.AST_STR:
 				baseType = new FanResolvedType("sys::Str");
@@ -224,32 +228,46 @@ public class FanResolvedType
 			case FanParser.URI:
 				baseType = new FanResolvedType("sys::Uri");
 				break;
-			case FanParser.KW_IT:
-				baseType = new FanResolvedType(resolveItType(scope));
+			case FanParser.AST_NAMED_SUPER:
+				CommonTree nameNode = (CommonTree)node.getFirstChildWithType(FanParser.AST_ID);
+				baseType = resolveExpr(scope, baseType, nameNode, index);
+				break;
+			case FanParser.KW_SUPER:
+				baseType = new FanResolvedType(resolveSuper(scope));
 				break;
 			case FanParser.KW_THIS:
 				baseType = new FanResolvedType(resolveThisType(scope));
 				break;
-			case FanParser.AST_NAMED_SUPER:
-				//TODO
+			case FanParser.AST_IT_BLOCK:
+				// Do nothing, keep type of left hand side.
 				break;
-			case FanParser.KW_SUPER:
-				//TODO
+			case FanParser.KW_IT:
+				baseType = new FanResolvedType(resolveItType(scope));
+				baseType.setStaticContext(false);
 				break;
 			case FanParser.AST_LIST:
-				//TODO
+				// TODO: list of what ?
+				//CommonTree listTypeNode = (CommonTree)node.getFirstChildWithType(FanParser.AST_TERM_EXPR);
+				//FanResolvedType listType = resolveExpr(result, scope, null, listTypeNode, index);
+				baseType = new FanResolvedType("sys::List");
 				break;
 			case FanParser.AST_MAP:
-				//TODO
+				// TODO: map of what ?
+				baseType = new FanResolvedType("sys::Map");
 				break;
-			case FanParser.AST_TYPE_LIT:
-				//TODO
+			case FanParser.AST_TYPE_LIT: // type litteral
+				String lit = FanLexAstUtils.getNodeContent(result, node);
+				if(lit.endsWith("#")) // it should
+					lit = lit.substring(0, lit.length() -1);
+				baseType = scope.getRoot().lookupUsing(lit);
+				baseType.setStaticContext(true);
 				break;
 			case FanParser.AST_SLOT_LIT:
-				//TODO
+				baseType = new FanResolvedType("sys::Slot");
 				break;
 			case FanParser.AST_SYMBOL:
-				//TODO
+				// TODO: is this correct - not sure
+				baseType = new FanResolvedType("sys::Symbol");
 				break;
 			case FanParser.AST_ID:
 				if (baseType == null)
@@ -302,7 +320,7 @@ public class FanResolvedType
 				// "Meaningless" 'wrapper' nodes (in term of expression resolving)
 				if (node.getChildCount() > 0)
 				{
-					baseType = resolveExpr(result, scope, baseType, (CommonTree) node.getChild(0), index);
+					baseType = resolveExpr(scope, baseType, (CommonTree) node.getChild(0), index);
 				} else
 				{
 					FanUtilities.GENERIC_LOGGER.info("Don't know how to resolve: " + t + " " + node.toStringTree());
@@ -348,36 +366,85 @@ public class FanResolvedType
 	 */
 	private static String parseNumberType(String text)
 	{
-		System.out.println("text: "+text);
 		text = text.toLowerCase();
-		if(text.endsWith("ns") || text.endsWith("ms")||
-				text.endsWith("sec") || text.endsWith("min")||
-				text.endsWith("hr") || text.endsWith("day"))
+		if (text.endsWith("ns") || text.endsWith("ms")
+			|| text.endsWith("sec") || text.endsWith("min")
+			|| text.endsWith("hr") || text.endsWith("day"))
+		{
 			return "sys::Duration";
-		if(text.startsWith("0x")) // hex
+		}
+		if (text.startsWith("0x")) // hex
+		{
 			return "sys::Int"; // char
-		if(text.endsWith("f"))
+		}
+		if (text.endsWith("f"))
+		{
 			return "sys::Float";
-		if(text.endsWith("d") || text.indexOf(".")!=-1)
+		}
+		if (text.endsWith("d") || text.indexOf(".") != -1)
+		{
 			return "sys::Decimal";
+		}
 		return "sys::Int";
 	}
 
 	public static String resolveThisType(FanAstScope scope)
 	{
 		// TODO: does 'this' always refer to the type even when in it block ?
-		FanTypeScope tscope = scope.getTypeScope();
-		if(tscope==null)
+		FanAstScope tscope = scope.getTypeScope();
+		if (tscope == null)
+		{
 			return FanIndexer.UNRESOLVED_TYPE;
-		return tscope.getQName();
+		}
+		return ((FanTypeScope)tscope).getQName();
 	}
 
 	public static String resolveItType(FanAstScope scope)
 	{
-		// TODO: find the it block
-		//FanTypeScope tscope = scope.getTypeScope();
-		//if(tscope==null)
+		// TODO: once resolved, lazy-cache it in the blockscope ?
+		FanBlockScope sc = scope.findParentItBlock(scope);
+		if(sc!=null)
+		{
+			int idx = scope.getAstNode().getTokenStartIndex() -1;
+			CommonTree blockNode = scope.getAstNode();
+			CommonTree ctorNode = FanLexAstUtils.findParentNode(blockNode, FanParser.AST_CTOR_BLOCK);
+			if(ctorNode != null)
+			{
+				CommonTree idNode = (CommonTree)ctorNode.getChild(0);
+				System.out.println("ctorNode: "+idNode.toStringTree());
+				return resolveExpr(sc, null, idNode, idx).getQualifiedType();
+			}
+			CommonTree exprNode = FanLexAstUtils.findParentNode(blockNode, FanParser.AST_TERM_EXPR);
+			if(exprNode != null)
+			{
+				System.out.println("exprNode: "+exprNode.toStringTree());
+				CommonTree base = (CommonTree)exprNode.getChild(0);
+				CommonTree chain = (CommonTree)exprNode.getChild(1);
+				System.out.println("base: "+base.toStringTree());
+				System.out.println("chain: "+chain.toStringTree());
+				FanResolvedType type = resolveExpr(scope, null, base, idx );
+				FanResolvedType type2 = resolveExpr(scope, type, chain,  idx);
+				System.out.println("type: "+type);
+				return type2.getQualifiedType();
+			}
+		}
 		return FanIndexer.UNRESOLVED_TYPE;
-		//return tscope.getQName();
+	}
+
+	public static String resolveSuper(FanAstScope scope)
+	{
+		FanAstScope tscope = scope;
+		while (tscope !=null && ! (tscope instanceof FanTypeScope))
+		{
+			tscope = tscope.getParent();
+		}
+		if (tscope != null)
+		{
+			FanResolvedType superType = ((FanTypeScope)tscope).getSuperClass();
+			return superType.getQualifiedType();
+		} else
+		{
+			return FanIndexer.UNRESOLVED_TYPE;
+		}
 	}
 }

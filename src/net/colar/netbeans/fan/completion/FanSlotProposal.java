@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.HashSet;
 import java.util.Vector;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.model.FanMethodParam;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
@@ -61,6 +62,10 @@ public class FanSlotProposal extends FanCompletionProposal
 			html = name + "(";
 			prefix = name + "(";
 			rHtml = slot.getReturnedType();
+			if (rHtml.equals("sys::Void"))
+			{
+				rHtml = "";
+			}
 			Vector<FanMethodParam> params = FanMethodParam.findAllForSlot(slot.getId());
 			//Param[] params = (Param[]) slot.m.params().asArray(Param.class);
 			for (FanMethodParam p : params)
@@ -96,6 +101,9 @@ public class FanSlotProposal extends FanCompletionProposal
 				prefix += ")";
 			}
 			html += args + ")";
+		} else
+		{
+			FanUtilities.GENERIC_LOGGER.error("Unknown Slot type: " +slot.slotKind);
 		}
 		FanBasicElementHandle handle = new FanBasicElementHandle(name, kind);
 		handle.setDoc(FanIndexer.getSlotDoc(slot));
@@ -150,7 +158,7 @@ public class FanSlotProposal extends FanCompletionProposal
 			} else
 			{
 				params = ((Method) slot).getParameterTypes();
-				rHtml= ((Method) slot).getReturnType().getSimpleName();
+				rHtml = ((Method) slot).getReturnType().getSimpleName();
 			}
 			String args = "";
 			html = name + "(";

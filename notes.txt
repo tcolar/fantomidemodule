@@ -1,6 +1,19 @@
 Review all the todos.
 
+Do a profiler session
+
+Propose slots -> need to add inherited slots !
+
+closure vars .each |Str s| {s.blah} ?
+
+Some fileds are stored in the db as if they where methods !
+
+Unrecognized modifier: ublic
+
 ============= TODO Completion ===============================
+loop vars
+throw exception vars
+
 -> Check local slot names against parents to see if all abstract are present, and if all "override" are overriding something and wether the one overriden is virtual
 -> warn when parent is Java FFI and there are duplicate slot names (no overload)
 - Filter proposals (Don't show innacessible items, private etc...)

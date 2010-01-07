@@ -182,11 +182,31 @@ public abstract class FanAstScope
 
 	public FanTypeScope getTypeScope()
 	{
-		FanAstScope current = this;
-		while (current !=null && !(current instanceof FanTypeScope))
-		{
-			current = current.getParent();
-		}
-		return (current instanceof FanTypeScope)?(FanTypeScope)current:null;
+		return (FanTypeScope) findParentScopByType(FanTypeScope.class);
 	}
+
+	public FanAstScope findParentScopByType(Class type)
+	{
+		FanAstScope tscope = this;
+		while (tscope !=null && ! (tscope.getClass() == type))
+		{
+			tscope = tscope.getParent();
+		}
+		return tscope;
+	}
+
+	public FanBlockScope findParentItBlock(FanAstScope scope)
+	{
+				while (scope !=null)
+		{
+			if(scope instanceof FanBlockScope)
+			{
+				if(((FanBlockScope)scope).isItBlock())
+					break;
+			}
+			scope = scope.getParent();
+		}
+		return (FanBlockScope) scope;
+	}
+
 }

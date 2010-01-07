@@ -110,6 +110,8 @@ AST_SYMBOL;
 AST_NAMED_SUPER;
 AST_LIST;
 AST_MAP;
+AST_IT_BLOCK;
+AST_CTOR_BLOCK;
 // help getting valid AST for completion: (INC means incomplete)
 AST_INC_USING;
 AST_INC_DOTCALL;
@@ -440,7 +442,8 @@ termExpr 	:	termBase termChain*
 termBase 	:	idExprReq | literal | typeBase | id;
 typeBase	:	typeLiteral | slotLiteral | namedSuper | staticCall |
  	                dsl | closure | simple | ctorBlock;
-ctorBlock	:	type itBlock;
+ctorBlock	:	type itBlock
+				-> ^(AST_CTOR_BLOCK type itBlock);
 staticCall	:	type DOT idExpr
 				-> ^(AST_STATIC_CALL ^(AST_TYPE type) ^(AST_CHILD idExpr));
 
@@ -454,7 +457,9 @@ incSafeDotCall: OP_SAFE_CALL
 				-> ^(AST_INC_SAFEDOTCALL);
 
 // itBlocks can have a COMMA after statements, which means to call it.add(expr).
-itBlock 	:	bracketL (stmt SP_COMMA? SP_SEMI?)* bracketR;
+itBlock 	:	(bracketL itBlockContent bracketR)
+				-> ^(AST_IT_BLOCK bracketL itBlockContent? bracketR);
+itBlockContent : (stmt SP_COMMA? SP_SEMI?)*;
 dotCall 	:	DOT idExpr
 				-> ^(AST_DOT_CALL idExpr);
 dynCall 	:	OP_ARROW idExpr;
@@ -488,15 +493,15 @@ typeLiteral	:  	(type {notAfterEol()}? OP_POUND)
 				-> ^(AST_TYPE_LIT type OP_POUND);
 slotLiteral	:  	(type? OP_POUND {notAfterEol()}? id)
 				-> ^(AST_SLOT_LIT type? OP_POUND id);
-symbLiteral :   (AT (id SP_COLON SP_COLON)? id)
-				-> ^(AST_SYMBOL AT (id SP_COLON SP_COLON)? id);
+symbLiteral :   (AT id1=(id SP_COLON SP_COLON)? id)
+				-> ^(AST_SYMBOL AT $id1? id);
 namedSuper 	:	(simpleType DOT KW_SUPER)
 				-> ^(AST_NAMED_SUPER simpleType DOT KW_SUPER);
 list 		:	((type {notAfterEol()}?)? sq_bracketL listItems sq_bracketR)
-				-> ^(AST_LIST type sq_bracketL listItems sq_bracketR);
+				-> ^(AST_LIST type? sq_bracketL listItems sq_bracketR);
 listItems 	:	(expr (SP_COMMA expr )* SP_COMMA?) | SP_COMMA;
 map 		:	((mapType {notAfterEol()}?)? sq_bracketL mapItems sq_bracketR)
-				-> ^(AST_MAP mapType sq_bracketL mapItems sq_bracketR);
+				-> ^(AST_MAP mapType? sq_bracketL mapItems sq_bracketR);
 mapItems 	:	(mapPair (SP_COMMA mapPair)* SP_COMMA?) | SP_COLON;
 mapPair		:	expr SP_COLON expr;
 simple		:	type parL expr parR;

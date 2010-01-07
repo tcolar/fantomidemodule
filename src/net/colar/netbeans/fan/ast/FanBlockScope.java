@@ -17,6 +17,7 @@ import org.antlr.runtime.tree.CommonTree;
  */
 public class FanBlockScope extends FanAstScope
 {
+	private boolean isItBlock = false;
 
 	public FanBlockScope(FanAstScope parent, CommonTree codeBlock)
 	{
@@ -44,11 +45,14 @@ public class FanBlockScope extends FanAstScope
 			return;
 		for (CommonTree child : (List<CommonTree>) node.getChildren())
 		{
-			if (child.getType() == FanParser.AST_CODE_BLOCK)
+			if (child.getType() == FanParser.AST_CODE_BLOCK ||
+				child.getType() == FanParser.AST_IT_BLOCK)
 			{
 				FanBlockScope subScope = new FanBlockScope(scope, child);
-				subScope.parse();
+				if(child.getType() == FanParser.AST_IT_BLOCK)
+					subScope.setIsItBlock(true);
 				scope.addChild(subScope);
+				subScope.parse();
 			} else
 			{
 				switch (child.getType())
@@ -64,7 +68,7 @@ public class FanBlockScope extends FanAstScope
 							CommonTree expr=(CommonTree)child.getFirstChildWithType(FanParser.AST_TERM_EXPR);
 							//FanLexAstUtils.dumpTree(child, 0);
 							if(expr != null)
-								resolved = FanResolvedType.makeFromExpr(scope.getRoot(), result, expr, expr.getTokenStartIndex()); // ??
+								resolved = FanResolvedType.makeFromExpr(scope, result, expr, expr.getTokenStartIndex()); // ??
 						}
 						else
 						{
@@ -86,5 +90,15 @@ public class FanBlockScope extends FanAstScope
 				parseBlock(scope, child);
 			}
 		}
+	}
+
+	public void setIsItBlock(boolean b)
+	{
+		isItBlock=true;
+	}
+
+	public boolean isItBlock()
+	{
+		return isItBlock;
 	}
 }

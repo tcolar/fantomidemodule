@@ -737,10 +737,17 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		if (type != null)
 		{
 			String sig = type.getQualifiedName() + "." + slot.getName();
-			Slot fslot = Slot.find(sig);
-			if (fslot != null)
+			try
 			{
-				return fanDocToHtml(fslot.doc());
+				Slot fslot = Slot.find(sig);
+				if (fslot != null)
+				{
+					return fanDocToHtml(fslot.doc());
+				}
+			} catch (Throwable t)
+			{
+				// Fantom runtime exception if type ! found
+				log.debug(t.toString());
 			}
 		}
 		return null;
