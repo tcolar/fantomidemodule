@@ -12,6 +12,7 @@ import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.indexer.FanResolvedType;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import org.antlr.runtime.tree.CommonTree;
+import org.netbeans.modules.csl.api.ElementKind;
 
 /**
  * Scope for a Type (class, enum, mixin)
@@ -36,6 +37,7 @@ public class FanTypeScope extends FanAstScope
 		{
 			return val;
 		}
+
 	}
 	String name = "";
 	// qualified Name
