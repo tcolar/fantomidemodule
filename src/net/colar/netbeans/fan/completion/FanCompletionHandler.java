@@ -290,7 +290,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		if (type.getDbType().isJava())
 		{
 			FanJarsIndexer indexer = FanIndexerFactory.getJavaIndexer();
-			List<Member> slots = indexer.findTypeSlots(type.getQualifiedType());
+			List<Member> slots = indexer.findTypeSlots(type.getAsTypedType());
 			for (Member slot : slots)
 			{
 				if (slot.getName().toLowerCase().startsWith(prefix))

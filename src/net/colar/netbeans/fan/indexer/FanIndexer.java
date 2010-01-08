@@ -220,7 +220,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				Vector<String> addedUsings = new Vector();
 				for (FanResolvedType type : rootScope.getUsing().values())
 				{
-					String sig = type.getQualifiedType();
+					String sig = type.getAsTypedType();
 					int foundIdx = -1;
 					for (int i = 0; i != usings.size(); i++)
 					{
@@ -290,7 +290,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						for (FanResolvedType item : typeScope.getInheritedItems())
 						{
 							String mainType = typeScope.getQName();
-							String inhType = item.getQualifiedType();
+							String inhType = item.isResolved()?item.getDbType().getQualifiedName():item.getAsTypedType();
 							int foundIdx = -1;
 							for (int i = 0; i != currentInh.size(); i++)
 							{

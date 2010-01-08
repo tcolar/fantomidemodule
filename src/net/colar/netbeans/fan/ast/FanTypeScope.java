@@ -139,7 +139,7 @@ public class FanTypeScope extends FanAstScope
 	{
 		for (FanResolvedType type : inheritedItems)
 		{
-			if (type.getQualifiedType().equals(qualifiedName))
+			if (type.getAsTypedType().equals(qualifiedName))
 			{
 				return true;
 			}

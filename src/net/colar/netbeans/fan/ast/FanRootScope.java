@@ -42,7 +42,7 @@ public class FanRootScope extends FanAstScope
 		super(null, result.getTree());
 		this.parserResult = result;
 
-		FanLexAstUtils.dumpTree(result.getTree(),0);
+		//FanLexAstUtils.dumpTree(result.getTree(),0);
 		
 		pod = FanUtilities.getPodForPath(result.getSourcePath());
 	}

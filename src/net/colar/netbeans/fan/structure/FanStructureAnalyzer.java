@@ -7,6 +7,7 @@ package net.colar.netbeans.fan.structure;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import net.colar.netbeans.fan.FanParserResult;
@@ -18,6 +19,8 @@ import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
 import net.colar.netbeans.fan.indexer.FanResolvedType;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.ast.FanTypeScope;
+import net.colar.netbeans.fan.indexer.FanIndexer;
+import net.colar.netbeans.fan.indexer.model.FanType;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
@@ -38,8 +41,6 @@ import org.netbeans.modules.csl.spi.ParserResult;
  */
 public class FanStructureAnalyzer implements StructureScanner
 {
-	// TODO: Rewrite using the AstParser / scopes
-
 	public static final String CODE_FOLDS = "codeblocks";
 	public static final String DOC_FOLDS = "comments";
 	public static final String COMMENT_FOLDS = "comments";
@@ -57,7 +58,7 @@ public class FanStructureAnalyzer implements StructureScanner
 		try
 		{
 			FanParserResult fanResult = (FanParserResult) result;
-			
+
 			FanRootScope root = fanResult.getRootScope();
 			List<FanAstScope> types = root.getChildren();
 			for (FanAstScope scope : types)
@@ -73,7 +74,7 @@ public class FanStructureAnalyzer implements StructureScanner
 					{
 						inheritance += ", ";
 					}
-					inheritance += inh.getQualifiedType();
+					inheritance += inh.getShortAsTypedType();
 				}
 				item.setName(t.getName());
 				String html = t.getName();
@@ -82,15 +83,55 @@ public class FanStructureAnalyzer implements StructureScanner
 					html += "<font color='#aaaaaa'>" + inheritance + "</font>";
 				}
 				item.setHtml(html);
-				items.add(item);
 				// Do slots
 				Collection<FanAstScopeVarBase> vars = t.getScopeVars();
+				List<StructureItem> slots = new ArrayList<StructureItem>();
 				for (FanAstScopeVarBase var : vars)
 				{
-					if (var instanceof FanAstField)
+					if (var instanceof FanAstMethod)
+					{
+						FanAstMethod m = (FanAstMethod) var;
+
+						ElementKind kind = m.isCtor() ? ElementKind.CONSTRUCTOR : ElementKind.METHOD;
+						FanStructureItem mItem = new FanStructureItem(var.getNode(), kind, result);
+						String returnType = FanType.getShortName(m.getTypeString());
+						if (returnType.equalsIgnoreCase("void"))
+						{
+							returnType = "";
+						}
+						// method params
+						Hashtable<String, FanResolvedType> parameters = m.getParameters();
+						String params = "";
+						for (String pname : parameters.keySet())
+						{
+							if (params.length() > 0)
+							{
+								params += ", ";
+							}
+							String pType=parameters.get(pname).getShortAsTypedType();
+							if(pType.equals(FanIndexer.UNRESOLVED_TYPE))
+								pType="";
+							params += "<font color='#aaaaaa'>" + pType + "</font>";
+							params += " "+pname;
+						}
+						/*String constChain = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_CONSTRUCTOR_CHAIN);*/
+						handleModifiers(mItem, m.getModifiers());
+						mItem.setName(var.getName());
+						String mHtml = var.getName() + "(" + params + ")";
+						if (returnType.length() > 0)
+						{
+							mHtml += " : <font color='#aaaaaa'>" + returnType + "</font>";
+						} /*else if (constChain.length() > 0)
+						{
+						mHtml += " : <font color='#aaaaaa'>" + returnType + "</font>";
+						}*/
+						mItem.setHtml(mHtml);
+						slots.add(mItem);
+						break;
+					} else if (var instanceof FanAstField)
 					{
 						FanStructureItem slotItem = new FanStructureItem(var.getNode(), ElementKind.FIELD, result);
-						String type = var.getType().getQualifiedType();
+						String type = var.getType().getShortAsTypedType();
 						handleModifiers(slotItem, var.getModifiers());
 						slotItem.setName(var.getName());
 						String slotHtml = var.getName();
@@ -99,17 +140,14 @@ public class FanStructureAnalyzer implements StructureScanner
 							slotHtml += " : <font color='#aaaaaa'>" + type + "</font>";
 						}
 						slotItem.setHtml(slotHtml);
-						items.add(slotItem);
-					}
-					if (var instanceof FanAstMethod)
-					{
-						//TODO
+						slots.add(slotItem);
 					}
 				}
+				if(slots.size()>0)
+					item.setNestedItems(slots);
+				items.add(item);
 			}
 
-			//String trace = "";
-			//scanTree(list, ast, fanResult, trace);
 		} catch (Exception e)
 		{
 			// if there is an error here, we don't want to propagate to the user, should log though
@@ -126,133 +164,33 @@ public class FanStructureAnalyzer implements StructureScanner
 		FanParserResult fanResult = (FanParserResult) result;
 		Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
 		CommonTree ast = fanResult.getTree();
-		addFolds(tokenStream, folds, ast);
+		addFolds(
+			tokenStream, folds, ast);
 		return folds;
 	}
 
-	/**
-	 * Scan down the tree for structure items, and add them to the tree if necesary
-	 * TODO: make use of the ASTParser instead ??
-	 * Recursive.
-	 * @param list
-	 * @param node
-	 */
-	/*public void scanTree(List<StructureItem> list, CommonTree node, FanParserResult result, String trace)
-	{
-	if (node != null && result != null)
-	{
-	FanStructureItem item = null;
-	trace += "->" + node.getText();
-	switch (node.getType())
-	{
-	case FanParser.AST_FIELD:
-	item = new FanStructureItem(node, ElementKind.FIELD, result);
-	String name = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_ID);
-	String modif = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_MODIFIER);
-	String type = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_TYPE);
-	handleModifiers(item, modif);
-	item.setName(name);
-	String html = name;
-	if (type.length() > 0)
-	{
-	html += " : <font color='#aaaaaa'>" + type + "</font>";
-	}
-	item.setHtml(html);
-	break;
-
-	case FanParser.AST_CLASS:
-	case FanParser.AST_MIXIN:
-	case FanParser.AST_ENUM:
-	item = new FanStructureItem(node, ElementKind.CLASS, result);
-	name = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_ID);
-	String inheritance = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_INHERITANCE);
-	item.setName(name);
-	html = name;
-	if (inheritance.length() > 0)
-	{
-	html += "<font color='#aaaaaa'>" + inheritance + "</font>";
-	}
-	item.setHtml(html);
-	break;
-
-	case FanParser.AST_METHOD:
-	case FanParser.AST_CONSTRUCTOR:
-	ElementKind kind = node.getType() == FanParser.AST_METHOD ? ElementKind.METHOD : ElementKind.CONSTRUCTOR;
-
-	item = new FanStructureItem(node, kind, result);
-	String returnType = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_TYPE);
-	if (returnType.equalsIgnoreCase("void"))
-	{
-	returnType = "";
-	}
-	String constChain = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_CONSTRUCTOR_CHAIN);
-	name = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_ID);
-	List<CommonTree> paramNodes=FanLexAstUtils.getAllChildrenWithType(node, FanParser.AST_PARAM);
-	String params="";
-	for(CommonTree paramNode : paramNodes)
-	{
-	if(params.length()>0)
-	params+=", ";
-	params += FanLexAstUtils.getNodeContent(result, paramNode);
-	}
-	modif = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_MODIFIER);
-	handleModifiers(item, modif);
-	item.setName(name);
-	html = name + "(<font color='#aaaaaa'>" + params + "</font>)";
-	if (returnType.length() > 0)
-	{
-	html += " : <font color='#aaaaaa'>" + returnType + "</font>";
-	} else if (constChain.length() > 0)
-	{
-	html += " : <font color='#aaaaaa'>" + returnType + "</font>";
-	}
-	item.setHtml(html);
-	break;
-	}
-	for (int i = 0; i < node.getChildCount(); i++)
-	{
-	CommonTree subNode = (CommonTree) node.getChild(i);
-	// For the ROOT node, we had directly to list, not sublist
-	if (node.isNil() || item == null)
-	{
-	//recurse into children
-	scanTree(list, subNode, result, trace);
-	} else
-	{
-	List<StructureItem> subList = new ArrayList<StructureItem>();
-	scanTree(subList, subNode, result, trace);
-	if (item != null && !subList.isEmpty())
-	{
-	item.setNestedItems(subList);
-	}
-	}
-	}
-
-	if (item != null)
-	{
-	//System.err.println("Adding to item list " + item.getName() + " " + trace);
-	list.add(item);
-	}
-	}
-	}*/
 	public Configuration getConfiguration()
 	{
 		return null;
-	}
+	} 
 
-	// TODO: use FanAstVar.modifiers instead of hardcoded
 	private void handleModifiers(FanStructureItem item, List<FanAstScopeVarBase.ModifEnum> modifs)
 	{
-		for(FanAstScopeVarBase.ModifEnum modif: modifs)
+		for (FanAstScopeVarBase.ModifEnum modif : modifs)
 		{
-			if(modif == modif.STATIC)
+			if (modif == modif.STATIC)
+			{
 				item.addModifier(Modifier.STATIC);
-			else if(modif == modif.PRIVATE)
+			} else if (modif == modif.PRIVATE)
+			{
 				item.addModifier(Modifier.PRIVATE);
-			else if(modif == modif.PUBLIC)
+			} else if (modif == modif.PUBLIC)
+			{
 				item.addModifier(Modifier.PUBLIC);
-			else if(modif == modif.PROTECTED)
+			} else if (modif == modif.PROTECTED)
+			{
 				item.addModifier(Modifier.PROTECTED);
+			}
 		}
 	}
 
@@ -268,6 +206,8 @@ public class FanStructureAnalyzer implements StructureScanner
 				case FanParser.AST_CODE_BLOCK:
 					type = CODE_FOLDS;
 					foldable = true;
+
+
 					break;
 				case FanParser.AST_DOCS:
 					//TODO: comments folding (in hidden channel)
@@ -298,12 +238,14 @@ public class FanStructureAnalyzer implements StructureScanner
 				}
 			}
 			// recurse into children
-			for (int i = 0; i < node.getChildCount(); i++)
+			for (int i = 0; i
+				< node.getChildCount(); i++)
 			{
 				CommonTree subNode = (CommonTree) node.getChild(i);
-				addFolds(tokenStream, folds, subNode);
-			}
+				addFolds(
+					tokenStream, folds, subNode);
 
+			}
 		}
 	}
 }

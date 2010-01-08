@@ -29,20 +29,22 @@ import org.antlr.runtime.tree.CommonTree;
 public class FanResolvedType
 {
 
-	private final String qualifiedType;
+	private final String asTypedType;
 	private final FanType dbType;
 	// whether it's used in a  nullable context : ex: Str? vs Str
 	// TODO not being set
 	private boolean nullableContext = false;
 	// whether it's used in a static context: ex Str. vs str.
 	private boolean staticContext = false;
+	private final String shortAsTypedType;
 
-	public FanResolvedType(String qualifiedType)
+	public FanResolvedType(String enteredType)
 	{
-		this.qualifiedType = qualifiedType;
-		if (qualifiedType != null && !qualifiedType.equals(FanIndexer.UNRESOLVED_TYPE))
+		this.asTypedType = enteredType;
+		shortAsTypedType = asTypedType.indexOf("::")!=-1?asTypedType.substring(asTypedType.indexOf("::")+2):asTypedType;
+		if (enteredType != null && !enteredType.equals(FanIndexer.UNRESOLVED_TYPE))
 		{
-			dbType = FanType.findByQualifiedName(qualifiedType);
+			dbType = FanType.findByQualifiedName(enteredType);
 		} else
 		{
 			dbType = null;
@@ -59,15 +61,20 @@ public class FanResolvedType
 		return dbType;
 	}
 
-	public String getQualifiedType()
+	public String getAsTypedType()
 	{
-		return qualifiedType;
+		return asTypedType;
+	}
+	
+	public String getShortAsTypedType()
+	{
+		return shortAsTypedType;
 	}
 
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(qualifiedType).append(" resolved:").append(isResolved());
+		StringBuilder sb = new StringBuilder(asTypedType).append(" resolved:").append(isResolved());
 		return sb.toString();
 	}
 
@@ -129,7 +136,7 @@ public class FanResolvedType
 				FanResolvedType valueType = makeFromSimpleType(scope, valueNode);
 				if (keyType.isResolved() && valueType.isResolved())
 				{
-					MapType mapType = new MapType(Type.find(keyType.getQualifiedType()), Type.find(valueType.getQualifiedType()));
+					MapType mapType = new MapType(Type.find(keyType.getAsTypedType()), Type.find(valueType.getAsTypedType()));
 					resolved = new FanResolvedType(mapType.qname());
 				}
 			}
@@ -142,7 +149,7 @@ public class FanResolvedType
 		{
 			if (resolved.isResolved())
 			{
-				resolved = new FanResolvedType(Type.find(resolved.getQualifiedType()).toListOf().qname());
+				resolved = new FanResolvedType(Type.find(resolved.getAsTypedType()).toListOf().qname());
 			}
 		}
 
@@ -298,7 +305,7 @@ public class FanResolvedType
 					if (baseType.isResolved() && baseType.getDbType().isJava())
 					{
 						// java slots
-						List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(baseType.getQualifiedType());
+						List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(baseType.getAsTypedType());
 						boolean found = false;
 						// Returrning the first match .. because java has overloading this could be wrong
 						// However i assume overloaded methods return the same type (If it doesn't too bad, it's ugly coe anyway :) )
@@ -319,7 +326,7 @@ public class FanResolvedType
 					} else
 					{
 						// Fan slots
-						FanSlot slot = FanSlot.findByTypeAndName(baseType.getQualifiedType(), t);
+						FanSlot slot = FanSlot.findByTypeAndName(baseType.getAsTypedType(), t);
 						if (slot != null)
 						{
 							baseType = new FanResolvedType(slot.returnedType);
@@ -423,7 +430,7 @@ public class FanResolvedType
 		if (tscope != null)
 		{
 			FanResolvedType superType = ((FanTypeScope)tscope).getSuperClass();
-			return superType.getQualifiedType();
+			return superType.getAsTypedType();
 		} else
 		{
 			return FanIndexer.UNRESOLVED_TYPE;
