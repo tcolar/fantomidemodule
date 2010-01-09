@@ -18,11 +18,12 @@ import fanx.fcode.FPod;
 import fanx.fcode.FSlot;
 import fanx.fcode.FType;
 import fanx.fcode.FTypeRef;
-import java.awt.Dialog;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
@@ -81,7 +82,8 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	static JOTLoggerLocation log = new JOTLoggerLocation(FanIndexer.class);
 	private final FanIndexerThread indexerThread;
 	public static volatile boolean shutdown = false;
-	Hashtable<String, Long> toBeIndexed = new Hashtable<String, Long>();
+	Hashtable<String, Long> fanSrcToBeIndexed = new Hashtable<String, Long>();
+	Hashtable<String, Long> fanPodsToBeIndexed = new Hashtable<String, Long>();
 	private FanJarsIndexer jarsIndexer;
 	private boolean alreadyWarned;
 
@@ -101,8 +103,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		if (!alreadyWarned)
 		{
 			alreadyWarned = true;
-			NotifyDescriptor desc = new NotifyDescriptor.Message("Initial Fantom/Java API Indexing just started\nThis might take a while and use a lot of CPU (once).\nSome features such as completion will not be available until it's completed."
-				, NotifyDescriptor.WARNING_MESSAGE);
+			NotifyDescriptor desc = new NotifyDescriptor.Message("Initial Fantom/Java API Indexing just started\nThis might take a while and use a lot of CPU (once).\nSome features such as completion will not be available until it's completed.", NotifyDescriptor.WARNING_MESSAGE);
 			DialogDisplayer.getDefault().notify(desc);
 		}
 	}
@@ -117,7 +118,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		long now = new Date().getTime();
 		log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");
 		// sources indexes will be called  through scanStarted()
-		// TODO: cleanup docs that don't exist any more docs (binaries & sources)?
 		// TODO: Log db stats (# of docs, types, slots)
 		jarsIndexer = new FanJarsIndexer();
 		// Do this one in the background (might take a while and not needed for everyone)
@@ -136,22 +136,32 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		for (Indexable indexable : iterable)
 		{
-			requestSrcIndexing(indexable.getURL().getPath());
+			requestIndexing(indexable.getURL().getPath());
 		}
 	}
 
-	public void requestSrcIndexing(String path)
+	/**
+	 * all Fantom indexing should be requested through here (no direct call to index()
+	 * for threading safety
+	 * @param path
+	 */
+	public void requestIndexing(String path)
 	{
+		boolean isPod = path.toLowerCase().endsWith(".pod");
+
 		FileObject fo = FileUtil.toFileObject(new File(path));
-		if (!FileUtil.isParentOf(FanPlatform.getInstance().getFanHome(), fo))
+		if (isPod)
 		{
-			toBeIndexed.put(path, new Date().getTime());
+			fanPodsToBeIndexed.put(path, new Date().getTime());
+		} else if (!FileUtil.isParentOf(FanPlatform.getInstance().getFanHome(), fo))
+		{
+			fanSrcToBeIndexed.put(path, new Date().getTime());
 		}
 	}
 
 	// TODO: It would be MUCH faster to just parse what we need (types/slots)
 	// Might need a separte ANTLR grammar though.
-	public void indexSrc(String path)
+	private void indexSrc(String path)
 	{
 		long then = new Date().getTime();
 		log.debug("Indexing requested for: " + path);
@@ -180,7 +190,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		log.debug("Indexing completed in " + (now - then) + " ms for: " + path);
 	}
 
-	public void indexSrc(String path, Result parserResult)
+	private void indexSrc(String path, Result parserResult)
 	{
 		log.debug("Indexing parsed result for : " + path);
 
@@ -194,7 +204,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	 * @param indexable
 	 * @param rootScope
 	 */
-	public void indexSrcDoc(String path, FanRootScope rootScope)
+	private void indexSrcDoc(String path, FanRootScope rootScope)
 	{
 		//TODO: does this need to be synchronized or is NB taking care of that ?
 		//JOTTransaction transaction = null;
@@ -291,7 +301,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						for (FanResolvedType item : typeScope.getInheritedItems())
 						{
 							String mainType = typeScope.getQName();
-							String inhType = item.isResolved()?item.getDbType().getQualifiedName():item.getAsTypedType();
+							String inhType = item.isResolved() ? item.getDbType().getQualifiedName() : item.getAsTypedType();
 							int foundIdx = -1;
 							for (int i = 0; i != currentInh.size(); i++)
 							{
@@ -366,7 +376,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							FanResolvedType slotType = slot.getType();
 							if (slotType.isResolved())
 							{
-								type = slotType.isResolved()?slotType.getDbType().getQualifiedName():slotType.getAsTypedType();
+								type = slotType.isResolved() ? slotType.getDbType().getQualifiedName() : slotType.getAsTypedType();
 							}
 							dbSlot.setReturnedType(type);
 							dbSlot.setName(slot.getName());
@@ -491,11 +501,42 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public void indexFantomPods(boolean runInBackground)
 	{
-		FanPodIndexerThread thread = new FanPodIndexerThread();
-		thread.start();
+		FanPlatform platform = FanPlatform.getInstance(false);
+		if (platform.isConfigured())
+		{
+			try
+			{
+				String podsDir = platform.getPodsDir();
+				File f = new File(podsDir);
+				// listen to changes in pod folder
+				FileUtil.addFileChangeListener(FanIndexer.this, f);
+				// index the pods if not up to date
+				File[] pods = f.listFiles();
+				for (File pod : pods)
+				{
+					String path = pod.getAbsolutePath();
+					if (checkIfNeedsReindexing(path, pod.lastModified()))
+					{
+						requestIndexing(path);
+					}
+				}
+			} catch (Throwable t)
+			{
+				log.exception("Pod indexing thread error", t);
+			}
+		}
 		if (!runInBackground)
 		{
-			thread.waitFor();
+			while (!shutdown && !fanPodsToBeIndexed.isEmpty())
+			{
+				try
+				{
+					Thread.sleep(100);
+					Thread.yield();
+				} catch (Exception e)
+				{
+				}
+			}
 		}
 	}
 
@@ -703,6 +744,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					{
 						String mainType = typeRef.signature;
 						String inhType = item.signature;
+						if (inhType.equals("sys::Obj")
+								|| inhType.equals("sys::Enum"))
+						{
+							// Those types are implied, no need to pollute the DB
+							continue;
+						}
 						int foundIdx = -1;
 						for (int i = 0; i != currentInh.size(); i++)
 						{
@@ -724,8 +771,9 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							inh.setMainType(mainType);
 							inh.setInheritedType(inhType);
 							inh.save();
+							System.out.println("saving inh: " + inh.getMainType() + " " + inh.getInheritedType() + " " + inh.getId());
 						}
-					} // end iinh
+					} // end inh
 
 					// Whatever wasn't removed from the vector is not needed anymore.
 					for (FanTypeInheritance inh : currentInh)
@@ -733,6 +781,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						inh.delete();
 					}
 
+					// allow for quicker exit on shutdown
+					if (shutdown)
+					{
+						break;
+					}
 				} // end type
 
 				for (FanType t : types)
@@ -744,7 +797,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				log.exception("Indexing failed for: " + pod, e);
 				try
 				{
-					// remove broken enrty, will try again next time
+					// remove broken entry, will try again next time
 					if (doc != null)
 					{
 						doc.delete();
@@ -771,7 +824,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		return FanTypeScope.TypeKind.CLASS.value();
 	}
 
-	public boolean hasFlag(int flags, int flag)
+	private boolean hasFlag(int flags, int flag)
 	{
 		return (flags & flag) != 0;
 	}
@@ -928,28 +981,31 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		String path = fe.getFile().getPath();
 		log.debug("File created: " + path);
-		indexPod(path);
+		requestIndexing(path);
 	}
 
 	public void fileChanged(FileEvent fe)
 	{
 		String path = fe.getFile().getPath();
 		log.debug("File changed: " + path);
-		indexPod(path);
+		requestIndexing(path);
 	}
 
 	public void fileDeleted(FileEvent fe)
 	{
+		// synced because we don't want to do it at the same time as the thread
 		String path = fe.getFile().getPath();
 		log.debug("File deleted: " + path);
+		//TODO: had this to a hashtable and do it in the thread
 		FanDocument.deleteForPath(null, path);
 	}
 
 	public void fileRenamed(FileRenameEvent fre)
 	{
-		// TODO: not sure if that's good
+		// synced because we don't want to do it at the same time as the thread
 		FileObject src = (FileObject) fre.getSource();
 		log.debug("File renamed: " + src.getPath() + " -> " + fre.getFile().getPath());
+		//TODO: had this to a hashtable and do it in the thread
 		FanDocument.renameDoc(src.getPath(), fre.getFile().getPath());
 	}
 
@@ -960,6 +1016,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	/*********************************************************************
 	 *  Indexer Thread class
+	 * All indexing request should go through here to avoid issues.
 	 */
 	class FanIndexerThread extends Thread implements Runnable
 	{
@@ -971,75 +1028,51 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			{
 				try
 				{
-					sleep(1000);
+					Thread.yield();
+					sleep(100);
 				} catch (Exception e)
 				{
 				}
-				;
 				long now = new Date().getTime();
-				for (String path : toBeIndexed.keySet())
+				// always do binaries first
+				do
 				{
-					Long l = toBeIndexed.get(path);
-					// Hasn't changed in acouple seconds
-					if (l.longValue() < now - 2000)
-					{
-						toBeIndexed.remove(path);
-						indexSrc(path);
-					}
-				}
-			}
-		}
-	}
-
-	class FanPodIndexerThread extends Thread implements Runnable
-	{
-
-		volatile boolean done = false;
-
-		@Override
-		public void run()
-		{
-			done = false;
-			FanPlatform platform = FanPlatform.getInstance(false);
-			if (platform.isConfigured())
-			{
-				try
-				{
-					String podsDir = platform.getPodsDir();
-					File f = new File(podsDir);
-					// listen to changes in pod folder
-					FileUtil.addFileChangeListener(FanIndexer.this, f);
-					// index the pods if not up to date
-					File[] pods = f.listFiles();
-					for (File pod : pods)
+					// Usig keys() since it uses a "snapshot"
+					// no concurrentmodif error
+					// also nextElement() should be safe since we only remove elements from within here
+					// elems can be added outside ... but that should be fine.
+					Enumeration<String> it = fanPodsToBeIndexed.keys();
+					while (it.hasMoreElements())
 					{
 						if (shutdown)
 						{
-							break;
+							return;
 						}
-						String path = pod.getAbsolutePath();
-						if (checkIfNeedsReindexing(path, pod.lastModified()))
+						String path = it.nextElement();
+						Long l = fanPodsToBeIndexed.get(path);
+						if (l.longValue() < now)
 						{
+							fanPodsToBeIndexed.remove(path);
 							indexPod(path);
 						}
 					}
-				} catch (Throwable t)
+				} while (!fanPodsToBeIndexed.isEmpty());
+				// then do the sources
+				Enumeration<String> it = fanSrcToBeIndexed.keys();
+				while (it.hasMoreElements())
 				{
-					log.exception("Pod indexing thread error", t);
-				}
-			}
-			done = true;
-		}
-
-		private void waitFor()
-		{
-			while (!done)
-			{
-				try
-				{
-					sleep(50);
-				} catch (Exception e)
-				{
+					if (shutdown)
+					{
+						return;
+					}
+					String path = it.nextElement();
+					Long l = fanSrcToBeIndexed.get(path);
+					// Hasn't changed in a couple seconds
+					if (l.longValue() < now - 2000)
+					{
+						fanSrcToBeIndexed.remove(path);
+						//indexSrc(path);
+					}
 				}
 			}
 		}

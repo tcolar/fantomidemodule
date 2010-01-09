@@ -250,10 +250,10 @@ public class FanSlot extends JOTModel
 		super.save(transaction);
 	}
 
-	public static Vector<FanSlot> getAllSlotsForType(String fanType)
+	public static Vector<FanSlot> getAllSlotsForType(String fanType, Boolean includeImpliedTypes)
 	{
 		Vector<String> types = new Vector<String>();
-		return getAllSlotsForType(fanType, types);
+		return getAllSlotsForType(fanType, types, includeImpliedTypes);
 	}
 
 	/**
@@ -262,26 +262,31 @@ public class FanSlot extends JOTModel
 	 * @param dbType
 	 * @return
 	 */
-	public static Vector<FanSlot> getAllSlotsForType(String fanType, Vector<String> doneTypes)
+	public static Vector<FanSlot> getAllSlotsForType(String fanType, Vector<String> doneTypes, boolean includeImpliedTypes)
 	{
+		System.out.println("############## " + fanType);
 		doneTypes.add(fanType);
 		FanType dbType = FanType.findByQualifiedName(fanType);
-		if(dbType == null)
+		if (dbType == null)
+		{
 			return new Vector<FanSlot>(0);
+		}
 		Vector<FanSlot> slots = FanSlot.findAllForType(dbType.getId());
+
 		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, fanType);
 		// get inherited slots
 		for (FanTypeInheritance inh : inhs)
 		{
-			String typeName = inh.getMainType();
-			System.out.println(fanType + ":" + typeName);
-			// If a type was already done, do not do again -> avoid cyclic dependencies etc...
+			String typeName = inh.getInheritedType();
+			System.out.println("############## " + fanType + " : " + typeName);
+			// If a type was already done, do not do again, also avoids potential cyclic dependencies etc...
 			if (doneTypes.contains(typeName))
 			{
+				System.out.println("###### skipping: "+typeName);
 				continue;
 			}
 			// add slots that are not already in
-			Vector<FanSlot> subSlots = getAllSlotsForType(typeName);
+			Vector<FanSlot> subSlots = getAllSlotsForType(typeName, includeImpliedTypes);
 			for (FanSlot s : subSlots)
 			{
 				boolean skip = false;
@@ -295,17 +300,21 @@ public class FanSlot extends JOTModel
 				}
 				if (!skip)
 				{
+					System.out.println("############## " + fanType + "->" + s.name);
 					slots.add(s);
 				}
 			}
 		}
-		// Add implicit super types
-		if (dbType.isClass() && !doneTypes.contains("sys::Obj"))
+		if (includeImpliedTypes)
 		{
-			slots.addAll(getAllSlotsForType("sys::Obj"));
-		} else if (dbType.isEnum() && !doneTypes.contains("sys::Enum"))
-		{
-			slots.addAll(getAllSlotsForType("sys::Enum"));
+			// Add implicit super types
+			if (dbType.isClass() && !doneTypes.contains("sys::Obj"))
+			{
+				slots.addAll(getAllSlotsForType("sys::Obj", includeImpliedTypes));
+			} else if (dbType.isEnum() && !doneTypes.contains("sys::Enum"))
+			{
+				slots.addAll(getAllSlotsForType("sys::Enum", includeImpliedTypes));
+			}
 		}
 		return slots;
 	}
@@ -313,7 +322,6 @@ public class FanSlot extends JOTModel
 	@Override
 	public String toString()
 	{
-		return "FanSlot: "+id+" : "+getName()+"("+getReturnedType()+")";
+		return "FanSlot: " + id + " : " + getName() + "(" + getReturnedType() + ")";
 	}
-
 }

@@ -115,11 +115,11 @@ public class FanResolvedType
 		}
 		FanRootScope root = scope.getRoot();
 
-		System.out.println("Node Type: " + node.toStringTree());
+		//System.out.println("Node Type: " + node.toStringTree());
 
-		// type is just a wrapper node
 		switch (node.getType())
 		{
+			// type is just a wrapper node
 			case FanParser.AST_TYPE:
 				for (CommonTree n : (List<CommonTree>) node.getChildren())
 				{

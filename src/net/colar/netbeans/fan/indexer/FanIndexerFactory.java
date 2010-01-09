@@ -118,7 +118,7 @@ public class FanIndexerFactory extends CustomIndexerFactory
 						JOTLogger.info(this, "ReIndexing: " + root);
 
 						nb++;
-						indexer.indexSrc(child.getPath());
+						indexer.requestIndexing(child.getPath());
 					}
 				}
 			}

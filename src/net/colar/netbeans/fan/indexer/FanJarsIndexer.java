@@ -679,6 +679,7 @@ public class FanJarsIndexer implements FileChangeListener
 							}
 						}
 					}
+					Thread.yield();
 				}
 			} catch (Throwable t)
 			{

@@ -58,4 +58,5 @@ public class FanTypeInheritance extends JOTModel
 		}
 		return new Vector<FanTypeInheritance>();
 	}
+
 }

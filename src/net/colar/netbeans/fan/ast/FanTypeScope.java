@@ -96,7 +96,7 @@ public class FanTypeScope extends FanAstScope
 		// Deal with ineritance
 		parseInheritance(inheritance);
 		// "cache" inherited slots, for faster var lookup later
-		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName);
+		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true);
 		for(FanSlot slot : slots)
 		{
 			inheritedSlots.put(slot.getName(), slot);
@@ -277,4 +277,11 @@ public class FanTypeScope extends FanAstScope
 		// default is Object
 		return new FanResolvedType("sys::Obj");
 	}
+
+	public Hashtable<String, FanSlot> getInheritedSlots()
+	{
+		return inheritedSlots;
+	}
+
+	
 }
