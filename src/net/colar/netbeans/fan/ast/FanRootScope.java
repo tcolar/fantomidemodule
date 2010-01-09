@@ -11,7 +11,7 @@ import java.util.Vector;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.modules.csl.api.Error;

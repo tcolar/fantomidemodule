@@ -16,7 +16,7 @@ import net.colar.netbeans.fan.ast.FanAstField;
 import net.colar.netbeans.fan.ast.FanAstMethod;
 import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
-import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.FanIndexer;
@@ -41,6 +41,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
  */
 public class FanStructureAnalyzer implements StructureScanner
 {
+
 	public static final String CODE_FOLDS = "codeblocks";
 	public static final String DOC_FOLDS = "comments";
 	public static final String COMMENT_FOLDS = "comments";
@@ -74,7 +75,7 @@ public class FanStructureAnalyzer implements StructureScanner
 					{
 						inheritance += ", ";
 					}
-					inheritance += inh.getShortAsTypedType();
+					inheritance += inh.getSignature(false);
 				}
 				item.setName(t.getName());
 				String html = t.getName();
@@ -95,6 +96,10 @@ public class FanStructureAnalyzer implements StructureScanner
 						ElementKind kind = m.isCtor() ? ElementKind.CONSTRUCTOR : ElementKind.METHOD;
 						FanStructureItem mItem = new FanStructureItem(var.getNode(), kind, result);
 						String returnType = FanType.getShortName(m.getTypeString());
+						if (returnType.equals(FanIndexer.UNRESOLVED_TYPE))
+						{
+							returnType = "";
+						}
 						if (returnType.equalsIgnoreCase("void"))
 						{
 							returnType = "";
@@ -108,11 +113,18 @@ public class FanStructureAnalyzer implements StructureScanner
 							{
 								params += ", ";
 							}
-							String pType=parameters.get(pname).getShortAsTypedType();
-							if(pType.equals(FanIndexer.UNRESOLVED_TYPE))
-								pType="";
+							String pType = parameters.get(pname).getSignature(false);
+							if (pType.equals(FanIndexer.UNRESOLVED_TYPE))
+							{
+								pType = "";
+							}
+
+							if (pType.equals(FanIndexer.UNRESOLVED_TYPE))
+							{
+								pType = "";
+							}
 							params += "<font color='#aaaaaa'>" + pType + "</font>";
-							params += " "+pname;
+							params += " " + pname;
 						}
 						/*String constChain = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_CONSTRUCTOR_CHAIN);*/
 						handleModifiers(mItem, m.getModifiers());
@@ -131,7 +143,11 @@ public class FanStructureAnalyzer implements StructureScanner
 					} else if (var instanceof FanAstField)
 					{
 						FanStructureItem slotItem = new FanStructureItem(var.getNode(), ElementKind.FIELD, result);
-						String type = var.getType().getShortAsTypedType();
+						String type = var.getType().getSignature(false);
+						if (type.equals(FanIndexer.UNRESOLVED_TYPE))
+						{
+							type = "";
+						}
 						handleModifiers(slotItem, var.getModifiers());
 						slotItem.setName(var.getName());
 						String slotHtml = var.getName();
@@ -143,8 +159,10 @@ public class FanStructureAnalyzer implements StructureScanner
 						slots.add(slotItem);
 					}
 				}
-				if(slots.size()>0)
+				if (slots.size() > 0)
+				{
 					item.setNestedItems(slots);
+				}
 				items.add(item);
 			}
 
@@ -172,7 +190,7 @@ public class FanStructureAnalyzer implements StructureScanner
 	public Configuration getConfiguration()
 	{
 		return null;
-	} 
+	}
 
 	private void handleModifiers(FanStructureItem item, List<FanAstScopeVarBase.ModifEnum> modifs)
 	{

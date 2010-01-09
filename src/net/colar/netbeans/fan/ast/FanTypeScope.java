@@ -5,14 +5,15 @@
 package net.colar.netbeans.fan.ast;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
-import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import org.antlr.runtime.tree.CommonTree;
-import org.netbeans.modules.csl.api.ElementKind;
 
 /**
  * Scope for a Type (class, enum, mixin)
@@ -25,7 +26,7 @@ public class FanTypeScope extends FanAstScope
 	{
 
 		CLASS(1), MIXIN(2), ENUM(3),
-		JAVA_CLASS(21), JAVA_INTERFACE(22),	JAVA_ANNOTATION(23), JAVA_ENUM(24);
+		JAVA_CLASS(21), JAVA_INTERFACE(22), JAVA_ANNOTATION(23), JAVA_ENUM(24);
 		int val;
 
 		private TypeKind(int i)
@@ -37,7 +38,6 @@ public class FanTypeScope extends FanAstScope
 		{
 			return val;
 		}
-
 	}
 	String name = "";
 	// qualified Name
@@ -47,6 +47,8 @@ public class FanTypeScope extends FanAstScope
 	TypeKind kind = TypeKind.CLASS;
 	// modifiers
 	protected ArrayList<FanAstScopeVarBase.ModifEnum> modifiers = new ArrayList<FanAstScopeVarBase.ModifEnum>();
+	// To make it faster to lokup vars
+	Hashtable<String, FanSlot> inheritedSlots = new Hashtable<String, FanSlot>();
 
 	public FanTypeScope(FanRootScope parent, CommonTree ast)
 	{
@@ -69,6 +71,7 @@ public class FanTypeScope extends FanAstScope
 		}
 
 		FanUtilities.GENERIC_LOGGER.debug("Type node: " + ast.toStringTree());
+
 		CommonTree nameNode = (CommonTree) ast.getFirstChildWithType(FanParser.AST_ID);
 		CommonTree inheritance = (CommonTree) ast.getFirstChildWithType(FanParser.AST_INHERITANCE);
 		// fields are within the code_block of the type
@@ -78,6 +81,7 @@ public class FanTypeScope extends FanAstScope
 		{
 			name = FanLexAstUtils.getNodeContent(getRoot().getParserResult(), nameNode);
 		}
+		qName = getPod() + "::" + name;
 
 		List<CommonTree> modifs = FanLexAstUtils.getAllChildrenWithType(ast, FanParser.AST_MODIFIER);
 		for (CommonTree m : modifs)
@@ -91,6 +95,13 @@ public class FanTypeScope extends FanAstScope
 
 		// Deal with ineritance
 		parseInheritance(inheritance);
+		// "cache" inherited slots, for faster var lookup later
+		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName);
+		for(FanSlot slot : slots)
+		{
+			inheritedSlots.put(slot.getName(), slot);
+		}
+
 
 		// Deal with children - slots
 		List<CommonTree> children = (List<CommonTree>) content.getChildren();
@@ -119,7 +130,6 @@ public class FanTypeScope extends FanAstScope
 			}
 		}
 
-		qName = getPod() + "::" + name;
 		//serialize();
 	}
 
@@ -156,7 +166,7 @@ public class FanTypeScope extends FanAstScope
 			{
 				if (child != null && child.getType() == FanParser.AST_ID)
 				{
-					FanResolvedType inhType = FanResolvedType.makeFromSimpleType(this, child);
+					FanResolvedType inhType = FanResolvedType.makeFromTypeSig(this, child);
 					String text = FanLexAstUtils.getNodeContent(getRoot().getParserResult(), child);
 					// WATCHME inhType.setTypeText(text);
 					if (!inhType.isResolved())
@@ -257,14 +267,14 @@ public class FanTypeScope extends FanAstScope
 
 	public FanResolvedType getSuperClass()
 	{
-		for(FanResolvedType item :inheritedItems)
+		for (FanResolvedType item : inheritedItems)
 		{
-			if(item.getDbType().isClass())
+			if (item.getDbType().isClass())
+			{
 				return item;
+			}
 		}
 		// default is Object
 		return new FanResolvedType("sys::Obj");
 	}
-
-
 }

@@ -8,7 +8,8 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -79,6 +80,8 @@ public abstract class FanAstScope
 	{
 		//System.out.println("Adding scope var: " + var);
 		String name = var.getName();
+		if(name.length()==0)
+			return;
 		// Can't have duplicated slot name in scope no matter what
 		if (hasScopevar(name))
 		{
@@ -129,18 +132,25 @@ public abstract class FanAstScope
 		children.add(child);
 	}
 
-	public FanResolvedType resolveVar(String type)
+	public FanResolvedType resolveVar(String varName)
 	{
-		if (type == null)
+		if (varName == null)
 		{
 			return FanResolvedType.makeUnresolved();
 		}
 		FanAstScope scope = this;
 		do
 		{
-			if (scope.hasScopevar(type))
+			if (scope.hasScopevar(varName))
 			{
-				return scope.getScopeVar(type).getType();
+				return scope.getScopeVar(varName).getType();
+			}
+			// if we get here, try in the type inheritance
+			if(scope instanceof FanTypeScope)
+			{
+				Hashtable<String, FanSlot> table = ((FanTypeScope)scope).inheritedSlots;
+				if(table.containsKey(varName))
+					return new FanResolvedType(table.get(varName).getReturnedType());
 			}
 			scope = scope.getParent();
 		} while (scope != null);

@@ -213,10 +213,12 @@ public class FanSlot extends JOTModel
 	{
 		return slotKind == FanModelConstants.SlotKind.CTOR.value();
 	}
+
 	public boolean isMethod()
 	{
 		return slotKind == FanModelConstants.SlotKind.METHOD.value();
 	}
+
 	public boolean isField()
 	{
 		return slotKind == FanModelConstants.SlotKind.FIELD.value();
@@ -226,14 +228,17 @@ public class FanSlot extends JOTModel
 	{
 		return protection == ModifEnum.PRIVATE.value();
 	}
+
 	public boolean isPublic()
 	{
 		return protection == ModifEnum.PUBLIC.value();
 	}
+
 	public boolean isProtected()
 	{
 		return protection == ModifEnum.PROTECTED.value();
 	}
+
 	public boolean isInternal()
 	{
 		return protection == ModifEnum.INTERNAL.value();
@@ -245,5 +250,70 @@ public class FanSlot extends JOTModel
 		super.save(transaction);
 	}
 
+	public static Vector<FanSlot> getAllSlotsForType(String fanType)
+	{
+		Vector<String> types = new Vector<String>();
+		return getAllSlotsForType(fanType, types);
+	}
+
+	/**
+	 * Recursive
+	 * Get all slots, including inheritance
+	 * @param dbType
+	 * @return
+	 */
+	public static Vector<FanSlot> getAllSlotsForType(String fanType, Vector<String> doneTypes)
+	{
+		doneTypes.add(fanType);
+		FanType dbType = FanType.findByQualifiedName(fanType);
+		if(dbType == null)
+			return new Vector<FanSlot>(0);
+		Vector<FanSlot> slots = FanSlot.findAllForType(dbType.getId());
+		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, fanType);
+		// get inherited slots
+		for (FanTypeInheritance inh : inhs)
+		{
+			String typeName = inh.getMainType();
+			System.out.println(fanType + ":" + typeName);
+			// If a type was already done, do not do again -> avoid cyclic dependencies etc...
+			if (doneTypes.contains(typeName))
+			{
+				continue;
+			}
+			// add slots that are not already in
+			Vector<FanSlot> subSlots = getAllSlotsForType(typeName);
+			for (FanSlot s : subSlots)
+			{
+				boolean skip = false;
+				for (FanSlot slot : slots)
+				{
+					if (slot.name.equals(s.name))
+					{
+						skip = true;
+						break;
+					}
+				}
+				if (!skip)
+				{
+					slots.add(s);
+				}
+			}
+		}
+		// Add implicit super types
+		if (dbType.isClass() && !doneTypes.contains("sys::Obj"))
+		{
+			slots.addAll(getAllSlotsForType("sys::Obj"));
+		} else if (dbType.isEnum() && !doneTypes.contains("sys::Enum"))
+		{
+			slots.addAll(getAllSlotsForType("sys::Enum"));
+		}
+		return slots;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "FanSlot: "+id+" : "+getName()+"("+getReturnedType()+")";
+	}
 
 }

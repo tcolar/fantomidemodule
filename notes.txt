@@ -4,7 +4,9 @@ Do a profiler session
 
 Deal with casting (Obj)   i as Obj
 Slot completion: for function propose toto.each |Str s->bool| {}   not toto.each(c)
-rewrite structure analyzer & scanner to use scope
+Function type parsing fails.
+completion of list/map like list[0].  map[key].   (indexExpr)
+constructor call like Actor("") -> create sa type that is NOT static
 
 Unrecognized modifier: ublic
 

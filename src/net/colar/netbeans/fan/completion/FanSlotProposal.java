@@ -48,7 +48,7 @@ public class FanSlotProposal extends FanCompletionProposal
 			}
 			html = name;
 			prefix = name;
-			rHtml += slot.getReturnedType();
+			rHtml += FanType.getShortName(slot.getReturnedType());
 		} else if (slot.isMethod() || slot.isCtor())
 		{
 			this.kind = ElementKind.METHOD;
@@ -59,7 +59,7 @@ public class FanSlotProposal extends FanCompletionProposal
 			String args = "";
 			html = name + "(";
 			prefix = name + "(";
-			rHtml = slot.getReturnedType();
+			rHtml = FanType.getShortName(slot.getReturnedType());
 			if (rHtml.equals("sys::Void"))
 			{
 				rHtml = "";

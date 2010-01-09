@@ -25,7 +25,7 @@ import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.indexer.FanJarsIndexer;
-import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
@@ -306,7 +306,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			}
 		} else
 		{
-			Vector<FanSlot> slots = getAllSlotsForType(type.getDbType());
+			Vector<FanSlot> slots = FanSlot.getAllSlotsForType(type.getAsTypedType());
 			for (FanSlot slot : slots)
 			{
 				if (slot.getName().toLowerCase().startsWith(prefix))
@@ -545,64 +545,4 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 	}
 
-	private Vector<FanSlot> getAllSlotsForType(FanType dbType)
-	{
-		Vector<String> types = new Vector<String>();
-		return getAllSlotsForType(dbType, types);
-	}
-	/**
-	 * Recursive
-	 * Get all slots, including inheritance
-	 * @param dbType
-	 * @return
-	 */
-	private Vector<FanSlot> getAllSlotsForType(FanType dbType, Vector<String> doneTypes)
-	{
-		doneTypes.add(dbType.getQualifiedName());
-		Vector<FanSlot> slots = FanSlot.findAllForType(dbType.getId());
-		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, dbType.getQualifiedName());
-		// get inherited slots
-		for (FanTypeInheritance inh : inhs)
-		{
-			String typeName =inh.getMainType();
-			System.out.println(dbType.getQualifiedName()+":"+typeName);
-			// If a type was already done, do not do again -> avoid cyclic dependencies etc...
-			if(doneTypes.contains(typeName))
-				continue;
-			FanType type = FanType.findByQualifiedName(typeName);
-			// add slots that are not already in
-			if(type!=null)
-			{
-				Vector<FanSlot> subSlots = getAllSlotsForType(type);
-				for(FanSlot s: subSlots)
-				{
-					boolean skip=false;
-					for(FanSlot slot : slots)
-					{
-						if(slot.name.equals(s.name))
-						{
-							skip=true;
-							break;
-						}
-					}
-					if( ! skip)
-					{
-						slots.add(s);
-					}
-				}
-			}
-		}
-		// Add implicit super types
-		if(dbType.isClass() && ! doneTypes.contains("sys::Obj"))
-		{
-			FanType objType = FanType.findByQualifiedName("sys::Obj");
-			slots.addAll(getAllSlotsForType(objType));
-		}
-		else if(dbType.isEnum() && ! doneTypes.contains("sys::Enum"))
-		{
-			FanType objType = FanType.findByQualifiedName("sys::Enum");
-			slots.addAll(getAllSlotsForType(objType));
-		}
-		return slots;
-	}
 }

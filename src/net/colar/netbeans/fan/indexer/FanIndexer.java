@@ -4,6 +4,7 @@
  */
 package net.colar.netbeans.fan.indexer;
 
+import net.colar.netbeans.fan.types.FanResolvedType;
 import fan.sys.Buf;
 import fan.sys.FanObj;
 import fan.sys.Pod;
@@ -365,7 +366,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							FanResolvedType slotType = slot.getType();
 							if (slotType.isResolved())
 							{
-								type = slotType.getDbType().getQualifiedName();
+								type = slotType.isResolved()?slotType.getDbType().getQualifiedName():slotType.getAsTypedType();
 							}
 							dbSlot.setReturnedType(type);
 							dbSlot.setName(slot.getName());

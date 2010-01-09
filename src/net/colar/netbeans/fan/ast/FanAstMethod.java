@@ -7,7 +7,7 @@ import java.util.Hashtable;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -40,7 +40,7 @@ public class FanAstMethod extends FanAstField
 			if (typeNode != null && id != null)
 			{
 				String pName = FanLexAstUtils.getNodeContent(result, id);
-				FanResolvedType pType = FanResolvedType.makeFromSimpleTypeWithWarning(scope, typeNode);
+				FanResolvedType pType = FanResolvedType.makeFromTypeSigWithWarning(scope, typeNode);
 				if (!parameters.containsKey(pName))
 				{
 					parameters.put(pName, pType);

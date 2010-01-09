@@ -6,7 +6,7 @@ package net.colar.netbeans.fan.ast;
 import java.util.ArrayList;
 import java.util.List;
 import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**

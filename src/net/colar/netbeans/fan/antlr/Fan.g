@@ -116,6 +116,7 @@ AST_FOR_INIT;
 AST_CATCH_DEF;
 AST_FORMAL;
 AST_CAST;
+AST_FUNC_TYPE;
 // help getting valid AST for completion: (INC means incomplete)
 AST_INC_USING;
 AST_INC_DOTCALL;
@@ -311,8 +312,9 @@ enumValDefs 	:	enumValDef (SP_COMMA  enumValDef)* eos;
 enumValDef 	:	docs id (parL args? parR)?;
 typeList	:  	type (SP_COMMA type)*;
 
-type	        :  	(typeRoot  SP_QMARK? more=(LIST_TYPE SP_QMARK?)*)
-					-> ^(AST_TYPE typeRoot SP_QMARK? $more*);
+type	        :  	(typeRoot SP_QMARK? typeTail)
+					-> ^(AST_TYPE typeRoot SP_QMARK? typeTail?);
+typeTail	:   (LIST_TYPE SP_QMARK?)*;
 typeRoot	:	mapType | nonMapType;
 nonMapType	:	funcType | simpleType;
 simpleType     	:  	id (SP_COLCOL id)?;
@@ -321,7 +323,9 @@ mapType		:	sq_bracketL? nonMapType SP_QMARK? (LIST_TYPE SP_QMARK?)*
 				({notAfterEol()}? SP_COLON {notAfterEol()}? type)+ sq_bracketR?
 			-> ^(AST_MAP ^(AST_CHILD nonMapType) ^(AST_CHILD type));
 // TODO: SP_COMMA syntax to go away in Fan 1.0.49
-funcType 	:	SP_PIPE (SP_COMMA | (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType)) SP_PIPE;
+funcType 	:	(SP_PIPE funcTypeContent SP_PIPE)
+				-> ^(AST_FUNC_TYPE funcTypeContent);
+funcTypeContent : SP_COMMA | (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType);
 assignedType	:	OP_ARROW type?;
 formals 	:  	formal (SP_COMMA formal)*;
 formal		:	(formal_content)

@@ -4,7 +4,7 @@
 
 package net.colar.netbeans.fan.ast;
 
-import net.colar.netbeans.fan.indexer.FanResolvedType;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
