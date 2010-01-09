@@ -1071,7 +1071,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					if (l.longValue() < now - 2000)
 					{
 						fanSrcToBeIndexed.remove(path);
-						//indexSrc(path);
+						indexSrc(path);
 					}
 				}
 			}
