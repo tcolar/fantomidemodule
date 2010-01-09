@@ -1071,6 +1071,8 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					if (l.longValue() < now - 2000)
 					{
 						fanSrcToBeIndexed.remove(path);
+						//TODO: Make sure if the source exits in pods too it doesn't duplicate
+						//TODO: warn than for editing fan sources you should use a separate fan src folders.
 						indexSrc(path);
 					}
 				}
