@@ -1,5 +1,8 @@
 Do a profiler session
 completion of list/map like list[0].  map[key].   (indexExpr)
+ternary expressions ??
+& / or etc.. expressions -> Boolean instance
+other expressions ??
 constructor call like Actor("") -> create sa type that is NOT static
 
 Unrecognized modifier: ublic
@@ -10,6 +13,10 @@ sysTest::FuncTest
 
 Still problems with inherited types(in src ?)
 see fwt::BorderPane
+
+test completion manually
+
+Do the TODO NOW items
 
 ============= TODO Completion ===============================
 
