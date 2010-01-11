@@ -1,18 +1,17 @@
-Review all the todos.
-
 Do a profiler session
-
-Deal with casting (Obj)   i as Obj
-Slot completion: for function propose toto.each |Str s->bool| {}   not toto.each(c)
-Function type parsing fails.
 completion of list/map like list[0].  map[key].   (indexExpr)
 constructor call like Actor("") -> create sa type that is NOT static
 
 Unrecognized modifier: ublic
 
+Review unpaarseable src (open fantom src's and see tasks)
+sysTest::symbolTest
+sysTest::FuncTest
+
+Still problems with inherited types(in src ?)
+see fwt::BorderPane
+
 ============= TODO Completion ===============================
-loop vars
-throw exception vars
 
 -> Check local slot names against parents to see if all abstract are present, and if all "override" are overriding something and wether the one overriden is virtual
 -> warn when parent is Java FFI and there are duplicate slot names (no overload)
