@@ -778,7 +778,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							inh.setMainType(mainType);
 							inh.setInheritedType(inhType);
 							inh.save();
-							//System.out.println("saving inh: " + inh.getMainType() + " " + inh.getInheritedType() + " " + inh.getId());
+							System.out.println("saving inh: " + inh.getMainType() + " " + inh.getInheritedType() + " " + inh.getId());
 						}
 					} // end inh
 
