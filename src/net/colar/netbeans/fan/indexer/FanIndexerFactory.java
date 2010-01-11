@@ -74,13 +74,14 @@ public class FanIndexerFactory extends CustomIndexerFactory
 		{
 			String path = idx.getURL().getPath();
 			JOTLogger.debug(this, "File deleted: " + path);
-			FanDocument.deleteForPath(null, path);
+			indexer.requestDelete(path);
 		}
 	}
 
 	@Override
 	public void filesDirty(Iterable<? extends Indexable> itrbl, Context cntxt)
 	{
+		// requestIndexing
 		indexer.index(itrbl, cntxt);
 	}
 

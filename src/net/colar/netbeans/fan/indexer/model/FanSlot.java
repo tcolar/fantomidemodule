@@ -279,7 +279,7 @@ public class FanSlot extends JOTModel
 		{
 			String typeName = inh.getInheritedType();
 			System.out.println("############## " + fanType + " : " + typeName);
-			// If a type was already done, do not do again, also avoids potential cyclic dependencies etc...
+			// If a type was already done, do not do again, also avoid potential cyclic dependencies etc...
 			if (doneTypes.contains(typeName))
 			{
 				System.out.println("###### skipping: "+typeName);

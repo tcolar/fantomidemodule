@@ -5,6 +5,8 @@ package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
 import net.colar.netbeans.fan.ast.FanTypeScope;
+import net.colar.netbeans.fan.indexer.FanIndexer;
+import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
@@ -25,8 +27,9 @@ public class FanType extends JOTModel
 	public String simpleName = "";
 	public String pod = ""; // name of the pod it's in (or package for java ffi)
 	public Integer kind = -1; // class, enum, mixin
-	public Long documentId = -1L; // id of the document(source) it's found in - can be null;
-	// wether defined ina  source or  a binary/lib
+	public Long srcDocId = -1L; // id of the document(source) it's found in - can be null;
+	public Long binDocId = -1L; // id of the document(source) it's found in - can be null;
+	// wether latest indexing was done from source or binary/lib
 	public Boolean fromSource = true;
 	// modifiers / protection
 	public Integer protection = -1; // private, public(default), internal, protected
@@ -45,14 +48,24 @@ public class FanType extends JOTModel
 		mapping.defineFieldSize("pod", 80);
 	}
 
-	public long getDocumentId()
+	public Long getBinDocId()
 	{
-		return documentId;
+		return binDocId;
 	}
 
-	public void setDocumentId(long documentId)
+	public void setBinDocId(Long binDocId)
 	{
-		this.documentId = documentId;
+		this.binDocId = binDocId;
+	}
+
+	public Long getSrcDocId()
+	{
+		return srcDocId;
+	}
+
+	public void setSrcDocId(Long srcDocId)
+	{
+		this.srcDocId = srcDocId;
 	}
 
 	public boolean isIsAbstract()
@@ -144,8 +157,9 @@ public class FanType extends JOTModel
 	 */
 	public static Vector<FanType> findAllForDoc(JOTTransaction transaction, long doc) throws Exception
 	{
-		JOTSQLCondition cond = new JOTSQLCondition("documentId", JOTSQLCondition.IS_EQUAL, doc);
-		return (Vector<FanType>) JOTQueryBuilder.selectQuery(transaction, FanType.class).where(cond).find().getAllResults();
+		JOTSQLCondition cond = new JOTSQLCondition("srcDocId", JOTSQLCondition.IS_EQUAL, doc);
+		JOTSQLCondition cond2 = new JOTSQLCondition("binDocId", JOTSQLCondition.IS_EQUAL, doc);
+		return (Vector<FanType>) JOTQueryBuilder.selectQuery(transaction, FanType.class).where(cond).orWhere(cond2).find().getAllResults();
 	}
 
 	public Boolean isFromSource()
@@ -159,26 +173,46 @@ public class FanType extends JOTModel
 	}
 
 	/**
-	 * Get the list of unique sorted types for a document
-	 * @param transaction
-	 * @param doc
-	 * @return
-	 * @throws Exception
+	 * We don't want to delete if either bindoc or srcdoc still there, just update the entry ... only delete if both are gone.
+	 * if there is a doc left (wethere src or bin) we should reindex that one to make sure we are up to date.
 	 */
-	/*public static Vector<FanType> findTypeList(JOTTransaction transaction, long doc) throws Exception
-	{
-	JOTSQLCondition cond = new JOTSQLCondition("documentId", JOTSQLCondition.IS_EQUAL, doc);
-	return (Vector<FanType>)JOTQueryBuilder.selectQuery(transaction, FanType.class).where(cond).
-	orderBy("fromSource",false).find().filterDistinct("qualifiedName").getAllResults();
-	}*/
-	public static void deleteForDoc(JOTTransaction trans, long id) throws Exception
+	public static void unlinkDocument(JOTTransaction trans, long id, boolean isSrcDoc) throws Exception
 	{
 		try
 		{
 			Vector<FanType> types = findAllForDoc(trans, id);
 			for (FanType type : types)
 			{
-				type.delete(trans);
+				// If there will be no link left, then delete the type
+				if ((isSrcDoc && type.getBinDocId() == -1)
+						|| (!isSrcDoc && type.getBinDocId() == -1))
+				{
+					type.delete(trans);
+				}
+				// otherwise:
+				else
+				{
+					if (isSrcDoc)
+					{
+						// I'm removing the src doc, but there is still a bin one
+						type.setSrcDocId(-1L);
+						if(type.isFromSource())
+						{
+							//TODO: Outdated, reindex this type from the src doc
+						}
+						type.save();
+					}
+					else
+					{
+						// I'm removing the bin doc, but there is still a src one
+						type.setBinDocId(-1L);
+						if( ! type.isFromSource())
+						{
+							//TODO: Outdated, reindex this type from the bin doc
+						}
+						type.save();
+					}
+				}
 			}
 		} catch (Exception e)
 		{
@@ -189,7 +223,6 @@ public class FanType extends JOTModel
 	@Override
 	public void delete(JOTTransaction trans) throws Exception
 	{
-		// TODO: delete slots
 		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, qualifiedName);
 		for (FanTypeInheritance inh : inhs)
 		{
@@ -235,7 +268,6 @@ public class FanType extends JOTModel
 		return null;
 	}
 
-
 	public static Vector<String> findAllPackagesNames()
 	{
 		try
@@ -256,7 +288,6 @@ public class FanType extends JOTModel
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	public static Vector<String> findAllPodNames()
 	{
@@ -330,8 +361,8 @@ public class FanType extends JOTModel
 
 	public boolean isClass()
 	{
-		return getKind() == FanTypeScope.TypeKind.CLASS.value() ||
-			getKind() == FanTypeScope.TypeKind.JAVA_CLASS.value();
+		return getKind() == FanTypeScope.TypeKind.CLASS.value()
+				|| getKind() == FanTypeScope.TypeKind.JAVA_CLASS.value();
 	}
 
 	public boolean isMixin()
@@ -341,13 +372,12 @@ public class FanType extends JOTModel
 
 	public boolean isEnum()
 	{
-		return getKind() == FanTypeScope.TypeKind.ENUM.value() ||
-			getKind() == FanTypeScope.TypeKind.JAVA_ENUM.value();
+		return getKind() == FanTypeScope.TypeKind.ENUM.value()
+				|| getKind() == FanTypeScope.TypeKind.JAVA_ENUM.value();
 	}
 
 	public boolean isJava()
 	{
-		return kind >20 && kind <30;
+		return kind > 20 && kind < 30;
 	}
-
 }

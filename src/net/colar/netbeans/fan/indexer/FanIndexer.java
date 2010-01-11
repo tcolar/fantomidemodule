@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
@@ -82,8 +81,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	static JOTLoggerLocation log = new JOTLoggerLocation(FanIndexer.class);
 	private final FanIndexerThread indexerThread;
 	public static volatile boolean shutdown = false;
+	//TODO: will that work or should they all be in the same fifo stack
 	Hashtable<String, Long> fanSrcToBeIndexed = new Hashtable<String, Long>();
 	Hashtable<String, Long> fanPodsToBeIndexed = new Hashtable<String, Long>();
+	Hashtable<String, Long> toBeDeleted = new Hashtable<String, Long>();
 	private FanJarsIndexer jarsIndexer;
 	private boolean alreadyWarned;
 
@@ -138,6 +139,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		{
 			requestIndexing(indexable.getURL().getPath());
 		}
+	}
+
+	public void requestDelete(String path)
+	{
+		toBeDeleted.put(path, new Date().getTime());
 	}
 
 	/**
@@ -283,7 +289,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 								}
 							}
 						}
-						dbType.setDocumentId(doc.getId());
+						dbType.setSrcDocId(doc.getId());
 						dbType.setKind(typeScope.getKind().value());
 						dbType.setIsAbstract(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.ABSTRACT));
 						dbType.setIsConst(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.CONST));
@@ -527,7 +533,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		}
 		if (!runInBackground)
 		{
-			while (!shutdown && !fanPodsToBeIndexed.isEmpty())
+			while (! (shutdown || fanPodsToBeIndexed.isEmpty()))
 			{
 				try
 				{
@@ -535,6 +541,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					Thread.yield();
 				} catch (Exception e)
 				{
+					log.exception("waiting for pods indexign to complete", e);
 				}
 			}
 		}
@@ -592,7 +599,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							}
 						}
 					}
-					dbType.setDocumentId(doc.getId());
+					dbType.setBinDocId(doc.getId());
 					dbType.setKind(getKind(type));
 					dbType.setIsAbstract(hasFlag(flags, FConst.Abstract));
 					dbType.setIsConst(hasFlag(flags, FConst.Const));
@@ -771,7 +778,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							inh.setMainType(mainType);
 							inh.setInheritedType(inhType);
 							inh.save();
-							System.out.println("saving inh: " + inh.getMainType() + " " + inh.getInheritedType() + " " + inh.getId());
+							//System.out.println("saving inh: " + inh.getMainType() + " " + inh.getInheritedType() + " " + inh.getId());
 						}
 					} // end inh
 
@@ -996,8 +1003,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		// synced because we don't want to do it at the same time as the thread
 		String path = fe.getFile().getPath();
 		log.debug("File deleted: " + path);
-		//TODO: had this to a hashtable and do it in the thread
-		FanDocument.deleteForPath(null, path);
+		toBeDeleted.put(path, new Date().getTime());
 	}
 
 	public void fileRenamed(FileRenameEvent fre)
@@ -1033,7 +1039,30 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				} catch (Exception e)
 				{
 				}
-				long now = new Date().getTime();
+				// to be deleted
+				Enumeration<String> tbd = toBeDeleted.keys();
+				{
+					while (tbd.hasMoreElements())
+					{
+						if (shutdown)
+						{
+							return;
+						}
+						String path = tbd.nextElement();
+
+						FanDocument doc = FanDocument.findByPath(path);
+						try
+						{
+							if (doc != null)
+							{
+								doc.delete();
+							}
+						} catch (Exception e)
+						{
+							log.exception("Error deleting doc", e);
+						}
+					}
+				}
 				// always do binaries first
 				do
 				{
@@ -1050,7 +1079,8 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						}
 						String path = it.nextElement();
 						Long l = fanPodsToBeIndexed.get(path);
-						if (l.longValue() < now)
+						long now = new Date().getTime();
+						if (l.longValue() < now - 1000)
 						{
 							fanPodsToBeIndexed.remove(path);
 							indexPod(path);
@@ -1068,6 +1098,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					String path = it.nextElement();
 					Long l = fanSrcToBeIndexed.get(path);
 					// Hasn't changed in a couple seconds
+					long now = new Date().getTime();
 					if (l.longValue() < now - 2000)
 					{
 						fanSrcToBeIndexed.remove(path);

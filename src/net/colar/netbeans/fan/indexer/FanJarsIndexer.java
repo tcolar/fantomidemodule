@@ -224,6 +224,7 @@ public class FanJarsIndexer implements FileChangeListener
 		FileUtil.addFileChangeListener(this, FileUtil.toFile(fe.getFile()));
 	}
 
+	//TODO: all events, use thread to delete/reindex etc...
 	public void fileDataCreated(FileEvent fe)
 	{
 		String path = fe.getFile().getPath();
@@ -244,7 +245,16 @@ public class FanJarsIndexer implements FileChangeListener
 	{
 		String path = fe.getFile().getPath();
 		log.debug("File deleted: " + path);
-		FanDocument.deleteForPath(null, path);
+		//TODO: had this to a hashtable and do it in the thread
+		// ptherwise might get multithreading issues
+		FanDocument doc = FanDocument.findByPath( path);
+		try
+		{
+			doc.delete();
+		}catch(Exception e)
+		{
+			log.exception("Error deleting doc", e);
+		}
 	}
 
 	public void fileRenamed(FileRenameEvent fre)
@@ -370,7 +380,7 @@ public class FanJarsIndexer implements FileChangeListener
 					}
 				}
 			}
-			dbType.setDocumentId(doc.getId());
+			dbType.setBinDocId(doc.getId());
 			dbType.setKind(getKind(c));
 			dbType.setIsAbstract(Modifier.isAbstract(flags));
 			dbType.setIsConst(Modifier.isFinal(flags) && Modifier.isStatic(flags));

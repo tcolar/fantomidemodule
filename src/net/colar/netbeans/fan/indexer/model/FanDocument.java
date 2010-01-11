@@ -87,25 +87,20 @@ public class FanDocument extends JOTModel
 		}
 	}
 
-	public static void deleteForPath(JOTTransaction trans, String path)
-	{
-		FanDocument doc = findByPath(path);
-		try
-		{
-			if (doc != null)
-			{
-				doc.delete(trans);
-			}
-		} catch (Exception e)
-		{
-			JOTLogger.logException(FanDocument.class, "Failed deleting doc: " + path, e);
-		}
-	}
-
+	/**
+	 * TODO: imp, following:
+	 * Each type might be avail from a source but also a pod
+	 * This removes one of those 2 links.
+	 * - If both links are gone, then delete the type altogether.
+	 * - If only one gone, then reindex using the one left
+	 * to make sure we are up2date
+	 * @param trans
+	 * @param path
+	 */
 	@Override
 	public void delete(JOTTransaction trans) throws Exception
 	{
-			FanType.deleteForDoc(trans, getId());
+			FanType.unlinkDocument(trans, getId(), isSource);
 			super.delete(trans);
 	}
 
