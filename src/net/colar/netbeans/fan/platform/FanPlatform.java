@@ -23,7 +23,7 @@ import org.openide.filesystems.FileUtil;
  */
 public class FanPlatform
 {
-	//TODO: should not be hardcoded
+	//TODO: too much hardcoded
 
 	private Set<ClassPath> sourcePaths = null;
 	private static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
@@ -71,7 +71,7 @@ public class FanPlatform
 			if (f.exists() && f.isDirectory())
 			{
 				File exe = new File(path + File.separator + "bin", "fan");
-				return exe.exists() && exe.isFile() /*&& exe.canExecute()*/;//TODO: fix
+				return exe.exists() && exe.isFile();
 			}
 		}
 		return false;
@@ -282,7 +282,6 @@ public class FanPlatform
 
 	public void update()
 	{
-		//TODO: dialog to let the user it's gonna index for a while'
 		// called when FAN_HOME is changed/updated.
 		readSettings();
 		FanIndexerFactory.getIndexer().indexAll(true);

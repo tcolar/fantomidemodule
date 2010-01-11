@@ -26,8 +26,6 @@ import net.colar.netbeans.fan.indexer.model.FanType;
  */
 public class FanSlotProposal extends FanCompletionProposal
 {
-//TODO : != icon for static slots
-
 	private String html = "";
 	private String rHtml = "";
 	private String prefix = "";

@@ -31,8 +31,6 @@ import org.openide.util.lookup.Lookups;
  */
 public class FanProject implements Project, ProjectInformation
 {
-	//TODO: make src folders dynamic
-
 	public static final String HARDCODED_JAVA_SRC_FOLDER = "java";
 	public static final String HARDCODED_FAN_SRC_FOLDER = "fan";
 	public static final String HARDCODED_TEST_SRC_FOLDER = "test";
@@ -102,7 +100,6 @@ public class FanProject implements Project, ProjectInformation
 
 	public static boolean isProject(FileObject projectDirectory)
 	{
-		//TODO: is this enough ?
 		return projectDirectory.getFileObject(FanProjectFactory.FAN_BUILD_FILE) != null;
 	}
 
@@ -121,7 +118,6 @@ public class FanProject implements Project, ProjectInformation
 
 		protected void projectOpened()
 		{
-			//TODO: register this folder, or the parent ???
 			FanClassPathProvider cpProvider = lkp.lookup(FanClassPathProvider.class);
 			//GlobalPathRegistry.getDefault().register(PATH_BOOT, cpProvider.getProjectClassPaths(PATH_BOOT));
 			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, cpProvider.getProjectClassPaths(ClassPath.SOURCE));

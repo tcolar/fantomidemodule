@@ -89,7 +89,6 @@ public class FanProjectActionProvider implements ActionProvider
 	@Override
 	public boolean isActionEnabled(String commandName, Lookup context) throws IllegalArgumentException
 	{
-		//TODO: enhance this as needed
 		return true;
 		/*
 		final Command command = findCommand(commandName);

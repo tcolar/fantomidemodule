@@ -12,13 +12,10 @@ import org.antlr.runtime.tree.CommonTree;
 /**
  * Generic scope
  * Usually delimited by a code block (brackets etc...)
- * // TODO: What else limits scope - research fantom doc
  * @author thibautc
  */
 public class FanBlockScope extends FanAstScope
 {
-	//private boolean isItBlock = false;
-
 	public FanBlockScope(FanAstScope parent, CommonTree codeBlock)
 	{
 		super(parent, codeBlock);
@@ -67,10 +64,6 @@ public class FanBlockScope extends FanAstScope
 						subScope.addScopeVar(var, true);
 					}
 				}
-				/*else if(child.getType() == FanParser.AST_IT_BLOCK)
-				{
-					// TODO: resolve expression on the right to figure "it: out ?
-				}*/
 			} else
 			{
 				FanResolvedType resolved = FanResolvedType.makeUnresolved();
@@ -85,7 +78,6 @@ public class FanBlockScope extends FanAstScope
 						resolved = FanResolvedType.makeUnresolved();
 						if (type == null || type.isNil())
 						{
-							//TODO: resolving infered types
 							CommonTree expr = (CommonTree) child.getFirstChildWithType(FanParser.AST_TERM_EXPR);
 							//FanLexAstUtils.dumpTree(child, 0);
 							if (expr != null)
@@ -129,7 +121,6 @@ public class FanBlockScope extends FanAstScope
 
 	/*public static String resolveItType(FanAstScope scope)
 	{
-		// TODO: once resolved, lazy-cache it in the blockscope ?
 		FanBlockScope sc = scope.findParentItBlock(scope);
 		if(sc!=null)
 		{

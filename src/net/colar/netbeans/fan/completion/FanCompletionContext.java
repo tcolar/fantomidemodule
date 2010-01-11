@@ -72,8 +72,6 @@ public class FanCompletionContext
 	/**
 	 * Figure out what type of completion we will propose
 	 *
-	 * TODO: Propose after '->' ? -> probably not since a dynamic call anyhow.
-	 *
 	 * NOTE: Call can be after '.' or '?.'
 	 * NOTE: For inferred vars ... try to recognize the 'easy' ones (literals): http://wiki.colar.net/fan_cheat_sheet#literals
 	 *		Easy: Local Fields, Local method calls, Bool, Numbers(Char), Str, Uri, 'Type (#)'??

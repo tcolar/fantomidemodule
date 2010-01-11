@@ -92,7 +92,6 @@ public abstract class FanAstScopeVarBase
 	 */
 	public static ModifEnum parseModifier(String m)
 	{
-		//TODO: const ?
 		if (m.toLowerCase().equalsIgnoreCase("private"))
 		{
 			return ModifEnum.PRIVATE;

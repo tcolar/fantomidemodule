@@ -28,9 +28,6 @@ import org.openide.util.Exceptions;
  *
  * Mostly copied from Groovy formatter and Changed as needed.
  *
- * TODO: Indent single line expr like If, Try etc...
- * TODO: Also try to use proper indent for Switch / Case
- *
  * @author thibautc
  */
 public class FanFormatter implements Formatter
@@ -135,7 +132,6 @@ public class FanFormatter implements Formatter
 		return 0;
 	}
 
-	// TODO RHTML - there can be many discontiguous sections, I've gotta process all of them on the given line
 	private int getTokenBalance(BaseDocument doc, int begin, int end, boolean includeKeywords)
 	{
 		int balance = 0;
@@ -360,7 +356,6 @@ public class FanFormatter implements Formatter
 
 			boolean includeEnd = endOffset == doc.getLength() || indentOnly;
 
-			// TODO - remove initialbalance etc.
 			computeIndents(doc, initialIndent, initialOffset, endOffset, info,
 				offsets, indents, indentEmptyLines, includeEnd, indentOnly);
 
@@ -449,7 +444,6 @@ public class FanFormatter implements Formatter
 		List<Integer> indents,
 		boolean indentEmptyLines, boolean includeEnd, boolean indentOnly)
 	{
-		// PENDING:
 		// The reformatting APIs in NetBeans should be lexer based. They are still
 		// based on the old TokenID apis. Once we get a lexer version, convert this over.
 		// I just need -something- in place until that is provided.

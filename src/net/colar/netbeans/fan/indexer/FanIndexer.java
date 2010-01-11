@@ -81,7 +81,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	static JOTLoggerLocation log = new JOTLoggerLocation(FanIndexer.class);
 	private final FanIndexerThread indexerThread;
 	public static volatile boolean shutdown = false;
-	//TODO: will that work or should they all be in the same fifo stack
+	//TODO: NOW will that work or should they all be in the same fifo stack
 	Hashtable<String, Long> fanSrcToBeIndexed = new Hashtable<String, Long>();
 	Hashtable<String, Long> fanPodsToBeIndexed = new Hashtable<String, Long>();
 	Hashtable<String, Long> toBeDeleted = new Hashtable<String, Long>();
@@ -119,7 +119,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		long now = new Date().getTime();
 		log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");
 		// sources indexes will be called  through scanStarted()
-		// TODO: Log db stats (# of docs, types, slots)
 		jarsIndexer = new FanJarsIndexer();
 		// Do this one in the background (might take a while and not needed for everyone)
 		jarsIndexer.indexJars(true);
@@ -212,8 +211,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	 */
 	private void indexSrcDoc(String path, FanRootScope rootScope)
 	{
-		//TODO: does this need to be synchronized or is NB taking care of that ?
-		//JOTTransaction transaction = null;
 		FanDocument doc = null;
 		try
 		{
@@ -268,7 +265,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				}
 
 				// types
-				// TODO: remove the old ones too
 				for (FanAstScope child : rootScope.getChildren())
 				{
 					// should be but check anyway in case of future change
@@ -1011,7 +1007,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		// synced because we don't want to do it at the same time as the thread
 		FileObject src = (FileObject) fre.getSource();
 		log.debug("File renamed: " + src.getPath() + " -> " + fre.getFile().getPath());
-		//TODO: had this to a hashtable and do it in the thread
+		//TODO NOW: had this to a hashtable and do it in the thread
 		FanDocument.renameDoc(src.getPath(), fre.getFile().getPath());
 	}
 
@@ -1102,8 +1098,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					if (l.longValue() < now - 2000)
 					{
 						fanSrcToBeIndexed.remove(path);
-						//TODO: Make sure if the source exits in pods too it doesn't duplicate
-						//TODO: warn than for editing fan sources you should use a separate fan src folders.
 						indexSrc(path);
 					}
 				}

@@ -35,7 +35,6 @@ public class FanNode extends FilterNode
 
 	public static final Pattern MAIN_METHOD = Pattern.compile("Void\\s+main\\([^)]*\\)\\s*\\{");
 	public static final String ATTR_NODE_FILEOBJECT = "NODE_FILEOBJECT";
-	//TODO: are those vars working ?
 	boolean isPod = false;
 	boolean isRoot = false;
 	boolean isRunnable = false;

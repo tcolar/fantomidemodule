@@ -24,7 +24,6 @@ public class FanTypeProposal extends FanCompletionProposal
 
 	public FanTypeProposal(FanType type, int anchor, String forcedName)
 	{
-		//TODO:
 		Boolean isJava=false;
 		this.pod = type.getPod();
 		

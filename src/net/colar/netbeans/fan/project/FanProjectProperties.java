@@ -38,7 +38,6 @@ public class FanProjectProperties
 	private volatile String buildTarget;
 	private File propFile = null;
 
-	// TODO: needs to be fixed, creates files all over the place
 	public FanProjectProperties(FanProject project)
 	{
 		assert project != null;

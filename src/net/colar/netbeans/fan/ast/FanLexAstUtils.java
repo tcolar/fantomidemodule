@@ -679,7 +679,6 @@ public class FanLexAstUtils
 
 	public static String getTokenStreamSlice(CommonTokenStream tokenStream, int start, int stop)
 	{
-		//TODO: is that good, this wil not have WS etc ...
 		List<CommonToken> tokens = (List<CommonToken>)tokenStream.getTokens(start, stop);
 		StringBuffer text = new StringBuffer();
 		for (CommonToken tk : tokens)

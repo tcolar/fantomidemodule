@@ -286,7 +286,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposeSlots(FanResolvedType type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
 	{
-		// TODO: propose all the supertypes slot (incl. Obj)
 		if (type.getDbType().isJava())
 		{
 			FanJarsIndexer indexer = FanIndexerFactory.getJavaIndexer();
@@ -306,7 +305,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			}
 		} else
 		{
-			//TODO: get that from the scope ?
+			//TODO: NOW ? get that from the scope ?
 			Vector<FanSlot> slots = FanSlot.getAllSlotsForType(type.getAsTypedType(), true);
 			for (FanSlot slot : slots)
 			{
@@ -317,7 +316,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					if (type.isStaticContext() == isStatic)
 					{
 						proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
-						docType = DocTypes.SLOT; // TODO
+						docType = DocTypes.SLOT;
 					}
 				}
 			}
@@ -337,7 +336,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		for (String s : items)
 		{
 			FanUtilities.GENERIC_LOGGER.debug("Proposal: " + s);
-			// TODO: JavaProps
 			proposals.add(new FanImportProposal(s, anchor - base.length(), true));
 		}
 	}
@@ -360,7 +358,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		for (String s : items)
 		{
 			FanUtilities.GENERIC_LOGGER.debug("Proposal: " + s);
-			// TODO: JavaProps
 			proposals.add(new FanImportProposal(s, anchor - type.length(), true));
 		}
 	}

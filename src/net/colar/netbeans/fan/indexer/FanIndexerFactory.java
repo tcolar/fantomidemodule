@@ -34,7 +34,6 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	public FanIndexerFactory()
 	{
 		FanUtilities.GENERIC_LOGGER.info("Fantom - Inited indexer Factory");
-		// TODO: cleanup, non-existing anymore sources
 	}
 
 	public static FanIndexer getIndexer()
@@ -51,7 +50,6 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	@Override
 	public boolean supportsEmbeddedIndexers()
 	{
-		// TODO: ??
 		return false;
 	}
 

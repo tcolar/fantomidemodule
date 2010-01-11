@@ -13,6 +13,7 @@ import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
+import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
 import org.openide.filesystems.FileObject;
@@ -25,7 +26,7 @@ import org.openide.util.WeakListeners;
  * Gets registered by annotation
  * @author thibautc
  */
-//@ActionsProvider.Registration() //TODO: doesn't work ?
+@ActionsProvider.Registration() //TODO: doesn't work ?
 public class FanBkptActionProvider extends ActionsProviderSupport implements PropertyChangeListener
 {
 

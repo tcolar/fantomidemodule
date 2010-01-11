@@ -198,7 +198,7 @@ public class FanType extends JOTModel
 						type.setSrcDocId(-1L);
 						if(type.isFromSource())
 						{
-							//TODO: Outdated, reindex this type from the src doc
+							//TODO NOW: Outdated, reindex this type from the src doc
 						}
 						type.save();
 					}
@@ -208,7 +208,7 @@ public class FanType extends JOTModel
 						type.setBinDocId(-1L);
 						if( ! type.isFromSource())
 						{
-							//TODO: Outdated, reindex this type from the bin doc
+							//TODO NOW: Outdated, reindex this type from the bin doc
 						}
 						type.save();
 					}

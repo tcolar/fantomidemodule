@@ -117,8 +117,6 @@ public class FanRootScope extends FanAstScope
 
 	private void addUsing(CommonTree usingNode)
 	{
-		//System.out.println("Usingnode: " + usingNode.toStringTree());
-		//TODO: warn/highlight if duplicated using
 		String name = null;
 		String type = null;
 		switch (usingNode.getChildCount())

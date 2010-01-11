@@ -88,7 +88,6 @@ public class FanDocument extends JOTModel
 	}
 
 	/**
-	 * TODO: imp, following:
 	 * Each type might be avail from a source but also a pod
 	 * This removes one of those 2 links.
 	 * - If both links are gone, then delete the type altogether.

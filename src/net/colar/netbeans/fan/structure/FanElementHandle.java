@@ -76,7 +76,7 @@ public class FanElementHandle implements ElementHandle
 
 	public boolean signatureEquals(ElementHandle arg0)
 	{
-		return false;//TODO
+		return false;
 	}
 
 	public OffsetRange getOffsetRange(ParserResult result)

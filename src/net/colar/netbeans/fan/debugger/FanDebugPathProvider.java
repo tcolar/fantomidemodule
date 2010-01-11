@@ -64,7 +64,6 @@ public class FanDebugPathProvider extends SourcePathProvider
 	private Set<ClassPath> globalSources = new HashSet();
 	// user provided paths (through listener)
 	private Set<ClassPath> customSources = new HashSet();
-	// TODO: binary roots any use ??
 	private PropertyChangeSupport pcs;
 	private PathRegistryListener pathRegistryListener;
 	private String[] sourceRoots;

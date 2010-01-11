@@ -27,9 +27,7 @@ import org.netbeans.modules.parsing.spi.Parser;
  * Primary Fan language definition
  * Provides "hooks" into various language support implementation
  *
- * TODO: Global: proper logging rather than sys.out
- *
- * * @author thibautc
+ * @author thibautc
  */
 public class FanLanguage extends DefaultLanguageConfig
 {

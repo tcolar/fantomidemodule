@@ -32,7 +32,6 @@ public class FanResolvedType
 	private final String asTypedType;
 	private final FanType dbType;
 	// whether it's used in a  nullable context : ex: Str? vs Str
-	// TODO not being set
 	private boolean nullableContext = false;
 	// whether it's used in a static context: ex Str. vs str.
 	private boolean staticContext = false;
@@ -209,7 +208,6 @@ public class FanResolvedType
 	private static FanResolvedType resolveExpr(FanAstScope scope,
 		FanResolvedType baseType, CommonTree node, int index)
 	{
-		//TODO: deal with functions
 		FanParserResult result = scope.getRoot().getParserResult();
 		// if unresolveable no point searching further
 		if (baseType != null && !baseType.isResolved())
@@ -235,8 +233,6 @@ public class FanResolvedType
 		switch (node.getType())
 		{
 			//TODO: ranges (tricky)
-			//TODO: loop vars
-			//TODO: Exception vars
 			case FanParser.AST_CAST:
 				CommonTree castType = (CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
 				baseType = makeFromTypeSigWithWarning(scope, castType);
@@ -291,13 +287,13 @@ public class FanResolvedType
 				baseType.setStaticContext(false);
 				break;
 			case FanParser.AST_LIST:
-				// TODO: list of what ?
+				// TODO NOW: list of what ?
 				//CommonTree listTypeNode = (CommonTree)node.getFirstChildWithType(FanParser.AST_TERM_EXPR);
 				//FanResolvedType listType = resolveExpr(result, scope, null, listTypeNode, index);
 				baseType = new FanResolvedType("sys::List");
 				break;
 			case FanParser.AST_MAP:
-				// TODO: map of what ?
+				// TODO NOW: map of what ?
 				baseType = new FanResolvedType("sys::Map");
 				break;
 			case FanParser.AST_TYPE_LIT: // type litteral
@@ -438,7 +434,6 @@ public class FanResolvedType
 
 	public static String resolveThisType(FanAstScope scope)
 	{
-		// TODO: does 'this' always refer to the type even when in it block ?
 		FanAstScope tscope = scope.getTypeScope();
 		if (tscope == null)
 		{

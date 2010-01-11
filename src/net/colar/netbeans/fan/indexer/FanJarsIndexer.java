@@ -160,7 +160,6 @@ public class FanJarsIndexer implements FileChangeListener
 				// only mark valid once done.
 				doc.setTstamp(new Date().getTime());
 				doc.save();
-				//TODO: delete outdated types (timestamp) ?
 			} catch (Exception e)
 			{
 				log.exception("Jar indexing error", e);
@@ -224,7 +223,7 @@ public class FanJarsIndexer implements FileChangeListener
 		FileUtil.addFileChangeListener(this, FileUtil.toFile(fe.getFile()));
 	}
 
-	//TODO: all events, use thread to delete/reindex etc...
+	//TODO NOW: all events, use thread to delete/reindex etc...
 	public void fileDataCreated(FileEvent fe)
 	{
 		String path = fe.getFile().getPath();
@@ -245,7 +244,7 @@ public class FanJarsIndexer implements FileChangeListener
 	{
 		String path = fe.getFile().getPath();
 		log.debug("File deleted: " + path);
-		//TODO: had this to a hashtable and do it in the thread
+		//TODO NOW: had this to a hashtable and do it in the thread
 		// ptherwise might get multithreading issues
 		FanDocument doc = FanDocument.findByPath( path);
 		try
@@ -259,7 +258,7 @@ public class FanJarsIndexer implements FileChangeListener
 
 	public void fileRenamed(FileRenameEvent fre)
 	{
-		// TODO: not sure if that's good
+		// TODO: NOW not sure if that's good
 		FileObject src = (FileObject) fre.getSource();
 		log.debug("File renamed: " + src.getPath() + " -> " + fre.getFile().getPath());
 		FanDocument.renameDoc(src.getPath(), fre.getFile().getPath());
@@ -412,7 +411,6 @@ public class FanJarsIndexer implements FileChangeListener
 			slots.addAll(Arrays.asList(c.getDeclaredFields()));
 			slots.addAll(Arrays.asList(c.getDeclaredMethods()));
 			slots.addAll(Arrays.asList(c.getDeclaredConstructors()));
-			// TODO: deal with annotations ?
 			//slots.addAll(Arrays.asList(c.getDeclaredAnnotations()));
 			for (Member slot : slots)
 			{
@@ -469,7 +467,6 @@ public class FanJarsIndexer implements FileChangeListener
 			dbSlot.setIsNullable(true);
 
 			dbSlot.save();
-			//TODO: CTOR too !
 			// deal with parameters of method/ctor
 			if (slot instanceof Method)
 			{
