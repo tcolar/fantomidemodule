@@ -111,19 +111,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public void indexAll(boolean background)
 	{
-		alreadyWarned = false;
-		// start the indexing thread
-		// index Fantom libs right aways
-		long then = new Date().getTime();
-		indexFantomPods(background);
-		long now = new Date().getTime();
-		log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");
-		// sources indexes will be called  through scanStarted()
-		jarsIndexer = new FanJarsIndexer();
-		// Do this one in the background (might take a while and not needed for everyone)
-		jarsIndexer.indexJars(true);
-		// cleanup old docs
-		cleanupOldDocs();
+		MainIndexer idx = new MainIndexer();
+		idx.start();
+		if(! background)
+			idx.waitFor();
 	}
 
 	public FanJarsIndexer getJarsIndexer()
@@ -168,6 +159,16 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	// Might need a separte ANTLR grammar though.
 	private void indexSrc(String path)
 	{
+		FanPlatform platform = FanPlatform.getInstance(false);
+		if (platform.isConfigured())
+		{
+			// Don't do Fantom distro sources since we have binaries (faster)
+			if (FileUtil.isParentOf(platform.getFanHome(), FileUtil.toFileObject(new File(path))))
+			{
+				return;
+			}
+		}
+
 		long then = new Date().getTime();
 		log.debug("Indexing requested for: " + path);
 		// Get a snaphost of the source
@@ -594,7 +595,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					dbType.setKind(getKind(type));
 
 					dbType.setIsAbstract(hasFlag(flags,
-							FConst.Abstract));
+						FConst.Abstract));
 					dbType.setIsConst(hasFlag(flags, FConst.Const));
 					dbType.setIsFinal(hasFlag(flags, FConst.Final));
 					dbType.setQualifiedName(sig);
@@ -602,7 +603,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					dbType.setPod(typeRef.podName);
 					dbType.setProtection(getProtection(type.flags));
 					dbType.setIsFromSource(
-							false);
+						false);
 
 					dbType.save();
 					// Slots
@@ -746,7 +747,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						String mainType = typeRef.signature;
 						String inhType = item.signature;
 						if (inhType.equals("sys::Obj")
-								|| inhType.equals("sys::Enum"))
+							|| inhType.equals("sys::Enum"))
 						{
 							// Those types are implied, no need to pollute the DB
 							continue;
@@ -981,7 +982,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		String path = fe.getFile().getPath();
 		log.debug("File created: " + path);
 		requestIndexing(
-				path);
+			path);
 	}
 
 	public void fileChanged(FileEvent fe)
@@ -989,7 +990,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		String path = fe.getFile().getPath();
 		log.debug("File changed: " + path);
 		requestIndexing(
-				path);
+			path);
 	}
 
 	public void fileDeleted(FileEvent fe)
@@ -1099,6 +1100,40 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						indexSrc(path);
 					}
 				}
+			}
+		}
+	}
+
+	class MainIndexer extends Thread implements Runnable
+	{
+		volatile boolean done=false;
+
+		@Override
+		public void run()
+		{
+			done = false;
+			alreadyWarned = false;
+			// cleanup old docs
+			cleanupOldDocs();
+			// start the indexing thread
+			// index Fantom libs right aways
+			long then = new Date().getTime();
+			// we want to wait for pods, since we want them done first
+			indexFantomPods(false);
+			long now = new Date().getTime();
+			log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");
+			// sources indexes will be called  through scanStarted()
+			jarsIndexer = new FanJarsIndexer();
+			// Do this one in the background (might take a while and not needed for everyone)
+			jarsIndexer.indexJars(true);
+			done =true;
+		}
+
+		public void waitFor()
+		{
+			while(!done && !shutdown)
+			{
+				try{sleep(100);}catch(Exception e){}
 			}
 		}
 	}

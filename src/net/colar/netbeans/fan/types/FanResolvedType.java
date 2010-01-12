@@ -442,7 +442,7 @@ public class FanResolvedType
 
 	private static FanResolvedType resolveIndexExpr(FanAstScope scope, FanResolvedType baseType, CommonTree node, int index)
 	{
-		FanUtilities.GENERIC_LOGGER.info("Index expr: " + node.toStringTree());
+		//FanUtilities.GENERIC_LOGGER.info("Index expr: " + node.toStringTree());
 		if (baseType instanceof FanResolvedListType)
 		{
 			baseType = ((FanResolvedListType) baseType).getItemType();
@@ -571,7 +571,7 @@ public class FanResolvedType
 	 * @param sig
 	 * @return
 	 */
-	private static FanResolvedType fromDbSig(String sig)
+	public static FanResolvedType fromDbSig(String sig)
 	{
 		FanResolvedType type = makeUnresolved();
 		boolean nullable = false;

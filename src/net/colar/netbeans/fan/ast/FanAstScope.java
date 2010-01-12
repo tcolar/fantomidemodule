@@ -150,7 +150,7 @@ public abstract class FanAstScope
 			{
 				Hashtable<String, FanSlot> table = ((FanTypeScope)scope).inheritedSlots;
 				if(table.containsKey(varName))
-					return new FanResolvedType(table.get(varName).getReturnedType());
+					return FanResolvedType.fromDbSig(table.get(varName).getReturnedType());
 			}
 			scope = scope.getParent();
 		} while (scope != null);

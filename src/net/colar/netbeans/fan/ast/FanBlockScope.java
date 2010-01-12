@@ -16,6 +16,7 @@ import org.antlr.runtime.tree.CommonTree;
  */
 public class FanBlockScope extends FanAstScope
 {
+
 	public FanBlockScope(FanAstScope parent, CommonTree codeBlock)
 	{
 		super(parent, codeBlock);
@@ -53,11 +54,11 @@ public class FanBlockScope extends FanAstScope
 				FanBlockScope subScope = new FanBlockScope(scope, child);
 				scope.addChild(subScope);
 				subScope.parse();
-				if(child.getType() == FanParser.AST_CTOR_BLOCK)
+				if (child.getType() == FanParser.AST_CTOR_BLOCK)
 				{
 					// add it
 					CommonTree type = (CommonTree) child.getFirstChildWithType(FanParser.AST_TYPE);
-					if(type != null)
+					if (type != null)
 					{
 						FanResolvedType resolved = FanResolvedType.makeFromTypeSigWithWarning(scope, type);
 						FanAstScopeVar var = new FanAstScopeVar(scope, node, "it", resolved);
@@ -80,8 +81,10 @@ public class FanBlockScope extends FanAstScope
 						{
 							//TODO NOW: other kinds of expressions
 							CommonTree expr = (CommonTree) child.getFirstChildWithType(FanParser.AST_CAST);
-							if(expr==null)
+							if (expr == null)
+							{
 								expr = (CommonTree) child.getFirstChildWithType(FanParser.AST_TERM_EXPR);
+							}
 							//FanLexAstUtils.dumpTree(child, 0);
 							if (expr != null)
 							{
@@ -95,20 +98,27 @@ public class FanBlockScope extends FanAstScope
 						//TODO: Now: for a catch, create a new scope
 						scope.addScopeVar(var, true);
 						break;
-					case FanParser.AST_FORMAL:
-						CommonTree fname = (CommonTree) child.getFirstChildWithType(FanParser.AST_ID);
-						CommonTree ftype = (CommonTree) child.getFirstChildWithType(FanParser.AST_TYPE);
-						String fnm = "it"; // If not named, it's "it"
-						if (fname != null)
+					case FanParser.AST_FUNC_TYPE:
+						// If it's a type definition, we don't had the fomal vars to the scope.
+						if(child.getParent().getType() == FanParser.AST_TYPE)
+							break;
+						List<CommonTree> formals = FanLexAstUtils.getAllChildrenWithType(child, FanParser.AST_FORMAL);
+						for (CommonTree formal : formals)
 						{
-							fnm = FanLexAstUtils.getNodeContent(result, fname);
-						}
-						resolved = FanResolvedType.makeUnresolved();
-						if (ftype != null && !ftype.isNil())
-						{
-							resolved = FanResolvedType.makeFromTypeSig(scope, ftype);
-							FanAstScopeVar fvar = new FanAstScopeVar(scope, node, fnm, resolved);
-							scope.addScopeVar(fvar, true);
+							CommonTree fname = (CommonTree) formal.getFirstChildWithType(FanParser.AST_ID);
+							CommonTree ftype = (CommonTree) formal.getFirstChildWithType(FanParser.AST_TYPE);
+							String fnm = "it"; // If not named, it's "it"
+							if (fname != null)
+							{
+								fnm = FanLexAstUtils.getNodeContent(result, fname);
+							}
+							resolved = FanResolvedType.makeUnresolved();
+							if (ftype != null && !ftype.isNil())
+							{
+								resolved = FanResolvedType.makeFromTypeSig(scope, ftype);
+								FanAstScopeVar fvar = new FanAstScopeVar(scope, child, fnm, resolved);
+								scope.addScopeVar(fvar, true);
+							}
 						}
 						break;
 					// Warn of incomplete items
@@ -125,34 +135,32 @@ public class FanBlockScope extends FanAstScope
 
 	/*public static String resolveItType(FanAstScope scope)
 	{
-		FanBlockScope sc = scope.findParentItBlock(scope);
-		if(sc!=null)
-		{
-			int idx = scope.getAstNode().getTokenStartIndex() -1;
-			CommonTree blockNode = scope.getAstNode();
-			CommonTree ctorNode = FanLexAstUtils.findParentNode(blockNode, FanParser.AST_CTOR_BLOCK);
-			if(ctorNode != null)
-			{
-				CommonTree idNode = (CommonTree)ctorNode.getChild(0);
-				System.out.println("ctorNode: "+idNode.toStringTree());
-				return resolveExpr(sc, null, idNode, idx).getQualifiedType();
-			}
-			CommonTree exprNode = FanLexAstUtils.findParentNode(blockNode, FanParser.AST_TERM_EXPR);
-			if(exprNode != null)
-			{
-				System.out.println("exprNode: "+exprNode.toStringTree());
-				CommonTree base = (CommonTree)exprNode.getChild(0);
-				CommonTree chain = (CommonTree)exprNode.getChild(1);
-				System.out.println("base: "+base.toStringTree());
-				System.out.println("chain: "+chain.toStringTree());
-				FanResolvedType type = resolveExpr(scope, null, base, idx );
-				FanResolvedType type2 = resolveExpr(scope, type, chain,  idx);
-				System.out.println("type: "+type);
-				return type2.getQualifiedType();
-			}
-		}
-		return FanIndexer.UNRESOLVED_TYPE;
+	FanBlockScope sc = scope.findParentItBlock(scope);
+	if(sc!=null)
+	{
+	int idx = scope.getAstNode().getTokenStartIndex() -1;
+	CommonTree blockNode = scope.getAstNode();
+	CommonTree ctorNode = FanLexAstUtils.findParentNode(blockNode, FanParser.AST_CTOR_BLOCK);
+	if(ctorNode != null)
+	{
+	CommonTree idNode = (CommonTree)ctorNode.getChild(0);
+	System.out.println("ctorNode: "+idNode.toStringTree());
+	return resolveExpr(sc, null, idNode, idx).getQualifiedType();
+	}
+	CommonTree exprNode = FanLexAstUtils.findParentNode(blockNode, FanParser.AST_TERM_EXPR);
+	if(exprNode != null)
+	{
+	System.out.println("exprNode: "+exprNode.toStringTree());
+	CommonTree base = (CommonTree)exprNode.getChild(0);
+	CommonTree chain = (CommonTree)exprNode.getChild(1);
+	System.out.println("base: "+base.toStringTree());
+	System.out.println("chain: "+chain.toStringTree());
+	FanResolvedType type = resolveExpr(scope, null, base, idx );
+	FanResolvedType type2 = resolveExpr(scope, type, chain,  idx);
+	System.out.println("type: "+type);
+	return type2.getQualifiedType();
+	}
+	}
+	return FanIndexer.UNRESOLVED_TYPE;
 	}*/
-
-
 }

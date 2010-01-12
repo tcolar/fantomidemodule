@@ -289,23 +289,23 @@ typeDef 	:	docs facet* ((classFlags* KW_CLASS)=>classDef |
 classDef 	@init {paraphrase.push("Class definition");} @after{paraphrase.pop();}
 		:  	(classHeader classBody)
 		    -> ^(AST_CLASS classHeader classBody);
-classHeader	:	(docs facet* m=classFlags* KW_CLASS cname=id inheritance?)
-			-> ^($cname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
+classHeader	:	(docs facet* m=classFlags* KW_CLASS id inheritance?)
+			-> ^(AST_MODIFIER $m)* KW_CLASS id  ^(AST_INHERITANCE inheritance)?;
 classFlags 	:	protection | KW_ABSTRACT | KW_FINAL | KW_CONST | KW_STATIC;
 classBody 	:	(bracketL slotDef* bracketR)  -> ^(AST_CODE_BLOCK bracketL slotDef* bracketR);
 protection	:	KW_PUBLIC | KW_PROTECTED | KW_PRIVATE | KW_INTERNAL;
 mixinDef	@init {paraphrase.push("Mixin definition");} @after{paraphrase.pop();}
 		:	(mixinHeader mixinBody)
 		    -> ^(AST_MIXIN mixinHeader mixinBody);
-mixinHeader	:	(docs facet* m=mixinFlags* KW_MIXIN mname=id inheritance?)
-			-> ^($mname) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
+mixinHeader	:	(docs facet* m=mixinFlags* KW_MIXIN id inheritance?)
+			->  ^(AST_MODIFIER $m)* KW_MIXIN id ^(AST_INHERITANCE inheritance)?;
 mixinFlags	:	protection | KW_CONST | KW_STATIC | KW_FINAL;
 mixinBody	:	bracketL slotDef* bracketR  -> ^(AST_CODE_BLOCK bracketL slotDef* bracketR);
 enumDef		@init {paraphrase.push("Enumeration definition");} @after{paraphrase.pop();}
 		:	(enumHeader enumBody)
 		    -> ^(AST_ENUM enumHeader enumBody);
-enumHeader	:   	(docs facet* m=protection? KW_ENUM ename=id inheritance?)
-			-> ^($ename) ^(AST_INHERITANCE inheritance)? ^(AST_MODIFIER $m)*;
+enumHeader	:   	(docs facet* m=protection? KW_ENUM id inheritance?)
+			->  ^(AST_MODIFIER $m)* KW_ENUM id ^(AST_INHERITANCE inheritance)?;
 enumBody	:	bracketL enumValDefs slotDef* bracketR   -> ^(AST_CODE_BLOCK bracketL enumValDefs slotDef* bracketR);
 inheritance 	:	SP_COLON typeList;
 	//	    -> ^(AST_INHERITANCE typeList);
@@ -516,8 +516,9 @@ literal 	:	KW_NULL | KW_THIS | KW_SUPER | KW_IT | KW_TRUE | KW_FALSE | strs | UR
 			slotLiteral | typeLiteral | list | map | symbLiteral | simple;
 strs		:	(qs=QUOTSTR | s=STR)
 				-> ^(AST_STR $s)? ^(AST_STR $qs)?;
+// we create a scope for type litterals, because sometimes they introduce variables (func types)
 typeLiteral	:  	(type {notAfterEol()}? OP_POUND)
-				-> ^(AST_TYPE_LIT type OP_POUND);
+				-> ^(AST_SCOPE ^(AST_TYPE_LIT type OP_POUND));
 slotLiteral	:  	(type? OP_POUND {notAfterEol()}? id)
 				-> ^(AST_SLOT_LIT type? OP_POUND id);
 symbLiteral :   (AT id1=(id SP_COLON SP_COLON)? id)
