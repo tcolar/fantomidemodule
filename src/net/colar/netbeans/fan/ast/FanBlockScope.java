@@ -92,6 +92,7 @@ public class FanBlockScope extends FanAstScope
 							resolved = FanResolvedType.makeFromTypeSigWithWarning(scope, type);
 						}
 						FanAstScopeVar var = new FanAstScopeVar(scope, node, nm, resolved);
+						//TODO: Now: for a catch, create a new scope
 						scope.addScopeVar(var, true);
 						break;
 					case FanParser.AST_FORMAL:

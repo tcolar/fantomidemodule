@@ -208,7 +208,7 @@ public class FanResolvedType
 	private static FanResolvedType resolveExpr(FanAstScope scope,
 			FanResolvedType baseType, CommonTree node, int index)
 	{
-		FanUtilities.GENERIC_LOGGER.info("** type: " + node.toStringTree() + " " + baseType);
+		//FanUtilities.GENERIC_LOGGER.info("** type: " + node.toStringTree() + " " + baseType);
 		FanParserResult result = scope.getRoot().getParserResult();
 		// if unresolveable no point searching further
 		if (baseType != null && !baseType.isResolved())
@@ -330,6 +330,7 @@ public class FanResolvedType
 				}
 				break;
 			case FanParser.AST_TYPE_LIT: // type litteral
+				System.out.println("Lit: "+node.toStringTree());
 				String lit = FanLexAstUtils.getNodeContent(result, node);
 				boolean nullable = false;
 				if (lit.endsWith("?"))
@@ -341,7 +342,7 @@ public class FanResolvedType
 				{
 					lit = lit.substring(0, lit.length() - 1);
 				}
-				baseType = scope.getRoot().lookupUsing(lit);
+				baseType = fromDbSig(lit);
 				baseType.setStaticContext(true);
 				baseType.setNullableContext(nullable);
 				break;
@@ -375,6 +376,7 @@ public class FanResolvedType
 					for (CommonTree child : children)
 					{
 						baseType = resolveExpr(scope, baseType, child, index);
+						break; //TODO: to break or not ??
 					}
 				} else
 				{

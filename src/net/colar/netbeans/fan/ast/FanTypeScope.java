@@ -86,10 +86,14 @@ public class FanTypeScope extends FanAstScope
 		List<CommonTree> modifs = FanLexAstUtils.getAllChildrenWithType(ast, FanParser.AST_MODIFIER);
 		for (CommonTree m : modifs)
 		{
-			FanAstScopeVarBase.ModifEnum modif = FanAstScopeVarBase.parseModifier(FanLexAstUtils.getNodeContent(getRoot().getParserResult(), m).trim());
-			if (modif != null)
+			String[] mStrs = FanLexAstUtils.getNodeContent(getRoot().getParserResult(), m).split(" ");
+			for (String mStr : mStrs)
 			{
-				modifiers.add(modif);
+				FanAstScopeVarBase.ModifEnum modif = FanAstScopeVarBase.parseModifier(mStr.trim());
+				if (modif != null)
+				{
+					modifiers.add(modif);
+				}
 			}
 		}
 
