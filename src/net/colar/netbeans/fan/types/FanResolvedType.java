@@ -331,20 +331,34 @@ public class FanResolvedType
 				break;
 			case FanParser.AST_TYPE_LIT: // type litteral
 				System.out.println("Lit: "+node.toStringTree());
-				String lit = FanLexAstUtils.getNodeContent(result, node);
-				boolean nullable = false;
-				if (lit.endsWith("?"))
-				{
-					lit = lit.substring(0, lit.length() - 1);
-					nullable = true;
-				}
-				if (lit.endsWith("#")) // it should
-				{
-					lit = lit.substring(0, lit.length() - 1);
-				}
-				baseType = fromDbSig(lit);
+				CommonTree litNode=(CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
+				baseType = makeFromExpr(scope, result, litNode, index);
 				baseType.setStaticContext(true);
-				baseType.setNullableContext(nullable);
+				break;
+			case FanParser.AST_FUNC_TYPE:
+				FanResolvedType returnType = null;
+				Vector<FanResolvedType> types = new Vector<FanResolvedType>();
+				boolean passedArrow = false;
+				for (CommonTree n : (List<CommonTree>) node.getChildren())
+				{
+					switch (n.getType())
+					{
+						case FanParser.OP_ARROW:
+							passedArrow = true;
+							break;
+						case FanParser.AST_TYPE:
+							if (!passedArrow)
+							{
+								types.add(makeFromTypeSig(scope, n));
+							} else
+							{
+								returnType = makeFromTypeSig(scope, n);
+							}
+					}
+				}
+
+				baseType = new FanResolvedFuncType(types, returnType);
+				baseType.setStaticContext(false);
 				break;
 			case FanParser.AST_SLOT_LIT:
 				baseType = new FanResolvedType("sys::Slot");
