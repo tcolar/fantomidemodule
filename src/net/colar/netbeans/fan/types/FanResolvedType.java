@@ -206,7 +206,7 @@ public class FanResolvedType
 	 * @return
 	 */
 	private static FanResolvedType resolveExpr(FanAstScope scope,
-		FanResolvedType baseType, CommonTree node, int index)
+			FanResolvedType baseType, CommonTree node, int index)
 	{
 		FanUtilities.GENERIC_LOGGER.info("** type: " + node.toStringTree() + " " + baseType);
 		FanParserResult result = scope.getRoot().getParserResult();
@@ -291,12 +291,27 @@ public class FanResolvedType
 				baseType = resolveIndexExpr(scope, baseType, node, index);
 				break;
 			case FanParser.AST_LIST:
-				baseType = new FanResolvedType("sys::List");
-				CommonTree listTypeNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TERM_EXPR);
-				if (listTypeNode != null)
+				CommonTree firstNode = (CommonTree) children.get(0);
+				// Because of a grammar issue, some indexed expression show up as List
+				boolean isResolveExpr = false;
+				if (firstNode != null && firstNode.getType() == FanParser.AST_TYPE)
 				{
-					FanResolvedType listType = resolveExpr(scope, null, listTypeNode, index);
-					baseType = new FanResolvedListType(listType);
+					FanResolvedType lType = resolveExpr(scope, baseType, firstNode, index);
+					if (lType != null && !lType.isStaticContext())
+					{
+						isResolveExpr = true;
+						baseType = resolveIndexExpr(scope, lType, node, index);
+					}
+				}
+				if (!isResolveExpr)
+				{//Normal list type like Str[]
+					baseType = new FanResolvedType("sys::List");
+					CommonTree listTypeNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TERM_EXPR);
+					if (listTypeNode != null)
+					{
+						FanResolvedType listType = resolveExpr(scope, null, listTypeNode, index);
+						baseType = new FanResolvedListType(listType);
+					}
 				}
 				break;
 			case FanParser.AST_MAP:
@@ -316,15 +331,15 @@ public class FanResolvedType
 				break;
 			case FanParser.AST_TYPE_LIT: // type litteral
 				String lit = FanLexAstUtils.getNodeContent(result, node);
-				if (lit.endsWith("#")) // it should
-				{
-					lit = lit.substring(0, lit.length() - 1);
-				}
 				boolean nullable = false;
 				if (lit.endsWith("?"))
 				{
 					lit = lit.substring(0, lit.length() - 1);
 					nullable = true;
+				}
+				if (lit.endsWith("#")) // it should
+				{
+					lit = lit.substring(0, lit.length() - 1);
 				}
 				baseType = scope.getRoot().lookupUsing(lit);
 				baseType.setStaticContext(true);
@@ -355,7 +370,7 @@ public class FanResolvedType
 				break;
 			default:
 				// "Meaningless" 'wrapper' nodes (in term of expression resolving)
-				if (children.size() > 0)
+				if (children != null && children.size() > 0)
 				{
 					for (CommonTree child : children)
 					{
@@ -462,8 +477,8 @@ public class FanResolvedType
 	{
 		text = text.toLowerCase();
 		if (text.endsWith("ns") || text.endsWith("ms")
-			|| text.endsWith("sec") || text.endsWith("min")
-			|| text.endsWith("hr") || text.endsWith("day"))
+				|| text.endsWith("sec") || text.endsWith("min")
+				|| text.endsWith("hr") || text.endsWith("day"))
 		{
 			return "sys::Duration";
 		}
@@ -589,11 +604,11 @@ public class FanResolvedType
 		{
 			Vector<FanResolvedType> types = new Vector<FanResolvedType>();
 			sig = sig.substring(1, sig.length() - 1);
-			String[] parts=sig.split("->");
-			if(parts.length==2)
+			String[] parts = sig.split("->");
+			if (parts.length == 2)
 			{
 				String[] typeParts = parts[0].split(",");
-				for(int i=0; i!=typeParts.length; i++)
+				for (int i = 0; i != typeParts.length; i++)
 				{
 					types.add(fromDbSig(typeParts[i].trim()));
 				}
