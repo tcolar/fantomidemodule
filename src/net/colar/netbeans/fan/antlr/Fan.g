@@ -409,7 +409,10 @@ forInit 	:	forInitDef | expr;
 forInitDef	:	typeId (AS_INIT_VAL expr)?
 				-> ^(AST_FOR_INIT typeId (AS_INIT_VAL expr)?);
 // catch is a reserved antlr keyword
-g_catch		:	KW_CATCH catchDef? ((bracketL)=>catch_long | stmtList);
+// also needs it's own scope (var)
+g_catch		:	(KW_CATCH g_catch_ct)
+				-> ^(AST_SCOPE g_catch_ct);
+g_catch_ct	:	catchDef? ((bracketL)=>catch_long | stmtList);
 catch_long	:	multiStmt;
 catchDef 	:	parL type id parR
 				-> ^(AST_CATCH_DEF parL type id parR);

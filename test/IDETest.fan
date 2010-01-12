@@ -1,38 +1,39 @@
+using fwt::Window
 
-class IDETest
+public class IDETest : Class2
 {
   Void doit(Str s, Int i)
   {
-    bool := true
-    string := "dfdff"
-    uri := `fdsdfdsf`
-    int := '\u1234'
-    int2 := '\n'
-    float := 25.3f
-    decimal := 4.0
-    decimal2 := 4.53d
-    duration := 32ms
-    type1 := Str# // FIXME
-    type2 := sys::Str# // FIXME
-    symbol := @serializable //FIXME
-    range := 0..5 //FIXME -> Int
-    range2 := 0..<5 //FIXME -> Int
-    list := [,]//FIXME
-    list2 := [5,6]//FIXME
-    list3 := ["gg","xx"]//FIXME
-    map := [:]//FIXME
-    map2 := ["toto":25]//FIXME
-    this_ := this//FIXME
-    super_ := super//FIXME
-    super2_ := Obj.super
+    f := |->Obj| { list }
+    g := f.toImmutable
 
-    File f := File(``)
-    {
-        it_ := it//FIXME
-    }
-    //TODO: list, map
+    verifyEq(|Int a, Float b->Bool|#.params, ["A":Int#, "B":Float#, "R":Bool#])
+    verifyEq(|Int a, Float b->Bool|#.params.isRO, true)
+
+    t := Str#
+      m := t.method("toInt")
+
+    proc := makeProc { mergeErr=false }
 
   }
+  Process makeProc(Str[] args := Str[,])
+  {
+    cmd := (Repo.boot.home + (isWindows ? `bin/fan.exe` : `bin/fan`)).osPath
+    return Process([cmd, Type.of(this).qname].addAll(args))
+  }
+
+  Void verifyJoin(Int:Str map, Int sep, Str[] expected, |Str,Int->Str|? f)
+  {
+    actual := map.join(sep.toChar, f).split(sep)
+    verifyEq(actual.sort, expected.sort)
+    verifyEq(map.join(sep.toChar), map.join(sep.toChar, null))
+  }
+
+}
+
+public class Class2
+{
+  Str toto:=""
 }
 
 
