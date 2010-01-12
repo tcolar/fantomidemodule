@@ -31,9 +31,9 @@ public class FanResolvedMapType extends FanResolvedType
 	}
 
 	@Override
-	public String getSignature(boolean fullyQualified)
+	public String toDbSig(boolean fullyQualified)
 	{
-		return "["+keyType.getSignature(fullyQualified)+" : "+valType.getSignature(fullyQualified)+"]";
+		return "["+keyType.toDbSig(fullyQualified)+" : "+valType.toDbSig(fullyQualified)+"]";
 	}
 
 }

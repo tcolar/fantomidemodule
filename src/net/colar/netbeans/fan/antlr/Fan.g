@@ -117,6 +117,7 @@ AST_CATCH_DEF;
 AST_FORMAL;
 AST_CAST;
 AST_FUNC_TYPE;
+AST_INDEX_EXPR;
 // help getting valid AST for completion: (INC means incomplete)
 AST_INC_USING;
 AST_INC_DOTCALL;
@@ -483,7 +484,12 @@ dynCall 	:	OP_ARROW idExpr;
 safeDotCall 	:	OP_SAFE_CALL idExpr
 				-> ^(AST_SAFE_DOT_CALL idExpr);
 safeDynCall	:	OP_SAFEDYN_CALL idExpr;
-indexExpr 	:	{notAfterEol()}? sq_bracketL expr sq_bracketR;
+// TODO: does not work, will be parsed as a "list" Type because the grammar is confusing
+// it's context sensitive - need to review.
+// Can't cleanly differentiate Int[3] (List of Int with val '3') and var[3] : int.get[3]
+// So for now I'm gonna get a List in the ast and deal with it there
+indexExpr 	:	({notAfterEol()}? sq_bracketL expr sq_bracketR)
+				-> ^(AST_INDEX_EXPR sq_bracketL expr sq_bracketR);
 // eos = end of expression
 callOp		:	{notAfterEol()}? parL args?  parR closure*;
 closure 	@init {paraphrase.push("Closure");} @after{paraphrase.pop();}

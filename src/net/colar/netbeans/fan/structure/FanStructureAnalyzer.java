@@ -75,7 +75,7 @@ public class FanStructureAnalyzer implements StructureScanner
 					{
 						inheritance += ", ";
 					}
-					inheritance += inh.getSignature(false);
+					inheritance += inh.toDbSig(false);
 				}
 				item.setName(t.getName());
 				String html = t.getName();
@@ -113,7 +113,7 @@ public class FanStructureAnalyzer implements StructureScanner
 							{
 								params += ", ";
 							}
-							String pType = parameters.get(pname).getSignature(false);
+							String pType = parameters.get(pname).toDbSig(false);
 							if (pType.equals(FanIndexer.UNRESOLVED_TYPE))
 							{
 								pType = "";
@@ -143,7 +143,7 @@ public class FanStructureAnalyzer implements StructureScanner
 					} else if (var instanceof FanAstField)
 					{
 						FanStructureItem slotItem = new FanStructureItem(var.getNode(), ElementKind.FIELD, result);
-						String type = var.getType().getSignature(false);
+						String type = var.getType().toDbSig(false);
 						if (type.equals(FanIndexer.UNRESOLVED_TYPE))
 						{
 							type = "";

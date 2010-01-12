@@ -36,7 +36,7 @@ public class FanResolvedFuncType extends FanResolvedType
 	}
 
 	@Override
-	public String getSignature(boolean fullyQualified)
+	public String toDbSig(boolean fullyQualified)
 	{
 		String sig = "|";
 		boolean first=true;
@@ -47,10 +47,10 @@ public class FanResolvedFuncType extends FanResolvedType
 				first = false;
 				sig+=", ";
 			}
-			sig+=type.getSignature(fullyQualified);
+			sig+=type.toDbSig(fullyQualified);
 		}
 		sig+= "->";
-		sig += retType.getSignature(fullyQualified) + "|";
+		sig += retType.toDbSig(fullyQualified) + "|";
 		return sig;
 	}
 }

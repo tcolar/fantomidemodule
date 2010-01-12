@@ -264,7 +264,7 @@ public class FanSlot extends JOTModel
 	 */
 	public static Vector<FanSlot> getAllSlotsForType(String fanType, Vector<String> doneTypes, boolean includeImpliedTypes)
 	{
-		System.out.println("############## " + fanType);
+		//System.out.println("############## " + fanType);
 		doneTypes.add(fanType);
 		FanType dbType = FanType.findByQualifiedName(fanType);
 		if (dbType == null)
@@ -278,11 +278,11 @@ public class FanSlot extends JOTModel
 		for (FanTypeInheritance inh : inhs)
 		{
 			String typeName = inh.getInheritedType();
-			System.out.println("############## " + fanType + " : " + typeName);
+			//System.out.println("############## " + fanType + " : " + typeName);
 			// If a type was already done, do not do again, also avoid potential cyclic dependencies etc...
 			if (doneTypes.contains(typeName))
 			{
-				System.out.println("###### skipping: "+typeName);
+				//System.out.println("###### skipping: "+typeName);
 				continue;
 			}
 			// add slots that are not already in
@@ -300,7 +300,7 @@ public class FanSlot extends JOTModel
 				}
 				if (!skip)
 				{
-					System.out.println("############## " + fanType + "->" + s.name);
+					//System.out.println("############## " + fanType + "->" + s.name);
 					slots.add(s);
 				}
 			}

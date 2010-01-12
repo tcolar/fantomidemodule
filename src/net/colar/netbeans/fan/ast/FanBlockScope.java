@@ -78,11 +78,14 @@ public class FanBlockScope extends FanAstScope
 						resolved = FanResolvedType.makeUnresolved();
 						if (type == null || type.isNil())
 						{
-							CommonTree expr = (CommonTree) child.getFirstChildWithType(FanParser.AST_TERM_EXPR);
+							//TODO NOW: other kinds of expressions
+							CommonTree expr = (CommonTree) child.getFirstChildWithType(FanParser.AST_CAST);
+							if(expr==null)
+								expr = (CommonTree) child.getFirstChildWithType(FanParser.AST_TERM_EXPR);
 							//FanLexAstUtils.dumpTree(child, 0);
 							if (expr != null)
 							{
-								resolved = FanResolvedType.makeFromExpr(scope, result, expr, expr.getTokenStartIndex()); // ??
+								resolved = FanResolvedType.makeFromExpr(scope, result, expr, expr.getTokenStopIndex()); // ??
 							}
 						} else
 						{

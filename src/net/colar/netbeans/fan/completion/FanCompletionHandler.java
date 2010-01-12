@@ -519,7 +519,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				return;
 			}
 			FanResolvedType type = FanResolvedType.makeFromExpr(result.getRootScope(), result, exprNode, index);
-			FanUtilities.GENERIC_LOGGER.debug("Type: " + type.toString());
+			FanUtilities.GENERIC_LOGGER.debug("Type: " + type.toString()/* +" "+exprNode.toStringTree()*/);
 			if (type.isResolved())
 			{
 				proposeSlots(type, proposals, offset + 1, prefix);

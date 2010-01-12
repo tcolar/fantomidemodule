@@ -78,7 +78,7 @@ public abstract class FanAstScope
 	 */
 	public void addScopeVar(FanAstScopeVarBase var, boolean allowOverride)
 	{
-		//System.out.println("Adding scope var: " + var);
+		FanUtilities.GENERIC_LOGGER.debug("Adding scope var: " + var);
 		String name = var.getName();
 		if(name.length()==0)
 			return;

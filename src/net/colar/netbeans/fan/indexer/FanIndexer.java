@@ -374,13 +374,8 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							}
 							dbSlot.setTypeId(dbType.getId());
 							dbSlot.setSlotKind(kind.value());
-							String type = UNRESOLVED_TYPE; // can that happen ?
 							FanResolvedType slotType = slot.getType();
-							if (slotType.isResolved())
-							{
-								type = slotType.isResolved() ? slotType.getDbType().getQualifiedName() : slotType.getAsTypedType();
-							}
-							dbSlot.setReturnedType(type);
+							dbSlot.setReturnedType(slotType.toDbSig(true));
 							dbSlot.setName(slot.getName());
 							dbSlot.setIsAbstract(slot.hasModifier(ModifEnum.ABSTRACT));
 							dbSlot.setIsNative(slot.hasModifier(ModifEnum.NATIVE));
