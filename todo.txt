@@ -1,5 +1,8 @@
 WARN/ASK FOR FANTOM+HOME AT FIRST START, if missing show message not exception.
 
+Review FanResolvedType and see if can simplify, seem to be some redundency
+See If can split indexer - 1000+ lines
+
 write unit tests for:
 - resolving expressions (FanResolvedType)
 - parsing files (parsing fantom distro & test) - fix existing one
@@ -10,6 +13,8 @@ write unit tests for:
 Then fix arising issues such as unparseable src such as
 - sysTest::symbolTest
 - sysTest::FuncTest
+
+Profile & find sticking points (scope/ scope var resolutuion could be optimized at least).
 
 ============= TODO Completion ===============================
 
