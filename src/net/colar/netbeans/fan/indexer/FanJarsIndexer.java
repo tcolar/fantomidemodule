@@ -82,7 +82,10 @@ public class FanJarsIndexer implements FileChangeListener
 
 	private void indexJar(String j)
 	{
-		FanIndexerFactory.getIndexer().warnIfNecessary();
+		if (j.endsWith("rt.jar"))
+		{
+			FanIndexerFactory.getIndexer().warnIfNecessary();
+		}
 		log.info("Indexing jar: " + j);
 		if (j.toLowerCase().endsWith(".jar"))
 		{
@@ -246,11 +249,11 @@ public class FanJarsIndexer implements FileChangeListener
 		log.debug("File deleted: " + path);
 		//TODO NOW: had this to a hashtable and do it in the thread
 		// ptherwise might get multithreading issues
-		FanDocument doc = FanDocument.findByPath( path);
+		FanDocument doc = FanDocument.findByPath(path);
 		try
 		{
 			doc.delete();
-		}catch(Exception e)
+		} catch (Exception e)
 		{
 			log.exception("Error deleting doc", e);
 		}
@@ -615,7 +618,7 @@ public class FanJarsIndexer implements FileChangeListener
 	public List<Member> findTypeSlots(String qualifiedType)
 	{
 		List<Member> slots = new ArrayList<Member>();
-		if ( ! classesCache.containsKey(qualifiedType))
+		if (!classesCache.containsKey(qualifiedType))
 		{
 			try
 			{
@@ -639,12 +642,18 @@ public class FanJarsIndexer implements FileChangeListener
 
 	public String getReturnType(Member member)
 	{
-		if(member instanceof Constructor)
+		if (member instanceof Constructor)
+		{
 			return member.getClass().getName();
-		if(member instanceof Method)
-			return ((Method)member).getReturnType().getName();
-		if(member instanceof Field)
-			return ((Field)member).getType().getName();
+		}
+		if (member instanceof Method)
+		{
+			return ((Method) member).getReturnType().getName();
+		}
+		if (member instanceof Field)
+		{
+			return ((Field) member).getType().getName();
+		}
 		return FanIndexer.UNRESOLVED_TYPE;
 	}
 

@@ -145,9 +145,18 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	 */
 	public void requestIndexing(String path)
 	{
+
 		boolean isPod = path.toLowerCase().endsWith(".pod");
 
 		FileObject fo = FileUtil.toFileObject(new File(path));
+		if (fo.getNameExt().equalsIgnoreCase("sys.pod"))
+		{
+			warnIfNecessary();
+		}
+		if (fo.getNameExt().equalsIgnoreCase("sys.pod"))
+		{
+			warnIfNecessary();
+		}
 		if (isPod)
 		{
 			fanPodsToBeIndexed.put(path, new Date().getTime());
@@ -221,13 +230,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			{
 				// create / update the doument
 				doc = FanDocument.findOrCreateOne(null, path);
-				if (doc.isNew())
-				{
-					doc.setPath(path);
-					doc.setTstamp(new Date().getTime());
-					doc.setIsSource(true);
-					doc.save();
-				}
+				doc.setPath(path);
+				doc.setTstamp(new Date().getTime());
+				doc.setIsSource(true);
+				doc.save();
 
 				// Update the  "using" / try to be smart as to not delete / recreate all everytime.
 				Vector<FanDocUsing> usings = FanDocUsing.findAllForDoc(null, doc.getId());
@@ -539,7 +545,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	private void indexPod(String pod)
 	{
-		warnIfNecessary();
 		if (pod.toLowerCase().endsWith(".pod"))
 		{
 			FanDocument doc = null;
@@ -553,14 +558,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				// Create the document
 				doc = FanDocument.findOrCreateOne(null, pod);
 
-				if (doc.isNew())
-				{
-					doc.setPath(pod);
-					//TODO NOW: save with timmestamp 0 until done, same for bin indexer
-					doc.setTstamp(new Date().getTime());
-					doc.setIsSource(false);
-					doc.save();
-				}
+				doc.setPath(pod);
+				//TODO NOW: save with timmestamp 0 until done, same for bin indexer
+				doc.setTstamp(new Date().getTime());
+				doc.setIsSource(false);
+				doc.save();
+				
 				Vector<FanType> types = FanType.findAllForDoc(null, doc.getId());
 				for (FType type : fpod.types)
 				{
