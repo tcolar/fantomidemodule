@@ -328,7 +328,7 @@ public class FanResolvedType
 				}
 				break;
 			case FanParser.AST_TYPE_LIT: // type litteral
-				System.out.println("Lit: "+node.toStringTree());
+				//System.out.println("Lit: "+node.toStringTree());
 				CommonTree litNode=(CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
 				baseType = makeFromExpr(scope, result, litNode, index);
 				baseType.setStaticContext(true);
