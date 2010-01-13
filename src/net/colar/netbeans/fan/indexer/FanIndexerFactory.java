@@ -4,7 +4,6 @@
 package net.colar.netbeans.fan.indexer;
 
 import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.jot.logger.JOTLogger;
 import org.netbeans.modules.parsing.spi.indexing.Context;

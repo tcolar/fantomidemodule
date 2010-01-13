@@ -231,7 +231,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				// create / update the doument
 				doc = FanDocument.findOrCreateOne(null, path);
 				doc.setPath(path);
-				doc.setTstamp(new Date().getTime());
+				doc.setTstamp(0L);
 				doc.setIsSource(true);
 				doc.save();
 
@@ -448,6 +448,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					}
 				} // end type loop
 
+				// all went well, set the tstamp - mark as good
+				doc.setTstamp(new Date().getTime());
+				doc.save();
+
 				// remove old usings
 				for (FanDocUsing using : usings)
 				{
@@ -509,7 +513,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				String podsDir = platform.getPodsDir();
 				File f = new File(podsDir);
 				// listen to changes in pod folder
-				FileUtil.addFileChangeListener(FanIndexer.this, f);
+				FileUtil.addRecursiveListener(this, f);
 				// index the pods if not up to date
 				File[] pods = f.listFiles();
 
@@ -559,8 +563,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				doc = FanDocument.findOrCreateOne(null, pod);
 
 				doc.setPath(pod);
-				//TODO NOW: save with timmestamp 0 until done, same for bin indexer
-				doc.setTstamp(new Date().getTime());
+				doc.setTstamp(0L);
 				doc.setIsSource(false);
 				doc.save();
 				
@@ -794,6 +797,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					}
 				} // end type
 
+				// all went well, set the tstamp - mark as good
+				doc.setTstamp(new Date().getTime());
+				doc.save();
+
 				for (FanType t : types)
 				{
 					t.delete();
@@ -1017,6 +1024,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public void fileAttributeChanged(FileAttributeEvent fae)
 	{
+		int bkpt=0;
 		// don't care
 	}
 
