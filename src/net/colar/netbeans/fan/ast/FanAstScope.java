@@ -80,8 +80,10 @@ public abstract class FanAstScope
 	{
 		FanUtilities.GENERIC_LOGGER.debug("Adding scope var: " + var);
 		String name = var.getName();
-		if(name.length()==0)
+		if (name.length() == 0)
+		{
 			return;
+		}
 		// Can't have duplicated slot name in scope no matter what
 		if (hasScopevar(name))
 		{
@@ -146,11 +148,13 @@ public abstract class FanAstScope
 				return scope.getScopeVar(varName).getType();
 			}
 			// if we get here, try in the type inheritance
-			if(scope instanceof FanTypeScope)
+			if (scope instanceof FanTypeScope)
 			{
-				Hashtable<String, FanSlot> table = ((FanTypeScope)scope).inheritedSlots;
-				if(table.containsKey(varName))
+				Hashtable<String, FanSlot> table = ((FanTypeScope) scope).inheritedSlots;
+				if (table.containsKey(varName))
+				{
 					return FanResolvedType.fromDbSig(table.get(varName).getReturnedType());
+				}
 			}
 			scope = scope.getParent();
 		} while (scope != null);
@@ -173,6 +177,20 @@ public abstract class FanAstScope
 				if (!vars.containsKey(var.getName()))
 				{
 					vars.put(var.getName(), var);
+				}
+			}
+			// add inherited slots
+			if (scope instanceof FanTypeScope)
+			{
+				Hashtable<String, FanSlot> inhSlots = ((FanTypeScope) scope).getInheritedSlots();
+				for (FanSlot slot : inhSlots.values())
+				{
+					if (!vars.containsKey(slot.getName()))
+					{
+						FanResolvedType type = FanResolvedType.fromDbSig(slot.getReturnedType());
+						FanAstScopeVarBase var=new FanAstScopeVar(scope, astNode, slot.getName(), type);
+						vars.put(slot.getName(), var);
+					}
 				}
 			}
 			scope = scope.getParent();
@@ -198,11 +216,10 @@ public abstract class FanAstScope
 	public FanAstScope findParentScopByType(Class type)
 	{
 		FanAstScope tscope = this;
-		while (tscope !=null && ! (tscope.getClass() == type))
+		while (tscope != null && !(tscope.getClass() == type))
 		{
 			tscope = tscope.getParent();
 		}
 		return tscope;
 	}
-
 }

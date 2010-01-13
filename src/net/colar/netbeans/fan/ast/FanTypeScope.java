@@ -70,7 +70,7 @@ public class FanTypeScope extends FanAstScope
 			kind = TypeKind.ENUM;
 		}
 
-		FanUtilities.GENERIC_LOGGER.info("Type node: " + ast.toStringTree());
+		//FanUtilities.GENERIC_LOGGER.info("Type node: " + ast.toStringTree());
 
 		CommonTree nameNode = (CommonTree) ast.getFirstChildWithType(FanParser.AST_ID);
 		CommonTree inheritance = (CommonTree) ast.getFirstChildWithType(FanParser.AST_INHERITANCE);
@@ -168,7 +168,7 @@ public class FanTypeScope extends FanAstScope
 			List<CommonTree> children = (List<CommonTree>) inheritance.getChildren();
 			for (CommonTree child : children)
 			{
-				if (child != null && child.getType() == FanParser.AST_ID)
+				if (child != null && child.getType() == FanParser.AST_TYPE)
 				{
 					FanResolvedType inhType = FanResolvedType.makeFromTypeSig(this, child);
 					String text = FanLexAstUtils.getNodeContent(getRoot().getParserResult(), child);
