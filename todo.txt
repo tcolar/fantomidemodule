@@ -1,3 +1,9 @@
+blog about & have ant check for use of javax/swing/GroupLayout and error if it does
+To fix:
+- (select panel/design and in inspector right click root node/properties and chnage to not use java 1.6)
+- (global: tools/options/gui builder)
+
+
 WARN/ASK FOR FANTOM+HOME AT FIRST START, if missing show message not exception.
 
 Review FanResolvedType and see if can simplify, seem to be some redundency
