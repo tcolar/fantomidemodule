@@ -198,7 +198,11 @@ public class FanType extends JOTModel
 						type.setSrcDocId(-1L);
 						if(type.isFromSource())
 						{
-							//TODO NOW: Outdated, reindex this type from the src doc
+							//TODO: Reindex just that type and not the whole pod !
+							// this should be pretty rare though
+							FanDocument doc=FanDocument.findById(type.getBinDocId());
+							if(doc!=null)
+								FanIndexerFactory.getIndexer().requestIndexing(doc.getPath());
 						}
 						type.save();
 					}
@@ -208,7 +212,9 @@ public class FanType extends JOTModel
 						type.setBinDocId(-1L);
 						if( ! type.isFromSource())
 						{
-							//TODO NOW: Outdated, reindex this type from the bin doc
+							FanDocument doc=FanDocument.findById(type.getSrcDocId());
+							if(doc!=null)
+								FanIndexerFactory.getIndexer().requestIndexing(doc.getPath());
 						}
 						type.save();
 					}

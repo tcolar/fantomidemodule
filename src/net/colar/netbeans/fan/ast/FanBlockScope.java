@@ -79,7 +79,7 @@ public class FanBlockScope extends FanAstScope
 						resolved = FanResolvedType.makeUnresolved();
 						if (type == null || type.isNil())
 						{
-							//TODO NOW: other kinds of expressions
+							//TODO: other kinds of expressions
 							CommonTree expr = (CommonTree) child.getFirstChildWithType(FanParser.AST_CAST);
 							if (expr == null)
 							{
@@ -95,7 +95,6 @@ public class FanBlockScope extends FanAstScope
 							resolved = FanResolvedType.makeFromTypeSigWithWarning(scope, type);
 						}
 						FanAstScopeVar var = new FanAstScopeVar(scope, node, nm, resolved);
-						//TODO: Now: for a catch, create a new scope
 						scope.addScopeVar(var, true);
 						break;
 					case FanParser.AST_FUNC_TYPE:

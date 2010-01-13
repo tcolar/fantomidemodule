@@ -103,6 +103,20 @@ public class FanDocument extends JOTModel
 			super.delete(trans);
 	}
 
+	public static FanDocument findById(Long docId)
+	{
+		FanDocument result = null;
+		try
+		{
+			JOTSQLCondition cond = new JOTSQLCondition("id", JOTSQLCondition.IS_EQUAL, docId);
+			result = (FanDocument) JOTQueryBuilder.selectQuery(null, FanDocument.class).where(cond).findOne();
+		} catch (Exception e)
+		{
+			JOTLogger.logException(FanDocument.class, "Failed seraching doc: " + docId, e);
+		}
+		return result;
+	}
+
 	public static FanDocument findByPath(String path)
 	{
 		FanDocument result = null;
@@ -112,7 +126,7 @@ public class FanDocument extends JOTModel
 			result = (FanDocument) JOTQueryBuilder.selectQuery(null, FanDocument.class).where(cond).findOne();
 		} catch (Exception e)
 		{
-			JOTLogger.logException(FanDocument.class, "Failed renaming doc: " + path, e);
+			JOTLogger.logException(FanDocument.class, "Failed searching doc: " + path, e);
 		}
 		return result;
 	}

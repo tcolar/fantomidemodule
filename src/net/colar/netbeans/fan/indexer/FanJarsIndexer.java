@@ -1,5 +1,6 @@
 package net.colar.netbeans.fan.indexer;
 
+import fan.sys.Sys;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -47,7 +48,6 @@ import org.openide.filesystems.FileUtil;
  */
 public class FanJarsIndexer implements FileChangeListener
 {
-
 	public static final String UNRESOLVED_TYPE = "!!UNRESOLVED!!";
 	private final static Pattern CLOSURECLASS = Pattern.compile(".*?\\$\\d+\\z");
 	static JOTLoggerLocation log = new JOTLoggerLocation(FanIndexer.class);
@@ -67,6 +67,9 @@ public class FanJarsIndexer implements FileChangeListener
 
 	public void indexJars(boolean runInBackground)
 	{
+		// call that fisrt because it fails the first time called (TimeZone exception)
+		try{File f = Sys.HomeDir;}catch(RuntimeException e){e.printStackTrace();}
+
 		long then = new Date().getTime();
 		cl = new FanJavaClassLoader();
 		classes.clear();
@@ -78,6 +81,9 @@ public class FanJarsIndexer implements FileChangeListener
 		}
 		long now = new Date().getTime();
 		log.info("Fantom Jars Parsing completed in " + (now - then) + " ms.");
+		File extDir = new File(Sys.HomeDir, "lib" + File.separator + "java" + File.separator + "ext");
+		//TODO doesn't seem to work right'
+		FileUtil.addFileChangeListener(this, extDir);
 	}
 
 	private void indexJar(String j)
@@ -226,7 +232,7 @@ public class FanJarsIndexer implements FileChangeListener
 		FileUtil.addFileChangeListener(this, FileUtil.toFile(fe.getFile()));
 	}
 
-	//TODO NOW: all events, use thread to delete/reindex etc...
+	//TODO all events, use thread to delete/reindex etc...
 	public void fileDataCreated(FileEvent fe)
 	{
 		String path = fe.getFile().getPath();
@@ -247,12 +253,13 @@ public class FanJarsIndexer implements FileChangeListener
 	{
 		String path = fe.getFile().getPath();
 		log.debug("File deleted: " + path);
-		//TODO NOW: had this to a hashtable and do it in the thread
+		//TODO: add this to a hashtable and do it in the thread
 		// ptherwise might get multithreading issues
 		FanDocument doc = FanDocument.findByPath(path);
 		try
 		{
-			doc.delete();
+			if(doc!=null)
+				doc.delete();
 		} catch (Exception e)
 		{
 			log.exception("Error deleting doc", e);
@@ -261,7 +268,7 @@ public class FanJarsIndexer implements FileChangeListener
 
 	public void fileRenamed(FileRenameEvent fre)
 	{
-		// TODO: NOW not sure if that's good
+		// TODO: not sure if that's good
 		FileObject src = (FileObject) fre.getSource();
 		log.debug("File renamed: " + src.getPath() + " -> " + fre.getFile().getPath());
 		FanDocument.renameDoc(src.getPath(), fre.getFile().getPath());
@@ -269,6 +276,7 @@ public class FanJarsIndexer implements FileChangeListener
 
 	public void fileAttributeChanged(FileAttributeEvent fae)
 	{
+		int bkpt=0;
 		// don't care
 	}
 

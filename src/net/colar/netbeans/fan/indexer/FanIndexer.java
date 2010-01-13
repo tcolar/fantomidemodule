@@ -81,7 +81,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	static JOTLoggerLocation log = new JOTLoggerLocation(FanIndexer.class);
 	private final FanIndexerThread indexerThread;
 	public static volatile boolean shutdown = false;
-	//TODO: NOW will that work or should they all be in the same fifo stack
+	//TODO: will that work or should they all be in the same fifo stack
 	Hashtable<String, Long> fanSrcToBeIndexed = new Hashtable<String, Long>();
 	Hashtable<String, Long> fanPodsToBeIndexed = new Hashtable<String, Long>();
 	Hashtable<String, Long> toBeDeleted = new Hashtable<String, Long>();
@@ -1018,7 +1018,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		// synced because we don't want to do it at the same time as the thread
 		FileObject src = (FileObject) fre.getSource();
 		log.debug("File renamed: " + src.getPath() + " -> " + fre.getFile().getPath());
-		//TODO NOW: had this to a hashtable and do it in the thread
+		//TODO add this to a hashtable and do it in the thread
 		FanDocument.renameDoc(src.getPath(), fre.getFile().getPath());
 	}
 
