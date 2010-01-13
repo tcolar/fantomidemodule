@@ -90,6 +90,7 @@ public class FanResolvedType
 			String type = FanLexAstUtils.getNodeContent(scope.getRoot().getParserResult(), node);
 			//TODO: Propose to auto-add using statements (Hints)
 			scope.getRoot().addError("Unresolved type: " + type, node);
+			FanUtilities.GENERIC_LOGGER.info("Could not resolve type: "+(node==null?"null":node.toStringTree()));
 		}
 		return result;
 	}
@@ -120,15 +121,12 @@ public class FanResolvedType
 		{
 			// type is just a wrapper node
 			case FanParser.AST_TYPE:
+			case FanParser.AST_CHILD:
 				for (CommonTree n : (List<CommonTree>) node.getChildren())
 				{
 					baseType = makeFromTypeSig(scope, n, baseType);
 				}
 				break;
-			case FanParser.AST_CHILD:
-				// just a wrapper node
-				CommonTree subNode = (CommonTree) node.getChild(0);
-				baseType = makeFromTypeSig(scope, subNode);
 			case FanParser.AST_ID:
 				String typeText = FanLexAstUtils.getNodeContent(scope.getRoot().getParserResult(), node);
 				baseType = root.lookupUsing(typeText);
