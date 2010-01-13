@@ -112,7 +112,7 @@ public class FanDocument extends JOTModel
 			result = (FanDocument) JOTQueryBuilder.selectQuery(null, FanDocument.class).where(cond).findOne();
 		} catch (Exception e)
 		{
-			JOTLogger.logException(FanDocument.class, "Failed seraching doc: " + docId, e);
+			JOTLogger.logException(FanDocument.class, "Failed searching doc: " + docId, e);
 		}
 		return result;
 	}
