@@ -9,7 +9,7 @@ import org.openide.util.NbPreferences;
 
 /**
  * Platform Settings support for Fan
- * uch as FAN_HOME
+ * such as FAN_HOME
  * @author tcolar
  */
 public class FanPlatformSettings

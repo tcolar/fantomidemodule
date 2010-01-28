@@ -35,4 +35,5 @@
 	    <java classpath="${classpath}" classname="net.colar.netbeans.fan.antlr.AntlrTokensToNetbeans"
 		args="src/net/colar/netbeans/fan/antlr/Fan.tokens src/net/colar/netbeans/fan/FanTokens.java net.colar.netbeans.fan"/>
 	</target>
+
 </project>

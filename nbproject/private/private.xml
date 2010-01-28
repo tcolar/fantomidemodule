@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/types/FanResolvedType.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/indexer/FanIndexer.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/antlr/Fan.g</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/completion/FanCompletionHandler.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/indexer/model/FanSlot.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/ast/FanTypeScope.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/ast/FanAstScope.java</file>
-        <file>file:/home/thibautc/NetBeansProjects/Fan/src/net/colar/netbeans/fan/indexer/FanJarsIndexer.java</file>
-    </open-files>
 </project-private>
