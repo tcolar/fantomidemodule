@@ -3,36 +3,62 @@
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
 <project name="net.colar.netbeans.fan" default="antlr-tokens-to-nb" basedir=".">
-    <description>Builds, tests, and runs the project net.colar.netbeans.fan.</description>
-    <import file="nbproject/build-impl.xml"/>
+	<description>Builds, tests, and runs the project net.colar.netbeans.fan.</description>
+	<import file="nbproject/build-impl.xml"/>
 
-	<property name="classpath" value="build/classes;../Fan_antlr/lib/antlrworks-1.2.3.jar"/>
-	
-	<property name="all_jars_path" value="${nbplatform.active.dir}/ide12/modules/;NetBeansProjects/Fan/lib"/>
+	<property name="prjDir" location="."/>
+	<property name="classpath" value="build/classes;../Fan_antlr/lib/antlrworks-1.2.3.jar;NetBeansProjects/Fan/lib"/>
 
-    <target name="jar" depends="init,compile,jar-prep" unless="is.jar.uptodate">
-	<echo message="jar: ${nbplatform.active.dir}"/>
-        <taskdef name="csljar" classname="org.netbeans.modules.csl.CslJar" classpath="ext/nbantext.jar;ext/cslanttask.jar;${classpath}"/>
-        <csljar jarfile="${cluster}/${module.jar}" compress="${build.package.compress}" index="${build.package.index}" manifest="${manifest.mf}" stamp="${cluster}/.lastModified">
-            <fileset dir="${build.classes.dir}"/>
-        </csljar>
-    </target>
+	<property name="all_jars_path" value="${nbplatform.active.dir}/ide12/modules/;lib/antlr-runtime-3.1.3.jar"/>
 
-	<target name="test" depends="compile" description="Test parser on files in 'fantom/src' folder">
-		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="../../fantom/src/"/>
-		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="../../fantom/test/"/>
+	<path id="project.class.path">
+		<fileset dir="${nbplatform.active.dir}/ide12/modules/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/platform11/modules/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/java3/modules/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/java3/modules/ext/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/platform11/modules/ext/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/platform11/lib/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/platform11/core/" includes="*.jar"/>
+		<fileset dir="lib" includes="*.jar"/>
+		<pathelement path="${classpath}"/>
+		<pathelement path="/tmp/fantom/classes"/>
+	</path>
+
+	<target name="jar" depends="init,compile,jar-prep" unless="is.jar.uptodate">
+		<echo message="jar: ${nbplatform.active.dir}"/>
+		<taskdef name="csljar" classname="org.netbeans.modules.csl.CslJar" classpath="ext/nbantext.jar;ext/cslanttask.jar;${classpath}"/>
+		<csljar jarfile="${cluster}/${module.jar}" compress="${build.package.compress}" index="${build.package.index}" manifest="${manifest.mf}" stamp="${cluster}/.lastModified">
+			<fileset dir="${build.classes.dir}"/>
+		</csljar>
 	</target>
-	<target name="test-light" depends="compile" description="Test parser on files in 'test_failing' folder">
-		<java classname="net.colar.netbeans.fan.test.FanParserTest" classpath="${classpath}" args="test"/>
+
+	<target name="test" depends="compile, test-build" description="JOT Unit tests">
+		<delete dir="/tmp/fantom"/>
+		<mkdir dir="/tmp/fantom/classes"/>
+		<copy todir="/tmp/fantom/classes">
+			<fileset dir="build/classes"/>
+			<fileset dir="build/test/unit/classes"/>
+		</copy>
+		<copy todir="/tmp/fantom">
+			<fileset dir="test/unit/data"/>
+		</copy>
+		<java classname="net.jot.testing.JOTTester" classpathref="project.class.path" dir="/tmp/fantom/">
+			<!-- First arg(required) is to your classes (to be tested) folder -->
+			<arg value="classes"/>
+			<arg value="-includePackages=net.colar.netbeans.fan.test.*" />
+			<arg value="-stopOnFailure=false" />
+			<!--<arg value="-debug"/>-->
+			<!--<arg value="-outputTo=/tmp/jottest.html"/>-->
+		</java>
 	</target>
 
 	<target name="compile-grammar" description="Recompile the antlr grammar (Fan.g) into lexer/parser." >
 		<java jvmargs="-Xmx1200m" classpath="${classpath}" classname="org.antlr.Tool"
-			args="src/net/colar/netbeans/fan/antlr/Fan.g -Xconversiontimeout 95000 -report"/>
+		args="src/net/colar/netbeans/fan/antlr/Fan.g -Xconversiontimeout 95000 -report"/>
 	</target>
 
 	<target name="antlr-tokens-to-nb" depends="clean, compile, compile-grammar">
-	    <java classpath="${classpath}" classname="net.colar.netbeans.fan.antlr.AntlrTokensToNetbeans"
+		<java classpath="${classpath}" classname="net.colar.netbeans.fan.antlr.AntlrTokensToNetbeans"
 		args="src/net/colar/netbeans/fan/antlr/Fan.tokens src/net/colar/netbeans/fan/FanTokens.java net.colar.netbeans.fan"/>
 	</target>
 
