@@ -47,7 +47,7 @@ public class FantomSrcParsingTest implements JOTTestable
 		{
 			JOTTester.tag(f.getPath());
 			boolean result = parseFile(f);
-			JOTTester.checkIf("Parsing " + file.getAbsolutePath(), result);
+			JOTTester.checkIf("Parsing " + f.getAbsolutePath(), result);
 		}
 		}
 		catch(Throwable e){e.printStackTrace();}
