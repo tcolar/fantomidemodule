@@ -40,27 +40,30 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 		srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_TEST_SRC_FOLDER));
 
 		Project[] projects = OpenProjects.getDefault().getOpenProjects();
-		for (Project prj : projects)
+		if (projects != null)
 		{
-			if (prj != null)
+			for (Project prj : projects)
 			{
-				SourceGroup[] sgs;
-				if (prj instanceof FanProject)
+				if (prj != null)
 				{
-					sgs = ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
-				} else
-				{
-					sgs = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-				}
-
-				for (SourceGroup sg : sgs)
-				{
-					ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
-					if (cp != null)
+					SourceGroup[] sgs;
+					if (prj instanceof FanProject)
 					{
-						for (FileObject root : cp.getRoots())
+						sgs = ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
+					} else
+					{
+						sgs = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+					}
+
+					for (SourceGroup sg : sgs)
+					{
+						ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
+						if (cp != null)
 						{
-							srcRoots.add(root);
+							for (FileObject root : cp.getRoots())
+							{
+								srcRoots.add(root);
+							}
 						}
 					}
 				}
@@ -72,14 +75,14 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 		/*JavaPlatform platform = JavaPlatformManager.getDefault().getDefaultPlatform();
 		if (platform != null)
 		{
-			ClassPath cp = platform.getSourceFolders();
-			if (cp != null)
-			{
-				for (FileObject root : cp.getRoots())
-				{
-					srcRoots.add(root);
-				}
-			}
+		ClassPath cp = platform.getSourceFolders();
+		if (cp != null)
+		{
+		for (FileObject root : cp.getRoots())
+		{
+		srcRoots.add(root);
+		}
+		}
 		}*/
 		// Fan distro sources
 		FanPlatform fan = FanPlatform.getInstance(false);

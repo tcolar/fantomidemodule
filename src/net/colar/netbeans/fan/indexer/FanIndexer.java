@@ -109,14 +109,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		}
 	}
 
-	public void indexAll(boolean background)
+	public void indexAll(boolean backgroundJava)
 	{
-		MainIndexer idx = new MainIndexer();
+		MainIndexer idx = new MainIndexer(backgroundJava);
 		idx.start();
-		if (!background)
-		{
-			idx.waitFor();
-		}
 	}
 
 	public FanJarsIndexer getJarsIndexer()
@@ -1121,6 +1117,13 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 
 		volatile boolean done = false;
+		private final boolean bg;
+
+		public MainIndexer(boolean backgroundJava)
+		{
+			super();
+			this.bg = backgroundJava;
+		}
 
 		@Override
 		public void run()
@@ -1139,21 +1142,9 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			// sources indexes will be called  through scanStarted()
 			jarsIndexer = new FanJarsIndexer();
 			// Do this one in the background (might take a while and not needed for everyone)
-			jarsIndexer.indexJars(true);
+			jarsIndexer.indexJars(bg);
 			done = true;
 		}
 
-		public void waitFor()
-		{
-			while (!done && !shutdown)
-			{
-				try
-				{
-					sleep(100);
-				} catch (Exception e)
-				{
-				}
-			}
-		}
 	}
 }
