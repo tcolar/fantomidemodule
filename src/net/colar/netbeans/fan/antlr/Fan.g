@@ -323,10 +323,10 @@ simpleType     	:  	id (SP_COLCOL id)?;
 mapType		:	sq_bracketL? nonMapType SP_QMARK? (LIST_TYPE SP_QMARK?)*
 				({notAfterEol()}? SP_COLON {notAfterEol()}? type)+ sq_bracketR?
 			-> ^(AST_MAP ^(AST_CHILD nonMapType) ^(AST_CHILD type));
-// TODO: SP_COMMA syntax to go away in Fan 1.0.49
+// TODO: SP_COMMA deprecated Fan 1.0.49
 funcType 	:	(SP_PIPE funcTypeContent SP_PIPE)
 				-> ^(AST_FUNC_TYPE funcTypeContent);
-funcTypeContent : SP_COMMA | (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType);
+funcTypeContent : (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType);
 assignedType	:	OP_ARROW type?;
 formals 	:  	formal (SP_COMMA formal)*;
 formal		:	(formal_content)
@@ -441,10 +441,11 @@ typeCheck	:  	(KW_ISNOT | KW_IS | KW_AS) typeRoot (SP_QMARK? {notAfterEol()}? '[
 compare		:  	(CP_COMPARATORS elvisExpr)*;
 
 elvisExpr 	:	rangeExpr (OP_ELVIS rangeExpr)* ;
-rangeExpr 	:	bitOrExpr (( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) bitOrExpr)* ;
-bitOrExpr 	:	bitAndExpr ((OP_BITOR | SP_PIPE) bitAndExpr)* ;
-bitAndExpr 	:	shiftExpr (OP_CURRY shiftExpr)*  ;
-shiftExpr 	:	addExpr ((OP_LSHIFT | OP_RSHIFT) addExpr)* ;
+rangeExpr 	:	addExpr (( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) addExpr)* ;
+// Bitwise ops deprecated in 1.0.49
+//bitOrExpr 	:	bitAndExpr ((OP_BITOR | SP_PIPE) bitAndExpr)* ;
+//bitAndExpr 	:	shiftExpr (OP_CURRY shiftExpr)*  ;
+//shiftExpr 	:	addExpr ((OP_LSHIFT | OP_RSHIFT) addExpr)* ;
 addExpr 	:	multExpr ((OP_PLUS | OP_MINUS) multExpr)* ;
 addAppend	:	(OP_PLUS | OP_MINUS) parenExpr;
 multExpr 	:	parenExpr ((OP_MULTI | OP_DIV | OP_MOD) parenExpr)* ;
@@ -455,7 +456,8 @@ castExpr 	:	{notAfterEol()}? parL type parR parenExpr
 // if PAR_l starts after newLine, this is a different exression
 groupedExpr 	:	parL expr parR termChain*;
 unaryExpr 	:	prefixExpr | postfixExpr | termExpr;
-prefixExpr 	:	(OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | OP_TILDA | OP_PLUS | OP_MINUS) parenExpr ;
+// ~ deprecated in 1.0.49
+prefixExpr 	:	(OP_CURRY | OP_BANG | OP_2PLUS | OP_2MINUS | /*OP_TILDA |*/ OP_PLUS | OP_MINUS) parenExpr ;
 postfixExpr 	:	termExpr (OP_2PLUS | OP_2MINUS) ;
 termExpr 	:	termBase termChain*
 			-> ^(AST_TERM_EXPR ^(AST_CHILD termBase) ^(AST_CHILD termChain*));
