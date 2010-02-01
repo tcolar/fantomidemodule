@@ -96,11 +96,7 @@ public class FanStructureAnalyzer implements StructureScanner
 						ElementKind kind = m.isCtor() ? ElementKind.CONSTRUCTOR : ElementKind.METHOD;
 						FanStructureItem mItem = new FanStructureItem(var.getNode(), kind, result);
 						String returnType = FanType.getShortName(m.getTypeString());
-						if (returnType.equals(FanIndexer.UNRESOLVED_TYPE))
-						{
-							returnType = "";
-						}
-						if (returnType.equalsIgnoreCase("void"))
+						if (returnType==null || returnType.equals(FanIndexer.UNRESOLVED_TYPE) || returnType.equalsIgnoreCase("void"))
 						{
 							returnType = "";
 						}
