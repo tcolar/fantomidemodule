@@ -944,10 +944,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		try
 		{
 			FanObj parser = (FanObj) Type.find("fandoc::FandocParser").make();
-			FanObj doc = (FanObj) parser.type().method("parseStr").call(parser, fandoc);
+			FanObj doc = (FanObj) parser.typeof().method("parseStr").call(parser, fandoc);
 			Buf buf = Buf.make();
 			FanObj writer = (FanObj) Type.find("fandoc::HtmlDocWriter").method("make").call(buf.out());
-			doc.type().method("write").call(doc, writer);
+			doc.typeof().method("write").call(doc, writer);
 			html = buf.flip().readAllStr();
 		} catch (Exception e)
 		{
