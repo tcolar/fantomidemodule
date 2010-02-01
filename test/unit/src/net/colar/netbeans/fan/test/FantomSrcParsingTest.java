@@ -16,6 +16,7 @@ import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.platform.FanPlatformSettings;
+import org.netbeans.modules.csl.api.Error;
 import net.jot.JOTInitializer;
 import net.jot.testing.JOTTestable;
 import net.jot.testing.JOTTester;
@@ -40,17 +41,17 @@ public class FantomSrcParsingTest implements JOTTestable
 
 		try
 		{
-		String folder = "/home/thibautc/fantom-1.0.49/src/";
-		File file = new File(folder);
-		Vector<File> files = getFanFiles(file);
-		for (File f : files)
+			String folder = "/home/thibautc/fantom-1.0.49/src/";
+			File file = new File(folder);
+			Vector<File> files = getFanFiles(file);
+			for (File f : files)
+			{
+				parseFile(f);
+			}
+		} catch (Throwable e)
 		{
-			JOTTester.tag(f.getPath());
-			boolean result = parseFile(f);
-			JOTTester.checkIf("Parsing " + f.getAbsolutePath(), result);
+			e.printStackTrace();
 		}
-		}
-		catch(Throwable e){e.printStackTrace();}
 		tearDown();
 	}
 
@@ -68,9 +69,6 @@ public class FantomSrcParsingTest implements JOTTestable
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, "/home/thibautc/fantom/");
 		JOTTester.checkIf("Fan home setup check ", FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME) != null);
 
-		//***********
-		//** The parsing really doesn't need the indexing'
-
 		FanPlatform.getInstance(false).readSettings();
 		// Do it in the foreground .. waitFor()
 		FanIndexerFactory.getIndexer().indexAll(false);
@@ -84,7 +82,7 @@ public class FantomSrcParsingTest implements JOTTestable
 		JOTInitializer.getInstance().destroy();
 	}
 
-	private boolean parseFile(File f)
+	private void parseFile(File f)
 	{
 		NBFanParser parser = new NBFanParser();
 		try
@@ -95,6 +93,7 @@ public class FantomSrcParsingTest implements JOTTestable
 			FanParserResult result = (FanParserResult) parser.getResult();
 			List<? extends org.netbeans.modules.csl.api.Error> errors = result.getDiagnostics();
 			// Look for failed parsing (antlr)
+			boolean hasErrors = false;
 			if (errors != null && errors.size() > 0)
 			{
 				for (org.netbeans.modules.csl.api.Error error : errors)
@@ -102,18 +101,22 @@ public class FantomSrcParsingTest implements JOTTestable
 					System.err.println("Error: " + error);
 				}
 				FanLexAstUtils.dumpTree(result.getTree(), 0);
-				return false;
+				hasErrors = true;
 			}
+			JOTTester.checkIf("ANTLR Parsing " + f.getAbsolutePath(), hasErrors);
 			// TODO: look for unresolved items
-			//result.getAntlrErrors();
-
+			hasErrors = false;
+			for (Error error : result.getErrors())
+			{
+				System.err.println("Error: " + error);
+				hasErrors = true;
+			}
+			JOTTester.checkIf("Semantic analysis " + f.getAbsolutePath(), hasErrors);
 		} catch (Throwable e)
 		{
 			System.err.println("Parsing failed for: " + f.getPath());
 			e.printStackTrace();
-			return false;
 		}
-		return true;
 	}
 
 	private Vector<File> getFanFiles(File file)

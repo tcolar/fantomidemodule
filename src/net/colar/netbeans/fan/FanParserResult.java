@@ -214,5 +214,10 @@ public class FanParserResult extends ParserResult
 		return sourcePath;
 	}
 
+	public List<Error> getErrors()
+	{
+		return errors;
+	}
+
 	
 }

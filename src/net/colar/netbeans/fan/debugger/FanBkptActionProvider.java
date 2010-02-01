@@ -23,22 +23,20 @@ import org.openide.util.WeakListeners;
 /**
  * Breakpoint action provider
  * Handles setting/unsettings breakpoints
- * Gets registered by annotation
+ * Registered through annotation
  * @author thibautc
  */
-@ActionsProvider.Registration() //TODO: doesn't work ?
+@ActionsProvider.Registration()
 public class FanBkptActionProvider extends ActionsProviderSupport implements PropertyChangeListener
 {
 
-	/*static
-	{
-		System.err.println("### Registering: " + FanBkptActionProvider.class.getName());
-	}*/
 	private static final Set actions = Collections.singleton(ActionsManager.ACTION_TOGGLE_BREAKPOINT);
 	private EditorContextDispatcher context = EditorContextDispatcher.getDefault();
 
 	public FanBkptActionProvider()
 	{
+		super();
+		FanUtilities.GENERIC_LOGGER.info("### Registering: " + FanBkptActionProvider.class.getName());
 		// listen on fan files
 		context.addPropertyChangeListener(FanLanguage.FAN_MIME_TYPE, WeakListeners.propertyChange(this, context));
 		setEnabled(ActionsManager.ACTION_TOGGLE_BREAKPOINT, false);
@@ -49,13 +47,13 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 	{
 		boolean enabled = EditorContextDispatcher.getDefault().getCurrentLine() != null;
 		setEnabled(ActionsManager.ACTION_TOGGLE_BREAKPOINT, enabled);
-		//System.out.println("Fan - BkptProvider enabling");
+		FanUtilities.GENERIC_LOGGER.info("Fan - BkptProvider enabling");
 	}
 
 	@Override
 	public void doAction(Object action)
 	{
-		//System.out.println("Fan - BkptProvider doaction");
+		FanUtilities.GENERIC_LOGGER.info("Fan - BkptProvider doaction");
 		FileObject fo = EditorContextDispatcher.getDefault().getCurrentFile();
 		if (fo == null || !fo.getMIMEType().equals(FanLanguage.FAN_MIME_TYPE))
 		{
@@ -63,7 +61,7 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 		}
 		Line line = EditorContextDispatcher.getDefault().getCurrentLine();
 		String url = EditorContextDispatcher.getDefault().getCurrentURLAsString();
-		FanUtilities.GENERIC_LOGGER.debug("Dbg line:"+line);
+		FanUtilities.GENERIC_LOGGER.info("Dbg line:"+line);
 		if (line == null)
 		{
 			return;
@@ -81,14 +79,25 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 				if (bp.getURL().equals(url) && bp.getLineNumber() == lineNb)
 				{
 					// Found existing BP, remove and quit
+					FanUtilities.GENERIC_LOGGER.info("Removing bkpt:"+ lineNb);
 					DebuggerManager.getDebuggerManager().removeBreakpoint(bp);
 					return;
 				}
 			}
 		}
 		// If we get here, it's a new bkpt, so create it.
+		FanUtilities.GENERIC_LOGGER.info("creating BP:"+lineNb);
 		LineBreakpoint bp = FanDebugHelper.createFanBp(url, lineNb);
 		DebuggerManager.getDebuggerManager().addBreakpoint(bp);
+		Breakpoint[] bkpts = DebuggerManager.getDebuggerManager().getBreakpoints();
+		for (int i = 0; i != bkpts.length; i++)
+		{
+			if (bkpts[i] instanceof LineBreakpoint)
+			{
+				LineBreakpoint bkpt = (LineBreakpoint)bkpts[i];
+				System.out.println("BKPT: "+i+" "+bkpt.getSourcePath()+ bkpt.getLineNumber());
+			}
+		}
 	}
 
 	@Override

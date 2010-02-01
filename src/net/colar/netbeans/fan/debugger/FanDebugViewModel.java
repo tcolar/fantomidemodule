@@ -13,7 +13,6 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 
 /**
  * //TODO: test/ fix / use FanDebugViewModel
- * ### UNUSED, maybe later ########
  *
  * Doesn't always work even when called when regsitered in META-INF ????
  *
