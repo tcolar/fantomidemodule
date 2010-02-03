@@ -3,7 +3,7 @@
  */
 package net.colar.netbeans.fan.indexer;
 
-import fan.sys.Sys;
+import fan.sys.Env;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -33,8 +33,8 @@ public class FanJavaClassLoader extends URLClassLoader
 		try
 		{
 			String sep = File.separator;
-			File extDir = new File(Sys.HomeDir, "lib" + sep + "java" + sep + "ext");
-			File platDir = new File(extDir, Sys.platform());
+			File extDir = new File(Env.cur().homeDir().osPath(), "lib" + sep + "java" + sep + "ext");
+			File platDir = new File(extDir, Env.cur().platform());
 			ArrayList acc = new ArrayList();
 			addExtJars(acc, extDir);
 			addExtJars(acc, platDir);

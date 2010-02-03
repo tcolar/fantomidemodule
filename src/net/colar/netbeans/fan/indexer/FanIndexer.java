@@ -16,6 +16,7 @@ import fanx.fcode.FMethod;
 import fanx.fcode.FMethodVar;
 import fanx.fcode.FPod;
 import fanx.fcode.FSlot;
+import fanx.fcode.FStore;
 import fanx.fcode.FType;
 import fanx.fcode.FTypeRef;
 import java.io.File;
@@ -25,7 +26,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.regex.Pattern;
-import java.util.zip.ZipFile;
 import net.colar.netbeans.fan.FanParserResult;
 import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.ast.FanAstField;
@@ -43,6 +43,7 @@ import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
 import net.colar.netbeans.fan.platform.FanPlatform;
+import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.builders.JOTQueryBuilder;
@@ -170,14 +171,16 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		if (platform.isConfigured())
 		{
 			// Don't do Fantom distro sources since we have binaries (faster)
+			log.info(platform.getFanHome()+" VS "+path);
 			if (FileUtil.isParentOf(platform.getFanHome(), FileUtil.toFileObject(new File(path))))
 			{
+				log.info("Skipping: "+path);
 				return;
 			}
-		}
+		}else{log.info("Platform not ready to index: "+path);}
 
 		long then = new Date().getTime();
-		log.debug("Indexing requested for: " + path);
+		log.info("Indexing requested for: " + path);
 		// Get a snaphost of the source
 		File f = new File(path);
 
@@ -551,8 +554,8 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			try
 			{
 
-				ZipFile zpod = new ZipFile(pod);
-				FPod fpod = new FPod(null, zpod, null);
+				//ZipFile zpod = new ZipFile(pod);
+				FPod fpod = new FPod(null, FStore.makeZip(new File(pod)));
 				fpod.readFully();
 				log.info("Indexing pod: " + pod);
 				// Create the document
@@ -911,7 +914,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			try
 			{
 				Pod pod = Pod.find(type.getPod());
-				Type t = pod.findType(type.getSimpleName());
+				Type t = pod.type(type.getSimpleName());
 				if (t != null)
 				{
 					return fanDocToHtml(t.doc());

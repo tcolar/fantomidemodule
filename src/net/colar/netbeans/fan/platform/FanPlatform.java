@@ -4,6 +4,7 @@
  */
 package net.colar.netbeans.fan.platform;
 
+import fan.sys.Sys;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,6 +59,8 @@ public class FanPlatform
 
 			// Set fan.home property, so we casn use Fan code later
 			System.setProperty("fan.home", fanHome);
+			// boot fan env.
+			Sys.boot();
 		}
 		// force updating paths
 		sourcePaths = null;

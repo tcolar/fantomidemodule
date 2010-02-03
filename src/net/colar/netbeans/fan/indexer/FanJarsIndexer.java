@@ -1,6 +1,6 @@
 package net.colar.netbeans.fan.indexer;
 
-import fan.sys.Sys;
+import fan.sys.Env;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -68,7 +68,7 @@ public class FanJarsIndexer implements FileChangeListener
 	public void indexJars(boolean runInBackground)
 	{
 		// call that fisrt because it fails the first time called (TimeZone exception)
-		try{File f = Sys.HomeDir;}catch(RuntimeException e){e.printStackTrace();}
+		try{Env.cur().homeDir();}catch(RuntimeException e){e.printStackTrace();}
 
 		long then = new Date().getTime();
 		cl = new FanJavaClassLoader();
@@ -81,7 +81,7 @@ public class FanJarsIndexer implements FileChangeListener
 		}
 		long now = new Date().getTime();
 		log.info("Fantom Jars Parsing completed in " + (now - then) + " ms.");
-		File extDir = new File(Sys.HomeDir, "lib" + File.separator + "java" + File.separator + "ext");
+		File extDir = new File(Env.cur().homeDir().osPath(), "lib" + File.separator + "java" + File.separator + "ext");
 		//TODO doesn't seem to work right'
 		FileUtil.addFileChangeListener(this, extDir);
 	}
