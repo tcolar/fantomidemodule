@@ -1,0 +1,181 @@
+Introducing NB Api's / CSL
+
+Introducing Fantom
+
+Initial: nb_fab (plugin)  r575
+- create plugin prj
+- layer.xml
+- mime.xml - schlieman ! .nbs
+
+Revision <592/593 : Fan_antlr
+- Fan.g
+- nbproject -> working project
+- build task (build.xml) -> FanLexer / FanParser 
+
+Rev <595:
+- antlr-runtime lib
+
+Rev < 602: more grammar work
+
+Rev <603: 
+- antlr.sh - testing grammar
+- working with antlrworks -> testing/debugging grammar
+- antlr works : extra memory
+
+Rev <607:
+- Working grammar
+- test fan files
+
+Rev <623:
+- More grammar work - line breaks hack, maps and other tricky structures
+
+Rev <636:
+- More grammar work - line breaks hack, 
+
+Rev <694:
+- More grammar edge cases work
+- Working with small grammar subsets to find issues Test.g / antlrworks
+
+Rev 700:
+- updated ant build file
+
+Rev 704:
+- created fan suite
+
+Rev 705:
+- Proper NB plugin
+- Integrated grammar into Fan plugin
+- Moved Fan_antlr into Fan /  cleanup
+
+Rev < 712:
+- FanLangHierarchy / FanLanguage.java / AntlrTokensToNetbeans.java / NBFanLexer.java
+
+
+Rev 712:
+- textcolors.xml
+- layer.xml
+- fanresolver.xml
+
+Rev 719:
+- CSL
+- Lexer integration
+
+Rev 724:
+- error recovery
+
+Rev 733:
+- Parser integration / crude error reporting from antlr
+
+Rev 736:
+- Module distro (plugin) added to FanSuite (nbm)
+
+Rev 739:
+- First release as an NBM !
+
+Rev < 744:
+- More error recovery work
+
+Rev < 746:
+- started ast work
+- navigator window
+
+Rev 752: 
+- working navigator window : got to class/method etc...
+
+Rev 754:
+- Code folding
+
+Rev 757:
+- Fan project support: logical view, filter node
+
+Rev < 785:
+- Project creation wizzrad / UI
+- Project Execution (run)
+
+Rev < 786:
+- project execution
+- fanshell support
+
+Rev < 815:
+TODO: explain gridlayout java 1.6 issue
+
+- settings window
+- Manu acions (build, run etc..)
+- custom icons for files etc...
+
+Rev < 819:
+- Create a release (suite)
+- added branding / images /etc...
+
+Rev < 820:
+- using jot for wizard templates (freemarker issues)
+
+832: Open automatically new files in editor
+
+839: dependencies cleanup (explain), release suite
+
+847: plugin folder
+
+852: Licence , keystroke handler
+
+855: indentation
+<866: bracket matching / autoclosing items
+
+869: pretty formatter
+
+882: Highlighting in interpolated strings
+
+889/890: fixes to navigator glitches, Fix to files dealyed appareance in project view
+
+901: Initial support for build, run and build&run of pods
+
+904: more support for pods: build etc...
+
+911: self signed certificate for plugin (plugin portal)
+
+912: releases , osx release
+
+924: java 1.5 wizzard issue
+
+928: started completion work
+
+931: license work
+
+936: started debugger
+
+945-950: breakpoints
+
+956: branding: splash, icon, version, license
+
+976: working debugger
+
+<1015: code formatter fixes
+
+1000+: completion work: lucene / no etc...
+new ast / parser - scoping work etc...
+custom db backed index
+Field parsing, slots & type determination
+using types resolving
+Simplified resolving types
+fandoc for slot proposals
+complete call expressions
+expression completion
+propose variables
+propose correct types and static or dynamic slots according to context
+local vars / scoping
+
+1162: wrapped jars
+perm gen space
+
+indexer work
+
+1224:
+Added customized CslJar.java so I can build cslJar from binaries and not need NB sources.
+
+<1235: java completion
+
+<1242: type resolution work
+
+<1250: structureanalyzewr using scope rewrite
+
+1262: type inference
