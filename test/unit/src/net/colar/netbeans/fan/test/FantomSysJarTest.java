@@ -4,6 +4,7 @@
 
 package net.colar.netbeans.fan.test;
 
+import fan.sys.Env;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.platform.FanPlatformSettings;
@@ -22,6 +23,8 @@ public class FantomSysJarTest implements JOTTestable
 	{
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, "/home/thibautc/fantom/");
 		FanPlatform.getInstance(false).readSettings();
+
+		Env.cur().homeDir();
 
 		String input="hello *there* `http://www.google.com`";
 		String out = FanIndexer.fanDocToHtml(input);
