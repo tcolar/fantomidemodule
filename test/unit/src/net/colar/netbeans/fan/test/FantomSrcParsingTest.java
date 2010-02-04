@@ -34,6 +34,11 @@ import org.openide.util.lookup.Lookups;
  */
 public class FantomSrcParsingTest implements JOTTestable
 {
+	//public static final String sources = "/home/thibautc/fantom/src/";
+	//public static final String sources = "/home/thibautc/fantom/test/";
+	// Files known to have parser errors
+	public static final String sources = "/home/thibautc/NetBeansProjects/Fan/test/parser_test/";
+
 
 	public void jotTest() throws Throwable
 	{
@@ -41,8 +46,7 @@ public class FantomSrcParsingTest implements JOTTestable
 
 		try
 		{
-			String folder = "/home/thibautc/fantom-1.0.49/src/";
-			File file = new File(folder);
+			File file = new File(sources);
 			Vector<File> files = getFanFiles(file);
 			for (File f : files)
 			{
@@ -103,7 +107,7 @@ public class FantomSrcParsingTest implements JOTTestable
 				FanLexAstUtils.dumpTree(result.getTree(), 0);
 				hasErrors = true;
 			}
-			JOTTester.checkIf("ANTLR Parsing " + f.getAbsolutePath(), hasErrors);
+			JOTTester.checkIf("ANTLR Parsing " + f.getAbsolutePath(), ! hasErrors);
 			// TODO: look for unresolved items
 			hasErrors = false;
 			for (Error error : result.getErrors())
@@ -111,7 +115,7 @@ public class FantomSrcParsingTest implements JOTTestable
 				System.err.println("Error: " + error);
 				hasErrors = true;
 			}
-			JOTTester.checkIf("Semantic analysis " + f.getAbsolutePath(), hasErrors);
+			JOTTester.checkIf("Semantic analysis " + f.getAbsolutePath(), ! hasErrors);
 		} catch (Throwable e)
 		{
 			System.err.println("Parsing failed for: " + f.getPath());

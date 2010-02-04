@@ -326,7 +326,8 @@ mapType		:	sq_bracketL? nonMapType SP_QMARK? (LIST_TYPE SP_QMARK?)*
 // TODO: SP_COMMA deprecated Fan 1.0.49
 funcType 	:	(SP_PIPE funcTypeContent SP_PIPE)
 				-> ^(AST_FUNC_TYPE funcTypeContent);
-funcTypeContent : (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType);
+// op_safe_dyn_call elxer confusion between |Str?->| (formal) and Str?->  (dyn call)
+funcTypeContent : (formals OP_SAFEDYN_CALL type?) | (formals ((OP_ARROW)=>assignedType)?) | ((OP_ARROW)=>assignedType);
 assignedType	:	OP_ARROW type?;
 formals 	:  	formal (SP_COMMA formal)*;
 formal		:	(formal_content)

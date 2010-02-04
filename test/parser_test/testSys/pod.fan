@@ -17,6 +17,7 @@
 @podResDirs = [`res/`, `locale/`]
 @nodoc
 @podIndexFacets = [@testSysByStr, @testSys::testSysByType]
+@js
 
 pod testSys
 {
@@ -38,7 +39,7 @@ pod testSys
   strA := "alpha"
   strB := "line1\nline2\nline3_\u02c3_"
 
-  uriA := `http://fandev.org/`
+  uriA := `http://fantom.org/`
 
   Num numA := 45
   Num? numB := null

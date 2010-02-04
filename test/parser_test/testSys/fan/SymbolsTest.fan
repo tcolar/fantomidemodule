@@ -27,7 +27,7 @@ class SymbolsTest : Test
     verifyImmutable(@durA, "durA",     30ms)
     verifyImmutable(@strA, "strA",     "alpha")
     verifyImmutable(@strB, "strB",     "line1\nline2\nline3_\u02c3_")
-    verifyImmutable(@uriA, "uriA",     `http://fandev.org/`)
+    verifyImmutable(@uriA, "uriA",     `http://fantom.org/`)
     verifyImmutable(@numA, "numA",     45,   Num#)
     verifyImmutable(@numB, "numB",     null, Num?#)
 
@@ -44,27 +44,27 @@ class SymbolsTest : Test
     verifyMutable(@serialC, "serialC", SerA { i = 12345; s = "symbols!"}, Obj#)
   }
 
-  Void verifyImmutable(Symbol x, Str name, Obj? val, Type of := val.type)
+  Void verifyImmutable(Symbol x, Str name, Obj? val, Type of := Type.of(val))
   {
     verifySymbol(x, name, val, of)
     verifySame(x.defVal, x.defVal)
   }
 
-  Void verifyMutable(Symbol x, Str name, Obj? val, Type of := val.type)
+  Void verifyMutable(Symbol x, Str name, Obj? val, Type of := Type.of(val))
   {
     verifySymbol(x, name, val, of)
     verifyNotSame(x.defVal, x.defVal)
   }
 
-  Void verifySymbol(Symbol x, Str name, Obj? val, Type of := val.type)
+  Void verifySymbol(Symbol x, Str name, Obj? val, Type of := Type.of(val))
   {
-    verifyEq(x, type.pod.symbol(name))
-    verifySame(x, type.pod.symbol(name))
+    verifyEq(x, Pod.of(this).symbol(name))
+    verifySame(x, Pod.of(this).symbol(name))
     verifyEq(x.name, name)
     verifyEq(x.qname, "testSys::$name")
     verifyEq(x.toStr, "@testSys::$name")
-    verifySame(x.pod, type.pod)
-    verifyEq(x.of, of)
+    verifySame(x.pod, Pod.of(this))
+    verifyEq(x.type, of)
     verifyEq(x.val, val)
     verifyEq(x.defVal, val)
   }
@@ -83,6 +83,7 @@ class SymbolsTest : Test
 // IO
 //////////////////////////////////////////////////////////////////////////
 
+/* TODO
   Void testIO()
   {
     verifyIO("", Str:Obj?[:])
@@ -94,7 +95,7 @@ class SymbolsTest : Test
          using testSys
          n=null;   b=true;   i=123456789
          f=12.4f;  d=3.33d;  dur=3min
-         uri=`http://fandev.org/`
+         uri=`http://fantom.org/`
          str="foo\nbar\u2cd3"
          ver=Version("1.2.3")
          date=Date("2009-07-21")
@@ -109,7 +110,7 @@ class SymbolsTest : Test
       Str:Obj?[
         "n":null,  "b":true,  "i":123456789,
         "f":12.4f, "d":3.33d, "dur":3min,
-        "uri":`http://fandev.org/`,
+        "uri":`http://fantom.org/`,
         "str":"foo\nbar\u2cd3",
         "ver":Version("1.2.3"),
         "date":Date("2009-07-21"),
@@ -126,19 +127,20 @@ class SymbolsTest : Test
   Void verifyIO(Str s, Str:Obj? expected)
   {
     actual := s.in.readSymbols
-    verifyEq(actual.type, [Str:Obj?]#)
+    verifyType(actual, [Str:Obj?]#)
     verifyEq(actual, expected)
     verifyEq(Buf().writeSymbols(actual).flip.readSymbols, expected)
   }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 // Overrides
 //////////////////////////////////////////////////////////////////////////
-
+/*
   Void testOverrides()
   {
     // create temp etc/testSys
-    f := Repo.working.home + `etc/testSys/pod.fansym`
+    f := Env.cur.workDir + `etc/testSys/pod.fansym`
     try
     {
       f.delete
@@ -164,5 +166,5 @@ class SymbolsTest : Test
       f.delete
     }
   }
-
+*/
 }
