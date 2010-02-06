@@ -29,7 +29,7 @@ MULTI_COMMENT
 */
 
 grammar Fan;
-options {output=AST;memoize=true;backtrack=true;}
+options {output=AST;/*memoize=true;backtrack=true;*/}
 
 // ########################## TOKENS
 // Define tokens for keywords used in the grammar, so they can be referenced.
@@ -427,21 +427,26 @@ g_default	:	KW_DEFAULT SP_COLON stmt*;
 expr
 @init {paraphrase.push("Expression");} @after{paraphrase.pop();}
 		:	assignExpr;
-assignExpr	:	ternaryExpr (assignOp assignExpr)?;
+assignExpr	:	ifExpr (assignOp assignExpr)?;
+assignOp	:	AS_EQUAL | AS_ASSIGN_OP;
+
+ifExpr      :	ternaryExpr | elvisExpr;
 ternaryExpr	:	condOrExpr (ternaryTail)?;
 // Problem: It will confuse the ':' of the ternary expr and then it fails.
-ternaryTail	:	SP_QMARK condOrExpr SP_COLON condOrExpr;
-assignOp	:	AS_EQUAL | AS_ASSIGN_OP;
+ternaryTail	:	SP_QMARK ifExprBody SP_COLON ifExprBody;
+elvisExpr 	:	condOrExpr OP_ELVIS ifExprBody ;
+ifExprBody  :   condOrExpr | ifExprThrow;
+ifExprThrow :   KW_THROW expr;
+
 condOrExpr 	:	condAndExpr  (OP_OR  condAndExpr)*;
 condAndExpr 	:	equalityExpr (OP_AND  equalityExpr)* ;
 equalityExpr	:	relationalExpr (CP_EQUALITY relationalExpr)* ;
 
-relationalExpr	:  	elvisExpr (typeCheck | compare);
+relationalExpr	:  	typeCheckExpr | compareExpr;
 // NOTE: we compare to typeRoot instead of type, because type would eat the trailing ?, breaking ternary expressions
-typeCheck	:  	(KW_ISNOT | KW_IS | KW_AS) typeRoot (SP_QMARK? {notAfterEol()}? '[]')*;
-compare		:  	(CP_COMPARATORS elvisExpr)*;
+typeCheckExpr	:  	rangeExpr (KW_ISNOT | KW_IS | KW_AS) typeRoot (SP_QMARK? {notAfterEol()}? '[]')*;
+compareExpr	:  	rangeExpr (CP_COMPARATORS rangeExpr)*;
 
-elvisExpr 	:	rangeExpr (OP_ELVIS rangeExpr)* ;
 rangeExpr 	:	addExpr (( OP_RANG_EXCL_OLD | OP_RANGE_EXCL | OP_RANGE ) addExpr)* ;
 // Bitwise ops deprecated in 1.0.49
 //bitOrExpr 	:	bitAndExpr ((OP_BITOR | SP_PIPE) bitAndExpr)* ;
@@ -559,7 +564,7 @@ getter			: t=ID {t.getText().equals("get")}?;
 setter			: t=ID {t.getText().equals("set")}?;
 pod				: t=ID {t.getText().equals("pod")}?;
 
-// For bettr error reporting
+// For better error reporting
 bracketL
 @init {paraphrase.push("{");} @after{paraphrase.pop();}
 		:	BRACKET_L;
