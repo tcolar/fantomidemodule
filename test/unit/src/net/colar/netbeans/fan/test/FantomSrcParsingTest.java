@@ -42,7 +42,7 @@ public class FantomSrcParsingTest implements JOTTestable
 
 	public void jotTest() throws Throwable
 	{
-		setUp();
+		/*setUp();
 
 		try
 		{
@@ -56,7 +56,7 @@ public class FantomSrcParsingTest implements JOTTestable
 		{
 			e.printStackTrace();
 		}
-		tearDown();
+		tearDown();*/
 	}
 
 	protected void setUp() throws Exception
