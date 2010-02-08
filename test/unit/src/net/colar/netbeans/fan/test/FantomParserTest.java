@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.jot.testing.JOTTestable;
+import net.jot.testing.JOTTester;
 import org.parboiled.Parboiled;
 import org.parboiled.common.StringUtils;
 import org.parboiled.support.ParseTreeUtils;
@@ -37,5 +38,6 @@ public class FantomParserTest implements JOTTestable
 		{
 			System.out.println(StringUtils.join(result.parseErrors, "---\n"));
 		}
+		JOTTester.checkIf("Errors? ", ! result.hasErrors());
 	}
 }

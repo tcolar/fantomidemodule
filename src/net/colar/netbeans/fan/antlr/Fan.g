@@ -29,7 +29,7 @@ MULTI_COMMENT
 */
 
 grammar Fan;
-options {output=AST;/*memoize=true;backtrack=true;*/}
+options {output=AST;memoize=true;backtrack=true;}
 
 // ########################## TOKENS
 // Define tokens for keywords used in the grammar, so they can be referenced.

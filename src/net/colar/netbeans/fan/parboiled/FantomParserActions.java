@@ -14,7 +14,6 @@ import org.netbeans.editor.BaseAction;
  */
 class FantomParserActions extends BaseAction
 {
-
 	@Override
 	public void actionPerformed(ActionEvent ae, JTextComponent jtc)
 	{

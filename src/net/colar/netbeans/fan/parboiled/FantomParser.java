@@ -3,13 +3,20 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
-import net.colar.netbeans.fan.antlr.FanParser.nonMapType_return;
 import org.parboiled.BaseParser;
+import org.parboiled.MatcherContext;
+import org.parboiled.Node;
 import org.parboiled.Rule;
+import org.parboiled.matchers.SequenceMatcher;
+import org.parboiled.support.InputBuffer;
 import org.parboiled.support.Leaf;
+import org.parboiled.support.ParseTreeUtils;
 
 /**
- *
+ * Parboiled parser for the Fantom Language
+ * Started with Fantom Grammar 1.0.50
+ * Grammar spec:
+ * http://fantom.org/doc/docLang/Grammar.html
  * @author thibautc
  */
 @SuppressWarnings(
@@ -18,9 +25,6 @@ import org.parboiled.support.Leaf;
 })
 public class FantomParser extends BaseParser<Object>
 {
-	//final FantomParserActions actions = new FantomParserActions();
-
-	public int skipCpt = 0;
 	// ------------ Comp Unit --------------------------------------------------
 
 	public Rule compilationUnit()
@@ -77,25 +81,16 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			OPT_SP,
 			optional(doc()),
-			//optional(facets()),
-			optional(protection()), optional(KW_ABSTRACT), optional(KW_FINAL), optional(KW_CONST),
+			//zeroOrMore(facet()),
+			optional(protection()),
+			zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)),
 			KW_CLASS,
 			id(),
 			optional(inheritance()),
-			tempBlock() //skipBlock()
-			//zeroOrMore(slotDef()),
-			//BRACKET_R);
-			);
-	}
-
-	public Rule tempBlock()
-	{
-		return enforcedSequence(
 			BRACKET_L,
-			zeroOrMore(
-			sequence(type(), id(), OPT_SP)),
-			BRACKET_R);
-
+			zeroOrMore(slotDef()),
+			BRACKET_R
+			);
 	}
 
 	public Rule protection()
@@ -107,7 +102,6 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return enforcedSequence(SP_COL, typeList());
 	}
-
 	// ------------ Type -------------------------------------------------------
 	public Rule type()
 	{
@@ -171,6 +165,53 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(type(), zeroOrMore(sequence(SP_COMMA, type())));
 	}
 
+	//------------------- Slot Def ---------------------------------------------
+	public Rule slotDef()
+	{
+		return /*firstOf(ctorDef(), methodDef(),*/ fieldDef()/*)*/;
+	}
+
+	public Rule fieldDef()
+	{
+			return sequence(
+					//zeroOrMore(facet()),
+					optional(protection()),
+					zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
+						KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
+					typeAndId(),
+					optional(sequence(OP_ASSIGN, expr())),
+					optional(fieldAccessor()),
+					eos()
+					);
+	}
+
+	public Rule typeAndId()
+	{
+		// Note it can be "type id", "type" or "id"
+		// but parser can't know if it's "type" or "id" so always recognize as type
+		// should never actually hit id()
+		return firstOf(sequence(type(),id()), type()/*, id()*/);
+	}
+	public Rule fieldAccessor()
+	{
+		return enforcedSequence(
+				BRACKET_L,
+				optional(sequence("get", firstOf(eos(), block()))),
+				optional(sequence(optional(protection()),"set", firstOf(eos(), block()))),
+				BRACKET_R
+				);
+	}
+
+	public Rule expr()
+	{
+		//TODO: dummy
+		return oneOrMore("XXX");
+	}
+	public Rule block()
+	{
+		//TODO: dummy
+		return oneOrMore("YYY");
+	}
 	// ------------ Misc -------------------------------------------------------
 	public Rule id()
 	{
@@ -178,12 +219,6 @@ public class FantomParser extends BaseParser<Object>
 			firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
 			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_", charRange('0', '9'))),
 			OPT_SP);
-	}
-
-	public Rule eos()
-	{
-		// also eat whatever spacing.
-		return sequence(OPT_SP, charSet(";\n}"));
 	}
 
 	public Rule doc()
@@ -208,7 +243,13 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule KW_PRIVATE = terminal("private");
 	public final Rule KW_INTERNAL = terminal("internal");
 	public final Rule KW_PROTECTED = terminal("protected");
+	public final Rule KW_STATIC = terminal("static");
+	public final Rule KW_NATIVE = terminal("native");
+	public final Rule KW_OVERRIDE = terminal("override");
+	public final Rule KW_VIRTUAL = terminal("virtual");
+	public final Rule KW_READONLY = terminal("readonly");
 	public final Rule OP_ARROW = terminal("->");
+	public final Rule OP_ASSIGN = terminal(":=");
 	public final Rule SP_PIPE = terminal("|");
 	public final Rule SP_QMARK = terminal("?");
 	public final Rule SP_COLCOL = terminal("::");
@@ -244,37 +285,26 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(string, testNot(mustNotFollow), optional(spacing())).label(string);
 	}
 
-	/*public boolean recurseCheck(String key)
+	// ----------- Custom action rules -----------------------------------------
+
+	/**
+	 * Look for end of statement
+	 * @return
+	 */
+	public boolean eos()
 	{
-	Integer val = recurseMap.get(key);
-	if(val==null)
-	val=0;
-	val++;
-	System.out.println(key +" -> " + val);
-	recurseMap.put(key, val);
-	return val<5;
-	}*/
-	public Rule skipBlock()
-	{
-		skipCpt = 0;
-		return zeroOrMore(sequence(any(), doSkip(LAST_TEXT())));
+		// First check if we just passed a '\n' (ignored spacing)
+		InputBuffer buffer = getContext().getInputBuffer();
+		Node nen = ParboiledUtils.getLastNonEmptyNode(getContext(), buffer);
+		if(nen!=null)
+		{
+			String text = ParseTreeUtils.getNodeText(nen, buffer);
+			if(nen.getLabel().equals("spacing") && text.indexOf("\n")!=-1)
+				return true; // we just passed a line break
+		}
+		// Otherwise look for upcoming statement ending chars: ';' '\n' or '}'
+		SequenceMatcher seq = (SequenceMatcher)sequence(OPT_SP,charSet(";\n}"),OPT_SP);
+		return seq.match((MatcherContext)getContext());
 	}
 
-	public boolean doSkip(String text)
-	{
-		System.out.println("text: '" + text + "'");
-		if (text.equalsIgnoreCase("{"))
-		{
-			// consume
-			skipCpt++;
-		} else if (LAST_TEXT().equalsIgnoreCase("}"))
-		{
-			skipCpt--;
-			if (skipCpt == 0)
-			{
-				return false;
-			}
-		}
-		return true;
-	}
 }
