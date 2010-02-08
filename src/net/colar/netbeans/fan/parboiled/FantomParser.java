@@ -31,7 +31,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(
 			OPT_SP,
-			zeroOrMore(using()),
+			zeroOrMore(firstOf(using(),incUsing())),
 			/*firstOf(podDef, */ zeroOrMore(typeDef())/*)*/,
 			OPT_SP,
 			eoi());
@@ -42,11 +42,24 @@ public class FantomParser extends BaseParser<Object>
 		return enforcedSequence(
 			KW_USING,
 			optional(ffi()),
+			id(), 
+			zeroOrMore(enforcedSequence(DOT, id())),
+			optional(enforcedSequence(SP_COLCOL, id())),// not enforced to allow completion
+			optional(usingAs()),
+			eos()); // optional because if last item in file then we get eoi
+	}
+	
+	// Inconplete using - to allow completion
+	public Rule incUsing()
+	{
+		return enforcedSequence(
+			KW_USING,
+			optional(ffi()),
 			optional(id()), // Not optional, but we want a valid ast for completion if missing
 			zeroOrMore(sequence(DOT, id())),// not enforced to allow completion
 			optional(sequence(SP_COLCOL, id())),// not enforced to allow completion
 			optional(usingAs()),
-			optional(eos())); // optional because if last item in file then we get eoi
+			optional(eos())); 		
 	}
 
 	public Rule ffi()
@@ -103,6 +116,7 @@ public class FantomParser extends BaseParser<Object>
 		return enforcedSequence(SP_COL, typeList());
 	}
 	// ------------ Type -------------------------------------------------------
+	// Types use noNl() a lot to avoid gramar confusion
 	public Rule type()
 	{
 		return firstOf(simpleMapType(), otherTypes());
@@ -111,11 +125,11 @@ public class FantomParser extends BaseParser<Object>
 	public Rule simpleMapType()
 	{
 		// It has to be other types, otherwise it's left recursive (loops forever)
-		return sequence(otherTypes(), SP_COL, otherTypes(),
+		return sequence(otherTypes(), noNl(), SP_COL, noNl(), otherTypes(),
 		optional(
-			sequence(optional(SP_QMARK), enforcedSequence(
+			sequence(noNl(), optional(SP_QMARK), noNl(), enforcedSequence(
 			SQ_BRACKET_L, SQ_BRACKET_R))), // list of '?[]'
-			optional(SP_QMARK)); // nullable
+			optional(sequence(noNl(), SP_QMARK))); // nullable
 	}
 
 	public Rule otherTypes()
@@ -123,46 +137,37 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			firstOf(funcType(), mapType(), simpleType()),
 			optional(
-			sequence(optional(SP_QMARK), enforcedSequence(
+			sequence(noNl(),optional(SP_QMARK), noNl(), enforcedSequence(
 			SQ_BRACKET_L, SQ_BRACKET_R))), // list of '?[]'
-			optional(SP_QMARK)); // nullable
+			optional(sequence(noNl(), SP_QMARK))); // nullable
 	}
 
 	public Rule simpleType()
 	{
 		return sequence(
 			id(),
-			optional(enforcedSequence(SP_COLCOL, id())));
+			optional(sequence(noNl(), enforcedSequence(SP_COLCOL, noNl(), id()))));
 	}
 
 	public Rule mapType()
 	{
 		// We use otherTypes here as well, because [Str:Int:Str] would be confusing too
-		return enforcedSequence(SQ_BRACKET_L, otherTypes(), SP_COL, otherTypes(), SQ_BRACKET_R);
+		return enforcedSequence(SQ_BRACKET_L, noNl(), otherTypes(), noNl(), SP_COL, noNl(), otherTypes(), noNl(), SQ_BRACKET_R);
 	}
 
 	public Rule funcType()
 	{
-		return enforcedSequence(SP_PIPE, optional(formals()), OP_ARROW, optional(type()), SP_PIPE);
+		return enforcedSequence(SP_PIPE, noNl(), optional(formals()), noNl(), OP_ARROW, noNl(), optional(type()), noNl(), SP_PIPE);
 	}
 
 	public Rule formals()
 	{
-		return sequence(formal(), zeroOrMore(enforcedSequence(SP_COMMA, formal())));
-	}
-
-	public Rule formal()
-	{
-		return firstOf(
-			sequence(type(), id()), // type & id
-			type(), // type only
-			id() // inferred
-			);
+		return sequence(typeAndId(), zeroOrMore(enforcedSequence(noNl(), SP_COMMA, typeAndId())));
 	}
 
 	public Rule typeList()
 	{
-		return sequence(type(), zeroOrMore(sequence(SP_COMMA, type())));
+		return sequence(type(), zeroOrMore(sequence(noNl(), SP_COMMA, type())));
 	}
 
 	//------------------- Slot Def ---------------------------------------------
@@ -226,50 +231,52 @@ public class FantomParser extends BaseParser<Object>
 		return oneOrMore(sequence("**", zeroOrMore(sequence(testNot("\n"), any())), "\n"));
 	}
 	// -------------- Terminal items -------------------------------------------
-	//public final Rule BRACKET_L = terminal("{");
-	//public final Rule BRACKET_R = terminal("}");
-	public final Rule SQ_BRACKET_L = terminal("[");
-	public final Rule SQ_BRACKET_R = terminal("]");
-	public final Rule BRACKET_L = terminal("{");
-	public final Rule BRACKET_R = terminal("}");
+	// -- Keywords --
 	public final Rule KW_USING = terminal("using");
-	public final Rule KW_AS = terminal("as");
-	public final Rule KW_POD = terminal("pod");
-	public final Rule KW_CLASS = terminal("class");
 	public final Rule KW_ABSTRACT = terminal("abstract");
-	public final Rule KW_FINAL = terminal("final");
+	public final Rule KW_AS = terminal("as");
+	public final Rule KW_CLASS = terminal("class");
 	public final Rule KW_CONST = terminal("const");
-	public final Rule KW_PUBLIC = terminal("public");
-	public final Rule KW_PRIVATE = terminal("private");
+	public final Rule KW_FINAL = terminal("final");
 	public final Rule KW_INTERNAL = terminal("internal");
-	public final Rule KW_PROTECTED = terminal("protected");
-	public final Rule KW_STATIC = terminal("static");
 	public final Rule KW_NATIVE = terminal("native");
 	public final Rule KW_OVERRIDE = terminal("override");
-	public final Rule KW_VIRTUAL = terminal("virtual");
+	public final Rule KW_PRIVATE = terminal("private");
+	public final Rule KW_PUBLIC = terminal("public");
+	public final Rule KW_PROTECTED = terminal("protected");
 	public final Rule KW_READONLY = terminal("readonly");
+	public final Rule KW_STATIC = terminal("static");
+	public final Rule KW_VIRTUAL = terminal("virtual");
+	// operators
 	public final Rule OP_ARROW = terminal("->");
 	public final Rule OP_ASSIGN = terminal(":=");
+	// separators
 	public final Rule SP_PIPE = terminal("|");
 	public final Rule SP_QMARK = terminal("?");
 	public final Rule SP_COLCOL = terminal("::");
 	public final Rule SP_COL = terminal(":");
 	public final Rule SP_COMMA = terminal(",");
+	// others
 	public final Rule DOT = terminal(".");
-	public final Rule OPT_SP = optional(spacing()); // optional spacing shortcut
+	public final Rule SQ_BRACKET_L = terminal("[");
+	public final Rule SQ_BRACKET_R = terminal("]");
+	public final Rule BRACKET_L = terminal("{");
+	public final Rule BRACKET_R = terminal("}");
+	// shortcut for optional spacing
+	public final Rule OPT_SP = optional(spacing()); 
 
-	// Leafs
+	// ------------ Leafs ------------------------------------------------------
 	@Leaf
 	public Rule spacing()
 	{
 		return oneOrMore(firstOf(
 			// whitespace
 			oneOrMore(charSet(" \t\r\n\u000c")),
-			// traditional comment
+			// multiline comment
 			sequence("/*", zeroOrMore(sequence(testNot("*/"), any())), "*/"), // normal comment
-			// if incomplete comment, then end at end of line
-			//sequence(zeroOrMore(sequence(testNot("\n"), any())), "\n"))),
-			// end of line comment
+			// if incomplete multiline comment, then end at end of line
+			sequence("/*", zeroOrMore(sequence(testNot("\n"), any())), "\n"),
+			// single line comment
 			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any())), charSet("\r\n"))));
 	}
 
@@ -294,6 +301,24 @@ public class FantomParser extends BaseParser<Object>
 	public boolean eos()
 	{
 		// First check if we just passed a '\n' (ignored spacing)
+		if(isAfterNL())
+			return true;
+		// Otherwise look for upcoming statement ending chars: ';' '\n' or '}'
+		SequenceMatcher seq = (SequenceMatcher)sequence(OPT_SP,charSet(";\n}"),OPT_SP);
+		return seq.match((MatcherContext)getContext());
+	}
+
+	/**
+	 * Checks if we just passed a '\n' (ignored spacing)
+	 * Usually we ignore newline (meaningless to grammar), but sometimes they
+	 * do are mening ful ex:
+	 * Str[Int]  != Str\n[Int]
+	 * @return
+	 */
+	public boolean isAfterNL()
+	{
+		if(getContext()==null)
+			return false;
 		InputBuffer buffer = getContext().getInputBuffer();
 		Node nen = ParboiledUtils.getLastNonEmptyNode(getContext(), buffer);
 		if(nen!=null)
@@ -302,9 +327,12 @@ public class FantomParser extends BaseParser<Object>
 			if(nen.getLabel().equals("spacing") && text.indexOf("\n")!=-1)
 				return true; // we just passed a line break
 		}
-		// Otherwise look for upcoming statement ending chars: ';' '\n' or '}'
-		SequenceMatcher seq = (SequenceMatcher)sequence(OPT_SP,charSet(";\n}"),OPT_SP);
-		return seq.match((MatcherContext)getContext());
+		return false;
 	}
 
+	// shortcut for ! isAfterNL();
+	public boolean noNl()
+	{
+		return ! isAfterNL();
+	}
 }
