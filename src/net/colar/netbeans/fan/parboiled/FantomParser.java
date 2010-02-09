@@ -8,6 +8,7 @@ import org.parboiled.MatcherContext;
 import org.parboiled.Node;
 import org.parboiled.Rule;
 import org.parboiled.matchers.SequenceMatcher;
+import org.parboiled.matchers.TestMatcher;
 import org.parboiled.support.InputBuffer;
 import org.parboiled.support.Leaf;
 import org.parboiled.support.ParseTreeUtils;
@@ -242,10 +243,12 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule stmt()
 	{
-		return firstOf(sequence(KW_BREAK, eos()), sequence(KW_CONTINUE, eos()), for_(),
+		return sequence(OPT_SP,
+				firstOf(sequence(KW_BREAK, eos()), sequence(KW_CONTINUE, eos()), for_(),
 						if_(), sequence(KW_RETURN, optional(expr()), eos()), switch_(),
 						sequence(KW_THROW, expr(), eos()), while_(), try_(),
-						localDef(), itAdd(), sequence(expr(), eos()));
+						localDef(), itAdd(), sequence(expr(), eos())),
+						OPT_SP);
 	}
 
 	public Rule for_()
@@ -884,8 +887,12 @@ public class FantomParser extends BaseParser<Object>
 		if(isAfterNL())
 			return true;
 		// Otherwise look for upcoming statement ending chars: ';' '\n' or '}'
-		SequenceMatcher seq = (SequenceMatcher)sequence(OPT_SP,charSet(";\n}"),OPT_SP);
-		return seq.match((MatcherContext)getContext());
+		SequenceMatcher seq = (SequenceMatcher)sequence(OPT_SP,charSet(";\n"));
+		if(seq.match((MatcherContext)getContext())) return true;
+		// '}' is eos too, but we should not consume it (\n either ?)
+		SequenceMatcher test = (SequenceMatcher)sequence(OPT_SP, test("}"));
+		if(test.match((MatcherContext)getContext())) return true;
+		return false;
 	}
 
 	/**
