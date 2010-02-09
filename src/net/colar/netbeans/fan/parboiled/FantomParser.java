@@ -29,12 +29,7 @@ import org.parboiled.support.ParseTreeUtils;
 public class FantomParser extends BaseParser<Object>
 {
 	// ------------ Comp Unit --------------------------------------------------
-
-	//TODO: look for all specila code in fan.g (comments) and see what needs to be brought over
-	//TODO: funcType: // op_safe_dyn_call elxer confusion between |Str?->| (formal) and Str?->  (dyn call)
-	//TODO: typeCheckExpr: we compare to typeRoot instead of type, because type would eat the trailing ?, breaking ternary expressions
-	//TODO: itBlocks can have a COMMA after statements, which means to call it.add(expr).
-
+	//TODO: funcType: // op_safe_dyn_call lexer confusion between |Str?->| (formal) and Str?->  (dyn call)
 
 	public Rule compilationUnit()
 	{
