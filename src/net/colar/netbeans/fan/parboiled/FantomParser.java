@@ -3,11 +3,6 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
-import net.colar.netbeans.fan.antlr.FanParser.condAndExpr_return;
-import net.colar.netbeans.fan.antlr.FanParser.condOrExpr_return;
-import net.colar.netbeans.fan.antlr.FanParser.idExprReq_return;
-import net.colar.netbeans.fan.antlr.FanParser.mapPair_return;
-import net.colar.netbeans.fan.antlr.FanParser.unaryExpr_return;
 import org.parboiled.BaseParser;
 import org.parboiled.MatcherContext;
 import org.parboiled.Node;
@@ -33,6 +28,10 @@ public class FantomParser extends BaseParser<Object>
 	// ------------ Comp Unit --------------------------------------------------
 
 	//TODO: look for all specila code in fan.g (comments) and see what needs to be brought over
+	//TODO: funcType: // op_safe_dyn_call elxer confusion between |Str?->| (formal) and Str?->  (dyn call)
+	//TODO: typeCheckExpr: we compare to typeRoot instead of type, because type would eat the trailing ?, breaking ternary expressions
+	//TODO: itBlocks can have a COMMA after statements, which means to call it.add(expr).
+
 
 	public Rule compilationUnit()
 	{
@@ -40,6 +39,8 @@ public class FantomParser extends BaseParser<Object>
 			OPT_SP,
 			zeroOrMore(firstOf(using(),incUsing())),
 			zeroOrMore(typeDef()),
+			OPT_SP,
+			zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
 			OPT_SP,
 			eoi());
 	}
@@ -519,15 +520,17 @@ public class FantomParser extends BaseParser<Object>
 		return firstOf(field(), call());
 	}
 
+	// require '*' otherwise it's just and ID (this would prevent termbase from checking literals)
 	public Rule field()
 	{
-		return sequence(optional(OP_MULT),id());
+		return sequence(OP_MULT,id());
 	}
 
+	// require params or/and closure, otherwise it's just and ID (this would prevent termbase from checking literals)
 	public Rule call()
 	{
 		return sequence(id(),
-						optional(enforcedSequence(PAR_L, args(), PAR_R)), // params
+						enforcedSequence(PAR_L, args(), PAR_R), // params
 						optional(closure()));
 	}
 
