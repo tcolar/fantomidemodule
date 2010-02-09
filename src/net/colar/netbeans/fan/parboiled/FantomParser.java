@@ -8,7 +8,6 @@ import org.parboiled.MatcherContext;
 import org.parboiled.Node;
 import org.parboiled.Rule;
 import org.parboiled.matchers.SequenceMatcher;
-import org.parboiled.matchers.TestMatcher;
 import org.parboiled.support.InputBuffer;
 import org.parboiled.support.Leaf;
 import org.parboiled.support.ParseTreeUtils;
@@ -18,6 +17,9 @@ import org.parboiled.support.ParseTreeUtils;
  * Started with Fantom Grammar 1.0.50
  * Grammar spec:
  * http://fantom.org/doc/docLang/Grammar.html
+ *
+ * Test Suite: net.colar.netbeans.fan.test.FantomParserTest
+ * 
  * @author thibautc
  */
 @SuppressWarnings(
@@ -143,7 +145,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule enumValDef()
 	{
-		return sequence(id(), optional(enforcedSequence(PAR_L, args() ,PAR_R)));
+		return sequence(id(), optional(enforcedSequence(PAR_L, optional(args()) ,PAR_R)));
 	}
 
 	public Rule slotDef()
@@ -190,8 +192,8 @@ public class FantomParser extends BaseParser<Object>
 					id(),
 					optional(
 						firstOf(	// ctor chain
-						enforcedSequence(KW_THIS, DOT, id(), PAR_L, args(), PAR_R),
-						enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), PAR_L, args(), PAR_R)
+						enforcedSequence(KW_THIS, DOT, id(), PAR_L, optional(args()), PAR_R),
+						enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), PAR_L, optional(args()), PAR_R)
 						)
 					),
 					PAR_L,
@@ -456,7 +458,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		//TODO: unclosed DSL ?
 		return sequence(simpleType(),
-			sequence(DSL_OPEN, zeroOrMore(sequence(testNot(DSL_CLOSE), any())), DSL_OPEN));
+			sequence(DSL_OPEN, zeroOrMore(sequence(testNot(DSL_CLOSE), any())), DSL_CLOSE));
 	}
 
 	public Rule closure()
@@ -533,8 +535,9 @@ public class FantomParser extends BaseParser<Object>
 	public Rule call()
 	{
 		return sequence(id(),
-						enforcedSequence(PAR_L, args(), PAR_R), // params
-						optional(closure()));
+						firstOf(
+							sequence(enforcedSequence(PAR_L, optional(args()), PAR_R), optional(closure())), //params & opt. closure
+							closure())); // closure only
 	}
 
 	/*
@@ -552,7 +555,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule callOp()
 	{
-		return enforcedSequence(PAR_L, args(), PAR_R, optional(closure()));
+		return enforcedSequence(PAR_L, optional(args()), PAR_R, optional(closure()));
 	}
 
 	public Rule litteral()
@@ -580,7 +583,10 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule map()
 	{
-		return sequence(optional(mapType()), noNl(), SQ_BRACKET_L, mapItems(), SQ_BRACKET_R);
+		return sequence(
+			optional(firstOf(mapType(),simpleMapType())),
+			noNl(), 
+			enforcedSequence(SQ_BRACKET_L, mapItems(), SQ_BRACKET_R));
 	}
 
 	public Rule mapItems()
@@ -596,26 +602,52 @@ public class FantomParser extends BaseParser<Object>
 	}
 
 	// ------------ Litteral items ---------------------------------------------
-	// Todo: review if allows things like : "aa\"bb"
 	public Rule strs()
 	{
 		return firstOf(
-			sequence(QUOTE, zeroOrMore(sequence(testNot(QUOTE), any())), QUOTE),
-			sequence(QUOTES3, zeroOrMore(sequence(testNot(QUOTES3), any())), QUOTES3)
+			sequence(QUOTES3, // triple quoted string
+						zeroOrMore(firstOf(
+							unicodeChar(),
+							escapedChar(),
+							sequence(testNot(QUOTES3), any())))
+					, QUOTES3),
+			sequence(QUOTE, // simple string
+						zeroOrMore(firstOf(
+							unicodeChar(),
+							escapedChar(),
+							sequence(testNot(QUOTE), any())))
+					, QUOTE)
 			);
 	}
 
 	public Rule uri()
 	{
-		return sequence(TICK, zeroOrMore(sequence(testNot(TICK), any())), TICK);
+		return sequence(TICK, 
+							zeroOrMore(firstOf(
+								unicodeChar(),
+								escapedChar(),
+								sequence(testNot(TICK), any()))),
+						TICK);
 	}
 
 	public Rule char_()
 	{
-		return firstOf(
-			enforcedSequence(SINGLE_Q, any(), SINGLE_Q),
-			enforcedSequence("\\u", hexDigit(), hexDigit(), hexDigit(), hexDigit())
-			);
+		return enforcedSequence(SINGLE_Q,
+							firstOf(
+								unicodeChar(),
+								escapedChar(),
+								any()), //all else
+							SINGLE_Q);
+	}
+
+	public Rule escapedChar()
+	{
+		return enforcedSequence("\\", firstOf('b','f','n','r','t','"','\'','`','$','\\'));
+	}
+
+	public Rule unicodeChar()
+	{
+		return enforcedSequence("\\u", hexDigit(), hexDigit(), hexDigit(), hexDigit());
 	}
 
 	public Rule hexDigit()
@@ -675,23 +707,36 @@ public class FantomParser extends BaseParser<Object>
 	// Types use noNl() a lot to avoid gramar confusion
 	public Rule type()
 	{
-		return firstOf(simpleMapType(), otherTypes());
+		return firstOf(simpleMapType(), nonSimpleMapTypes());
 	}
 
 	public Rule simpleMapType()
 	{
-		// It has to be other types, otherwise it's left recursive (loops forever)
-		return sequence(otherTypes(), noNl(), SP_COL, noNl(), otherTypes(),
+		// It has to be other nonSimpleMapTypes, otherwise it's left recursive (loops forever)
+		return sequence(nonSimpleMapTypes(), noNl(), SP_COL, noNl(), nonSimpleMapTypes(),
 		optional(
-			sequence(noNl(), optional(SP_QMARK), noNl(), enforcedSequence(
-			SQ_BRACKET_L, SQ_BRACKET_R))), // list of '?[]'
+			// Not enforcing [] because of problems with maps like this Str:int["":5]
+			sequence(noNl(), optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
 			optional(sequence(noNl(), SP_QMARK))); // nullable
 	}
 
-	public Rule otherTypes()
+	// all types except simple map
+	public Rule nonSimpleMapTypes()
 	{
 		return sequence(
 			firstOf(funcType(), mapType(), simpleType()),
+			optional(
+			// Not enforcing [] because of problems with maps like this Str:int["":5]
+			sequence(noNl(),optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			optional(sequence(noNl(), SP_QMARK))); // nullable
+	}
+
+	// all types except function
+	public Rule nonFunctionTypes()
+	{
+		return sequence(
+			// Don't allow simpleMap starting with '|' as this confuses with closinf Function.
+			firstOf(sequence(testNot(SP_PIPE),simpleMapType()), mapType(), simpleType()),
 			optional(
 			sequence(noNl(),optional(SP_QMARK), noNl(), enforcedSequence(
 			SQ_BRACKET_L, SQ_BRACKET_R))), // list of '?[]'
@@ -707,18 +752,25 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule mapType()
 	{
-		// We use otherTypes here as well, because [Str:Int:Str] would be confusing too
-		return enforcedSequence(SQ_BRACKET_L, noNl(), otherTypes(), noNl(), SP_COL, noNl(), otherTypes(), noNl(), SQ_BRACKET_R);
+		// We use nonSimpleMapTypes here as well, because [Str:Int:Str] would be confusing
+		// not enforced to allow map rule to work ([Int:Str][5,""])
+		return sequence(SQ_BRACKET_L, noNl(), nonSimpleMapTypes(), noNl(), SP_COL, noNl(), nonSimpleMapTypes(), noNl(), SQ_BRACKET_R);
 	}
 
 	public Rule funcType()
 	{
-		return enforcedSequence(SP_PIPE, noNl(), optional(formals()), noNl(), OP_ARROW, noNl(), optional(type()), noNl(), SP_PIPE);
+		return enforcedSequence(SP_PIPE, noNl(), optional(formals()), noNl(), OP_ARROW, noNl(), 
+		// type() stating with '|' would cause issues because it would get confused with the closing "|"
+		// so not allowing types starting with PIPE (testNot), such as an inner function Type (or simpleMap of).
+								optional(sequence(testNot(SP_PIPE), type())),
+								noNl(), SP_PIPE);
 	}
 
 	public Rule formals()
 	{
-		return sequence(typeAndOrId(), zeroOrMore(enforcedSequence(noNl(), SP_COMMA, typeAndOrId())));
+		// Formal type of function type would cause issues because it will get confused whether it's
+		// the closing "|" or opening of an inner one. -> not allowing nested functions def (using nonFunctionTypes())
+		return sequence(typeAndOrId(), zeroOrMore(sequence(noNl(), SP_COMMA, typeAndOrId())));
 	}
 
 	public Rule typeList()
