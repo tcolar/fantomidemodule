@@ -887,9 +887,9 @@ public class FantomParser extends BaseParser<Object>
 		if(isAfterNL())
 			return true;
 		// Otherwise look for upcoming statement ending chars: ';' '\n' or '}'
-		SequenceMatcher seq = (SequenceMatcher)sequence(OPT_SP,charSet(";\n"));
+		SequenceMatcher seq = (SequenceMatcher)sequence(OPT_SP,"");
 		if(seq.match((MatcherContext)getContext())) return true;
-		// '}' is eos too, but we should not consume it (\n either ?)
+		// '}' is eos too, but we should not consume it, so using a test
 		SequenceMatcher test = (SequenceMatcher)sequence(OPT_SP, test("}"));
 		if(test.match((MatcherContext)getContext())) return true;
 		return false;

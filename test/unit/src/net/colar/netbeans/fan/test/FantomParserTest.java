@@ -40,4 +40,12 @@ public class FantomParserTest implements JOTTestable
 		}
 		JOTTester.checkIf("Errors? ", ! result.hasErrors());
 	}
+
+	public static void main(String[] args)
+	{
+		try
+		{
+			new FantomParserTest().jotTest();
+		}catch(Throwable t){t.printStackTrace();}
+	}
 }
