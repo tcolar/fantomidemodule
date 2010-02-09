@@ -945,7 +945,7 @@ public class FantomParser extends BaseParser<Object>
 	/**
 	 * Checks if we just passed a '\n' (ignored spacing)
 	 * Usually we ignore newline (meaningless to grammar), but sometimes they
-	 * do are mening ful ex:
+	 * are meaningful ex:
 	 * Str[Int]  != Str\n[Int]
 	 * @return
 	 */
