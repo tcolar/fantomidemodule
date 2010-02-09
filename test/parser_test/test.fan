@@ -13,6 +13,7 @@ ml comment
 	[Str:Int]?[]?:[Int:Str]? m5
 	[Str:Int][]:[Int:Str]?[] m6
 	[Str:Int][]:[Int:Str]?[] m7
+
 }
 
 /* incomplete ml comment <- parser should stop here at end of line
@@ -21,4 +22,10 @@ ml comment
 ** Impl of destination provider
 **
 class DestinationDataProviderImpl : DestinationDataProvider
-{}
+{
+	static void myMethod(Str toto)
+	{
+		toto := "Thibaut"
+		echo("hello $toto")
+	}
+}
