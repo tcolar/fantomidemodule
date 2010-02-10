@@ -92,12 +92,13 @@ public class FantomParser extends BaseParser<Object>
 				sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)), KW_CLASS), // standard class
 				enforcedSequence(ENUM, KW_CLASS), // enum class
 				enforcedSequence(FACET, KW_CLASS), // facet class
+				KW_CLASS, // standard class
 				KW_MIXIN // mixin
 				),
 				id(),
 				optional(inheritance()),
 				BRACKET_L,
-				optional(enumValDefs()), // only valid for enums, but simplifying
+				//TODO: conflicts with slotDef : optional(enumValDefs()), // only valid for enums, but simplifying
 				zeroOrMore(slotDef()),
 				BRACKET_R);
 	}

@@ -253,6 +253,8 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("MethodDef3", result, "methodDef", "Void doit(Str s){Int i:=5\n\n\tj:=7}");
 
 		// Type Def
+		result = parser.parse(parser.typeDef(), "internal final class Dummy\n{Int var}");
+		testNodeName("TypeDef1", result, "typeDef", "internal final class Dummy\n{Int var}");
 
 		// Comp. unit
 
