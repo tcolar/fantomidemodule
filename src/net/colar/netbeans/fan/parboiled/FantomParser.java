@@ -155,7 +155,7 @@ public class FantomParser extends BaseParser<Object>
 					optional(protection()),
 					zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
 						KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
-					typeAndOrId(),
+					/*typeAndOrId(),*/ type(), id(), // Type required for fields (Grammar does not say so)
 					optional(sequence(OP_ASSIGN, expr())),
 					optional(fieldAccessor()),
 					eos()
@@ -218,8 +218,8 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return enforcedSequence(
 				BRACKET_L,
-				optional(sequence("get", firstOf(eos(), block()))),
-				optional(sequence(optional(protection()),"set", firstOf(eos(), block()))),
+				optional(sequence("get", firstOf(block(), eos()))),
+				optional(sequence(optional(protection()),"set", firstOf(block(),eos()))),
 				BRACKET_R
 				);
 	}
@@ -234,7 +234,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return firstOf(
 				itBlock(), // it block is normal block
-				stmt() // singlr statement
+				stmt() // single statement
 			);
 	}
 
@@ -244,7 +244,8 @@ public class FantomParser extends BaseParser<Object>
 				firstOf(sequence(KW_BREAK, eos()), sequence(KW_CONTINUE, eos()), for_(),
 						if_(), sequence(KW_RETURN, optional(expr()), eos()), switch_(),
 						sequence(KW_THROW, expr(), eos()), while_(), try_(),
-						localDef(), itAdd(), sequence(expr(), eos())),
+						// localDef needs to go last, it matches simple Id's
+						itAdd(), sequence(expr(), eos()), localDef()),
 						OPT_SP);
 	}
 
@@ -276,7 +277,9 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule itAdd()
 	{
-		return sequence(expr(), zeroOrMore(sequence(SP_COMMA, expr())), eos());
+		// Changed to oneOrMore, otherwise it will match normal expressions
+		// Also since it's called from statemnt, why need to match multiples ??
+		return sequence(expr(), SP_COMMA/*oneOrMore(sequence(SP_COMMA, expr())), optional(SP_COMMA), eos()*/);
 	}
 
 	public Rule try_()
@@ -473,7 +476,8 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule itBlock()
 	{
-		return enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R);
+		// Do not enforce because it prevents fieldAccesor to work.
+		return sequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R);
 	}
 
 	public Rule termChain()

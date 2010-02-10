@@ -180,6 +180,56 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("Call3", result, "call", "toto|->|{i:=5}");
 		result = parser.parse(parser.call(), "toto(a, b)|->|{i:=5}");
 		testNodeName("Call4", result, "call", "toto(a, b)|->|{i:=5}");
+		result = parser.parse(parser.idExpr(), "toto");
+		testNodeName("IdExpr1", result, "idExpr", "toto");//id
+		result = parser.parse(parser.idExpr(), "*toto");
+		testNodeName("IdExpr2", result, "idExpr", "*toto");//field
+		result = parser.parse(parser.idExpr(), "blah()");
+		testNodeName("IdExpr3", result, "idExpr", "blah()");//call
+		result = parser.parse(parser.staticCall(), "toto.blah()");
+		testNodeName("StaticCall1", result, "staticCall", "toto.blah()");
+		result = parser.parse(parser.staticCall(), "toto.toto");
+		testNodeName("StaticCall2", result, "staticCall", "toto.toto");
+		result = parser.parse(parser.expr(), "toto.doit");
+		testNodeName("expr1", result, "expr", "toto.doit");
+
+		// TODO: many more expr
+
+		// stmt
+		result = parser.parse(parser.stmt(), "toto.doit");
+		testNodeName("stmt1", result, "stmt", "toto.doit");
+		result = parser.parse(parser.stmt(), "i:=5");
+		testNodeName("Stmt2", result, "stmt", "i:=5");
+		result = parser.parse(parser.block(), "i:=5");
+		testNodeName("Block", result, "block", "i:=5");
+		result = parser.parse(parser.block(), "{i:=5}");
+		testNodeName("Block2", result, "block", "{i:=5}");
+		result = parser.parse(parser.block(), "{i:=5\nj:=6}");
+		testNodeName("Block3", result, "block", "{i:=5\nj:=6}");
+
+		// Slot Def
+		result = parser.parse(parser.fieldAccessor(), "{get{i:=23}}");
+		testNodeName("FiledAccesor1", result, "fieldAccessor", "{get{i:=23}}");
+		result = parser.parse(parser.fieldAccessor(), "{get{i:=23}private set{}}");
+		testNodeName("FiledAccesor2", result, "fieldAccessor", "{get{i:=23}private set{}}");
+		result = parser.parse(parser.fieldDef(), "Int a");
+		testNodeName("FiledDef1", result, "fieldDef", "Int a");
+		result = parser.parse(parser.fieldDef(), "private const Int a");
+		testNodeName("FiledDef2", result, "fieldDef", "private const Int a");
+		result = parser.parse(parser.fieldDef(), "static override readonly Int a:=23");
+		testNodeName("FiledDef3", result, "fieldDef", "static override readonly Int a:=23");
+		result = parser.parse(parser.fieldDef(), "Int a{get{i:=23}\nprivate set{}\n}");
+		testNodeName("FiledDef4", result, "fieldDef", "Int a{get{i:=23}\nprivate set{}\n}");
+		result = parser.parse(parser.fieldDef(), "Int a:=23{get{i:=23}\nprivate set{}\n}");
+		testNodeName("FiledDef5", result, "fieldDef", "Int a:=23{get{i:=23}\nprivate set{}\n}");
+		result = parser.parse(parser.methodDef(), "private static Void doit(){}");
+		testNodeName("MethodDef1", result, "methodDef", "private static Void doit(){}");
+		result = parser.parse(parser.methodDef(), "Void doit(){Int i:=5\ntoto.doit}");
+		testNodeName("MethodDef2", result, "methodDef", "Void doit(){Int i:=5\ntoto.doit}");
+
+		// Type Def
+
+		// Comp. unit
 
 		// TODO: eos() noNL() ?
 		
