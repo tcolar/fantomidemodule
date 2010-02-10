@@ -194,15 +194,11 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("expr1", result, "expr", "toto.doit");
 		result = parser.parse(parser.expr(), "i=5");
 		testNodeName("expr2", result, "expr", "i=5");
-		result = parser.parse(parser.expr(), "Int i:=5");
-		testNodeName("expr3", result, "expr", "Int i:=5");
 
 		result = parser.parse(parser.localDef(), "a:=23");
 		testNodeName("localDef1", result, "localDef", "a:=23");
 		result = parser.parse(parser.localDef(), "Int a:=23");
 		testNodeName("localDef2", result, "localDef", "Int a:=23");
-		result = parser.parse(parser.localDef(), "var");
-		testNodeName("localDef4", result, "localDef", "var");
 		result = parser.parse(parser.localDef(), "Int var");
 		testNodeName("localDef5", result, "localDef", "Int var");
 
@@ -251,10 +247,10 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("FiledDef5", result, "fieldDef", "Int a:=23{get{i=23}\nprivate set{}\n}");
 		result = parser.parse(parser.methodDef(), "private static Void doit(Str a, Int b){}");
 		testNodeName("MethodDef1", result, "methodDef", "private static Void doit(Str a, Int b){}");
-		result = parser.parse(parser.methodDef(), "Void doit(Str s){i=5}");
-		testNodeName("MethodDef2", result, "methodDef", "Void doit(Str s){i=5}");
-		result = parser.parse(parser.methodDef(), "Void doit(Str s){Int i=5\n\n\tj=7}");
-		testNodeName("MethodDef3", result, "methodDef", "Void doit(Str s){Int i=5\n\n\tj=7}");
+		result = parser.parse(parser.methodDef(), "Void doit(Str s){i:=5}");
+		testNodeName("MethodDef2", result, "methodDef", "Void doit(Str s){i:=5}");
+		result = parser.parse(parser.methodDef(), "Void doit(Str s){Int i:=5\n\n\tj:=7}");
+		testNodeName("MethodDef3", result, "methodDef", "Void doit(Str s){Int i:=5\n\n\tj:=7}");
 
 		// Type Def
 
