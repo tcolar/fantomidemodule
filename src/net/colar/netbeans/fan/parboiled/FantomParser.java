@@ -245,7 +245,6 @@ public class FantomParser extends BaseParser<Object>
 						if_(), sequence(KW_RETURN, optional(expr()), eos()), switch_(),
 						sequence(KW_THROW, expr(), eos()), while_(), try_(),
 						// localDef needs to go last, it matches simple Id's
-						// TODO: localDef and Expr are confused (noth match id)
 						itAdd(), sequence(expr(), eos()), localDef()),
 						OPT_SP);
 	}
