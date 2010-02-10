@@ -5,12 +5,13 @@ package net.colar.netbeans.fan.parboiled;
 
 import org.parboiled.BaseParser;
 import org.parboiled.MatcherContext;
-import org.parboiled.Node;
 import org.parboiled.Rule;
+import org.parboiled.matchers.OptionalMatcher;
 import org.parboiled.matchers.SequenceMatcher;
+import org.parboiled.support.Chars;
 import org.parboiled.support.InputBuffer;
+import org.parboiled.support.InputLocation;
 import org.parboiled.support.Leaf;
-import org.parboiled.support.ParseTreeUtils;
 
 /**
  * Parboiled parser for the Fantom Language
@@ -34,38 +35,38 @@ public class FantomParser extends BaseParser<Object>
 	public Rule compilationUnit()
 	{
 		return sequence(
-			OPT_SP,
-			zeroOrMore(firstOf(using(),incUsing())),
-			zeroOrMore(typeDef()),
-			OPT_SP,
-			zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
-			OPT_SP,
-			eoi());
+				OPT_SP,
+				zeroOrMore(firstOf(using(), incUsing())),
+				zeroOrMore(typeDef()),
+				OPT_SP,
+				zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
+				OPT_SP,
+				eoi());
 	}
 
 	public Rule using()
 	{
 		return enforcedSequence(
-			KW_USING,
-			optional(ffi()),
-			id(), 
-			zeroOrMore(enforcedSequence(DOT, id())),
-			optional(enforcedSequence(SP_COLCOL, id())),// not enforced to allow completion
-			optional(usingAs()),
-			eos());
+				KW_USING,
+				optional(ffi()),
+				id(),
+				zeroOrMore(enforcedSequence(DOT, id())),
+				optional(enforcedSequence(SP_COLCOL, id())),// not enforced to allow completion
+				optional(usingAs()),
+				eos());
 	}
-	
+
 	// Inconplete using - to allow completion
 	public Rule incUsing()
 	{
 		return enforcedSequence(
-			KW_USING,
-			optional(ffi()),
-			optional(id()), // Not optional, but we want a valid ast for completion if missing
-			zeroOrMore(sequence(DOT, id())),// not enforced to allow completion
-			optional(sequence(SP_COLCOL, id())),// not enforced to allow completion
-			optional(usingAs()),
-			optional(eos())); 		
+				KW_USING,
+				optional(ffi()),
+				optional(id()), // Not optional, but we want a valid ast for completion if missing
+				zeroOrMore(sequence(DOT, id())),// not enforced to allow completion
+				optional(sequence(SP_COLCOL, id())),// not enforced to allow completion
+				optional(usingAs()),
+				optional(eos()));
 	}
 
 	public Rule ffi()
@@ -83,23 +84,22 @@ public class FantomParser extends BaseParser<Object>
 	{
 		// regrouped together classdef, enumDef, mixinDef & facetDef as they are grammatically very similar
 		return sequence(
-			OPT_SP,
-			optional(doc()),
-			zeroOrMore(facet()),
-			optional(protection()),
-			firstOf(
-				sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)),	KW_CLASS), // standard class
+				OPT_SP,
+				optional(doc()),
+				zeroOrMore(facet()),
+				optional(protection()),
+				firstOf(
+				sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)), KW_CLASS), // standard class
 				enforcedSequence(ENUM, KW_CLASS), // enum class
 				enforcedSequence(FACET, KW_CLASS), // facet class
 				KW_MIXIN // mixin
-			),
-			id(),
-			optional(inheritance()),
-			BRACKET_L,
-			optional(enumValDefs()), // only valid for enums, but simplifying
-			zeroOrMore(slotDef()),
-			BRACKET_R
-			);
+				),
+				id(),
+				optional(inheritance()),
+				BRACKET_L,
+				optional(enumValDefs()), // only valid for enums, but simplifying
+				zeroOrMore(slotDef()),
+				BRACKET_R);
 	}
 
 	public Rule protection()
@@ -111,7 +111,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return enforcedSequence(SP_COL, typeList());
 	}
-	
+
 	// ------------- Facets ----------------------------------------------------
 	public Rule facet()
 	{
@@ -121,10 +121,10 @@ public class FantomParser extends BaseParser<Object>
 	public Rule facetVals()
 	{
 		return enforcedSequence(
-			BRACKET_L,
-			facetVal(),
-			zeroOrMore(sequence(eos(), facetVal())),
-			BRACKET_R);
+				BRACKET_L,
+				facetVal(),
+				zeroOrMore(sequence(eos(), facetVal())),
+				BRACKET_R);
 	}
 
 	public Rule facetVal()
@@ -140,7 +140,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule enumValDef()
 	{
-		return sequence(id(), optional(enforcedSequence(PAR_L, optional(args()) ,PAR_R)));
+		return sequence(id(), optional(enforcedSequence(PAR_L, optional(args()), PAR_R)));
 	}
 
 	public Rule slotDef()
@@ -150,58 +150,55 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule fieldDef()
 	{
-			return sequence(
-					zeroOrMore(facet()),
-					optional(protection()),
-					zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
-						KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
-					/*typeAndOrId(),*/ type(), id(), // Type required for fields (Grammar does not say so)
-					optional(sequence(OP_ASSIGN, expr())),
-					optional(fieldAccessor()),
-					eos()
-					);
+		return sequence(
+				zeroOrMore(facet()),
+				optional(protection()),
+				zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
+				KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
+				/*typeAndOrId(),*/ type(), id(), // Type required for fields (Grammar does not say so)
+				optional(sequence(OP_ASSIGN, expr())),
+				optional(fieldAccessor()),
+				eos());
 	}
 
 	public Rule methodDef()
 	{
-			return sequence(
-					zeroOrMore(facet()),
-					optional(protection()),
-					zeroOrMore(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
-						KW_OVERRIDE, KW_VIRTUAL)),
-					type(),
-					id(),
-					PAR_L,
-					optional(params()),
-					PAR_R,
-					methodBody());
+		return sequence(
+				zeroOrMore(facet()),
+				optional(protection()),
+				zeroOrMore(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
+				KW_OVERRIDE, KW_VIRTUAL)),
+				type(),
+				id(),
+				PAR_L,
+				optional(params()),
+				PAR_R,
+				methodBody());
 	}
 
 	public Rule ctorDef()
 	{
-			return sequence(
-					zeroOrMore(facet()),
-					optional(protection()),
-					type(),
-					KW_NEW,
-					id(),
-					optional(
-						firstOf(	// ctor chain
-						enforcedSequence(KW_THIS, DOT, id(), PAR_L, optional(args()), PAR_R),
-						enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), PAR_L, optional(args()), PAR_R)
-						)
-					),
-					PAR_L,
-					optional(params()),
-					PAR_R,
-					methodBody());
+		return sequence(
+				zeroOrMore(facet()),
+				optional(protection()),
+				type(),
+				KW_NEW,
+				id(),
+				optional(
+				firstOf( // ctor chain
+				enforcedSequence(KW_THIS, DOT, id(), PAR_L, optional(args()), PAR_R),
+				enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), PAR_L, optional(args()), PAR_R))),
+				PAR_L,
+				optional(params()),
+				PAR_R,
+				methodBody());
 	}
 
 	public Rule methodBody()
 	{
-		return	firstOf(
-				 enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R),
-				 eos()); // method with no body
+		return firstOf(
+				enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R),
+				eos()); // method with no body
 	}
 
 	public Rule params()
@@ -219,9 +216,8 @@ public class FantomParser extends BaseParser<Object>
 		return enforcedSequence(
 				BRACKET_L,
 				optional(sequence("get", firstOf(block(), eos()))),
-				optional(sequence(optional(protection()),"set", firstOf(block(),eos()))),
-				BRACKET_R
-				);
+				optional(sequence(optional(protection()), "set", firstOf(block(), eos()))),
+				BRACKET_R);
 	}
 
 	public Rule args()
@@ -235,18 +231,18 @@ public class FantomParser extends BaseParser<Object>
 		return firstOf(
 				itBlock(), // it block is normal block
 				stmt() // single statement
-			);
+				);
 	}
 
 	public Rule stmt()
 	{
 		return sequence(OPT_SP,
 				firstOf(sequence(KW_BREAK, eos()), sequence(KW_CONTINUE, eos()), for_(),
-						if_(), sequence(KW_RETURN, optional(expr()), eos()), switch_(),
-						sequence(KW_THROW, expr(), eos()), while_(), try_(),
-						// localDef needs to go last, it matches simple Id's
-						itAdd(), sequence(expr(), eos()), localDef()),
-						OPT_SP);
+				if_(), sequence(KW_RETURN, optional(expr()), eos()), switch_(),
+				sequence(KW_THROW, expr(), eos()), while_(), try_(),
+				// localDef needs to go last, it matches simple Id's
+				itAdd(), sequence(expr(), eos()), localDef()),
+				OPT_SP);
 	}
 
 	public Rule for_()
@@ -260,7 +256,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule if_()
 	{
 		return enforcedSequence(KW_IF, PAR_L, expr(), PAR_R, block(),
-			optional(enforcedSequence(KW_ELSE, block())));
+				optional(enforcedSequence(KW_ELSE, block())));
 	}
 
 	public Rule while_()
@@ -271,8 +267,8 @@ public class FantomParser extends BaseParser<Object>
 	public Rule localDef()
 	{
 		return sequence(typeAndOrId(),
-						optional(enforcedSequence(OP_ASSIGN, expr())),
-						eos());
+				optional(enforcedSequence(OP_ASSIGN, expr())),
+				eos());
 	}
 
 	public Rule itAdd()
@@ -285,7 +281,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule try_()
 	{
 		return enforcedSequence(KW_TRY, block(), zeroOrMore(catch_()),
-			optional(sequence(KW_FINALLY, block())));
+				optional(sequence(KW_FINALLY, block())));
 	}
 
 	public Rule catch_()
@@ -296,10 +292,10 @@ public class FantomParser extends BaseParser<Object>
 	public Rule switch_()
 	{
 		return enforcedSequence(KW_SWITCH, PAR_L, expr(), PAR_R,
-			BRACKET_L,
-			zeroOrMore(enforcedSequence(KW_CASE, expr(), SP_COL, zeroOrMore(stmt()))),
-			optional(enforcedSequence(KW_DEFAULT, SP_COL, zeroOrMore(stmt()))),
-			BRACKET_R);
+				BRACKET_L,
+				zeroOrMore(enforcedSequence(KW_CASE, expr(), SP_COL, zeroOrMore(stmt()))),
+				optional(enforcedSequence(KW_DEFAULT, SP_COL, zeroOrMore(stmt()))),
+				BRACKET_R);
 	}
 
 	// ----------- Expressions -------------------------------------------------
@@ -321,7 +317,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule ternaryExpr()
 	{
 		return sequence(condOrExpr(),
-			optional(enforcedSequence(SP_QMARK, ifExprBody(), SP_COL, ifExprBody())));
+				optional(enforcedSequence(SP_QMARK, ifExprBody(), SP_COL, ifExprBody())));
 	}
 
 	public Rule elvisExpr()
@@ -357,7 +353,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule typeCheckExpr()
 	{
 		return sequence(rangeExpr(),
-			optional(enforcedSequence(firstOf(KW_IS, KW_ISNOT, KW_AS),type())));
+				optional(enforcedSequence(firstOf(KW_IS, KW_ISNOT, KW_AS), type())));
 	}
 
 	public Rule compareExpr()
@@ -367,20 +363,20 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule rangeExpr()
 	{
-		return sequence(addExpr(), 
-			zeroOrMore(enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), addExpr())));
+		return sequence(addExpr(),
+				zeroOrMore(enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), addExpr())));
 	}
 
 	public Rule addExpr()
 	{
 		return sequence(multExpr(),
-			zeroOrMore(enforcedSequence(firstOf(OP_PLUS, OP_MINUS), multExpr())));
+				zeroOrMore(enforcedSequence(firstOf(OP_PLUS, OP_MINUS), multExpr())));
 	}
 
 	public Rule multExpr()
 	{
 		return sequence(parExpr(),
-			zeroOrMore(enforcedSequence(firstOf(OP_MULT, OP_DIV), parExpr())));
+				zeroOrMore(enforcedSequence(firstOf(OP_MULT, OP_DIV), parExpr())));
 	}
 
 	public Rule parExpr()
@@ -429,7 +425,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule typeBase()
 	{
 		return firstOf(typeLitteral(), slotLitteral(), namedSuper(), staticCall(),
-						dsl(), closure(), simple(), ctorBlock());
+				dsl(), closure(), simple(), ctorBlock());
 	}
 
 	public Rule typeLitteral()
@@ -456,7 +452,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		//TODO: unclosed DSL ?
 		return sequence(simpleType(),
-			sequence(DSL_OPEN, zeroOrMore(sequence(testNot(DSL_CLOSE), any())), DSL_CLOSE));
+				sequence(DSL_OPEN, zeroOrMore(sequence(testNot(DSL_CLOSE), any())), DSL_CLOSE));
 	}
 
 	public Rule closure()
@@ -483,7 +479,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule termChain()
 	{
 		return firstOf(safeDotCall(), safeDynCall(), dotCall(), dynCall(), indexExpr(),
-						callOp(), itBlock(), incDotCall());
+				callOp(), itBlock(), incDotCall());
 	}
 
 	public Rule dotCall()
@@ -509,7 +505,7 @@ public class FantomParser extends BaseParser<Object>
 	// incomplete dot call, make valid to allow for completion
 	public Rule incDotCall()
 	{
-		return DOT; 
+		return DOT;
 	}
 
 	public Rule idExpr()
@@ -527,24 +523,24 @@ public class FantomParser extends BaseParser<Object>
 	// require '*' otherwise it's just and ID (this would prevent termbase from checking literals)
 	public Rule field()
 	{
-		return sequence(OP_MULT,id());
+		return sequence(OP_MULT, id());
 	}
 
 	// require params or/and closure, otherwise it's just and ID (this would prevent termbase from checking literals)
 	public Rule call()
 	{
 		return sequence(id(),
-						firstOf(
-							sequence(enforcedSequence(PAR_L, optional(args()), PAR_R), optional(closure())), //params & opt. closure
-							closure())); // closure only
+				firstOf(
+				sequence(enforcedSequence(PAR_L, optional(args()), PAR_R), optional(closure())), //params & opt. closure
+				closure())); // closure only
 	}
 
 	/*
 	 *  TODO: does not always  work, will be parsed as a "list" Type because the grammar is confusing
 	 *	it's context sensitive - need to review.
 	 *  Can't cleanly differentiate Int[3] (List of Int with val '3') and var[3] : int.get[3]
-     *  So for now I'm gonna get a List in the ast and deal with it there
-     *  indexExpr 	:	({notAfterEol()}? sq_bracketL expr sq_bracketR)
+	 *  So for now I'm gonna get a List in the ast and deal with it there
+	 *  indexExpr 	:	({notAfterEol()}? sq_bracketL expr sq_bracketR)
 	 * 	-> ^(AST_INDEX_EXPR sq_bracketL expr sq_bracketR);
 	 */
 	public Rule indexExpr()
@@ -560,39 +556,36 @@ public class FantomParser extends BaseParser<Object>
 	public Rule litteral()
 	{
 		return firstOf(KW_NULL, KW_THIS, KW_SUPER, KW_IT, KW_TRUE, KW_FALSE,
-						strs(), uri(), number(), char_(), namedSuper(),
-						list(), map());
+				strs(), uri(), number(), char_(), namedSuper(),
+				list(), map());
 	}
 
 	public Rule list()
 	{
 		return sequence(
-			optional(sequence(type(), noNl())),
-			SQ_BRACKET_L, listItems(), SQ_BRACKET_R
-			);
+				optional(sequence(type(), noNl())),
+				SQ_BRACKET_L, listItems(), SQ_BRACKET_R);
 	}
 
 	public Rule listItems()
 	{
 		return firstOf(
-			SP_COMMA,
-			sequence(expr(), zeroOrMore(enforcedSequence(SP_COMMA, expr())))
-			);
+				SP_COMMA,
+				sequence(expr(), zeroOrMore(enforcedSequence(SP_COMMA, expr()))));
 	}
 
 	public Rule map()
 	{
 		return sequence(
-			optional(firstOf(mapType(),simpleMapType())),
-			noNl(), 
-			enforcedSequence(SQ_BRACKET_L, mapItems(), SQ_BRACKET_R));
+				optional(firstOf(mapType(), simpleMapType())),
+				noNl(),
+				enforcedSequence(SQ_BRACKET_L, mapItems(), SQ_BRACKET_R));
 	}
 
 	public Rule mapItems()
 	{
 		return firstOf(SP_COL,
-			sequence(mapPair(), zeroOrMore(sequence(SP_COMMA, mapPair())))
-			);
+				sequence(mapPair(), zeroOrMore(sequence(SP_COMMA, mapPair()))));
 	}
 
 	public Rule mapPair()
@@ -604,44 +597,41 @@ public class FantomParser extends BaseParser<Object>
 	public Rule strs()
 	{
 		return firstOf(
-			sequence(QUOTES3, // triple quoted string
-						zeroOrMore(firstOf(
-							unicodeChar(),
-							escapedChar(),
-							sequence(testNot(QUOTES3), any())))
-					, QUOTES3),
-			sequence(QUOTE, // simple string
-						zeroOrMore(firstOf(
-							unicodeChar(),
-							escapedChar(),
-							sequence(testNot(QUOTE), any())))
-					, QUOTE)
-			);
+				sequence(QUOTES3, // triple quoted string
+				zeroOrMore(firstOf(
+				unicodeChar(),
+				escapedChar(),
+				sequence(testNot(QUOTES3), any()))), QUOTES3),
+				sequence(QUOTE, // simple string
+				zeroOrMore(firstOf(
+				unicodeChar(),
+				escapedChar(),
+				sequence(testNot(QUOTE), any()))), QUOTE));
 	}
 
 	public Rule uri()
 	{
-		return sequence(TICK, 
-							zeroOrMore(firstOf(
-								unicodeChar(),
-								escapedChar(),
-								sequence(testNot(TICK), any()))),
-						TICK);
+		return sequence(TICK,
+				zeroOrMore(firstOf(
+				unicodeChar(),
+				escapedChar(),
+				sequence(testNot(TICK), any()))),
+				TICK);
 	}
 
 	public Rule char_()
 	{
 		return enforcedSequence(SINGLE_Q,
-							firstOf(
-								unicodeChar(),
-								escapedChar(),
-								any()), //all else
-							SINGLE_Q);
+				firstOf(
+				unicodeChar(),
+				escapedChar(),
+				any()), //all else
+				SINGLE_Q);
 	}
 
 	public Rule escapedChar()
 	{
-		return enforcedSequence("\\", firstOf('b','f','n','r','t','"','\'','`','$','\\'));
+		return enforcedSequence("\\", firstOf('b', 'f', 'n', 'r', 't', '"', '\'', '`', '$', '\\'));
 	}
 
 	public Rule unicodeChar()
@@ -652,32 +642,30 @@ public class FantomParser extends BaseParser<Object>
 	public Rule hexDigit()
 	{
 		return firstOf(charRange('a', 'f'),
-						charRange('A','F'),
-						digit()
-						);
+				charRange('A', 'F'),
+				digit());
 	}
 
 	public Rule digit()
 	{
-		return charRange('0','9');
+		return charRange('0', '9');
 	}
 
 	public Rule number()
 	{
 		return sequence(
-			optional(OP_MINUS),
-			firstOf(
+				optional(OP_MINUS),
+				firstOf(
 				// hex number
-				sequence(firstOf("0x","0X"),
-						oneOrMore(firstOf("_",hexDigit()))),
+				sequence(firstOf("0x", "0X"),
+				oneOrMore(firstOf("_", hexDigit()))),
 				// decimal
 				sequence(digit(),
-						zeroOrMore(sequence(zeroOrMore("_"), digit())),
-						optional(fraction()),
-						optional(exponent())),
+				zeroOrMore(sequence(zeroOrMore("_"), digit())),
+				optional(fraction()),
+				optional(exponent())),
 				// fractional
-				sequence(fraction(), optional(exponent()), optional(nbType()))
-			));
+				sequence(fraction(), optional(exponent()), optional(nbType()))));
 	}
 
 	public Rule fraction()
@@ -690,8 +678,7 @@ public class FantomParser extends BaseParser<Object>
 		return enforcedSequence(charSet("eE"),
 				optional(firstOf(OP_PLUS, OP_MINUS)),
 				digit(),
-				zeroOrMore(sequence(zeroOrMore("_"), digit()))
-			);
+				zeroOrMore(sequence(zeroOrMore("_"), digit())));
 	}
 
 	public Rule nbType()
@@ -699,7 +686,7 @@ public class FantomParser extends BaseParser<Object>
 		return firstOf(
 				"day", "hr", "min", "sec", "ms", "ns", //durations
 				"f", "F", "D", "d" // float / decimal
-			);
+				);
 	}
 
 	// ------------ Type -------------------------------------------------------
@@ -713,40 +700,40 @@ public class FantomParser extends BaseParser<Object>
 	{
 		// It has to be other nonSimpleMapTypes, otherwise it's left recursive (loops forever)
 		return sequence(nonSimpleMapTypes(), noNl(), SP_COL, noNl(), nonSimpleMapTypes(),
-		optional(
-			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(noNl(), optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(sequence(noNl(), SP_QMARK))); // nullable
+				optional(
+				// Not enforcing [] because of problems with maps like this Str:int["":5]
+				sequence(noNl(), optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+				optional(sequence(noNl(), SP_QMARK))); // nullable
 	}
 
 	// all types except simple map
 	public Rule nonSimpleMapTypes()
 	{
 		return sequence(
-			firstOf(funcType(), mapType(), simpleType()),
-			optional(
-			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(noNl(),optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(sequence(noNl(), SP_QMARK))); // nullable
+				firstOf(funcType(), mapType(), simpleType()),
+				optional(
+				// Not enforcing [] because of problems with maps like this Str:int["":5]
+				sequence(noNl(), optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+				optional(sequence(noNl(), SP_QMARK))); // nullable
 	}
 
 	// all types except function
 	public Rule nonFunctionTypes()
 	{
 		return sequence(
-			// Don't allow simpleMap starting with '|' as this confuses with closinf Function.
-			firstOf(sequence(testNot(SP_PIPE),simpleMapType()), mapType(), simpleType()),
-			optional(
-			sequence(noNl(),optional(SP_QMARK), noNl(), enforcedSequence(
-			SQ_BRACKET_L, SQ_BRACKET_R))), // list of '?[]'
-			optional(sequence(noNl(), SP_QMARK))); // nullable
+				// Don't allow simpleMap starting with '|' as this confuses with closinf Function.
+				firstOf(sequence(testNot(SP_PIPE), simpleMapType()), mapType(), simpleType()),
+				optional(
+				sequence(noNl(), optional(SP_QMARK), noNl(), enforcedSequence(
+				SQ_BRACKET_L, SQ_BRACKET_R))), // list of '?[]'
+				optional(sequence(noNl(), SP_QMARK))); // nullable
 	}
 
 	public Rule simpleType()
 	{
 		return sequence(
-			id(),
-			optional(sequence(noNl(), enforcedSequence(SP_COLCOL, noNl(), id()))));
+				id(),
+				optional(sequence(noNl(), enforcedSequence(SP_COLCOL, noNl(), id()))));
 	}
 
 	public Rule mapType()
@@ -758,11 +745,11 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule funcType()
 	{
-		return enforcedSequence(SP_PIPE, noNl(), optional(formals()), noNl(), OP_ARROW, noNl(), 
-		// type() stating with '|' would cause issues because it would get confused with the closing "|"
-		// so not allowing types starting with PIPE (testNot), such as an inner function Type (or simpleMap of).
-								optional(sequence(testNot(SP_PIPE), type())),
-								noNl(), SP_PIPE);
+		return enforcedSequence(SP_PIPE, noNl(), optional(formals()), noNl(), OP_ARROW, noNl(),
+				// type() stating with '|' would cause issues because it would get confused with the closing "|"
+				// so not allowing types starting with PIPE (testNot), such as an inner function Type (or simpleMap of).
+				optional(sequence(testNot(SP_PIPE), type())),
+				noNl(), SP_PIPE);
 	}
 
 	public Rule formals()
@@ -785,12 +772,13 @@ public class FantomParser extends BaseParser<Object>
 		return firstOf(sequence(type(), id()), type()/*, id()*/);
 	}
 	// ------------ Misc -------------------------------------------------------	
+
 	public Rule id()
 	{
 		return sequence(
-			firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
-			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_", charRange('0', '9'))),
-			OPT_SP);
+				firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
+				zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_", charRange('0', '9'))),
+				OPT_SP);
 	}
 
 	public Rule doc()
@@ -802,14 +790,14 @@ public class FantomParser extends BaseParser<Object>
 	public Rule spacing()
 	{
 		return oneOrMore(firstOf(
-			// whitespace
-			oneOrMore(charSet(" \t\r\n\u000c")),
-			// multiline comment
-			sequence("/*", zeroOrMore(sequence(testNot("*/"), any())), "*/"), // normal comment
-			// if incomplete multiline comment, then end at end of line
-			sequence("/*", zeroOrMore(sequence(testNot("\n"), any())), "\n"),
-			// single line comment
-			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any())), charSet("\r\n"))));
+				// whitespace
+				oneOrMore(charSet(" \t\r\n\u000c")),
+				// multiline comment
+				sequence("/*", zeroOrMore(sequence(testNot("*/"), any())), "*/"), // normal comment
+				// if incomplete multiline comment, then end at end of line
+				sequence("/*", zeroOrMore(sequence(testNot("\n"), any())), "\n"),
+				// single line comment
+				sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any())), charSet("\r\n"))));
 	}
 
 	@Leaf
@@ -894,9 +882,9 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule OP_POUND = terminal("#");
 	// comparators
 	public final Rule CP_EQUALITY = firstOf(terminal("==="), terminal("!=="),
-							terminal("=="), terminal("!="));
+			terminal("=="), terminal("!="));
 	public final Rule CP_COMPARATORS = firstOf(terminal("<="), terminal(">="),
-							terminal("<=>"), terminal("<"), terminal(">"));
+			terminal("<=>"), terminal("<"), terminal(">"));
 	// separators
 	public final Rule SP_PIPE = terminal("|");
 	public final Rule SP_QMARK = terminal("?");
@@ -906,8 +894,8 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule SP_SEMI = terminal(";");
 	// assignment
 	public final Rule AS_EQUAL = terminal("=");
-	public final Rule AS_ASSIGN_OPS = firstOf(terminal("*="),terminal("/="),
-							terminal("%="),terminal("+="),terminal("-="));
+	public final Rule AS_ASSIGN_OPS = firstOf(terminal("*="), terminal("/="),
+			terminal("%="), terminal("+="), terminal("-="));
 	// others
 	public final Rule QUOTES3 = terminal("\"\"\"");
 	public final Rule QUOTE = terminal("\"");
@@ -924,25 +912,51 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule PAR_L = terminal("(");
 	public final Rule PAR_R = terminal(")");
 	// shortcut for optional spacing
-	public final Rule OPT_SP = optional(spacing()); 
+	public final Rule OPT_SP = optional(spacing());
 
 	// ----------- Custom action rules -----------------------------------------
-
 	/**
 	 * Look for end of statement
 	 * @return
 	 */
 	public boolean eos()
 	{
-		// First check if we just passed a '\n' (ignored spacing)
-		if(isAfterNL())
+		MatcherContext ctx = (MatcherContext) getContext();
+		if (ctx == null)
+		{
+			return false;
+		}
+		// geting after potential spacing first
+		OptionalMatcher opt=new OptionalMatcher(spacing());
+		opt.match(ctx);
+
+		// First check if we just passed a '\n' (in spacing)
+		//System.out.println("EOS> checking afterNL");
+		if (isAfterNL())
+		{
 			return true;
-		// Otherwise look for upcoming statement ending chars: ';' '\n' or '}'
-		SequenceMatcher seq = (SequenceMatcher)sequence(OPT_SP,"");
-		if(seq.match((MatcherContext)getContext())) return true;
+		}
+		//System.out.println("EOS> checking '}'");
 		// '}' is eos too, but we should not consume it, so using a test
-		SequenceMatcher test = (SequenceMatcher)sequence(OPT_SP, test("}"));
-		if(test.match((MatcherContext)getContext())) return true;
+		SequenceMatcher seq = (SequenceMatcher) sequence(OPT_SP, test(eoi()));
+		if (seq.match(ctx))
+		{
+			return true;
+		}
+		// test foe end of input, that qualifies too
+		seq = (SequenceMatcher) sequence(OPT_SP, test('}'));
+		if (seq.match(ctx))
+		{
+			return true;
+		}
+		// Otherwise look for upcoming statement ending chars: ';' or '}'
+		//System.out.println("EOS> checking ';'");
+		seq = (SequenceMatcher) sequence(OPT_SP, ';');
+		if (seq.match(ctx))
+		{
+			return true;
+		}
+		//System.out.println("EOS> False");
 		return false;
 	}
 
@@ -955,15 +969,55 @@ public class FantomParser extends BaseParser<Object>
 	 */
 	public boolean isAfterNL()
 	{
-		if(getContext()==null)
-			return false;
-		InputBuffer buffer = getContext().getInputBuffer();
-		Node nen = ParboiledUtils.getLastNonEmptyNode(getContext(), buffer);
-		if(nen!=null)
+		if (getContext() == null)
 		{
-			String text = ParseTreeUtils.getNodeText(nen, buffer);
-			if(nen.getLabel().equals("spacing") && text.indexOf("\n")!=-1)
-				return true; // we just passed a line break
+			return false;
+		}
+		MatcherContext ctx = (MatcherContext) getContext();
+		InputLocation loc = ctx.getCurrentLocation();
+		InputBuffer buf = ctx.getInputBuffer();
+		int delta = -1;
+		char c;
+		 // MultiLine comment might have \n to be ignored
+		boolean inMlComment = false;
+		// Lok back into the buffer for a '\n'
+		while ((c = loc.lookAhead(buf, delta)) != Chars.EOI)
+		{
+			if (c == '\n')
+			{
+				if (!inMlComment)
+				{
+					return true;
+				} else if (c == '/')
+				{
+					if (loc.lookAhead(buf, delta - 1) == '*')
+					{
+						// in ML comment
+						inMlComment = true;
+						delta--;
+					}
+				}
+				else if (c == '*')
+				{
+					if (loc.lookAhead(buf, delta - 1) == '/')
+					{
+						// out of ML comment
+						inMlComment = false;
+						delta--;
+					}
+				} else
+				{
+					if (! (inMlComment || c==' ' || c=='\t' ||
+						c=='\r' || c=='\u000c'))
+					{
+						// if not in a multiLineComment
+						// or not a whitespace charcater, then we failed finding \n
+						return false;
+					}
+				}
+			}
+			// keep going
+			delta--;
 		}
 		return false;
 	}
@@ -971,6 +1025,6 @@ public class FantomParser extends BaseParser<Object>
 	// shortcut for ! isAfterNL();
 	public boolean noNl()
 	{
-		return ! isAfterNL();
+		return !isAfterNL();
 	}
 }

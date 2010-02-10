@@ -195,17 +195,31 @@ public class FantomParserTest implements JOTTestable
 
 		// TODO: many more expr
 
+		// facets
+		result = parser.parse(parser.facet(), "@Str");
+		testNodeName("facet1", result, "facet", "@Str");
+		result = parser.parse(parser.facet(), "@Sys::Str");
+		testNodeName("facet2", result, "facet", "@Sys::Str");
+		result = parser.parse(parser.facet(), "@Str{id=toto.doit}");
+		testNodeName("facet3", result, "facet", "@Str{id=toto.doit}");
+		result = parser.parse(parser.facet(), "@Str{id=toto.doit;name='c'\nstatus=25}");
+		testNodeName("facet4", result, "facet", "@Str{id=toto.doit;name='c'\nstatus=25}");
+
 		// stmt
 		result = parser.parse(parser.stmt(), "toto.doit");
 		testNodeName("stmt1", result, "stmt", "toto.doit");
 		result = parser.parse(parser.stmt(), "i=5");
 		testNodeName("Stmt2", result, "stmt", "i=5");
+		result = parser.parse(parser.stmt(), "Int i=5");
+		testNodeName("Stmt3", result, "stmt", "Int i=5");
+		result = parser.parse(parser.stmt(), "Int i=5+3");
+		testNodeName("Stmt4", result, "stmt", "Int i=5+3");
 		result = parser.parse(parser.block(), "i=5");
 		testNodeName("Block", result, "block", "i=5");
 		result = parser.parse(parser.block(), "{i=5}");
 		testNodeName("Block2", result, "block", "{i=5}");
-		result = parser.parse(parser.block(), "{i=5\nj=6}");
-		testNodeName("Block3", result, "block", "{i=5\nj=6}");
+		result = parser.parse(parser.block(), "{i=5;k=7\n\nj=6}");
+		testNodeName("Block3", result, "block", "{i=5;k=7\n\nj=6}");
 
 		// Slot Def
 		result = parser.parse(parser.fieldAccessor(), "{get{i=23}}");
@@ -222,10 +236,12 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("FiledDef4", result, "fieldDef", "Int a{get{i=23}\nprivate set{}\n}");
 		result = parser.parse(parser.fieldDef(), "Int a:=23{get{i=23}\nprivate set{}\n}");
 		testNodeName("FiledDef5", result, "fieldDef", "Int a:=23{get{i=23}\nprivate set{}\n}");
-		result = parser.parse(parser.methodDef(), "private static Void doit(){}");
-		testNodeName("MethodDef1", result, "methodDef", "private static Void doit(){}");
-		result = parser.parse(parser.methodDef(), "Void doit(){Int i=5\ntoto.doit}");
-		testNodeName("MethodDef2", result, "methodDef", "Void doit(){Int i=5\ntoto.doit}");
+		result = parser.parse(parser.methodDef(), "private static Void doit(Str a, Int b){}");
+		testNodeName("MethodDef1", result, "methodDef", "private static Void doit(Str a, Int b){}");
+		result = parser.parse(parser.methodDef(), "Void doit(Str s){i=5}");
+		testNodeName("MethodDef2", result, "methodDef", "Void doit(Str s){i=5}");
+		result = parser.parse(parser.methodDef(), "Void doit(Str s){Int i=5\n\n\tj=7}");
+		testNodeName("MethodDef3", result, "methodDef", "Void doit(Str s){Int i=5\n\n\tj=7}");
 
 		// Type Def
 
