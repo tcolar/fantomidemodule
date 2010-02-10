@@ -192,6 +192,19 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("StaticCall2", result, "staticCall", "toto.toto");
 		result = parser.parse(parser.expr(), "toto.doit");
 		testNodeName("expr1", result, "expr", "toto.doit");
+		result = parser.parse(parser.expr(), "i=5");
+		testNodeName("expr2", result, "expr", "i=5");
+		result = parser.parse(parser.expr(), "Int i:=5");
+		testNodeName("expr3", result, "expr", "Int i:=5");
+
+		result = parser.parse(parser.localDef(), "a:=23");
+		testNodeName("localDef1", result, "localDef", "a:=23");
+		result = parser.parse(parser.localDef(), "Int a:=23");
+		testNodeName("localDef2", result, "localDef", "Int a:=23");
+		result = parser.parse(parser.localDef(), "var");
+		testNodeName("localDef4", result, "localDef", "var");
+		result = parser.parse(parser.localDef(), "Int var");
+		testNodeName("localDef5", result, "localDef", "Int var");
 
 		// TODO: many more expr
 
@@ -210,10 +223,10 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("stmt1", result, "stmt", "toto.doit");
 		result = parser.parse(parser.stmt(), "i=5");
 		testNodeName("Stmt2", result, "stmt", "i=5");
-		result = parser.parse(parser.stmt(), "Int i=5");
-		testNodeName("Stmt3", result, "stmt", "Int i=5");
-		result = parser.parse(parser.stmt(), "Int i=5+3");
-		testNodeName("Stmt4", result, "stmt", "Int i=5+3");
+		result = parser.parse(parser.stmt(), "Int i:=5");
+		testNodeName("Stmt3", result, "stmt", "Int i:=5");
+		result = parser.parse(parser.stmt(), "Int i:=5+3");
+		testNodeName("Stmt4", result, "stmt", "Int i:=5+3");
 		result = parser.parse(parser.block(), "i=5");
 		testNodeName("Block", result, "block", "i=5");
 		result = parser.parse(parser.block(), "{i=5}");

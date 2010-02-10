@@ -241,6 +241,8 @@ public class FantomParser extends BaseParser<Object>
 				if_(), sequence(KW_RETURN, optional(expr()), eos()), switch_(),
 				sequence(KW_THROW, expr(), eos()), while_(), try_(),
 				// localDef needs to go last, it matches simple Id's
+				// TODO: but expr matches single ID's as well / don't work
+				// probably have to have fulllocaldef(with type), expr, localDef (nevr hit ?)
 				itAdd(), sequence(expr(), eos()), localDef()),
 				OPT_SP);
 	}
@@ -306,7 +308,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule assignExpr()
 	{
-		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_ASSIGN_OPS), assignExpr())));
+		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_ASSIGN_OPS, AS_EQUAL), assignExpr())));
 	}
 
 	public Rule ifExpr()
