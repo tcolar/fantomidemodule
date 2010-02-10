@@ -3,6 +3,8 @@
  */
 package net.colar.netbeans.fan.test;
 
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.jot.testing.JOTTestable;
 import net.jot.testing.JOTTester;
@@ -54,7 +56,7 @@ public class FantomParserTest implements JOTTestable
 		result = parser.parse(parser.strs(), "\"\"\"\"hello\"\\n\"\" \"\"\"");
 		testNodeName("3Quotes Str 3", result, "strs", "\"\"\"\"hello\"\\n\"\" \"\"\"");
 		result = parser.parse(parser.dsl(), "Str<| dfdsfsd \\ \\n |  > dsfsd |>");
-		testNodeName("DSL", result, "dsl",  "Str<| dfdsfsd \\ \\n |  > dsfsd |>");
+		testNodeName("DSL", result, "dsl", "Str<| dfdsfsd \\ \\n |  > dsfsd |>");
 		// numbers
 		result = parser.parse(parser.digit(), "7");
 		testNodeName("Digit", result, "digit");
@@ -251,32 +253,47 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("MethodDef2", result, "methodDef", "Void doit(Str s){i:=5}");
 		result = parser.parse(parser.methodDef(), "Void doit(Str s){Int i:=5\n\n\tj:=7}");
 		testNodeName("MethodDef3", result, "methodDef", "Void doit(Str s){Int i:=5\n\n\tj:=7}");
+		result = parser.parse(parser.ctorDef(), "Void new doIt(Str s){Int i:=5\n\n\tj:=7}");
+		testNodeName("Ctor1", result, "ctorDef", "Void new doIt(Str s){Int i:=5\n\n\tj:=7}");
+		result = parser.parse(parser.ctorDef(), "Void new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
+		testNodeName("Ctor2", result, "ctorDef", "Void new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
+		result = parser.parse(parser.ctorDef(), "Void new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
+		testNodeName("Ctor3", result, "ctorDef", "Void new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
 
 		// Type Def
 		result = parser.parse(parser.typeDef(), "internal final class Dummy\n{Int var}");
-		testNodeName("TypeDef1", result, "typeDef", "internal final class Dummy\n{Int var}");
+		testNodeName("TypeDef - class", result, "typeDef", "internal final class Dummy\n{Int var}");
+		result = parser.parse(parser.typeDef(), "internal final class Dummy:Toto, Tata, Tutu\n{Int var}");
+		testNodeName("TypeDef - class2", result, "typeDef", "internal final class Dummy:Toto, Tata, Tutu\n{Int var}");
+		result = parser.parse(parser.typeDef(), "internal mixin Dummy\n{Int var}");
+		testNodeName("TypeDef - mixin", result, "typeDef", "internal mixin Dummy\n{Int var}");
+		//TODO: enum class, inheritance, facet class
+		//TODO: deal with enum val defs
 
-		// Comp. unit
+		// TODO: Comp. unit, test some real fan files
+		//TODO: relative paths
+		testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/test.fan");
+		testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/sending.fan");
+	}
 
-		// TODO: eos() noNL() ?
-		
+	public void testFile(String filePath) throws Exception
+	{
+		FantomParser parser = Parboiled.createParser(FantomParser.class);
 
-
-		/*DataInputStream dis = new DataInputStream(new FileInputStream("/home/thibautc/NetBeansProjects/Fan/test/parser_test/test.fan"));
+		DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
 		byte[] buffer = new byte[dis.available()];
 		dis.readFully(buffer);
 		String testInput = new String(buffer);
 
 		ParsingResult<Object> result = parser.parse(parser.compilationUnit(), testInput);
 
-		System.out.println(testInput + " = " + result.parseTreeRoot.getValue() + '\n');
-		System.out.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
-
 		if (result.hasErrors())
 		{
-		System.out.println(StringUtils.join(result.parseErrors, "---\n"));
+			System.out.println(StringUtils.join(result.parseErrors, "---\n"));
+			System.out.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
 		}
-		JOTTester.checkIf("Errors? ", ! result.hasErrors());*/
+		JOTTester.checkIf("Parsing "+filePath, !result.hasErrors());
+
 	}
 
 	public void testNodeName(String label, ParsingResult<Object> result, String nodeName) throws Exception
@@ -293,10 +310,10 @@ public class FantomParserTest implements JOTTestable
 		JOTTester.checkIf(label + " - parsing success", !result.hasErrors());
 		JOTTester.checkIf(label + " - root not null", result.parseTreeRoot != null);
 		JOTTester.checkIf(label + " - check name(" + nodeName + ")", result.parseTreeRoot.getLabel().equals(nodeName), result.parseTreeRoot.getLabel());
-		if(value!=null)
+		if (value != null)
 		{
 			String txt = ParseTreeUtils.getNodeText(result.parseTreeRoot, result.inputBuffer);
-			JOTTester.checkIf(label+" - check value", txt.equals(value), "'"+value+"' VS '"+txt+"'");
+			JOTTester.checkIf(label + " - check value", txt.equals(value), "'" + value + "' VS '" + txt + "'");
 		}
 	}
 
