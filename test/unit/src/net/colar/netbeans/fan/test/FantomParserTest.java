@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.test;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.util.Date;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.jot.testing.JOTTestable;
 import net.jot.testing.JOTTester;
@@ -222,6 +223,16 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("expr3", result, "expr", "[4:\"four\", 5f:\"five\"]");
 		result = parser.parse(parser.expr(), "r += 4");
 		testNodeName("expr4", result, "expr", "r += 4");
+		result = parser.parse(parser.expr(), "5>3");
+		testNodeName("expr5", result, "expr", "5>3");
+		result = parser.parse(parser.if_(), "if(5>3)doit()");
+		testNodeName("if1", result, "if_", "if(5>3)doit()");
+		result = parser.parse(parser.if_(), "if(5>3)doit();else doThat();");
+		testNodeName("if2", result, "if_", "if(5>3)doit();else doThat();");
+		result = parser.parse(parser.if_(), "if(5>3+2){doThis();doThat()}");
+		testNodeName("if3", result, "if_", "if(5>3+2){doThis();doThat()}");
+		result = parser.parse(parser.if_(), "if(5>3+2){doThis();doThat()}else{doThat}");
+		testNodeName("if4", result, "if_", "if(5>3+2){doThis();doThat()}else{doThat}");
 		// TODO: many more expr
 
 		// facets
@@ -299,11 +310,13 @@ public class FantomParserTest implements JOTTestable
 
 	public void testFile(String filePath) throws Exception
 	{
+		long start = new Date().getTime();
 		FantomParser parser = Parboiled.createParser(FantomParser.class);
 
 		DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
 		byte[] buffer = new byte[dis.available()];
 		dis.readFully(buffer);
+		dis.close();//TODO: finally
 		String testInput = new String(buffer);
 
 		ParsingResult<Object> result = parser.parse(parser.compilationUnit(), testInput);
@@ -314,7 +327,7 @@ public class FantomParserTest implements JOTTestable
 			System.out.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
 		}
 		JOTTester.checkIf("Parsing "+filePath, !result.hasErrors());
-
+		System.out.println("Parsed "+filePath+" in "+(new Date().getTime()-start)+"ms");
 	}
 
 	public void testNodeName(String label, ParsingResult<Object> result, String nodeName) throws Exception

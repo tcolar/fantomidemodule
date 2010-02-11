@@ -134,7 +134,7 @@ class Maps
   Void show(Obj? result, Str what)
   {
     resultStr := "" + result
-    if (resultStr.size > 40) resultStr = resultStr[0..40] + "..."
+    //if (resultStr.size > 40) resultStr = resultStr[0..40] + "..."
     echo(what.padr(40) + " => " + resultStr)
   }
 

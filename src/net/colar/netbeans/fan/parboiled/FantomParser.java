@@ -20,7 +20,7 @@ import org.parboiled.support.Leaf;
  * http://fantom.org/doc/docLang/Grammar.html
  *
  * Test Suite: net.colar.netbeans.fan.test.FantomParserTest
- * 
+ *
  * @author thibautc
  */
 @SuppressWarnings(
@@ -357,13 +357,15 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule relationalExpr()
 	{
+		// chg to add ramgeexp as last option
 		return firstOf(typeCheckExpr(), compareExpr());
 	}
 
 	public Rule typeCheckExpr()
 	{
+		// changed to required, otherwise eats all rangeExpr and compare never gets evaled
 		return sequence(rangeExpr(),
-			optional(enforcedSequence(firstOf(KW_IS, KW_ISNOT, KW_AS), type())));
+			enforcedSequence(firstOf(KW_IS, KW_ISNOT, KW_AS), type()));
 	}
 
 	public Rule compareExpr()
@@ -712,11 +714,11 @@ public class FantomParser extends BaseParser<Object>
 	public Rule simpleMapType()
 	{
 		// It has to be other nonSimpleMapTypes, otherwise it's left recursive (loops forever)
-		return sequence(nonSimpleMapTypes(), noNl(), SP_COL, noNl(), nonSimpleMapTypes(),
+		return sequence(nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(),
 			optional(
 			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(noNl(), optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(sequence(noNl(), SP_QMARK))); // nullable
+			sequence(optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			optional(SP_QMARK)); // nullable
 	}
 
 	// all types except simple map
@@ -726,8 +728,8 @@ public class FantomParser extends BaseParser<Object>
 			firstOf(funcType(), mapType(), simpleType()),
 			optional(
 			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(noNl(), optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(sequence(noNl(), SP_QMARK))); // nullable
+			sequence(optional(SP_QMARK), noNl(), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			optional(SP_QMARK)); // nullable
 	}
 
 	// all types except function
@@ -737,23 +739,23 @@ public class FantomParser extends BaseParser<Object>
 			// Don't allow simpleMap starting with '|' as this confuses with closinf Function.
 			firstOf(sequence(testNot(SP_PIPE), simpleMapType()), mapType(), simpleType()),
 			optional(
-			sequence(noNl(), optional(SP_QMARK), noNl(), enforcedSequence(
+			sequence(optional(SP_QMARK), noNl(), enforcedSequence(
 			SQ_BRACKET_L, SQ_BRACKET_R))), // list of '?[]'
-			optional(sequence(noNl(), SP_QMARK))); // nullable
+			optional(SP_QMARK)); // nullable
 	}
 
 	public Rule simpleType()
 	{
 		return sequence(
 			id(),
-			optional(sequence(noNl(), enforcedSequence(SP_COLCOL, noNl(), id()))));
+			optional(enforcedSequence(SP_COLCOL, id())));
 	}
 
 	public Rule mapType()
 	{
 		// We use nonSimpleMapTypes here as well, because [Str:Int:Str] would be confusing
 		// not enforced to allow map rule to work ([Int:Str][5,""])
-		return sequence(SQ_BRACKET_L, noNl(), nonSimpleMapTypes(), noNl(), SP_COL, noNl(), nonSimpleMapTypes(), noNl(), SQ_BRACKET_R);
+		return sequence(SQ_BRACKET_L, nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(), SQ_BRACKET_R);
 	}
 
 	public Rule funcType()
@@ -763,23 +765,23 @@ public class FantomParser extends BaseParser<Object>
 				// type() stating with '|' would cause issues because it would get confused with the closing "|"
 				// so not allowing types starting with PIPE (testNot), such as an inner function Type (or simpleMap of).
 				// First we check for one with no formals |->| or |->Str|
-				sequence(SP_PIPE, noNl(), OP_ARROW, noNl(), optional(sequence(testNot(SP_PIPE), type())), SP_PIPE),
+				sequence(SP_PIPE, OP_ARROW, optional(sequence(testNot(SP_PIPE), type())), SP_PIPE),
 				// Then we check a full functype like |Int i -> Str|
-				sequence(SP_PIPE, noNl(), formals(), noNl(),OP_ARROW, noNl(),sequence(testNot(SP_PIPE), type()), noNl(), SP_PIPE),
+				sequence(SP_PIPE, formals(),OP_ARROW, sequence(testNot(SP_PIPE), type()), SP_PIPE),
 				// Then we check for one with formals only |Int i|
-				sequence(SP_PIPE, noNl(), formals(), noNl(), optional(OP_ARROW), noNl(), SP_PIPE));
+				sequence(SP_PIPE, formals(), optional(OP_ARROW), SP_PIPE));
 	}
 
 	public Rule formals()
 	{
 		// Formal type of function type would cause issues because it will get confused whether it's
 		// the closing "|" or opening of an inner one. -> not allowing nested functions def (using nonFunctionTypes())
-		return sequence(typeAndOrId(), zeroOrMore(sequence(noNl(), SP_COMMA, typeAndOrId())));
+		return sequence(typeAndOrId(), zeroOrMore(sequence(SP_COMMA, typeAndOrId())));
 	}
 
 	public Rule typeList()
 	{
-		return sequence(type(), zeroOrMore(sequence(noNl(), SP_COMMA, type())));
+		return sequence(type(), zeroOrMore(sequence(SP_COMMA, type())));
 	}
 
 	public Rule typeAndOrId()
@@ -789,7 +791,7 @@ public class FantomParser extends BaseParser<Object>
 		// so would never actually hit id()
 		return firstOf(sequence(type(), id()), type()/*, id()*/);
 	}
-	// ------------ Misc -------------------------------------------------------	
+	// ------------ Misc -------------------------------------------------------
 
 	public Rule id()
 	{
