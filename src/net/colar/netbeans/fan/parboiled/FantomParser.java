@@ -7,7 +7,6 @@ import org.parboiled.BaseParser;
 import org.parboiled.MatcherContext;
 import org.parboiled.Rule;
 import org.parboiled.matchers.Matcher;
-import org.parboiled.matchers.SequenceMatcher;
 import org.parboiled.support.Leaf;
 
 /**
@@ -239,7 +238,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule stmt()
 	{
-		return sequence(OPT_LF(),
+		return sequence(testNot(BRACKET_R), OPT_LF(),
 			firstOf(sequence(KW_BREAK, eos()), sequence(KW_CONTINUE, eos()), for_(),
 			if_(), sequence(KW_RETURN, optional(expr()), eos()), switch_(),
 			sequence(KW_THROW, expr(), eos()), while_(), try_(),
@@ -568,9 +567,13 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule litteral()
 	{
+		return firstOf(litteralBase(), list(), map());
+	}
+
+	public Rule litteralBase()
+	{
 		return firstOf(KW_NULL, KW_THIS, KW_SUPER, KW_IT, KW_TRUE, KW_FALSE,
-			strs(), uri(), number(), char_(), namedSuper(),
-			list(), map());
+			strs(), uri(), number(), char_(), namedSuper());
 	}
 
 	public Rule list()
@@ -598,24 +601,31 @@ public class FantomParser extends BaseParser<Object>
 	public Rule mapItems()
 	{
 		return firstOf(SP_COL,
-			sequence(mapPair(), zeroOrMore(sequence(SP_COMMA, mapPair()))));
+			sequence(mapPair(), zeroOrMore(enforcedSequence(SP_COMMA, mapPair()))));
 	}
 
 	public Rule mapPair()
 	{
-		return sequence(expr(), SP_COL, expr());
+		return sequence(mapItem(), enforcedSequence(SP_COL, mapItem()));
+	}
+
+	// It theory any expr() is accepted, but this kills the parser(super slow)
+	// so allowing only select items
+	public Rule mapItem()
+	{
+		return sequence(firstOf(litteralBase(), id()), zeroOrMore(termChain()));
 	}
 
 	// ------------ Litteral items ---------------------------------------------
 	public Rule strs()
 	{
 		return firstOf(
-			sequence(QUOTES3, // triple quoted string
+			enforcedSequence(QUOTES3, // triple quoted string
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
 			sequence(testNot(QUOTES3), any()))), QUOTES3),
-			sequence(QUOTE, // simple string
+			enforcedSequence(QUOTE, // simple string
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
@@ -731,10 +741,10 @@ public class FantomParser extends BaseParser<Object>
 	}
 
 	// all types except function
-	public Rule nonFunctionTypes()
+	public Rule nonFunctionType()
 	{
 		return sequence(
-			// Don't allow simpleMap starting with '|' as this confuses with closinf Function.
+			// Don't allow simpleMap starting with '|' as this conflict with closing Function.
 			firstOf(sequence(testNot(SP_PIPE), simpleMapType()), mapType(), simpleType()),
 			optional(
 			sequence(optional(SP_QMARK), enforcedSequence(
@@ -758,28 +768,31 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule funcType()
 	{
-		return firstOf(
+		return enforcedSequence(SP_PIPE,
+				firstOf(
 				// Fantom grammar is not correct for this.
 				// type() stating with '|' would cause issues because it would get confused with the closing "|"
 				// so not allowing types starting with PIPE (testNot), such as an inner function Type (or simpleMap of).
+				// We check in an order that's faster
 				// First we check for one with no formals |->| or |->Str|
-				sequence(SP_PIPE, OP_ARROW, optional(sequence(testNot(SP_PIPE), type())), SP_PIPE),
-				// Then we check a full functype like |Int i -> Str|
-				sequence(SP_PIPE, formals(),OP_ARROW, sequence(testNot(SP_PIPE), type()), SP_PIPE),
-				// Then we check for one with formals only |Int i|
-				sequence(SP_PIPE, formals(), optional(OP_ARROW), SP_PIPE));
+				enforcedSequence(OP_ARROW, optional(nonFunctionType())),
+				// Then we check for one with formals only |Int i| or maybe full: |Int i -> Str|
+				sequence(formals(), optional(enforcedSequence(OP_ARROW, optional(nonFunctionType()))))),
+				SP_PIPE);
 	}
 
 	public Rule formals()
 	{
 		// Formal type of function type would cause issues because it will get confused whether it's
 		// the closing "|" or opening of an inner one. -> not allowing nested functions def (using nonFunctionTypes())
-		return sequence(typeAndOrId(), zeroOrMore(sequence(SP_COMMA, typeAndOrId())));
+		return sequence(
+					testNot(SP_PIPE), typeAndOrId(),
+					zeroOrMore(enforcedSequence(SP_COMMA, testNot(SP_PIPE), typeAndOrId()))); // typeAnrOrId - funtional types
 	}
 
 	public Rule typeList()
 	{
-		return sequence(type(), zeroOrMore(sequence(SP_COMMA, type())));
+		return sequence(type(), zeroOrMore(enforcedSequence(SP_COMMA, type())));
 	}
 
 	public Rule typeAndOrId()
