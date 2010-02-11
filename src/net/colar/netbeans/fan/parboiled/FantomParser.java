@@ -805,12 +805,12 @@ public class FantomParser extends BaseParser<Object>
 	public Rule spacing()
 	{
 		return oneOrMore(firstOf(
-			// whitespace
+			// whitespace (Do NOT eat \n since it can be meaningful)
 			oneOrMore(charSet(" \t\u000c")),
 			// multiline comment
 			sequence("/*", zeroOrMore(sequence(testNot("*/"), any())), "*/"), // normal comment
 			// if incomplete multiline comment, then end at end of line
-			sequence("/*", zeroOrMore(sequence(testNot("\n"), any())), "\n"),
+			sequence("/*", zeroOrMore(sequence(testNot(charSet("\r\n")), any())), charSet("\r\n")),
 			// single line comment
 			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any())), charSet("\r\n"))));
 	}
