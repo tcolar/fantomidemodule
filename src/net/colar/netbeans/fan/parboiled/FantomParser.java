@@ -36,6 +36,9 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(
 			OPT_SP,
+			// Missing from grammar: Optional unix env line
+			optional(sequence("#!",zeroOrMore(sequence(testNot("\n"), any())), "\n")),
+			OPT_SP,
 			zeroOrMore(firstOf(using(), incUsing())),
 			zeroOrMore(typeDef()),
 			OPT_SP,
@@ -377,13 +380,15 @@ public class FantomParser extends BaseParser<Object>
 	public Rule addExpr()
 	{
 		return sequence(multExpr(),
-			zeroOrMore(enforcedSequence(firstOf(OP_PLUS, OP_MINUS), multExpr())));
+			// not enforced so that += assignexpr can happen
+			zeroOrMore(sequence(firstOf(OP_PLUS, OP_MINUS), multExpr())));
 	}
 
 	public Rule multExpr()
 	{
 		return sequence(parExpr(),
-			zeroOrMore(enforcedSequence(firstOf(OP_MULT, OP_DIV), parExpr())));
+			// not enforced so that *= assignexpr can happen
+			zeroOrMore(sequence(firstOf(OP_MULT, OP_DIV), parExpr())));
 	}
 
 	public Rule parExpr()
@@ -586,7 +591,8 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			optional(firstOf(mapType(), simpleMapType())),
 			noNl(),
-			enforcedSequence(SQ_BRACKET_L, mapItems(), SQ_BRACKET_R));
+			// Not enforced to allow resolving list of maps [Str:Int][]
+			sequence(SQ_BRACKET_L, mapItems(), SQ_BRACKET_R));
 	}
 
 	public Rule mapItems()
@@ -663,16 +669,16 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			optional(OP_MINUS),
 			firstOf(
-			// hex number
-			sequence(firstOf("0x", "0X"),
-			oneOrMore(firstOf("_", hexDigit()))),
-			// decimal
-			sequence(digit(),
-			zeroOrMore(sequence(zeroOrMore("_"), digit())),
-			optional(fraction()),
-			optional(exponent())),
-			// fractional
-			sequence(fraction(), optional(exponent()), optional(nbType()))));
+				// hex number
+				sequence(firstOf("0x", "0X"), oneOrMore(firstOf("_", hexDigit()))),
+				// decimal
+				sequence(digit(),
+					zeroOrMore(sequence(zeroOrMore("_"), digit())),
+					optional(fraction()),
+					optional(exponent())),
+				// fractional
+				sequence(fraction(), optional(exponent()))),
+			optional(nbType()));
 	}
 
 	public Rule fraction()
@@ -752,11 +758,16 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule funcType()
 	{
-		return enforcedSequence(SP_PIPE, noNl(), optional(formals()), noNl(), OP_ARROW, noNl(),
-			// type() stating with '|' would cause issues because it would get confused with the closing "|"
-			// so not allowing types starting with PIPE (testNot), such as an inner function Type (or simpleMap of).
-			optional(sequence(testNot(SP_PIPE), type())),
-			noNl(), SP_PIPE);
+		return firstOf(
+				// Fantom grammar is not correct for this.
+				// type() stating with '|' would cause issues because it would get confused with the closing "|"
+				// so not allowing types starting with PIPE (testNot), such as an inner function Type (or simpleMap of).
+				// First we check for one with no formals |->| or |->Str|
+				sequence(SP_PIPE, noNl(), OP_ARROW, noNl(), optional(sequence(testNot(SP_PIPE), type())), SP_PIPE),
+				// Then we check a full functype like |Int i -> Str|
+				sequence(SP_PIPE, noNl(), formals(), noNl(),OP_ARROW, noNl(),sequence(testNot(SP_PIPE), type()), noNl(), SP_PIPE),
+				// Then we check for one with formals only |Int i|
+				sequence(SP_PIPE, noNl(), formals(), noNl(), optional(OP_ARROW), noNl(), SP_PIPE));
 	}
 
 	public Rule formals()

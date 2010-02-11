@@ -88,6 +88,8 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("Number f 6", result, "number");
 		result = parser.parse(parser.number(), "1_2.3_7e-5_6f");
 		testNodeName("Number f 7", result, "number");
+		result = parser.parse(parser.number(), "5f");
+		testNodeName("Number f 8", result, "number");
 		result = parser.parse(parser.number(), "4d");
 		testNodeName("Number d 1", result, "number");
 		result = parser.parse(parser.number(), "4.00");
@@ -170,10 +172,14 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("Map 4", result, "map", "Int:Str[5:9,7:12]");
 		result = parser.parse(parser.map(), "[Int:Str][5:9,7:12]");
 		testNodeName("Map 5", result, "map", "[Int:Str][5:9,7:12]");
+		result = parser.parse(parser.map(), "[4:\"four\", 5f:\"five\"]");
+		testNodeName("Map 6", result, "map", "[4:\"four\", 5f:\"five\"]");
 		result = parser.parse(parser.closure(), "|->|{}");
 		testNodeName("Closure 1", result, "closure", "|->|{}");
 		result = parser.parse(parser.closure(), "|->|{i=5}");
 		testNodeName("Closure 2", result, "closure", "|->|{i=5}");
+		result = parser.parse(parser.closure(), "|val| {r += \"$val \"}");
+		testNodeName("Closure 3", result, "closure", "|val| {r += \"$val \"}");
 		result = parser.parse(parser.call(), "toto()");
 		testNodeName("Call1", result, "call", "toto()");
 		result = parser.parse(parser.call(), "toto(a, b)");
@@ -192,18 +198,30 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("StaticCall1", result, "staticCall", "toto.blah()");
 		result = parser.parse(parser.staticCall(), "toto.toto");
 		testNodeName("StaticCall2", result, "staticCall", "toto.toto");
-		result = parser.parse(parser.expr(), "toto.doit");
-		testNodeName("expr1", result, "expr", "toto.doit");
-		result = parser.parse(parser.expr(), "i=5");
-		testNodeName("expr2", result, "expr", "i=5");
-
 		result = parser.parse(parser.localDef(), "a:=23");
 		testNodeName("localDef1", result, "localDef", "a:=23");
 		result = parser.parse(parser.localDef(), "Int a:=23");
 		testNodeName("localDef2", result, "localDef", "Int a:=23");
 		result = parser.parse(parser.localDef(), "Int var");
 		testNodeName("localDef5", result, "localDef", "Int var");
-
+		result = parser.parse(parser.litteral(), "[4:\"four\", 5f:\"five\"]");
+		testNodeName("litteral1", result, "litteral", "[4:\"four\", 5f:\"five\"]");
+		result = parser.parse(parser.termExpr(), "[4:\"four\", 5f:\"five\"]");
+		testNodeName("termExpr1", result, "termExpr", "[4:\"four\", 5f:\"five\"]");
+		result = parser.parse(parser.parExpr(), "[4:\"four\", 5f:\"five\"]");
+		testNodeName("parExpr1", result, "parExpr", "[4:\"four\", 5f:\"five\"]");
+		result = parser.parse(parser.equalityExpr(), "[4:\"four\", 5f:\"five\"]");
+		testNodeName("equalityExpr1", result, "equalityExpr", "[4:\"four\", 5f:\"five\"]");
+		result = parser.parse(parser.condOrExpr(), "[4:\"four\", 5f:\"five\"]");
+		testNodeName("condOrExpr1", result, "condOrExpr", "[4:\"four\", 5f:\"five\"]");
+		result = parser.parse(parser.expr(), "toto.doit");
+		testNodeName("expr1", result, "expr", "toto.doit");
+		result = parser.parse(parser.expr(), "i=5");
+		testNodeName("expr2", result, "expr", "i=5");
+		result = parser.parse(parser.expr(), "[4:\"four\", 5f:\"five\"]");
+		testNodeName("expr3", result, "expr", "[4:\"four\", 5f:\"five\"]");
+		result = parser.parse(parser.expr(), "r += 4");
+		testNodeName("expr4", result, "expr", "r += 4");
 		// TODO: many more expr
 
 		// facets
@@ -225,6 +243,8 @@ public class FantomParserTest implements JOTTestable
 		testNodeName("Stmt3", result, "stmt", "Int i:=5");
 		result = parser.parse(parser.stmt(), "Int i:=5+3");
 		testNodeName("Stmt4", result, "stmt", "Int i:=5+3");
+		result = parser.parse(parser.stmt(), "show([4:\"four\", 5f:\"five\"],\"same as above with type inference\")");
+		testNodeName("Stmt5", result, "stmt", "show([4:\"four\", 5f:\"five\"],\"same as above with type inference\")");
 		result = parser.parse(parser.block(), "i=5");
 		testNodeName("Block", result, "block", "i=5");
 		result = parser.parse(parser.block(), "{i=5}");
@@ -270,10 +290,11 @@ public class FantomParserTest implements JOTTestable
 		//TODO: enum class, inheritance, facet class
 		//TODO: deal with enum val defs
 
-		// TODO: Comp. unit, test some real fan files
-		//TODO: relative paths
+		// Test real files   TODO: relative paths
 		testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/test.fan");
-		testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/sending.fan");
+		testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/hello.fan");
+		testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/maps.fan");
+		//testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/sending.fan");
 	}
 
 	public void testFile(String filePath) throws Exception
