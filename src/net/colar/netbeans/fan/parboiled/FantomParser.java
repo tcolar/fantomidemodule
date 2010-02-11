@@ -4,7 +4,10 @@
 package net.colar.netbeans.fan.parboiled;
 
 import org.parboiled.BaseParser;
+import org.parboiled.MatcherContext;
 import org.parboiled.Rule;
+import org.parboiled.matchers.Matcher;
+import org.parboiled.matchers.SequenceMatcher;
 import org.parboiled.support.Leaf;
 
 /**
@@ -196,7 +199,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule methodBody()
 	{
-		return sequence(firstOf(
+		return sequence(OPT_LF(), firstOf(
 			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R),
 			eos()),OPT_LF()); // method with no body
 	}
@@ -228,10 +231,10 @@ public class FantomParser extends BaseParser<Object>
 	// ------------ Statements -------------------------------------------------
 	public Rule block()
 	{
-		return firstOf(
+		return sequence(firstOf(
 			itBlock(), // it block is normal block
 			stmt() // single statement
-			);
+			),OPT_LF());
 	}
 
 	public Rule stmt()
@@ -817,12 +820,12 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule LF()
 	{
-		return sequence(OPT_SP, oneOrMore(charSet("\r\n")));
+		return oneOrMore(sequence(OPT_SP, oneOrMore(charSet("\r\n")),OPT_SP));
 	}
 
 	public Rule OPT_LF()
 	{
-		return zeroOrMore(LF());
+		return optional(LF());
 	}
 
 	@Leaf
@@ -941,53 +944,40 @@ public class FantomParser extends BaseParser<Object>
 
 	// ----------- Custom action rules -----------------------------------------
 	/**
-	 * Look for end of statement
+	 * Special action that looks for end of statement
 	 * @return
 	 */
-	public Rule eos()
+	public boolean eos()
 	{
-		return sequence(OPT_SP,
-					firstOf(
-						LF(),
-						';',
-						test('}'),
-						test(eoi())
-					)
-				);
-		/*
 		MatcherContext ctx = (MatcherContext) getContext();
 		if (ctx == null)
 		{
 			return false;
 		}
-		// Geting AFTER potential spacing (incl \n) first
-		OptionalMatcher opt = new OptionalMatcher(spacing());
-		opt.match(ctx);
-
-		SequenceMatcher lf = (SequenceMatcher)LF();
-		if(lf.match(ctx))
-			return true;
-
-		// End Of Input (eoi) qualifies as eos as well. we test for it, not consume it
-		SequenceMatcher seq = (SequenceMatcher) sequence(OPT_SP, test(eoi()));
-		if (seq.match(ctx))
+		// ';' is an end of statement (consume it)
+		Matcher m = (Matcher) sequence(OPT_SP, SP_SEMI);
+		if (ctx.runMatcher(m, false))
 		{
 			return true;
 		}
-		// '}' is an end of statement as well, we test for it, not consume it
-		seq = (SequenceMatcher) sequence(OPT_SP, test('}'));
-		if (seq.match(ctx))
+		// '\n' is an end of statement (consume it)
+		m = (Matcher) LF();
+		if (ctx.runMatcher(m, false))
 		{
 			return true;
 		}
-		// Otherwise look for upcoming statement ending chars: ';' or '}'
-		//System.out.println("EOS> checking ';'");
-		seq = (SequenceMatcher) sequence(OPT_SP, ';');
-		if (seq.match(ctx))
+		// '}' is an end of statement (BUT DO NOT CONSUME IT !)
+		m = new PeekTestMatcher(sequence(OPT_SP, BRACKET_R), false);
+		if (ctx.runMatcher(m, false))
 		{
 			return true;
 		}
-		return false;*/
+		// EOI(endOfInput) is an end of statement (BUT DO NOT CONSUME IT !)
+		m = new PeekTestMatcher(sequence(OPT_SP, eoi()), false);
+		if (ctx.runMatcher(m, false))
+		{
+			return true;
+		}
+		return false;
 	}
-
 }
