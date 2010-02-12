@@ -4,7 +4,8 @@ class DestinationDataProviderImpl : DestinationDataProvider
 {
 	static Void myMethod(Str toto)
 	{
-		toto:=23
+		Str[] toto:=23
 		tata.do
+		return runService([wisp])
 	}
 }

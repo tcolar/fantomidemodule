@@ -172,9 +172,7 @@ public class FantomParser extends BaseParser<Object>
 			KW_OVERRIDE, KW_VIRTUAL)),
 			type(),
 			id(),
-			PAR_L,
-			optional(params()),
-			PAR_R,
+			enforcedSequence(PAR_L, optional(params()),	PAR_R),
 			methodBody());
 	}
 
@@ -184,18 +182,16 @@ public class FantomParser extends BaseParser<Object>
 			zeroOrMore(facet()),
 			optional(protection()),
 			type(),
-			KW_NEW,
+			enforcedSequence(KW_NEW,
 			id(),
-			PAR_L,
-			optional(params()),
-			PAR_R,
+			enforcedSequence(PAR_L,	optional(params()),	PAR_R),
 			optional( // ctorChain
 				// Fantom  Grammar page is missing SP_COL
 				enforcedSequence(SP_COL,
 					firstOf(
 					enforcedSequence(KW_THIS, DOT, id(), PAR_L, optional(args()), PAR_R),
 					enforcedSequence(KW_SUPER, optional(sequence(DOT, id())), PAR_L, optional(args()), PAR_R)))),
-			methodBody());
+			methodBody()));
 	}
 
 	public Rule methodBody()
@@ -636,7 +632,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule uri()
 	{
-		return sequence(TICK,
+		return enforcedSequence(TICK,
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
@@ -666,9 +662,9 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule hexDigit()
 	{
-		return firstOf(charRange('a', 'f'),
-			charRange('A', 'F'),
-			digit());
+		return firstOf(digit(),
+			charRange('a', 'f'),
+			charRange('A', 'F'));
 	}
 
 	public Rule digit()
@@ -682,20 +678,20 @@ public class FantomParser extends BaseParser<Object>
 			optional(OP_MINUS),
 			firstOf(
 				// hex number
-				sequence(firstOf("0x", "0X"), oneOrMore(firstOf("_", hexDigit()))),
+				enforcedSequence(firstOf("0x", "0X"), oneOrMore(firstOf("_", hexDigit()))),
 				// decimal
-				sequence(digit(),
+				// fractional
+				enforcedSequence(fraction(), optional(exponent())),
+				enforcedSequence(digit(),
 					zeroOrMore(sequence(zeroOrMore("_"), digit())),
 					optional(fraction()),
-					optional(exponent())),
-				// fractional
-				sequence(fraction(), optional(exponent()))),
+					optional(exponent()))),
 			optional(nbType()));
 	}
 
 	public Rule fraction()
 	{
-		return sequence(DOT, digit(), zeroOrMore(sequence(zeroOrMore("_"), digit())));
+		return enforcedSequence(DOT, digit(), zeroOrMore(sequence(zeroOrMore("_"), digit())));
 	}
 
 	public Rule exponent()
