@@ -156,7 +156,9 @@ public class FantomParser extends BaseParser<Object>
 			zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
 			KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
 			/*typeAndOrId(),*/ type(), id(), // Type required for fields (Grammar does not say so)
-			optional(sequence(OP_ASSIGN, expr())),
+			//TODO: when there is an OP_ASSIGN AND a fieldAccesor, parser takes forever !!
+			// probably confused with an itBlock
+			optional(enforcedSequence(OP_ASSIGN, expr())),
 			optional(fieldAccessor()),
 			eos());
 	}
