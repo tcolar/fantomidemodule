@@ -27,24 +27,12 @@ public class FantomParserTest implements JOTTestable
 		FantomParser parser = Parboiled.createParser(FantomParser.class);
 		ParsingResult<Object> result = null;
 
-		boolean singleTest = true; // just this one quick test
+		boolean singleTest = false; // just this one quick test
 		if (singleTest)
 		{ //TODO: with ifExpr it takes 9ms, whereas with condOrExpr  it takes <5
-			result = parser.parse(parser.condOrExpr(), "[wisp]");//caching run
-			result = parser.parse(parser.list(), "[wisp]");//caching run
-			result = parser.parse(parser.expr(), "[wisp]");//caching run
-			result = parse(parser, parser.condOrExpr(), "[wisp]");
-			result = parse(parser, parser.condOrExpr(), "[wisp]");
-			result = parse(parser, parser.condOrExpr(), "[wisp]"); // ~ 15ms
-			result = parse(parser, parser.list(), "[wisp]");
-			result = parse(parser, parser.list(), "[wisp]"); // ~4ms
-			result = parse(parser, parser.list(), "[wisp]");
-			result = parse(parser, parser.expr(), "[wisp]"); //~30ms
-			result = parse(parser, parser.expr(), "[wisp]");
-			result = parse(parser, parser.expr(), "[wisp]");
-			result = parse(parser, parser.litteral(), "[wisp]"); //~5ms
-			result = parse(parser, parser.litteral(), "[wisp]");
-			result = parse(parser, parser.litteral(), "[wisp]");
+			//result = parser.parse(parser.condOrExpr(), "[wisp]");//caching run
+			result = parse(parser, parser.fieldDef(), "Int a:=toto{}");
+			testNodeName("FirstTest", result, "fieldDef","Int a:=toto{}");
 			//System.out.println(ParseTreeUtils.printNodeTree(result));
 			return;
 		}
@@ -286,19 +274,19 @@ public class FantomParserTest implements JOTTestable
 
 		// Slot Def
 		result = parse(parser, parser.fieldAccessor(), "{get{i=23}}");
-		testNodeName("FiledAccesor1", result, "fieldAccessor", "{get{i=23}}");
-		result = parse(parser, parser.fieldAccessor(), "{get{i=23}private set{}}");
-		testNodeName("FiledAccesor2", result, "fieldAccessor", "{get{i=23}private set{}}");
+		testNodeName("FieldAccesor1", result, "fieldAccessor", "{get{i=23}}");
+		result = parse(parser, parser.fieldAccessor(), "{get{i=23}\nprivate set{}\n}");
+		testNodeName("FieldAccesor2", result, "fieldAccessor", "{get{i=23}\nprivate set{}\n}");
 		result = parse(parser, parser.fieldDef(), "Int a");
-		testNodeName("FiledDef1", result, "fieldDef", "Int a");
+		testNodeName("FieldDef1", result, "fieldDef", "Int a");
 		result = parse(parser, parser.fieldDef(), "private const Int a");
-		testNodeName("FiledDef2", result, "fieldDef", "private const Int a");
+		testNodeName("FieldDef2", result, "fieldDef", "private const Int a");
 		result = parse(parser, parser.fieldDef(), "static override readonly Int a:=23");
-		testNodeName("FiledDef3", result, "fieldDef", "static override readonly Int a:=23");
+		testNodeName("FieldDef3", result, "fieldDef", "static override readonly Int a:=23");
 		result = parse(parser, parser.fieldDef(), "Int a{get{i=23}\nprivate set{}\n}");
-		testNodeName("FiledDef4", result, "fieldDef", "Int a{get{i=23}\nprivate set{}\n}");
+		testNodeName("FieldDef4", result, "fieldDef", "Int a{get{i=23}\nprivate set{}\n}");
 		result = parse(parser, parser.fieldDef(), "Int a:=23{get{i=23}\nprivate set{}\n}");
-		testNodeName("FiledDef5", result, "fieldDef", "Int a:=23{get{i=23}\nprivate set{}\n}");
+		testNodeName("FieldDef5", result, "fieldDef", "Int a:=23{get{i=23}\nprivate set{}\n}");
 		result = parse(parser, parser.methodDef(), "private static Void doit(Str a, Int b){}");
 		testNodeName("MethodDef1", result, "methodDef", "private static Void doit(Str a, Int b){}");
 		result = parse(parser, parser.methodDef(), "Void doit(Str s){i:=5}");
@@ -335,10 +323,10 @@ public class FantomParserTest implements JOTTestable
 		long start = new Date().getTime();
 		ParsingResult<Object> result = parser.parse(rule, input);
 		long time = new Date().getTime() - start;
-		System.err.println("Parsing in " + (new Date().getTime() - start) + "ms");
+		//System.err.println("Parsing in " + (new Date().getTime() - start) + "ms");
 		if (time > 5)
 		{
-			//System.err.println("Long parsing in " + (new Date().getTime() - start) + "ms");
+			System.err.println("Long parsing : "+(new Date().getTime() - start) + "ms, for:\n"+input);
 			//System.err.println(ParseTreeUtils.printNodeTree(result));
 		}
 		return result;

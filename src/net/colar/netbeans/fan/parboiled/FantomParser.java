@@ -7,6 +7,7 @@ import org.parboiled.BaseParser;
 import org.parboiled.MatcherContext;
 import org.parboiled.Rule;
 import org.parboiled.matchers.Matcher;
+import org.parboiled.support.Cached;
 import org.parboiled.support.Leaf;
 
 /**
@@ -25,6 +26,8 @@ import org.parboiled.support.Leaf;
 })
 public class FantomParser extends BaseParser<Object>
 {
+	public boolean inFieldInit; // to help with differentiation of field accesor & itBlock
+	
 	// ------------ Comp Unit --------------------------------------------------
 	//TODO: funcType: // op_safe_dyn_call lexer confusion between |Str?->| (formal) and Str?->  (dyn call)
 
@@ -145,7 +148,11 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule slotDef()
 	{
-		return sequence(firstOf(ctorDef(), methodDef(), fieldDef()),OPT_LF());
+		return sequence(firstOf(
+				ctorDef(), // look for 'new'
+				methodDef(), // look for params : '('
+				fieldDef()), // others
+			OPT_LF());
 	}
 
 	public Rule fieldDef()
@@ -155,11 +162,13 @@ public class FantomParser extends BaseParser<Object>
 			optional(protection()),
 			zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
 			KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
-			/*typeAndOrId(),*/ type(), id(), // Type required for fields (Grammar does not say so)
+			/*typeAndOrId(),*/ type(), id(), // Type required for fields(no infered) (Grammar does not say so)
 			//TODO: when there is an OP_ASSIGN AND a fieldAccesor, parser takes forever !!
 			// probably confused with an itBlock
+			setFieldInit(true),
 			optional(enforcedSequence(OP_ASSIGN, expr())),
 			optional(fieldAccessor()),
+			setFieldInit(false),
 			eos());
 	}
 
@@ -213,10 +222,11 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule fieldAccessor()
 	{
-		return sequence(OPT_LF(),enforcedSequence(
+		return sequence(OPT_LF(),
+			enforcedSequence(
 			BRACKET_L,
-			optional(sequence(OPT_LF(),"get", firstOf(block(), eos()))),
-			optional(sequence(OPT_LF(),optional(protection()), "set", firstOf(block(), eos()))),
+			optional(sequence(OPT_LF(),enforcedSequence(GET, firstOf(block(), eos())))),
+			optional(sequence(OPT_LF(), optional(protection()), enforcedSequence(SET, firstOf(block(), eos())))),
 			BRACKET_R),OPT_LF());
 	}
 
@@ -229,7 +239,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule block()
 	{
 		return sequence(firstOf(
-			itBlock(), // it block is normal block
+			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R),  // block
 			stmt() // single statement
 			),OPT_LF());
 	}
@@ -237,10 +247,20 @@ public class FantomParser extends BaseParser<Object>
 	public Rule stmt()
 	{
 		return sequence(testNot(BRACKET_R), OPT_LF(),
-			firstOf(sequence(KW_BREAK, eos()), sequence(KW_CONTINUE, eos()), for_(),
-			if_(), sequence(KW_RETURN, optional(expr()), eos()), switch_(),
-			sequence(KW_THROW, expr(), eos()), while_(), try_(),
-			localDef(), itAdd(), sequence(expr(), eos())),
+			firstOf(
+			sequence(KW_BREAK, eos()), 
+			sequence(KW_CONTINUE, eos()),
+			sequence(KW_RETURN, optional(expr()), eos()),
+			sequence(KW_THROW, expr(), eos()),
+			if_(),
+			for_(),
+			switch_(),
+			while_(),
+			try_(),
+			// local var definition (:=)
+			localDef(),
+			// otherwise expression (optiona Comma for itAdd expression)
+			sequence(expr(), optional(SP_COMMA), eos())),
 			OPT_LF());
 	}
 
@@ -267,20 +287,14 @@ public class FantomParser extends BaseParser<Object>
 	{
 		// this is changed to matched either:
 		// 'Int j', 'j:=27', 'Int j:=27'
-		// 'a' is technically a localDef but will be matched as an expression
-		// we can't differentiate 'a'(localdef) from 'a'(method call)
 		return sequence(
 			firstOf(
-			sequence(typeAndOrId(), enforcedSequence(OP_ASSIGN, expr())),
-			sequence(type(), id())),
+			// Fantom parser says that if it start with both type & id, then it's a local def for sure -> enforce
+			// Typed: 'Int a'   or 'Int a : = 27'
+			enforcedSequence(sequence(type(), id()),optional(enforcedSequence(OP_ASSIGN, expr()))),
+			// Inferred : 'a:=27'
+			sequence(id(), enforcedSequence(OP_ASSIGN, expr()))),
 			eos());
-	}
-
-	public Rule itAdd()
-	{
-		// Changed to oneOrMore, otherwise it will match normal expressions
-		// Also since it's called from statemnt, why need to match multiples ??
-		return sequence(expr(), SP_COMMA/*oneOrMore(sequence(SP_COMMA, expr())), optional(SP_COMMA), eos()*/);
 	}
 
 	public Rule try_()
@@ -311,7 +325,8 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule assignExpr()
 	{
-		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_ASSIGN_OPS, AS_EQUAL), OPT_LF(), assignExpr())));
+		// check '=' first as is most common
+		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_ASSIGN_OPS), OPT_LF(), assignExpr())));
 	}
 
 	public Rule ifExpr()
@@ -483,13 +498,18 @@ public class FantomParser extends BaseParser<Object>
 	public Rule itBlock()
 	{
 		// Do not enforce because it prevents fieldAccesor to work.
-		return sequence(OPT_LF(), BRACKET_L, zeroOrMore(stmt()), BRACKET_R);
+		return sequence(
+			OPT_LF(),
+			BRACKET_L,
+		     // Note, don't allow field accesors to be parsed as itBlock
+			peekTestNot(sequence(inFieldInit, OPT_LF(), firstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)/*, echo("Skipping itBlock")*/)),
+			zeroOrMore(stmt()),	BRACKET_R);
 	}
 
 	public Rule termChain()
 	{
 		return firstOf(safeDotCall(), safeDynCall(), dotCall(), dynCall(), indexExpr(),
-			callOp(), itBlock(), incDotCall());
+			callOp(), itBlock()/*, incDotCall()*/);
 	}
 
 	public Rule dotCall()
@@ -840,6 +860,14 @@ public class FantomParser extends BaseParser<Object>
 	}
 
 	@Leaf
+	public Rule keyword(String string)
+	{
+		// Makes sure not to matche things that START with a keyword like "thisisatest"
+		return sequence(string, 
+			testNot(firstOf(digit(), charRange('A', 'Z'), charRange('a', 'z'), "_")),
+			optional(spacing())).label(string);
+	}
+	@Leaf
 	public Rule terminal(String string)
 	{
 		return sequence(string, optional(spacing())).label(string);
@@ -852,54 +880,56 @@ public class FantomParser extends BaseParser<Object>
 	}
 	// -------------- Terminal items -------------------------------------------
 	// -- Keywords --
-	public final Rule KW_USING = terminal("using");
-	public final Rule KW_ABSTRACT = terminal("abstract");
-	public final Rule KW_AS = terminal("as");
-	public final Rule KW_ASSERT = terminal("assert"); // not a grammar kw
-	public final Rule KW_BREAK = terminal("break");
-	public final Rule KW_CATCH = terminal("catch");
-	public final Rule KW_CASE = terminal("case");
-	public final Rule KW_CLASS = terminal("class");
-	public final Rule KW_CONST = terminal("const");
-	public final Rule KW_CONTINUE = terminal("continue");
-	public final Rule KW_DEFAULT = terminal("default");
-	public final Rule KW_DO = terminal("do"); // unused, reserved
-	public final Rule KW_ELSE = terminal("else");
-	public final Rule KW_FALSE = terminal("false");
-	public final Rule KW_FINAL = terminal("final");
-	public final Rule KW_FINALLY = terminal("finally");
-	public final Rule KW_FOR = terminal("for");
-	public final Rule KW_FOREACH = terminal("foreach"); // unused, reserved
-	public final Rule KW_IF = terminal("if");
-	public final Rule KW_INTERNAL = terminal("internal");
-	public final Rule KW_IS = terminal("is");
-	public final Rule KW_IT = terminal("ii");
-	public final Rule KW_ISNOT = terminal("isnot");
-	public final Rule KW_MIXIN = terminal("mixin");
-	public final Rule KW_NATIVE = terminal("native");
-	public final Rule KW_NEW = terminal("new");
-	public final Rule KW_NULL = terminal("null");
-	public final Rule KW_ONCE = terminal("once");
-	public final Rule KW_OVERRIDE = terminal("override");
-	public final Rule KW_PRIVATE = terminal("private");
-	public final Rule KW_PUBLIC = terminal("public");
-	public final Rule KW_PROTECTED = terminal("protected");
-	public final Rule KW_READONLY = terminal("readonly");
-	public final Rule KW_RETURN = terminal("return");
-	public final Rule KW_STATIC = terminal("static");
-	public final Rule KW_SUPER = terminal("super");
-	public final Rule KW_SWITCH = terminal("switch");
-	public final Rule KW_THIS = terminal("this");
-	public final Rule KW_THROW = terminal("throw");
-	public final Rule KW_TRUE = terminal("true");
-	public final Rule KW_TRY = terminal("tty");
-	public final Rule KW_VIRTUAL = terminal("virtual");
-	public final Rule KW_VOID = terminal("void"); // unused, reserved
-	public final Rule KW_VOLATILE = terminal("volatile"); // unused, reserved
-	public final Rule KW_WHILE = terminal("while");
+	public final Rule KW_USING = keyword("using");
+	public final Rule KW_ABSTRACT = keyword("abstract");
+	public final Rule KW_AS = keyword("as");
+	public final Rule KW_ASSERT = keyword("assert"); // not a grammar kw
+	public final Rule KW_BREAK = keyword("break");
+	public final Rule KW_CATCH = keyword("catch");
+	public final Rule KW_CASE = keyword("case");
+	public final Rule KW_CLASS = keyword("class");
+	public final Rule KW_CONST = keyword("const");
+	public final Rule KW_CONTINUE = keyword("continue");
+	public final Rule KW_DEFAULT = keyword("default");
+	public final Rule KW_DO = keyword("do"); // unused, reserved
+	public final Rule KW_ELSE = keyword("else");
+	public final Rule KW_FALSE = keyword("false");
+	public final Rule KW_FINAL = keyword("final");
+	public final Rule KW_FINALLY = keyword("finally");
+	public final Rule KW_FOR = keyword("for");
+	public final Rule KW_FOREACH = keyword("foreach"); // unused, reserved
+	public final Rule KW_IF = keyword("if");
+	public final Rule KW_INTERNAL = keyword("internal");
+	public final Rule KW_IS = keyword("is");
+	public final Rule KW_IT = keyword("ii");
+	public final Rule KW_ISNOT = keyword("isnot");
+	public final Rule KW_MIXIN = keyword("mixin");
+	public final Rule KW_NATIVE = keyword("native");
+	public final Rule KW_NEW = keyword("new");
+	public final Rule KW_NULL = keyword("null");
+	public final Rule KW_ONCE = keyword("once");
+	public final Rule KW_OVERRIDE = keyword("override");
+	public final Rule KW_PRIVATE = keyword("private");
+	public final Rule KW_PUBLIC = keyword("public");
+	public final Rule KW_PROTECTED = keyword("protected");
+	public final Rule KW_READONLY = keyword("readonly");
+	public final Rule KW_RETURN = keyword("return");
+	public final Rule KW_STATIC = keyword("static");
+	public final Rule KW_SUPER = keyword("super");
+	public final Rule KW_SWITCH = keyword("switch");
+	public final Rule KW_THIS = keyword("this");
+	public final Rule KW_THROW = keyword("throw");
+	public final Rule KW_TRUE = keyword("true");
+	public final Rule KW_TRY = keyword("try");
+	public final Rule KW_VIRTUAL = keyword("virtual");
+	public final Rule KW_VOID = keyword("void"); // unused, reserved
+	public final Rule KW_VOLATILE = keyword("volatile"); // unused, reserved
+	public final Rule KW_WHILE = keyword("while");
 	// Non keyword meningful items
-	public final Rule ENUM = terminal("enum");
-	public final Rule FACET = terminal("facet");
+	public final Rule ENUM = keyword("enum");
+	public final Rule FACET = keyword("facet");
+	public final Rule GET = keyword("get");
+	public final Rule SET = keyword("set"); 
 	// operators
 	public final Rule OP_SAFE_CALL = terminal("?.");
 	public final Rule OP_SAFE_DYN_CALL = terminal("?->");
@@ -953,6 +983,33 @@ public class FantomParser extends BaseParser<Object>
 	// shortcut for optional spacing
 	public final Rule OPT_SP = optional(spacing());
 
+
+	// Overrides of standard rules
+	/*@Cached
+	@Override
+	public Rule firstOf(Object[] rules)
+	{
+		return new PeekFirstOfMatcher(toRules(rules));
+	}
+
+	@Override
+	public Rule firstOf(Object rule, Object rule2, Object... moreRules)
+	{
+		return firstOf(Utils.arrayOf(rule, Utils.arrayOf(rule2, moreRules)));
+	}
+
+	@Cached
+	@Override
+    public Rule test(Object rule)
+	{
+        return new PeekTestMatcher(toRule(rule), false);
+    }*/
+	@Cached
+    public Rule peekTestNot(Object rule)
+	{
+        return new PeekTestMatcher(toRule(rule), true);
+    }
+
 	// ----------- Custom action rules -----------------------------------------
 	/**
 	 * Special action that looks for end of statement
@@ -990,5 +1047,23 @@ public class FantomParser extends BaseParser<Object>
 			return true;
 		}
 		return false;
+	}
+
+	public boolean setFieldInit(boolean val)
+	{
+		inFieldInit=val;
+		return true;
+	}
+
+	// Debugging utils
+	public boolean echo(String str)
+	{
+		System.out.println(str);
+		return true;
+	}
+	public boolean printPath()
+	{
+		System.out.println(getContext().getPath());
+		return true;
 	}
 }

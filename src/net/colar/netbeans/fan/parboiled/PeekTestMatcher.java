@@ -1,7 +1,6 @@
 /*
  * Thibaut Colar Feb 11, 2010
  */
-
 package net.colar.netbeans.fan.parboiled;
 
 import com.sun.istack.internal.NotNull;
@@ -11,22 +10,28 @@ import org.parboiled.matchers.TestMatcher;
 import org.parboiled.support.InputLocation;
 
 /**
- * Regular Test does not allow a test that consumes no data
- * This one soecifically does not consume anything (peek)
+ * Same as standard but allows matching no chars
  * @author thibautc
  */
-public class PeekTestMatcher<V> extends TestMatcher<V> 
+public class PeekTestMatcher<V> extends TestMatcher<V>
 {
-	public PeekTestMatcher(@NotNull Rule subRule, boolean inverted) {
-        super(subRule, inverted);
-    }
+	private final boolean invert;
+
+	public PeekTestMatcher(@NotNull Rule subRule, boolean inverted)
+	{
+		super(subRule, inverted);
+		this.invert = inverted;
+	}
 
 	@Override
 	public boolean match(@NotNull MatcherContext<V> context) {
         InputLocation lastLocation = context.getCurrentLocation();
-        boolean matched = context.runMatcher(getChildren().get(0), false);
+        boolean matched = context.runMatcher(getChildren().get(0), context.isEnforced() && !invert);
+        //if (matched && context.getCurrentLocation() == lastLocation && lastLocation.currentChar != Chars.EOI) {
+        //    Checks.fail("The inner rule of Test/TestNot rule '%s' must not allow empty matches", context.getPath());
+        //}
         context.setCurrentLocation(lastLocation); // reset location, test matchers never advance
 
-        return matched;
+        return invert ? !matched : matched;
     }
 }
