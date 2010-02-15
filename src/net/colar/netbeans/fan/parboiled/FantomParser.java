@@ -238,7 +238,7 @@ public class FantomParser extends BaseParser<Object>
 	// ------------ Statements -------------------------------------------------
 	public Rule block()
 	{
-		return sequence(firstOf(
+		return sequence(OPT_LF(), firstOf(
 			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R),  // block
 			stmt() // single statement
 			),OPT_LF());
@@ -267,20 +267,20 @@ public class FantomParser extends BaseParser<Object>
 	public Rule for_()
 	{
 		return enforcedSequence(KW_FOR, PAR_L,
-			optional(firstOf(localDef(), expr())),
-			SP_SEMI, optional(expr()), SP_SEMI, optional(expr()), PAR_R,
+			optional(firstOf(localDef(), sequence(condOrExpr(), SP_SEMI)/*was expr*/)),
+			optional(expr()), SP_SEMI, optional(expr()), PAR_R,
 			block());
 	}
 
 	public Rule if_()
 	{
-		return enforcedSequence(KW_IF, PAR_L, expr(), PAR_R, block(),
+		return enforcedSequence(KW_IF, PAR_L, condOrExpr()/*was expr*/, PAR_R, block(),
 			optional(enforcedSequence(KW_ELSE, block())));
 	}
 
 	public Rule while_()
 	{
-		return enforcedSequence(KW_WHILE, PAR_L, expr(), PAR_R, block());
+		return enforcedSequence(KW_WHILE, PAR_L, condOrExpr()/*was expr*/, PAR_R, block());
 	}
 
 	public Rule localDef()
@@ -824,7 +824,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule id()
 	{
-		return sequence(
+		return sequence(testNot(keyword()),
 			firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
 			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_", charRange('0', '9'))),
 			OPT_SP);
@@ -878,9 +878,22 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(string, testNot(mustNotFollow), optional(spacing())).label(string);
 	}
+
+	public Rule keyword()
+	{
+		return sequence(
+				 // don't bother until it starts with 'A'='Z'
+				test(charRange('A', 'Z')),
+				firstOf(KW_ABSTRACT, KW_AS, KW_ASSERT, KW_BREAK, KW_CATCH, KW_CASE, KW_CLASS,
+				KW_CONST, KW_CONTINUE, KW_DEFAULT, KW_DO, KW_ELSE, KW_FALSE, KW_FINAL,
+				KW_FINALLY, KW_FOR, KW_FOREACH, KW_IF, KW_INTERNAL, KW_IS, KW_ISNOT, KW_IT,
+				KW_MIXIN, KW_NATIVE, KW_NEW, KW_NULL, KW_ONCE, KW_OVERRIDE, KW_PRIVATE,
+				KW_PROTECTED, KW_PUBLIC, KW_READONLY, KW_RETURN, KW_STATIC, KW_SUPER, KW_SWITCH,
+				KW_THIS, KW_THROW, KW_TRUE, KW_TRY, KW_USING, KW_VIRTUAL, KW_VOID, KW_VOLATILE,
+				KW_WHILE));
+	}
 	// -------------- Terminal items -------------------------------------------
 	// -- Keywords --
-	public final Rule KW_USING = keyword("using");
 	public final Rule KW_ABSTRACT = keyword("abstract");
 	public final Rule KW_AS = keyword("as");
 	public final Rule KW_ASSERT = keyword("assert"); // not a grammar kw
@@ -921,6 +934,7 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule KW_THROW = keyword("throw");
 	public final Rule KW_TRUE = keyword("true");
 	public final Rule KW_TRY = keyword("try");
+	public final Rule KW_USING = keyword("using");
 	public final Rule KW_VIRTUAL = keyword("virtual");
 	public final Rule KW_VOID = keyword("void"); // unused, reserved
 	public final Rule KW_VOLATILE = keyword("volatile"); // unused, reserved
