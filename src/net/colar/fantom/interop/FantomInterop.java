@@ -1,7 +1,7 @@
 package net.colar.fantom.interop;
 
-import fan.sys.Err;
 import fan.sys.FanObj;
+import fan.sys.Method;
 import fan.sys.Type;
 
 /*
@@ -23,13 +23,26 @@ public class FantomInterop
 
 	public static FanObj callMethod(FanObj type, String method, Object... params)
 	{
-		return (FanObj) type.typeof().method("parseStr").call(params);
+		return (FanObj) resolveMethod(type, method).call(params);
 	}
 
 	public static FanObj callMethod(String qualifiedType, String staticMethod)
 	{
 		return callMethod(createObj(qualifiedType), staticMethod);
 	}
+
+	public static Method resolveMethod(FanObj type, String methodName) throws NoSuchFantomItemException
+	{
+		try
+		{
+			return type.typeof().method(methodName);
+		}
+		catch(Throwable e)
+		{
+			throw new NoSuchFantomItemException(type.toString(), methodName, e);
+		}
+	}
+
 
 	public static Type resolveType(String qualifiedType) throws NoSuchFantomItemException
 	{

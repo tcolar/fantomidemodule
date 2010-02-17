@@ -250,7 +250,7 @@ public class FantomParser extends BaseParser<Object>
 			firstOf(
 			sequence(KW_BREAK, eos()),
 			sequence(KW_CONTINUE, eos()),
-			sequence(KW_RETURN, firstOf(eos(), sequence(expr(), eos()))),
+			sequence(KW_RETURN,firstOf(eos(), sequence(expr(), eos()))).label("MY_RT_STMT"),
 			sequence(KW_THROW, expr(), eos()),
 			if_(),
 			for_(),
@@ -425,7 +425,8 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule unaryExpr()
 	{
-		return firstOf(prefixExpr(), postfixExpr(), termExpr());
+		// grouped with postfixEpr to avoid looking for termExpr twice !
+		return firstOf(prefixExpr(), sequence(termExpr(), optional(firstOf(OP_2MINUS, OP_2PLUS))));
 	}
 
 	public Rule prefixExpr()
@@ -433,11 +434,6 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			firstOf(OP_CURRY, OP_BANG, OP_2PLUS, OP_2MINUS, OP_PLUS, OP_MINUS),
 			parExpr());
-	}
-
-	public Rule postfixExpr()
-	{
-		return sequence(termExpr(), firstOf(OP_2MINUS, OP_2PLUS));
 	}
 
 	public Rule termExpr()
@@ -591,6 +587,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule litteral()
 	{
+		//TODO: this casuse checking for "id" so many times .....
 		return firstOf(litteralBase(), list(), map());
 	}
 
@@ -743,7 +740,22 @@ public class FantomParser extends BaseParser<Object>
 	// Types use noNl() a lot to avoid gramar confusion
 	public Rule type()
 	{
-		return firstOf(simpleMapType(), nonSimpleMapTypes());
+		return sequence(
+			firstOf(
+				mapType(),
+				funcType(),
+				sequence(id(), optional(sequence(SP_COLCOL, id())))
+				),
+			optional(SP_QMARK), //nullable
+			optional(sequence(SQ_BRACKET_L, SQ_BRACKET_R)),//list
+			optional(sequence(SP_COL, type())),//simple map Int:Str
+			optional(SP_QMARK) // nullable list/map
+			);
+		/*return firstOf(
+			mapType(),
+			funcType(),
+			simpleMapType(),
+			simpleType());*/
 	}
 
 	public Rule simpleMapType()
@@ -837,7 +849,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(testNot(keyword()),
 			firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
-			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_", charRange('0', '9'))),
+			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9'))),
 			OPT_SP);
 	}
 
@@ -862,7 +874,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule LF()
 	{
-		return oneOrMore(sequence(OPT_SP, oneOrMore(charSet("\r\n")), OPT_SP));
+		return sequence(oneOrMore(sequence(OPT_SP, charSet("\n\r"))), OPT_SP);
 	}
 
 	public Rule OPT_LF()
@@ -873,7 +885,7 @@ public class FantomParser extends BaseParser<Object>
 	@Leaf
 	public Rule keyword(String string)
 	{
-		// Makes sure not to matche things that START with a keyword like "thisisatest"
+		// Makes sure not to match things that START with a keyword like "thisisatest"
 		return sequence(string,
 			testNot(firstOf(digit(), charRange('A', 'Z'), charRange('a', 'z'), "_")),
 			optional(spacing())).label(string);
@@ -1014,7 +1026,20 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return new PeekTestMatcher(toRule(rule), true);
 	}
+	@Cached
+	public Rule peekTest(Object rule)
+	{
+		return new PeekTestMatcher(toRule(rule), false);
+	}
 
+	/*public Rule eos()
+	{
+		return sequence(OPT_SP, firstOf(echo("eos 1"),
+			SP_SEMI,echo("eos 2"),
+			LF(),echo("eos3"),
+			peekTest(BRACKET_R),echo("eos 4"),
+			peekTest(eoi()),echo("No eos match!")));
+	}*/
 	// ----------- Custom action rules -----------------------------------------
 	/**
 	 * Special action that looks for end of statement
@@ -1060,11 +1085,17 @@ public class FantomParser extends BaseParser<Object>
 		return true;
 	}
 
+	public boolean setLabel(String s)
+	{
+		getContext().setNodeValue(s);
+		return true;
+	}
+
 	// Debugging utils
 	public boolean echo(String str)
 	{
 		System.out.println(str);
-		return true;
+		return false;
 	}
 
 	public boolean printPath()

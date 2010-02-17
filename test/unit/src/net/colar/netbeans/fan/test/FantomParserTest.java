@@ -30,7 +30,7 @@ public class FantomParserTest implements JOTTestable
 		FantomParser parser = Parboiled.createParser(FantomParser.class);
 		ParsingResult<Object> result = null;
 
-		boolean singleTest = false;//false; // Do just the 1 first test
+		boolean singleTest = true;//false; // Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
 		boolean fantomFilesTest = true; // parse fantom distro files
@@ -38,9 +38,15 @@ public class FantomParserTest implements JOTTestable
 		if (singleTest)
 		{ //TODO: with ifExpr it takes 9ms, whereas with condOrExpr  it takes <5
 			//result = parser.parse(parser.condOrExpr(), "[wisp]");//caching run
-			result = parse(parser, parser.expr(), "while(2>3){++i}");
-			testNodeName("FirstTest", result, "expr", "while(2>3){++i}");
-			System.out.println(ParseTreeUtils.printNodeTree(result));
+			//result = parse(parser, parser.expr(), "while(2>3){++i}");
+			//testNodeName("FirstTest", result, "expr", "while(2>3){++i}");
+			//System.out.println(ParseTreeUtils.printNodeTree(result));
+			try
+			{
+			//result = parse(parser, parser.stmt(), "return c");
+			//testNodeName("stmt", result, "stmt");
+			testFile("/home/thibautc/fantom-1.0.51/examples/sys/test.fan");
+			}catch(Exception e){e.printStackTrace();}
 			return;
 		}
 		// --- Full test Suite -------------
@@ -378,29 +384,38 @@ public class FantomParserTest implements JOTTestable
 	{
 		try
 		{
-		long start = new Date().getTime();
-		FantomParser parser = Parboiled.createParser(FantomParser.class);
+			long start = new Date().getTime();
+			FantomParser parser = Parboiled.createParser(FantomParser.class);
 
-		DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
-		byte[] buffer = new byte[dis.available()];
-		dis.readFully(buffer);
-		dis.close();//TODO: finally
-		String testInput = new String(buffer);
+			DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
+			byte[] buffer = new byte[dis.available()];
+			dis.readFully(buffer);
+			dis.close();//TODO: finally
+			String testInput = new String(buffer);
 
-		ParsingResult<Object> result = parser.parse(parser.compilationUnit(), testInput);
+			ParsingResult<Object> result = parser.parse(parser.compilationUnit(), testInput);
 
-		if (result.hasErrors())
-		{
-			System.err.println(StringUtils.join(result.parseErrors, "---\n"));
-			System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
-		}
-		JOTTester.checkIf("Parsing " + filePath, !result.hasErrors());
-		System.out.println("Parsed " + filePath + " in " + (new Date().getTime() - start) + "ms");
-		}
-		catch(Exception e)
+			long length = new Date().getTime() - start;
+			if (result.hasErrors() )
+			{
+				System.err.println(StringUtils.join(result.parseErrors, "---\n"));
+				System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
+			}
+			/*if (length > 5000)
+			{
+				System.out.println("Slow parsing for " + filePath + " in " + length + "ms");
+				System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
+			} else*/
+			{
+				System.out.println("Parsed " + filePath + " in " + length + "ms");
+			}
+
+			JOTTester.checkIf("Parsing " + filePath, !result.hasErrors());
+			JOTTester.checkIf("Parsing time " + filePath, length < 5000, "Took: "+length);
+		} catch (Exception e)
 		{
 			System.err.println("Exception while parsing " + filePath);
-			throw(e);
+			throw (e);
 		}
 	}
 
