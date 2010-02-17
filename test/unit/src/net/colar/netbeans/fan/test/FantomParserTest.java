@@ -30,7 +30,7 @@ public class FantomParserTest implements JOTTestable
 		FantomParser parser = Parboiled.createParser(FantomParser.class);
 		ParsingResult<Object> result = null;
 
-		boolean singleTest = true;//false; // Do just the 1 first test
+		boolean singleTest = false;//false; // Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
 		boolean fantomFilesTest = true; // parse fantom distro files
@@ -40,13 +40,13 @@ public class FantomParserTest implements JOTTestable
 			//result = parser.parse(parser.condOrExpr(), "[wisp]");//caching run
 			//result = parse(parser, parser.expr(), "while(2>3){++i}");
 			//testNodeName("FirstTest", result, "expr", "while(2>3){++i}");
-			//System.out.println(ParseTreeUtils.printNodeTree(result));
 			try
 			{
-			//result = parse(parser, parser.stmt(), "return c");
-			//testNodeName("stmt", result, "stmt");
-			testFile("/home/thibautc/fantom-1.0.51/examples/sys/test.fan");
+			result = parse(parser, parser.stmt(), "g.pen = Pen { width = 1 }");
+			testNodeName("singleTest", result, "stmt");
+			//testFile("/home/thibautc/fantom-1.0.51/examples/sys/test.fan");
 			}catch(Exception e){e.printStackTrace();}
+			//System.out.println(ParseTreeUtils.printNodeTree(result));
 			return;
 		}
 		// --- Full test Suite -------------
@@ -60,7 +60,7 @@ public class FantomParserTest implements JOTTestable
 			result = parse(parser, parser.spacing(), "   \n/*fdsfdsfs*/	\t");
 			testNodeName("Spacing3", result, "spacing");
 			result = parse(parser, parser.spacing(), "/* blah\nblu"); // unterminated ml comment
-			testNodeName("Spacing4", result, "spacing", "/* blah\n"); // should match until \n
+			testNodeName("Spacing4", result, "spacing", "/* blah"); // should match until \n
 			// litterals
 			result = parse(parser, parser.char_(), "'a'");
 			testNodeName("Char", result, "char_", "'a'");
@@ -257,6 +257,10 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("if3", result, "if_", "if(5>3+2){doThis();doThat()}");
 			result = parse(parser, parser.if_(), "if(5>3+2){doThis();doThat()}else{doThat}");
 			testNodeName("if4", result, "if_", "if(5>3+2){doThis();doThat()}else{doThat}");
+			result = parse(parser, parser.ternaryExpr(), "2>3?a:b");
+			testNodeName("ternaryExpr1", result, "ternaryExpr", "2>3?a:b");
+			result = parse(parser, parser.ternaryExpr(), "col==0 ? key : Buf.fromBase64(map[key]).readAllStr");
+			testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key : Buf.fromBase64(map[key]).readAllStr");
 			// TODO: many more expr
 
 			// facets
@@ -280,6 +284,8 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("Stmt4", result, "stmt", "Int i:=5+3");
 			result = parse(parser, parser.stmt(), "show([4:\"four\", 5f:\"five\"],\"same as above with type inference\")");
 			testNodeName("Stmt5", result, "stmt", "show([4:\"four\", 5f:\"five\"],\"same as above with type inference\")");
+			result = parse(parser, parser.stmt(), "Label { text=\"Name\"  },"); // addIt stmt
+			testNodeName("Stmt6", result, "stmt", "Label { text=\"Name\"  },");
 			result = parse(parser, parser.block(), "i=5");
 			testNodeName("Block", result, "block", "i=5");
 			result = parse(parser, parser.block(), "{i=5}");
@@ -308,12 +314,12 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("MethodDef2", result, "methodDef", "Void doit(Str s){i:=5}");
 			result = parse(parser, parser.methodDef(), "Void doit(Str s){Int i:=5\n\n\tj:=7}");
 			testNodeName("MethodDef3", result, "methodDef", "Void doit(Str s){Int i:=5\n\n\tj:=7}");
-			result = parse(parser, parser.ctorDef(), "Void new doIt(Str s){Int i:=5\n\n\tj:=7}");
-			testNodeName("Ctor1", result, "ctorDef", "Void new doIt(Str s){Int i:=5\n\n\tj:=7}");
-			result = parse(parser, parser.ctorDef(), "Void new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
-			testNodeName("Ctor2", result, "ctorDef", "Void new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
-			result = parse(parser, parser.ctorDef(), "Void new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
-			testNodeName("Ctor3", result, "ctorDef", "Void new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
+			result = parse(parser, parser.ctorDef(), "new doIt(Str s){Int i:=5\n\n\tj:=7}");
+			testNodeName("Ctor1", result, "ctorDef", "new doIt(Str s){Int i:=5\n\n\tj:=7}");
+			result = parse(parser, parser.ctorDef(), "new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
+			testNodeName("Ctor2", result, "ctorDef", "new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
+			result = parse(parser, parser.ctorDef(), "new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
+			testNodeName("Ctor3", result, "ctorDef", "new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
 
 			// Type Def
 			result = parse(parser, parser.typeDef(), "internal final class Dummy\n{Int var}");

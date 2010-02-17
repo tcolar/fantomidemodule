@@ -190,7 +190,6 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			zeroOrMore(facet()),
 			optional(protection()),
-			type(),
 			enforcedSequence(KW_NEW,
 			id(),
 			enforcedSequence(PAR_L, optional(params()), PAR_R),
@@ -198,15 +197,15 @@ public class FantomParser extends BaseParser<Object>
 			// Fantom  Grammar page is missing SP_COL
 			enforcedSequence(SP_COL,
 			firstOf(
-			enforcedSequence(KW_THIS, DOT, id(), PAR_L, optional(args()), PAR_R),
-			enforcedSequence(KW_SUPER, optional(sequence(DOT, id())), PAR_L, optional(args()), PAR_R)))),
+			enforcedSequence(KW_THIS, DOT, id(), enforcedSequence(PAR_L, optional(args()), PAR_R)),
+			enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), enforcedSequence(PAR_L, optional(args()), PAR_R))))),
 			methodBody()));
 	}
 
 	public Rule methodBody()
 	{
-		return sequence(OPT_LF(), firstOf(
-			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R),
+		return sequence(firstOf(
+			enforcedSequence(sequence(OPT_LF(), BRACKET_L), zeroOrMore(stmt()), BRACKET_R),
 			eos()), OPT_LF()); // method with no body
 	}
 
@@ -250,7 +249,7 @@ public class FantomParser extends BaseParser<Object>
 			firstOf(
 			sequence(KW_BREAK, eos()),
 			sequence(KW_CONTINUE, eos()),
-			sequence(KW_RETURN,firstOf(eos(), sequence(expr(), eos()))).label("MY_RT_STMT"),
+			sequence(KW_RETURN, sequence(optional(expr()), eos())).label("MY_RT_STMT"),
 			sequence(KW_THROW, expr(), eos()),
 			if_(),
 			for_(),
@@ -259,8 +258,9 @@ public class FantomParser extends BaseParser<Object>
 			try_(),
 			// local var definition (:=)
 			localDef(),
-			// otherwise expression (optiona Comma for itAdd expression)
-			sequence(expr(), optional(SP_COMMA), eos())),
+			// otherwise expression (optional Comma for itAdd expression)
+			// do firstOf, because "," in this case can be considered an end of statement
+			sequence(expr(), firstOf(SP_COMMA, eos()))),
 			OPT_LF());
 	}
 
@@ -516,7 +516,8 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule dotCall()
 	{
-		return enforcedSequence(DOT, idExpr());
+		// test not "..", as this would be a range
+		return enforcedSequence(sequence(DOT, testNot(DOT)), idExpr());
 	}
 
 	public Rule dynCall()
@@ -563,7 +564,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(id(),
 			firstOf(
-			sequence(enforcedSequence(PAR_L, optional(args()), PAR_R), optional(closure())), //params & opt. closure
+			sequence(enforcedSequence(PAR_L, OPT_LF(), optional(args()), PAR_R), optional(closure())), //params & opt. closure
 			closure())); // closure only
 	}
 
@@ -867,9 +868,9 @@ public class FantomParser extends BaseParser<Object>
 			// multiline comment
 			sequence("/*", zeroOrMore(sequence(testNot("*/"), any())), "*/"), // normal comment
 			// if incomplete multiline comment, then end at end of line
-			sequence("/*", zeroOrMore(sequence(testNot(charSet("\r\n")), any())), charSet("\r\n")),
+			sequence("/*", zeroOrMore(sequence(testNot(charSet("\r\n")), any()))/*, charSet("\r\n")*/),
 			// single line comment
-			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any())), charSet("\r\n"))));
+			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any()))/*, charSet("\r\n")*/)));
 	}
 
 	public Rule LF()
@@ -906,8 +907,8 @@ public class FantomParser extends BaseParser<Object>
 	public Rule keyword()
 	{
 		return sequence(
-			// don't bother until it starts with 'A'='Z'
-			test(charRange('A', 'Z')),
+			// don't bother unless it starts with 'a'-'z'
+			test(charRange('a', 'z')),
 			firstOf(KW_ABSTRACT, KW_AS, KW_ASSERT, KW_BREAK, KW_CATCH, KW_CASE, KW_CLASS,
 			KW_CONST, KW_CONTINUE, KW_DEFAULT, KW_DO, KW_ELSE, KW_FALSE, KW_FINAL,
 			KW_FINALLY, KW_FOR, KW_FOREACH, KW_IF, KW_INTERNAL, KW_IS, KW_ISNOT, KW_IT,
@@ -1021,6 +1022,12 @@ public class FantomParser extends BaseParser<Object>
 	// shortcut for optional spacing
 	public final Rule OPT_SP = optional(spacing());
 
+	@Override
+	public Rule firstOf(Object[] rules)
+	{
+		return new PeekFirstOfMatcher(toRules(rules));
+	}
+
 	@Cached
 	public Rule peekTestNot(Object rule)
 	{
@@ -1064,14 +1071,16 @@ public class FantomParser extends BaseParser<Object>
 		{
 			return true;
 		}
+
 		// '}' is an end of statement (BUT DO NOT CONSUME IT !)
-		m = new PeekTestMatcher(sequence(OPT_SP, BRACKET_R), false);
+		// consume the white space though
+		m = (Matcher) sequence(OPT_SP, peekTest(BRACKET_R));
 		if (ctx.runMatcher(m, false))
 		{
 			return true;
 		}
 		// EOI(endOfInput) is an end of statement (BUT DO NOT CONSUME IT !)
-		m = new PeekTestMatcher(sequence(OPT_SP, eoi()), false);
+		m = (Matcher) sequence(OPT_SP, peekTest(eoi()));
 		if (ctx.runMatcher(m, false))
 		{
 			return true;
