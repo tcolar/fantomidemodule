@@ -330,27 +330,25 @@ public class FantomParser extends BaseParser<Object>
 	public Rule assignExpr()
 	{
 		// check '=' first as is most common
-		return firstOf(
-			// try local def first
-			localDef(),
-			// Other expressions
-			sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_ASSIGN_OPS), OPT_LF(), assignExpr()))));
+		// moved localDef to statement since it can't be on the right hand side
+		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_ASSIGN_OPS), OPT_LF(), assignExpr())));
 	}
 
 	public Rule ifExpr()
 	{
-		return firstOf(elvisExpr(), ternaryExpr());
-	}
-
-	public Rule ternaryExpr()
-	{
+		// rewritten (together with ternaryTail, elvisTail) such as we check condOrExpr only once
 		return sequence(condOrExpr(),
-			optional(sequence(SP_QMARK, setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), SP_COL, ifExprBody())));
+			optional(firstOf(elvisTail(), ternaryTail())));
 	}
 
-	public Rule elvisExpr()
+	public Rule ternaryTail()
 	{
-		return sequence(condOrExpr(), OP_ELVIS, ifExprBody());
+		return enforcedSequence(SP_QMARK, setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), SP_COL, ifExprBody());
+	}
+
+	public Rule elvisTail()
+	{
+		return enforcedSequence(OP_ELVIS, ifExprBody());
 	}
 
 	public Rule ifExprBody()
@@ -375,40 +373,44 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule relationalExpr()
 	{
-		// chg to add ramgeexp as last option
-		return firstOf(typeCheckExpr(), compareExpr());
+		// chg to add ramgeExp as last option
+		// Changed (with typeCheckTail, compareTail) to check for rangeExpr only one
+		return sequence(rangeExpr(), optional(firstOf(typeCheckTail(), compareTail())));
 	}
 
-	public Rule typeCheckExpr()
+	public Rule typeCheckTail()
 	{
 		// changed to required, otherwise eats all rangeExpr and compare never gets evaled
-		return sequence(rangeExpr(),
-			enforcedSequence(firstOf(KW_IS, KW_ISNOT, KW_AS), type()));
+		return enforcedSequence(firstOf(KW_IS, KW_ISNOT, KW_AS), type());
 	}
 
-	public Rule compareExpr()
+	public Rule compareTail()
 	{
-		return sequence(rangeExpr(), zeroOrMore(enforcedSequence(CP_COMPARATORS, OPT_LF(), rangeExpr())));
+		// TODO: check if that is correct
+		// changed to not be zeroOrMore as there can be only one comparaison check in an expression (no 3< x <5)
+		return /*zeroOrMore(*/enforcedSequence(CP_COMPARATORS, OPT_LF(), rangeExpr())/*)*/;
 	}
 
 	public Rule rangeExpr()
 	{
+		// TODO: check if that is correct
+		// changed to not be zeroOrMore(opt instead) as there can be only one range in an expression (no [1..3..5])
 		return sequence(addExpr(),
-			zeroOrMore(enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr())));
+			optional(enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr())));
 	}
 
 	public Rule addExpr()
 	{
 		return sequence(multExpr(),
-			// not enforced so that += assignexpr can happen
-			zeroOrMore(sequence(firstOf(OP_PLUS, OP_MINUS), OPT_LF(), multExpr())));
+			// checking it's not '+=' or '-=', so we can let assignExpr happen
+			zeroOrMore(enforcedSequence(sequence(firstOf(OP_PLUS, OP_MINUS), testNot(AS_EQUAL)), OPT_LF(), multExpr())));
 	}
 
 	public Rule multExpr()
 	{
 		return sequence(parExpr(),
-			// not enforced so that *= assignexpr can happen
-			zeroOrMore(sequence(firstOf(OP_MULT, OP_DIV, OP_MODULO), OPT_LF(), parExpr())));
+			// checking it's not '*=', '/=' or '%=', so we can let assignExpr happen
+			zeroOrMore(enforcedSequence(sequence(firstOf(OP_MULT, OP_DIV, OP_MODULO), testNot(AS_EQUAL)), OPT_LF(), parExpr())));
 	}
 
 	public Rule parExpr()

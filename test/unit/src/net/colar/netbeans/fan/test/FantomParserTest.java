@@ -30,7 +30,7 @@ public class FantomParserTest implements JOTTestable
 		FantomParser parser = Parboiled.createParser(FantomParser.class);
 		ParsingResult<Object> result = null;
 
-		boolean singleTest = true;//false; // Do just the 1 first test
+		boolean singleTest = false;//false; // Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
 		boolean fantomFilesTest = true; // parse fantom distro files
@@ -258,10 +258,10 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("if3", result, "if_", "if(5>3+2){doThis();doThat()}");
 			result = parse(parser, parser.if_(), "if(5>3+2){doThis();doThat()}else{doThat}");
 			testNodeName("if4", result, "if_", "if(5>3+2){doThis();doThat()}else{doThat}");
-			result = parse(parser, parser.ternaryExpr(), "2>3?a:b");
-			testNodeName("ternaryExpr1", result, "ternaryExpr", "2>3?a:b");
-			result = parse(parser, parser.ternaryExpr(), "col==0 ? key : Buf.fromBase64(map[key]).readAllStr");
-			testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key : Buf.fromBase64(map[key]).readAllStr");
+			result = parse(parser, parser.expr(), "2>3?a:b");
+			testNodeName("ternaryExpr1", result, "expr", "2>3?a:b");
+			result = parse(parser, parser.expr(), "col==0 ? key : Buf.fromBase64(map[key]).readAllStr");
+			testNodeName("ternaryExpr2", result, "expr", "col==0 ? key : Buf.fromBase64(map[key]).readAllStr");
 			// TODO: many more expr
 
 			// facets
