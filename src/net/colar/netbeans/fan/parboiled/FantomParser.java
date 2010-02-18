@@ -864,7 +864,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule doc()
 	{
 		// In theory there are no empty lines betwen doc and type ... but thta does happen so alowing it
-		return oneOrMore(sequence(OPT_SP, "**", zeroOrMore(sequence(testNot("\n"), any())), "\n", OPT_LF()));
+		return oneOrMore(sequence(OPT_SP, "**", zeroOrMore(sequence(testNot("\n"), any())), OPT_LF()));
 	}
 
 	@Leaf
