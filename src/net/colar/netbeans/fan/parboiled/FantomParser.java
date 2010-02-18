@@ -36,7 +36,8 @@ public class FantomParser extends BaseParser<Object>
 			// Missing from grammar: Optional unix env line
 			optional(sequence("#!", zeroOrMore(sequence(testNot("\n"), any())), "\n")),
 			zeroOrMore(firstOf(using(), incUsing())),
-			zeroOrMore(typeDef()),
+			// staticBlock is missing from Fantom grammr page
+			zeroOrMore(firstOf(staticBlock(), typeDef())),
 			OPT_LF(),
 			zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
 			OPT_LF(),
@@ -78,6 +79,11 @@ public class FantomParser extends BaseParser<Object>
 		return enforcedSequence(KW_AS, id());
 	}
 
+	public Rule staticBlock()
+	{
+		return sequence(KW_STATIC, OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R));
+	}
+
 	// ------------- Type def --------------------------------------------------
 	public Rule typeDef()
 	{
@@ -92,7 +98,7 @@ public class FantomParser extends BaseParser<Object>
 			sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)), KW_CLASS), // standard class
 			enforcedSequence(ENUM, KW_CLASS), // enum class
 			enforcedSequence(FACET, KW_CLASS), // facet class
-			KW_MIXIN // mixin
+			KW_MIXIN
 			),
 			id(),
 			optional(inheritance()),
@@ -269,8 +275,11 @@ public class FantomParser extends BaseParser<Object>
 	public Rule for_()
 	{
 		return enforcedSequence(KW_FOR, PAR_L,
-			optional(firstOf(localDef(), sequence(condOrExpr(), SP_SEMI)/*was expr*/)),
-			optional(expr()), SP_SEMI, optional(expr()), PAR_R,
+			// LocalDef consumes the SEMI as part of loking for EOS, so rewrote to deal with this
+			firstOf(SP_SEMI, firstOf(localDef(), sequence(expr(), SP_SEMI))),
+			firstOf(SP_SEMI, sequence(expr(), SP_SEMI)),
+			optional(expr()),
+			PAR_R,
 			block());
 	}
 
@@ -336,6 +345,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule ifExpr()
 	{
 		// rewritten (together with ternaryTail, elvisTail) such as we check condOrExpr only once
+		// this makes a gigantic difference in parser speed form original grammar
 		return sequence(condOrExpr(),
 			optional(firstOf(elvisTail(), ternaryTail())));
 	}
@@ -372,8 +382,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule relationalExpr()
 	{
-		// chg to add ramgeExp as last option
-		// Changed (with typeCheckTail, compareTail) to check for rangeExpr only one
+		// Changed (with typeCheckTail, compareTail) to check for rangeExpr only once (way faster)
 		return sequence(rangeExpr(), optional(firstOf(typeCheckTail(), compareTail())));
 	}
 
@@ -385,14 +394,12 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule compareTail()
 	{
-		// TODO: check if that is correct
 		// changed to not be zeroOrMore as there can be only one comparaison check in an expression (no 3< x <5)
 		return /*zeroOrMore(*/enforcedSequence(CP_COMPARATORS, OPT_LF(), rangeExpr())/*)*/;
 	}
 
 	public Rule rangeExpr()
 	{
-		// TODO: check if that is correct
 		// changed to not be zeroOrMore(opt instead) as there can be only one range in an expression (no [1..3..5])
 		return sequence(addExpr(),
 			optional(enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr())));
