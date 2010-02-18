@@ -30,25 +30,22 @@ public class FantomParserTest implements JOTTestable
 		FantomParser parser = Parboiled.createParser(FantomParser.class);
 		ParsingResult<Object> result = null;
 
-		boolean singleTest = false;//false; // Do just the 1 first test
+		boolean singleTest = true;//false; // Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
 		boolean fantomFilesTest = true; // parse fantom distro files
 
 		if (singleTest)
 		{ //TODO: with ifExpr it takes 9ms, whereas with condOrExpr  it takes <5
-			//result = parser.parse(parser.condOrExpr(), "[wisp]");//caching run
-			//result = parse(parser, parser.expr(), "while(2>3){++i}");
-			//testNodeName("FirstTest", result, "expr", "while(2>3){++i}");
 			try
 			{
-			//result = parse(parser, parser.ifExprBody(), "Buf.fromBase64(map[key]).readAllStr");
-			//testNodeName("ternaryExpr1", result, "ifExprBody", "Buf.fromBase64(map[key]).readAllStr");
+			//result = parse(parser, parser.stmt(), "hbar.onModify.add |evt| { echo(\"hbar = $evt.data\") }");
+			//testNodeName("singleTest1", result, "stmt", "hbar.onModify.add |evt| { echo(\"hbar = $evt.data\") }");
 			//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
 			//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-			testFile("/home/thibautc/fantom-1.0.51/examples/build.fan");
+			testFile("/home/thibautc/fantom-1.0.51/examples/fwt/demo.fan");
 			}catch(Exception e){e.printStackTrace();}
-			System.out.println(ParseTreeUtils.printNodeTree(result));
+			//System.out.println(ParseTreeUtils.printNodeTree(result));
 			return;
 		}
 		// --- Full test Suite -------------
@@ -297,33 +294,33 @@ public class FantomParserTest implements JOTTestable
 			result = parse(parser, parser.block(), "{i=5;k=7\n\nj=6}");
 			testNodeName("Block3", result, "block", "{i=5;k=7\n\nj=6}");
 
-			// Slot Def
+			// Slot De
 			result = parse(parser, parser.fieldAccessor(), "{get{i=23}}");
 			testNodeName("FieldAccesor1", result, "fieldAccessor", "{get{i=23}}");
 			result = parse(parser, parser.fieldAccessor(), "{get{i=23}\nprivate set{}\n}");
 			testNodeName("FieldAccesor2", result, "fieldAccessor", "{get{i=23}\nprivate set{}\n}");
-			result = parse(parser, parser.fieldDef(), "Int a");
-			testNodeName("FieldDef1", result, "fieldDef", "Int a");
-			result = parse(parser, parser.fieldDef(), "private const Int a");
-			testNodeName("FieldDef2", result, "fieldDef", "private const Int a");
-			result = parse(parser, parser.fieldDef(), "static override readonly Int a:=23");
-			testNodeName("FieldDef3", result, "fieldDef", "static override readonly Int a:=23");
-			result = parse(parser, parser.fieldDef(), "Int a{get{i=23}\nprivate set{}\n}");
-			testNodeName("FieldDef4", result, "fieldDef", "Int a{get{i=23}\nprivate set{}\n}");
-			result = parse(parser, parser.fieldDef(), "Int a:=23{get{i=23}\nprivate set{}\n}");
-			testNodeName("FieldDef5", result, "fieldDef", "Int a:=23{get{i=23}\nprivate set{}\n}");
-			result = parse(parser, parser.methodDef(), "private static Void doit(Str a, Int b){}");
-			testNodeName("MethodDef1", result, "methodDef", "private static Void doit(Str a, Int b){}");
-			result = parse(parser, parser.methodDef(), "Void doit(Str s){i:=5}");
-			testNodeName("MethodDef2", result, "methodDef", "Void doit(Str s){i:=5}");
-			result = parse(parser, parser.methodDef(), "Void doit(Str s){Int i:=5\n\n\tj:=7}");
-			testNodeName("MethodDef3", result, "methodDef", "Void doit(Str s){Int i:=5\n\n\tj:=7}");
-			result = parse(parser, parser.ctorDef(), "new doIt(Str s){Int i:=5\n\n\tj:=7}");
-			testNodeName("Ctor1", result, "ctorDef", "new doIt(Str s){Int i:=5\n\n\tj:=7}");
-			result = parse(parser, parser.ctorDef(), "new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
-			testNodeName("Ctor2", result, "ctorDef", "new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
-			result = parse(parser, parser.ctorDef(), "new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
-			testNodeName("Ctor3", result, "ctorDef", "new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
+			result = parse(parser, parser.slotDef(), "Int a");
+			testNodeName("FieldDef1", result, "slotDef", "Int a");
+			result = parse(parser, parser.slotDef(), "private const Int a");
+			testNodeName("FieldDef2", result, "slotDef", "private const Int a");
+			result = parse(parser, parser.slotDef(), "static override readonly Int a:=23");
+			testNodeName("FieldDef3", result, "slotDef", "static override readonly Int a:=23");
+			result = parse(parser, parser.slotDef(), "Int a{get{i=23}\nprivate set{}\n}");
+			testNodeName("FieldDef4", result, "slotDef", "Int a{get{i=23}\nprivate set{}\n}");
+			result = parse(parser, parser.slotDef(), "Int a:=23{get{i=23}\nprivate set{}\n}");
+			testNodeName("FieldDef5", result, "slotDef", "Int a:=23{get{i=23}\nprivate set{}\n}");
+			result = parse(parser, parser.slotDef(), "private static Void doit(Str a, Int b){}");
+			testNodeName("MethodDef1", result, "slotDef", "private static Void doit(Str a, Int b){}");
+			result = parse(parser, parser.slotDef(), "Void doit(Str s){i:=5}");
+			testNodeName("MethodDef2", result, "slotDef", "Void doit(Str s){i:=5}");
+			result = parse(parser, parser.slotDef(), "Void doit(Str s){Int i:=5\n\n\tj:=7}");
+			testNodeName("MethodDef3", result, "slotDef", "Void doit(Str s){Int i:=5\n\n\tj:=7}");
+			result = parse(parser, parser.slotDef(), "new doIt(Str s){Int i:=5\n\n\tj:=7}");
+			testNodeName("Ctor1", result, "slotDef", "new doIt(Str s){Int i:=5\n\n\tj:=7}");
+			result = parse(parser, parser.slotDef(), "new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
+			testNodeName("Ctor2", result, "slotDef", "new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
+			result = parse(parser, parser.slotDef(), "new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
+			testNodeName("Ctor3", result, "slotDef", "new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
 
 			// Type Def
 			result = parse(parser, parser.typeDef(), "internal final class Dummy\n{Int var}");
