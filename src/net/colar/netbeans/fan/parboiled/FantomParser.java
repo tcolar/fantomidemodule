@@ -476,7 +476,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule closure()
 	{
-		return sequence(funcType(), enforcedSequence(OPT_LF(), BRACKET_L, zeroOrMore(stmt()), BRACKET_R));
+		return sequence(funcType(), OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R));
 	}
 
 	public Rule itBlock()
