@@ -26,7 +26,7 @@ public class FantomParser extends BaseParser<Object>
 {
 
 	public boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
-	public boolean noSimpleMap = false; // to disallow ambigous simppeMaps in certain situations (within another map, ternaryExpr)
+	public boolean noSimpleMap = false; // to disallow ambigous simpleMaps in certain situations (within another map, ternaryExpr)
 
 	// ------------ Comp Unit --------------------------------------------------
 	public Rule compilationUnit()
@@ -36,7 +36,7 @@ public class FantomParser extends BaseParser<Object>
 			// Missing from grammar: Optional unix env line
 			optional(sequence("#!", zeroOrMore(sequence(testNot("\n"), any())), "\n")),
 			zeroOrMore(firstOf(using(), incUsing())),
-			// staticBlock is missing from Fantom grammr page
+			// staticBlock is missing from Fantom grammar page
 			zeroOrMore(firstOf(staticBlock(), typeDef())),
 			OPT_LF(),
 			zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
@@ -51,7 +51,7 @@ public class FantomParser extends BaseParser<Object>
 			optional(ffi()),
 			id(),
 			zeroOrMore(enforcedSequence(DOT, id())),
-			optional(enforcedSequence(SP_COLCOL, id())),// not enforced to allow completion
+			optional(enforcedSequence(SP_COLCOL, id())),
 			optional(usingAs()),
 			eos()), OPT_LF());
 	}
