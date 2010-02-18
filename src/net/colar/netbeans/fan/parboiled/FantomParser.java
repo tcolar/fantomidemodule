@@ -81,7 +81,7 @@ public class FantomParser extends BaseParser<Object>
 	// ------------- Type def --------------------------------------------------
 	public Rule typeDef()
 	{
-		// regrouped together classdef, enumDef, mixinDef & facetDef as they are grammatically very similar
+		// grouped together classdef, enumDef, mixinDef & facetDef as they are grammatically very similar (optimized)
 		return sequence(
 			OPT_LF(),
 			optional(doc()),
@@ -207,7 +207,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule methodBody()
 	{
 		return sequence(firstOf(
-			enforcedSequence(sequence(OPT_LF(), BRACKET_L), zeroOrMore(stmt()), BRACKET_R),
+			enforcedSequence(sequence(OPT_LF(), BRACKET_L), zeroOrMore(stmt()), OPT_LF(), BRACKET_R),
 			eos()), OPT_LF()); // method with no body
 	}
 
@@ -240,7 +240,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule block()
 	{
 		return sequence(OPT_LF(), firstOf(
-			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R), // block
+			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R), // block
 			stmt() // single statement
 			), OPT_LF());
 	}
@@ -308,7 +308,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule catch_()
 	{
-		return enforcedSequence(KW_CATCH, PAR_L, type(), id(), PAR_R, block());
+		return enforcedSequence(KW_CATCH, optional(enforcedSequence(PAR_L, type(), id(), PAR_R)), block());
 	}
 
 	public Rule switch_()
@@ -342,12 +342,12 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule ternaryTail()
 	{
-		return enforcedSequence(SP_QMARK, setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), SP_COL, ifExprBody());
+		return enforcedSequence(SP_QMARK, OPT_LF(), setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), SP_COL, OPT_LF(), ifExprBody());
 	}
 
 	public Rule elvisTail()
 	{
-		return enforcedSequence(OP_ELVIS, ifExprBody());
+		return enforcedSequence(OP_ELVIS, OPT_LF(), ifExprBody());
 	}
 
 	public Rule ifExprBody()
@@ -612,14 +612,13 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule mapPair()
 	{
-		return sequence(mapItem(), enforcedSequence(SP_COL, mapItem()));
+		// allowing all expressions is probably more than really needed
+		return sequence(expr(), enforcedSequence(SP_COL, expr()));
 	}
 
-	// It theory any expr() is accepted, but this kills the parser(super slow)
-	// so allowing only select items
 	public Rule mapItem()
 	{
-		return sequence(firstOf(litteralBase(), id()), zeroOrMore(termChain()));
+		return expr();//sequence(firstOf(litteralBase(), id()), zeroOrMore(termChain()));
 	}
 
 	// ------------ Litteral items ---------------------------------------------

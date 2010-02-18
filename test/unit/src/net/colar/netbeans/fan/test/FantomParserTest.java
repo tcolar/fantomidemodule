@@ -349,8 +349,6 @@ public class FantomParserTest implements JOTTestable
 			testAllFanFilesUnder(FAN_HOME + "/examples/");
 			// Test all Fantom distro sources
 			testAllFanFilesUnder(FAN_HOME + "/src/");
-			// Test all Fantom distro tests
-			testAllFanFilesUnder(FAN_HOME + "/test/");
 		}
 	}
 
@@ -360,7 +358,7 @@ public class FantomParserTest implements JOTTestable
 		ParsingResult<Object> result = parser.parse(rule, input);
 		long time = new Date().getTime() - start;
 		//System.err.println("Parsing in " + (new Date().getTime() - start) + "ms");
-		if (time > 5)
+		if (time > 100)
 		{
 			System.err.println("Long parsing : " + (new Date().getTime() - start) + "ms, for:\n" + input);
 			//System.err.println(ParseTreeUtils.printNodeTree(result));
@@ -406,7 +404,7 @@ public class FantomParserTest implements JOTTestable
 			if (result.hasErrors() )
 			{
 				System.err.println(StringUtils.join(result.parseErrors, "---\n"));
-				System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
+				//System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
 			}
 			/*if (length > 5000)
 			{
@@ -418,11 +416,11 @@ public class FantomParserTest implements JOTTestable
 			}
 			
 			JOTTester.checkIf("Parsing " + filePath, !result.hasErrors());
-			JOTTester.checkIf("Parsing time " + filePath, length < 60000, "Took: "+length);
+			JOTTester.checkIf("Parsing time " + filePath, length <1000, "Took: "+length);
 		} catch (Exception e)
 		{
-			System.err.println("Exception while parsing " + filePath);
-			throw (e);
+			JOTTester.checkIf("Exception while parsing " + filePath, false);
+			//throw (e);
 		}
 	}
 
@@ -452,7 +450,7 @@ public class FantomParserTest implements JOTTestable
 	{
 		try
 		{
-			JOTTester.singleTest(new FantomParserTest(), true/*false*/);
+			JOTTester.singleTest(new FantomParserTest(), false);
 		} catch (Throwable t)
 		{
 			t.printStackTrace();
