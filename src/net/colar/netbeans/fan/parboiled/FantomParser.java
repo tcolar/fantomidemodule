@@ -26,10 +26,9 @@ public class FantomParser extends BaseParser<Object>
 {
 
 	public boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
-	public boolean noSimpleMap = false;
+	public boolean noSimpleMap = false; // to disallow ambigous simppeMaps in certain situations (within another map, ternaryExpr)
 
 	// ------------ Comp Unit --------------------------------------------------
-	//TODO: funcType: // op_safe_dyn_call lexer confusion between |Str?->| (formal) and Str?->  (dyn call)
 	public Rule compilationUnit()
 	{
 		return sequence(
@@ -572,7 +571,6 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule litteral()
 	{
-		//TODO: this casuse checking for "id" so many times .....
 		return firstOf(litteralBase(), list(), map());
 	}
 
@@ -722,8 +720,7 @@ public class FantomParser extends BaseParser<Object>
 			);
 	}
 
-	// ------------ Type -------------------------------------------------------
-	// Types use noNl() a lot to avoid gramar confusion
+	// Rewrote more like Fantom Parser (simpler & optimized)
 	public Rule type()
 	{
 		return sequence(
@@ -732,17 +729,13 @@ public class FantomParser extends BaseParser<Object>
 				funcType(),
 				sequence(id(), optional(sequence(SP_COLCOL, id())))
 				),
+			// Look for optional map/list/nullable items
 			optional(SP_QMARK), //nullable
 			optional(sequence(SQ_BRACKET_L, SQ_BRACKET_R)),//list
 			// Do not allow simple maps within left side of expressions ... this causes issues wiht ":"
 			optional(sequence(peekTestNot(noSimpleMap), SP_COL, type())),//simple map Int:Str
 			optional(SP_QMARK) // nullable list/map
 			);
-		/*return firstOf(
-			mapType(),
-			funcType(),
-			simpleMapType(),
-			simpleType());*/
 	}
 
 	public Rule simpleMapType()
@@ -1011,7 +1004,8 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule OPT_SP = optional(spacing());
 
 	/**
-	 * Ovveride because sandrad firstOf complains about empty matches
+	 * Override because sandard firstOf() complains about empty matches
+	 * and we allow empty matches in peekTest
 	 * @param rules
 	 * @return
 	 */
@@ -1022,6 +1016,11 @@ public class FantomParser extends BaseParser<Object>
 		return new PeekFirstOfMatcher(toRules(rules));
 	}
 
+	/**
+	 * Custom test matchers which allow result without matching any data (boolean check)
+	 * @param rule
+	 * @return
+	 */
 	@Cached
 	public Rule peekTestNot(Object rule)
 	{
@@ -1033,54 +1032,19 @@ public class FantomParser extends BaseParser<Object>
 		return new PeekTestMatcher(toRule(rule), false);
 	}
 
+	// ----------- Custom action rules -----------------------------------------
+	/**
+	 * Custom action to find an end of statement
+	 * @return
+	 */
 	public Rule eos()
 	{
 		return sequence(OPT_SP, firstOf(
-			SP_SEMI,
-			LF(),
-			peekTest(BRACKET_R),
-			peekTest(eoi())));
+			SP_SEMI, // ;
+			LF(), // \n
+			peekTest(BRACKET_R), // '}' is end of statement oo, but no NOT consume it !
+			peekTest(eoi()))); // EOI is end of statement oo, but no NOT consume it !
 	}
-	// ----------- Custom action rules -----------------------------------------
-	/**
-	 * Special action that looks for end of statement
-	 * @return
-	 */
-	/*public boolean eos()
-	{
-		MatcherContext ctx = (MatcherContext) getContext();
-		if (ctx == null)
-		{
-			return false;
-		}
-		// ';' is an end of statement (consume it)
-		Matcher m = (Matcher) sequence(OPT_SP, SP_SEMI);
-		if (ctx.runMatcher(m, false))
-		{
-			return true;
-		}
-		// '\n' is an end of statement (consume it)
-		m = (Matcher) LF();
-		if (ctx.runMatcher(m, false))
-		{
-			return true;
-		}
-
-		// '}' is an end of statement (BUT DO NOT CONSUME IT !)
-		// consume the white space though
-		m = (Matcher) sequence(OPT_SP, peekTest(BRACKET_R));
-		if (ctx.runMatcher(m, false))
-		{
-			return true;
-		}
-		// EOI(endOfInput) is an end of statement (BUT DO NOT CONSUME IT !)
-		m = (Matcher) sequence(OPT_SP, peekTest(eoi()));
-		if (ctx.runMatcher(m, false))
-		{
-			return true;
-		}
-		return false;
-	}*/
 
 	public boolean setFieldInit(boolean val)
 	{
@@ -1093,24 +1057,21 @@ public class FantomParser extends BaseParser<Object>
 		return true;
 	}
 
-	public boolean setLabel(String s)
-	{
-		getContext().setNodeValue(s);
-		return true;
-	}
-
 	// Debugging utils
+	/** System.out - eval to true*/
 	public boolean echo(String str)
 	{
 		System.out.println(str);
 		return true;
 	}
+	/** System.out - eval to false*/
 	public boolean echof(String str)
 	{
 		System.out.println(str);
 		return false;
 	}
 
+	/** System.out current node path - eval to true*/
 	public boolean printPath()
 	{
 		System.out.println(getContext().getPath());
