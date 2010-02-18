@@ -28,7 +28,7 @@ public class FantomParser extends BaseParser<Object>
 {
 
 	public boolean inFieldInit; // to help with differentiation of field accesor & itBlock
-	public boolean inTernary = false;
+	public boolean noSimpleMap = false;
 
 	// ------------ Comp Unit --------------------------------------------------
 	//TODO: funcType: // op_safe_dyn_call lexer confusion between |Str?->| (formal) and Str?->  (dyn call)
@@ -314,8 +314,8 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return enforcedSequence(KW_SWITCH, PAR_L, expr(), PAR_R,
 			OPT_LF(), BRACKET_L, OPT_LF(),
-			zeroOrMore(enforcedSequence(KW_CASE, expr(), SP_COL, zeroOrMore(stmt()))),
-			optional(enforcedSequence(KW_DEFAULT, SP_COL, zeroOrMore(stmt()))),
+			zeroOrMore(enforcedSequence(KW_CASE, expr(), SP_COL, zeroOrMore(firstOf(stmt(), LF())))),
+			optional(enforcedSequence(KW_DEFAULT, SP_COL, zeroOrMore(firstOf(stmt(), LF())))),
 			OPT_LF(), BRACKET_R);
 	}
 
@@ -343,7 +343,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule ternaryExpr()
 	{
 		return sequence(condOrExpr(),
-			optional(sequence(SP_QMARK, setInTernary(true), ifExprBody(), setInTernary(false), SP_COL, ifExprBody())));
+			optional(sequence(SP_QMARK, setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), SP_COL, ifExprBody())));
 	}
 
 	public Rule elvisExpr()
@@ -752,7 +752,7 @@ public class FantomParser extends BaseParser<Object>
 			optional(SP_QMARK), //nullable
 			optional(sequence(SQ_BRACKET_L, SQ_BRACKET_R)),//list
 			// Do not allow simple maps within left side of expressions ... this causes issues wiht ":"
-			optional(sequence(peekTestNot(inTernary), SP_COL, type())),//simple map Int:Str
+			optional(sequence(peekTestNot(noSimpleMap), SP_COL, type())),//simple map Int:Str
 			optional(SP_QMARK) // nullable list/map
 			);
 		/*return firstOf(
@@ -1103,9 +1103,9 @@ public class FantomParser extends BaseParser<Object>
 		inFieldInit = val;
 		return true;
 	}
-	public boolean setInTernary(boolean val)
+	public boolean setNoSimpleMap(boolean val)
 	{
-		inTernary = val;
+		noSimpleMap = val;
 		return true;
 	}
 
