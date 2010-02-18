@@ -90,6 +90,7 @@ public class FantomParser extends BaseParser<Object>
 			optional(doc()),
 			zeroOrMore(facet()),
 			optional(protection()),
+			enforcedSequence(
 			firstOf(
 			sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)), KW_CLASS), // standard class
 			enforcedSequence(ENUM, KW_CLASS), // enum class
@@ -103,7 +104,7 @@ public class FantomParser extends BaseParser<Object>
 			OPT_LF(),
 			//TODO: conflicts with slotDef : optional(enumValDefs()), // only valid for enums, but simplifying
 			zeroOrMore(slotDef()),
-			BRACKET_R, OPT_LF());
+			BRACKET_R, OPT_LF()));
 	}
 
 	public Rule protection()
@@ -149,18 +150,21 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule slotDef()
 	{
-		return sequence(firstOf(
-			ctorDef(), // look for 'new'
-			methodDef(), // look for params : '('
-			fieldDef()), // others
+		return sequence(
+			OPT_LF(),
+			optional(doc()),// common to all slots
+			zeroOrMore(facet()),// common to all slots
+			optional(protection()),// common to all slots
+			firstOf(
+				ctorDef(), // look for 'new'
+				methodDef(), // look for params : '('
+				fieldDef()), // others
 			OPT_LF());
 	}
 
 	public Rule fieldDef()
 	{
 		return sequence(
-			zeroOrMore(facet()),
-			optional(protection()),
 			zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
 			KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
 			/*typeAndOrId(),*/ type(), id(), // Type required for fields(no infered) (Grammar does not say so)
@@ -175,32 +179,32 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule methodDef()
 	{
-		return sequence(
-			zeroOrMore(facet()),
-			optional(protection()),
-			zeroOrMore(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
-			KW_OVERRIDE, KW_VIRTUAL)),
-			type(),
-			id(),
-			enforcedSequence(PAR_L, optional(params()), PAR_R),
+		return enforcedSequence(
+				sequence(
+				zeroOrMore(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
+				KW_OVERRIDE, KW_VIRTUAL)),
+				type(),
+				id(),
+				PAR_L),
+			optional(params()),
+			PAR_R,
 			methodBody());
 	}
 
 	public Rule ctorDef()
 	{
-		return sequence(
-			zeroOrMore(facet()),
-			optional(protection()),
-			enforcedSequence(KW_NEW,
+		return enforcedSequence(KW_NEW,
 			id(),
-			enforcedSequence(PAR_L, optional(params()), PAR_R),
+			PAR_L, 
+			optional(params()),
+			PAR_R,
 			optional( // ctorChain
 			// Fantom  Grammar page is missing SP_COL
 			enforcedSequence(sequence(OPT_LF(), SP_COL),
 			firstOf(
 			enforcedSequence(KW_THIS, DOT, id(), enforcedSequence(PAR_L, optional(args()), PAR_R)),
 			enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), enforcedSequence(PAR_L, optional(args()), PAR_R))))),
-			methodBody()));
+			methodBody());
 	}
 
 	public Rule methodBody()
@@ -860,7 +864,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule doc()
 	{
 		// In theory there are no empty lines betwen doc and type ... but thta does happen so alowing it
-		return oneOrMore(sequence("**", zeroOrMore(sequence(testNot("\n"), any())), "\n", OPT_LF()));
+		return oneOrMore(sequence(OPT_SP, "**", zeroOrMore(sequence(testNot("\n"), any())), "\n", OPT_LF()));
 	}
 
 	@Leaf
