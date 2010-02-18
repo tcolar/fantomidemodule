@@ -4,9 +4,7 @@
 package net.colar.netbeans.fan.parboiled;
 
 import org.parboiled.BaseParser;
-import org.parboiled.MatcherContext;
 import org.parboiled.Rule;
-import org.parboiled.matchers.Matcher;
 import org.parboiled.support.Cached;
 import org.parboiled.support.Leaf;
 
@@ -265,7 +263,7 @@ public class FantomParser extends BaseParser<Object>
 			localDef(),
 			// otherwise expression (optional Comma for itAdd expression)
 			// do firstOf, because "," in this case can be considered an end of statement
-			sequence(expr(), firstOf(SP_COMMA, eos()))),
+			sequence(expr(), firstOf(sequence(SP_COMMA, optional(eos())), eos()))),
 			OPT_LF());
 	}
 
@@ -410,7 +408,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(parExpr(),
 			// not enforced so that *= assignexpr can happen
-			zeroOrMore(sequence(firstOf(OP_MULT, OP_DIV), OPT_LF(), parExpr())));
+			zeroOrMore(sequence(firstOf(OP_MULT, OP_DIV, OP_MODULO), OPT_LF(), parExpr())));
 	}
 
 	public Rule parExpr()
@@ -515,8 +513,9 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule termChain()
 	{
-		return firstOf(safeDotCall(), safeDynCall(), dotCall(), dynCall(), indexExpr(),
-			callOp(), itBlock()/*, incDotCall()*/);
+		return sequence(OPT_LF(),
+				firstOf(safeDotCall(), safeDynCall(), dotCall(), dynCall(), indexExpr(),
+			callOp(), itBlock()/*, incDotCall()*/));
 	}
 
 	public Rule dotCall()
@@ -995,6 +994,7 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule OP_MINUS = terminal("-");
 	public final Rule OP_MULT = terminal("*");
 	public final Rule OP_DIV = terminal("/");
+	public final Rule OP_MODULO = terminal("%");
 	public final Rule OP_POUND = terminal("#");
 	// comparators
 	public final Rule CP_EQUALITY = firstOf(terminal("==="), terminal("!=="),
