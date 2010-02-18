@@ -28,6 +28,7 @@ public class FantomParser extends BaseParser<Object>
 {
 
 	public boolean inFieldInit; // to help with differentiation of field accesor & itBlock
+	public boolean inTernary = false;
 
 	// ------------ Comp Unit --------------------------------------------------
 	//TODO: funcType: // op_safe_dyn_call lexer confusion between |Str?->| (formal) and Str?->  (dyn call)
@@ -166,7 +167,7 @@ public class FantomParser extends BaseParser<Object>
 			//TODO: when there is an OP_ASSIGN AND a fieldAccesor, parser takes forever !!
 			// probably confused with an itBlock
 			setFieldInit(true),
-			optional(enforcedSequence(OP_ASSIGN, expr())),
+			optional(enforcedSequence(OP_ASSIGN, OPT_LF(), expr())),
 			optional(fieldAccessor()),
 			setFieldInit(false),
 			eos());
@@ -195,7 +196,7 @@ public class FantomParser extends BaseParser<Object>
 			enforcedSequence(PAR_L, optional(params()), PAR_R),
 			optional( // ctorChain
 			// Fantom  Grammar page is missing SP_COL
-			enforcedSequence(SP_COL,
+			enforcedSequence(sequence(OPT_LF(), SP_COL),
 			firstOf(
 			enforcedSequence(KW_THIS, DOT, id(), enforcedSequence(PAR_L, optional(args()), PAR_R)),
 			enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), enforcedSequence(PAR_L, optional(args()), PAR_R))))),
@@ -290,9 +291,9 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			firstOf(
 			// fan parser says if it's start with "id :=" or "Type, id", then it gotta be a localDef (enforce)
-			enforcedSequence(sequence(type(), id(), OP_ASSIGN), expr()),
+			enforcedSequence(sequence(type(), id(), OP_ASSIGN), OPT_LF(), expr()),
 			// same if it starts with "id :="
-			enforcedSequence(sequence(id(), OP_ASSIGN), expr()),
+			enforcedSequence(sequence(id(), OP_ASSIGN), OPT_LF(), expr()),
 			// var def with no value
 			sequence(type(), id())),
 			eos());
@@ -342,7 +343,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule ternaryExpr()
 	{
 		return sequence(condOrExpr(),
-			optional(enforcedSequence(SP_QMARK, ifExprBody(), SP_COL, ifExprBody())));
+			optional(sequence(SP_QMARK, setInTernary(true), ifExprBody(), setInTernary(false), SP_COL, ifExprBody())));
 	}
 
 	public Rule elvisExpr()
@@ -450,7 +451,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule typeBase()
 	{
 		return firstOf(
-			typeLitteral(), slotLitteral(), namedSuper(), staticCall(),
+			slotLitteral(), typeLitteral(), namedSuper(), staticCall(),
 			dsl(), closure(), simple(), ctorBlock());
 	}
 
@@ -601,7 +602,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule list()
 	{
 		return sequence(
-			optional(type()),
+			optional(type()), OPT_LF(),
 			SQ_BRACKET_L, OPT_LF(), listItems(), OPT_LF(), SQ_BRACKET_R);
 	}
 
@@ -610,7 +611,7 @@ public class FantomParser extends BaseParser<Object>
 		return firstOf(
 			SP_COMMA,
 			// allow extra comma
-			sequence(expr(), zeroOrMore(sequence(SP_COMMA, OPT_LF(), expr()))), optional(SP_COMMA));
+			sequence(expr(), zeroOrMore(sequence(SP_COMMA, OPT_LF(), expr())), optional(SP_COMMA)));
 	}
 
 	public Rule map()
@@ -623,7 +624,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule mapItems()
 	{
-		return firstOf(SP_COL,
+		return firstOf(SP_COL,//empty map
 			// allow extra comma
 			sequence(mapPair(), zeroOrMore(sequence(SP_COMMA, OPT_LF(), mapPair())), optional(SP_COMMA)));
 	}
@@ -712,7 +713,8 @@ public class FantomParser extends BaseParser<Object>
 			zeroOrMore(sequence(zeroOrMore("_"), digit())),
 			optional(fraction()),
 			optional(exponent()))),
-			optional(nbType()));
+			optional(nbType()),
+			OPT_SP);
 	}
 
 	public Rule fraction()
@@ -749,7 +751,8 @@ public class FantomParser extends BaseParser<Object>
 				),
 			optional(SP_QMARK), //nullable
 			optional(sequence(SQ_BRACKET_L, SQ_BRACKET_R)),//list
-			optional(sequence(SP_COL, type())),//simple map Int:Str
+			// Do not allow simple maps within left side of expressions ... this causes issues wiht ":"
+			optional(sequence(peekTestNot(inTernary), SP_COL, type())),//simple map Int:Str
 			optional(SP_QMARK) // nullable list/map
 			);
 		/*return firstOf(
@@ -856,7 +859,8 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule doc()
 	{
-		return oneOrMore(sequence("**", zeroOrMore(sequence(testNot("\n"), any())), "\n"));
+		// In theory there are no empty lines betwen doc and type ... but thta does happen so alowing it
+		return oneOrMore(sequence("**", zeroOrMore(sequence(testNot("\n"), any())), "\n", OPT_LF()));
 	}
 
 	@Leaf
@@ -991,8 +995,8 @@ public class FantomParser extends BaseParser<Object>
 	// comparators
 	public final Rule CP_EQUALITY = firstOf(terminal("==="), terminal("!=="),
 		terminal("=="), terminal("!="));
-	public final Rule CP_COMPARATORS = firstOf(terminal("<="), terminal(">="),
-		terminal("<=>"), terminal("<"), terminal(">"));
+	public final Rule CP_COMPARATORS = firstOf(terminal("<=>"), terminal("<="),
+		terminal(">="), terminal("<"), terminal(">"));
 	// separators
 	public final Rule SP_PIPE = terminal("|");
 	public final Rule SP_QMARK = terminal("?");
@@ -1022,7 +1026,13 @@ public class FantomParser extends BaseParser<Object>
 	// shortcut for optional spacing
 	public final Rule OPT_SP = optional(spacing());
 
+	/**
+	 * Ovveride because sandrad firstOf complains about empty matches
+	 * @param rules
+	 * @return
+	 */
 	@Override
+	@Cached
 	public Rule firstOf(Object[] rules)
 	{
 		return new PeekFirstOfMatcher(toRules(rules));
@@ -1039,20 +1049,20 @@ public class FantomParser extends BaseParser<Object>
 		return new PeekTestMatcher(toRule(rule), false);
 	}
 
-	/*public Rule eos()
+	public Rule eos()
 	{
-		return sequence(OPT_SP, firstOf(echo("eos 1"),
-			SP_SEMI,echo("eos 2"),
-			LF(),echo("eos3"),
-			peekTest(BRACKET_R),echo("eos 4"),
-			peekTest(eoi()),echo("No eos match!")));
-	}*/
+		return sequence(OPT_SP, firstOf(
+			SP_SEMI,
+			LF(),
+			peekTest(BRACKET_R),
+			peekTest(eoi())));
+	}
 	// ----------- Custom action rules -----------------------------------------
 	/**
 	 * Special action that looks for end of statement
 	 * @return
 	 */
-	public boolean eos()
+	/*public boolean eos()
 	{
 		MatcherContext ctx = (MatcherContext) getContext();
 		if (ctx == null)
@@ -1086,11 +1096,16 @@ public class FantomParser extends BaseParser<Object>
 			return true;
 		}
 		return false;
-	}
+	}*/
 
 	public boolean setFieldInit(boolean val)
 	{
 		inFieldInit = val;
+		return true;
+	}
+	public boolean setInTernary(boolean val)
+	{
+		inTernary = val;
 		return true;
 	}
 
@@ -1102,6 +1117,11 @@ public class FantomParser extends BaseParser<Object>
 
 	// Debugging utils
 	public boolean echo(String str)
+	{
+		System.out.println(str);
+		return true;
+	}
+	public boolean echof(String str)
 	{
 		System.out.println(str);
 		return false;
