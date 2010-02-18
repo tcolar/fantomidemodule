@@ -25,7 +25,7 @@ import org.parboiled.support.Leaf;
 public class FantomParser extends BaseParser<Object>
 {
 
-	public boolean inFieldInit; // to help with differentiation of field accesor & itBlock
+	public boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
 	public boolean noSimpleMap = false;
 
 	// ------------ Comp Unit --------------------------------------------------
@@ -455,51 +455,29 @@ public class FantomParser extends BaseParser<Object>
 	public Rule typeBase()
 	{
 		return firstOf(
-			slotLitteral(), typeLitteral(), namedSuper(), staticCall(),
-			dsl(), closure(), simple(), ctorBlock());
-	}
-
-	public Rule typeLitteral()
-	{
-		return sequence(type(), OP_POUND);
-	}
-
-	public Rule slotLitteral()
-	{
-		return sequence(optional(type()), OP_POUND, id());
-	}
-
-	public Rule namedSuper()
-	{
-		return sequence(type(), DOT, KW_SUPER);
-	}
-
-	public Rule staticCall()
-	{
-		// TODO: allow LF ?
-		return sequence(type(), DOT, /*OPT_LF(),*/ idExpr());
+				enforcedSequence(OP_POUND, id()), // slot litteral (without type)
+				closure(),
+				dsl(), // DSL
+				// Optimized by grouping all the items that start with "type" (since looking for type if slow)
+				sequence(type(), firstOf(
+					sequence(OP_POUND, optional(id())), // type/slot litteral
+					sequence(DOT, KW_SUPER), // named super
+					sequence(DOT, /*OPT_LF(),*/ idExpr()), // static call
+					sequence(PAR_L, expr(), PAR_R), // "simple"
+					itBlock() // ctor block
+				)));
 	}
 
 	public Rule dsl()
 	{
 		//TODO: unclosed DSL ?
 		return sequence(simpleType(),
-			sequence(DSL_OPEN, OPT_LF(), zeroOrMore(sequence(testNot(DSL_CLOSE), any())), OPT_LF(), DSL_CLOSE));
+			enforcedSequence(DSL_OPEN, OPT_LF(), zeroOrMore(sequence(testNot(DSL_CLOSE), any())), OPT_LF(), DSL_CLOSE));
 	}
 
 	public Rule closure()
 	{
-		return sequence(funcType(), OPT_LF(), BRACKET_L, zeroOrMore(stmt()), BRACKET_R);
-	}
-
-	public Rule simple()
-	{
-		return sequence(type(), PAR_L, expr(), PAR_R);
-	}
-
-	public Rule ctorBlock()
-	{
-		return sequence(type(), itBlock());
+		return sequence(funcType(), enforcedSequence(OPT_LF(), BRACKET_L, zeroOrMore(stmt()), BRACKET_R));
 	}
 
 	public Rule itBlock()
@@ -507,10 +485,10 @@ public class FantomParser extends BaseParser<Object>
 		// Do not enforce because it prevents fieldAccesor to work.
 		return sequence(
 			OPT_LF(),
-			BRACKET_L,
+			enforcedSequence(sequence(BRACKET_L,
 			// Note, don't allow field accesors to be parsed as itBlock
-			peekTestNot(sequence(inFieldInit, OPT_LF(), firstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)/*, echo("Skipping itBlock")*/)),
-			zeroOrMore(stmt()), BRACKET_R);
+			peekTestNot(sequence(inFieldInit, OPT_LF(), firstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)/*, echo("Skipping itBlock")*/))),
+			zeroOrMore(stmt()), BRACKET_R));
 	}
 
 	public Rule termChain()
@@ -601,7 +579,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule litteralBase()
 	{
 		return firstOf(KW_NULL, KW_THIS, KW_SUPER, KW_IT, KW_TRUE, KW_FALSE,
-			strs(), uri(), number(), char_(), namedSuper());
+			strs(), uri(), number(), char_());
 	}
 
 	public Rule list()

@@ -218,10 +218,10 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("IdExpr2", result, "idExpr", "*toto");//field
 			result = parse(parser, parser.idExpr(), "blah()");
 			testNodeName("IdExpr3", result, "idExpr", "blah()");//call
-			result = parse(parser, parser.staticCall(), "toto.blah()");
-			testNodeName("StaticCall1", result, "staticCall", "toto.blah()");
-			result = parse(parser, parser.staticCall(), "toto.toto");
-			testNodeName("StaticCall2", result, "staticCall", "toto.toto");
+			result = parse(parser, parser.expr(), "toto.blah()");
+			testNodeName("StaticCall1", result, "expr", "toto.blah()");
+			result = parse(parser, parser.expr(), "toto.toto");
+			testNodeName("StaticCall2", result, "expr", "toto.toto");
 			result = parse(parser, parser.localDef(), "a:=23");
 			testNodeName("localDef1", result, "localDef", "a:=23");
 			result = parse(parser, parser.localDef(), "Int a:=23");
