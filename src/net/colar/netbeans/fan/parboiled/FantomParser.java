@@ -625,12 +625,12 @@ public class FantomParser extends BaseParser<Object>
 	public Rule strs()
 	{
 		return firstOf(
-			enforcedSequence(QUOTES3, // triple quoted string
+			enforcedSequence("\"\"\"", // triple quoted string, // (not using 3QUOTE terminal, since it could eat empty space inside the string)
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
 			sequence(testNot(QUOTES3), any()))), QUOTES3),
-			enforcedSequence(QUOTE, // simple string
+			enforcedSequence("\"", // simple string, (not using QUOTE terminal, since it could eat empty space inside the string)
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
@@ -639,7 +639,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule uri()
 	{
-		return enforcedSequence(TICK,
+		return enforcedSequence("`",// (not using TICK terminal, since it could eat empty space inside the string)
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
@@ -649,17 +649,19 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule char_()
 	{
-		return enforcedSequence(SINGLE_Q,
-			firstOf(
-			unicodeChar(),
-			escapedChar(),
-			any()), //all else
-			SINGLE_Q);
+		return firstOf(
+			"' '", 
+			enforcedSequence('\'',// (not using SINGLE_Q terminal, since it could eat empty space inside the char)
+				firstOf(
+				unicodeChar(),
+				escapedChar(),
+				any()), //all else
+				SINGLE_Q));
 	}
 
 	public Rule escapedChar()
 	{
-		return enforcedSequence("\\", firstOf('b', 'f', 'n', 'r', 't', '"', '\'', '`', '$', '\\'));
+		return enforcedSequence('\\', firstOf('b', 'f', 'n', 'r', 't', '"', '\'', '`', '$', '\\'));
 	}
 
 	public Rule unicodeChar()
@@ -730,8 +732,8 @@ public class FantomParser extends BaseParser<Object>
 				),
 			// Look for optional map/list/nullable items
 			optional(SP_QMARK), //nullable
-			optional(sequence(SQ_BRACKET_L, SQ_BRACKET_R)),//list
-			// Do not allow simple maps within left side of expressions ... this causes issues wiht ":"
+			zeroOrMore(sequence(SQ_BRACKET_L, SQ_BRACKET_R)),//list(s)
+			// Do not allow simple maps within left side of expressions ... this causes issues with ":"
 			optional(sequence(peekTestNot(noSimpleMap), SP_COL, type())),//simple map Int:Str
 			optional(SP_QMARK) // nullable list/map
 			);

@@ -43,7 +43,7 @@ public class FantomParserTest implements JOTTestable
 			//testNodeName("singleTest1", result, "stmt", "hbar.onModify.add |evt| { echo(\"hbar = $evt.data\") }");
 			//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
 			//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-			testFile("/home/thibautc/fantom-1.0.51/examples/fwt/demo.fan");
+			testFile("/home/thibautc/fantom-1.0.51/src/testCompiler/fan/TokenizerTest.fan");
 			}catch(Exception e){e.printStackTrace();}
 			//System.out.println(ParseTreeUtils.printNodeTree(result));
 			return;
@@ -64,21 +64,23 @@ public class FantomParserTest implements JOTTestable
 			result = parse(parser, parser.char_(), "'a'");
 			testNodeName("Char", result, "char_", "'a'");
 			result = parse(parser, parser.char_(), "'\\n'");
-			testNodeName("Char2", result, "char_");
+			testNodeName("Char2", result, "char_", "'\\n'");
 			result = parse(parser, parser.char_(), "'\\u5F9a'");
-			testNodeName("Char3", result, "char_");
+			testNodeName("Char3", result, "char_", "'\\u5F9a'");
 			result = parse(parser, parser.uri(), "`http://www.google.com/`");
-			testNodeName("Uri", result, "uri");
+			testNodeName("Uri", result, "uri", "`http://www.google.com/`");
 			result = parse(parser, parser.strs(), "\"aa\"");
-			testNodeName("String", result, "strs");
+			testNodeName("String", result, "strs", "\"aa\"");
 			result = parse(parser, parser.strs(), "\"aa\\r\\nbb\"");
 			testNodeName("String 2", result, "strs", "\"aa\\r\\nbb\"");
 			result = parse(parser, parser.strs(), "\"a \\n $toto \\$thingy \\t \\u5F39\"");
-			testNodeName("String 3", result, "strs");
+			testNodeName("String 3", result, "strs", "\"a \\n $toto \\$thingy \\t \\u5F39\"");
 			result = parse(parser, parser.strs(), "\"gggfdgdfgfdgdfgkkjdlkewd erfreggreg gtrgtrtrgtrg trgtrgtrrtg rgrgtrgrtgrtg\"");
-			testNodeName("String 4", result, "strs");
-			result = parse(parser, parser.strs(), "\"\"\"a\"\"\"");
-			testNodeName("3Quotes Str 1", result, "strs", "\"\"\"a\"\"\"");
+			testNodeName("String 4", result, "strs", "\"gggfdgdfgfdgdfgkkjdlkewd erfreggreg gtrgtrtrgtrg trgtrgtrrtg rgrgtrgrtgrtg\"");
+			result = parse(parser, parser.expr(), "\"/*toto*/ text\"");
+			testNodeName("String 5", result, "expr", "\"/*toto*/ text\"");
+			result = parse(parser, parser.strs(), "\"aa\\r\\nbb\"");
+			testNodeName("3Quotes Str 1", result, "strs", "\"aa\\r\\nbb\"");
 			result = parse(parser, parser.strs(), "\"\"\"\"hello\" \"\"\"");
 			testNodeName("3Quotes Str 2", result, "strs", "\"\"\"\"hello\" \"\"\"");
 			result = parse(parser, parser.strs(), "\"\"\"\"hello\"\\n\"\" \"\"\"");
@@ -420,6 +422,7 @@ public class FantomParserTest implements JOTTestable
 		} catch (Exception e)
 		{
 			JOTTester.checkIf("Exception while parsing " + filePath, false);
+			e.printStackTrace();
 			//throw (e);
 		}
 	}
