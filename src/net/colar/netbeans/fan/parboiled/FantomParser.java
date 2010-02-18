@@ -153,6 +153,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule slotDef()
 	{
+		// Rewrote this to "unify" slots common parts (for better performance)
 		return sequence(
 			OPT_LF(),
 			optional(doc()),// common to all slots
@@ -171,8 +172,6 @@ public class FantomParser extends BaseParser<Object>
 			zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
 			KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
 			/*typeAndOrId(),*/ type(), id(), // Type required for fields(no infered) (Grammar does not say so)
-			//TODO: when there is an OP_ASSIGN AND a fieldAccesor, parser takes forever !!
-			// probably confused with an itBlock
 			setFieldInit(true),
 			optional(enforcedSequence(OP_ASSIGN, OPT_LF(), expr())),
 			optional(fieldAccessor()),
@@ -202,7 +201,7 @@ public class FantomParser extends BaseParser<Object>
 			optional(params()),
 			PAR_R,
 			optional( // ctorChain
-			// Fantom  Grammar page is missing SP_COL
+			// Fantom  Grammar page is missing the ':'
 			enforcedSequence(sequence(OPT_LF(), SP_COL),
 			firstOf(
 			enforcedSequence(KW_THIS, DOT, id(), enforcedSequence(PAR_L, optional(args()), PAR_R)),
@@ -264,10 +263,10 @@ public class FantomParser extends BaseParser<Object>
 			switch_(),
 			while_(),
 			try_(),
-			// local var definition (:=)
+			// check local var definition as it's faster to parse ':='
 			localDef(),
 			// otherwise expression (optional Comma for itAdd expression)
-			// do firstOf, because "," in this case can be considered an end of statement
+			// using firstOf, because "," in this case can be considered an end of statement
 			sequence(expr(), firstOf(sequence(SP_COMMA, optional(eos())), eos()))),
 			OPT_LF());
 	}
@@ -285,18 +284,20 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule if_()
 	{
+		// using condExpr rather than expr
 		return enforcedSequence(KW_IF, PAR_L, condOrExpr()/*was expr*/, PAR_R, block(),
 			optional(enforcedSequence(KW_ELSE, block())));
 	}
 
 	public Rule while_()
 	{
+		// using condExpr rather than expr
 		return enforcedSequence(KW_WHILE, PAR_L, condOrExpr()/*was expr*/, PAR_R, block());
 	}
 
 	public Rule localDef()
 	{
-		// this is changed to matched either:
+		// slight chnage from teh grammar to match either:
 		// 'Int j', 'j:=27', 'Int j:=27'
 		return sequence(
 			firstOf(
@@ -388,7 +389,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule typeCheckTail()
 	{
-		// changed to required, otherwise eats all rangeExpr and compare never gets evaled
+		// changed to required, otherwise consumes all rangeExpr and compare never gets evaled
 		return enforcedSequence(firstOf(KW_IS, KW_ISNOT, KW_AS), type());
 	}
 
@@ -436,7 +437,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule unaryExpr()
 	{
-		// grouped with postfixEpr to avoid looking for termExpr twice !
+		// grouped with postfixEpr to avoid looking for termExpr twice (very slow parsing !)
 		return firstOf(prefixExpr(), sequence(termExpr(), optional(firstOf(OP_2MINUS, OP_2PLUS))));
 	}
 
@@ -464,7 +465,7 @@ public class FantomParser extends BaseParser<Object>
 				enforcedSequence(OP_POUND, id()), // slot litteral (without type)
 				closure(),
 				dsl(), // DSL
-				// Optimized by grouping all the items that start with "type" (since looking for type if slow)
+				// Optimized by grouping all the items that start with "type" (since looking for type if resource intensive)
 				sequence(type(), firstOf(
 					sequence(OP_POUND, optional(id())), // type/slot litteral
 					sequence(DOT, KW_SUPER), // named super
@@ -488,7 +489,6 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule itBlock()
 	{
-		// Do not enforce because it prevents fieldAccesor to work.
 		return sequence(
 			OPT_LF(),
 			enforcedSequence(sequence(BRACKET_L,
@@ -558,14 +558,6 @@ public class FantomParser extends BaseParser<Object>
 			closure())); // closure only
 	}
 
-	/*
-	 *  TODO: does not always  work, will be parsed as a "list" Type because the grammar is confusing
-	 *	it's context sensitive - need to review.
-	 *  Can't cleanly differentiate Int[3] (List of Int with val '3') and var[3] : int.get[3]
-	 *  So for now I'm gonna get a List in the ast and deal with it there
-	 *  indexExpr 	:	({notAfterEol()}? sq_bracketL expr sq_bracketR)
-	 * 	-> ^(AST_INDEX_EXPR sq_bracketL expr sq_bracketR);
-	 */
 	public Rule indexExpr()
 	{
 		return sequence(SQ_BRACKET_L, expr(), SQ_BRACKET_R);
@@ -606,7 +598,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(
 			optional(firstOf(mapType(), simpleMapType())),
-			// Not enforced to allow resolving list of maps [Str:Int][]
+			// Not enforced to allow resolving list of typed maps like [Str:Int][]
 			sequence(SQ_BRACKET_L, OPT_LF(), mapItems(), OPT_LF(), SQ_BRACKET_R));
 	}
 
@@ -625,7 +617,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule mapItem()
 	{
-		return expr();//sequence(firstOf(litteralBase(), id()), zeroOrMore(termChain()));
+		return expr();
 	}
 
 	// ------------ Litteral items ---------------------------------------------
@@ -728,7 +720,7 @@ public class FantomParser extends BaseParser<Object>
 			);
 	}
 
-	// Rewrote more like Fantom Parser (simpler & optimized)
+	// Rewrote more like Fantom Parser (simpler & faster) - lokffor type base then listOfs, mapOfs notations
 	public Rule type()
 	{
 		return sequence(
