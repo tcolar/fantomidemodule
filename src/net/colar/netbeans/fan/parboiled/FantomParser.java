@@ -724,21 +724,24 @@ public class FantomParser extends BaseParser<Object>
 			);
 	}
 
-	// Rewrote more like Fantom Parser (simpler & faster) - lokffor type base then listOfs, mapOfs notations
+	/** Rewrote more like Fantom Parser (simpler & faster) - lokffor type base then listOfs, mapOfs notations
+	 * Added check so that the "?" (nullable type indicator) cannot be separated from it's type (noSpace)
+	 * @return
+	 */
 	public Rule type()
 	{
 		return sequence(
 			firstOf(
 				mapType(),
 				funcType(),
-				sequence(id(), optional(sequence(SP_COLCOL, id())))
+				sequence(id(), optional(sequence(noSpace(), SP_COLCOL, noSpace(), id())))
 				),
 			// Look for optional map/list/nullable items
-			optional(SP_QMARK), //nullable
-			zeroOrMore(sequence(SQ_BRACKET_L, SQ_BRACKET_R)),//list(s)
+			optional(sequence(noSpace(), SP_QMARK)), //nullable
+			zeroOrMore(sequence(noSpace(),SQ_BRACKET_L, SQ_BRACKET_R)),//list(s)
 			// Do not allow simple maps within left side of expressions ... this causes issues with ":"
 			optional(sequence(peekTestNot(noSimpleMap), SP_COL, type())),//simple map Int:Str
-			optional(SP_QMARK) // nullable list/map
+			optional(sequence(noSpace(), SP_QMARK)) // nullable list/map
 			);
 	}
 
@@ -780,27 +783,23 @@ public class FantomParser extends BaseParser<Object>
 	public Rule funcType()
 	{
 		return sequence(
-			testNot(sequence(SP_PIPE, SP_PIPE)), // that's a logical OR not a function type
-			enforcedSequence(SP_PIPE,
+			testNot(OP_OR), // '||' that's a logical OR not a function type
+			// '|' could be the closing pipe so we can't enforce
+			sequence(SP_PIPE,
 			firstOf(
-			// Fantom grammar is not correct for this.
-			// type() stating with '|' would cause issues because it would get confused with the closing "|"
-			// so not allowing types starting with PIPE (testNot), such as an inner function Type (or simpleMap of).
-			// We check in an order that's faster
 			// First we check for one with no formals |->| or |->Str|
-			enforcedSequence(OP_ARROW, optional(sequence(testNot(SP_PIPE),type()))),
+			enforcedSequence(OP_ARROW, optional(type())),
 			// Then we check for one with formals |Int i| or maybe full: |Int i -> Str|
-			sequence(formals(), optional(enforcedSequence(OP_ARROW, optional(sequence(testNot(SP_PIPE),type())))))),
+			sequence(formals(), optional(enforcedSequence(OP_ARROW, optional(type()))))),
 			SP_PIPE));
 	}
 
 	public Rule formals()
 	{
-		// Formal type of function type would cause issues because it will get confused whether it's
-		// the closing "|" or opening of an inner one. -> not allowing nested functions def (using nonFunctionTypes())
+		// Allowing funcType within formals | |Int-Str a| -> Str|
 		return sequence(
-			testNot(SP_PIPE), typeAndOrId(),
-			zeroOrMore(enforcedSequence(SP_COMMA, testNot(SP_PIPE), typeAndOrId()))); // typeAnrOrId - funtional types
+			typeAndOrId(),
+			zeroOrMore(enforcedSequence(SP_COMMA, typeAndOrId())));
 	}
 
 	public Rule typeList()
@@ -1034,8 +1033,19 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(OPT_SP, firstOf(
 			SP_SEMI, // ;
 			LF(), // \n
-			peekTest(BRACKET_R), // '}' is end of statement oo, but no NOT consume it !
-			peekTest(eoi()))); // EOI is end of statement oo, but no NOT consume it !
+			peekTest(BRACKET_R), // '}' is end of statement too, but do NOT consume it !
+			peekTest(eoi()))); // EOI is end of statement too, but do NOT consume it !
+	}
+
+	/**Pass if not following some whitespace*/
+	public Rule noSpace()
+	{
+		return peekTestNot(afterSpace());
+	}
+	public boolean afterSpace()
+	{
+		char c = getContext().getCurrentLocation().lookAhead(getContext().getInputBuffer(), -1);
+		return Character.isWhitespace(c);
 	}
 
 	public boolean setFieldInit(boolean val)
