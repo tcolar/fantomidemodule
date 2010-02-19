@@ -82,7 +82,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule staticBlock()
 	{
-		return sequence(KW_STATIC, OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R));
+		return sequence(KW_STATIC, OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R), OPT_LF());
 	}
 
 	// ------------- Type def --------------------------------------------------
@@ -295,14 +295,14 @@ public class FantomParser extends BaseParser<Object>
 	public Rule if_()
 	{
 		// using condExpr rather than expr
-		return enforcedSequence(KW_IF, PAR_L, condOrExpr()/*was expr*/, PAR_R, block(),
+		return enforcedSequence(KW_IF, PAR_L, condOrExpr(), PAR_R, block(),
 			optional(enforcedSequence(KW_ELSE, block())));
 	}
 
 	public Rule while_()
 	{
 		// using condExpr rather than expr
-		return enforcedSequence(KW_WHILE, PAR_L, condOrExpr()/*was expr*/, PAR_R, block());
+		return enforcedSequence(KW_WHILE, PAR_L, condOrExpr(), PAR_R, block());
 	}
 
 	public Rule localDef()
@@ -363,12 +363,12 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule ternaryTail()
 	{
-		return enforcedSequence(SP_QMARK, OPT_LF(), setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), SP_COL, OPT_LF(), ifExprBody());
+		return enforcedSequence(sequence(OPT_LF(), SP_QMARK), OPT_LF(), setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), OPT_LF(), SP_COL, OPT_LF(), ifExprBody());
 	}
 
 	public Rule elvisTail()
 	{
-		return enforcedSequence(OP_ELVIS, OPT_LF(), ifExprBody());
+		return enforcedSequence(sequence(OPT_LF(), OP_ELVIS), OPT_LF(), ifExprBody());
 	}
 
 	public Rule ifExprBody()
@@ -494,7 +494,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule closure()
 	{
-		return sequence(funcType(), OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R));
+		return sequence(OPT_LF(), funcType(), OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R));
 	}
 
 	public Rule itBlock()
@@ -634,12 +634,12 @@ public class FantomParser extends BaseParser<Object>
 	public Rule strs()
 	{
 		return firstOf(
-			enforcedSequence("\"\"\"", // triple quoted string, // (not using 3QUOTE terminal, since it could eat empty space inside the string)
+			enforcedSequence("\"\"\"", // triple quoted string, // (not using 3QUOTE terminal, since it could consume empty space inside the string)
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
 			sequence(testNot(QUOTES3), any()))), QUOTES3),
-			enforcedSequence("\"", // simple string, (not using QUOTE terminal, since it could eat empty space inside the string)
+			enforcedSequence("\"", // simple string, (not using QUOTE terminal, since it could consume empty space inside the string)
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
@@ -648,11 +648,11 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule uri()
 	{
-		return enforcedSequence("`",// (not using TICK terminal, since it could eat empty space inside the string)
+		return enforcedSequence("`",// (not using TICK terminal, since it could consume empty space inside the string)
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			// missing from Fantom litteral page, special URI escape sequences
-			sequence('\\', firstOf(':','/','#','[',']','@','&','=',';')),
+			sequence('\\', firstOf(':','/','#','[',']','@','&','=',';','?')),
 			escapedChar(),
 			sequence(testNot(TICK), any()))),
 			TICK);
@@ -660,14 +660,12 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule char_()
 	{
-		return firstOf(
-			"' '", 
-			enforcedSequence('\'',// (not using SINGLE_Q terminal, since it could eat empty space inside the char)
+		return enforcedSequence('\'',// (not using SINGLE_Q terminal, since it could consume empty space inside the char)
 				firstOf(
 				unicodeChar(),
 				escapedChar(), // standard esapes
 				any()), //all else
-				SINGLE_Q));
+				SINGLE_Q);
 	}
 
 	public Rule escapedChar()

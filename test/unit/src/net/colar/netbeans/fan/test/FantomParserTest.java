@@ -254,6 +254,8 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("expr6", result, "expr", "Buf.fromBase64(map[key]).readAllStr");//
 			result = parse(parser, parser.expr(), "m = m is JavaMethod ? ((JavaMethod)m).next : null");
 			testNodeName("expr7", result, "expr", "m = m is JavaMethod ? ((JavaMethod)m).next : null");
+			result = parse(parser, parser.condOrExpr(), "str[n] == 55 || str[n] == ','");
+			testNodeName("condOr", result, "condOrExpr", "str[n] == 55 || str[n] == ','");
 			result = parse(parser, parser.if_(), "if(5>3)doit()");
 			testNodeName("if1", result, "if_", "if(5>3)doit()");
 			result = parse(parser, parser.if_(), "if(5>3)doit();else doThat();");
@@ -261,7 +263,9 @@ public class FantomParserTest implements JOTTestable
 			result = parse(parser, parser.if_(), "if(5>3+2){doThis();doThat()}");
 			testNodeName("if3", result, "if_", "if(5>3+2){doThis();doThat()}");
 			result = parse(parser, parser.if_(), "if(5>3+2){doThis();doThat()}else{doThat}");
-			testNodeName("if4", result, "if_", "if(5>3+2){doThis();doThat()}else{doThat}");
+			testNodeName("if4", result, "if_", "if(5>3+2){doThis();doThat()}else{doThat}");//
+			result = parse(parser, parser.if_(), "if (str[n] == ' ' || str[n] == ',') break");
+			testNodeName("if5", result, "if_", "if (str[n] == ' ' || str[n] == ',') break");
 			result = parse(parser, parser.expr(), "2>3?a:b");
 			testNodeName("ternaryExpr1", result, "expr", "2>3?a:b");
 			result = parse(parser, parser.expr(), "col==0 ? key : Buf.fromBase64(map[key]).readAllStr");
@@ -389,6 +393,8 @@ public class FantomParserTest implements JOTTestable
 				testAllFanFilesUnder(f.getAbsolutePath());
 			} else
 			{
+				if(f.getName().equals("gamma.fan")) // Known invalid file
+					continue;
 				if (f.getName().endsWith(".fan") || f.getName().endsWith(".fwt"))
 				{
 					testFile(f.getAbsolutePath());
