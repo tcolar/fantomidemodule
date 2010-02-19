@@ -40,12 +40,12 @@ public class FantomParserTest implements JOTTestable
 			try
 			{
 			//result = parse(parser, parser.slotDef(), "override CType? base { get { load; return *base } internal set}");
-			testNodeName("singleTest1", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
+			//testNodeName("singleTest1", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
 			//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
 			//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-			testFile("/home/thibautc/fantom-1.0.51/src/sys/fan/Endian.fan");
+			testFile("/home/thibautc/fantom-1.0.51/src/web/fan/WebClient.fan");
 			}catch(Exception e){e.printStackTrace();}
-			System.out.println(ParseTreeUtils.printNodeTree(result));
+			//System.out.println(ParseTreeUtils.printNodeTree(result));
 			return;
 		}
 		// --- Full test Suite -------------
@@ -251,7 +251,9 @@ public class FantomParserTest implements JOTTestable
 			result = parse(parser, parser.expr(), "5>3");
 			testNodeName("expr5", result, "expr", "5>3");
 			result = parse(parser, parser.expr(), "Buf.fromBase64(map[key]).readAllStr");
-			testNodeName("expr6", result, "expr", "Buf.fromBase64(map[key]).readAllStr");
+			testNodeName("expr6", result, "expr", "Buf.fromBase64(map[key]).readAllStr");//
+			result = parse(parser, parser.expr(), "m = m is JavaMethod ? ((JavaMethod)m).next : null");
+			testNodeName("expr7", result, "expr", "m = m is JavaMethod ? ((JavaMethod)m).next : null");
 			result = parse(parser, parser.if_(), "if(5>3)doit()");
 			testNodeName("if1", result, "if_", "if(5>3)doit()");
 			result = parse(parser, parser.if_(), "if(5>3)doit();else doThat();");
@@ -289,6 +291,8 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("Stmt5", result, "stmt", "show([4:\"four\", 5f:\"five\"],\"same as above with type inference\")");
 			result = parse(parser, parser.stmt(), "Label { text=\"Name\"  },"); // addIt stmt
 			testNodeName("Stmt6", result, "stmt", "Label { text=\"Name\"  },");
+			result = parse(parser, parser.stmt(), "obj := | |->Int| a, |->Int| b->Int| { return (Int)a.call + (Int)b.call }");
+			testNodeName("Stmt7", result, "stmt", "obj := | |->Int| a, |->Int| b->Int| { return (Int)a.call + (Int)b.call }");
 			result = parse(parser, parser.block(), "i=5");
 			testNodeName("Block", result, "block", "i=5");
 			result = parse(parser, parser.block(), "{i=5}");
@@ -296,7 +300,7 @@ public class FantomParserTest implements JOTTestable
 			result = parse(parser, parser.block(), "{i=5;k=7\n\nj=6}");
 			testNodeName("Block3", result, "block", "{i=5;k=7\n\nj=6}");
 
-			// Slot De
+			// Slot Def
 			result = parse(parser, parser.fieldAccessor(), "{get{i=23}}");
 			testNodeName("FieldAccesor1", result, "fieldAccessor", "{get{i=23}}");
 			result = parse(parser, parser.fieldAccessor(), "{get{i=23}\nprivate set{}\n}");
@@ -311,6 +315,10 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("FieldDef4", result, "slotDef", "Int a{get{i=23}\nprivate set{}\n}");
 			result = parse(parser, parser.slotDef(), "Int a:=23{get{i=23}\nprivate set{}\n}");
 			testNodeName("FieldDef5", result, "slotDef", "Int a:=23{get{i=23}\nprivate set{}\n}");
+			result = parse(parser, parser.slotDef(), "override CType? base { get { load; return *base } internal set}");
+			testNodeName("FieldDef6", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
+			result = parse(parser, parser.slotDef(), "**comment\nUri reqUri := ``\n  {\n    set { if (!it.isAbs) throw ArgErr(\"Request URI not absolute: `$it`\"); *reqUri = it }\n  }");
+			testNodeName("FieldDef7", result, "slotDef", "**comment\nUri reqUri := ``\n  {\n    set { if (!it.isAbs) throw ArgErr(\"Request URI not absolute: `$it`\"); *reqUri = it }\n  }");
 			result = parse(parser, parser.slotDef(), "private static Void doit(Str a, Int b){}");
 			testNodeName("MethodDef1", result, "slotDef", "private static Void doit(Str a, Int b){}");
 			result = parse(parser, parser.slotDef(), "Void doit(Str s){i:=5}");
@@ -323,6 +331,8 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("Ctor2", result, "slotDef", "new doIt(Str s):this.make(null, last){Int i:=5\n\n\tj:=7}");
 			result = parse(parser, parser.slotDef(), "new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
 			testNodeName("Ctor3", result, "slotDef", "new doIt(Str s):super(){Int i:=5\n\n\tj:=7}");
+			result = parse(parser, parser.staticBlock(), "static{Int i:=5\n\n\tj:=7}");
+			testNodeName("StaticBlock", result, "staticBlock", "static{Int i:=5\n\n\tj:=7}");
 
 			// Type Def
 			result = parse(parser, parser.typeDef(), "internal final class Dummy\n{Int var}");
@@ -453,7 +463,7 @@ public class FantomParserTest implements JOTTestable
 	{
 		try
 		{
-			JOTTester.singleTest(new FantomParserTest(), false);
+			JOTTester.singleTest(new FantomParserTest(), true);
 		} catch (Throwable t)
 		{
 			t.printStackTrace();

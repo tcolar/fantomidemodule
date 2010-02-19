@@ -238,7 +238,7 @@ public class FantomParser extends BaseParser<Object>
 			BRACKET_L,
 			optional(sequence(OPT_LF(), enforcedSequence(GET, firstOf(block(), eos())))),
 			optional(sequence(OPT_LF(), optional(protection()), enforcedSequence(SET, firstOf(block(), eos())))),
-			BRACKET_R), OPT_LF());
+			BRACKET_R)); // do not consume trailing LF, since fieldDef looks for EOS
 	}
 
 	public Rule args()
