@@ -26,6 +26,7 @@ public class FantomParser extends BaseParser<Object>
 {
 
 	public boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
+	public boolean inEnum = false; // so we know whether to allow enumDefs
 	public boolean noSimpleMap = false; // to disallow ambigous simpleMaps in certain situations (within another map, ternaryExpr)
 
 	// ------------ Comp Unit --------------------------------------------------
@@ -89,6 +90,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		// grouped together classdef, enumDef, mixinDef & facetDef as they are grammatically very similar (optimized)
 		return sequence(
+			setInEnum(false),
 			OPT_LF(),
 			optional(doc()),
 			zeroOrMore(facet()),
@@ -96,16 +98,16 @@ public class FantomParser extends BaseParser<Object>
 			enforcedSequence(
 			firstOf(
 			sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)), KW_CLASS), // standard class
-			enforcedSequence(ENUM, KW_CLASS), // enum class
+			enforcedSequence(ENUM, KW_CLASS, setInEnum(true)), // enum class
 			enforcedSequence(FACET, KW_CLASS), // facet class
-			KW_MIXIN
+			sequence(optional(KW_CONST), KW_MIXIN)
 			),
 			id(),
 			optional(inheritance()),
 			OPT_LF(),
 			BRACKET_L,
 			OPT_LF(),
-			//TODO: conflicts with slotDef : optional(enumValDefs()), // only valid for enums, but simplifying
+			optional(sequence(peekTest(inEnum), enumValDefs())), // only valid for enums, but simplifying
 			zeroOrMore(slotDef()),
 			BRACKET_R, OPT_LF()));
 	}
@@ -143,12 +145,12 @@ public class FantomParser extends BaseParser<Object>
 	//------------------- Slot Def ---------------------------------------------
 	public Rule enumValDefs()
 	{
-		return sequence(enumValDef(), zeroOrMore(sequence(SP_COMMA, enumValDef())), eos());
+		return sequence(enumValDef(), zeroOrMore(sequence(SP_COMMA, enumValDef())), OPT_LF(), eos());
 	}
 
 	public Rule enumValDef()
 	{
-		return sequence(id(), optional(enforcedSequence(PAR_L, optional(args()), PAR_R)), OPT_LF());
+		return sequence(OPT_LF(), id(), optional(enforcedSequence(PAR_L, optional(args()), PAR_R)));
 	}
 
 	public Rule slotDef()
@@ -183,8 +185,9 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return enforcedSequence(
 				sequence(
+				// Fan grammar misses 'final'
 				zeroOrMore(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
-				KW_OVERRIDE, KW_VIRTUAL)),
+				KW_OVERRIDE, KW_VIRTUAL, KW_FINAL)),
 				type(),
 				id(),
 				PAR_L),
@@ -597,7 +600,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule map()
 	{
 		return sequence(
-			optional(mapType()),
+			optional(firstOf(mapType(), simpleMapType())),
 			// Not enforced to allow resolving list of typed maps like [Str:Int][]
 			sequence(SQ_BRACKET_L, OPT_LF(), mapItems(), OPT_LF(), SQ_BRACKET_R));
 	}
@@ -725,8 +728,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(
 			firstOf(
-				// check it's a full map type (using '[') as a simpel map type, will be parsed separately
-				sequence(test(SQ_BRACKET_L), mapType()),
+				mapType(),
 				funcType(),
 				sequence(id(), optional(sequence(SP_COLCOL, id())))
 				),
@@ -739,6 +741,27 @@ public class FantomParser extends BaseParser<Object>
 			);
 	}
 
+	public Rule simpleMapType()
+	{
+		// It has to be other nonSimpleMapTypes, otherwise it's left recursive (loops forever)
+		return sequence(nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(),
+			optional(
+			// Not enforcing [] because of problems with maps like this Str:int["":5]
+			sequence(optional(SP_QMARK), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			optional(SP_QMARK)); // nullable
+	}
+ 
+	// all types except simple map
+	public Rule nonSimpleMapTypes()
+	{
+		return sequence(
+			firstOf(funcType(), mapType(), simpleType()),
+			optional(
+			// Not enforcing [] because of problems with maps like this Str:int["":5]
+			sequence(optional(SP_QMARK), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			optional(SP_QMARK)); // nullable
+	}
+ 
 	public Rule simpleType()
 	{
 		return sequence(
@@ -748,11 +771,9 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule mapType()
 	{
+		// We use nonSimpleMapTypes here as well, because [Str:Int:Str] would be confusing
 		// not enforced to allow map rule to work ([Int:Str][5,""])
-		return firstOf(
-			sequence(SQ_BRACKET_L, setNoSimpleMap(true), type(), setNoSimpleMap(false), SP_COL, setNoSimpleMap(true), type(), setNoSimpleMap(false), SQ_BRACKET_R),
-			// check noSimpleMap to prevent infinite recusrion
-			sequence(peekTestNot(noSimpleMap), setNoSimpleMap(true), type(), setNoSimpleMap(false), SP_COL, setNoSimpleMap(true), type(), setNoSimpleMap(false)));
+		return sequence(SQ_BRACKET_L, nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(), SQ_BRACKET_R);
 	}
 
 	public Rule funcType()
@@ -1024,6 +1045,11 @@ public class FantomParser extends BaseParser<Object>
 	public boolean setNoSimpleMap(boolean val)
 	{
 		noSimpleMap = val;
+		return true;
+	}
+	public boolean setInEnum(boolean val)
+	{
+		inEnum = val;
 		return true;
 	}
 
