@@ -43,7 +43,7 @@ public class FantomParserTest implements JOTTestable
 			//testNodeName("singleTest1", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
 			//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
 			//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-			testFile("/home/thibautc/fantom-1.0.51/src/web/fan/WebClient.fan");
+			testFile("/home/thibautc/fantom-1.0.51/src/compiler/fan/steps/Normalize.fan");
 			}catch(Exception e){e.printStackTrace();}
 			//System.out.println(ParseTreeUtils.printNodeTree(result));
 			return;
@@ -297,7 +297,11 @@ public class FantomParserTest implements JOTTestable
 			testNodeName("Stmt6", result, "stmt", "Label { text=\"Name\"  },");
 			result = parse(parser, parser.stmt(), "obj := | |->Int| a, |->Int| b->Int| { return (Int)a.call + (Int)b.call }");
 			testNodeName("Stmt7", result, "stmt", "obj := | |->Int| a, |->Int| b->Int| { return (Int)a.call + (Int)b.call }");
-			result = parse(parser, parser.block(), "i=5");
+			result = parse(parser, parser.stmt(), "MethodDef.makeInstanceInit(iInit.loc, t, iInit)");
+			testNodeName("Stmt8", result, "stmt", "MethodDef.makeInstanceInit(iInit.loc, t, iInit)");
+			result = parse(parser, parser.stmt(), "ii := MethodDef.makeInstanceInit(iInit.loc, t, iInit)");
+			testNodeName("Stmt9", result, "stmt", "ii := MethodDef.makeInstanceInit(iInit.loc, t, iInit)");
+			result = parse(parser, parser.block(), "i=5");//
 			testNodeName("Block", result, "block", "i=5");
 			result = parse(parser, parser.block(), "{i=5}");
 			testNodeName("Block2", result, "block", "{i=5}");

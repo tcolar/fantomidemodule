@@ -916,7 +916,7 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule KW_IF = keyword("if");
 	public final Rule KW_INTERNAL = keyword("internal");
 	public final Rule KW_IS = keyword("is");
-	public final Rule KW_IT = keyword("ii");
+	public final Rule KW_IT = keyword("it");
 	public final Rule KW_ISNOT = keyword("isnot");
 	public final Rule KW_MIXIN = keyword("mixin");
 	public final Rule KW_NATIVE = keyword("native");
