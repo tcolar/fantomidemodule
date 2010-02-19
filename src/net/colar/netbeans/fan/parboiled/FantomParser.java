@@ -27,6 +27,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
 	public boolean inEnum = false; // so we know whether to allow enumDefs
+	// TODO: See if I can do away with this one and simplify  the map /simpelMap stuff
 	public boolean noSimpleMap = false; // to disallow ambigous simpleMaps in certain situations (within another map, ternaryExpr)
 
 	// ------------ Comp Unit --------------------------------------------------
@@ -657,7 +658,9 @@ public class FantomParser extends BaseParser<Object>
 			enforcedSequence('\'',// (not using SINGLE_Q terminal, since it could eat empty space inside the char)
 				firstOf(
 				unicodeChar(),
-				escapedChar(),
+				// missing from Fantom litteral page, special URI escape sequences
+				sequence('\\', firstOf(':','/','#','[',']','@','&','=',';')),
+				escapedChar(), // standard esapes
 				any()), //all else
 				SINGLE_Q));
 	}
