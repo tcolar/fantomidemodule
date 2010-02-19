@@ -37,8 +37,7 @@ public class FantomParser extends BaseParser<Object>
 			// Missing from grammar: Optional unix env line
 			optional(sequence("#!", zeroOrMore(sequence(testNot("\n"), any())), "\n")),
 			zeroOrMore(firstOf(using(), incUsing())),
-			// staticBlock is missing from Fantom grammar page
-			zeroOrMore(firstOf(staticBlock(), typeDef())),
+			zeroOrMore(typeDef()),
 			OPT_LF(),
 			zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
 			OPT_LF(),
@@ -100,7 +99,7 @@ public class FantomParser extends BaseParser<Object>
 			sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)), KW_CLASS), // standard class
 			enforcedSequence(ENUM, KW_CLASS, setInEnum(true)), // enum class
 			enforcedSequence(FACET, KW_CLASS), // facet class
-			sequence(optional(KW_CONST), KW_MIXIN)
+			sequence(optional(KW_CONST), KW_MIXIN) // mixin
 			),
 			id(),
 			optional(inheritance()),
@@ -108,7 +107,8 @@ public class FantomParser extends BaseParser<Object>
 			BRACKET_L,
 			OPT_LF(),
 			optional(sequence(peekTest(inEnum),optional(enumValDefs()))), // only valid for enums, but simplifying
-			zeroOrMore(slotDef()),
+			// Static block missing from Fan grammar
+			zeroOrMore(firstOf(staticBlock(), slotDef())),
 			BRACKET_R, OPT_LF()));
 	}
 
