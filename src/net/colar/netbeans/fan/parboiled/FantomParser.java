@@ -107,7 +107,7 @@ public class FantomParser extends BaseParser<Object>
 			OPT_LF(),
 			BRACKET_L,
 			OPT_LF(),
-			optional(sequence(peekTest(inEnum), enumValDefs())), // only valid for enums, but simplifying
+			optional(sequence(peekTest(inEnum),optional(enumValDefs()))), // only valid for enums, but simplifying
 			zeroOrMore(slotDef()),
 			BRACKET_R, OPT_LF()));
 	}
@@ -150,7 +150,8 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule enumValDef()
 	{
-		return sequence(OPT_LF(), id(), optional(enforcedSequence(PAR_L, optional(args()), PAR_R)));
+		// Fantom grammar is missing "doc"
+		return sequence(OPT_LF(), optional(doc()), id(), optional(enforcedSequence(PAR_L, optional(args()), PAR_R)));
 	}
 
 	public Rule slotDef()

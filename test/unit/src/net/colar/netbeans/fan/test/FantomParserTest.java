@@ -39,11 +39,11 @@ public class FantomParserTest implements JOTTestable
 		{ //TODO: with ifExpr it takes 9ms, whereas with condOrExpr  it takes <5
 			try
 			{
-			result = parse(parser, parser.slotDef(), "override CType? base { get { load; return *base } internal set}");
+			//result = parse(parser, parser.slotDef(), "override CType? base { get { load; return *base } internal set}");
 			testNodeName("singleTest1", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
 			//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
 			//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-			//testFile("/home/thibautc/fantom-1.0.51/src/testCompiler/fan/TokenizerTest.fan");
+			testFile("/home/thibautc/fantom-1.0.51/src/sys/fan/Endian.fan");
 			}catch(Exception e){e.printStackTrace();}
 			System.out.println(ParseTreeUtils.printNodeTree(result));
 			return;
