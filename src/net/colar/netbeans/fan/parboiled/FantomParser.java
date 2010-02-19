@@ -651,6 +651,8 @@ public class FantomParser extends BaseParser<Object>
 		return enforcedSequence("`",// (not using TICK terminal, since it could eat empty space inside the string)
 			zeroOrMore(firstOf(
 			unicodeChar(),
+			// missing from Fantom litteral page, special URI escape sequences
+			sequence('\\', firstOf(':','/','#','[',']','@','&','=',';')),
 			escapedChar(),
 			sequence(testNot(TICK), any()))),
 			TICK);
@@ -663,8 +665,6 @@ public class FantomParser extends BaseParser<Object>
 			enforcedSequence('\'',// (not using SINGLE_Q terminal, since it could eat empty space inside the char)
 				firstOf(
 				unicodeChar(),
-				// missing from Fantom litteral page, special URI escape sequences
-				sequence('\\', firstOf(':','/','#','[',']','@','&','=',';')),
 				escapedChar(), // standard esapes
 				any()), //all else
 				SINGLE_Q));
