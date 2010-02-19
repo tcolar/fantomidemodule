@@ -97,7 +97,8 @@ public class FantomParser extends BaseParser<Object>
 			optional(protection()),
 			enforcedSequence(
 			firstOf(
-			sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)), KW_CLASS), // standard class
+			// Some fantom code has protection after modifiers, so allowing that
+			sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)),	optional(protection()), KW_CLASS), // standard class
 			enforcedSequence(ENUM, KW_CLASS, setInEnum(true)), // enum class
 			enforcedSequence(FACET, KW_CLASS), // facet class
 			sequence(optional(KW_CONST), KW_MIXIN) // mixin
@@ -175,6 +176,8 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
 			KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
+			// Some fantom code has protection after modifiers, so allowing that
+			optional(protection()),
 			/*typeAndOrId(),*/ type(), id(), // Type required for fields(no infered) (Grammar does not say so)
 			setFieldInit(true),
 			optional(enforcedSequence(OP_ASSIGN, OPT_LF(), expr())),
@@ -190,6 +193,8 @@ public class FantomParser extends BaseParser<Object>
 				// Fan grammar misses 'final'
 				zeroOrMore(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
 				KW_OVERRIDE, KW_VIRTUAL, KW_FINAL)),
+				// Some fantom code has protection after modifiers, so allowing that
+				optional(protection()),
 				type(),
 				id(),
 				PAR_L),

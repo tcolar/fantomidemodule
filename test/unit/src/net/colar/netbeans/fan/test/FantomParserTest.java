@@ -30,7 +30,7 @@ public class FantomParserTest implements JOTTestable
 		FantomParser parser = Parboiled.createParser(FantomParser.class);
 		ParsingResult<Object> result = null;
 
-		boolean singleTest = false;//false; // Do just the 1 first test
+		boolean singleTest = false;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
 		boolean fantomFilesTest = true; // parse fantom distro files
