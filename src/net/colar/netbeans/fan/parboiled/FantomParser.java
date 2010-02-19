@@ -597,7 +597,7 @@ public class FantomParser extends BaseParser<Object>
 	public Rule map()
 	{
 		return sequence(
-			optional(firstOf(mapType(), simpleMapType())),
+			optional(mapType()),
 			// Not enforced to allow resolving list of typed maps like [Str:Int][]
 			sequence(SQ_BRACKET_L, OPT_LF(), mapItems(), OPT_LF(), SQ_BRACKET_R));
 	}
@@ -725,7 +725,8 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(
 			firstOf(
-				mapType(),
+				// check it's a full map type (using '[') as a simpel map type, will be parsed separately
+				sequence(test(SQ_BRACKET_L), mapType()),
 				funcType(),
 				sequence(id(), optional(sequence(SP_COLCOL, id())))
 				),
@@ -738,39 +739,6 @@ public class FantomParser extends BaseParser<Object>
 			);
 	}
 
-	public Rule simpleMapType()
-	{
-		// It has to be other nonSimpleMapTypes, otherwise it's left recursive (loops forever)
-		return sequence(nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(),
-			optional(
-			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(optional(SP_QMARK), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(SP_QMARK)); // nullable
-	}
-
-	// all types except simple map
-	public Rule nonSimpleMapTypes()
-	{
-		return sequence(
-			firstOf(funcType(), mapType(), simpleType()),
-			optional(
-			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(optional(SP_QMARK), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(SP_QMARK)); // nullable
-	}
-
-	// all types except function
-	public Rule nonFunctionType()
-	{
-		return sequence(
-			// Don't allow simpleMap starting with '|' as this conflict with closing Function.
-			firstOf(sequence(testNot(SP_PIPE), simpleMapType()), mapType(), simpleType()),
-			optional(
-			sequence(optional(SP_QMARK), enforcedSequence(
-			SQ_BRACKET_L, SQ_BRACKET_R))), // list of '?[]'
-			optional(SP_QMARK)); // nullable
-	}
-
 	public Rule simpleType()
 	{
 		return sequence(
@@ -780,9 +748,11 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule mapType()
 	{
-		// We use nonSimpleMapTypes here as well, because [Str:Int:Str] would be confusing
 		// not enforced to allow map rule to work ([Int:Str][5,""])
-		return sequence(SQ_BRACKET_L, nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(), SQ_BRACKET_R);
+		return firstOf(
+			sequence(SQ_BRACKET_L, setNoSimpleMap(true), type(), setNoSimpleMap(false), SP_COL, setNoSimpleMap(true), type(), setNoSimpleMap(false), SQ_BRACKET_R),
+			// check noSimpleMap to prevent infinite recusrion
+			sequence(peekTestNot(noSimpleMap), setNoSimpleMap(true), type(), setNoSimpleMap(false), SP_COL, setNoSimpleMap(true), type(), setNoSimpleMap(false)));
 	}
 
 	public Rule funcType()
@@ -796,9 +766,9 @@ public class FantomParser extends BaseParser<Object>
 			// so not allowing types starting with PIPE (testNot), such as an inner function Type (or simpleMap of).
 			// We check in an order that's faster
 			// First we check for one with no formals |->| or |->Str|
-			enforcedSequence(OP_ARROW, optional(nonFunctionType())),
-			// Then we check for one with formals only |Int i| or maybe full: |Int i -> Str|
-			sequence(formals(), optional(enforcedSequence(OP_ARROW, optional(nonFunctionType()))))),
+			enforcedSequence(OP_ARROW, optional(sequence(testNot(SP_PIPE),type()))),
+			// Then we check for one with formals |Int i| or maybe full: |Int i -> Str|
+			sequence(formals(), optional(enforcedSequence(OP_ARROW, optional(sequence(testNot(SP_PIPE),type())))))),
 			SP_PIPE));
 	}
 
