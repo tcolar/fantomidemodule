@@ -147,7 +147,7 @@ public class FantomParser extends BaseParser<Object>
 	//------------------- Slot Def ---------------------------------------------
 	public Rule enumValDefs()
 	{
-		return sequence(enumValDef(), zeroOrMore(sequence(SP_COMMA, enumValDef())), OPT_LF(), eos());
+		return sequence(enumValDef(), zeroOrMore(sequence(SP_COMMA, enumValDef())), eos());
 	}
 
 	public Rule enumValDef()

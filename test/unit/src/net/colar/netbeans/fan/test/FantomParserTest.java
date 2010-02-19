@@ -463,7 +463,7 @@ public class FantomParserTest implements JOTTestable
 	{
 		try
 		{
-			JOTTester.singleTest(new FantomParserTest(), true);
+			JOTTester.singleTest(new FantomParserTest(), false);
 		} catch (Throwable t)
 		{
 			t.printStackTrace();
