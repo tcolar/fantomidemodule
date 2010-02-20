@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan;
 
 import java.util.Collection;
+import net.colar.netbeans.fan.parboiled.FantomParserTokens;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.spi.lexer.LanguageHierarchy;
@@ -71,6 +72,7 @@ public class FanTokenID implements TokenId
 	@Override
 	protected Collection<FanTokenID> createTokenIds()
 	{
+		FantomParserTokens.buildTokenList();
 	    return NBFanLexer.getTokenIds();
 	}
 
@@ -85,4 +87,6 @@ public class FanTokenID implements TokenId
     {
 	return language;
     }
+
+
 }
