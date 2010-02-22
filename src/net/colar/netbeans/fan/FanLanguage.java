@@ -58,23 +58,23 @@ public class FanLanguage extends DefaultLanguageConfig
 		return "fan";
 	}
 
-	@Override
+	/*@Override
 	public Parser getParser()
 	{
 		return new NBFanParser();
-	}
+	}*/
 
 	@Override
 	public boolean hasStructureScanner()
 	{
-		return true;
+		return false;
 	}
 
-	@Override
+	/*@Override
 	public StructureScanner getStructureScanner()
 	{
 		return new FanStructureAnalyzer();
-	}
+	}*/
 
 	@Override
 	public KeystrokeHandler getKeystrokeHandler()
@@ -82,11 +82,11 @@ public class FanLanguage extends DefaultLanguageConfig
 		return new FanKeyStrokeHandler();
 	}
 
-	@Override
+	/*@Override
 	public SemanticAnalyzer getSemanticAnalyzer()
 	{
 		return new FanSemanticAnalyzer();
-	}
+	}*/
 
 	@Override
 	public Set<String> getBinaryLibraryPathIds()
@@ -106,12 +106,11 @@ public class FanLanguage extends DefaultLanguageConfig
 		return new FanFormatter();
 	}
 
-	// Being worked on
-	@Override
+	/*@Override
 	public CodeCompletionHandler getCompletionHandler()
 	{
  		return new FanCompletionHandler();
-	}
+	}*/
 
 	@Override
 	public boolean hasFormatter()

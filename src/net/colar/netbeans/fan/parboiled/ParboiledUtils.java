@@ -4,10 +4,9 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
-import java.util.List;
-import org.parboiled.Context;
 import org.parboiled.Node;
-import org.parboiled.support.InputBuffer;
+import org.parboiled.common.Predicate;
+import org.parboiled.support.LabelPrefixPredicate;
 import org.parboiled.support.ParseTreeUtils;
 
 /**
@@ -19,13 +18,19 @@ public class ParboiledUtils
 {
 	private ParboiledUtils(){}
 
+	public static Node findFirstChildByLabel(Node parent, String label)
+	{
+		//return ParseTreeUtils.findNode(parent, new FindFirstByLabelPredicate(label));
+		return ParseTreeUtils.findNode(parent, new LabelPrefixPredicate(label));
+	}
+
 	/**
 	 * Find the "last"(most recent) non-empty node found in this context
 	 * @param ctx
 	 * @param buffer
 	 * @return
 	 */
-	public static Node getLastNonEmptyNode(Context ctx, InputBuffer buffer)
+	/*public static Node getLastNonEmptyNode(Context ctx, InputBuffer buffer)
 	{
 		// scan up the context tree until we find one that contains a non empty node
 		while (ctx != null)
@@ -45,12 +50,12 @@ public class ParboiledUtils
 			ctx = ctx.getParent();
 		}
 		return null;
-	}
+	}*/
 
 	/*
 	 * Find the smallest(leaf) and most recent non-empty sunode of this node
 	 */
-	public static Node getLastNonEmptyNode(Node node, InputBuffer buffer)
+	/*public static Node getLastNonEmptyNode(Node node, InputBuffer buffer)
 	{
 		String t = ParseTreeUtils.getNodeText(node, buffer);
 		if (t == null || t.length() == 0)
@@ -71,5 +76,21 @@ public class ParboiledUtils
 			}
 		}
 		return node;
+	}*/
+
+	private class FindFirstByLabelPredicate<V> implements Predicate<Node<V>>
+	{
+		private final String label;
+		public FindFirstByLabelPredicate(String label)
+		{
+			this.label=label;
+		}
+
+		public boolean apply(Node<V> node)
+		{
+				if(node.getLabel().equals(label))
+					return true;
+			return false;
+		}
 	}
 }

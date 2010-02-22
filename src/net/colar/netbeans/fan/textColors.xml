@@ -10,7 +10,10 @@
     <fontcolor default="character" name="character"/>
     <fontcolor foreColor="006f00" name="DOC"/>
     <fontcolor foreColor="0066ff" name="comparator"/>
-    <fontcolor foreColor="ff0066" name="assignment"/>
+    <fontcolor foreColor="a606fd" name="assignment"/>
+    <fontcolor foreColor="ff0000" name="initialization">
+		<font style="bold"/>
+	</fontcolor>
     <fontcolor foreColor="ff006f" name="DSL">
 	<font style="bold"/>
     </fontcolor>

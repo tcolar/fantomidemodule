@@ -3,73 +3,83 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
-import java.lang.reflect.Field;
 import java.util.Hashtable;
 import net.colar.netbeans.fan.FanTokenID;
 
 /**
- * Parboiled parser does not really provide a lexer, so this class takes the final rules(fields)
- * and consider them lexer ID's
- * It's also create the token with categories, which are in turn used for syntax highlighting
+ * Parboiled parser does not really provide a lexer, so we simulate one using the parser.
+ * This is creates the tokens important to the lexer (syntax highlighting)
  * @author thibautc
  */
 public class FantomParserTokens
 {
+	// lazy inited
+	private static Hashtable<Integer, FanTokenID> tokens = new Hashtable<Integer, FanTokenID>();
+	private static Hashtable<String, Integer> tokenIdByName = new Hashtable<String, Integer>();
 
-	private static Hashtable<String, String> getCategories()
+	// Lexer label names
+	private static final String[] lexerItems = {"comment","unixLine","doc","lexerOps","lexerSeps","lexerAssign",
+									"lexerInit", "lexerComps", "strs", "uri", "char", "dsl", "keyword", "id", "number",
+									"whiteSpace", "ANY", "error"};
+
+	private static Hashtable<String, String> getColorIds()
 	{
 		Hashtable<String, String> cats = new Hashtable<String, String>();
-		cats.put("LINE_COMMENT", "comment");
-		cats.put("EXEC_COMMENT", "comment");
-		cats.put("MULTI_COMMENT", "comment");
-		cats.put("NUMBER", "number");
-		cats.put("CHAR", "character");
-		cats.put("INC_", "error"); //incomplete
-		cats.put("KW_", "keyword");
-		cats.put("OP_", "operator");
-		cats.put("SP_", "separator");
-		cats.put("CP_", "comparator");
-		cats.put("AS_", "assignment");
-		cats.put("STR", "string");
-		cats.put("QUOTSTR", "string");
-		cats.put("URI", "string");
+		cats.put("comment", "comment");
+		cats.put("doc", "DOC");
+		cats.put("unixLine", "DOC");
+		cats.put("dsl", "DSL");
+		cats.put("number", "number");
+		cats.put("char", "character");
+		cats.put("keyword", "keyword");
+		cats.put("lexerOps", "operator");
+		cats.put("lexerSeps", "separator");
+		cats.put("lexerComps", "comparator");
+		cats.put("lexerAssign", "assignment");
+		cats.put("lexerInit", "initialization");
+		cats.put("strs", "string");
+		cats.put("uri", "string");
+		cats.put("error", "error"); //error token in case of problem with lexer
 		return cats;
 	}
 
-	public static Hashtable<Integer, FanTokenID> buildTokenList()
+	public static FanTokenID getTokenByName(String name)
 	{
-		Hashtable<Integer, FanTokenID> tokens = new Hashtable<Integer, FanTokenID>();
-		Hashtable<String, String> categories= getCategories();
+		Integer id = tokenIdByName.get(name);
+		if(id==null)
+			return null;
+		return tokens.get(id);
+	}
 
-		Class clazz = FantomParser.class;
-		Field[] fields = clazz.getFields();
-		int id = 0;
-		for (Field field : fields)
+	public static Hashtable<Integer, FanTokenID> getTokens()
+	{
+		if (tokens.isEmpty())
 		{
-			id++;
-			FanTokenID token;
-			String name = field.getName();
-			String cat = "";
-			if (categories.containsKey(name))
+			synchronized(FantomParser.class)
 			{
-			    cat = (String)categories.get(name);
-			} else
-			{    // generic categories like KW_xyz
-			    if (name.indexOf("_") > 0)
-			    {
-				String nm = name.substring(0, name.indexOf("_")+1);
-
-				if (categories.containsKey(nm))
+				if (tokens.isEmpty())
 				{
-				    cat = (String)categories.get(nm);
-				}
-			    }
-			}
-			System.out.println("New token: "+name+"("+id+") : "+cat);
-			token = new FanTokenID(name, id, cat);
-			tokens.put(id, token);
-		}
+					tokens = new Hashtable<Integer, FanTokenID>();
+					Hashtable<String, String> colorIds = getColorIds();
 
+					int id = 0;
+					for(String name : lexerItems)
+					{
+						id++;
+						FanTokenID token;
+						String cat = "";
+						if (colorIds.containsKey(name))
+						{
+							cat = (String) colorIds.get(name);
+						}
+						//System.out.println("New token: " + name + "(" + id + ") : " + cat);
+						token = new FanTokenID(name, id, cat);
+						tokens.put(id, token);
+						tokenIdByName.put(name, id);
+					}
+				}
+			}
+		}
 		return tokens;
 	}
 }

@@ -36,13 +36,18 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			OPT_LF(),
 			// Missing from grammar: Optional unix env line
-			optional(sequence("#!", zeroOrMore(sequence(testNot("\n"), any())), "\n")),
+			optional(unixLine()),
 			zeroOrMore(firstOf(using(), incUsing())),
 			zeroOrMore(typeDef()),
 			OPT_LF(),
 			zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
 			OPT_LF(),
 			eoi());
+	}
+
+	public Rule unixLine()
+	{
+		return sequence("#!", zeroOrMore(sequence(testNot("\n"), any())), "\n").label("unixLine");
 	}
 
 	public Rule using()
@@ -180,7 +185,7 @@ public class FantomParser extends BaseParser<Object>
 			optional(protection()),
 			/*typeAndOrId(),*/ type(), id(), // Type required for fields(no infered) (Grammar does not say so)
 			setFieldInit(true),
-			optional(enforcedSequence(OP_ASSIGN, OPT_LF(), expr())),
+			optional(enforcedSequence(AS_INIT, OPT_LF(), expr())),
 			optional(fieldAccessor()),
 			setFieldInit(false),
 			eos());
@@ -233,7 +238,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule param()
 	{
-		return sequence(OPT_LF(), type(), id(), optional(enforcedSequence(OP_ASSIGN, expr())), OPT_LF());
+		return sequence(OPT_LF(), type(), id(), optional(enforcedSequence(AS_INIT, expr())), OPT_LF());
 	}
 
 	public Rule fieldAccessor()
@@ -312,9 +317,9 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(
 			firstOf(
 			// fan parser says if it's start with "id :=" or "Type, id", then it gotta be a localDef (enforce)
-			enforcedSequence(sequence(type(), id(), OP_ASSIGN), OPT_LF(), expr()),
+			enforcedSequence(sequence(type(), id(), AS_INIT), OPT_LF(), expr()),
 			// same if it starts with "id :="
-			enforcedSequence(sequence(id(), OP_ASSIGN), OPT_LF(), expr()),
+			enforcedSequence(sequence(id(), AS_INIT), OPT_LF(), expr()),
 			// var def with no value
 			sequence(type(), id())),
 			eos());
@@ -350,7 +355,7 @@ public class FantomParser extends BaseParser<Object>
 	{
 		// check '=' first as is most common
 		// moved localDef to statement since it can't be on the right hand side
-		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_ASSIGN_OPS), OPT_LF(), assignExpr())));
+		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_OPS), OPT_LF(), assignExpr())));
 	}
 
 	public Rule ifExpr()
@@ -643,7 +648,7 @@ public class FantomParser extends BaseParser<Object>
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
-			sequence(testNot(QUOTE), any()))), QUOTE));
+			sequence(testNot(QUOTE), any()))), QUOTE)).label("strs");
 	}
 
 	public Rule uri()
@@ -655,7 +660,7 @@ public class FantomParser extends BaseParser<Object>
 			sequence('\\', firstOf(':','/','#','[',']','@','&','=',';','?')),
 			escapedChar(),
 			sequence(testNot(TICK), any()))),
-			TICK);
+			TICK).label("uri");
 	}
 
 	public Rule char_()
@@ -665,7 +670,7 @@ public class FantomParser extends BaseParser<Object>
 				unicodeChar(),
 				escapedChar(), // standard esapes
 				any()), //all else
-				SINGLE_Q);
+				SINGLE_Q).label("char");
 	}
 
 	public Rule escapedChar()
@@ -705,7 +710,7 @@ public class FantomParser extends BaseParser<Object>
 			optional(fraction()),
 			optional(exponent()))),
 			optional(nbType()),
-			OPT_SP);
+			OPT_SP).label("number");
 	}
 
 	public Rule fraction()
@@ -827,32 +832,43 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(testNot(keyword()),
 			firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
 			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9'))),
-			OPT_SP);
+			OPT_SP).label("id");
 	}
 
 	public Rule doc()
 	{
-		// In theory there are no empty lines betwen doc and type ... but thta does happen so alowing it
-		return oneOrMore(sequence(OPT_SP, "**", zeroOrMore(sequence(testNot("\n"), any())), OPT_LF()));
+		// In theory there are no empty lines betwen doc and type ... but that does happen so alowing it
+		return oneOrMore(sequence(OPT_SP, "**", zeroOrMore(sequence(testNot("\n"), any())), OPT_LF())).label("doc");
 	}
 
-	@Leaf
 	public Rule spacing()
 	{
 		return oneOrMore(firstOf(
 			// whitespace (Do NOT eat \n since it can be meaningful)
-			oneOrMore(charSet(" \t\u000c")),
-			// multiline comment
-			sequence("/*", zeroOrMore(sequence(testNot("*/"), any())), "*/"), // normal comment
-			// if incomplete multiline comment, then end at end of line
-			sequence("/*", zeroOrMore(sequence(testNot(charSet("\r\n")), any()))/*, charSet("\r\n")*/),
-			// single line comment
-			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any()))/*, charSet("\r\n")*/)));
+			whiteSpace(), comment())).label("spacing");
 	}
 
+	public Rule whiteSpace()
+	{
+		return oneOrMore(charSet(" \t\u000c")).label("whiteSpace");
+	}
+
+	@Leaf
+	public Rule comment()
+	{
+		return firstOf(
+			// multiline comment
+			sequence("/*", zeroOrMore(sequence(testNot("*/"), any())), "*/"),
+			// if incomplete multiline comment, then end at end of line
+			sequence("/*", zeroOrMore(sequence(testNot(charSet("\r\n")), any()))),
+			// single line comment
+			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any())))).label("comment");
+	}
+
+	@Leaf
 	public Rule LF()
 	{
-		return sequence(oneOrMore(sequence(OPT_SP, charSet("\n\r"))), OPT_SP);
+		return sequence(oneOrMore(sequence(OPT_SP, charSet("\n\r"))), OPT_SP).label("LF");
 	}
 
 	public Rule OPT_LF()
@@ -892,7 +908,7 @@ public class FantomParser extends BaseParser<Object>
 			KW_MIXIN, KW_NATIVE, KW_NEW, KW_NULL, KW_ONCE, KW_OVERRIDE, KW_PRIVATE,
 			KW_PROTECTED, KW_PUBLIC, KW_READONLY, KW_RETURN, KW_STATIC, KW_SUPER, KW_SWITCH,
 			KW_THIS, KW_THROW, KW_TRUE, KW_TRY, KW_USING, KW_VIRTUAL, KW_VOID, KW_VOLATILE,
-			KW_WHILE));
+			KW_WHILE)).label("keyword");
 	}
 	// -------------- Terminal items -------------------------------------------
 	// -- Keywords --
@@ -950,7 +966,6 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule OP_SAFE_CALL = terminal("?.");
 	public final Rule OP_SAFE_DYN_CALL = terminal("?->");
 	public final Rule OP_ARROW = terminal("->");
-	public final Rule OP_ASSIGN = terminal(":=");
 	public final Rule OP_ELVIS = terminal("?:");
 	public final Rule OP_OR = terminal("||");
 	public final Rule OP_AND = terminal("&&");
@@ -979,8 +994,9 @@ public class FantomParser extends BaseParser<Object>
 	public final Rule SP_COMMA = terminal(",");
 	public final Rule SP_SEMI = terminal(";");
 	// assignment
+	public final Rule AS_INIT = terminal(":=");
 	public final Rule AS_EQUAL = terminal("=");
-	public final Rule AS_ASSIGN_OPS = firstOf(terminal("*="), terminal("/="),
+	public final Rule AS_OPS = firstOf(terminal("*="), terminal("/="),
 		terminal("%="), terminal("+="), terminal("-="));
 	// others
 	public final Rule QUOTES3 = terminal("\"\"\"");
@@ -1010,7 +1026,7 @@ public class FantomParser extends BaseParser<Object>
 	@Cached
 	public Rule firstOf(Object[] rules)
 	{
-		return new PeekFirstOfMatcher(toRules(rules));
+		return new PeekFirstOfMatcher(toRules(rules)).label("firstOf");
 	}
 
 	/**
@@ -1089,5 +1105,44 @@ public class FantomParser extends BaseParser<Object>
 	{
 		System.out.println(getContext().getPath());
 		return true;
+	}
+
+	// ============ Simulate a lexer ===========================================
+	// This should just craete tokens for the items we want to highlight(color) in the IDE
+	// It should be able to deal with "anything" and not ever fail if possible.
+	public Rule lexer()
+	{
+		// If any changes made here, keep in sync with lexerTokens list in FantomParserTokens.java
+		return sequence(
+			zeroOrMore(firstOf(
+			comment(), unixLine(), doc(),
+			 lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
+			strs(), uri(), char_(), dsl(), keyword(), id(), number(),
+			whiteSpace(), any())).label("lexerItems"),
+			// "Any" includes "everything else" - items withough highlighting.
+			// "Aby" is also is a catchall for other unexpected items (should not happen)
+			eoi()); // until end of file
+	}
+	public Rule lexerOps()
+	{
+		return firstOf(OP_2MINUS, OP_2PLUS, OP_AND, OP_ARROW, AS_INIT, OP_BANG, OP_CURRY, OP_DIV, OP_ELVIS,
+			OP_MINUS, OP_MODULO, OP_MULT, OP_OR, OP_PLUS, OP_POUND, OP_RANGE, OP_RANGE_EXCL, OP_SAFE_CALL,
+			OP_SAFE_DYN_CALL).label("lexerOps");
+	}
+	public Rule lexerSeps()
+	{
+		return firstOf(SP_COL, SP_COLCOL, SP_COMMA, SP_PIPE, SP_QMARK, SP_SEMI).label("lexerSeps");
+	}
+	public Rule lexerComps()
+	{
+		return firstOf(CP_COMPARATORS, CP_EQUALITY).label("lexerComps");
+	}
+	public Rule lexerAssign()
+	{
+		return firstOf(AS_EQUAL, AS_OPS).label("lexerAssign");
+	}
+	public Rule lexerInit()
+	{
+		return AS_INIT.label("lexerInit");
 	}
 }
