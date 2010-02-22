@@ -1,4 +1,9 @@
 /*
+
+// Deprecated (2/22/10) - using parboiled parser from now on
+// Last updated for Fantom 1.0.50
+
+
 Thibaut Colar http://www.colar.net/	       2009
 ANTLR3 Grammar for the Fan programming language
 http://fandev.org/doc/docLang/Grammar.html

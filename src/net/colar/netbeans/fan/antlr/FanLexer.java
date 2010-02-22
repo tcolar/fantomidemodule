@@ -1,3 +1,4 @@
+// Deprecated (2/22/10)- using parboiled parser now
 // $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2010-02-04 13:59:17
 package net.colar.netbeans.fan.antlr;
 import net.colar.netbeans.fan.FanParserResult;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+
+@Deprecated //  Deprecated (2/22/10)- using parboiled parser now
 public class FanLexer extends Lexer {
     public static final int AST_INDEX_EXPR=81;
     public static final int EXPONENT=163;

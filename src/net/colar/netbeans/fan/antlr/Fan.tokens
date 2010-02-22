@@ -1,3 +1,5 @@
+//  Deprecated (2/22/10)- using parboiled parser now
+
 EXPONENT=163
 AST_INDEX_EXPR=81
 DSL=124

@@ -52,7 +52,7 @@
 		</java>
 	</target>
 
-	<target name="compile-grammar" description="Recompile the antlr grammar (Fan.g) into lexer/parser." >
+	<!--<target name="compile-grammar" description="Recompile the antlr grammar (Fan.g) into lexer/parser." >
 		<java jvmargs="-Xmx2200m" classpath="${classpath}" classname="org.antlr.Tool"
 		args="src/net/colar/netbeans/fan/antlr/Fan.g -Xconversiontimeout 995000 -report"/>
 	</target>
@@ -60,6 +60,6 @@
 	<target name="antlr-tokens-to-nb" depends="clean, compile, compile-grammar">
 		<java classpath="${classpath}" classname="net.colar.netbeans.fan.antlr.AntlrTokensToNetbeans"
 		args="src/net/colar/netbeans/fan/antlr/Fan.tokens src/net/colar/netbeans/fan/FanTokens.java net.colar.netbeans.fan"/>
-	</target>
+	</target>-->
 
 </project>

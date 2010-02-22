@@ -33,7 +33,8 @@ public class FantomParserTest implements JOTTestable
 		boolean singleTest = false;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
-		boolean fantomFilesTest = true; // parse fantom distro files
+		boolean fantomFilesTest = false; // parse fantom distro files
+		boolean fantomFilesLexerTest = true; // parse fantom distro files (lexer rules)
 
 		if (singleTest)
 		{ //TODO: with ifExpr it takes 9ms, whereas with condOrExpr  it takes <5
@@ -43,7 +44,7 @@ public class FantomParserTest implements JOTTestable
 			//testNodeName("singleTest1", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
 			//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
 			//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-			testFile("/home/thibautc/fantom-1.0.51/src/compiler/fan/steps/Normalize.fan");
+			testFile("/home/thibautc/fantom-1.0.51/src/compiler/fan/steps/Normalize.fan", false);
 			}catch(Exception e){e.printStackTrace();}
 			//System.out.println(ParseTreeUtils.printNodeTree(result));
 			return;
@@ -356,19 +357,27 @@ public class FantomParserTest implements JOTTestable
 		if (refFilesTest)
 		{
 			// Test real files   TODO: relative paths
-			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/test.fan");
-			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/hello.fan");
-			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/files.fan");
-			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/maps.fan");
+			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/test.fan", false);
+			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/hello.fan", false);
+			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/files.fan", false);
+			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/maps.fan", false);
 			//testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/sending.fan");
 		}
 
 		if (fantomFilesTest)
 		{
 			// Test all Fantom distro examples
-			testAllFanFilesUnder(FAN_HOME + "/examples/");
+			testAllFanFilesUnder(FAN_HOME + "/examples/", false);
 			// Test all Fantom distro sources
-			testAllFanFilesUnder(FAN_HOME + "/src/");
+			testAllFanFilesUnder(FAN_HOME + "/src/", false);
+		}
+
+		if (fantomFilesLexerTest)
+		{
+			// Test all Fantom distro examples
+			testAllFanFilesUnder(FAN_HOME + "/examples/", true);
+			// Test all Fantom distro sources
+			testAllFanFilesUnder(FAN_HOME + "/src/", true);
 		}
 	}
 
@@ -386,7 +395,7 @@ public class FantomParserTest implements JOTTestable
 		return result;
 	}
 
-	private void testAllFanFilesUnder(String folderPath) throws Exception
+	private void testAllFanFilesUnder(String folderPath, boolean lexerOnly) throws Exception
 	{
 		File folder = new File(folderPath);
 		File[] files = folder.listFiles();
@@ -394,20 +403,20 @@ public class FantomParserTest implements JOTTestable
 		{
 			if (f.isDirectory())
 			{
-				testAllFanFilesUnder(f.getAbsolutePath());
+				testAllFanFilesUnder(f.getAbsolutePath(), lexerOnly);
 			} else
 			{
 				if(f.getName().equals("gamma.fan")) // Known invalid file
 					continue;
 				if (f.getName().endsWith(".fan") || f.getName().endsWith(".fwt"))
 				{
-					testFile(f.getAbsolutePath());
+					testFile(f.getAbsolutePath(), lexerOnly);
 				}
 			}
 		}
 	}
 
-	public void testFile(String filePath) throws Exception
+	public void testFile(String filePath, boolean lexerOnly) throws Exception
 	{
 		try
 		{
@@ -420,7 +429,7 @@ public class FantomParserTest implements JOTTestable
 			dis.close();//TODO: finally
 			String testInput = new String(buffer);
 
-			ParsingResult<Object> result = parser.parse(parser.compilationUnit(), testInput);
+			ParsingResult<Object> result = parser.parse((lexerOnly?parser.lexer(): parser.compilationUnit()), testInput);
 
 			long length = new Date().getTime() - start;
 			if (result.hasErrors() )
@@ -434,14 +443,14 @@ public class FantomParserTest implements JOTTestable
 				System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
 			} else*/
 			{
-				System.out.println("Parsed " + filePath + " in " + length + "ms");
+				System.out.println("Parsed " +(lexerOnly?"(lex only)":"")+ filePath + " in " + length + "ms");
 			}
 			
-			JOTTester.checkIf("Parsing " + filePath, !result.hasErrors());
-			JOTTester.checkIf("Parsing time " + filePath, length <2000, "Took: "+length);
+			JOTTester.checkIf("Parsing "  +(lexerOnly?"(lex only)":"")+ filePath, !result.hasErrors());
+			JOTTester.checkIf("Parsing time "  +(lexerOnly?"(lex only)":"")+ filePath, length <2000, "Took: "+length);
 		} catch (Exception e)
 		{
-			JOTTester.checkIf("Exception while parsing " + filePath, false);
+			JOTTester.checkIf("Exception while parsing " +(lexerOnly?"(lex only)":"") + filePath, false);
 			e.printStackTrace();
 			//throw (e);
 		}

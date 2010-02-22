@@ -1,3 +1,4 @@
+// Note: Deprecated (2/22/10)- using parboiled parser now
 lexer grammar Fan;
 
 @members {

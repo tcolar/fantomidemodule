@@ -1,4 +1,5 @@
-/*
+/* Deprecated (2/22/10)- using parboiled parser now
+ *
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -17,6 +18,7 @@ import java.util.Hashtable;
  * This is then used by the lexer/parser impl.
  * @author thibautc
  */
+@Deprecated //  Deprecated (2/22/10)- using parboiled parser now
 public class AntlrTokensToNetbeans
 {
     /**

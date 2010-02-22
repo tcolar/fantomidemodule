@@ -15,6 +15,7 @@ import org.netbeans.spi.lexer.LexerInput;
  * This wraps the lexer data as a charstream.
  * @author tcolar
  */
+@Deprecated //  Deprecated (2/22/10)- using parboiled parser now
 public class NetbeansAntlrStream implements CharStream
 {
 

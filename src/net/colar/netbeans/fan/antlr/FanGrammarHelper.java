@@ -1,4 +1,4 @@
-/*
+/* Deprecated (2/22/10)- using parboiled parser now
  * Thibaut Colar Aug 19, 2009
  */
 
@@ -8,6 +8,7 @@ package net.colar.netbeans.fan.antlr;
  * Some things to be particularely careful to keep in sync when changing the grammar.
  * @author thibautc
  */
+@Deprecated //  Deprecated (2/22/10)- using parboiled parser now
 public class FanGrammarHelper {
 	
 	public static final int[] WS_TOKENS={FanLexer.WS, FanLexer.LB};
