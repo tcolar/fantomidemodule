@@ -17,11 +17,12 @@ public class FantomParserTokens
 	private static Hashtable<Integer, FanTokenID> tokens = new Hashtable<Integer, FanTokenID>();
 	private static Hashtable<String, Integer> tokenIdByName = new Hashtable<String, Integer>();
 
-	// Lexer label names
+	// Lexer label names ... we want all tokens provided by the lexer() rule of the parser to be listed here
 	private static final String[] lexerItems = {"comment","unixLine","doc","lexerOps","lexerSeps","lexerAssign",
 									"lexerInit", "lexerComps", "strs", "uri", "char", "dsl", "keyword", "id", "number",
 									"whiteSpace", "ANY", "error"};
 
+	// Map Token lables with Netbeans color entries (textColors.xml)
 	private static Hashtable<String, String> getColorIds()
 	{
 		Hashtable<String, String> cats = new Hashtable<String, String>();
@@ -43,6 +44,11 @@ public class FantomParserTokens
 		return cats;
 	}
 
+	/**
+	 * Get a token object by it's label/name
+	 * @param name
+	 * @return
+	 */
 	public static FanTokenID getTokenByName(String name)
 	{
 		Integer id = tokenIdByName.get(name);
@@ -51,6 +57,10 @@ public class FantomParserTokens
 		return tokens.get(id);
 	}
 
+	/**
+	 * Get all the defined token (lazilly cached)
+	 * @return
+	 */
 	public static Hashtable<Integer, FanTokenID> getTokens()
 	{
 		if (tokens.isEmpty())

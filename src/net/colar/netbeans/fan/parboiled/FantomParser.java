@@ -10,7 +10,9 @@ import org.parboiled.support.Leaf;
 
 /**
  * Parboiled parser for the Fantom Language
- * Started with Fantom Grammar 1.0.50
+ *
+ * Current for Fantom grammar 1.0.51
+ *
  * Grammar spec:
  * http://fantom.org/doc/docLang/Grammar.html
  *

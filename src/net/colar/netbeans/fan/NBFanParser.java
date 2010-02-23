@@ -7,6 +7,7 @@ package net.colar.netbeans.fan;
 import javax.swing.event.ChangeListener;
 import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.antlr.FanParser;
+import net.colar.netbeans.fan.parboiled.FantomParser;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.Token;
@@ -18,10 +19,11 @@ import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
+import org.parboiled.support.ParsingResult;
 
 /**
  * Parser impl.
- * Bridges NB parser with ANTLR parser
+ * Bridges NB parser with parboiled parser
  * @author tcolar
  */
 public class NBFanParser extends Parser
@@ -38,17 +40,11 @@ public class NBFanParser extends Parser
 	public void parse(Snapshot snapshot)
 	{
 		FanUtilities.GENERIC_LOGGER.debug("Starting parsing of: " + snapshot.getSource().getFileObject().getPath());
-		FanLexer lexer = new FanLexer(new ANTLRStringStream(snapshot.getText().toString()));
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-		FanParser parser = new FanParser(tokens);
-		parser.nbErrors = true;
-		parser.setTreeAdaptor(FAN_TREE_ADAPTOR);
-
-		result = new FanParserResult(snapshot, tokens);
+		result = new FanParserResult(snapshot);
 		try
 		{
-			result = parser.parse(result);
+			result.parse();
 			result.parseAstScope();
 		} catch (Throwable t)
 		{
@@ -64,6 +60,7 @@ public class NBFanParser extends Parser
 	{
 		return getResult();
 	}
+
 	public Result getResult()
 	{
 		return result;
@@ -86,16 +83,5 @@ public class NBFanParser extends Parser
 	{
 		//throw new UnsupportedOperationException("Not supported yet.");
 	}
-	/**
-	 * Static ANTLR tree adaptor.
-	 */
-	public static final TreeAdaptor FAN_TREE_ADAPTOR = new CommonTreeAdaptor()
-	{
 
-		@Override
-		public Object create(Token payload)
-		{
-			return new CommonTree(payload);
-		}
-	};
 }

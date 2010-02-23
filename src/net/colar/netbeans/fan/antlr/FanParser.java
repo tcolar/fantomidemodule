@@ -298,7 +298,7 @@ public class FanParser extends Parser {
     	this.parsingResult=parsingResult;
     	// Parse from grammar root and save the result
     	ParserRuleReturnScope result=prog();
-    	this.parsingResult.setAntlrScope(result);
+    	//this.parsingResult.setAntlrScope(result);
     	return this.parsingResult;
         }
         @Override
@@ -306,8 +306,8 @@ public class FanParser extends Parser {
         {
     		if(! nbErrors)
     			throw(new RuntimeException("Parser Exception",e));
-    		else
-    			parsingResult.addAntlrError(e,paraphrase);
+    		//else
+    			//parsingResult.addAntlrError(e,paraphrase);
         }
 
         Stack<String> paraphrase = new Stack<String>();

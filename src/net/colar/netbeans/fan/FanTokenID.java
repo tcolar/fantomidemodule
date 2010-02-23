@@ -13,7 +13,7 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
 /**
- * Represent a TokenID as found in the lexer tokenstream
+ * Represent a TokenID as found in the lexer (In this case actually the parboiled parser)
  * @author thibautc
  */
 public class FanTokenID implements TokenId
