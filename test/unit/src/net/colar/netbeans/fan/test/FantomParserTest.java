@@ -7,14 +7,18 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
+import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.jot.testing.JOTTestable;
 import net.jot.testing.JOTTester;
+import org.parboiled.Node;
 import org.parboiled.Parboiled;
 import org.parboiled.Rule;
 import org.parboiled.common.StringUtils;
+import org.parboiled.common.ToStringFormatter;
 import org.parboiled.support.ParseTreeUtils;
 import org.parboiled.support.ParsingResult;
+import org.parboiled.trees.GraphUtils;
 
 /**
  * Test new parboiled based parser
@@ -28,9 +32,9 @@ public class FantomParserTest implements JOTTestable
 	public void jotTest() throws Throwable
 	{
 		FantomParser parser = Parboiled.createParser(FantomParser.class);
-		ParsingResult<Object> result = null;
+		ParsingResult<AstNode> result = null;
 
-		boolean singleTest = false;// Do just the 1 first test
+		boolean singleTest = true;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
 		boolean fantomFilesTest = false; // parse fantom distro files
@@ -40,12 +44,15 @@ public class FantomParserTest implements JOTTestable
 		{ //TODO: with ifExpr it takes 9ms, whereas with condOrExpr  it takes <5
 			try
 			{
-			//result = parse(parser, parser.slotDef(), "override CType? base { get { load; return *base } internal set}");
-			//testNodeName("singleTest1", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
-			//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-			//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-			testFile("/home/thibautc/fantom-1.0.51/src/compiler/fan/steps/Normalize.fan", false);
-			}catch(Exception e){e.printStackTrace();}
+				//result = parse(parser, parser.slotDef(), "override CType? base { get { load; return *base } internal set}");
+				//testNodeName("singleTest1", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
+				//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
+				//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
+				testAst("/home/thibautc/fantom-1.0.51/src/compiler/fan/steps/Normalize.fan");
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 			//System.out.println(ParseTreeUtils.printNodeTree(result));
 			return;
 		}
@@ -381,10 +388,10 @@ public class FantomParserTest implements JOTTestable
 		}
 	}
 
-	public ParsingResult<Object> parse(FantomParser parser, Rule rule, String input)
+	public ParsingResult<AstNode> parse(FantomParser parser, Rule rule, String input)
 	{
 		long start = new Date().getTime();
-		ParsingResult<Object> result = parser.parse(rule, input);
+		ParsingResult<AstNode> result = parser.parse(rule, input);
 		long time = new Date().getTime() - start;
 		//System.err.println("Parsing in " + (new Date().getTime() - start) + "ms");
 		if (time > 100)
@@ -406,8 +413,10 @@ public class FantomParserTest implements JOTTestable
 				testAllFanFilesUnder(f.getAbsolutePath(), lexerOnly);
 			} else
 			{
-				if(f.getName().equals("gamma.fan")) // Known invalid file
+				if (f.getName().equals("gamma.fan")) // Known invalid file
+				{
 					continue;
+				}
 				if (f.getName().endsWith(".fan") || f.getName().endsWith(".fwt"))
 				{
 					testFile(f.getAbsolutePath(), lexerOnly);
@@ -429,39 +438,39 @@ public class FantomParserTest implements JOTTestable
 			dis.close();//TODO: finally
 			String testInput = new String(buffer);
 
-			ParsingResult<Object> result = parser.parse((lexerOnly?parser.lexer(): parser.compilationUnit()), testInput);
+			ParsingResult<AstNode> result = parser.parse((lexerOnly ? parser.lexer() : parser.compilationUnit()), testInput);
 
 			long length = new Date().getTime() - start;
-			if (result.hasErrors() )
+			if (result.hasErrors())
 			{
 				System.err.println(StringUtils.join(result.parseErrors, "---\n"));
 				//System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
 			}
 			/*if (length > 5000)
 			{
-				System.out.println("Slow parsing for " + filePath + " in " + length + "ms");
-				System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
+			System.out.println("Slow parsing for " + filePath + " in " + length + "ms");
+			System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
 			} else*/
 			{
-				System.out.println("Parsed " +(lexerOnly?"(lex only)":"")+ filePath + " in " + length + "ms");
+				System.out.println("Parsed " + (lexerOnly ? "(lex only)" : "") + filePath + " in " + length + "ms");
 			}
-			
-			JOTTester.checkIf("Parsing "  +(lexerOnly?"(lex only)":"")+ filePath, !result.hasErrors());
-			JOTTester.checkIf("Parsing time "  +(lexerOnly?"(lex only)":"")+ filePath, length <2000, "Took: "+length);
+
+			JOTTester.checkIf("Parsing " + (lexerOnly ? "(lex only)" : "") + filePath, !result.hasErrors());
+			JOTTester.checkIf("Parsing time " + (lexerOnly ? "(lex only)" : "") + filePath, length < 2000, "Took: " + length);
 		} catch (Exception e)
 		{
-			JOTTester.checkIf("Exception while parsing " +(lexerOnly?"(lex only)":"") + filePath, false);
+			JOTTester.checkIf("Exception while parsing " + (lexerOnly ? "(lex only)" : "") + filePath, false);
 			e.printStackTrace();
 			//throw (e);
 		}
 	}
 
-	public void testNodeName(String label, ParsingResult<Object> result, String nodeName) throws Exception
+	public void testNodeName(String label, ParsingResult<AstNode> result, String nodeName) throws Exception
 	{
 		testNodeName(label, result, nodeName, null);
 	}
 
-	public void testNodeName(String label, ParsingResult<Object> result, String nodeName, String value) throws Exception
+	public void testNodeName(String label, ParsingResult<AstNode> result, String nodeName, String value) throws Exception
 	{
 		if (result.hasErrors())
 		{
@@ -475,6 +484,45 @@ public class FantomParserTest implements JOTTestable
 		{
 			String txt = ParseTreeUtils.getNodeText(result.parseTreeRoot, result.inputBuffer);
 			JOTTester.checkIf(label + " - check value", txt.equals(value), "'" + value + "' VS '" + txt + "'");
+		}
+	}
+
+	public void testAst(String filePath) throws Exception
+	{
+		FantomParser parser = Parboiled.createParser(FantomParser.class);
+
+		DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
+		byte[] buffer = new byte[dis.available()];
+		dis.readFully(buffer);
+		dis.close();//TODO: finally
+		String testInput = new String(buffer);
+
+		ParsingResult<AstNode> result = parser.parse(parser.compilationUnit(), testInput);
+
+		if (result.hasErrors())
+		{
+			System.err.println(StringUtils.join(result.parseErrors, "---\n"));
+			System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
+		}
+
+		Node<AstNode> nd = result.parseTreeRoot;
+		String inc = "";
+		printNode(nd, inc);
+		System.out.println("Abstract Syntax Tree:\n" +
+                    GraphUtils.printTree(result.parseTreeRoot.getValue(), new ToStringFormatter<AstNode>()) + '\n');
+		//System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
+	}
+
+	public static void printNode(Node<AstNode> nd, String inc)
+	{
+		AstNode astNd = nd.getValue();
+		if(astNd!=null)
+		{
+			System.out.println(inc+astNd.toString()+" "+nd.getLabel());
+		}
+		for(Node<AstNode> subNode: nd.getChildren())
+		{
+			printNode(subNode, inc+"  ");
 		}
 	}
 

@@ -178,7 +178,7 @@ public class FanLexAstUtils
 		{
 			return OffsetRange.NONE;
 		}
-		CommonTokenStream tokenStream = result.getTokenStream();
+		CommonTokenStream tokenStream = null;//result.getTokenStream();
 		CommonToken startToken = (CommonToken) tokenStream.get(start);
 		CommonToken endToken = (CommonToken) tokenStream.get(end);
 		OffsetRange range = new OffsetRange(startToken.getStartIndex(), endToken.getStopIndex() + 1);
@@ -194,7 +194,7 @@ public class FanLexAstUtils
 		//System.out.println("AstNode token: "+pResult.getTokenStream().get(index).toString());
 		//System.out.println("AstNode token type: "+pResult.getTokenStream().get(index).getType());
 		//System.out.println("AstNode token text: '"+pResult.getTokenStream().get(index).getText()+"'");
-		CommonTree node = findASTNodeAt(pResult, pResult.getTree(), tokenIndex);
+		CommonTree node = findASTNodeAt(pResult, null/*pResult.getTree()*/, tokenIndex);
 		// If not found, return the root
 		if (node == null)
 		{
@@ -745,7 +745,7 @@ public class FanLexAstUtils
 		int last = node.getTokenStopIndex();
 		if(startOffset < last)
 			last=startOffset;
-		CommonTokenStream ts = result.getTokenStream();
+		CommonTokenStream ts = null;//result.getTokenStream();
 		for (int i = last; i >= first; i--)
 		{
 			if (ts.get(i).getType() == type)

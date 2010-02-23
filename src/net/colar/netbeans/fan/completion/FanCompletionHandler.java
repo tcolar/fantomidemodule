@@ -507,7 +507,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			String prefix = "";
 			if (exprNode.getTokenStopIndex() > index)
 			{
-				prefix = result.getTokenStream().get(index + 1).getText();
+				prefix = null;//result.getTokenStream().get(index + 1).getText();
 			}
 			FanUtilities.GENERIC_LOGGER.debug("Prefix: " + prefix);
 			// we want to stop just before the Call token

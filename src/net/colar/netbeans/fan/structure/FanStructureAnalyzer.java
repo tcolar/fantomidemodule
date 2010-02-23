@@ -173,11 +173,11 @@ public class FanStructureAnalyzer implements StructureScanner
 	@Override
 	public Map<String, List<OffsetRange>> folds(ParserResult result)
 	{
-		CommonTokenStream tokenStream = ((FanParserResult) result).getTokenStream();
+		CommonTokenStream tokenStream = null;//((FanParserResult) result).getTokenStream();
 
 		FanParserResult fanResult = (FanParserResult) result;
 		Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
-		CommonTree ast = fanResult.getTree();
+		CommonTree ast = null;//fanResult.getTree();
 		addFolds(
 			tokenStream, folds, ast);
 		return folds;

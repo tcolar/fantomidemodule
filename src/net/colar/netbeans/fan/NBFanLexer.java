@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 //import org.antlr.runtime.CommonToken;
 import java.util.Iterator;
+import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.FantomParserTokens;
 import net.colar.netbeans.fan.parboiled.ParboiledUtils;
@@ -92,7 +93,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		}
 		//System.out.println("Data: " + data);
 		FantomParser parser = new FantomParser();
-		ParsingResult<Object> result = parser.parse(parser.lexer(), data.toString());
+		ParsingResult<AstNode> result = parser.parse(parser.lexer(), data.toString());
 		if (result.hasErrors())
 		{
 			// This really should never happen, since lexer should be able to deal with almost anything.

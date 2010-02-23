@@ -39,7 +39,7 @@ public class FanRootScope extends FanAstScope
 
 	public FanRootScope(FanParserResult result)
 	{
-		super(null, result.getTree());
+		super(null, null/*result.getTree()*/);
 		this.parserResult = result;
 
 		//FanLexAstUtils.dumpTree(result.getTree(),0);

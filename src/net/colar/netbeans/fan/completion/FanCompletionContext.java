@@ -62,7 +62,7 @@ public class FanCompletionContext
 		isPrefixMatch = context.isPrefixMatch(); // ?
 		doc = result.getSnapshot().getSource().getDocument(true);
 		tokenStream = FanLexAstUtils.getFanTokenSequence(doc);
-		rootNode = result.getTree();
+		rootNode = null;//result.getTree();
 		curNode = FanLexAstUtils.findASTNodeAt(result, FanLexAstUtils.offsetToTokenIndex(result, offset));
 
 		completionType = determineCompletionType();

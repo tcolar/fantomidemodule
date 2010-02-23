@@ -24,8 +24,9 @@ import org.parboiled.support.Leaf;
 {
 	"InfiniteRecursion"
 })
-public class FantomParser extends BaseParser<Object>
+public class FantomParser extends BaseParser<AstNode>
 {
+	final FantomParserActions actions = new FantomParserActions();
 
 	public boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
 	public boolean inEnum = false; // so we know whether to allow enumDefs
@@ -44,7 +45,7 @@ public class FantomParser extends BaseParser<Object>
 			OPT_LF(),
 			zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
 			OPT_LF(),
-			eoi());
+			eoi(),createParentNode("AST_ROOT"));
 	}
 
 	public Rule unixLine()
@@ -56,12 +57,12 @@ public class FantomParser extends BaseParser<Object>
 	{
 		return sequence(OPT_LF(), enforcedSequence(
 			KW_USING,
-			optional(ffi()),
-			id(),
+			optional(sequence(ffi(), createNode("AST_USING_FFI"))),
+			sequence(id(),
 			zeroOrMore(enforcedSequence(DOT, id())),
-			optional(enforcedSequence(SP_COLCOL, id())),
+			optional(enforcedSequence(SP_COLCOL, id()))), createNode("AST_USING_ID"),
 			optional(usingAs()),
-			eos()), OPT_LF());
+			eos()), createParentNode("AST_USING"), OPT_LF());
 	}
 
 	// Inconplete using - to allow completion
@@ -84,7 +85,7 @@ public class FantomParser extends BaseParser<Object>
 
 	public Rule usingAs()
 	{
-		return enforcedSequence(KW_AS, id());
+		return enforcedSequence(KW_AS, id(), createNode("AST_USING_AS"));
 	}
 
 	public Rule staticBlock()
@@ -638,6 +639,7 @@ public class FantomParser extends BaseParser<Object>
 	}
 
 	// ------------ Litteral items ---------------------------------------------
+	@Leaf
 	public Rule strs()
 	{
 		return firstOf(
@@ -653,6 +655,7 @@ public class FantomParser extends BaseParser<Object>
 			sequence(testNot(QUOTE), any()))), QUOTE)).label("strs");
 	}
 
+	@Leaf
 	public Rule uri()
 	{
 		return enforcedSequence("`",// (not using TICK terminal, since it could consume empty space inside the string)
@@ -665,6 +668,7 @@ public class FantomParser extends BaseParser<Object>
 			TICK).label("uri");
 	}
 
+	@Leaf
 	public Rule char_()
 	{
 		return enforcedSequence('\'',// (not using SINGLE_Q terminal, since it could consume empty space inside the char)
@@ -675,16 +679,19 @@ public class FantomParser extends BaseParser<Object>
 				SINGLE_Q).label("char");
 	}
 
+	@Leaf
 	public Rule escapedChar()
 	{
 		return enforcedSequence('\\', firstOf('b', 'f', 'n', 'r', 't', '"', '\'', '`', '$', '\\'));
 	}
 
+	@Leaf
 	public Rule unicodeChar()
 	{
 		return enforcedSequence("\\u", hexDigit(), hexDigit(), hexDigit(), hexDigit());
 	}
 
+	@Leaf
 	public Rule hexDigit()
 	{
 		return firstOf(digit(),
@@ -692,11 +699,13 @@ public class FantomParser extends BaseParser<Object>
 			charRange('A', 'F'));
 	}
 
+	@Leaf
 	public Rule digit()
 	{
 		return charRange('0', '9');
 	}
 
+	@Leaf
 	public Rule number()
 	{
 		return sequence(
@@ -715,12 +724,14 @@ public class FantomParser extends BaseParser<Object>
 			OPT_SP).label("number");
 	}
 
+	@Leaf
 	public Rule fraction()
 	{
 		// not enfored to allow: "3.times ||" constructs as well as ranges 3..5
 		return sequence(DOT, digit(), zeroOrMore(sequence(zeroOrMore("_"), digit())));
 	}
 
+	@Leaf
 	public Rule exponent()
 	{
 		return enforcedSequence(charSet("eE"),
@@ -729,6 +740,7 @@ public class FantomParser extends BaseParser<Object>
 			zeroOrMore(sequence(zeroOrMore("_"), digit())));
 	}
 
+	@Leaf
 	public Rule nbType()
 	{
 		return firstOf(
@@ -829,6 +841,7 @@ public class FantomParser extends BaseParser<Object>
 	}
 	// ------------ Misc -------------------------------------------------------
 
+	@Leaf
 	public Rule id()
 	{
 		return sequence(testNot(keyword()),
@@ -837,12 +850,14 @@ public class FantomParser extends BaseParser<Object>
 			OPT_SP).label("id");
 	}
 
+	@Leaf
 	public Rule doc()
 	{
 		// In theory there are no empty lines betwen doc and type ... but that does happen so alowing it
 		return oneOrMore(sequence(OPT_SP, "**", zeroOrMore(sequence(testNot("\n"), any())), OPT_LF())).label("doc");
 	}
 
+	@Leaf
 	public Rule spacing()
 	{
 		return oneOrMore(firstOf(
@@ -850,6 +865,7 @@ public class FantomParser extends BaseParser<Object>
 			whiteSpace(), comment())).label("spacing");
 	}
 
+	@Leaf
 	public Rule whiteSpace()
 	{
 		return oneOrMore(charSet(" \t\u000c")).label("whiteSpace");
@@ -873,6 +889,7 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(oneOrMore(sequence(OPT_SP, charSet("\n\r"))), OPT_SP).label("LF");
 	}
 
+	@Leaf
 	public Rule OPT_LF()
 	{
 		return optional(LF());
@@ -899,6 +916,7 @@ public class FantomParser extends BaseParser<Object>
 		return sequence(string, testNot(mustNotFollow), optional(spacing())).label(string);
 	}
 
+	@Leaf
 	public Rule keyword()
 	{
 		return sequence(
@@ -1052,6 +1070,7 @@ public class FantomParser extends BaseParser<Object>
 	 * Custom action to find an end of statement
 	 * @return
 	 */
+	@Leaf
 	public Rule eos()
 	{
 		return sequence(OPT_SP, firstOf(
@@ -1062,10 +1081,12 @@ public class FantomParser extends BaseParser<Object>
 	}
 
 	/**Pass if not following some whitespace*/
+	@Leaf
 	public Rule noSpace()
 	{
 		return peekTestNot(afterSpace());
 	}
+
 	public boolean afterSpace()
 	{
 		char c = getContext().getCurrentLocation().lookAhead(getContext().getInputBuffer(), -1);
@@ -1110,7 +1131,7 @@ public class FantomParser extends BaseParser<Object>
 	}
 
 	// ============ Simulate a lexer ===========================================
-	// This should just craete tokens for the items we want to highlight(color) in the IDE
+	// This should just create tokens for the items we want to highlight(color) in the IDE
 	// It should be able to deal with "anything" and not ever fail if possible.
 	public Rule lexer()
 	{
@@ -1146,5 +1167,17 @@ public class FantomParser extends BaseParser<Object>
 	public Rule lexerInit()
 	{
 		return AS_INIT.label("lexerInit");
+	}
+
+	public boolean createNode(String name)
+	{
+		SET(actions.createAst(name, LAST_TEXT()));
+		return true;
+	}
+
+	public boolean createParentNode(String name)
+	{
+		SET(actions.createAst(name));
+		return true;
 	}
 }

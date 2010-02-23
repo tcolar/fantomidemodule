@@ -104,7 +104,7 @@ public class FantomSrcParsingTest implements JOTTestable
 				{
 					System.err.println("Error: " + error);
 				}
-				FanLexAstUtils.dumpTree(result.getTree(), 0);
+				FanLexAstUtils.dumpTree(null/*result.getTree()*/, 0);
 				hasErrors = true;
 			}
 			JOTTester.checkIf("ANTLR Parsing " + f.getAbsolutePath(), ! hasErrors);

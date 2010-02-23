@@ -4,20 +4,28 @@
 
 package net.colar.netbeans.fan.parboiled;
 
-import java.awt.event.ActionEvent;
-import javax.swing.text.JTextComponent;
-import org.netbeans.editor.BaseAction;
+import java.util.List;
+import org.parboiled.BaseActions;
+import org.parboiled.Node;
 
 /**
  *
  * @author thibautc
  */
-class FantomParserActions extends BaseAction
+public class FantomParserActions extends BaseActions<AstNode>
 {
-	@Override
-	public void actionPerformed(ActionEvent ae, JTextComponent jtc)
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+	public AstNode createAst(String name, String value) {
+        return new AstNode(name, value);
+    }
+	public AstNode createAst(String name) {
+        return new AstNode(name, (String)null);
+    }
 
+	/*public AstNode createAst(List<AstNode> list) {
+        return new AstNode("Root", list);
+    }*/
+
+	public AstNode createAst(String name, List<AstNode> list) {
+        return new AstNode("Root", list);
+    }
 }

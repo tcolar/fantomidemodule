@@ -49,7 +49,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap<OffsetRange, Set<ColoringAttributes>>();
 		//if (res.getDiagnostics().isEmpty())
 		{
-			CommonTree ast = res.getTree();
+			CommonTree ast = null;//res.getTree();
 			//System.out.println("AST TREE: " + ast.toStringTree());
 			//res.dumpTree();
 			scanTree(res, ast, newHighlights);
