@@ -519,6 +519,10 @@ public class FantomParserTest implements JOTTestable
 		if(astNd!=null)
 		{
 			System.out.println(inc+astNd.toString()+" "+nd.getLabel());
+			for(AstNode snd : astNd.getChildren())
+			{
+				System.out.println(inc+" -> "+snd.toString());				
+			}
 		}
 		for(Node<AstNode> subNode: nd.getChildren())
 		{
