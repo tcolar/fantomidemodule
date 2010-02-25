@@ -48,7 +48,7 @@ public class FantomParserTest implements JOTTestable
 				//testNodeName("singleTest1", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
 				//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
 				//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-				testAst("/home/thibautc/fantom-1.0.51/src/compiler/fan/steps/Normalize.fan");
+				testAst("/home/thibautc/dummy/fan/Main.fan");
 			} catch (Exception e)
 			{
 				e.printStackTrace();
@@ -505,29 +505,12 @@ public class FantomParserTest implements JOTTestable
 			System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
 		}
 
-		Node<AstNode> nd = result.parseTreeRoot;
+		AstNode nd = result.parseTreeRoot.getValue();
 		String inc = "";
-		printNode(nd, inc);
-		System.out.println("Abstract Syntax Tree:\n" +
-                    GraphUtils.printTree(result.parseTreeRoot.getValue(), new ToStringFormatter<AstNode>()) + '\n');
+		AstNode.printNodeTree(nd, inc);
+		//System.out.println("Abstract Syntax Tree:\n" +
+		//            GraphUtils.printTree(result.parseTreeRoot.getValue(), new ToStringFormatter<AstNode>()) + '\n');
 		//System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
-	}
-
-	public static void printNode(Node<AstNode> nd, String inc)
-	{
-		AstNode astNd = nd.getValue();
-		if(astNd!=null)
-		{
-			System.out.println(inc+astNd.toString()+" "+nd.getLabel());
-			for(AstNode snd : astNd.getChildren())
-			{
-				System.out.println(inc+" -> "+snd.toString());				
-			}
-		}
-		for(Node<AstNode> subNode: nd.getChildren())
-		{
-			printNode(subNode, inc+"  ");
-		}
 	}
 
 	public static void main(String[] args)

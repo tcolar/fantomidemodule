@@ -26,7 +26,7 @@ import org.parboiled.support.Leaf;
 })
 public class FantomParser extends BaseParser<AstNode>
 {
-	final FantomParserActions actions = new FantomParserActions();
+	final FantomParserActions ast = new FantomParserActions();
 
 	public boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
 	public boolean inEnum = false; // so we know whether to allow enumDefs
@@ -45,7 +45,7 @@ public class FantomParser extends BaseParser<AstNode>
 			OPT_LF(),
 			zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
 			OPT_LF(),
-			eoi(),createParentNode("AST_ROOT"));
+			eoi(),ast.newNode("AST_COMP_UNIT"), SET(ast.rootNode));
 	}
 
 	public Rule unixLine()
@@ -57,12 +57,12 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		return sequence(OPT_LF(), enforcedSequence(
 			KW_USING,
-			optional(sequence(ffi(), createNode("AST_USING_FFI"))),
+			optional(sequence(ffi(), ast.newNode("AST_USING_FFI"))),
 			sequence(id(),
 			zeroOrMore(enforcedSequence(DOT, id())),
-			optional(enforcedSequence(SP_COLCOL, id()))), createNode("AST_USING_ID"),
-			optional(usingAs()),
-			eos()), createParentNode("AST_USING"), OPT_LF());
+			optional(enforcedSequence(SP_COLCOL, id()))), ast.newNode("AST_USING_ID"),
+			optional(sequence(usingAs(), ast.newNode("AST_USING_AS"))),
+			eos()), ast.newNode("AST_USING"), OPT_LF());
 	}
 
 	// Inconplete using - to allow completion
@@ -85,7 +85,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule usingAs()
 	{
-		return enforcedSequence(KW_AS, id(), createNode("AST_USING_AS"));
+		return enforcedSequence(KW_AS, id());
 	}
 
 	public Rule staticBlock()
@@ -845,8 +845,8 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule id()
 	{
 		return sequence(testNot(keyword()),
-			firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
-			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9'))),
+			sequence(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
+			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9')))),
 			OPT_SP).label("id");
 	}
 
@@ -1169,16 +1169,4 @@ public class FantomParser extends BaseParser<AstNode>
 		return AS_INIT.label("lexerInit");
 	}
 
-	public boolean createNode(String name)
-	{
-		SET(actions.createAst(name, LAST_TEXT()));
-		return true;
-	}
-
-	public boolean createParentNode(String name)
-	{
-		//LAST_VALUE().getChildren().;
-		SET(actions.createAst(name));
-		return true;
-	}
 }
