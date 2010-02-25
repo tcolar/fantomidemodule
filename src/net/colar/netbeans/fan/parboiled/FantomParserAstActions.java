@@ -12,10 +12,12 @@ import org.parboiled.Node;
  * Utility actions for creating Parser AST nodes.
  * @author thibautc
  */
-public class FantomParserActions extends BaseActions<AstNode>
+public class FantomParserAstActions extends BaseActions<AstNode>
 {
+	/**
+	 * Store temporarely orphaned(no parent) node while the AST is being built (bottom-up)
+	 */
 	private List<AstNode> orphanNodes = new ArrayList<AstNode>();
-
 
 	/**
 	 * Utility to create a new AST Node form the last parsed Node (LAT_NODE())
@@ -24,10 +26,10 @@ public class FantomParserActions extends BaseActions<AstNode>
 	 * @param name
 	 * @return
 	 */
-	public boolean newNode(String name)
+	public boolean newNode(AstKind kind)
 	{
 		Node<AstNode> parseNode = LAST_NODE();
-		AstNode node = new AstNode(name, getContext().getPath(), parseNode);
+		AstNode node = new AstNode(kind, getContext().getPath(), parseNode);
 		//System.out.println("New node: "+node);
 		// Add the node into the tree
 		// Note: The AST tree is built bootom - up.

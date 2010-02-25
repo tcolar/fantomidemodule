@@ -22,17 +22,17 @@ public class AstNode
 	private final Node<AstNode> parseNode;
 	/** ParseNode path*/
 	private final String parsePath;
-	/** name os this AST Node -> replace with Enum ?*/
-	private final String name;
+	/** kind of this AST Node*/
+	private final AstKind kind;
 	/** Children AST nodes */
 	private List<AstNode> children = new ArrayList<AstNode>();
 	/** Parent AST Node*/
 	private AstNode parent;
 
-	public AstNode(String name, String path, Node<AstNode> parseNode)
+	public AstNode(AstKind kind, String path, Node<AstNode> parseNode)
 	{
 		this.parseNode = parseNode;
-		this.name = name;
+		this.kind = kind;
 		this.parsePath=path;
 	}
 
@@ -40,7 +40,7 @@ public class AstNode
 	public String toString()
 	{
 		//ParseTreeUtils.getNodeText(parseNode, null)
-		return name + (parseNode==null?"":"[" +  parseNode.getLabel() + "] - ") + parsePath;
+		return kind + (parseNode==null?"":"[" +  parseNode.getLabel() + "] - ") + parsePath;
 	}
 
 	public String getParsePath()
@@ -100,9 +100,9 @@ public class AstNode
 		this.parent = node;
 	}
 
-	public String getName()
+	public AstKind getKind()
 	{
-		return name;
+		return kind;
 	}
 
 	public Node<AstNode> getParseNode()

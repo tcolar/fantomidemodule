@@ -27,7 +27,7 @@ import org.parboiled.support.Leaf;
 })
 public class FantomParser extends BaseParser<AstNode>
 {
-	final FantomParserActions ast = new FantomParserActions();
+	final FantomParserAstActions ast = new FantomParserAstActions();
 
 	public boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
 	public boolean inEnum = false; // so we know whether to allow enumDefs
@@ -47,7 +47,7 @@ public class FantomParser extends BaseParser<AstNode>
 			OPT_LF(),
 			zeroOrMore(doc()) // allow for extra docs at end of file (if last type commented out)
 			// Create comp. unit AST node (root node)
-			), ast.newNode("AST_COMP_UNIT"),
+			), ast.newNode(AstKind.AST_COMP_UNIT),
 			OPT_LF(),
 			eoi());
 	}
@@ -61,12 +61,12 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		return sequence(OPT_LF(), enforcedSequence(
 			KW_USING,
-			optional(sequence(ffi(), ast.newNode("AST_USING_FFI"))),
+			optional(sequence(ffi(), ast.newNode(AstKind.AST_USING_FFI))),
 			sequence(id(),
 			zeroOrMore(enforcedSequence(DOT, id())),
-			optional(enforcedSequence(SP_COLCOL, id()))), ast.newNode("AST_USING_ID"),
-			optional(sequence(usingAs(), ast.newNode("AST_USING_AS"))),
-			eos()), ast.newNode("AST_USING"), OPT_LF());
+			optional(enforcedSequence(SP_COLCOL, id()))), ast.newNode(AstKind.AST_ID),
+			optional(sequence(usingAs(), ast.newNode(AstKind.AST_USING_AS))),
+			eos()), ast.newNode(AstKind.AST_USING), OPT_LF());
 	}
 
 	// Inconplete using - to allow completion
@@ -124,7 +124,7 @@ public class FantomParser extends BaseParser<AstNode>
 			optional(sequence(peekTest(inEnum),optional(enumValDefs()))), // only valid for enums, but simplifying
 			// Static block missing from Fan grammar
 			zeroOrMore(firstOf(staticBlock(), slotDef())),
-			BRACKET_R)), ast.newNode("AST_TYPE_DEF"), OPT_LF());
+			BRACKET_R)), ast.newNode(AstKind.AST_TYPE_DEF), OPT_LF());
 	}
 
 	public Rule protection()
@@ -195,7 +195,7 @@ public class FantomParser extends BaseParser<AstNode>
 			setFieldInit(true),
 			optional(enforcedSequence(AS_INIT, OPT_LF(), expr())),
 			optional(fieldAccessor()),
-			setFieldInit(false)), ast.newNode("AST_FIELD_DEF"),
+			setFieldInit(false)), ast.newNode(AstKind.AST_FIELD_DEF),
 			eos());
 	}
 
