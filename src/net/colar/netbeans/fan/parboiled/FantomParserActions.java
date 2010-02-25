@@ -28,7 +28,7 @@ public class FantomParserActions extends BaseActions<AstNode>
 	{
 		Node<AstNode> parseNode = LAST_NODE();
 		AstNode node = new AstNode(name, getContext().getPath(), parseNode);
-		System.out.println("New node: "+node);
+		//System.out.println("New node: "+node);
 		// Add the node into the tree
 		// Note: The AST tree is built bootom - up.
 		List<AstNode> newOrphans = new ArrayList<AstNode>();

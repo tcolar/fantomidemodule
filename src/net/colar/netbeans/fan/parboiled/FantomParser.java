@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
+import org.h2.command.ddl.CreateAggregate;
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
 import org.parboiled.support.Cached;
@@ -103,6 +104,7 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(
 			setInEnum(false),
 			OPT_LF(),
+			sequence(
 			optional(doc()),
 			zeroOrMore(facet()),
 			optional(protection()),
@@ -122,7 +124,7 @@ public class FantomParser extends BaseParser<AstNode>
 			optional(sequence(peekTest(inEnum),optional(enumValDefs()))), // only valid for enums, but simplifying
 			// Static block missing from Fan grammar
 			zeroOrMore(firstOf(staticBlock(), slotDef())),
-			BRACKET_R, OPT_LF()));
+			BRACKET_R)), ast.newNode("AST_TYPE_DEF"), OPT_LF());
 	}
 
 	public Rule protection()
@@ -184,7 +186,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule fieldDef()
 	{
-		return sequence(
+		return sequence(sequence(
 			zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
 			KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
 			// Some fantom code has protection after modifiers, so allowing that
@@ -193,7 +195,7 @@ public class FantomParser extends BaseParser<AstNode>
 			setFieldInit(true),
 			optional(enforcedSequence(AS_INIT, OPT_LF(), expr())),
 			optional(fieldAccessor()),
-			setFieldInit(false),
+			setFieldInit(false)), ast.newNode("AST_FIELD_DEF"),
 			eos());
 	}
 
