@@ -18,8 +18,8 @@ import org.parboiled.support.Leaf;
  *
  * Test Suite: net.colar.netbeans.fan.test.FantomParserTest
  *
- * Note: ast.newNode calls, create ast node, using the last node matched (LAST_NODE())
- *			ast.newScopeNode, does the same for items that should introduce a scope.
+ * Note: ast.newNode() calls create ast nodes, using the last node matched (LAST_NODE())
+ *		 ast.newScopeNode(), does the same for items that should introduce a scope.
  *
  * @author thibautc
  */
