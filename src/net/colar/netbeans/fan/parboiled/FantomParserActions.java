@@ -6,53 +6,50 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.List;
 import org.parboiled.BaseActions;
+import org.parboiled.Node;
 
 /**
- *
+ * Utility actions for creating Parser AST nodes.
  * @author thibautc
  */
 public class FantomParserActions extends BaseActions<AstNode>
 {
+	private List<AstNode> orphanNodes = new ArrayList<AstNode>();
 
-	public AstNode rootNode = new AstNode("AST_ROOT", "/", null);
-	/*public boolean newNode(String name, Node<AstNode> parserNode) {
-	new AstNode(name, parserNode);
-	return true;
-	}*/
-
-	public boolean newNode(String name)
-	{
-		AstNode node = new AstNode(name, getContext().getPath(), LAST_NODE());
-		addNodeToTree(node);
-		//System.out.println("==== Ast Tree >");
-		//AstNode.printNodeTree(rootNode, "");
-		//System.out.println("==== Ast Tree <");
-		return true;
-	}
 
 	/**
-	 * TODO, not efficient
-	 * @param node
+	 * Utility to create a new AST Node form the last parsed Node (LAT_NODE())
+	 * The new ASTNode gets set as the Value() of the parseNode (SET())
+	 * The new Node gets properly linked with it's parent/children Nodes automatically
+	 * @param name
+	 * @return
 	 */
-	private void addNodeToTree(AstNode node)
+	public boolean newNode(String name)
 	{
-		// this is being built bottom - up
-		String path = node.getPath();
-		List<AstNode> toBeMoved = new ArrayList<AstNode>();
-		for (AstNode nd : rootNode.getChildren())
+		Node<AstNode> parseNode = LAST_NODE();
+		AstNode node = new AstNode(name, getContext().getPath(), parseNode);
+		System.out.println("New node: "+node);
+		// Add the node into the tree
+		// Note: The AST tree is built bootom - up.
+		List<AstNode> newOrphans = new ArrayList<AstNode>();
+		for(AstNode nd : orphanNodes)
 		{
-			if (nd.getPath().length()>  path.length() && nd.getPath().startsWith(path))
+			if (nd.getParsePath().length() > node.getParsePath().length() && nd.getParsePath().startsWith(node.getParsePath()))
 			{
-				//System.out.println("Will move: "+nd.getPath()+" into "+path);
-				toBeMoved.add(nd);
+				//System.out.println("Linking node: "+nd+ " to "+node);
+				nd.setParent(node);
+				node.addChild(nd);
+			}
+			else
+			{
+				//System.out.println("Keeping sibbling node: "+nd);
+				newOrphans.add(nd);
 			}
 		}
-		for (AstNode nd : toBeMoved)
-		{
-			node.addChild(nd);
-			rootNode.removeChild(nd);
-		}
-		// whatever left in rootNode should be a sibling
-		rootNode.addChild(node);
+		newOrphans.add(node);
+		orphanNodes = newOrphans;
+		// Reference ast node from parseNode(LAST_NODE) - using setValue()
+		SET(node);
+		return true;
 	}
 }

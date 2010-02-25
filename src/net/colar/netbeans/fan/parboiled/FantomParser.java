@@ -38,14 +38,17 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		return sequence(
 			OPT_LF(),
+			sequence(
 			// Missing from grammar: Optional unix env line
 			optional(unixLine()),
 			zeroOrMore(firstOf(using(), incUsing())),
 			zeroOrMore(typeDef()),
 			OPT_LF(),
-			zeroOrMore(doc()), // allow for extra docs at end of file (if last type commented out)
+			zeroOrMore(doc()) // allow for extra docs at end of file (if last type commented out)
+			// Create comp. unit AST node (root node)
+			), ast.newNode("AST_COMP_UNIT"),
 			OPT_LF(),
-			eoi(),ast.newNode("AST_COMP_UNIT"), SET(ast.rootNode));
+			eoi());
 	}
 
 	public Rule unixLine()

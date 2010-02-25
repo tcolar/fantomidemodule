@@ -6,41 +6,46 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.List;
 import org.parboiled.Node;
+import org.parboiled.support.InputBuffer;
 import org.parboiled.support.InputLocation;
-import org.parboiled.support.ParseTreeUtils;
-import org.parboiled.trees.GraphUtils;
-import org.parboiled.trees.TreeUtils;
 
 /**
- *
+ * This is the AST node, it's linked to it's parent and children AST Node
+ * It also has a reference to the ParseNode it was created from
+ * The parseNode has a cross reference to it's AstNode through (getValue)
+ * So we can go back and force between parseNode and AstNode easily.
  * @author thibautc
  */
 public class AstNode
 {
-
+	/** Reference to the parse Node, this AST node was created from*/
 	private final Node<AstNode> parseNode;
+	/** ParseNode path*/
+	private final String parsePath;
+	/** name os this AST Node -> replace with Enum ?*/
 	private final String name;
-	private final String path;
+	/** Children AST nodes */
 	private List<AstNode> children = new ArrayList<AstNode>();
+	/** Parent AST Node*/
 	private AstNode parent;
 
 	public AstNode(String name, String path, Node<AstNode> parseNode)
 	{
 		this.parseNode = parseNode;
 		this.name = name;
-		this.path=path;
+		this.parsePath=path;
 	}
 
 	@Override
 	public String toString()
 	{
 		//ParseTreeUtils.getNodeText(parseNode, null)
-		return name + (parseNode==null?"":"[" +  parseNode.getLabel() + "] - ") + path;
+		return name + (parseNode==null?"":"[" +  parseNode.getLabel() + "] - ") + parsePath;
 	}
 
-	public String getPath()
+	public String getParsePath()
 	{
-		return path;
+		return parsePath;
 	}
 
 	public String getLabel()
@@ -56,11 +61,6 @@ public class AstNode
 	public InputLocation getEndLocation()
 	{
 		return parseNode.getEndLocation();
-	}
-
-	public AstNode getValue()
-	{
-		return parseNode.getValue();
 	}
 
 	public AstNode getParent()
@@ -83,15 +83,32 @@ public class AstNode
 		children.remove(nd);
 	}
 
-	public static void printNodeTree(AstNode nd, String inc)
+	public static void printNodeTree(AstNode nd, String inc, InputBuffer buffer)
 	{
 		if (nd != null)
 		{
-			System.out.println(inc+nd.toString());
+			System.out.println(inc+nd.toString() /*+ " "+ParseTreeUtils.getNodeText(nd.getParseNode(), buffer)*/);
 			for (AstNode subNode : nd.getChildren())
 			{
-				printNodeTree(subNode, inc + "  ");
+				printNodeTree(subNode, inc + "  ", buffer);
 			}
 		}
 	}
+
+	void setParent(AstNode node)
+	{
+		this.parent = node;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public Node<AstNode> getParseNode()
+	{
+		return parseNode;
+	}
+
+
 }

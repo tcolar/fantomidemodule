@@ -507,7 +507,7 @@ public class FantomParserTest implements JOTTestable
 
 		AstNode nd = result.parseTreeRoot.getValue();
 		String inc = "";
-		AstNode.printNodeTree(nd, inc);
+		AstNode.printNodeTree(nd, inc, result.inputBuffer);
 		//System.out.println("Abstract Syntax Tree:\n" +
 		//            GraphUtils.printTree(result.parseTreeRoot.getValue(), new ToStringFormatter<AstNode>()) + '\n');
 		//System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
