@@ -28,8 +28,15 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 	 */
 	public boolean newNode(AstKind kind)
 	{
+		return newNode(kind, false);
+	}
+
+	private boolean newNode(AstKind kind, boolean isScopeNode)
+	{
 		Node<AstNode> parseNode = LAST_NODE();
 		AstNode node = new AstNode(kind, getContext().getPath(), parseNode);
+		if(isScopeNode)
+			node.setIsScopeNode();
 		//System.out.println("New node: "+node);
 		// Add the node into the tree
 		// Note: The AST tree is built bootom - up.
@@ -53,5 +60,15 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 		// Reference ast node from parseNode(LAST_NODE) - using setValue()
 		SET(node);
 		return true;
+	}
+
+	/**
+	 * Create a node that defines a scope (holds scope vars)
+	 * @param kind
+	 * @return
+	 */
+	public boolean newScopeNode(AstKind kind)
+	{
+		return newNode(kind, true);
 	}
 }

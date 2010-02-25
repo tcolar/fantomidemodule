@@ -3,7 +3,6 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
-import org.h2.command.ddl.CreateAggregate;
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
 import org.parboiled.support.Cached;
@@ -18,6 +17,9 @@ import org.parboiled.support.Leaf;
  * http://fantom.org/doc/docLang/Grammar.html
  *
  * Test Suite: net.colar.netbeans.fan.test.FantomParserTest
+ *
+ * Note: ast.newNode calls, create ast node, using the last node matched (LAST_NODE())
+ *			ast.newScopeNode, does the same for items that should introduce a scope.
  *
  * @author thibautc
  */
@@ -47,7 +49,7 @@ public class FantomParser extends BaseParser<AstNode>
 			OPT_LF(),
 			zeroOrMore(doc()) // allow for extra docs at end of file (if last type commented out)
 			// Create comp. unit AST node (root node)
-			), ast.newNode(AstKind.AST_COMP_UNIT),
+			), ast.newScopeNode(AstKind.AST_COMP_UNIT),
 			OPT_LF(),
 			eoi());
 	}
@@ -94,7 +96,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule staticBlock()
 	{
-		return sequence(KW_STATIC, OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R), OPT_LF());
+		return sequence(KW_STATIC, OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R), ast.newScopeNode(AstKind.AST_BLOCK), OPT_LF());
 	}
 
 	// ------------- Type def --------------------------------------------------
@@ -201,7 +203,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule methodDef()
 	{
-		return enforcedSequence(
+		return sequence(enforcedSequence(
 				sequence(
 				// Fan grammar misses 'final'
 				zeroOrMore(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
@@ -213,12 +215,12 @@ public class FantomParser extends BaseParser<AstNode>
 				PAR_L),
 			optional(params()),
 			PAR_R,
-			methodBody());
+			methodBody()), ast.newScopeNode(AstKind.AST_METHOD_DEF)); // nees own scope because of params
 	}
 
 	public Rule ctorDef()
 	{
-		return enforcedSequence(KW_NEW,
+		return sequence(enforcedSequence(KW_NEW,
 			id(),
 			PAR_L, 
 			optional(params()),
@@ -229,14 +231,14 @@ public class FantomParser extends BaseParser<AstNode>
 			firstOf(
 			enforcedSequence(KW_THIS, DOT, id(), enforcedSequence(PAR_L, optional(args()), PAR_R)),
 			enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), enforcedSequence(PAR_L, optional(args()), PAR_R))))),
-			methodBody());
+			methodBody()), ast.newScopeNode(AstKind.AST_CTOR_DEF));
 	}
 
 	public Rule methodBody()
 	{
 		return sequence(firstOf(
 			enforcedSequence(sequence(OPT_LF(), BRACKET_L), zeroOrMore(stmt()), OPT_LF(), BRACKET_R),
-			eos()), OPT_LF()); // method with no body
+			eos()), ast.newScopeNode(AstKind.AST_BLOCK), OPT_LF()); // method with no body
 	}
 
 	public Rule params()
@@ -268,7 +270,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule block()
 	{
 		return sequence(OPT_LF(), firstOf(
-			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R), // block
+			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R), ast.newScopeNode(AstKind.AST_BLOCK), // block
 			stmt() // single statement
 			), OPT_LF());
 	}
@@ -329,7 +331,7 @@ public class FantomParser extends BaseParser<AstNode>
 			// same if it starts with "id :="
 			enforcedSequence(sequence(id(), AS_INIT), OPT_LF(), expr()),
 			// var def with no value
-			sequence(type(), id())),
+			sequence(type(), id())), ast.newNode(AstKind.AST_LOCAL_DEF),
 			eos());
 	}
 

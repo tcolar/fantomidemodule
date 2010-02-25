@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.parboiled;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import org.parboiled.Node;
 import org.parboiled.support.InputBuffer;
@@ -28,7 +29,8 @@ public class AstNode
 	private List<AstNode> children = new ArrayList<AstNode>();
 	/** Parent AST Node*/
 	private AstNode parent;
-	// TODO: scope var table (hash)
+	/**scope var table (hash) - Null if not a scoping Node*/
+	private Hashtable scopeVars = null;
 
 	public AstNode(AstKind kind, String path, Node<AstNode> parseNode)
 	{
@@ -41,7 +43,7 @@ public class AstNode
 	public String toString()
 	{
 		//ParseTreeUtils.getNodeText(parseNode, null)
-		return kind + (parseNode==null?"":"[" +  parseNode.getLabel() + "] - ") + parsePath;
+		return kind +(scopeVars!=null?"(Scope)":"") + (parseNode==null?"":"[" +  parseNode.getLabel() + "] - ") + parsePath;
 	}
 
 	public String getParsePath()
@@ -111,5 +113,9 @@ public class AstNode
 		return parseNode;
 	}
 
+	public void setIsScopeNode()
+	{
+		scopeVars = new Hashtable();
+	}
 
 }
