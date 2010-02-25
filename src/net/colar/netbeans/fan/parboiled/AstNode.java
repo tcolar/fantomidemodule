@@ -28,6 +28,7 @@ public class AstNode
 	private List<AstNode> children = new ArrayList<AstNode>();
 	/** Parent AST Node*/
 	private AstNode parent;
+	// TODO: scope var table (hash)
 
 	public AstNode(AstKind kind, String path, Node<AstNode> parseNode)
 	{

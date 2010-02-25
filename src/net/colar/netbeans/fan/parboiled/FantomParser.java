@@ -59,27 +59,27 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule using()
 	{
-		return sequence(OPT_LF(), enforcedSequence(
+		return sequence(OPT_LF(), sequence(
 			KW_USING,
 			optional(sequence(ffi(), ast.newNode(AstKind.AST_USING_FFI))),
 			sequence(id(),
-			zeroOrMore(enforcedSequence(DOT, id())),
-			optional(enforcedSequence(SP_COLCOL, id()))), ast.newNode(AstKind.AST_ID),
+			zeroOrMore(sequence(DOT, id())),
+			optional(sequence(SP_COLCOL, id()))), ast.newNode(AstKind.AST_ID),
 			optional(sequence(usingAs(), ast.newNode(AstKind.AST_USING_AS))),
 			eos()), ast.newNode(AstKind.AST_USING), OPT_LF());
 	}
 
-	// Inconplete using - to allow completion
+	// Incomplete using - to allow for completion
 	public Rule incUsing()
 	{
-		return enforcedSequence(
+		return sequence(OPT_LF(), sequence(
 			KW_USING,
-			optional(ffi()),
-			optional(id()), // Not optional, but we want a valid ast for completion if missing
-			zeroOrMore(sequence(DOT, id())),// not enforced to allow completion
-			optional(sequence(SP_COLCOL, id())),// not enforced to allow completion
-			optional(usingAs()),
-			optional(eos()), OPT_LF());
+			optional(sequence(ffi(), ast.newNode(AstKind.AST_USING_FFI))),
+			sequence(optional(id()), // Not optional, but we want a valid ast for completion if missing
+			zeroOrMore(sequence(DOT, optional(id()))),// not enforced to allow completion
+			optional(sequence(SP_COLCOL, optional(id())))), ast.newNode(AstKind.AST_ID),// not enforced to allow completion
+			optional(sequence(KW_AS, optional(id()))),
+			eos()), ast.newNode(AstKind.AST_INC_USING), OPT_LF());
 	}
 
 	public Rule ffi()
@@ -89,7 +89,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule usingAs()
 	{
-		return enforcedSequence(KW_AS, id());
+		return sequence(KW_AS, id());
 	}
 
 	public Rule staticBlock()
