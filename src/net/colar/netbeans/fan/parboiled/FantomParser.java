@@ -113,12 +113,12 @@ public class FantomParser extends BaseParser<AstNode>
 			enforcedSequence(
 			firstOf(
 			// Some fantom code has protection after modifiers, so allowing that
-			sequence(zeroOrMore(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST)),	optional(protection()), KW_CLASS), // standard class
+			sequence(zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST), ast.newNode(AstKind.AST_MODIFIER))),	optional(protection()), KW_CLASS), // standard class
 			enforcedSequence(ENUM, KW_CLASS, setInEnum(true)), // enum class
 			enforcedSequence(FACET, KW_CLASS), // facet class
-			sequence(optional(KW_CONST), KW_MIXIN) // mixin
+			sequence(optional(sequence(KW_CONST, ast.newNode(AstKind.AST_MODIFIER))), KW_MIXIN) // mixin
 			),
-			id(),
+			id(), ast.newNode(AstKind.AST_ID), 
 			optional(inheritance()),
 			OPT_LF(),
 			BRACKET_L,
@@ -131,12 +131,12 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule protection()
 	{
-		return firstOf(KW_PUBLIC, KW_PROTECTED, KW_INTERNAL, KW_PRIVATE);
+		return sequence(firstOf(KW_PUBLIC, KW_PROTECTED, KW_INTERNAL, KW_PRIVATE), ast.newNode(AstKind.AST_MODIFIER));
 	}
 
 	public Rule inheritance()
 	{
-		return enforcedSequence(SP_COL, typeList());
+		return enforcedSequence(SP_COL, typeList(), ast.newNode(AstKind.AST_INHERITANCE));
 	}
 
 	// ------------- Facets ----------------------------------------------------
@@ -836,7 +836,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule typeList()
 	{
-		return sequence(type(), zeroOrMore(enforcedSequence(SP_COMMA, type())));
+		return sequence(type(), ast.newNode(AstKind.AST_TYPE), zeroOrMore(enforcedSequence(SP_COMMA, type(), ast.newNode(AstKind.AST_TYPE))));
 	}
 
 	public Rule typeAndOrId()
