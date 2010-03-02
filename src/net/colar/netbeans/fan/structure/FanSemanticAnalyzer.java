@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.ast.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.netbeans.modules.csl.api.ColoringAttributes;
@@ -45,7 +45,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	@Override
 	public void run(Result result, SchedulerEvent event)
 	{
-		FanParserResult res = (FanParserResult) result;
+		FanParserTask res = (FanParserTask) result;
 		Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap<OffsetRange, Set<ColoringAttributes>>();
 		//if (res.getDiagnostics().isEmpty())
 		{
@@ -90,7 +90,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	 * @param ast
 	 * @param newHighlights
 	 */
-	private void scanTree(FanParserResult result, CommonTree node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights)
+	private void scanTree(FanParserTask result, CommonTree node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights)
 	{
 		// It seems that even parsing is good again, the cancel flag stays ON
 		// this prevent parsing to restart after then was an error
@@ -145,7 +145,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		}
 	}
 
-	private void addIdToHighlights(FanParserResult result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, CommonTree node, EnumSet<ColoringAttributes> colorAttributes)
+	private void addIdToHighlights(FanParserTask result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, CommonTree node, EnumSet<ColoringAttributes> colorAttributes)
 	{
 		// We can't mess the enumset, so work of a copy (slower though)
 		Set<ColoringAttributes> newAttributes = EnumSet.copyOf(colorAttributes);
@@ -162,11 +162,11 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		addToHighlights(result, newHighlights, idNode, newAttributes);
 	}
 
-	private void addToHighlights(FanParserResult result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, CommonTree node, Set<ColoringAttributes> colorAttributes)
+	private void addToHighlights(FanParserTask result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, CommonTree node, Set<ColoringAttributes> colorAttributes)
 	{
 		if (node != null && !node.isNil() && node.getChildCount() > 0)
 		{
-			OffsetRange range = FanLexAstUtils.getNodeRange((FanParserResult) result, node);
+			OffsetRange range = FanLexAstUtils.getNodeRange((FanParserTask) result, node);
 			if (range != null)
 			{
 				newHighlights.put(range, colorAttributes);
@@ -197,7 +197,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	/**
 	 * Highlight interpolated variables in Strings
 	 */
-	private void addInterpolationHighlights(FanParserResult result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, CommonTree node)
+	private void addInterpolationHighlights(FanParserTask result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, CommonTree node)
 	{
 		//System.out.println(">interpolation");
 		if (node.getChildCount() == 0)
@@ -205,7 +205,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			return; // shouldn't happen but being safe
 		}
 		CommonTree textNode = (CommonTree) node.getChild(0);
-		OffsetRange strRange = FanLexAstUtils.getNodeRange((FanParserResult) result, node);
+		OffsetRange strRange = FanLexAstUtils.getNodeRange((FanParserTask) result, node);
 		String str = textNode.getText();
 		//System.out.println("interpolation : " + str);
 		Matcher matcher = INTERPOLATION.matcher(str);

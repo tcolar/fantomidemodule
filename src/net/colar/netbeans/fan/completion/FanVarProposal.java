@@ -4,7 +4,7 @@
 package net.colar.netbeans.fan.completion;
 
 import java.util.HashSet;
-import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;

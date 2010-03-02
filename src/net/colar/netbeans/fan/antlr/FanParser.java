@@ -1,7 +1,7 @@
 // @Deprecated //  Deprecated (2/22/10)- using parboiled parser now
 // $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2010-02-04 13:59:11
 package net.colar.netbeans.fan.antlr;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 
 
 import org.antlr.runtime.*;
@@ -292,8 +292,8 @@ public class FanParser extends Parser {
         	}
 
         /* Error Handling */
-        FanParserResult parsingResult=null;
-        public FanParserResult parse(FanParserResult parsingResult) throws RecognitionException
+        FanParserTask parsingResult=null;
+        public FanParserTask parse(FanParserTask parsingResult) throws RecognitionException
         {
     	this.parsingResult=parsingResult;
     	// Parse from grammar root and save the result

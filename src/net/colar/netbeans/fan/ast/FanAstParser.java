@@ -3,7 +3,7 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 
 /**
  * Use as fanParserResult(Parse tree) and create the scope / AST tree from it
@@ -11,6 +11,7 @@ import net.colar.netbeans.fan.FanParserResult;
  * Also it has scope builtin so we can use it find variables/fields etc... for a given node/token.
  * @author thibautc
  */
+@Deprecated
 public class FanAstParser
 {
 
@@ -20,7 +21,7 @@ public class FanAstParser
 	 * Also track errors (unresolvable imports, undefined vars and so on)
 	 * @return
 	 */
-	public static FanRootScope parseScope(FanParserResult result)
+	public static FanRootScope parseScope(FanParserTask result)
 	{
 		FanRootScope rootScope = new FanRootScope(result);
 		rootScope.parse();

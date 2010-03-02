@@ -14,7 +14,7 @@ import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.antlr.FanLexer;
-import net.colar.netbeans.fan.ast.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;

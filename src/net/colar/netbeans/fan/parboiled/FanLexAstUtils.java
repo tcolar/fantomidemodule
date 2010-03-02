@@ -2,16 +2,18 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.colar.netbeans.fan.ast;
+package net.colar.netbeans.fan.parboiled;
 
 import net.colar.netbeans.fan.antlr.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.text.Document;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
@@ -20,6 +22,9 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.parboiled.Node;
+import org.parboiled.common.Predicate;
+import org.parboiled.support.ParseTreeUtils;
 
 /**
  * Utilities for lexer / parser / ast trees
@@ -158,7 +163,7 @@ public class FanLexAstUtils
 	 * @param node
 	 * @return range or null if range is invalid
 	 */
-	public static OffsetRange getNodeRange(FanParserResult result, CommonTree node)
+	public static OffsetRange getNodeRange(FanParserTask result, CommonTree node)
 	{
 		if (node == null)
 		{
@@ -168,13 +173,13 @@ public class FanLexAstUtils
 		int end = getTokenStop(node);
 		//System.out.println("Start: " + start + " End:" + end + " ");
 		// Cant figure why this happens, something must be wrong but no clue so far.
-		if(start>end)
+		if (start > end)
 		{
-			int tmp=start;
-			start=end;
-			end=tmp;
+			int tmp = start;
+			start = end;
+			end = tmp;
 		}
-		if(start==-1)
+		if (start == -1)
 		{
 			return OffsetRange.NONE;
 		}
@@ -189,7 +194,7 @@ public class FanLexAstUtils
 	 * Finds the closest(smallest) AST node at given token index
 	 * Returns root node if no better macth found.
 	 */
-	public static CommonTree findASTNodeAt(FanParserResult pResult, int tokenIndex)
+	public static CommonTree findASTNodeAt(FanParserTask pResult, int tokenIndex)
 	{
 		//System.out.println("AstNode token: "+pResult.getTokenStream().get(index).toString());
 		//System.out.println("AstNode token type: "+pResult.getTokenStream().get(index).getType());
@@ -198,7 +203,7 @@ public class FanLexAstUtils
 		// If not found, return the root
 		if (node == null)
 		{
-			node = pResult.getRootScope().getAstNode();
+			node = null;//pResult.getRootScope().getAstNode();
 		}
 		return node;
 	}
@@ -211,7 +216,7 @@ public class FanLexAstUtils
 	 * @param lexerIndex
 	 * @return Null if not found
 	 */
-	private static CommonTree findASTNodeAt(FanParserResult pResult, CommonTree node, int tokenIndex)
+	private static CommonTree findASTNodeAt(FanParserTask pResult, CommonTree node, int tokenIndex)
 	{
 		CommonTree result = null;
 		int start = getTokenStart(node);
@@ -448,7 +453,7 @@ public class FanLexAstUtils
 		return null;
 	}
 
-	public static String getNodeContent(FanParserResult result, Tree node)
+	public static String getNodeContent(FanParserTask result, Tree node)
 	{
 		if (node == null)
 		{
@@ -537,7 +542,7 @@ public class FanLexAstUtils
 		}
 	}
 
-	public static String getChildTextByType(FanParserResult result, CommonTree node)
+	public static String getChildTextByType(FanParserTask result, CommonTree node)
 	{
 		return getChildTextByType(result, node, -1);
 	}
@@ -546,7 +551,7 @@ public class FanLexAstUtils
 	 * - if itemIndex==-1 return the whole content of the node
 	 * - if itemIndex!=-1 return the content of the subchild of the node at the given index
 	 */
-	public static String getChildTextByType(FanParserResult result, CommonTree node, int itemIndex)
+	public static String getChildTextByType(FanParserTask result, CommonTree node, int itemIndex)
 	{
 		String text = "";
 		if (node != null)
@@ -572,7 +577,7 @@ public class FanLexAstUtils
 		return text;
 	}
 
-	public static String getSubChildTextByType(FanParserResult result, CommonTree node, int astType)
+	public static String getSubChildTextByType(FanParserTask result, CommonTree node, int astType)
 	{
 		return getSubChildTextByType(result, node, astType, -1);
 	}
@@ -583,7 +588,7 @@ public class FanLexAstUtils
 	 * - if itemIndex==-1 return the whole content of the node
 	 * - if itemIndex!=-1 return the content of the subchild of the node at the given index
 	 */
-	public static String getSubChildTextByType(FanParserResult result, CommonTree node, int astType, int itemIndex)
+	public static String getSubChildTextByType(FanParserTask result, CommonTree node, int astType, int itemIndex)
 	{
 		String text = "";
 		if (node != null)
@@ -602,7 +607,7 @@ public class FanLexAstUtils
 	 * @param type
 	 * @return
 	 */
-	public static int findLastTokenIndexByType(FanParserResult result, CommonTree node, int type)
+	public static int findLastTokenIndexByType(FanParserTask result, CommonTree node, int type)
 	{
 		int last = node.getTokenStopIndex();
 		return findPrevTokenByType(result, node, last, type);
@@ -616,15 +621,15 @@ public class FanLexAstUtils
 	 */
 	public static int getTokenStart(CommonTree node)
 	{
-		int index =node.getTokenStartIndex();
+		int index = node.getTokenStartIndex();
 		if (node.getChildCount() > 0)
 		{
 			for (CommonTree child : (List<CommonTree>) node.getChildren())
 			{
 				int index2 = getTokenStart(child);
-				if (index2!=-1 && (index == -1 || index2 < index))
+				if (index2 != -1 && (index == -1 || index2 < index))
 				{
-					index=index2;
+					index = index2;
 				}
 			}
 		}
@@ -632,11 +637,11 @@ public class FanLexAstUtils
 		/*int index2 = node.getTokenStartIndex();
 		if (index == -1)
 		{
-			return index2;
+		return index2;
 		}
 		if (index2 == -1)
 		{
-			return index;
+		return index;
 		}
 		// Ok they are not -1
 		return index < index2 ? index : index2;*/
@@ -653,14 +658,14 @@ public class FanLexAstUtils
 		int index = node.getTokenStopIndex();
 		if (node.getChildCount() > 0)
 		{
-			List<CommonTree> children = (List<CommonTree>)node.getChildren();
+			List<CommonTree> children = (List<CommonTree>) node.getChildren();
 			for (int i = children.size() - 1; i >= 0; i--)
 			{
 				CommonTree child = children.get(i);
 				int index2 = getTokenStop(child);
-				if (index2!=-1 && (index==-1 || index2>index))
+				if (index2 != -1 && (index == -1 || index2 > index))
 				{
-					index=index2;
+					index = index2;
 				}
 			}
 		}
@@ -668,18 +673,18 @@ public class FanLexAstUtils
 		/*int index2 = node.getTokenStopIndex();
 		if (index2 == -1)
 		{
-			return index;
+		return index;
 		}
 		if (index == -1)
 		{
-			return index2;
+		return index2;
 		}
 		return index2 > index ? index2 : index;*/
 	}
 
 	public static String getTokenStreamSlice(CommonTokenStream tokenStream, int start, int stop)
 	{
-		List<CommonToken> tokens = (List<CommonToken>)tokenStream.getTokens(start, stop);
+		List<CommonToken> tokens = (List<CommonToken>) tokenStream.getTokens(start, stop);
 		StringBuffer text = new StringBuffer();
 		for (CommonToken tk : tokens)
 		{
@@ -693,7 +698,7 @@ public class FanLexAstUtils
 	 * @param pResult
 	 * @return
 	 */
-	public static int offsetToTokenIndex(FanParserResult pResult, int index)
+	public static int offsetToTokenIndex(FanParserTask pResult, int index)
 	{
 		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
 		int saved = ts.index();
@@ -711,7 +716,7 @@ public class FanLexAstUtils
 	 * @param index
 	 * @return
 	 */
-	public static int tokenIndexToOffset(FanParserResult pResult, int index)
+	public static int tokenIndexToOffset(FanParserTask pResult, int index)
 	{
 		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
 		int saved = ts.index();
@@ -739,12 +744,14 @@ public class FanLexAstUtils
 		return result;
 	}
 
-	public static int findPrevTokenByType(FanParserResult result, CommonTree node, int startOffset, int type)
+	public static int findPrevTokenByType(FanParserTask result, CommonTree node, int startOffset, int type)
 	{
 		int first = node.getTokenStartIndex();
 		int last = node.getTokenStopIndex();
-		if(startOffset < last)
-			last=startOffset;
+		if (startOffset < last)
+		{
+			last = startOffset;
+		}
 		CommonTokenStream ts = null;//result.getTokenStream();
 		for (int i = last; i >= first; i--)
 		{
@@ -758,4 +765,60 @@ public class FanLexAstUtils
 		}
 		return -1;
 	}
+
+	public static OffsetRange getNodeRange(AstNode node)
+	{
+		return new OffsetRange(node.getStartLocation().index, node.getEndLocation().index);
+	}
+
+	public static AstNode getScopeNode(AstNode node)
+	{
+		AstNode nd = node;
+		while (nd != null)
+		{
+			if (nd.isScopeNode())
+			{
+				return nd;
+			}
+			nd = nd.getParent();
+		}
+		return null;
+	}
+
+	/**
+	 * Find a node with given predicate
+	 * @param parentNode
+	 * @param name
+	 */
+	public static AstNode getFirstChild(AstNode parentNode, Predicate pred)
+	{
+		if (parentNode != null)
+		{
+			for (AstNode child : parentNode.getChildren())
+			{
+				if (pred.apply(child))
+				{
+					return child;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static List<AstNode> getChildren(AstNode parentNode, Predicate pred)
+	{
+		List<AstNode> nodes = new ArrayList<AstNode>();
+		if (parentNode != null)
+		{
+			for (AstNode child : parentNode.getChildren())
+			{
+				if (pred.apply(child))
+				{
+					nodes.add(child);
+				}
+			}
+		}
+		return nodes;
+	}
+
 }

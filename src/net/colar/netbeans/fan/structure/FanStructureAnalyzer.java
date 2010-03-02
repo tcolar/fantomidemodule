@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.ast.FanAstField;
 import net.colar.netbeans.fan.ast.FanAstMethod;
 import net.colar.netbeans.fan.ast.FanAstScope;
-import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.ast.FanTypeScope;
@@ -58,9 +58,9 @@ public class FanStructureAnalyzer implements StructureScanner
 		List<StructureItem> items = new ArrayList<StructureItem>();
 		try
 		{
-			FanParserResult fanResult = (FanParserResult) result;
+			FanParserTask fanResult = (FanParserTask) result;
 
-			FanRootScope root = fanResult.getRootScope();
+			FanRootScope root = null;//fanResult.getRootScope();
 			List<FanAstScope> types = root.getChildren();
 			for (FanAstScope scope : types)
 			{
@@ -75,7 +75,7 @@ public class FanStructureAnalyzer implements StructureScanner
 					{
 						inheritance += ", ";
 					}
-					inheritance += inh.toDbSig(false);
+					inheritance += inh.toTypeSig(false);
 				}
 				item.setName(t.getName());
 				String html = t.getName();
@@ -94,7 +94,7 @@ public class FanStructureAnalyzer implements StructureScanner
 						FanAstMethod m = (FanAstMethod) var;
 
 						ElementKind kind = m.isCtor() ? ElementKind.CONSTRUCTOR : ElementKind.METHOD;
-						FanStructureItem mItem = new FanStructureItem(var.getNode(), kind, result);
+						FanStructureItem mItem = new FanStructureItem(null/*var.getNode()*/, kind, result);
 						String returnType = FanType.getShortName(m.getTypeString());
 						if (returnType==null || returnType.equals(FanIndexer.UNRESOLVED_TYPE) || returnType.equalsIgnoreCase("void"))
 						{
@@ -109,7 +109,7 @@ public class FanStructureAnalyzer implements StructureScanner
 							{
 								params += ", ";
 							}
-							String pType = parameters.get(pname).toDbSig(false);
+							String pType = parameters.get(pname).toTypeSig(false);
 							if (pType.equals(FanIndexer.UNRESOLVED_TYPE))
 							{
 								pType = "";
@@ -138,8 +138,8 @@ public class FanStructureAnalyzer implements StructureScanner
 						break;
 					} else if (var instanceof FanAstField)
 					{
-						FanStructureItem slotItem = new FanStructureItem(var.getNode(), ElementKind.FIELD, result);
-						String type = var.getType().toDbSig(false);
+						FanStructureItem slotItem = new FanStructureItem(null/*var.getNode()*/, ElementKind.FIELD, result);
+						String type = var.getType().toTypeSig(false);
 						if (type.equals(FanIndexer.UNRESOLVED_TYPE))
 						{
 							type = "";
@@ -175,7 +175,7 @@ public class FanStructureAnalyzer implements StructureScanner
 	{
 		CommonTokenStream tokenStream = null;//((FanParserResult) result).getTokenStream();
 
-		FanParserResult fanResult = (FanParserResult) result;
+		FanParserTask fanResult = (FanParserTask) result;
 		Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
 		CommonTree ast = null;//fanResult.getTree();
 		addFolds(

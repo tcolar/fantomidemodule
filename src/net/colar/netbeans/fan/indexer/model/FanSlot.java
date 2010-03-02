@@ -4,7 +4,7 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
-import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;

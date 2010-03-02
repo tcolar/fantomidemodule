@@ -3,12 +3,14 @@
  */
 package net.colar.netbeans.fan.ast;
 
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.types.FanResolvedType;
@@ -25,6 +27,7 @@ import org.netbeans.modules.csl.spi.DefaultError;
  * Also holds errors (unresolvable imports, undefined vars and so on)
  * @author thibautc
  */
+@Deprecated
 public class FanRootScope extends FanAstScope
 {
 	// using statements. type=null means unresolvable
@@ -34,12 +37,12 @@ public class FanRootScope extends FanAstScope
 	// For example unesolvable pods, undefined vars and so on
 	List<Error> errors = new ArrayList<Error>();
 	List<Hint> hints = new ArrayList<Hint>();
-	private final FanParserResult parserResult;
+	private final FanParserTask parserResult;
 	private final String pod;
 
-	public FanRootScope(FanParserResult result)
+	public FanRootScope(FanParserTask result)
 	{
-		super(null, null/*result.getTree()*/);
+		super(null/*, null/*result.getTree()*/);
 		this.parserResult = result;
 
 		//FanLexAstUtils.dumpTree(result.getTree(),0);
@@ -245,7 +248,7 @@ public class FanRootScope extends FanAstScope
 		}
 	}
 
-	public FanParserResult getParserResult()
+	public FanParserTask getParserResult()
 	{
 		return parserResult;
 	}

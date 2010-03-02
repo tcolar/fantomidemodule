@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.ast;
 
+import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import java.util.Hashtable;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
@@ -11,13 +12,14 @@ import org.antlr.runtime.tree.CommonTree;
  * Scope for a method
  * @author thibautc
  */
+@Deprecated
 public class FanMethodScope extends FanBlockScope
 {
 	private final FanAstMethod methodSlot;
 
 	public FanMethodScope(FanAstScope parent, FanAstMethod methodSlot)
 	{
-		super(parent, methodSlot.getNode());
+		super(null/*parent, methodSlot.getNode()*/);
 		this.methodSlot=methodSlot;
 	}
 
@@ -31,7 +33,7 @@ public class FanMethodScope extends FanBlockScope
 		for(String name : params.keySet())
 		{
 			FanResolvedType type = params.get(name);
-			FanAstScopeVar var = new FanAstScopeVar(this, node, name, type);
+			FanAstScopeVar var = null;//new FanAstScopeVar(this, node, name, type);
 			addScopeVar(var, true);
 		}
 		// Do normal code block parsing

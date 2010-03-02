@@ -1,15 +1,15 @@
 /*
  * Thibaut Colar Dec 3, 2009
  */
-package net.colar.netbeans.fan.ast;
+package net.colar.netbeans.fan.scope;
 
 import java.util.ArrayList;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.types.FanResolvedType;
-import org.antlr.runtime.tree.CommonTree;
 
 /**
- * Base class for scope vars (fields / methods etc..)
+ * Base class for scope vars (Fields, methods, local defs etc...)
  * @author thibautc
  */
 public abstract class FanAstScopeVarBase
@@ -19,8 +19,29 @@ public abstract class FanAstScopeVarBase
 	// The type of the field / or returned type for a method
 	protected FanResolvedType type = FanResolvedType.makeUnresolved();
 	protected ArrayList<FanAstScopeVarBase.ModifEnum> modifiers = new ArrayList<FanAstScopeVarBase.ModifEnum>();
-	protected FanAstScope scope;
-	protected CommonTree node;
+	protected AstNode node;
+	protected VarKind kind;
+
+	public enum VarKind
+	{
+		IMPORT(1),
+		TYPE_CLASS(11), TYPE_MIXIN(12), TYPE_ENUM(13), TYPE_FACET(14), // fantom types
+		FIELD(31), METHOD(32), //slots
+		LOCAL(41), //local def
+		IMPLIED(51); // this, it etc...}
+		
+		private int val;
+
+		private VarKind(int i)
+		{
+			val = i;
+		}
+
+		public int value()
+		{
+			return val;
+		}
+	}
 
 	// Modifiers
 	public enum ModifEnum
@@ -42,10 +63,10 @@ public abstract class FanAstScopeVarBase
 		}
 	}
 
-	public FanAstScopeVarBase(FanAstScope scope, CommonTree node)
+	public FanAstScopeVarBase(AstNode node, String name)
 	{
-		this.scope = scope;
 		this.node = node;
+		this.name=name;
 	}
 
 	public String getName()
@@ -53,14 +74,9 @@ public abstract class FanAstScopeVarBase
 		return name;
 	}
 
-	public CommonTree getNode()
+	public AstNode getNode()
 	{
 		return node;
-	}
-
-	public FanAstScope getScope()
-	{
-		return scope;
 	}
 
 	public ArrayList<FanAstScopeVarBase.ModifEnum> getModifiers()
@@ -85,7 +101,7 @@ public abstract class FanAstScopeVarBase
 	}
 
 	/**
-	 * Reda modifier string and return enum type
+	 * Read a modifier string and return enum type
 	 * @param m
 	 * @return
 	 */

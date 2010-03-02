@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.ast;
 
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -16,6 +17,7 @@ import org.antlr.runtime.tree.CommonTree;
  * Base object for scope.
  * @author thibautc
  */
+@Deprecated
 public abstract class FanAstScope
 {
 	// the AST node this scope is for
@@ -30,10 +32,10 @@ public abstract class FanAstScope
 	// Node childs
 	private List<FanAstScope> children = new ArrayList<FanAstScope>();
 
-	public FanAstScope(FanAstScope parent, CommonTree astNode)
+	public FanAstScope(FanAstScope parent/*, CommonTree astNode*/)
 	{
 		this.parent = parent;
-		this.astNode = astNode;
+		//this.astNode = astNode;
 	}
 
 	public void dump()
@@ -87,7 +89,7 @@ public abstract class FanAstScope
 		// Can't have duplicated slot name in scope no matter what
 		if (hasScopevar(name))
 		{
-			getRoot().addError("Duplicated name in scope: " + name, var.getNode());
+			//getRoot().addError("Duplicated name in scope: " + name, var.getNode());
 			return;
 		}
 		// check for duplicate name in parent scope if !oallowOverride
@@ -98,7 +100,7 @@ public abstract class FanAstScope
 			{
 				if (scope.hasScopevar(name))
 				{
-					getRoot().addError("Duplicated name: " + name, var.getNode());
+					//getRoot().addError("Duplicated name: " + name, var.getNode());
 					return;
 				}
 				scope = scope.getParent();
@@ -153,7 +155,7 @@ public abstract class FanAstScope
 				Hashtable<String, FanSlot> table = ((FanTypeScope) scope).inheritedSlots;
 				if (table.containsKey(varName))
 				{
-					return FanResolvedType.fromDbSig(table.get(varName).getReturnedType());
+					return FanResolvedType.fromTypeSig(table.get(varName).getReturnedType());
 				}
 			}
 			scope = scope.getParent();
@@ -187,8 +189,8 @@ public abstract class FanAstScope
 				{
 					if (!vars.containsKey(slot.getName()))
 					{
-						FanResolvedType type = FanResolvedType.fromDbSig(slot.getReturnedType());
-						FanAstScopeVarBase var=new FanAstScopeVar(scope, astNode, slot.getName(), type);
+						FanResolvedType type = FanResolvedType.fromTypeSig(slot.getReturnedType());
+						FanAstScopeVarBase var= null; //new FanAstScopeVar(scope, astNode, slot.getName(), type);
 						vars.put(slot.getName(), var);
 					}
 				}

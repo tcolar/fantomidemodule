@@ -6,7 +6,7 @@ package net.colar.netbeans.fan.hints;
 
 import java.util.Collections;
 import java.util.List;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
@@ -22,11 +22,11 @@ public class FanHintsProvider implements HintsProvider
 {
 	public void computeErrors(HintsManager manager, RuleContext ctx, List<Hint> hints, List<Error> errors)
 	{
-		FanParserResult result=(FanParserResult)ctx.parserResult;
-		FanRootScope root = result.getRootScope();
+		FanParserTask result=(FanParserTask)ctx.parserResult;
+		FanRootScope root = null;//result.getRootScope();
 		if(root!=null)
 		{
-			errors.addAll(root.getErrors());
+			errors.addAll(result.getErrors());
 		}
 	}
 

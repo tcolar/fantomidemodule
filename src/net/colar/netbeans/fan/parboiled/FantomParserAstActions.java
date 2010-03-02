@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.parboiled;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseActions;
 import org.parboiled.Node;
 
@@ -28,18 +29,49 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 	 */
 	public boolean newNode(AstKind kind)
 	{
-		return newNode(kind, false);
+		Node<AstNode> parseNode = LAST_NODE();
+		AstNode node = new AstNode(kind, getContext().getPath(), parseNode);
+		linkNode(node);
+		SET(node);
+		return true;
 	}
 
-	private boolean newNode(AstKind kind, boolean isScopeNode)
+		/**
+	 * Create a node that defines a scope (holds scope vars)
+	 * @param kind
+	 * @return
+	 */
+	public boolean newScopeNode(AstKind kind)
 	{
 		Node<AstNode> parseNode = LAST_NODE();
 		AstNode node = new AstNode(kind, getContext().getPath(), parseNode);
-		if(isScopeNode)
-			node.setIsScopeNode();
-		//System.out.println("New node: "+node);
-		// Add the node into the tree
-		// Note: The AST tree is built bootom - up.
+		node.setIsScopeNode();
+		linkNode(node);
+		SET(node);
+		return true;
+	}
+
+	/**
+	 * Create the root node
+	 * @param kind
+	 * @return
+	 */
+	public boolean newRootNode(AstKind kind, FanParserTask task)
+	{
+		Node<AstNode> parseNode = LAST_NODE();
+		RootNode node = new RootNode(kind, getContext().getPath(), parseNode, task);
+		node.setIsScopeNode();
+		linkNode(node);
+		SET(node);
+		return true;
+	}
+
+	/**
+	 * Maintain node links (to parents / children / parsenode)
+	 * @param node
+	 */
+	private void linkNode(AstNode node)
+	{
 		List<AstNode> newOrphans = new ArrayList<AstNode>();
 		for(AstNode nd : orphanNodes)
 		{
@@ -57,18 +89,6 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 		}
 		newOrphans.add(node);
 		orphanNodes = newOrphans;
-		// Reference ast node from parseNode(LAST_NODE) - using setValue()
-		SET(node);
-		return true;
 	}
 
-	/**
-	 * Create a node that defines a scope (holds scope vars)
-	 * @param kind
-	 * @return
-	 */
-	public boolean newScopeNode(AstKind kind)
-	{
-		return newNode(kind, true);
-	}
 }

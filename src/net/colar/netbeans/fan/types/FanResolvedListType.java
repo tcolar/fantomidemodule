@@ -24,8 +24,8 @@ public class FanResolvedListType extends FanResolvedType
 	}
 
 	@Override
-	public String toDbSig(boolean fullyQualified)
+	public String toTypeSig(boolean fullyQualified)
 	{
-		return itemType.toDbSig(fullyQualified)+"[]";
+		return itemType.toTypeSig(fullyQualified)+"[]";
 	}
 }

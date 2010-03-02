@@ -26,13 +26,13 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.regex.Pattern;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.ast.FanAstField;
 import net.colar.netbeans.fan.ast.FanAstMethod;
 import net.colar.netbeans.fan.ast.FanAstScope;
-import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
-import net.colar.netbeans.fan.ast.FanAstScopeVarBase.ModifEnum;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanDocUsing;
@@ -210,8 +210,8 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		log.debug("Indexing parsed result for : " + path);
 
-		FanParserResult fanResult = (FanParserResult) parserResult;
-		indexSrcDoc(path, fanResult.getRootScope());
+		FanParserTask fanResult = (FanParserTask) parserResult;
+		//indexSrcDoc(path, fanResult.getRootScope());
 	}
 
 	/**
@@ -380,7 +380,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							dbSlot.setTypeId(dbType.getId());
 							dbSlot.setSlotKind(kind.value());
 							FanResolvedType slotType = slot.getType();
-							dbSlot.setReturnedType(slotType.toDbSig(true));
+							dbSlot.setReturnedType(slotType.toTypeSig(true));
 							dbSlot.setName(slot.getName());
 							dbSlot.setIsAbstract(slot.hasModifier(ModifEnum.ABSTRACT));
 							dbSlot.setIsNative(slot.hasModifier(ModifEnum.NATIVE));

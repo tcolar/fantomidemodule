@@ -92,7 +92,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 			data.append((char) i);
 		}
 		//System.out.println("Data: " + data);
-		FantomParser parser = new FantomParser();
+		FantomParser parser = new FantomParser(null);
 		ParsingResult<AstNode> result = parser.parse(parser.lexer(), data.toString());
 		if (result.hasErrors())
 		{

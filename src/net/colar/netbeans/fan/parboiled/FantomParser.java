@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
+import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
 import org.parboiled.support.Cached;
@@ -35,6 +36,14 @@ public class FantomParser extends BaseParser<AstNode>
 	public boolean inEnum = false; // so we know whether to allow enumDefs
 	// TODO: See if I can do away with this one and simplify  the map /simpelMap stuff
 	public boolean noSimpleMap = false; // to disallow ambigous simpleMaps in certain situations (within another map, ternaryExpr)
+	/**Parse task that kicked in this parser*/
+	private final FanParserTask parserTask;
+
+
+	public FantomParser(FanParserTask parserTask)
+	{
+		this.parserTask=parserTask;
+	}
 
 	// ------------ Comp Unit --------------------------------------------------
 	public Rule compilationUnit()
@@ -49,7 +58,7 @@ public class FantomParser extends BaseParser<AstNode>
 			OPT_LF(),
 			zeroOrMore(doc()) // allow for extra docs at end of file (if last type commented out)
 			// Create comp. unit AST node (root node)
-			), ast.newScopeNode(AstKind.AST_COMP_UNIT),
+			), ast.newRootNode(AstKind.AST_COMP_UNIT, parserTask),
 			OPT_LF(),
 			eoi());
 	}
@@ -113,10 +122,10 @@ public class FantomParser extends BaseParser<AstNode>
 			enforcedSequence(
 			firstOf(
 			// Some fantom code has protection after modifiers, so allowing that
-			sequence(zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST), ast.newNode(AstKind.AST_MODIFIER))),	optional(protection()), KW_CLASS), // standard class
-			enforcedSequence(ENUM, KW_CLASS, setInEnum(true)), // enum class
-			enforcedSequence(FACET, KW_CLASS), // facet class
-			sequence(optional(sequence(KW_CONST, ast.newNode(AstKind.AST_MODIFIER))), KW_MIXIN) // mixin
+			sequence(zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST), ast.newNode(AstKind.AST_MODIFIER))),	optional(protection()), KW_CLASS).label(AstKind.LBL_CLASS.name()), // standard class
+			enforcedSequence(ENUM, KW_CLASS, setInEnum(true)).label(AstKind.LBL_ENUM.name()), // enum class
+			enforcedSequence(FACET, KW_CLASS).label(AstKind.LBL_FACET.name()), // facet class
+			sequence(optional(sequence(KW_CONST, ast.newNode(AstKind.AST_MODIFIER))), KW_MIXIN).label(AstKind.LBL_MIXIN.name()) // mixin
 			),
 			id(), ast.newNode(AstKind.AST_ID), 
 			optional(inheritance()),

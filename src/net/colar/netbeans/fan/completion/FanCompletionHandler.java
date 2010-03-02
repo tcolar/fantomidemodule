@@ -15,12 +15,12 @@ import java.util.Set;
 import java.util.Vector;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.ast.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.ast.FanAstScope;
-import net.colar.netbeans.fan.ast.FanAstScopeVarBase;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
@@ -82,8 +82,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			int anchor = context.getCaretOffset();
 			preamble = cpl.getPreamble();
 			FanUtilities.GENERIC_LOGGER.debug("preamb: " + preamble);
-			FanParserResult result = (FanParserResult) context.getParserResult();
-			FanRootScope rootScope = result.getRootScope();
+			FanParserTask result = (FanParserTask) context.getParserResult();
+			FanRootScope rootScope = null;//result.getRootScope();
 
 			switch (cpl.getCompletionType())
 			{
@@ -105,7 +105,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		} catch (Exception e)
 		{
 			e.printStackTrace();
-			FanParserResult result = (FanParserResult) context.getParserResult();
+			FanParserTask result = (FanParserTask) context.getParserResult();
 			if (result != null)
 			{
 				result.addError("Completion error", e);
@@ -390,7 +390,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	// TODO: setup nice icons(package/class etc..) in importproposals
 	private void proposeUsing(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
 	{
-		FanParserResult result = (FanParserResult) context.getParserResult();
+		FanParserTask result = (FanParserTask) context.getParserResult();
 		Document doc = result.getSnapshot().getSource().getDocument(true);
 		TokenSequence ts = FanLexAstUtils.getFanTokenSequence(doc);
 		int offset = context.getCaretOffset();
@@ -485,7 +485,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
 	{
-		FanParserResult result = (FanParserResult) context.getParserResult();
+		FanParserTask result = (FanParserTask) context.getParserResult();
 		int offset = context.getCaretOffset();
 		// we want to look at offset -1 (ie: before the caret) so we are IN the expression, not just after.
 		if (offset > 0)
@@ -518,7 +518,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				FanUtilities.GENERIC_LOGGER.info("Call separator not found !");
 				return;
 			}
-			FanResolvedType type = FanResolvedType.makeFromExpr(result.getRootScope(), result, exprNode, index);
+			FanResolvedType type = FanResolvedType.makeFromExpr(result, null/*exprNode*/, index); // FIXME null
 			FanUtilities.GENERIC_LOGGER.debug("Type: " + type.toString()/* +" "+exprNode.toStringTree()*/);
 			if (type.isResolved())
 			{
@@ -529,10 +529,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 	private void proposeVars(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, String prefix)
 	{
-		FanParserResult result = (FanParserResult) context.getParserResult();
+		FanParserTask result = (FanParserTask) context.getParserResult();
 		int index = FanLexAstUtils.offsetToTokenIndex(result, context.getCaretOffset());
 		CommonTree node = FanLexAstUtils.findASTNodeAt(result, index);
-		FanAstScope scope = result.getRootScope().findClosestScope(node);
+		FanAstScope scope = null;//result.getRootScope().findClosestScope(node);
 		for (FanAstScopeVarBase var : scope.getScopeVarsRecursive())
 		{
 			if (var.getName().startsWith(prefix))

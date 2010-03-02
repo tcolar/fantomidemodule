@@ -1,7 +1,7 @@
 // Deprecated (2/22/10)- using parboiled parser now
 // $ANTLR 3.1.2 src/net/colar/netbeans/fan/antlr/Fan.g 2010-02-04 13:59:17
 package net.colar.netbeans.fan.antlr;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 
 
 import org.antlr.runtime.*;

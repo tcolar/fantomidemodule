@@ -6,6 +6,10 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import net.colar.netbeans.fan.FanParserTask;
+import net.colar.netbeans.fan.scope.FanAstScopeVar;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import org.parboiled.Node;
 import org.parboiled.support.InputBuffer;
 import org.parboiled.support.InputLocation;
@@ -30,7 +34,7 @@ public class AstNode
 	/** Parent AST Node*/
 	private AstNode parent;
 	/**scope var table (hash) - Null if not a scoping Node*/
-	private Hashtable scopeVars = null;
+	private Hashtable<String, FanAstScopeVar> scopeVars = null;
 
 	public AstNode(AstKind kind, String path, Node<AstNode> parseNode)
 	{
@@ -115,7 +119,57 @@ public class AstNode
 
 	public void setIsScopeNode()
 	{
-		scopeVars = new Hashtable();
+		scopeVars = new Hashtable<String, FanAstScopeVar>();
 	}
+
+	public boolean isScopeNode()
+	{
+		return scopeVars != null;
+	}
+
+	/**
+	 * Return the scope vars of THIS node only.
+	 */
+	public Hashtable<String, FanAstScopeVar> getLocalScopeVars()
+	{
+		return scopeVars;
+	}
+
+	/**
+	 * Add a scope var to the closest scope.
+	 * @param name
+	 * @param varKind
+	 * @param type
+	 */
+	public void addScopeVar(String name, VarKind varKind, FanResolvedType type)
+	{
+		AstNode scopeNode = FanLexAstUtils.getScopeNode(this);
+		if(scopeNode==null)
+			return;
+		FanAstScopeVar var = new FanAstScopeVar(this, varKind, name, type);
+		scopeNode.getLocalScopeVars().put(name, var);
+	}
+
+	public RootNode getRoot()
+	{
+		AstNode nd = this;
+		while(nd!=null)
+			if(nd instanceof RootNode)
+				return (RootNode) nd;
+		return null;
+	}
+
+	/**
+	 * Get the text content of the node
+	 * @param node
+	 * @return
+	 */
+	public String getNodeText(boolean strip)
+	{
+		//TODO: strip, remove whitespace, comments etc ....
+		//InputBuffer buf = getRoot().getParserTask().getParsingResult().inputBuffer;
+		return toString();
+	}
+
 
 }

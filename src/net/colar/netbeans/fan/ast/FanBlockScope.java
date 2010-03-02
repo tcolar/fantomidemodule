@@ -3,8 +3,10 @@
  */
 package net.colar.netbeans.fan.ast;
 
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import java.util.List;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
@@ -14,12 +16,13 @@ import org.antlr.runtime.tree.CommonTree;
  * Usually delimited by a code block (brackets etc...)
  * @author thibautc
  */
+@Deprecated
 public class FanBlockScope extends FanAstScope
 {
 
-	public FanBlockScope(FanAstScope parent, CommonTree codeBlock)
+	public FanBlockScope(FanAstScope parent/*, CommonTree codeBlock*/)
 	{
-		super(parent, codeBlock);
+		super(parent/*, codeBlock*/);
 	}
 
 	/**
@@ -39,7 +42,7 @@ public class FanBlockScope extends FanAstScope
 	private static void parseBlock(FanAstScope scope, CommonTree node)
 	{
 		//System.out.println(node.toStringTree());
-		FanParserResult result = scope.getRoot().getParserResult();
+		/*FanParserTask result = scope.getRoot().getParserResult();
 		if (node == null || node.getChildCount() == 0)
 		{
 			return;
@@ -51,7 +54,7 @@ public class FanBlockScope extends FanAstScope
 				|| child.getType() == FanParser.AST_CTOR_BLOCK
 				|| child.getType() == FanParser.AST_SCOPE)
 			{
-				FanBlockScope subScope = new FanBlockScope(scope, child);
+				FanBlockScope subScope = new FanBlockScope(scope);
 				scope.addChild(subScope);
 				subScope.parse();
 				if (child.getType() == FanParser.AST_CTOR_BLOCK)
@@ -61,7 +64,7 @@ public class FanBlockScope extends FanAstScope
 					if (type != null)
 					{
 						FanResolvedType resolved = FanResolvedType.makeFromTypeSigWithWarning(scope, type);
-						FanAstScopeVar var = new FanAstScopeVar(scope, node, "it", resolved);
+						FanAstScopeVar var = null;//new FanAstScopeVar(scope, node, "it", resolved);
 						subScope.addScopeVar(var, true);
 					}
 				}
@@ -94,7 +97,7 @@ public class FanBlockScope extends FanAstScope
 						{
 							resolved = FanResolvedType.makeFromTypeSigWithWarning(scope, type);
 						}
-						FanAstScopeVar var = new FanAstScopeVar(scope, node, nm, resolved);
+						FanAstScopeVar var = null;// new FanAstScopeVar(scope, node, nm, resolved);
 						scope.addScopeVar(var, true);
 						break;
 					case FanParser.AST_FUNC_TYPE:
@@ -115,7 +118,7 @@ public class FanBlockScope extends FanAstScope
 							if (ftype != null && !ftype.isNil())
 							{
 								resolved = FanResolvedType.makeFromTypeSig(scope, ftype);
-								FanAstScopeVar fvar = new FanAstScopeVar(scope, child, fnm, resolved);
+								FanAstScopeVar fvar = null; //new FanAstScopeVar(scope, child, fnm, resolved);
 								scope.addScopeVar(fvar, true);
 							}
 						}
@@ -129,7 +132,7 @@ public class FanBlockScope extends FanAstScope
 				// recurse
 				parseBlock(scope, child);
 			}
-		}
+		}*/
 	}
 
 	/*public static String resolveItType(FanAstScope scope)

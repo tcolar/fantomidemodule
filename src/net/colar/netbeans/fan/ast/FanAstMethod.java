@@ -3,9 +3,10 @@
  */
 package net.colar.netbeans.fan.ast;
 
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import java.util.Hashtable;
 import java.util.List;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
@@ -14,6 +15,7 @@ import org.antlr.runtime.tree.CommonTree;
  * Method or Ctor.
  * @author thibautc
  */
+@Deprecated
 public class FanAstMethod extends FanAstField
 {
 
@@ -24,7 +26,7 @@ public class FanAstMethod extends FanAstField
 	{
 		// Same as a field basically.
 		super(scope, node);
-		FanParserResult result = scope.getRoot().getParserResult();
+		/*FanParserTask result = scope.getRoot().getParserResult();
 
 		this.isCtor = isCtor;
 
@@ -48,7 +50,7 @@ public class FanAstMethod extends FanAstField
 					scope.getRoot().addError("Duplicated parameter name", id);
 				}
 			}
-		}
+		}*/
 	}
 
 	public Hashtable<String, FanResolvedType> getParameters()

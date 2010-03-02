@@ -8,10 +8,10 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.Future;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.test.mock.MockLookup;
-import net.colar.netbeans.fan.ast.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.platform.FanPlatform;
@@ -94,7 +94,7 @@ public class FantomSrcParsingTest implements JOTTestable
 			Source source = Source.create(FileUtil.toFileObject(f));
 			Snapshot snapshot = source.createSnapshot();
 			parser.parse(snapshot);
-			FanParserResult result = (FanParserResult) parser.getResult();
+			FanParserTask result = (FanParserTask) parser.getResult();
 			List<? extends org.netbeans.modules.csl.api.Error> errors = result.getDiagnostics();
 			// Look for failed parsing (antlr)
 			boolean hasErrors = false;

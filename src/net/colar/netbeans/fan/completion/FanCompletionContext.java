@@ -4,11 +4,11 @@
 package net.colar.netbeans.fan.completion;
 
 import javax.swing.text.Document;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.ast.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import org.antlr.runtime.tree.CommonTree;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
@@ -41,13 +41,13 @@ public class FanCompletionContext
 		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, CALL, ID
 	};
 	private final CodeCompletionContext context;
-	FanParserResult result;
+	FanParserTask result;
 	private String preamble = "";
 
 	public FanCompletionContext(CodeCompletionContext context)
 	{
 		this.context = context;
-		result = (FanParserResult) context.getParserResult();
+		result = (FanParserTask) context.getParserResult();
 
 		//result.dumpTree();
 
@@ -203,7 +203,7 @@ public class FanCompletionContext
 		return queryType;
 	}
 
-	public FanParserResult getResult()
+	public FanParserTask getResult()
 	{
 		return result;
 	}

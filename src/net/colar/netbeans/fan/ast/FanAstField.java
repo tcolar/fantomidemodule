@@ -3,8 +3,10 @@
  */
 package net.colar.netbeans.fan.ast;
 
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import java.util.List;
-import net.colar.netbeans.fan.FanParserResult;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.types.FanResolvedType;
@@ -14,6 +16,7 @@ import org.antlr.runtime.tree.CommonTree;
  * Type field
  * @author thibautc
  */
+@Deprecated
 public class FanAstField extends FanAstScopeVarBase
 {
 	// the string the type was resolved from
@@ -22,17 +25,17 @@ public class FanAstField extends FanAstScopeVarBase
 
 	public FanAstField(FanAstScope scope, CommonTree node)
 	{
-		super(scope, node);
-		FanParserResult result = scope.getRoot().getParserResult();
+		super(null, null/*scope, node*/);
+		/*FanParserTask result = scope.getRoot().getParserResult();
 		name = FanLexAstUtils.getNodeContent(result, node.getFirstChildWithType(FanParser.AST_ID)).trim();
 		if (node.getType() == FanParser.AST_CONSTRUCTOR)
 		{
-			type = new FanResolvedType(FanResolvedType.resolveThisType(scope));
+			type = new FanResolvedType(FanResolvedType.resolveThisType());
 		} else
 		{
 			CommonTree typeNode = (CommonTree) node.getFirstChildWithType(FanParser.AST_TYPE);
 			typeString = FanLexAstUtils.getNodeContent(result, typeNode);
-			type = FanResolvedType.makeFromTypeSigWithWarning(scope, typeNode);
+			type = FanResolvedType.makeFromTypeSigWithWarning(typeNode);
 		}
 		if(type==null)
 			FanUtilities.GENERIC_LOGGER.info("Failed resolving slot type: "+node.toStringTree());
@@ -49,7 +52,7 @@ public class FanAstField extends FanAstScopeVarBase
 					modifiers.add(modif);
 				}
 			}
-		}
+		}*/
 	}
 
 	public String getTypeString()
