@@ -17,6 +17,7 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.parboiled.Node;
+import org.parboiled.Parboiled;
 import org.parboiled.common.StringUtils;
 import org.parboiled.support.ParsingResult;
 
@@ -92,7 +93,10 @@ public class NBFanLexer implements Lexer<FanTokenID>
 			data.append((char) i);
 		}
 		//System.out.println("Data: " + data);
+		// FIXME: this gives a classNotFound !
+		//FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
 		FantomParser parser = new FantomParser(null);
+
 		ParsingResult<AstNode> result = parser.parse(parser.lexer(), data.toString());
 		if (result.hasErrors())
 		{

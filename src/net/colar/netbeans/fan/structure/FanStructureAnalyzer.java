@@ -5,26 +5,16 @@
 package net.colar.netbeans.fan.structure;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.ast.FanAstField;
-import net.colar.netbeans.fan.ast.FanAstMethod;
-import net.colar.netbeans.fan.ast.FanAstScope;
+import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
-import net.colar.netbeans.fan.types.FanResolvedType;
-import net.colar.netbeans.fan.ast.FanRootScope;
-import net.colar.netbeans.fan.ast.FanTypeScope;
-import net.colar.netbeans.fan.indexer.FanIndexer;
-import net.colar.netbeans.fan.indexer.model.FanType;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
-import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
@@ -58,8 +48,14 @@ public class FanStructureAnalyzer implements StructureScanner
 		List<StructureItem> items = new ArrayList<StructureItem>();
 		try
 		{
-			FanParserTask fanResult = (FanParserTask) result;
-
+			FanParserTask task = (FanParserTask) result;
+			for(org.netbeans.modules.csl.api.Error err : task.getDiagnostics())
+			{
+				System.out.println(err.getDescription()+" "+err.getDisplayName()+" "+err.getFile());
+			}
+			if(task.getParsingResult()!=null)
+				AstNode.printNodeTree(task.getRootScope(), "", task.getParsingResult().inputBuffer);
+			/*
 			FanRootScope root = null;//fanResult.getRootScope();
 			List<FanAstScope> types = root.getChildren();
 			for (FanAstScope scope : types)
@@ -94,7 +90,7 @@ public class FanStructureAnalyzer implements StructureScanner
 						FanAstMethod m = (FanAstMethod) var;
 
 						ElementKind kind = m.isCtor() ? ElementKind.CONSTRUCTOR : ElementKind.METHOD;
-						FanStructureItem mItem = new FanStructureItem(null/*var.getNode()*/, kind, result);
+						FanStructureItem mItem = new FanStructureItem(null, kind, result);
 						String returnType = FanType.getShortName(m.getTypeString());
 						if (returnType==null || returnType.equals(FanIndexer.UNRESOLVED_TYPE) || returnType.equalsIgnoreCase("void"))
 						{
@@ -122,23 +118,19 @@ public class FanStructureAnalyzer implements StructureScanner
 							params += "<font color='#aaaaaa'>" + pType + "</font>";
 							params += " " + pname;
 						}
-						/*String constChain = FanLexAstUtils.getSubChildTextByType(result, node, FanParser.AST_CONSTRUCTOR_CHAIN);*/
 						handleModifiers(mItem, m.getModifiers());
 						mItem.setName(var.getName());
 						String mHtml = var.getName() + "(" + params + ")";
 						if (returnType.length() > 0)
 						{
 							mHtml += " : <font color='#aaaaaa'>" + returnType + "</font>";
-						} /*else if (constChain.length() > 0)
-						{
-						mHtml += " : <font color='#aaaaaa'>" + returnType + "</font>";
-						}*/
+						}
 						mItem.setHtml(mHtml);
 						slots.add(mItem);
 						break;
 					} else if (var instanceof FanAstField)
 					{
-						FanStructureItem slotItem = new FanStructureItem(null/*var.getNode()*/, ElementKind.FIELD, result);
+						FanStructureItem slotItem = new FanStructureItem(null, ElementKind.FIELD, result);
 						String type = var.getType().toTypeSig(false);
 						if (type.equals(FanIndexer.UNRESOLVED_TYPE))
 						{
@@ -160,7 +152,7 @@ public class FanStructureAnalyzer implements StructureScanner
 					item.setNestedItems(slots);
 				}
 				items.add(item);
-			}
+			}*/
 
 		} catch (Exception e)
 		{
@@ -175,11 +167,11 @@ public class FanStructureAnalyzer implements StructureScanner
 	{
 		CommonTokenStream tokenStream = null;//((FanParserResult) result).getTokenStream();
 
-		FanParserTask fanResult = (FanParserTask) result;
+		FanParserTask task = (FanParserTask) result;
 		Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
-		CommonTree ast = null;//fanResult.getTree();
+		/*CommonTree ast = null;//fanResult.getTree();
 		addFolds(
-			tokenStream, folds, ast);
+			tokenStream, folds, ast);*/
 		return folds;
 	}
 

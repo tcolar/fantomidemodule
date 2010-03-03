@@ -21,7 +21,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 	private List<AstNode> orphanNodes = new ArrayList<AstNode>();
 
 	/**
-	 * Utility to create a new AST Node form the last parsed Node (LAT_NODE())
+	 * Utility to create a new AST Node from the last parsed Node (LAT_NODE())
 	 * The new ASTNode gets set as the Value() of the parseNode (SET())
 	 * The new Node gets properly linked with it's parent/children Nodes automatically
 	 * @param name

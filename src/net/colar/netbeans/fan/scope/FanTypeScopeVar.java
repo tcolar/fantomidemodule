@@ -58,7 +58,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		{
 			name = nameNode.getNodeText(true);
 		}
-		qName = node.getRoot().getParsedSourcePod() + "::" + name;
+		qName = node.getRoot().getPod() + "::" + name;
 
 		List<AstNode> modifs = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_MODIFIER));
 		for (AstNode m : modifs)

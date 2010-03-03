@@ -30,14 +30,15 @@ import org.parboiled.support.Leaf;
 })
 public class FantomParser extends BaseParser<AstNode>
 {
+	//Note: Fields in PB parse can NOT be private
 	final FantomParserAstActions ast = new FantomParserAstActions();
 
-	public boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
-	public boolean inEnum = false; // so we know whether to allow enumDefs
+	boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
+	boolean inEnum = false; // so we know whether to allow enumDefs
 	// TODO: See if I can do away with this one and simplify  the map /simpelMap stuff
-	public boolean noSimpleMap = false; // to disallow ambigous simpleMaps in certain situations (within another map, ternaryExpr)
+	boolean noSimpleMap = false; // to disallow ambigous simpleMaps in certain situations (within another map, ternaryExpr)
 	/**Parse task that kicked in this parser*/
-	private final FanParserTask parserTask;
+	final FanParserTask parserTask;
 
 
 	public FantomParser(FanParserTask parserTask)

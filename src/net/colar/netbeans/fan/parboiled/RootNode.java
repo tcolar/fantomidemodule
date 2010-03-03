@@ -16,13 +16,11 @@ public class RootNode extends AstNode
 {
 	/** Reference to the ParserTask that created this node - Only mantained on the root node*/
 	private final FanParserTask task;
-	private final String pod;
 
 	public RootNode(AstKind kind, String path, Node<AstNode> parseNode, FanParserTask task)
 	{
 		super(kind, path, parseNode);
 		this.task = task;
-		pod=FanUtilities.getPodForPath(task.getSourcePath());
 	}
 
 	public FanParserTask getParserTask()
@@ -30,8 +28,8 @@ public class RootNode extends AstNode
 		return task;
 	}
 
-	public String getParsedSourcePod()
+	public String getPod()
 	{
-		return pod;
+		return getParserTask().getPod();
 	}
 }

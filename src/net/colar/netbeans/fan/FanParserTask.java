@@ -148,7 +148,10 @@ public class FanParserTask extends ParserResult
 	 */
 	public void parse()
 	{
+		//FIXME: this causes classNotFound !!
 		FantomParser parser = Parboiled.createParser(FantomParser.class, this);
+		//FantomParser parser = new FantomParser(this);
+
 		try
 		{
 			parsingResult = parser.parse(parser.compilationUnit(), getSnapshot().getText().toString());
@@ -166,6 +169,7 @@ public class FanParserTask extends ParserResult
 		} catch (Exception e)
 		{
 			addError("Parser error", e);
+			e.printStackTrace();
 		}
 	}
 
@@ -305,6 +309,11 @@ public class FanParserTask extends ParserResult
 	public ParsingResult<AstNode> getParsingResult()
 	{
 		return parsingResult;
+	}
+
+	public String getPod()
+	{
+		return pod;
 	}
 	
 }

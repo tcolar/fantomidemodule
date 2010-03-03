@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.jot.testing.JOTTestable;
@@ -31,7 +32,7 @@ public class FantomParserTest implements JOTTestable
 
 	public void jotTest() throws Throwable
 	{
-		FantomParser parser = Parboiled.createParser(FantomParser.class);
+		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
 		ParsingResult<AstNode> result = null;
 
 		boolean singleTest = true;// Do just the 1 first test
@@ -489,7 +490,7 @@ public class FantomParserTest implements JOTTestable
 
 	public void testAst(String filePath) throws Exception
 	{
-		FantomParser parser = Parboiled.createParser(FantomParser.class);
+		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
 
 		DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
 		byte[] buffer = new byte[dis.available()];
