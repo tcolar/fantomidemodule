@@ -13,7 +13,7 @@ import org.parboiled.support.InputLocation;
  * Same as standard but allows matching no chars
  * @author thibautc
  */
-public class PeekTestMatcher<V> extends TestMatcher<V>
+/*public class PeekTestMatcher<V> extends TestMatcher<V>
 {
 	private final boolean invert;
 
@@ -34,4 +34,4 @@ public class PeekTestMatcher<V> extends TestMatcher<V>
 
         return invert ? !matched : matched;
     }
-}
+}*/

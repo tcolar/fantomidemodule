@@ -18,6 +18,7 @@ import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.parboiled.Node;
 import org.parboiled.Parboiled;
+import org.parboiled.RecoveringParseRunner;
 import org.parboiled.common.StringUtils;
 import org.parboiled.support.ParsingResult;
 
@@ -63,8 +64,8 @@ public class NBFanLexer implements Lexer<FanTokenID>
 			Node<Object> node = lexerIterator.next();
 			// the node we get is the "firstOf" parent node, we want the child of it.
 			node = node.getChildren().get(0);
-			int nodeStart=node.getStartLocation().index;
-			int nodeEnd=node.getEndLocation().index;
+			int nodeStart=node.getStartLocation().getIndex();
+			int nodeEnd=node.getEndLocation().getIndex();
 
 			//System.err.println("Node: " + node.getLabel()+" "+nodeStart+" "+nodeEnd);
 
@@ -97,7 +98,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		//FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
 		FantomParser parser = new FantomParser(null);
 
-		ParsingResult<AstNode> result = parser.parse(parser.lexer(), data.toString());
+		ParsingResult<AstNode> result = RecoveringParseRunner.run(parser.lexer(), data.toString());
 		if (result.hasErrors())
 		{
 			// This really should never happen, since lexer should be able to deal with almost anything.

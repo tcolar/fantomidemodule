@@ -6,6 +6,8 @@ package net.colar.netbeans.fan.parboiled;
 import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
+import org.parboiled.matchers.TestMatcher;
+import org.parboiled.matchers.TestNotMatcher;
 import org.parboiled.support.Cached;
 import org.parboiled.support.Leaf;
 
@@ -133,7 +135,7 @@ public class FantomParser extends BaseParser<AstNode>
 			OPT_LF(),
 			BRACKET_L,
 			OPT_LF(),
-			optional(sequence(peekTest(inEnum),optional(enumValDefs()))), // only valid for enums, but simplifying
+			optional(sequence(test(inEnum),optional(enumValDefs()))), // only valid for enums, but simplifying
 			// Static block missing from Fan grammar
 			zeroOrMore(firstOf(staticBlock(), slotDef())),
 			BRACKET_R)), ast.newNode(AstKind.AST_TYPE_DEF), OPT_LF());
@@ -280,9 +282,9 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule block()
 	{
 		return sequence(OPT_LF(), firstOf(
-			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R), ast.newScopeNode(AstKind.AST_BLOCK), // block
+			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R),
 			stmt() // single statement
-			), OPT_LF());
+			), ast.newScopeNode(AstKind.AST_BLOCK), OPT_LF());
 	}
 
 	public Rule stmt()
@@ -528,7 +530,7 @@ public class FantomParser extends BaseParser<AstNode>
 			OPT_LF(),
 			enforcedSequence(sequence(BRACKET_L,
 			// Note, don't allow field accesors to be parsed as itBlock
-			peekTestNot(sequence(inFieldInit, OPT_LF(), firstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)/*, echo("Skipping itBlock")*/))),
+			testNot(sequence(inFieldInit, OPT_LF(), firstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)/*, echo("Skipping itBlock")*/))),
 			zeroOrMore(stmt()), BRACKET_R));
 	}
 
@@ -782,7 +784,7 @@ public class FantomParser extends BaseParser<AstNode>
 			optional(sequence(noSpace(), SP_QMARK)), //nullable
 			zeroOrMore(sequence(noSpace(),SQ_BRACKET_L, SQ_BRACKET_R)),//list(s)
 			// Do not allow simple maps within left side of expressions ... this causes issues with ":"
-			optional(sequence(peekTestNot(noSimpleMap), SP_COL, type())),//simple map Int:Str
+			optional(sequence(testNot(noSimpleMap), SP_COL, type())),//simple map Int:Str
 			optional(sequence(noSpace(), SP_QMARK)) // nullable list/map
 			);
 	}
@@ -1053,35 +1055,6 @@ public class FantomParser extends BaseParser<AstNode>
 	// shortcut for optional spacing
 	public final Rule OPT_SP = optional(spacing());
 
-	/**
-	 * Override because sandard firstOf() complains about empty matches
-	 * and we allow empty matches in peekTest
-	 * @param rules
-	 * @return
-	 */
-	@Override
-	@Cached
-	public Rule firstOf(Object[] rules)
-	{
-		return new PeekFirstOfMatcher(toRules(rules)).label("firstOf");
-	}
-
-	/**
-	 * Custom test matchers which allow result without matching any data (boolean check)
-	 * @param rule
-	 * @return
-	 */
-	@Cached
-	public Rule peekTestNot(Object rule)
-	{
-		return new PeekTestMatcher(toRule(rule), true);
-	}
-	@Cached
-	public Rule peekTest(Object rule)
-	{
-		return new PeekTestMatcher(toRule(rule), false);
-	}
-
 	// ----------- Custom action rules -----------------------------------------
 	/**
 	 * Custom action to find an end of statement
@@ -1093,20 +1066,21 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(OPT_SP, firstOf(
 			SP_SEMI, // ;
 			LF(), // \n
-			peekTest(BRACKET_R), // '}' is end of statement too, but do NOT consume it !
-			peekTest(eoi()))); // EOI is end of statement too, but do NOT consume it !
+			test(BRACKET_R), // '}' is end of statement too, but do NOT consume it !
+			test(eoi()))); // EOI is end of statement too, but do NOT consume it !
 	}
 
 	/**Pass if not following some whitespace*/
-	@Leaf
 	public Rule noSpace()
 	{
-		return peekTestNot(afterSpace());
+		return testNot(toRule(afterSpace()));
 	}
 
 	public boolean afterSpace()
 	{
-		char c = getContext().getCurrentLocation().lookAhead(getContext().getInputBuffer(), -1);
+		//char c = getContext().getCurrentLocation().lookAhead(getContext().getInputBuffer(), -1);
+		int index = getContext().getCurrentLocation().getIndex();
+		char c = getContext().getInputBuffer().charAt(index-1);
 		return Character.isWhitespace(c);
 	}
 
@@ -1186,4 +1160,10 @@ public class FantomParser extends BaseParser<AstNode>
 		return AS_INIT.label("lexerInit");
 	}
 
+
+	//TODO: TEMP fix
+	public Rule enforcedSequence(Object... rules)
+	{
+		return sequence(rules);
+	}
 }

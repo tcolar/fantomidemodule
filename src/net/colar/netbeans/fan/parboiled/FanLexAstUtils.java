@@ -12,8 +12,6 @@ import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
-import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.tree.CommonTree;
@@ -22,9 +20,7 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.parboiled.Node;
-import org.parboiled.common.Predicate;
-import org.parboiled.support.ParseTreeUtils;
+import org.parboiled.google.base.Predicate;
 
 /**
  * Utilities for lexer / parser / ast trees
@@ -768,7 +764,7 @@ public class FanLexAstUtils
 
 	public static OffsetRange getNodeRange(AstNode node)
 	{
-		return new OffsetRange(node.getStartLocation().index, node.getEndLocation().index);
+		return new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
 	}
 
 	public static AstNode getScopeNode(AstNode node)

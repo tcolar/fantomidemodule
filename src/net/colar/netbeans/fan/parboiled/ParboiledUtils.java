@@ -5,7 +5,6 @@
 package net.colar.netbeans.fan.parboiled;
 
 import org.parboiled.Node;
-import org.parboiled.common.Predicate;
 import org.parboiled.support.LabelPrefixPredicate;
 import org.parboiled.support.ParseTreeUtils;
 

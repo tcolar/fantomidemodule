@@ -26,7 +26,8 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.parboiled.Node;
 import org.parboiled.Parboiled;
-import org.parboiled.support.ParseError;
+import org.parboiled.RecoveringParseRunner;
+import org.parboiled.errors.ParseError;
 import org.parboiled.support.ParseTreeUtils;
 import org.parboiled.support.ParsingResult;
 
@@ -149,12 +150,21 @@ public class FanParserTask extends ParserResult
 	public void parse()
 	{
 		//FIXME: this causes classNotFound !!
+		try
+		{
+			Class c = FantomParser.class;
+			Class c2 = c.getClassLoader().loadClass(c.getName());
+			System.out.println("C2: "+c2);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		FantomParser parser = Parboiled.createParser(FantomParser.class, this);
 		//FantomParser parser = new FantomParser(this);
 
 		try
 		{
-			parsingResult = parser.parse(parser.compilationUnit(), getSnapshot().getText().toString());
+			parsingResult = RecoveringParseRunner.run(parser.compilationUnit(), getSnapshot().getText().toString());
 			astRoot = parsingResult.parseTreeRoot.getValue();
 			// Copy parboiled parse error as CSL errrors
 			for (ParseError err : parsingResult.parseErrors)
@@ -162,7 +172,7 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				FileObject fo = FileUtil.toFileObject(new File(sourcePath));
 				Error error = DefaultError.createDefaultError(err.getErrorMessage(), err.toString(), err.toString(),
-					fo, err.getErrorStart().index, err.getErrorEnd().index,
+					fo, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex()+err.getErrorCharCount(),
 					false, Severity.ERROR);
 				errors.add(error);
 			}
@@ -221,13 +231,13 @@ public class FanParserTask extends ParserResult
 				/*Collection<FanAstScopeVarBase> vars = child.getScopeVars();
 				for (FanAstScopeVarBase slot : vars)
 				{
-					if (slot instanceof FanAstMethod)
-					{
-						FanMethodScope scope = new FanMethodScope(child, (FanAstMethod) slot);
-						child.addChild(scope);
-						scope.parse();
-					}
-					// otherwise it's a field, nothing to do with it
+				if (slot instanceof FanAstMethod)
+				{
+				FanMethodScope scope = new FanMethodScope(child, (FanAstMethod) slot);
+				child.addChild(scope);
+				scope.parse();
+				}
+				// otherwise it's a field, nothing to do with it
 				}*/
 			}
 		}
@@ -239,64 +249,66 @@ public class FanParserTask extends ParserResult
 		String as = FanLexAstUtils.getFirstChild(usingNode, new NodeKindPredicate(AstKind.AST_USING_AS)).getNodeText(true);
 		String ffi = FanLexAstUtils.getFirstChild(usingNode, new NodeKindPredicate(AstKind.AST_USING_FFI)).getNodeText(true);
 
-		String name = as!=null?as:type;
+		String name = as != null ? as : type;
 
-		if(ffi!=null && ffi.toLowerCase().startsWith("[java]"))
+		if (ffi != null && ffi.toLowerCase().startsWith("[java]"))
 		{
-				String qname = type.substring(6).trim().replaceAll("::", "\\.");
-				// Individual Item
-				if (FanType.findByQualifiedName(qname)==null)
-				{
-					addError("Unresolved Java Item: " + qname, usingNode);
-				} else
-				{
-					addUsing(name, qname, usingNode, type);
-				}
+			String qname = type.substring(6).trim().replaceAll("::", "\\.");
+			// Individual Item
+			if (FanType.findByQualifiedName(qname) == null)
+			{
+				addError("Unresolved Java Item: " + qname, usingNode);
 			} else
 			{
-				if (type.indexOf("::") > 0)
+				addUsing(name, qname, usingNode, type);
+			}
+		} else
+		{
+			if (type.indexOf("::") > 0)
+			{
+				// Adding a specific type
+				String[] data = type.split("::");
+				if (!FanType.hasPod(data[0]))
 				{
-					// Adding a specific type
-					String[] data = type.split("::");
-					if (!FanType.hasPod(data[0]))
-					{
-						addError("Unresolved Pod: " + data[0], usingNode);
-					} else if (FanType.findByQualifiedName(type) == null)
-					{
-						addError("Unresolved Type: " + type, usingNode);
-					}
+					addError("Unresolved Pod: " + data[0], usingNode);
+				} else if (FanType.findByQualifiedName(type) == null)
+				{
+					addError("Unresolved Type: " + type, usingNode);
+				}
 
-					//Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
-					addUsing(name, type, usingNode, type);
+				//Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
+				addUsing(name, type, usingNode, type);
+			} else
+			{
+				// Adding all the types of a Pod
+				if (!FanType.hasPod(name))
+				{
+					addError("Unresolved Pod: " + name, usingNode);
 				} else
 				{
-					// Adding all the types of a Pod
-					if (!FanType.hasPod(name))
+					Vector<FanType> items = FanType.findPodTypes(name, "");
+					for (FanType t : items)
 					{
-						addError("Unresolved Pod: " + name, usingNode);
-					} else
-					{
-						Vector<FanType> items = FanType.findPodTypes(name, "");
-						for (FanType t : items)
-						{
-							addUsing(t.getSimpleName(), t.getQualifiedName(), usingNode, type);
-						}
+						addUsing(t.getSimpleName(), t.getQualifiedName(), usingNode, type);
 					}
 				}
 			}
+		}
 	}
 
 	private void addUsing(String name, String qType, AstNode node, String text)
 	{
 		AstNode scopeNode = FanLexAstUtils.getScopeNode(node);
-		if(scopeNode==null)
+		if (scopeNode == null)
+		{
 			return;
+		}
 		if (scopeNode.getLocalScopeVars().containsKey(name))
 		{
 			addError("Duplicated using: " + qType + " / " + scopeNode.getLocalScopeVars().get(name), node);
 		}
-		FanType type=FanType.findByPodAndType("sys", name);
-		if (type!=null)
+		FanType type = FanType.findByPodAndType("sys", name);
+		if (type != null)
 		{
 			if (type.getPod().equals("sys"))
 			{
@@ -315,7 +327,6 @@ public class FanParserTask extends ParserResult
 	{
 		return pod;
 	}
-	
 }
 
 

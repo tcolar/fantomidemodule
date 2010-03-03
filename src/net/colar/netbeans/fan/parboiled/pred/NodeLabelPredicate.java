@@ -3,9 +3,8 @@
  */
 package net.colar.netbeans.fan.parboiled.pred;
 
-import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
-import org.parboiled.common.Predicate;
+import org.parboiled.google.base.Predicate;
 
 /**
  *

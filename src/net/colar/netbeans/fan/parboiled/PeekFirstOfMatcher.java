@@ -11,15 +11,13 @@ import org.parboiled.Rule;
 import org.parboiled.matchers.FirstOfMatcher;
 import org.parboiled.matchers.Matcher;
 import org.parboiled.support.Characters;
-import org.parboiled.support.Chars;
-import org.parboiled.support.Checks;
 import org.parboiled.support.InputLocation;
 
 /**
  * Same as standard but allows matching no chars
  * @author thibautc
  */
-public class PeekFirstOfMatcher<V> extends FirstOfMatcher<V>
+/*public class PeekFirstOfMatcher<V> extends FirstOfMatcher<V>
 {
 	public PeekFirstOfMatcher(@NotNull Rule[] subRules) {
         super(subRules);
@@ -55,4 +53,4 @@ public class PeekFirstOfMatcher<V> extends FirstOfMatcher<V>
         }
         return chars;
     }
-}
+}*/

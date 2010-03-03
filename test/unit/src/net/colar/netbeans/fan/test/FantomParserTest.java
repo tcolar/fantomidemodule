@@ -12,14 +12,12 @@ import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.jot.testing.JOTTestable;
 import net.jot.testing.JOTTester;
-import org.parboiled.Node;
 import org.parboiled.Parboiled;
+import org.parboiled.RecoveringParseRunner;
 import org.parboiled.Rule;
 import org.parboiled.common.StringUtils;
-import org.parboiled.common.ToStringFormatter;
 import org.parboiled.support.ParseTreeUtils;
 import org.parboiled.support.ParsingResult;
-import org.parboiled.trees.GraphUtils;
 
 /**
  * Test new parboiled based parser
@@ -35,10 +33,10 @@ public class FantomParserTest implements JOTTestable
 		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
 		ParsingResult<AstNode> result = null;
 
-		boolean singleTest = true;// Do just the 1 first test
+		boolean singleTest = false;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
-		boolean fantomFilesTest = false; // parse fantom distro files
+		boolean fantomFilesTest = true; // parse fantom distro files
 		boolean fantomFilesLexerTest = true; // parse fantom distro files (lexer rules)
 
 		if (singleTest)
@@ -392,7 +390,7 @@ public class FantomParserTest implements JOTTestable
 	public ParsingResult<AstNode> parse(FantomParser parser, Rule rule, String input)
 	{
 		long start = new Date().getTime();
-		ParsingResult<AstNode> result = parser.parse(rule, input);
+		ParsingResult<AstNode> result = RecoveringParseRunner.run(rule, input);
 		long time = new Date().getTime() - start;
 		//System.err.println("Parsing in " + (new Date().getTime() - start) + "ms");
 		if (time > 100)
@@ -431,7 +429,7 @@ public class FantomParserTest implements JOTTestable
 		try
 		{
 			long start = new Date().getTime();
-			FantomParser parser = Parboiled.createParser(FantomParser.class);
+			FantomParser parser = Parboiled.createParser(FantomParser.class, (Object)null);
 
 			DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
 			byte[] buffer = new byte[dis.available()];
@@ -439,7 +437,7 @@ public class FantomParserTest implements JOTTestable
 			dis.close();//TODO: finally
 			String testInput = new String(buffer);
 
-			ParsingResult<AstNode> result = parser.parse((lexerOnly ? parser.lexer() : parser.compilationUnit()), testInput);
+			ParsingResult<AstNode> result = RecoveringParseRunner.run((lexerOnly ? parser.lexer() : parser.compilationUnit()), testInput);
 
 			long length = new Date().getTime() - start;
 			if (result.hasErrors())
@@ -498,7 +496,7 @@ public class FantomParserTest implements JOTTestable
 		dis.close();//TODO: finally
 		String testInput = new String(buffer);
 
-		ParsingResult<AstNode> result = parser.parse(parser.compilationUnit(), testInput);
+		ParsingResult<AstNode> result = RecoveringParseRunner.run(parser.compilationUnit(), testInput);
 
 		if (result.hasErrors())
 		{

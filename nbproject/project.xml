@@ -311,8 +311,8 @@
                 <binary-origin>release/modules/ext/sys.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/parboiled-0.9.2.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/parboiled-0.9.2.0.jar</binary-origin>
+                <runtime-relative-path>ext/parboiled-0.9.5.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/parboiled-0.9.5.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/javaOnTracks.jar</runtime-relative-path>

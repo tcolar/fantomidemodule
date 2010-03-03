@@ -454,7 +454,7 @@ public class FanResolvedType
 
 	private static boolean isValidTokenStart(AstNode node, int maxIndex)
 	{
-		int index = node.getStartLocation().index;
+		int index = node.getStartLocation().getIndex();
 		// will be -1 for a Nill node
 		return index >= 0 && index <= maxIndex;
 	}
