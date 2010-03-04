@@ -42,7 +42,7 @@ public class FanParserTask extends ParserResult
 
 	List<Error> errors = new Vector<Error>(); // -> use parsingResult.errors ?
 	// full path of the source file
-	private final String sourcePath;
+	private final FileObject sourceFile;
 	// simple name of the source file
 	private final String sourceName;
 	// pod name
@@ -55,8 +55,8 @@ public class FanParserTask extends ParserResult
 	{
 		super(snapshot);
 		sourceName = snapshot.getSource().getFileObject().getName();
-		sourcePath = snapshot.getSource().getFileObject().getPath();
-		pod = FanUtilities.getPodForPath(sourcePath);
+		sourceFile = FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
+		pod = FanUtilities.getPodForPath(sourceFile.getPath());
 	}
 
 	@Override
@@ -119,16 +119,16 @@ public class FanParserTask extends ParserResult
 		return astRoot;
 	}
 
-	public String getSourcePath()
+	public FileObject getSourceFile()
 	{
-		return sourcePath;
+		return sourceFile;
 	}
 
-	public List<Error> getErrors()
-	{
-		return errors;
-	}
-
+	/**
+	 * Add an error (not the parser errors, but others like semantic etc..)
+	 * @param info
+	 * @param node
+	 */
 	public void addError(String info, AstNode node)
 	{
 		if (node == null)
@@ -140,7 +140,7 @@ public class FanParserTask extends ParserResult
 		int start = range.getStart();
 		int end = range.getEnd();
 		//System.out.println("Start: "+start+"End:"+end);
-		Error error = DefaultError.createDefaultError(key, info, "Syntax Error", null, start, end, false, Severity.ERROR);
+		Error error = DefaultError.createDefaultError(key, info, "Syntax Error", sourceFile, start, end, true, Severity.ERROR);
 		errors.add(error);
 	}
 
@@ -149,30 +149,18 @@ public class FanParserTask extends ParserResult
 	 */
 	public void parse()
 	{
-		//FIXME: this causes classNotFound !!
-		try
-		{
-			Class c = FantomParser.class;
-			Class c2 = c.getClassLoader().loadClass(c.getName());
-			System.out.println("C2: "+c2);
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 		FantomParser parser = Parboiled.createParser(FantomParser.class, this);
-		//FantomParser parser = new FantomParser(this);
 
 		try
 		{
 			parsingResult = RecoveringParseRunner.run(parser.compilationUnit(), getSnapshot().getText().toString());
 			astRoot = parsingResult.parseTreeRoot.getValue();
-			// Copy parboiled parse error as CSL errrors
+			// Copy parboiled parse error into a CSL errrors
 			for (ParseError err : parsingResult.parseErrors)
 			{
 				// key, displayName, description, file, start, end, lineError?, severity
-				FileObject fo = FileUtil.toFileObject(new File(sourcePath));
 				Error error = DefaultError.createDefaultError(err.getErrorMessage(), err.toString(), err.toString(),
-					fo, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex()+err.getErrorCharCount(),
+					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex()+err.getErrorCharCount(),
 					false, Severity.ERROR);
 				errors.add(error);
 			}
@@ -245,9 +233,9 @@ public class FanParserTask extends ParserResult
 
 	private void addUsing(AstNode usingNode)
 	{
-		String type = FanLexAstUtils.getFirstChild(usingNode, new NodeKindPredicate(AstKind.AST_TYPE)).getNodeText(true);
-		String as = FanLexAstUtils.getFirstChild(usingNode, new NodeKindPredicate(AstKind.AST_USING_AS)).getNodeText(true);
-		String ffi = FanLexAstUtils.getFirstChild(usingNode, new NodeKindPredicate(AstKind.AST_USING_FFI)).getNodeText(true);
+		String type = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_ID));
+		String as = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_USING_AS));
+		String ffi = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_USING_FFI));
 
 		String name = as != null ? as : type;
 

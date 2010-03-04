@@ -9,11 +9,15 @@ import java.util.Set;
 import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
 import net.colar.netbeans.fan.hints.FanHintsProvider;
 import net.colar.netbeans.fan.structure.FanFormatter;
+import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
+import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.KeystrokeHandler;
+import org.netbeans.modules.csl.api.SemanticAnalyzer;
+import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.parsing.spi.Parser;
 
@@ -64,11 +68,11 @@ public class FanLanguage extends DefaultLanguageConfig
 		return false;
 	}
 
-	/*@Override
+	@Override
 	public StructureScanner getStructureScanner()
 	{
 		return new FanStructureAnalyzer();
-	}*/
+	}
 
 	@Override
 	public KeystrokeHandler getKeystrokeHandler()
@@ -76,11 +80,11 @@ public class FanLanguage extends DefaultLanguageConfig
 		return new FanKeyStrokeHandler();
 	}
 
-	/*@Override
+	@Override
 	public SemanticAnalyzer getSemanticAnalyzer()
 	{
 		return new FanSemanticAnalyzer();
-	}*/
+	}
 
 	@Override
 	public Set<String> getBinaryLibraryPathIds()

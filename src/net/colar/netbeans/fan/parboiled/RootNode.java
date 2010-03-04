@@ -5,7 +5,6 @@
 package net.colar.netbeans.fan.parboiled;
 
 import net.colar.netbeans.fan.FanParserTask;
-import net.colar.netbeans.fan.FanUtilities;
 import org.parboiled.Node;
 
 /**
@@ -19,7 +18,7 @@ public class RootNode extends AstNode
 
 	public RootNode(AstKind kind, String path, Node<AstNode> parseNode, FanParserTask task)
 	{
-		super(kind, path, parseNode);
+		super(kind, path, parseNode, "ROOT");
 		this.task = task;
 	}
 

@@ -817,4 +817,10 @@ public class FanLexAstUtils
 		return nodes;
 	}
 
+	public static String getFirstChildText(AstNode parentNode, Predicate pred)
+	{
+		AstNode node = getFirstChild(parentNode, pred);
+		return node==null?null:node.getNodeText(true);
+	}
+
 }

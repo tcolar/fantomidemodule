@@ -107,15 +107,7 @@ public class FantomSrcParsingTest implements JOTTestable
 				FanLexAstUtils.dumpTree(null/*result.getTree()*/, 0);
 				hasErrors = true;
 			}
-			JOTTester.checkIf("ANTLR Parsing " + f.getAbsolutePath(), ! hasErrors);
-			// TODO: look for unresolved items
-			hasErrors = false;
-			for (Error error : result.getErrors())
-			{
-				System.err.println("Error: " + error);
-				hasErrors = true;
-			}
-			JOTTester.checkIf("Semantic analysis " + f.getAbsolutePath(), ! hasErrors);
+			JOTTester.checkIf("Parsing errors " + f.getAbsolutePath(), ! hasErrors);
 		} catch (Throwable e)
 		{
 			System.err.println("Parsing failed for: " + f.getPath());

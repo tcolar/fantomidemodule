@@ -23,11 +23,8 @@ public class FanHintsProvider implements HintsProvider
 	public void computeErrors(HintsManager manager, RuleContext ctx, List<Hint> hints, List<Error> errors)
 	{
 		FanParserTask result=(FanParserTask)ctx.parserResult;
-		FanRootScope root = null;//result.getRootScope();
-		if(root!=null)
-		{
-			errors.addAll(result.getErrors());
-		}
+		if(result!=null)
+			errors.addAll(result.getDiagnostics());
 	}
 
 

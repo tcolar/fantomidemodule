@@ -47,7 +47,7 @@ public class FanRootScope extends FanAstScope
 
 		//FanLexAstUtils.dumpTree(result.getTree(),0);
 		
-		pod = FanUtilities.getPodForPath(result.getSourcePath());
+		pod = FanUtilities.getPodForPath(result.getSourceFile().getPath());
 	}
 
 	private void addUsing(String name, String qType, CommonTree node, String text)

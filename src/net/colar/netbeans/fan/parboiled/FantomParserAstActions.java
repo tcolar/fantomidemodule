@@ -30,9 +30,10 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 	public boolean newNode(AstKind kind)
 	{
 		Node<AstNode> parseNode = LAST_NODE();
-		AstNode node = new AstNode(kind, getContext().getPath().toString(), parseNode);
+		AstNode node = new AstNode(kind, getContext().getPath().toString(), parseNode, LAST_TEXT());
 		linkNode(node);
 		SET(node);
+		System.out.println(node+" : "+LAST_TEXT());
 		return true;
 	}
 
@@ -44,7 +45,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 	public boolean newScopeNode(AstKind kind)
 	{
 		Node<AstNode> parseNode = LAST_NODE();
-		AstNode node = new AstNode(kind, getContext().getPath().toString(), parseNode);
+		AstNode node = new AstNode(kind, getContext().getPath().toString(), parseNode, LAST_TEXT());
 		node.setIsScopeNode();
 		linkNode(node);
 		SET(node);

@@ -29,6 +29,8 @@ public class AstNode
 	private final String parsePath;
 	/** kind of this AST Node*/
 	private final AstKind kind;
+	/** Node text */
+	private final String text;
 	/** Children AST nodes */
 	private List<AstNode> children = new ArrayList<AstNode>();
 	/** Parent AST Node*/
@@ -36,18 +38,19 @@ public class AstNode
 	/**scope var table (hash) - Null if not a scoping Node*/
 	private Hashtable<String, FanAstScopeVar> scopeVars = null;
 
-	public AstNode(AstKind kind, String path, Node<AstNode> parseNode)
+	public AstNode(AstKind kind, String path, Node<AstNode> parseNode, String nodeText)
 	{
 		this.parseNode = parseNode;
 		this.kind = kind;
 		this.parsePath=path;
+		this.text=nodeText;
 	}
 
 	@Override
 	public String toString()
 	{
 		//ParseTreeUtils.getNodeText(parseNode, null)
-		return kind +(scopeVars!=null?"(Scope)":"") + (parseNode==null?"":"[" +  parseNode.getLabel() + "] - ") + parsePath;
+		return kind +(scopeVars!=null?"(Scope)":"") + (parseNode==null?"":"[" +  parseNode.getLabel() + "] - ") + parsePath; //+" : "+nodeText
 	}
 
 	public String getParsePath()
@@ -166,9 +169,7 @@ public class AstNode
 	 */
 	public String getNodeText(boolean strip)
 	{
-		//TODO: strip, remove whitespace, comments etc ....
-		//InputBuffer buf = getRoot().getParserTask().getParsingResult().inputBuffer;
-		return toString();
+		return text;
 	}
 
 
