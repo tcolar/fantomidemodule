@@ -169,7 +169,8 @@ public class AstNode
 	 */
 	public String getNodeText(boolean strip)
 	{
-		return text;
+		//TODO: work on stripping comments and son on
+		return strip?text.trim() : text;
 	}
 
 
