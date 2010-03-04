@@ -75,11 +75,11 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		return sequence(OPT_LF(), sequence(
 			KW_USING,
-			optional(sequence(ffi(), ast.newNode(AstKind.AST_USING_FFI))),
+			optional(ffi()),
 			sequence(id(),
 			zeroOrMore(sequence(DOT, id())),
 			optional(sequence(SP_COLCOL, id()))), ast.newNode(AstKind.AST_ID),
-			optional(sequence(usingAs(), ast.newNode(AstKind.AST_USING_AS))),
+			optional(usingAs()),
 			eos()), ast.newNode(AstKind.AST_USING), OPT_LF());
 	}
 
@@ -88,7 +88,7 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		return sequence(OPT_LF(), sequence(
 			KW_USING,
-			optional(sequence(ffi(), ast.newNode(AstKind.AST_USING_FFI))),
+			optional(ffi()),
 			sequence(optional(id()), // Not optional, but we want a valid ast for completion if missing
 			zeroOrMore(sequence(DOT, optional(id()))),// not enforced to allow completion
 			optional(sequence(SP_COLCOL, optional(id())))), ast.newNode(AstKind.AST_ID),// not enforced to allow completion
@@ -98,12 +98,12 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule ffi()
 	{
-		return enforcedSequence(SQ_BRACKET_L, id(), SQ_BRACKET_R);
+		return enforcedSequence(SQ_BRACKET_L, id(), ast.newNode(AstKind.AST_USING_FFI), SQ_BRACKET_R);
 	}
 
 	public Rule usingAs()
 	{
-		return sequence(KW_AS, id());
+		return sequence(KW_AS, id(), ast.newNode(AstKind.AST_USING_AS));
 	}
 
 	public Rule staticBlock()
@@ -1100,6 +1100,17 @@ public class FantomParser extends BaseParser<AstNode>
 		return true;
 	}
 
+	/**
+	 * In Parboiled 0.9.5.0, enforcedSequence was removed, just use sequence now.
+	 * Maybe do a replaceAll later.
+	 * @param rules
+	 * @return
+	 */
+	public Rule enforcedSequence(Object... rules)
+	{
+		return sequence(rules);
+	}
+
 	// Debugging utils
 	/** System.out - eval to true*/
 	public boolean echo(String str)
@@ -1160,10 +1171,4 @@ public class FantomParser extends BaseParser<AstNode>
 		return AS_INIT.label("lexerInit");
 	}
 
-
-	//TODO: TEMP fix
-	public Rule enforcedSequence(Object... rules)
-	{
-		return sequence(rules);
-	}
 }

@@ -50,7 +50,10 @@ public class AstNode
 	public String toString()
 	{
 		//ParseTreeUtils.getNodeText(parseNode, null)
-		return kind +(scopeVars!=null?"(Scope)":"") + (parseNode==null?"":"[" +  parseNode.getLabel() + "] - ") + parsePath; //+" : "+nodeText
+		String txt=text;
+		if(txt.indexOf("\n")>0)
+			txt=txt.substring(0, txt.indexOf("\n"))+"...";
+		return kind +(scopeVars!=null?"(Scope)":"") + parsePath +" : '"+txt+"'";
 	}
 
 	public String getParsePath()

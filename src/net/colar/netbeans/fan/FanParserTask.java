@@ -239,9 +239,9 @@ public class FanParserTask extends ParserResult
 
 		String name = as != null ? as : type;
 
-		if (ffi != null && ffi.toLowerCase().startsWith("[java]"))
+		if (ffi != null && ffi.toLowerCase().equals("java"))
 		{
-			String qname = type.substring(6).trim().replaceAll("::", "\\.");
+			String qname = type.replaceAll("::", "\\.");
 			// Individual Item
 			if (FanType.findByQualifiedName(qname) == null)
 			{
@@ -269,6 +269,8 @@ public class FanParserTask extends ParserResult
 			} else
 			{
 				// Adding all the types of a Pod
+				if(name.equalsIgnoreCase("sys")) // sys is always avail.
+					return;
 				if (!FanType.hasPod(name))
 				{
 					addError("Unresolved Pod: " + name, usingNode);
