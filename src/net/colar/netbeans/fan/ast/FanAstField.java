@@ -3,13 +3,10 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.AstKind;
+import net.colar.netbeans.fan.parboiled.AstNode;
+import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
-import java.util.List;
-import net.colar.netbeans.fan.FanParserTask;
-import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.types.FanResolvedType;
 import org.antlr.runtime.tree.CommonTree;
 
 /**
@@ -23,12 +20,10 @@ public class FanAstField extends FanAstScopeVarBase
 
 	protected String typeString;
 
-	public FanAstField(FanAstScope scope, CommonTree node)
+	public FanAstField(AstNode fieldNode, String name)
 	{
-		super(null, null/*scope, node*/);
-		/*FanParserTask result = scope.getRoot().getParserResult();
-		name = FanLexAstUtils.getNodeContent(result, node.getFirstChildWithType(FanParser.AST_ID)).trim();
-		if (node.getType() == FanParser.AST_CONSTRUCTOR)
+		super(fieldNode, name);
+		if (node.getKind() == AstKind.AST_CTOR_DEF)
 		{
 			type = new FanResolvedType(FanResolvedType.resolveThisType());
 		} else
@@ -52,7 +47,7 @@ public class FanAstField extends FanAstScopeVarBase
 					modifiers.add(modif);
 				}
 			}
-		}*/
+		}
 	}
 
 	public String getTypeString()
