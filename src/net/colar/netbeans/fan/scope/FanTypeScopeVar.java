@@ -41,21 +41,21 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLASS)) != null)
 		{
 			kind = VarKind.TYPE_CLASS;
-			
+
 		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ENUM)) != null)
 		{ //TODO: Deal with enum val defs ?
 			kind = VarKind.TYPE_ENUM;
-			
+
 		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_FACET)) != null)
 		{
 			kind = VarKind.TYPE_FACET;
-			
+
 		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_MIXIN)) != null)
 		{
 			kind = VarKind.TYPE_MIXIN;
 
 			//FanUtilities.GENERIC_LOGGER.info("Type node: " + ast.toStringTree());
-			
+
 		}
 		AstNode nameNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		AstNode inheritance = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_INHERITANCE));
@@ -89,29 +89,26 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			inheritedSlots.put(slot.getName(), slot);
 		}
 
-
-		// Deal with children - slots
-		
+		// Deal with children - slots		
 		for (AstNode child : node.getChildren())
 		{
-			/*// FIXME
 			switch (child.getKind())
 			{
-			case AST_FIELD:
-			FanAstField field = new FanAstField(this, child);
-			if (!field.getType().isResolved())
-			{
-			//TODO: Propose to auto-add using statements (Hints)
-			getRoot().addError("Unresolved field type", child);
+				case AST_FIELD_DEF:
+					FanAstField field = new FanAstField(this, child);
+					if (!field.getType().isResolved())
+					{
+						//TODO: Propose to auto-add using statements (Hints)
+						node.getRoot().getParserTask().addError("Unresolved field type", child);
+					}
+					addScopeVar(field, false);
+					break;
+				case AST_METHOD_DEF:
+				case AST_CTOR_DEF:
+					FanAstMethod method = new FanAstMethod(this, child, child.getKind() == AstKind.AST_CTOR_DEF);
+					addScopeVar(method, false);
+					break;
 			}
-			addScopeVar(field, false);
-			break;
-			case FanParser.AST_METHOD:
-			case FanParser.AST_CONSTRUCTOR:
-			FanAstMethod method = new FanAstMethod(this, child, child.getType() == FanParser.AST_CONSTRUCTOR);
-			addScopeVar(method, false);
-			break;
-			}*/
 		}
 	}
 
