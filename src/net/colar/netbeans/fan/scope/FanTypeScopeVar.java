@@ -1,7 +1,6 @@
 /*
  * Thibaut Colar Mar 2, 2010
  */
-
 package net.colar.netbeans.fan.scope;
 
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
-import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
 import net.colar.netbeans.fan.types.FanResolvedType;
 
 /**
@@ -23,6 +21,7 @@ import net.colar.netbeans.fan.types.FanResolvedType;
 public class FanTypeScopeVar extends FanAstScopeVarBase
 {
 	// qualified Name
+
 	String qName = "";
 	List<FanResolvedType> inheritedItems = new ArrayList<FanResolvedType>();
 	// To make it faster to lokup vars
@@ -33,26 +32,33 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		super(typeDefNode, name);
 	}
 
-	protected void parse()
+	public void parse()
 	{
 		if (node == null)
 		{
 			return;
 		}
-		if(FanLexAstUtils.getFirstChild(node, new NodeLabelPredicate(AstKind.LBL_CLASS.name()))!=null)
+		if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLASS)) != null)
+		{
 			kind = VarKind.TYPE_CLASS;
-		else if(FanLexAstUtils.getFirstChild(node, new NodeLabelPredicate(AstKind.LBL_ENUM.name()))!=null)
+			
+		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ENUM)) != null)
+		{ //TODO: Deal with enum val defs ?
 			kind = VarKind.TYPE_ENUM;
-		else if(FanLexAstUtils.getFirstChild(node, new NodeLabelPredicate(AstKind.LBL_FACET.name()))!=null)
+			
+		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_FACET)) != null)
+		{
 			kind = VarKind.TYPE_FACET;
-		else if(FanLexAstUtils.getFirstChild(node, new NodeLabelPredicate(AstKind.LBL_MIXIN.name()))!=null)
+			
+		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_MIXIN)) != null)
+		{
 			kind = VarKind.TYPE_MIXIN;
 
-		//FanUtilities.GENERIC_LOGGER.info("Type node: " + ast.toStringTree());
+			//FanUtilities.GENERIC_LOGGER.info("Type node: " + ast.toStringTree());
+			
+		}
 		AstNode nameNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		AstNode inheritance = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_INHERITANCE));
-		// fields are within the code_block of the type
-		AstNode content = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
 
 		if (nameNode != null)
 		{
@@ -63,7 +69,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		List<AstNode> modifs = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_MODIFIER));
 		for (AstNode m : modifs)
 		{
-			String[] mStrs = node.getNodeText(true).split(" ");
+			String[] mStrs = m.getNodeText(true).split(" ");
 			for (String mStr : mStrs)
 			{
 				FanAstScopeVarBase.ModifEnum modif = FanAstScopeVarBase.parseModifier(mStr.trim());
@@ -78,36 +84,35 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		parseInheritance(inheritance);
 		// "cache" inherited slots, for faster var lookup later
 		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true);
-		for(FanSlot slot : slots)
+		for (FanSlot slot : slots)
 		{
 			inheritedSlots.put(slot.getName(), slot);
 		}
 
 
 		// Deal with children - slots
-		for (AstNode child : content.getChildren())
+		
+		for (AstNode child : node.getChildren())
 		{
-			// FIXME
-			/*switch (child.getKind())
+			/*// FIXME
+			switch (child.getKind())
 			{
-				case AST_FIELD:
-					FanAstField field = new FanAstField(this, child);
-					if (!field.getType().isResolved())
-					{
-						//TODO: Propose to auto-add using statements (Hints)
-						getRoot().addError("Unresolved field type", child);
-					}
-					addScopeVar(field, false);
-					break;
-				case FanParser.AST_METHOD:
-				case FanParser.AST_CONSTRUCTOR:
-					FanAstMethod method = new FanAstMethod(this, child, child.getType() == FanParser.AST_CONSTRUCTOR);
-					addScopeVar(method, false);
-					break;
+			case AST_FIELD:
+			FanAstField field = new FanAstField(this, child);
+			if (!field.getType().isResolved())
+			{
+			//TODO: Propose to auto-add using statements (Hints)
+			getRoot().addError("Unresolved field type", child);
+			}
+			addScopeVar(field, false);
+			break;
+			case FanParser.AST_METHOD:
+			case FanParser.AST_CONSTRUCTOR:
+			FanAstMethod method = new FanAstMethod(this, child, child.getType() == FanParser.AST_CONSTRUCTOR);
+			addScopeVar(method, false);
+			break;
 			}*/
 		}
-
-		//serialize();
 	}
 
 	private boolean hasInheritedClass()
@@ -141,30 +146,30 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			List<AstNode> children = FanLexAstUtils.getChildren(inheritance, new NodeKindPredicate(AstKind.AST_TYPE));
 			for (AstNode child : children)
 			{
-					FanResolvedType inhType = FanResolvedType.makeFromTypeSig(child);
-					String text = node.getNodeText(true);
-					if (!inhType.isResolved())
+				FanResolvedType inhType = FanResolvedType.makeFromTypeSig(child);
+				String text = node.getNodeText(true);
+				if (!inhType.isResolved())
+				{
+					node.getRoot().getParserTask().addError("Unresolved inherited item!", child);
+				} else
+				{
+					FanType fanType = inhType.getDbType();
+					if (fanType.isFinal())
 					{
-						node.getRoot().getParserTask().addError("Unresolved inherited item!", child);
-					} else
+						// this covers enums too
+						node.getRoot().getParserTask().addError("Can't inherit from a final class!", child);
+					} else if (fanType.isClass())
 					{
-						FanType fanType = inhType.getDbType();
-						if (fanType.isFinal())
+						if (hasInheritedClass())
 						{
-							// this covers enums too
-							node.getRoot().getParserTask().addError("Can't inherit from a final class!", child);
-						} else if (fanType.isClass())
-						{
-							if (hasInheritedClass())
-							{
-								node.getRoot().getParserTask().addError("Can only inherit from one class!", inheritance);
-							}
+							node.getRoot().getParserTask().addError("Can only inherit from one class!", inheritance);
 						}
 					}
-					if (!hasInheritedItem(text))
-					{
-						inheritedItems.add(inhType);
-					}
+				}
+				if (!hasInheritedItem(text))
+				{
+					inheritedItems.add(inhType);
+				}
 			}
 		}
 	}

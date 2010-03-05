@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.parboiled.Node;
@@ -36,7 +37,7 @@ public class AstNode
 	/** Parent AST Node*/
 	private AstNode parent;
 	/**scope var table (hash) - Null if not a scoping Node*/
-	private Hashtable<String, FanAstScopeVar> scopeVars = null;
+	private Hashtable<String, FanAstScopeVarBase> scopeVars = null;
 
 	public AstNode(AstKind kind, String path, Node<AstNode> parseNode, String nodeText)
 	{
@@ -53,7 +54,7 @@ public class AstNode
 		String txt=text;
 		if(txt.indexOf("\n")>0)
 			txt=txt.substring(0, txt.indexOf("\n"))+"...";
-		return kind +(scopeVars!=null?"(Scope)":"") + parsePath +" : '"+txt+"'";
+		return kind +(scopeVars!=null?"(Scope)":"[") + parsePath +"] : '"+txt+"'";
 	}
 
 	public String getParsePath()
@@ -125,7 +126,7 @@ public class AstNode
 
 	public void setIsScopeNode()
 	{
-		scopeVars = new Hashtable<String, FanAstScopeVar>();
+		scopeVars = new Hashtable<String, FanAstScopeVarBase>();
 	}
 
 	public boolean isScopeNode()
@@ -136,7 +137,7 @@ public class AstNode
 	/**
 	 * Return the scope vars of THIS node only.
 	 */
-	public Hashtable<String, FanAstScopeVar> getLocalScopeVars()
+	public Hashtable<String, FanAstScopeVarBase> getLocalScopeVars()
 	{
 		return scopeVars;
 	}
@@ -160,8 +161,11 @@ public class AstNode
 	{
 		AstNode nd = this;
 		while(nd!=null)
+		{
 			if(nd instanceof RootNode)
 				return (RootNode) nd;
+			nd = nd.getParent();
+		}
 		return null;
 	}
 

@@ -15,6 +15,7 @@ import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -160,7 +161,7 @@ public class FanParserTask extends ParserResult
 			{
 				// key, displayName, description, file, start, end, lineError?, severity
 				Error error = DefaultError.createDefaultError(err.getErrorMessage(), err.toString(), err.toString(),
-					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex()+err.getErrorCharCount(),
+					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
 					false, Severity.ERROR);
 				errors.add(error);
 			}
@@ -202,10 +203,11 @@ public class FanParserTask extends ParserResult
 			switch (node.getKind())
 			{
 				case AST_TYPE_DEF:
-					// will parse and add the type
-					//FanTypeScope scope = new FanTypeScope(this, child);
-					//scope.parse();
-					//addChild(scope);
+					String name = FanLexAstUtils.getFirstChildText(node, new NodeKindPredicate(AstKind.AST_ID));
+					FanTypeScopeVar var = new FanTypeScopeVar(node, name);
+					var.parse();
+					AstNode scopeNode = FanLexAstUtils.getScopeNode(node);
+					scopeNode.getLocalScopeVars().put(name, var);
 					break;
 			}
 		}
@@ -229,6 +231,7 @@ public class FanParserTask extends ParserResult
 				}*/
 			}
 		}
+		int bkpt=0;
 	}
 
 	private void addUsing(AstNode usingNode)
@@ -269,8 +272,10 @@ public class FanParserTask extends ParserResult
 			} else
 			{
 				// Adding all the types of a Pod
-				if(name.equalsIgnoreCase("sys")) // sys is always avail.
+				if (name.equalsIgnoreCase("sys")) // sys is always avail.
+				{
 					return;
+				}
 				if (!FanType.hasPod(name))
 				{
 					addError("Unresolved Pod: " + name, usingNode);
@@ -305,7 +310,7 @@ public class FanParserTask extends ParserResult
 				addError("Duplicated using: " + qType + " / " + "sys::" + name, node);
 			}
 		}
-		node.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, new FanResolvedType(qType));
+		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, new FanResolvedType(qType));
 	}
 
 	public ParsingResult<AstNode> getParsingResult()
@@ -317,6 +322,7 @@ public class FanParserTask extends ParserResult
 	{
 		return pod;
 	}
+
 }
 
 

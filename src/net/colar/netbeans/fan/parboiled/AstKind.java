@@ -10,9 +10,10 @@ package net.colar.netbeans.fan.parboiled;
 public enum AstKind
 {
 	// specific items
-	AST_COMP_UNIT, AST_USING, AST_USING_FFI, AST_USING_AS,
-	AST_TYPE_DEF, AST_FIELD_DEF, AST_METHOD_DEF, AST_CTOR_DEF,
-	AST_LOCAL_DEF,
+	AST_COMP_UNIT, AST_USING, AST_USING_FFI, AST_USING_AS, //compUnit
+	AST_TYPE_DEF, AST_CLASS, AST_ENUM, AST_MIXIN, AST_FACET,  // Types
+	AST_FIELD_DEF, AST_METHOD_DEF, AST_CTOR_DEF, //Slots
+	AST_LOCAL_DEF, // Vars
 	// incomplete/error items
 	AST_INC_USING, AST_INC_DOTCALL, AST_SAFEDOTCALL,
 	// More generic items

@@ -125,10 +125,10 @@ public class FantomParser extends BaseParser<AstNode>
 			enforcedSequence(
 			firstOf(
 			// Some fantom code has protection after modifiers, so allowing that
-			sequence(zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST), ast.newNode(AstKind.AST_MODIFIER))),	optional(protection()), KW_CLASS).label(AstKind.LBL_CLASS.name()), // standard class
-			enforcedSequence(ENUM, KW_CLASS, setInEnum(true)).label(AstKind.LBL_ENUM.name()), // enum class
-			enforcedSequence(FACET, KW_CLASS).label(AstKind.LBL_FACET.name()), // facet class
-			sequence(optional(sequence(KW_CONST, ast.newNode(AstKind.AST_MODIFIER))), KW_MIXIN).label(AstKind.LBL_MIXIN.name()) // mixin
+			sequence(sequence(zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST), ast.newNode(AstKind.AST_MODIFIER))), optional(protection()), KW_CLASS), ast.newNode(AstKind.AST_CLASS)), // standard class
+			enforcedSequence(ENUM, KW_CLASS, setInEnum(true), ast.newNode(AstKind.AST_ENUM)), // enum class
+			enforcedSequence(FACET, KW_CLASS, ast.newNode(AstKind.AST_FACET)), // facet class
+			sequence(sequence(optional(sequence(KW_CONST, ast.newNode(AstKind.AST_MODIFIER))), KW_MIXIN), ast.newNode(AstKind.AST_MIXIN)) // mixin
 			),
 			id(), ast.newNode(AstKind.AST_ID), 
 			optional(inheritance()),
