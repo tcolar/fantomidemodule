@@ -19,9 +19,7 @@ import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
-import net.colar.netbeans.fan.ast.FanAstScope;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
-import net.colar.netbeans.fan.ast.FanRootScope;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.indexer.FanJarsIndexer;
@@ -70,6 +68,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	public CodeCompletionResult complete(CodeCompletionContext context)
 	{
 		ArrayList<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
+		/*
 		try
 		{
 			String prefix = context.getPrefix();
@@ -111,6 +110,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				result.addError("Completion error", e);
 			}
 		}
+		 */
 		DefaultCompletionResult completionResult = new DefaultCompletionResult(proposals, false);
 		return completionResult;
 	}
@@ -365,9 +365,9 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	/**
 	 * Propose defined types (fan.sys) + whatever listed in using + current pod
 	 */
-	private void proposeDefinedTypes(ArrayList<CompletionProposal> proposals, int anchor, String prefix, FanRootScope rootScope)
+	private void proposeDefinedTypes(ArrayList<CompletionProposal> proposals, int anchor, String prefix/*, FanRootScope rootScope*/)
 	{
-		ArrayList<CompletionProposal> props = new ArrayList<CompletionProposal>();
+		/*ArrayList<CompletionProposal> props = new ArrayList<CompletionProposal>();
 		Hashtable<String, FanResolvedType> usings = rootScope.getUsing();
 		for (String key : usings.keySet())
 		{
@@ -384,7 +384,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		proposeTypes(rootScope.getPod(), props, anchor, prefix);
 		// propose sys types, don't need a 'using'
 		proposeTypes("sys", props, anchor, prefix);
-		proposals.addAll(props);
+		proposals.addAll(props);*/
 	}
 
 	// TODO: setup nice icons(package/class etc..) in importproposals
@@ -529,7 +529,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 	private void proposeVars(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, String prefix)
 	{
-		FanParserTask result = (FanParserTask) context.getParserResult();
+		/*FanParserTask result = (FanParserTask) context.getParserResult();
 		int index = FanLexAstUtils.offsetToTokenIndex(result, context.getCaretOffset());
 		CommonTree node = FanLexAstUtils.findASTNodeAt(result, index);
 		FanAstScope scope = null;//result.getRootScope().findClosestScope(node);
@@ -540,7 +540,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				FanVarProposal prop = new FanVarProposal(var, context.getCaretOffset() - prefix.length());
 				proposals.add(prop);
 			}
-		}
+		}*/
 	}
 
 }

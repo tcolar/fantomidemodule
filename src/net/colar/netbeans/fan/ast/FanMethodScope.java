@@ -12,14 +12,14 @@ import org.antlr.runtime.tree.CommonTree;
  * Scope for a method
  * @author thibautc
  */
-@Deprecated
+/*@Deprecated
 public class FanMethodScope extends FanBlockScope
 {
 	private final FanAstMethod methodSlot;
 
 	public FanMethodScope(FanAstScope parent, FanAstMethod methodSlot)
 	{
-		super(null/*parent, methodSlot.getNode()*/);
+		super(null);
 		this.methodSlot=methodSlot;
 	}
 
@@ -39,4 +39,4 @@ public class FanMethodScope extends FanBlockScope
 		// Do normal code block parsing
 		super.parse();
 	}
-}
+}*/

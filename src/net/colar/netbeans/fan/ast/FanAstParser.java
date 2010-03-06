@@ -21,11 +21,11 @@ public class FanAstParser
 	 * Also track errors (unresolvable imports, undefined vars and so on)
 	 * @return
 	 */
-	public static FanRootScope parseScope(FanParserTask result)
+	/*public static FanRootScope parseScope(FanParserTask result)
 	{
 		FanRootScope rootScope = new FanRootScope(result);
 		rootScope.parse();
 		return rootScope;
-	}
+	}*/
 
 }

@@ -27,7 +27,7 @@ import org.netbeans.modules.csl.spi.DefaultError;
  * Also holds errors (unresolvable imports, undefined vars and so on)
  * @author thibautc
  */
-@Deprecated
+/*@Deprecated
 public class FanRootScope extends FanAstScope
 {
 	// using statements. type=null means unresolvable
@@ -42,7 +42,7 @@ public class FanRootScope extends FanAstScope
 
 	public FanRootScope(FanParserTask result)
 	{
-		super(null/*, null/*result.getTree()*/);
+		super(null);
 		this.parserResult = result;
 
 		//FanLexAstUtils.dumpTree(result.getTree(),0);
@@ -67,13 +67,6 @@ public class FanRootScope extends FanAstScope
 		using.put(name, new FanResolvedType(qType));
 	}
 
-	/*private void addType(FanAstScope type)
-	{
-	if (type != null)
-	{
-	addChild(type);
-	}
-	}*/
 	public Hashtable<String, FanResolvedType> getUsing()
 	{
 		return using;
@@ -281,13 +274,6 @@ public class FanRootScope extends FanAstScope
 		return FanResolvedType.makeUnresolved();
 	}
 
-	/**
-	 * Find the smallest enclosing scope fro a given AST node
-	 * TODO: maybe save(lazy cache) this into the node(commontree) ?
-	 * this is quite expensive
-	 * @param node
-	 * @return
-	 */
 	public FanAstScope findClosestScope(CommonTree node)
 	{
 		// start at the root node (this) and scan down
@@ -295,11 +281,6 @@ public class FanRootScope extends FanAstScope
 		return scope == null ? this : scope;
 	}
 
-	/**
-	 * recursive
-	 * @param scope
-	 * @param node
-	 */
 	private FanAstScope findClosestScope(FanAstScope scope, CommonTree node)
 	{
 		CommonTree scopeNode = scope.getAstNode();
@@ -324,5 +305,5 @@ public class FanRootScope extends FanAstScope
 	}
 
 
-}
+}*/
 

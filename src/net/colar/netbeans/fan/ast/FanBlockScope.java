@@ -16,33 +16,24 @@ import org.antlr.runtime.tree.CommonTree;
  * Usually delimited by a code block (brackets etc...)
  * @author thibautc
  */
-@Deprecated
+/*@Deprecated
 public class FanBlockScope extends FanAstScope
 {
 
-	public FanBlockScope(FanAstScope parent/*, CommonTree codeBlock*/)
+	public FanBlockScope(FanAstScope parent)
 	{
-		super(parent/*, codeBlock*/);
+		super(parent);
 	}
 
-	/**
-	 * Parse the code block recursively and create apropriate subscopes
-	 * @param codeBlock
-	 */
 	protected void parse()
 	{
 		parseBlock(this, getAstNode());
 	}
 
-	/**
-	 * Recursive
-	 * Static to avoid using this node's method by accident
-	 * @param node
-	 */
 	private static void parseBlock(FanAstScope scope, CommonTree node)
 	{
 		//System.out.println(node.toStringTree());
-		/*FanParserTask result = scope.getRoot().getParserResult();
+		FanParserTask result = scope.getRoot().getParserResult();
 		if (node == null || node.getChildCount() == 0)
 		{
 			return;
@@ -132,10 +123,10 @@ public class FanBlockScope extends FanAstScope
 				// recurse
 				parseBlock(scope, child);
 			}
-		}*/
+		}
 	}
 
-	/*public static String resolveItType(FanAstScope scope)
+	public static String resolveItType(FanAstScope scope)
 	{
 	FanBlockScope sc = scope.findParentItBlock(scope);
 	if(sc!=null)
@@ -164,5 +155,5 @@ public class FanBlockScope extends FanAstScope
 	}
 	}
 	return FanIndexer.UNRESOLVED_TYPE;
-	}*/
-}
+	}
+}*/

@@ -17,7 +17,7 @@ import org.antlr.runtime.tree.CommonTree;
  * Base object for scope.
  * @author thibautc
  */
-@Deprecated
+/*@Deprecated
 public abstract class FanAstScope
 {
 	// the AST node this scope is for
@@ -32,7 +32,7 @@ public abstract class FanAstScope
 	// Node childs
 	private List<FanAstScope> children = new ArrayList<FanAstScope>();
 
-	public FanAstScope(FanAstScope parent/*, CommonTree astNode*/)
+	public FanAstScope(FanAstScope parent)
 	{
 		this.parent = parent;
 		//this.astNode = astNode;
@@ -52,10 +52,6 @@ public abstract class FanAstScope
 		return parent;
 	}
 
-	/**
-	 * Return the root node .. lazily cached
-	 * @return
-	 */
 	public FanRootScope getRoot()
 	{
 		if (root == null)
@@ -73,11 +69,6 @@ public abstract class FanAstScope
 		return root;
 	}
 
-	/**
-	 * If allowOverride is false and the name is duplicated, it will shiw an error
-	 * @param slot
-	 * @param allowOverride
-	 */
 	public void addScopeVar(FanAstScopeVarBase var, boolean allowOverride)
 	{
 		FanUtilities.GENERIC_LOGGER.debug("Adding scope var: " + var);
@@ -164,10 +155,6 @@ public abstract class FanAstScope
 		return FanResolvedType.makeUnresolved();
 	}
 
-	/**
-	 * return all the vars defined in this scope and all the parent scopes
-	 * Note: If a var is overriden only return the one from the narrowest scope
-	 */
 	public Collection<FanAstScopeVarBase> getScopeVarsRecursive()
 	{
 		Hashtable<String, FanAstScopeVarBase> vars = new Hashtable<String, FanAstScopeVarBase>();
@@ -200,9 +187,6 @@ public abstract class FanAstScope
 		return vars.values();
 	}
 
-	/**
-	 * Return the vars defined in this scope
-	 */
 	public Collection<FanAstScopeVarBase> getScopeVars()
 	{
 		return scopeVars.values();
@@ -224,4 +208,4 @@ public abstract class FanAstScope
 		}
 		return tscope;
 	}
-}
+}*/

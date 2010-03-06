@@ -12,7 +12,6 @@ import net.colar.netbeans.fan.antlr.FanParser;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.types.FanResolvedType;
-import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import org.antlr.runtime.tree.CommonTree;
 
@@ -20,7 +19,7 @@ import org.antlr.runtime.tree.CommonTree;
  * Scope for a Type (class, enum, mixin)
  * @author tcolar
  */
-@Deprecated
+/*@Deprecated
 public class FanTypeScope extends FanAstScope
 {
 
@@ -54,7 +53,7 @@ public class FanTypeScope extends FanAstScope
 
 	public FanTypeScope(FanRootScope parent, CommonTree ast)
 	{
-		super(parent/*, ast*/);
+		super(parent);
 	}
 
 	protected void parse()
@@ -165,7 +164,7 @@ public class FanTypeScope extends FanAstScope
 
 	private void parseInheritance(CommonTree inheritance)
 	{
-		/*if (inheritance != null && inheritance.getChildCount() > 0)
+		if (inheritance != null && inheritance.getChildCount() > 0)
 		{
 			List<CommonTree> children = (List<CommonTree>) inheritance.getChildren();
 			for (CommonTree child : children)
@@ -199,7 +198,7 @@ public class FanTypeScope extends FanAstScope
 					}
 				}
 			}
-		}*/
+		}
 	}
 
 	public String getName()
@@ -234,10 +233,6 @@ public class FanTypeScope extends FanAstScope
 		return modifiers;
 	}
 
-	/**
-	 * Qualified name
-	 * @return
-	 */
 	public String getQName()
 	{
 		return qName;
@@ -290,4 +285,4 @@ public class FanTypeScope extends FanAstScope
 	}
 
 	
-}
+}*/

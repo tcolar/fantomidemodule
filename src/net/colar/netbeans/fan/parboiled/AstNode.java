@@ -54,7 +54,17 @@ public class AstNode
 		String txt=text;
 		if(txt.indexOf("\n")>0)
 			txt=txt.substring(0, txt.indexOf("\n"))+"...";
-		return kind +(scopeVars!=null?"(Scope)":"[") + parsePath +"] : '"+txt+"'";
+		String scope="";
+		if(isScopeNode())
+		{
+			scope = "\n\tSCOPE{";
+			for(FanAstScopeVarBase var : getLocalScopeVars().values())
+			{
+				scope+=var.toString()+"; ";
+			}
+			scope+="}";
+		}
+		return kind +(scopeVars!=null?"":"[") + parsePath +"] : '"+txt+"'"+scope;
 	}
 
 	public String getParsePath()
@@ -150,11 +160,21 @@ public class AstNode
 	 */
 	public void addScopeVar(String name, VarKind varKind, FanResolvedType type)
 	{
+		FanAstScopeVar var = new FanAstScopeVar(this, varKind, name, type);
+		addScopeVar(var);
+	}
+	/**
+	 * Add a scope var to the closest scope.
+	 * @param name
+	 * @param varKind
+	 * @param type
+	 */
+	public void addScopeVar(FanAstScopeVarBase var)
+	{
 		AstNode scopeNode = FanLexAstUtils.getScopeNode(this);
 		if(scopeNode==null)
 			return;
-		FanAstScopeVar var = new FanAstScopeVar(this, varKind, name, type);
-		scopeNode.getLocalScopeVars().put(name, var);
+		scopeNode.getLocalScopeVars().put(var.getName(), var);
 	}
 
 	public RootNode getRoot()

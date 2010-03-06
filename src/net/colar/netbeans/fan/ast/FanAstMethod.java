@@ -15,7 +15,7 @@ import org.antlr.runtime.tree.CommonTree;
  * Method or Ctor.
  * @author thibautc
  */
-@Deprecated
+/*@Deprecated
 public class FanAstMethod extends FanAstField
 {
 
@@ -26,7 +26,7 @@ public class FanAstMethod extends FanAstField
 	{
 		// Same as a field basically.
 		super(scope, node);
-		/*FanParserTask result = scope.getRoot().getParserResult();
+		FanParserTask result = scope.getRoot().getParserResult();
 
 		this.isCtor = isCtor;
 
@@ -50,7 +50,7 @@ public class FanAstMethod extends FanAstField
 					scope.getRoot().addError("Duplicated parameter name", id);
 				}
 			}
-		}*/
+		}
 	}
 
 	public Hashtable<String, FanResolvedType> getParameters()
@@ -64,4 +64,4 @@ public class FanAstMethod extends FanAstField
 	}
 
 
-}
+}*/

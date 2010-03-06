@@ -6,15 +6,20 @@ package net.colar.netbeans.fan.structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import net.colar.netbeans.fan.FanParserTask;
-import net.colar.netbeans.fan.antlr.FanParser;
+import net.colar.netbeans.fan.indexer.FanIndexer;
+import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstNode;
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
-import org.antlr.runtime.CommonToken;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.tree.CommonTree;
+import net.colar.netbeans.fan.scope.FanFieldScopeVar;
+import net.colar.netbeans.fan.scope.FanMethodScopeVar;
+import net.colar.netbeans.fan.scope.FanTypeScopeVar;
+import net.colar.netbeans.fan.types.FanResolvedType;
+import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
@@ -55,14 +60,15 @@ public class FanStructureAnalyzer implements StructureScanner
 			}
 			if(task.getParsingResult()!=null)
 				AstNode.printNodeTree(task.getRootScope(), "", task.getParsingResult().inputBuffer);
-			/*
-			FanRootScope root = null;//fanResult.getRootScope();
-			List<FanAstScope> types = root.getChildren();
-			for (FanAstScope scope : types)
+			
+			AstNode rootScope = task.getRootScope();
+			for (FanAstScopeVarBase var : rootScope.getLocalScopeVars().values())
 			{
 				FanStructureItem item = null;
-				FanTypeScope t = (FanTypeScope) scope;
-				item = new FanStructureItem(t.getAstNode(), ElementKind.CLASS, result);
+				if(! (var instanceof FanTypeScopeVar))
+					continue;
+				FanTypeScopeVar t = (FanTypeScopeVar) var;
+				item = new FanStructureItem(t.getNode(), ElementKind.CLASS, result);
 				List<FanResolvedType> inhs = t.getInheritedItems();
 				String inheritance = "";
 				for (FanResolvedType inh : inhs)
@@ -77,20 +83,20 @@ public class FanStructureAnalyzer implements StructureScanner
 				String html = t.getName();
 				if (inheritance.length() > 0)
 				{
-					html += "<font color='#aaaaaa'>" + inheritance + "</font>";
+					html += " : <font color='#aaaaaa'>" + inheritance + "</font>";
 				}
 				item.setHtml(html);
 				// Do slots
-				Collection<FanAstScopeVarBase> vars = t.getScopeVars();
 				List<StructureItem> slots = new ArrayList<StructureItem>();
-				for (FanAstScopeVarBase var : vars)
+				AstNode scopeNode = FanLexAstUtils.getScopeNode(t.getNode());
+				for (FanAstScopeVarBase slotVar : scopeNode.getLocalScopeVars().values())
 				{
-					if (var instanceof FanAstMethod)
+					if (slotVar instanceof FanMethodScopeVar)
 					{
-						FanAstMethod m = (FanAstMethod) var;
+						FanMethodScopeVar m = (FanMethodScopeVar) slotVar;
 
 						ElementKind kind = m.isCtor() ? ElementKind.CONSTRUCTOR : ElementKind.METHOD;
-						FanStructureItem mItem = new FanStructureItem(null, kind, result);
+						FanStructureItem mItem = new FanStructureItem(slotVar.getNode(), kind, result);
 						String returnType = FanType.getShortName(m.getTypeString());
 						if (returnType==null || returnType.equals(FanIndexer.UNRESOLVED_TYPE) || returnType.equalsIgnoreCase("void"))
 						{
@@ -119,26 +125,25 @@ public class FanStructureAnalyzer implements StructureScanner
 							params += " " + pname;
 						}
 						handleModifiers(mItem, m.getModifiers());
-						mItem.setName(var.getName());
-						String mHtml = var.getName() + "(" + params + ")";
+						mItem.setName(slotVar.getName());
+						String mHtml = slotVar.getName() + "(" + params + ")";
 						if (returnType.length() > 0)
 						{
 							mHtml += " : <font color='#aaaaaa'>" + returnType + "</font>";
 						}
 						mItem.setHtml(mHtml);
 						slots.add(mItem);
-						break;
-					} else if (var instanceof FanAstField)
+					} else if (slotVar instanceof FanFieldScopeVar)
 					{
-						FanStructureItem slotItem = new FanStructureItem(null, ElementKind.FIELD, result);
-						String type = var.getType().toTypeSig(false);
+						FanStructureItem slotItem = new FanStructureItem(slotVar.getNode(), ElementKind.FIELD, result);
+						String type = slotVar.getType().toTypeSig(false);
 						if (type.equals(FanIndexer.UNRESOLVED_TYPE))
 						{
 							type = "";
 						}
-						handleModifiers(slotItem, var.getModifiers());
-						slotItem.setName(var.getName());
-						String slotHtml = var.getName();
+						handleModifiers(slotItem, slotVar.getModifiers());
+						slotItem.setName(slotVar.getName());
+						String slotHtml = slotVar.getName();
 						if (type.length() > 0)
 						{
 							slotHtml += " : <font color='#aaaaaa'>" + type + "</font>";
@@ -152,7 +157,7 @@ public class FanStructureAnalyzer implements StructureScanner
 					item.setNestedItems(slots);
 				}
 				items.add(item);
-			}*/
+			}
 
 		} catch (Exception e)
 		{
@@ -164,14 +169,9 @@ public class FanStructureAnalyzer implements StructureScanner
 
 	@Override
 	public Map<String, List<OffsetRange>> folds(ParserResult result)
-	{
-		CommonTokenStream tokenStream = null;//((FanParserResult) result).getTokenStream();
-
-		FanParserTask task = (FanParserTask) result;
+	{  // Note: only seem to be called if no errors in the file
 		Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
-		/*CommonTree ast = null;//fanResult.getTree();
-		addFolds(
-			tokenStream, folds, ast);*/
+		addFolds(folds, ((FanParserTask)result).getAstTree());
 		return folds;
 	}
 
@@ -200,40 +200,34 @@ public class FanStructureAnalyzer implements StructureScanner
 		}
 	}
 
-	private void addFolds(CommonTokenStream tokenStream, Map<String, List<OffsetRange>> folds, CommonTree node)
+	private void addFolds(Map<String, List<OffsetRange>> folds, AstNode node)
 	{
 		if (node != null)
 		{
 			boolean foldable = false;
 			String type = CODE_FOLDS;
-			//System.err.println("** " + node.getText());
-			switch (node.getType())
+			switch (node.getKind())
 			{
-				case FanParser.AST_CODE_BLOCK:
+				case AST_BLOCK:
 					type = CODE_FOLDS;
 					foldable = true;
-
-
 					break;
-				case FanParser.AST_DOCS:
-					//TODO: comments folding (in hidden channel)
-					//TODO: also imports folding (using)
-					//case FanParser.MULTI_COMMENT:
+				// TODO: allow for DOC. ML_COMMENTS folding
+				/*case AST_DOC:
+				case AST_ML_COMMENT:
 					type = DOC_FOLDS;
 					foldable = true;
-					break;
+					break;*/
 			}
 
-			if (foldable && node.getTokenStartIndex() != -1 && node.getTokenStopIndex() != -1)
+			if (foldable)
 			{
-				CommonToken startToken = (CommonToken) tokenStream.get(node.getTokenStartIndex());
-				CommonToken endToken = (CommonToken) tokenStream.get(node.getTokenStopIndex());
-				int start = startToken.getStartIndex();
-				int end = endToken.getStopIndex() + 1;
-				// don't add unless at least 1 long (ex: class with def alone)
-				if (start >= 0 && end >= 0 && end > start)
+				int start = node.getStartLocation().getRow();
+				int end = node.getEndLocation().getRow();
+				// don't add unless at least 2 line long
+				if (start<end)
 				{
-					OffsetRange range = new OffsetRange(start, end);
+					OffsetRange range = new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
 					List<OffsetRange> fold = folds.get(type);
 					if (fold == null)
 					{
@@ -244,13 +238,9 @@ public class FanStructureAnalyzer implements StructureScanner
 				}
 			}
 			// recurse into children
-			for (int i = 0; i
-				< node.getChildCount(); i++)
+			for (AstNode subNode : node.getChildren())
 			{
-				CommonTree subNode = (CommonTree) node.getChild(i);
-				addFolds(
-					tokenStream, folds, subNode);
-
+				addFolds(folds, subNode);
 			}
 		}
 	}

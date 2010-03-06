@@ -4,7 +4,6 @@
  */
 package net.colar.netbeans.fan.indexer;
 
-import net.colar.netbeans.fan.types.FanResolvedType;
 import fan.sys.Buf;
 import fan.sys.FanObj;
 import fan.sys.Pod;
@@ -28,14 +27,11 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.NBFanParser;
-import net.colar.netbeans.fan.ast.FanAstField;
-import net.colar.netbeans.fan.ast.FanAstMethod;
-import net.colar.netbeans.fan.ast.FanAstScope;
+//import net.colar.netbeans.fan.ast.FanAstField;
+//import net.colar.netbeans.fan.ast.FanAstMethod;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
-import net.colar.netbeans.fan.ast.FanRootScope;
-import net.colar.netbeans.fan.ast.FanTypeScope;
-import net.colar.netbeans.fan.indexer.model.FanDocUsing;
+//import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.indexer.model.FanMethodParam;
 import net.colar.netbeans.fan.indexer.model.FanModelConstants;
@@ -43,7 +39,6 @@ import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
 import net.colar.netbeans.fan.platform.FanPlatform;
-import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.builders.JOTQueryBuilder;
@@ -211,7 +206,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		log.debug("Indexing parsed result for : " + path);
 
 		FanParserTask fanResult = (FanParserTask) parserResult;
-		//indexSrcDoc(path, fanResult.getRootScope());
+		//indexSrcDoc(path, fanResult.getRootScope()); // FIXME
 	}
 
 	/**
@@ -220,7 +215,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	 * @param indexable
 	 * @param rootScope
 	 */
-	private void indexSrcDoc(String path, FanRootScope rootScope)
+	/*private void indexSrcDoc(String path, FanRootScope rootScope)
 	{
 		FanDocument doc = null;
 		try
@@ -345,16 +340,16 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						{
 							// determine kind of slot
 							FanModelConstants.SlotKind kind = FanModelConstants.SlotKind.FIELD;
-							if (slot instanceof FanAstMethod)
+							if (slot instanceof FanMethodScopeVar)
 							{
-								if (((FanAstMethod) slot).isCtor())
+								if (((FanMethodScopeVar) slot).isCtor())
 								{
 									kind = FanModelConstants.SlotKind.CTOR;
 								} else
 								{
 									kind = FanModelConstants.SlotKind.METHOD;
 								}
-							} else if (slot instanceof FanAstField)
+							} else if (slot instanceof FanFieldScopeVar)
 							{
 								kind = FanModelConstants.SlotKind.FIELD;
 							} else
@@ -394,9 +389,9 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							dbSlot.save();
 
 							// deal with parameters of method/ctor
-							if (slot instanceof FanAstMethod)
+							if (slot instanceof FanMethodScopeVar)
 							{
-								FanAstMethod method = (FanAstMethod) slot;
+								FanMethodScopeVar method = (FanMethodScopeVar) slot;
 								Hashtable<String, FanResolvedType> parameters = method.getParameters();
 
 								// Try to reuse existing db entries.
@@ -479,7 +474,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				log.exception("Indexing 'rollback' failed for: " + path, e);
 			}
 		}
-	}
+	}*/
 
 	public static boolean checkIfNeedsReindexing(String path, long tstamp)
 	{
@@ -828,13 +823,13 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		if (hasFlag(type.flags, FConst.Mixin))
 		{
-			return FanTypeScope.TypeKind.MIXIN.value();
+			return FanAstScopeVarBase.VarKind.TYPE_MIXIN.value();
 		}
 		if (hasFlag(type.flags, FConst.Enum))
 		{
-			return FanTypeScope.TypeKind.ENUM.value();
+			return FanAstScopeVarBase.VarKind.TYPE_ENUM.value();
 		} // class is default
-		return FanTypeScope.TypeKind.CLASS.value();
+		return FanAstScopeVarBase.VarKind.TYPE_CLASS.value();
 	}
 
 	private boolean hasFlag(int flags, int flag)

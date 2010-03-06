@@ -7,7 +7,6 @@ package net.colar.netbeans.fan.hints;
 import java.util.Collections;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
-import net.colar.netbeans.fan.ast.FanRootScope;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintsProvider;

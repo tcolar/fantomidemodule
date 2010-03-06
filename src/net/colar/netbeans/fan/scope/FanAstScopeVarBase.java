@@ -26,6 +26,7 @@ public abstract class FanAstScopeVarBase
 	{
 		IMPORT(1),
 		TYPE_CLASS(11), TYPE_MIXIN(12), TYPE_ENUM(13), TYPE_FACET(14), // fantom types
+		TYPE_JAVA_CLASS(21), TYPE_JAVA_INTERFACE(22), TYPE_JAVA_ENUM(23), TYPE_JAVA_ANNOTATION(24), // fantom types
 		FIELD(31), METHOD(32), //slots
 		LOCAL(41), //local def
 		IMPLIED(51); // this, it etc...}
@@ -175,5 +176,22 @@ public abstract class FanAstScopeVarBase
 		}
 		// default is public
 		return ModifEnum.PUBLIC.value();
+	}
+
+	/**
+	 * Add or or multiple modifiers (Space separated);
+	 * @param modifs
+	 */
+	public void addModifiers(String modifs)
+	{
+			String[] mStrs = modifs.split(" ");
+			for (String mStr : mStrs)
+			{
+				FanAstScopeVarBase.ModifEnum modif = parseModifier(mStr.trim());
+				if (modif != null)
+				{
+					modifiers.add(modif);
+				}
+			}
 	}
 }

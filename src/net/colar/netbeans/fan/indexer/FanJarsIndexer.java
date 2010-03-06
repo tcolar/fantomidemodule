@@ -22,9 +22,10 @@ import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
-import net.colar.netbeans.fan.ast.FanTypeScope;
+//import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.indexer.model.FanType;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.builders.JOTQueryBuilder;
@@ -552,18 +553,18 @@ public class FanJarsIndexer implements FileChangeListener
 	{
 		if (c.isInterface())
 		{
-			return FanTypeScope.TypeKind.JAVA_INTERFACE.value();
+			return FanAstScopeVarBase.VarKind.TYPE_JAVA_INTERFACE.value();
 		}
 		if (c.isAnnotation())
 		{
-			return FanTypeScope.TypeKind.JAVA_ANNOTATION.value();
+			return FanAstScopeVarBase.VarKind.TYPE_JAVA_ANNOTATION.value();
 		}
 		if (c.isEnum())
 		{
-			return FanTypeScope.TypeKind.JAVA_ENUM.value();
+			return FanAstScopeVarBase.VarKind.TYPE_JAVA_ENUM.value();
 		}
 		// class is default
-		return FanTypeScope.TypeKind.JAVA_CLASS.value();
+		return FanAstScopeVarBase.VarKind.TYPE_JAVA_CLASS.value();
 	}
 
 	private int getProtection(int flags)

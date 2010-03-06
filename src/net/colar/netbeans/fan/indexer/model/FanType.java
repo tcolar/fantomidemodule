@@ -4,9 +4,10 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
-import net.colar.netbeans.fan.ast.FanTypeScope;
+//import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
@@ -367,19 +368,19 @@ public class FanType extends JOTModel
 
 	public boolean isClass()
 	{
-		return getKind() == FanTypeScope.TypeKind.CLASS.value()
-				|| getKind() == FanTypeScope.TypeKind.JAVA_CLASS.value();
+		return getKind() == FanAstScopeVarBase.VarKind.TYPE_CLASS.value()
+				|| getKind() == FanAstScopeVarBase.VarKind.TYPE_JAVA_CLASS.value();
 	}
 
 	public boolean isMixin()
 	{
-		return getKind() == FanTypeScope.TypeKind.MIXIN.value();
+		return getKind() == FanAstScopeVarBase.VarKind.TYPE_MIXIN.value();
 	}
 
 	public boolean isEnum()
 	{
-		return getKind() == FanTypeScope.TypeKind.ENUM.value()
-				|| getKind() == FanTypeScope.TypeKind.JAVA_ENUM.value();
+		return getKind() == FanAstScopeVarBase.VarKind.TYPE_ENUM.value()
+				|| getKind() == FanAstScopeVarBase.VarKind.TYPE_JAVA_ENUM.value();
 	}
 
 	public boolean isJava()

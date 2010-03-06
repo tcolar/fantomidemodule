@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.structure;
 
 import java.util.HashSet;
 import java.util.Set;
+import net.colar.netbeans.fan.parboiled.AstNode;
 import org.antlr.runtime.CommonToken;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
@@ -25,14 +26,14 @@ public class FanElementHandle implements ElementHandle
 
 	private final ParserResult result;
 	private final Source source;
-	private final CommonToken token;
+	private final AstNode node;
 	private ElementKind kind;
 	private OffsetRange offsetRange;
 	private Set<Modifier> modifiers = new HashSet<Modifier>();
 
-	public FanElementHandle(ElementKind kind, CommonToken token, ParserResult result, OffsetRange range)
+	public FanElementHandle(ElementKind kind, AstNode node, ParserResult result, OffsetRange range)
 	{
-		this.token = token;
+		this.node = node;
 		this.result = result;
 		this.source = result.getSnapshot().getSource();
 		this.kind = kind;
@@ -51,7 +52,7 @@ public class FanElementHandle implements ElementHandle
 
 	public String getName()
 	{
-		return token.getText();
+		return node.getNodeText(true);
 	}
 
 	public String getIn()

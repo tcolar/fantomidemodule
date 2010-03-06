@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.scope;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstKind;
@@ -53,9 +54,6 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_MIXIN)) != null)
 		{
 			kind = VarKind.TYPE_MIXIN;
-
-			//FanUtilities.GENERIC_LOGGER.info("Type node: " + ast.toStringTree());
-
 		}
 		AstNode nameNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		AstNode inheritance = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_INHERITANCE));
@@ -90,24 +88,50 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		}
 
 		// Deal with children - slots		
-		for (AstNode child : node.getChildren())
+		AstNode blockNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
+		if(blockNode==null)
+			return;
+		for (AstNode slot : blockNode.getChildren())
 		{
-			switch (child.getKind())
+			switch (slot.getKind())
 			{
-				case AST_FIELD_DEF:
-					FanAstField field = new FanAstField(this, child);
-					if (!field.getType().isResolved())
+				case AST_SLOT_DEF:
+					List<String> slotModifs = new ArrayList<String>();
+					FanFieldScopeVar slotVar = null;
+					for (AstNode child : slot.getChildren())
 					{
-						//TODO: Propose to auto-add using statements (Hints)
-						node.getRoot().getParserTask().addError("Unresolved field type", child);
+						String slotName = FanLexAstUtils.getFirstChildText(child, new NodeKindPredicate(AstKind.AST_ID));
+						switch (child.getKind())
+						{
+							// could be multiple modifiers, but only one of either field, ctor, method
+							case AST_MODIFIER:
+								//Protection is "outside" of field_def/method_def
+								slotModifs.add(child.getNodeText(true));
+								break;
+							case AST_FIELD_DEF:
+								slotVar = new FanFieldScopeVar(child, slotName);
+								break;
+							case AST_METHOD_DEF:
+							case AST_CTOR_DEF:
+								slotVar = new FanMethodScopeVar(child, slotName, child.getKind() == AstKind.AST_CTOR_DEF);
+								break;
+						}
 					}
-					addScopeVar(field, false);
-					break;
-				case AST_METHOD_DEF:
-				case AST_CTOR_DEF:
-					FanAstMethod method = new FanAstMethod(this, child, child.getKind() == AstKind.AST_CTOR_DEF);
-					addScopeVar(method, false);
-					break;
+					// Add the "outer" modifiers(protection) to the slotVar and save it in scope.
+					for (String modif : slotModifs)
+					{
+						if (slotVar != null)
+						{
+							slotVar.addModifiers(modif);
+						} else
+						{
+							node.getRoot().getParserTask().addError("Orphaned modifier in slot.", slot);
+						}
+					}
+					if (slotVar != null) //shouldn't be
+					{
+						node.addScopeVar(slotVar);
+					}
 			}
 		}
 	}
@@ -147,19 +171,19 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 				String text = node.getNodeText(true);
 				if (!inhType.isResolved())
 				{
-					node.getRoot().getParserTask().addError("Unresolved inherited item!", child);
+					node.getRoot().getParserTask().addError("Unresolved inherited item : "+child.getNodeText(true), child);
 				} else
 				{
 					FanType fanType = inhType.getDbType();
 					if (fanType.isFinal())
 					{
 						// this covers enums too
-						node.getRoot().getParserTask().addError("Can't inherit from a final class!", child);
+						node.getRoot().getParserTask().addError("Can't inherit from a final class : "+child.getNodeText(true), child);
 					} else if (fanType.isClass())
 					{
 						if (hasInheritedClass())
 						{
-							node.getRoot().getParserTask().addError("Can only inherit from one class!", inheritance);
+							node.getRoot().getParserTask().addError("Can only inherit from one class !", inheritance);
 						}
 					}
 				}
@@ -169,5 +193,15 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 				}
 			}
 		}
+	}
+
+	public List<FanResolvedType> getInheritedItems()
+	{
+		return inheritedItems;
+	}
+
+	public Hashtable<String, FanSlot> getInheritedSlots()
+	{
+		return inheritedSlots;
 	}
 }

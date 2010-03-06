@@ -133,12 +133,14 @@ public class FantomParser extends BaseParser<AstNode>
 			id(), ast.newNode(AstKind.AST_ID), 
 			optional(inheritance()),
 			OPT_LF(),
+			sequence(
 			BRACKET_L,
 			OPT_LF(),
 			optional(sequence(test(inEnum),optional(enumValDefs()))), // only valid for enums, but simplifying
 			// Static block missing from Fan grammar
 			zeroOrMore(firstOf(staticBlock(), slotDef())),
-			BRACKET_R)), ast.newNode(AstKind.AST_TYPE_DEF), OPT_LF());
+			BRACKET_R), ast.newNode(AstKind.AST_BLOCK))),
+			ast.newNode(AstKind.AST_TYPE_DEF), OPT_LF());
 	}
 
 	public Rule protection()
@@ -188,24 +190,28 @@ public class FantomParser extends BaseParser<AstNode>
 		// Rewrote this to "unify" slots common parts (for better performance)
 		return sequence(
 			OPT_LF(),
+			sequence(
 			optional(doc()),// common to all slots
 			zeroOrMore(facet()),// common to all slots
 			optional(protection()),// common to all slots
 			firstOf(
 				ctorDef(), // look for 'new'
 				methodDef(), // look for params : '('
-				fieldDef()), // others
+				fieldDef())), // others
+			ast.newNode(AstKind.AST_SLOT_DEF),
 			OPT_LF());
 	}
 
 	public Rule fieldDef()
 	{
 		return sequence(sequence(
-			zeroOrMore(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
-			KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL)),
+			zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
+			KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL), ast.newNode(AstKind.AST_MODIFIER))),
 			// Some fantom code has protection after modifiers, so allowing that
 			optional(protection()),
-			/*typeAndOrId(),*/ type(), id(), // Type required for fields(no infered) (Grammar does not say so)
+			/*typeAndOrId(), // Type required for fields(no infered) (Grammar does not say so)*/
+			type(),  ast.newNode(AstKind.AST_TYPE),
+			id(), ast.newNode(AstKind.AST_ID),
 			setFieldInit(true),
 			optional(enforcedSequence(AS_INIT, OPT_LF(), expr())),
 			optional(fieldAccessor()),
@@ -218,12 +224,12 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(enforcedSequence(
 				sequence(
 				// Fan grammar misses 'final'
-				zeroOrMore(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
-				KW_OVERRIDE, KW_VIRTUAL, KW_FINAL)),
+				zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
+				KW_OVERRIDE, KW_VIRTUAL, KW_FINAL), ast.newNode(AstKind.AST_MODIFIER))),
 				// Some fantom code has protection after modifiers, so allowing that
 				optional(protection()),
-				type(),
-				id(),
+				type(), ast.newNode(AstKind.AST_TYPE),
+				id(), ast.newNode(AstKind.AST_ID),
 				PAR_L),
 			optional(params()),
 			PAR_R,
@@ -233,7 +239,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule ctorDef()
 	{
 		return sequence(enforcedSequence(KW_NEW,
-			id(),
+			id(), ast.newNode(AstKind.AST_ID),
 			PAR_L, 
 			optional(params()),
 			PAR_R,
@@ -260,7 +266,10 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule param()
 	{
-		return sequence(OPT_LF(), type(), id(), optional(enforcedSequence(AS_INIT, expr())), OPT_LF());
+		return sequence(OPT_LF(), 
+			sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID), optional(enforcedSequence(AS_INIT, expr()))),
+			ast.newNode(AstKind.AST_PARAM),
+			OPT_LF());
 	}
 
 	public Rule fieldAccessor()
