@@ -8,8 +8,6 @@ import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanTokenID;
-import net.colar.netbeans.fan.antlr.FanGrammarHelper;
-import net.colar.netbeans.fan.antlr.FanLexer;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.spi.ParserResult;

@@ -4,7 +4,6 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
-import net.colar.netbeans.fan.antlr.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,10 +11,6 @@ import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.FanUtilities;
-import org.antlr.runtime.CommonToken;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.Tree;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;

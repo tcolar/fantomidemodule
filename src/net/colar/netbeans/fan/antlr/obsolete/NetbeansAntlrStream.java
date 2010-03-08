@@ -1,14 +1,10 @@
 /*
  * Deprecated 2/22/10 Using parboiled now
+ * 
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.colar.netbeans.fan.antlr;
-
-import java.util.ArrayList;
-import java.util.List;
-import org.antlr.runtime.CharStream;
-import org.netbeans.spi.lexer.LexerInput;
+package net.colar.netbeans.fan.antlr.obsolete;
 
 /**
  * Mostly copied from online newsgroup / antlr source
@@ -16,7 +12,7 @@ import org.netbeans.spi.lexer.LexerInput;
  * This wraps the lexer data as a charstream.
  * @author tcolar
  */
-@Deprecated //  Deprecated (2/22/10)- using parboiled parser now
+/*@Deprecated //  Deprecated (2/22/10)- using parboiled parser now
 public class NetbeansAntlrStream implements CharStream
 {
 
@@ -42,14 +38,6 @@ public class NetbeansAntlrStream implements CharStream
 	this.name = name;
     }
 
-    /**
-     * Note: i'm ignoring start/stop, just returning text of current token
-     * This fucntion is called by token.getText() and is useful fro debugging.
-     * So i just return the current token text.
-     * @param start
-     * @param stop
-     * @return
-     */
     public String substring(int start, int stop)
     {
 	return input.readText().toString();
@@ -109,11 +97,6 @@ public class NetbeansAntlrStream implements CharStream
 	return c;
     }
 
-    /**
-     *
-     * @author Terence Parr
-     * @source org.antlr.runtime.ANTLRStringStream.java
-     */
     public int mark()
     {
 	if (markers == null)
@@ -208,4 +191,4 @@ public class NetbeansAntlrStream implements CharStream
     {
 	input.backup(count);
     }
-}
+}*/

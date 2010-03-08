@@ -2,13 +2,13 @@
  * Thibaut Colar Aug 19, 2009
  */
 
-package net.colar.netbeans.fan.antlr;
+package net.colar.netbeans.fan.antlr.obsolete;
 
 /**
  * Some things to be particularely careful to keep in sync when changing the grammar.
  * @author thibautc
  */
-@Deprecated //  Deprecated (2/22/10)- using parboiled parser now
+/*@Deprecated //  Deprecated (2/22/10)- using parboiled parser now
 public class FanGrammarHelper {
 	
 	public static final int[] WS_TOKENS={FanLexer.WS, FanLexer.LB};
@@ -20,4 +20,4 @@ public class FanGrammarHelper {
 	// TODO: consider movin methods here from keystrokeHandler for token matching
 	// check also FanCompletionHandler
 
-}
+}*/
