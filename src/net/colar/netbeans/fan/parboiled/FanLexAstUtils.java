@@ -20,7 +20,9 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.parboiled.Node;
 import org.parboiled.google.base.Predicate;
+import org.parboiled.support.InputBuffer;
 
 /**
  * Utilities for lexer / parser / ast trees
@@ -821,6 +823,18 @@ public class FanLexAstUtils
 	{
 		AstNode node = getFirstChild(parentNode, pred);
 		return node==null?null:node.getNodeText(true);
+	}
+
+	public static String getNodeText(Node<AstNode> node, InputBuffer inputBuffer)
+	{
+		int start = node.getStartLocation().getIndex();
+		int end = node.getEndLocation().getIndex();
+		return inputBuffer.extract(start, end);
+	}
+
+	public static OffsetRange getNodeRange(Node<AstNode> node)
+	{
+		return new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
 	}
 
 }

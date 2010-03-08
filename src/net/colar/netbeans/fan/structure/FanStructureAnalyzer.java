@@ -30,7 +30,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
  * StructureScanner impl.
  * Generates a structure tree from the source (~AST), used for Navigator window (class,enum,mixin,field...)
  * Also provides code folding support.
- * 
+ *
  * See: http://hg.netbeans.org/main/file/24d72d2643e1/csl.api/src/org/netbeans/modules/csl/editor/fold/GsfFoldManager.java
  * @author thibautc
  */

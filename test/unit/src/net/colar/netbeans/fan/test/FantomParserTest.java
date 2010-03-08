@@ -40,7 +40,7 @@ public class FantomParserTest implements JOTTestable
 		boolean fantomFilesLexerTest = true; // parse fantom distro files (lexer rules)
 
 		if (singleTest)
-		{ //TODO: with ifExpr it takes 9ms, whereas with condOrExpr  it takes <5
+		{
 			try
 			{
 				//result = parse(parser, parser.slotDef(), "override CType? base { get { load; return *base } internal set}");
