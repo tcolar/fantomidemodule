@@ -3,16 +3,6 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.List;
-import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.indexer.model.FanSlot;
-import net.colar.netbeans.fan.types.FanResolvedType;
-import org.antlr.runtime.tree.CommonTree;
-
 /**
  * Base object for scope.
  * @author thibautc

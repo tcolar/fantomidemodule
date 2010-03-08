@@ -3,16 +3,6 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import java.util.List;
-import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.parboiled.AstKind;
-import net.colar.netbeans.fan.parboiled.AstNode;
-import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
-import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
-import net.colar.netbeans.fan.types.FanResolvedType;
-import org.antlr.runtime.tree.CommonTree;
-
 /**
  * Type field
  * @author thibautc

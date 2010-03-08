@@ -3,25 +3,6 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
-import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Vector;
-import net.colar.netbeans.fan.FanParserTask;
-import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.types.FanResolvedType;
-import net.colar.netbeans.fan.indexer.model.FanType;
-import org.antlr.runtime.tree.CommonTree;
-import org.netbeans.modules.csl.api.Error;
-import org.netbeans.modules.csl.api.Hint;
-import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.csl.api.Severity;
-import org.netbeans.modules.csl.spi.DefaultError;
-
 /**
  * RootScope for a Fan file
  * Also holds errors (unresolvable imports, undefined vars and so on)

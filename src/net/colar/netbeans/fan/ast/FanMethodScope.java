@@ -3,11 +3,6 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import net.colar.netbeans.fan.scope.FanAstScopeVar;
-import java.util.Hashtable;
-import net.colar.netbeans.fan.types.FanResolvedType;
-import org.antlr.runtime.tree.CommonTree;
-
 /**
  * Scope for a method
  * @author thibautc

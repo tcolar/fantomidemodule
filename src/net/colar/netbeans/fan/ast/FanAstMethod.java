@@ -3,14 +3,6 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
-import java.util.Hashtable;
-import java.util.List;
-import net.colar.netbeans.fan.FanParserTask;
-import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.types.FanResolvedType;
-import org.antlr.runtime.tree.CommonTree;
-
 /**
  * Method or Ctor.
  * @author thibautc

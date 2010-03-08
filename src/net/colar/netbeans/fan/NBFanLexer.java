@@ -6,7 +6,6 @@ package net.colar.netbeans.fan;
 
 import java.util.Collection;
 import java.util.Hashtable;
-//import org.antlr.runtime.CommonToken;
 import java.util.Iterator;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
@@ -17,7 +16,6 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.parboiled.Node;
-import org.parboiled.Parboiled;
 import org.parboiled.RecoveringParseRunner;
 import org.parboiled.common.StringUtils;
 import org.parboiled.support.ParsingResult;

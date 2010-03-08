@@ -3,14 +3,6 @@
  */
 package net.colar.netbeans.fan.ast;
 
-import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
-import net.colar.netbeans.fan.scope.FanAstScopeVar;
-import java.util.List;
-import net.colar.netbeans.fan.FanParserTask;
-import net.colar.netbeans.fan.antlr.FanParser;
-import net.colar.netbeans.fan.types.FanResolvedType;
-import org.antlr.runtime.tree.CommonTree;
-
 /**
  * Generic scope
  * Usually delimited by a code block (brackets etc...)
