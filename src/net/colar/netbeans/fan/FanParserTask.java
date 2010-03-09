@@ -172,7 +172,8 @@ public class FanParserTask extends ParserResult
 					false, Severity.ERROR);
 				errors.add(error);
 			}
-			astRoot = parsingResult.parseTreeRoot.getValue();
+			if(parsingResult.parseTreeRoot != null)
+				astRoot = parsingResult.parseTreeRoot.getValue();
 		} catch (Exception e)
 		{
 			addError("Parser error", e);

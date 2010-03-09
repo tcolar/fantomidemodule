@@ -82,9 +82,9 @@ public class FanLexAstUtils
 	 * @param closing
 	 * @return
 	 */
-	public static OffsetRange findRangeFromOpening(Document doc, TokenSequence<? extends FanTokenID> ts, int openingTokenID, int closingTokenID)
+	public static OffsetRange findRangeFromOpening(Document doc, TokenSequence<? extends FanTokenID> ts, TokenName openingToken, TokenName closingToken)
 	{
-		return findRange(doc, ts, openingTokenID, closingTokenID, true);
+		return findRange(doc, ts, openingToken, closingToken, true);
 	}
 
 	public static boolean matchType(TokenId token, TokenName[] array)
@@ -108,9 +108,9 @@ public class FanLexAstUtils
 	 * @param closing
 	 * @return
 	 */
-	public static OffsetRange findRangeFromClosing(Document doc, TokenSequence<? extends FanTokenID> ts, int openingTokenID, int closingTokenID)
+	public static OffsetRange findRangeFromClosing(Document doc, TokenSequence<? extends FanTokenID> ts, TokenName openingToken, TokenName closingToken)
 	{
-		return findRange(doc, ts, openingTokenID, closingTokenID, false);
+		return findRange(doc, ts, openingToken, closingToken, false);
 	}
 
 	/**
@@ -122,23 +122,23 @@ public class FanLexAstUtils
 	 * @param lookForClosing (false=lookForOpening  - backward)
 	 * @return
 	 */
-	private static OffsetRange findRange(Document doc, TokenSequence<? extends FanTokenID> ts, int openingID, int closingID, boolean lookForClosing)
+	private static OffsetRange findRange(Document doc, TokenSequence<? extends FanTokenID> ts, TokenName opening, TokenName closing, boolean lookForClosing)
 	{
 		int balance = 0;
 
 		while (move(ts, lookForClosing))
 		{
 			Token<? extends FanTokenID> token = ts.token();
-			int ord = token.id().ordinal();
+			FanTokenID id = token.id();
 
-			if (ord == openingID)
+			if (id.matches(opening))
 			{
 				if ((!lookForClosing) && balance == 0)
 				{
 					return new OffsetRange(ts.offset(), ts.offset() + token.length());
 				}
 				balance++;
-			} else if (ord == closingID)
+			} else if (id.matches(closing))
 			{
 				if (lookForClosing && balance == 0)
 				{

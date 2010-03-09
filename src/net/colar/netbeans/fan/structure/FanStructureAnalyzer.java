@@ -62,6 +62,8 @@ public class FanStructureAnalyzer implements StructureScanner
 				AstNode.printNodeTree(task.getRootScope(), "", task.getParsingResult().inputBuffer);
 			
 			AstNode rootScope = task.getRootScope();
+			if(rootScope == null)
+				return items;
 			for (FanAstScopeVarBase var : rootScope.getLocalScopeVars().values())
 			{
 				FanStructureItem item = null;

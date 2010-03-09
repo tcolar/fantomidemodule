@@ -15,6 +15,7 @@ import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -49,7 +50,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	{
 		FanParserTask res = (FanParserTask) result;
 		Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap<OffsetRange, Set<ColoringAttributes>>();
-		//if (res.getDiagnostics().isEmpty())
+		if (res.getParseNodeTree() != null)
 		{
 			scanTree(res, res.getParseNodeTree(), newHighlights);
 			highlights = newHighlights.size() == 0 ? null : newHighlights;
@@ -81,7 +82,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	 */
 	private void scanTree(FanParserTask result, Node<AstNode> node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights)
 	{
-		if (node.getLabel().equals("strs"))
+		if (node.getLabel().equals(TokenName.STRS.name()))
 		{
 			addStrHighlights(result, newHighlights, node);
 		} else if (node.getValue() != null)

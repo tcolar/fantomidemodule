@@ -24,27 +24,27 @@ public class FanCompletionContext
 {
 
 	private completionTypes completionType;
-	private final int offset;
-	private final QueryType queryType;
-	private final boolean caseSensitive;
-	private final boolean isPrefixMatch;
-	private final Document doc;
-	private final CommonTree rootNode;
-	private final TokenSequence<? extends FanTokenID> tokenStream;
-	private final CommonTree curNode;
+	private int offset;
+	private QueryType queryType;
+	private boolean caseSensitive;
+	private boolean isPrefixMatch;
+	private Document doc;
+	//private CommonTree rootNode;
+	private TokenSequence<? extends FanTokenID> tokenStream;
+	//private CommonTree curNode;
 
 	public static enum completionTypes
 	{
 
 		UNKNOWN, ROOT_LEVEL, IMPORT_POD, IMPORT_FFI_JAVA, CALL, ID
 	};
-	private final CodeCompletionContext context;
+	private CodeCompletionContext context;
 	FanParserTask result;
 	private String preamble = "";
 
 	public FanCompletionContext(CodeCompletionContext context)
 	{
-		this.context = context;
+		/*this.context = context;
 		result = (FanParserTask) context.getParserResult();
 
 		//result.dumpTree();
@@ -64,7 +64,7 @@ public class FanCompletionContext
 		curNode = FanLexAstUtils.findASTNodeAt(result, FanLexAstUtils.offsetToTokenIndex(result, offset));
 
 		completionType = determineCompletionType();
-		FanUtilities.GENERIC_LOGGER.debug("Compl. type:" + completionType.toString());
+		FanUtilities.GENERIC_LOGGER.debug("Compl. type:" + completionType.toString());*/
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class FanCompletionContext
 	{
 		//result.dumpTree();
 		// We want the significant node before the cursor
-		FanLexAstUtils.moveToPrevNonWsToken(tokenStream, offset, 0);
+		/*FanLexAstUtils.moveToPrevNonWsToken(tokenStream, offset, 0);
 		CommonTree node = FanLexAstUtils.findASTNodeAt(result, tokenStream.index());
 		if (node==null)
 		{
@@ -157,7 +157,7 @@ public class FanCompletionContext
 			}
 		}
 		// restore ts offset
-		//tokenStream.move(offset);
+		//tokenStream.move(offset);*/
 		return completionTypes.UNKNOWN;
 	}
 
@@ -176,10 +176,10 @@ public class FanCompletionContext
 		return context;
 	}
 
-	public CommonTree getCurNode()
+/*	public CommonTree getCurNode()
 	{
 		return curNode;
-	}
+	}*/
 
 	public Document getDoc()
 	{
@@ -206,20 +206,16 @@ public class FanCompletionContext
 		return result;
 	}
 
-	public CommonTree getRootNode()
+	/*public CommonTree getRootNode()
 	{
 		return rootNode;
-	}
+	}*/
 
 	public TokenSequence<? extends FanTokenID> getTokenStream()
 	{
 		return tokenStream;
 	}
 
-	/**
-	 * Preamble contains prefix text relevant to the completion
-	 * @return
-	 */
 	public String getPreamble()
 	{
 		return preamble;

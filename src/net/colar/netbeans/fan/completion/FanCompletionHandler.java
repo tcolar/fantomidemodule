@@ -12,11 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.indexer.FanJarsIndexer;
@@ -25,7 +22,6 @@ import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
-import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -385,7 +381,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	// TODO: setup nice icons(package/class etc..) in importproposals
 	private void proposeUsing(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
 	{
-		FanParserTask result = (FanParserTask) context.getParserResult();
+		/*FanParserTask result = (FanParserTask) context.getParserResult();
 		Document doc = result.getSnapshot().getSource().getDocument(true);
 		TokenSequence ts = FanLexAstUtils.getFanTokenSequence(doc);
 		int offset = context.getCaretOffset();
@@ -424,10 +420,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				}
 			} else
 			{
-				/*if (pod.startsWith("[java]"))
-				{
-				proposeJavaTypes(proposals, anchor, pod, type);
-				} else*/
 				{
 					proposeTypes(pod, proposals, anchor, type);
 				}
@@ -466,7 +458,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 	/**
@@ -480,7 +472,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 */
 	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
 	{
-		FanParserTask result = (FanParserTask) context.getParserResult();
+		/*FanParserTask result = (FanParserTask) context.getParserResult();
 		int offset = context.getCaretOffset();
 		// we want to look at offset -1 (ie: before the caret) so we are IN the expression, not just after.
 		if (offset > 0)
@@ -513,13 +505,13 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				FanUtilities.GENERIC_LOGGER.info("Call separator not found !");
 				return;
 			}
-			FanResolvedType type = FanResolvedType.makeFromExpr(result, null/*exprNode*/, index); // FIXME null
-			FanUtilities.GENERIC_LOGGER.debug("Type: " + type.toString()/* +" "+exprNode.toStringTree()*/);
+			FanResolvedType type = FanResolvedType.makeFromExpr(result, null, index); // FIXME null
+			FanUtilities.GENERIC_LOGGER.debug("Type: " + type.toString());
 			if (type.isResolved())
 			{
 				proposeSlots(type, proposals, offset + 1, prefix);
 			}
-		}
+		}*/
 	}
 
 	private void proposeVars(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, String prefix)

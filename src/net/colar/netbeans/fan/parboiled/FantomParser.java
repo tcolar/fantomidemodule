@@ -954,7 +954,7 @@ public class FantomParser extends BaseParser<AstNode>
 			KW_MIXIN, KW_NATIVE, KW_NEW, KW_NULL, KW_ONCE, KW_OVERRIDE, KW_PRIVATE,
 			KW_PROTECTED, KW_PUBLIC, KW_READONLY, KW_RETURN, KW_STATIC, KW_SUPER, KW_SWITCH,
 			KW_THIS, KW_THROW, KW_TRUE, KW_TRY, KW_USING, KW_VIRTUAL, KW_VOID, KW_VOLATILE,
-			KW_WHILE));
+			KW_WHILE)).label(TokenName.KEYWORD.name());
 	}
 	// -------------- Terminal items -------------------------------------------
 	// -- Keywords --
@@ -1053,12 +1053,12 @@ public class FantomParser extends BaseParser<AstNode>
 	public final Rule AT = terminal("@");
 	public final Rule DSL_OPEN = terminal("<|");
 	public final Rule DSL_CLOSE = terminal("|>");
-	public final Rule SQ_BRACKET_L = terminal("[");
-	public final Rule SQ_BRACKET_R = terminal("]");
-	public final Rule BRACKET_L = terminal("{");
-	public final Rule BRACKET_R = terminal("}");
-	public final Rule PAR_L = terminal("(");
-	public final Rule PAR_R = terminal(")");
+	public final Rule SQ_BRACKET_L = terminal("[").label(TokenName.SQ_BRACKET_L.name());
+	public final Rule SQ_BRACKET_R = terminal("]").label(TokenName.SQ_BRACKET_R.name());
+	public final Rule BRACKET_L = terminal("{").label(TokenName.BRACKET_L.name());
+	public final Rule BRACKET_R = terminal("}").label(TokenName.BRACKET_R.name());
+	public final Rule PAR_L = terminal("(").label(TokenName.PAR_L.name());
+	public final Rule PAR_R = terminal(")").label(TokenName.PAR_R.name());
 	// shortcut for optional spacing
 	public final Rule OPT_SP = optional(spacing());
 
@@ -1149,7 +1149,7 @@ public class FantomParser extends BaseParser<AstNode>
 			comment(), unixLine(), doc(),
 			strs(), uri(), char_(), dsl(),
 			lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
-			lexerBrackets(),
+			BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R,
 			keyword(), id(), number(),
 			whiteSpace(), any())).label("lexerItems"),
 			// "Any" includes "everything else" - items withough highlighting.
@@ -1161,10 +1161,6 @@ public class FantomParser extends BaseParser<AstNode>
 		return firstOf(OP_2MINUS, OP_2PLUS, OP_AND, OP_ARROW, AS_INIT, OP_BANG, OP_CURRY, OP_DIV, OP_ELVIS,
 			OP_MINUS, OP_MODULO, OP_MULT, OP_OR, OP_PLUS, OP_POUND, OP_RANGE, OP_RANGE_EXCL, OP_SAFE_CALL,
 			OP_SAFE_DYN_CALL).label(TokenName.LEXEROPS.name());
-	}
-	public Rule lexerBrackets()
-	{
-		return firstOf(BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R).label(TokenName.LEXERBRACKETS.name());
 	}
 	public Rule lexerSeps()
 	{

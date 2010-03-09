@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.parboiled;
 
 import java.util.Hashtable;
 import net.colar.netbeans.fan.FanTokenID;
+import net.colar.netbeans.fan.FanUtilities;
 
 /**
  * Parboiled parser does not really provide a lexer, so we simulate one using the parser.
@@ -16,9 +17,9 @@ public class FantomParserTokens
 	// Lexer label names ... we want all tokens provided by the lexer() rule of the parser to be listed here
 	public enum TokenName{
 		COMMENT, UNIXLINE, DOC, LEXEROPS, LEXERSEPS, LEXERASSIGN, LEXERINIT, LEXERCOMPS, LEXERITEMS,
-		STRS, URI, CHAR, KEYWORD, ID, NUMBER, WHITESPACE, SPACING, LF, LEXERBRACKETS, DSL, ANY, ERROR
-				//TODO: make brackets individuals tokens as needed - ({[)}]
-				// serach and replace uses of "(" "[" etc...
+		STRS, URI, CHAR, KEYWORD, ID, NUMBER, WHITESPACE, SPACING, LF, DSL, ANY, ERROR,
+		//Items we use a lot in the lexer
+		SQ_BRACKET_L, SQ_BRACKET_R, BRACKET_L, BRACKET_R, PAR_L, PAR_R
 	}
 
 	// lazy inited
@@ -54,10 +55,23 @@ public class FantomParserTokens
 	 */
 	public static FanTokenID getTokenByName(String name)
 	{
+		if(name==null)
+		{
+			FanUtilities.GENERIC_LOGGER.info("FantomparserToken: Null token passed");
+			return getTokenByName(TokenName.ERROR);
+		}
 		Integer id = tokenIdByName.get(name);
 		if(id==null)
-			return null;
+		{
+			FanUtilities.GENERIC_LOGGER.info("FantomparserToken: No scuh token: "+name);
+			return getTokenByName(TokenName.ERROR);
+		}
 		return tokens.get(id);
+	}
+
+	public static FanTokenID getTokenByName(TokenName name)
+	{
+		return getTokenByName(name.name());
 	}
 
 	/**

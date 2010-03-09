@@ -74,7 +74,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 			if(tk == null)
 			{
 				//System.err.println("Unknown token: " + node.getLabel());
-				tk= FantomParserTokens.getTokenByName("error");
+				tk= FantomParserTokens.getTokenByName(TokenName.ERROR);
 			}
 
 			result = info.tokenFactory().createToken(tk, (nodeEnd-nodeStart));

@@ -6,6 +6,7 @@ package net.colar.netbeans.fan;
 
 import java.util.Collection;
 import net.colar.netbeans.fan.parboiled.FantomParserTokens;
+import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.spi.lexer.LanguageHierarchy;
@@ -55,6 +56,20 @@ public class FanTokenID implements TokenId
 	{
 		return fixedText;
 	}
+
+	/**
+	 * Check wether this token is of the TokenName sort (ny ID)
+	 * @param name
+	 * @return
+	 */
+	public boolean matches(TokenName name)
+	{
+		TokenId tk = FantomParserTokens.getTokenByName(name);
+		if(tk==null)
+			return false;
+		return tk.ordinal() == ordinal;
+	}
+
 	/**
 	 * Basic language hierarchy impl.
 	 * (Static init block)

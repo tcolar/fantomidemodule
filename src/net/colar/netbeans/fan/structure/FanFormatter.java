@@ -76,13 +76,12 @@ public class FanFormatter implements Formatter
 			return 0;
 		}
 
-		// Look backwards to find a suitable context - a class, module or method definition
+		// Look backwards to find a suitable context - a type definition
 		// which we will assume is properly indented and balanced
 		do
 		{
 			Token<? extends FanTokenID> token = ts.token();
-			TokenId id = token.id();
-			int ord = id.ordinal();
+			FanTokenID id = token.id();
 
 			if (tokenIs(token, "class") || tokenIs(token, "mixin") || tokenIs(token, "enum"))
 			{
@@ -93,7 +92,7 @@ public class FanFormatter implements Formatter
 		return ts.offset();
 	}
 
-	private int getTokenBalanceDelta(TokenId id, Token<? extends FanTokenID> token,
+	private int getTokenBalanceDelta(FanTokenID id, Token<? extends FanTokenID> token,
 		BaseDocument doc, TokenSequence<? extends FanTokenID> ts, boolean includeKeywords)
 	{
 		int ord = id.ordinal();
@@ -110,10 +109,10 @@ public class FanFormatter implements Formatter
 					return -1;
 				}
 			}
-		} else*/ if (tokenIs(token, "(") || tokenIs(token, "{") || tokenIs(token, "["))
+		} else*/ if (id.matches(TokenName.PAR_L) || id.matches(TokenName.BRACKET_L) || id.matches(TokenName.SQ_BRACKET_L))
 		{
 			return 1;
-		} else if (tokenIs(token, ")") || tokenIs(token, "}") || tokenIs(token, "]"))
+		} else if (id.matches(TokenName.SQ_BRACKET_R) || id.matches(TokenName.BRACKET_R) || id.matches(TokenName.PAR_R))
 		{
 			return -1;
 		} 
@@ -141,7 +140,7 @@ public class FanFormatter implements Formatter
 		do
 		{
 			Token<? extends FanTokenID> token = ts.token();
-			TokenId id = token.id();
+			FanTokenID id = token.id();
 
 			balance += getTokenBalanceDelta(id, token, doc, ts, includeKeywords);
 		} while (ts.moveNext() && (ts.offset() < end));
@@ -222,13 +221,13 @@ public class FanFormatter implements Formatter
 				return false;
 			}
 
-			TokenId id = token.id();
-			int ord = id.ordinal();
+			FanTokenID id = token.id();
 
 			// If the line starts with an end-marker, such as "end", "}", "]", etc.,
 			// find the corresponding opening marker, and indent the line to the same
 			// offset as the beginning of that line.
-			return ( /*LexUtilities.isIndentToken(id) && !LexUtilities.isBeginToken(id, doc, offset)) ||*/tokenIs(token, "}") || tokenIs(token, ")") || tokenIs(token, "]"));
+			return ( /*LexUtilities.isIndentToken(id) && !LexUtilities.isBeginToken(id, doc, offset)) ||*/
+				id.matches(TokenName.BRACKET_R) || id.matches(TokenName.PAR_R) || id.matches(TokenName.SQ_BRACKET_R));
 		}
 
 		return false;
@@ -260,8 +259,7 @@ public class FanFormatter implements Formatter
 
 		if (token != null)
 		{
-			TokenId id = token.id();
-			int ord = id.ordinal();
+			FanTokenID id = token.id();
 			boolean isContinuationOperator = (id.primaryCategory().equalsIgnoreCase("operator") ||
 				tokenIs(token, "."));
 
@@ -290,7 +288,7 @@ public class FanFormatter implements Formatter
 				if (token != null)
 				{
 					id = token.id();
-					if (tokenIs(token, "{"))
+					if (id.matches(TokenName.BRACKET_L))
 					{ // NOI18N
 						return false;
 					}
@@ -504,11 +502,11 @@ public class FanFormatter implements Formatter
 				String line = doc.getText(offset, endOfLine - offset);
 				if (token != null)
 				{
-					int ord = token.id().ordinal();
+					FanTokenID id = token.id();
 					// Check if we are in single stmt
 					if (checkForSignleStmt)
 					{
-						if (tokenIs(token,"{"))
+						if (id.matches(TokenName.BRACKET_L))
 						{
 							singleStmtAdjust = indentSize;
 						}
@@ -516,7 +514,7 @@ public class FanFormatter implements Formatter
 					}
 					if (inCaseStmt)
 					{
-						if (tokenIs(token, "}") || tokenIs(token, "case") || tokenIs(token, "default"))
+						if (id.matches(TokenName.BRACKET_R) || tokenIs(token, "case") || tokenIs(token, "default"))
 						{
 							inCaseStmt = false;
 						} else
