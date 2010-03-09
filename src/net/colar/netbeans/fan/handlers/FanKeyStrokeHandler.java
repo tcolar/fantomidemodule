@@ -14,6 +14,7 @@ import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -92,29 +93,30 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			prev = doc.getText(caretOffset - 1, 1).charAt(0);
 		}
 		char next = ' ';
-		if (caretOffset < doc.getLength()-1)
+		if (caretOffset < doc.getLength() - 1)
 		{
 			next = doc.getText(caretOffset, 1).charAt(0);
 		}
 		Token<? extends FanTokenID> token = FanLexAstUtils.getFanTokenAt(document, caretOffset);
 
 		// If User types "over" closing item we closed automaticaly, skip it
+		String nm = token.id().name();
+		String txt = token.text().toString().trim();
 		if (token != null)
 		{
-			int ord = token.id().ordinal();
 			//For str,uri : if backquoted -> don't skip
 			//System.out.println("prev: "+prev);
 			//System.out.println("next: "+next);
 			//System.out.println("car: "+car);
 			//System.out.println("tk: "+token.id().name());
-			if ((car == '"' && ord == FanLexer.INC_STR && next=='"' && prev!='\\') ||
-					(car == '"' && ord == FanLexer.STR && next=='"' && prev!='\\') ||
-					(car == '`' && ord == FanLexer.URI && next=='`' && prev!='\\') ||
-					(car == '`' && ord == FanLexer.INC_URI && next=='`' && prev!='\\') ||
-					(car == '\'' && ord == FanLexer.CHAR && next=='\'') ||
-					(car == ']' && ord == FanLexer.SQ_BRACKET_R) ||
-					(car == ')' && ord == FanLexer.PAR_R) ||
-					(car == '}' && ord == FanLexer.BRACKET_R))
+			if ((car == '"' && nm.equals(TokenName.STRS.name()) && next == '"' && prev != '\\')
+					|| (car == '"' && nm.equals(TokenName.STRS.name()) && next == '"' && prev != '\\')
+					|| (car == '`' && nm.equals(TokenName.URI.name()) && next == '`' && prev != '\\')
+					|| //(car == '`' && ord == FanLexer.INC_URI && next=='`' && prev!='\\') ||
+					(car == '\'' && nm.equals(TokenName.CHAR.name()) && next == '\'')
+					|| (car == ']' && txt.equals("]"))
+					|| (car == ')' && txt.equals(")"))
+					|| (car == '}' && txt.equals("}")))
 			{
 				// just skip the existing same characters
 				target.getCaret().setDot(caretOffset + 1);
@@ -122,8 +124,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			}
 		}
 		// Same but dual characters
-		if (/*(car == '/' && prev=='*' && token.id().ordinal() == FanLexer.MULTI_COMMENT) ||*/
-				(car == '>' && prev=='|' && token.id().ordinal() == FanLexer.DSL))
+		if (/*(car == '/' && prev=='*' && token.id().ordinal() == FanLexer.MULTI_COMMENT) ||*/(car == '>' && prev == '|' && nm.equals(TokenName.DSL.name())))
 		{
 			// remove previous char and then skip existing one
 			doc.remove(caretOffset - 1, 1);
@@ -132,20 +133,20 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		}
 
 		// If within those tokens, don't do anything special
-		if (token.id().ordinal() == FanLexer.STR ||
-				token.id().ordinal() == FanLexer.CHAR ||
-				token.id().ordinal() == FanLexer.DOC ||
-				token.id().ordinal() == FanLexer.DSL ||
-				token.id().ordinal() == FanLexer.EXEC_COMMENT ||
-				token.id().ordinal() == FanLexer.INC_COMMENT ||
-				token.id().ordinal() == FanLexer.INC_DSL ||
-				token.id().ordinal() == FanLexer.INC_STR ||
-				token.id().ordinal() == FanLexer.INC_URI ||
-				token.id().ordinal() == FanLexer.LINE_COMMENT ||
-				token.id().ordinal() == FanLexer.MULTI_COMMENT ||
-				token.id().ordinal() == FanLexer.QUOTSTR ||
-				token.id().ordinal() == FanLexer.STR ||
-				token.id().ordinal() == FanLexer.URI)
+		if (nm.equals(TokenName.DSL.name())
+				|| nm.equals(TokenName.CHAR.name())
+				|| nm.equals(TokenName.DOC.name())
+				|| nm.equals(TokenName.DSL.name())
+				|| nm.equals(TokenName.COMMENT.name())
+				|| //token.id().ordinal() == FanLexer.INC_COMMENT ||
+				//token.id().ordinal() == FanLexer.INC_DSL ||
+				//token.id().ordinal() == FanLexer.INC_STR ||
+				//token.id().ordinal() == FanLexer.INC_URI ||
+				//token.id().ordinal() == FanLexer.LINE_COMMENT ||
+				//token.id().ordinal() == FanLexer.MULTI_COMMENT ||
+				//token.id().ordinal() == FanLexer.QUOTSTR ||
+				nm.equals(TokenName.STRS.name())
+				|| nm.equals(TokenName.URI.name()))
 		{
 			return false;
 		}
@@ -170,27 +171,29 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 				break;
 			case '"':
 				// If third quote in row(""") then don't close (quoted string)
-				if(caretOffset>2)
+				if (caretOffset > 2)
 				{
-					String prev2=doc.getText(caretOffset-2, 2);
-					if(prev2.equals("\"\""))
+					String prev2 = doc.getText(caretOffset - 2, 2);
+					if (prev2.equals("\"\""))
+					{
 						break;
+					}
 				}
 				toInsert = "\"";
 				break;
 			// dual characters
 			case '|':
-				if (prev=='<')
+				if (prev == '<')
 				{
 					toInsert = "|>";
 				}
 				break;
 			/*case '*':
-				if (prev=='/')
-				{
-					toInsert = "* /";
-				}
-				break;*/
+			if (prev=='/')
+			{
+			toInsert = "* /";
+			}
+			break;*/
 		}
 		// do the insertion job
 		if (toInsert.length() > 0)
@@ -199,7 +202,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			target.getCaret().setDot(caretOffset);
 			if (toInsert.length() > 0)
 			{
-				lastInsertStart=caretOffset;
+				lastInsertStart = caretOffset;
 				lastInsertSize = toInsert.length();
 			}
 		}
@@ -277,7 +280,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
 		// If we just auto-added chars in beforeCharInserted() and the user
 		// press backspace right away(no moving), we remove them now.
-		if (lastInsertSize > 0 && caretOffset==lastInsertStart)
+		if (lastInsertSize > 0 && caretOffset == lastInsertStart)
 		{
 			doc.remove(caretOffset, lastInsertSize);
 		}
@@ -289,22 +292,23 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	public int beforeBreak(Document document, int caretOffset, JTextComponent target) throws BadLocationException
 	{
 		Token tkNext = FanLexAstUtils.getFanTokenAt(document, caretOffset);
-		int offset=caretOffset==0?0:caretOffset-1;
+		int offset = caretOffset == 0 ? 0 : caretOffset - 1;
 		// Get token BEFORE line break
 		Token tk = FanLexAstUtils.getFanTokenAt(document, offset);
 		//If within DSL, STR, URI don't indent anything as they can be multiline
 		// unless they are complete (next token is !=)
-		if (tkNext!=null && tk != null)
+		if (tkNext != null && tk != null)
 		{
 			int ord = tk.id().ordinal();
 			int ord2 = tkNext.id().ordinal();
-			if (	(ord == FanLexer.DSL && ord2==ord)|
-					(ord == FanLexer.STR && ord2==ord) |
-					(ord == FanLexer.QUOTSTR && ord2==ord) |
-					(ord == FanLexer.URI && ord2==ord) |
-					ord == FanLexer.INC_DSL |
-					ord == FanLexer.INC_STR |
-					ord == FanLexer.INC_URI)
+			String nm = tk.id().name();
+			if ((nm.equals(TokenName.DSL.name()) && ord2 == ord)
+					| (nm.equals(TokenName.STRS.name()) && ord2 == ord)
+					| //(ord == FanLexer.QUOTSTR && ord2==ord) |
+					(nm.equals(TokenName.URI.name()) && ord2 == ord))
+			//ord == FanLexer.INC_DSL |
+			//ord == FanLexer.INC_STR |
+			//ord == FanLexer.INC_URI)
 			{
 				return -1;
 			}
@@ -406,10 +410,11 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		} else
 		{
 			int ord = token.id().ordinal();
+			String txt = token.text().toString().trim();
 			// if rightToken is not 'matcheable', use left token
-			if (ord != FanLexer.PAR_L && ord != FanLexer.PAR_R &&
-					ord != FanLexer.SQ_BRACKET_L && ord != FanLexer.SQ_BRACKET_R &&
-					ord != FanLexer.BRACKET_L && ord != FanLexer.BRACKET_R)
+			if (!txt.equals("(") && !txt.equals(")")
+					&& !txt.equals("[") && !txt.equals("]")
+					&& !txt.equals("{") && !txt.equals("}"))
 			{
 				token = FanLexAstUtils.getFanTokenAt(document, caretOffset);
 				searchOffset =
@@ -421,29 +426,38 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		if (token != null)
 		{
 			int ord = token.id().ordinal();
+			String txt = token.text().toString().trim();
 			//Ok, now try to find the matching token
-			switch (ord)
+			if (txt.equals("("))
 			{
-				case FanLexer.PAR_L:
-					ts.move(caretOffset + searchOffset);// start after opening char
-					return FanLexAstUtils.findRangeFromOpening(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
-				case FanLexer.PAR_R:
-					ts.move(caretOffset + searchOffset - 1);// start before opening char (since going backward)
-					return FanLexAstUtils.findRangeFromClosing(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
-				case FanLexer.BRACKET_L:
-					ts.move(caretOffset + searchOffset);
-					return FanLexAstUtils.findRangeFromOpening(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
-				case FanLexer.BRACKET_R:
-					ts.move(caretOffset + searchOffset - 1);
-					return FanLexAstUtils.findRangeFromClosing(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
-				case FanLexer.SQ_BRACKET_L:
-					ts.move(caretOffset + searchOffset);
-					return FanLexAstUtils.findRangeFromOpening(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
-				case FanLexer.SQ_BRACKET_R:
-					ts.move(caretOffset + searchOffset - 1);
-					return FanLexAstUtils.findRangeFromClosing(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
+				ts.move(caretOffset + searchOffset);// start after opening char
+				return FanLexAstUtils.findRangeFromOpening(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
 			}
-
+			else if (txt.equals(")"))
+			{
+				ts.move(caretOffset + searchOffset - 1);// start before opening char (since going backward)
+				return FanLexAstUtils.findRangeFromClosing(document, ts, FanLexer.PAR_L, FanLexer.PAR_R);
+			}
+			else if (txt.equals("{"))
+			{
+				ts.move(caretOffset + searchOffset);
+				return FanLexAstUtils.findRangeFromOpening(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
+			}
+			else if (txt.equals("}"))
+			{
+				ts.move(caretOffset + searchOffset - 1);
+				return FanLexAstUtils.findRangeFromClosing(document, ts, FanLexer.BRACKET_L, FanLexer.BRACKET_R);
+			}
+			else if (txt.equals("["))
+			{
+				ts.move(caretOffset + searchOffset);
+				return FanLexAstUtils.findRangeFromOpening(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
+			}
+			else if (txt.equals("]"))
+			{
+				ts.move(caretOffset + searchOffset - 1);
+				return FanLexAstUtils.findRangeFromClosing(document, ts, FanLexer.SQ_BRACKET_L, FanLexer.SQ_BRACKET_R);
+			}
 		}
 		//default - no match
 		return OffsetRange.NONE;

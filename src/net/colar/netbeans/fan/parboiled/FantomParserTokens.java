@@ -17,6 +17,8 @@ public class FantomParserTokens
 	public enum TokenName{
 		COMMENT, UNIXLINE, DOC, LEXEROPS, LEXERSEPS, LEXERASSIGN, LEXERINIT, LEXERCOMPS, LEXERITEMS,
 		STRS, URI, CHAR, KEYWORD, ID, NUMBER, WHITESPACE, SPACING, LF, LEXERBRACKETS, DSL, ANY, ERROR
+				//TODO: make brackets individuals tokens as needed - ({[)}]
+				// serach and replace uses of "(" "[" etc...
 	}
 
 	// lazy inited
