@@ -6,10 +6,8 @@ package net.colar.netbeans.fan.parboiled;
 import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
-import org.parboiled.matchers.TestMatcher;
-import org.parboiled.matchers.TestNotMatcher;
-import org.parboiled.support.Cached;
 import org.parboiled.support.Leaf;
+import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 
 /**
  * Parboiled parser for the Fantom Language
@@ -68,7 +66,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule unixLine()
 	{
-		return sequence("#!", zeroOrMore(sequence(testNot("\n"), any())), "\n").label("unixLine");
+		return sequence("#!", zeroOrMore(sequence(testNot("\n"), any())), "\n").label(TokenName.UNIXLINE.name());
 	}
 
 	public Rule using()
@@ -302,7 +300,7 @@ public class FantomParser extends BaseParser<AstNode>
 			firstOf(
 			sequence(KW_BREAK, eos()),
 			sequence(KW_CONTINUE, eos()),
-			sequence(KW_RETURN, sequence(optional(expr()), eos())).label("MY_RT_STMT"),
+			sequence(KW_RETURN, sequence(optional(expr()), eos())),
 			sequence(KW_THROW, expr(), eos()),
 			if_(),
 			for_(),
@@ -525,7 +523,7 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		//TODO: unclosed DSL ?
 		return sequence(simpleType(),
-			enforcedSequence(DSL_OPEN, OPT_LF(), zeroOrMore(sequence(testNot(DSL_CLOSE), any())), OPT_LF(), DSL_CLOSE));
+			enforcedSequence(DSL_OPEN, OPT_LF(), zeroOrMore(sequence(testNot(DSL_CLOSE), any())), OPT_LF(), DSL_CLOSE)).label(TokenName.DSL.name());
 	}
 
 	public Rule closure()
@@ -680,7 +678,7 @@ public class FantomParser extends BaseParser<AstNode>
 			zeroOrMore(firstOf(
 			unicodeChar(),
 			escapedChar(),
-			sequence(testNot(QUOTE), any()))), QUOTE)).label("strs");
+			sequence(testNot(QUOTE), any()))), QUOTE)).label(TokenName.STRS.name());
 	}
 
 	@Leaf
@@ -693,7 +691,7 @@ public class FantomParser extends BaseParser<AstNode>
 			sequence('\\', firstOf(':','/','#','[',']','@','&','=',';','?')),
 			escapedChar(),
 			sequence(testNot(TICK), any()))),
-			TICK).label("uri");
+			TICK).label(TokenName.URI.name());
 	}
 
 	@Leaf
@@ -704,7 +702,7 @@ public class FantomParser extends BaseParser<AstNode>
 				unicodeChar(),
 				escapedChar(), // standard esapes
 				any()), //all else
-				SINGLE_Q).label("char");
+				SINGLE_Q).label(TokenName.CHAR.name());
 	}
 
 	@Leaf
@@ -749,7 +747,7 @@ public class FantomParser extends BaseParser<AstNode>
 			optional(fraction()),
 			optional(exponent()))),
 			optional(nbType()),
-			OPT_SP).label("number");
+			OPT_SP).label(TokenName.NUMBER.name());
 	}
 
 	@Leaf
@@ -875,14 +873,14 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(testNot(keyword()),
 			sequence(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
 			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9')))),
-			OPT_SP).label("id");
+			OPT_SP).label(TokenName.ID.name());
 	}
 
 	@Leaf
 	public Rule doc()
 	{
 		// In theory there are no empty lines betwen doc and type ... but that does happen so alowing it
-		return oneOrMore(sequence(OPT_SP, "**", zeroOrMore(sequence(testNot("\n"), any())), OPT_LF())).label("doc");
+		return oneOrMore(sequence(OPT_SP, "**", zeroOrMore(sequence(testNot("\n"), any())), OPT_LF())).label(TokenName.DOC.name());
 	}
 
 	@Leaf
@@ -890,13 +888,13 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		return oneOrMore(firstOf(
 			// whitespace (Do NOT eat \n since it can be meaningful)
-			whiteSpace(), comment())).label("spacing");
+			whiteSpace(), comment())).label(TokenName.SPACING.name());
 	}
 
 	@Leaf
 	public Rule whiteSpace()
 	{
-		return oneOrMore(charSet(" \t\u000c")).label("whiteSpace");
+		return oneOrMore(charSet(" \t\u000c")).label(TokenName.WHITESPACE.name());
 	}
 
 	@Leaf
@@ -908,13 +906,13 @@ public class FantomParser extends BaseParser<AstNode>
 			// if incomplete multiline comment, then end at end of line
 			sequence("/*", zeroOrMore(sequence(testNot(charSet("\r\n")), any()))),
 			// single line comment
-			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any())))).label("comment");
+			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any())))).label(TokenName.COMMENT.name());
 	}
 
 	@Leaf
 	public Rule LF()
 	{
-		return sequence(oneOrMore(sequence(OPT_SP, charSet("\n\r"))), OPT_SP).label("LF");
+		return sequence(oneOrMore(sequence(OPT_SP, charSet("\n\r"))), OPT_SP).label(TokenName.LF.name());
 	}
 
 	@Leaf
@@ -956,7 +954,7 @@ public class FantomParser extends BaseParser<AstNode>
 			KW_MIXIN, KW_NATIVE, KW_NEW, KW_NULL, KW_ONCE, KW_OVERRIDE, KW_PRIVATE,
 			KW_PROTECTED, KW_PUBLIC, KW_READONLY, KW_RETURN, KW_STATIC, KW_SUPER, KW_SWITCH,
 			KW_THIS, KW_THROW, KW_TRUE, KW_TRY, KW_USING, KW_VIRTUAL, KW_VOID, KW_VOLATILE,
-			KW_WHILE)).label("keyword");
+			KW_WHILE));
 	}
 	// -------------- Terminal items -------------------------------------------
 	// -- Keywords --
@@ -1108,7 +1106,6 @@ public class FantomParser extends BaseParser<AstNode>
 		inEnum = val;
 		return true;
 	}
-
 	/**
 	 * In Parboiled 0.9.5.0, enforcedSequence was removed, just use sequence now.
 	 * Maybe do a replaceAll later.
@@ -1150,34 +1147,40 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(
 			zeroOrMore(firstOf(
 			comment(), unixLine(), doc(),
-			 lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
-			strs(), uri(), char_(), dsl(), keyword(), id(), number(),
+			strs(), uri(), char_(), dsl(),
+			lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
+			lexerBrackets(),
+			keyword(), id(), number(),
 			whiteSpace(), any())).label("lexerItems"),
 			// "Any" includes "everything else" - items withough highlighting.
-			// "Aby" is also is a catchall for other unexpected items (should not happen)
+			// "Any" is also is a catchall for other unexpected items (should not happen)
 			eoi()); // until end of file
 	}
 	public Rule lexerOps()
 	{
 		return firstOf(OP_2MINUS, OP_2PLUS, OP_AND, OP_ARROW, AS_INIT, OP_BANG, OP_CURRY, OP_DIV, OP_ELVIS,
 			OP_MINUS, OP_MODULO, OP_MULT, OP_OR, OP_PLUS, OP_POUND, OP_RANGE, OP_RANGE_EXCL, OP_SAFE_CALL,
-			OP_SAFE_DYN_CALL).label("lexerOps");
+			OP_SAFE_DYN_CALL).label(TokenName.LEXEROPS.name());
+	}
+	public Rule lexerBrackets()
+	{
+		return firstOf(BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R).label(TokenName.LEXERBRACKETS.name());
 	}
 	public Rule lexerSeps()
 	{
-		return firstOf(SP_COL, SP_COLCOL, SP_COMMA, SP_PIPE, SP_QMARK, SP_SEMI).label("lexerSeps");
+		return firstOf(SP_COL, SP_COLCOL, SP_COMMA, SP_PIPE, SP_QMARK, SP_SEMI).label(TokenName.LEXERSEPS.name());
 	}
 	public Rule lexerComps()
 	{
-		return firstOf(CP_COMPARATORS, CP_EQUALITY).label("lexerComps");
+		return firstOf(CP_COMPARATORS, CP_EQUALITY).label(TokenName.LEXERCOMPS.name());
 	}
 	public Rule lexerAssign()
 	{
-		return firstOf(AS_EQUAL, AS_OPS).label("lexerAssign");
+		return firstOf(AS_EQUAL, AS_OPS).label(TokenName.LEXERASSIGN.name());
 	}
 	public Rule lexerInit()
 	{
-		return AS_INIT.label("lexerInit");
+		return AS_INIT.label(TokenName.LEXERINIT.name());
 	}
 
 }

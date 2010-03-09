@@ -9,6 +9,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -30,6 +31,9 @@ import org.openide.util.Exceptions;
  */
 public class FanFormatter implements Formatter
 {
+	public static final TokenName[] INSIGNIFICANT_TOKENS={TokenName.WHITESPACE, TokenName.LF,
+		TokenName.COMMENT, TokenName.DOC};
+
 
 	public boolean needsParserResult()
 	{
@@ -80,7 +84,7 @@ public class FanFormatter implements Formatter
 			TokenId id = token.id();
 			int ord = id.ordinal();
 
-			if (ord == FanLexer.KW_CLASS || ord == FanLexer.KW_MIXIN || ord == FanLexer.KW_ENUM)
+			if (tokenIs(token, "class") || tokenIs(token, "mixin") || tokenIs(token, "enum"))
 			{
 				return ts.offset();
 			}
@@ -93,10 +97,8 @@ public class FanFormatter implements Formatter
 		BaseDocument doc, TokenSequence<? extends FanTokenID> ts, boolean includeKeywords)
 	{
 		int ord = id.ordinal();
-		if (ord == FanLexer.ID)
+		/*if (ord == FanLexer.ID)
 		{
-			// In some cases, the [ shows up as an identifier, for example in this expression:
-			//  for k, v in sort{|a1, a2| a1[0].id2name <=> a2[0].id2name}
 			if (token.length() == 1)
 			{
 				char c = token.text().charAt(0);
@@ -105,27 +107,16 @@ public class FanFormatter implements Formatter
 					return 1;
 				} else if (c == ']')
 				{
-					// I've seen "]" come instead of a RBRACKET too - for example in RHTML:
-					// <%if session[:user]%>
 					return -1;
 				}
 			}
-		} else if (ord == FanLexer.PAR_L || ord == FanLexer.BRACKET_L || ord == FanLexer.SQ_BRACKET_L)
+		} else*/ if (tokenIs(token, "(") || tokenIs(token, "{") || tokenIs(token, "["))
 		{
 			return 1;
-		} else if (ord == FanLexer.PAR_R || ord == FanLexer.BRACKET_R || ord == FanLexer.SQ_BRACKET_R)
+		} else if (tokenIs(token, ")") || tokenIs(token, "}") || tokenIs(token, "]"))
 		{
 			return -1;
-		} /*else if (includeKeywords)
-		{
-		if (LexUtilities.isBeginToken(id, doc, ts))
-		{
-		return 1;
-		} else if (id == FanTokenID.RBRACE)
-		{
-		return -1;
-		}
-		}*/
+		} 
 
 		return 0;
 	}
@@ -171,8 +162,7 @@ public class FanFormatter implements Formatter
 				TokenId id = token.id();
 				// If we're in a string literal (or regexp or documentation) leave
 				// indentation alone!
-				if (/*LexerUtils.matchType(id.ordinal(), FanGrammarHelper.INSIGNIFICANT_TOKENS) ||*/id.ordinal() == FanLexer.DSL || id.ordinal() == FanLexer.QUOTSTR ||
-					id.ordinal() == FanLexer.STR)
+				if (id.name().equals(TokenName.DSL.name()) ||	id.name().equals(TokenName.STRS.name()))
 				{
 					// Those can be multiline, so leave it alone
 					return true;
@@ -192,9 +182,9 @@ public class FanFormatter implements Formatter
 				TokenId id = token.id();
 				// If we're in a string literal (or regexp or documentation) leave
 				// indentation alone!
-				if (FanLexAstUtils.matchType(id.ordinal(), FanGrammarHelper.INSIGNIFICANT_TOKENS) ||
-					id.ordinal() == FanLexer.DSL || id.ordinal() == FanLexer.QUOTSTR ||
-					id.ordinal() == FanLexer.STR)
+				if (FanLexAstUtils.matchType(id, INSIGNIFICANT_TOKENS) ||
+					id.name().equals(TokenName.DSL.name()) ||
+					id.name().equals(TokenName.STRS.name()))
 				{
 					return true;
 				}
@@ -238,7 +228,7 @@ public class FanFormatter implements Formatter
 			// If the line starts with an end-marker, such as "end", "}", "]", etc.,
 			// find the corresponding opening marker, and indent the line to the same
 			// offset as the beginning of that line.
-			return ( /*LexUtilities.isIndentToken(id) && !LexUtilities.isBeginToken(id, doc, offset)) ||*/ord == FanLexer.BRACKET_R || ord == FanLexer.PAR_R || ord == FanLexer.SQ_BRACKET_R);
+			return ( /*LexUtilities.isIndentToken(id) && !LexUtilities.isBeginToken(id, doc, offset)) ||*/tokenIs(token, "}") || tokenIs(token, ")") || tokenIs(token, "]"));
 		}
 
 		return false;
@@ -273,7 +263,7 @@ public class FanFormatter implements Formatter
 			TokenId id = token.id();
 			int ord = id.ordinal();
 			boolean isContinuationOperator = (id.primaryCategory().equalsIgnoreCase("operator") ||
-				ord == FanLexer.DOT);
+				tokenIs(token, "."));
 
 			if (ts.offset() == offset && token.length() > 1 && token.text().toString().startsWith("\\"))
 			{
@@ -281,7 +271,7 @@ public class FanFormatter implements Formatter
 				isContinuationOperator = true;
 			}
 
-			if (ord == FanLexer.SP_COMMA)
+			if (tokenIs(token, ","))
 			{
 				if (bracketBalance == 0)
 				{
@@ -300,7 +290,7 @@ public class FanFormatter implements Formatter
 				if (token != null)
 				{
 					id = token.id();
-					if (ord == FanLexer.BRACKET_L)
+					if (tokenIs(token, "{"))
 					{ // NOI18N
 						return false;
 					}
@@ -518,7 +508,7 @@ public class FanFormatter implements Formatter
 					// Check if we are in single stmt
 					if (checkForSignleStmt)
 					{
-						if (ord != FanLexer.BRACKET_L)
+						if (tokenIs(token,"{"))
 						{
 							singleStmtAdjust = indentSize;
 						}
@@ -526,7 +516,7 @@ public class FanFormatter implements Formatter
 					}
 					if (inCaseStmt)
 					{
-						if (ord == FanLexer.BRACKET_R || ord == FanLexer.KW_CASE || ord == FanLexer.KW_DEFAULT)
+						if (tokenIs(token, "}") || tokenIs(token, "case") || tokenIs(token, "default"))
 						{
 							inCaseStmt = false;
 						} else
@@ -536,9 +526,9 @@ public class FanFormatter implements Formatter
 
 					}
 					// Check current line to set single stmt flags for next pass
-					if (ord == FanLexer.KW_IF || ord == FanLexer.KW_ELSE ||
-						ord == FanLexer.KW_TRY || ord == FanLexer.KW_CATCH || ord == FanLexer.KW_FINALLY ||
-						ord == FanLexer.KW_FOR || ord == FanLexer.KW_WHILE)
+					if (tokenIs(token, "if") || tokenIs(token, "else") ||
+						tokenIs(token, "try") || tokenIs(token, "catch") || tokenIs(token, "finally") ||
+						tokenIs(token, "for") || tokenIs(token, "while"))
 					{
 						// Deal with when there is a bracket at the end of line (then not a single stmt)
 						// Not perfect ... but probably OK
@@ -547,7 +537,7 @@ public class FanFormatter implements Formatter
 							checkForSignleStmt = true;
 						}
 					}
-					if (ord == FanLexer.KW_CASE || ord == FanLexer.KW_DEFAULT)
+					if (tokenIs(token, "case") || tokenIs(token, "default"))
 					{
 						inCaseStmt = true;
 					}
@@ -588,6 +578,11 @@ public class FanFormatter implements Formatter
 			Exceptions.printStackTrace(ble);
 		}
 
+	}
+
+	private boolean tokenIs(Token tk, String txt)
+	{
+		return tk.text().toString().trim().equals(txt);
 	}
 
 	/*void reformatComments(BaseDocument doc, int start, int end)

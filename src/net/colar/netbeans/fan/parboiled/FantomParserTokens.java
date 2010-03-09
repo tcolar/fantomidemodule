@@ -8,39 +8,40 @@ import net.colar.netbeans.fan.FanTokenID;
 
 /**
  * Parboiled parser does not really provide a lexer, so we simulate one using the parser.
- * This is creates the tokens important to the lexer (syntax highlighting)
+ * This creates the tokens important to the lexer (syntax highlighting)
  * @author thibautc
  */
 public class FantomParserTokens
 {
+	// Lexer label names ... we want all tokens provided by the lexer() rule of the parser to be listed here
+	public enum TokenName{
+		COMMENT, UNIXLINE, DOC, LEXEROPS, LEXERSEPS, LEXERASSIGN, LEXERINIT, LEXERCOMPS, LEXERITEMS,
+		STRS, URI, CHAR, KEYWORD, ID, NUMBER, WHITESPACE, SPACING, LF, LEXERBRACKETS, DSL, ANY, ERROR
+	}
+
 	// lazy inited
 	private static Hashtable<Integer, FanTokenID> tokens = new Hashtable<Integer, FanTokenID>();
 	private static Hashtable<String, Integer> tokenIdByName = new Hashtable<String, Integer>();
 
-	// Lexer label names ... we want all tokens provided by the lexer() rule of the parser to be listed here
-	private static final String[] lexerItems = {"comment","unixLine","doc","lexerOps","lexerSeps","lexerAssign",
-									"lexerInit", "lexerComps", "strs", "uri", "char", "dsl", "keyword", "id", "number",
-									"whiteSpace", "ANY", "error"};
-
 	// Map Token lables with Netbeans color entries (textColors.xml)
-	private static Hashtable<String, String> getColorIds()
+	private static Hashtable<TokenName, String> getColorIds()
 	{
-		Hashtable<String, String> cats = new Hashtable<String, String>();
-		cats.put("comment", "comment");
-		cats.put("doc", "DOC");
-		cats.put("unixLine", "DOC");
-		cats.put("dsl", "DSL");
-		cats.put("number", "number");
-		cats.put("char", "character");
-		cats.put("keyword", "keyword");
-		cats.put("lexerOps", "operator");
-		cats.put("lexerSeps", "separator");
-		cats.put("lexerComps", "comparator");
-		cats.put("lexerAssign", "assignment");
-		cats.put("lexerInit", "initialization");
-		cats.put("strs", "string");
-		cats.put("uri", "string");
-		cats.put("error", "error"); //error token in case of problem with lexer
+		Hashtable<TokenName, String> cats = new Hashtable<TokenName, String>();
+		cats.put(TokenName.COMMENT, "comment");
+		cats.put(TokenName.DOC, "DOC");
+		cats.put(TokenName.UNIXLINE, "DOC");
+		cats.put(TokenName.DSL, "DSL");
+		cats.put(TokenName.NUMBER, "number");
+		cats.put(TokenName.CHAR, "character");
+		cats.put(TokenName.KEYWORD, "keyword");
+		cats.put(TokenName.LEXEROPS, "operator");
+		cats.put(TokenName.LEXERSEPS, "separator");
+		cats.put(TokenName.LEXERCOMPS, "comparator");
+		cats.put(TokenName.LEXERASSIGN, "assignment");
+		cats.put(TokenName.LEXERASSIGN, "initialization");
+		cats.put(TokenName.STRS, "string");
+		cats.put(TokenName.URI, "string");
+		cats.put(TokenName.ERROR, "error"); //error token in case of problem with lexer
 		return cats;
 	}
 
@@ -70,10 +71,10 @@ public class FantomParserTokens
 				if (tokens.isEmpty())
 				{
 					tokens = new Hashtable<Integer, FanTokenID>();
-					Hashtable<String, String> colorIds = getColorIds();
+					Hashtable<TokenName, String> colorIds = getColorIds();
 
 					int id = 0;
-					for(String name : lexerItems)
+					for(TokenName name : TokenName.values())
 					{
 						id++;
 						FanTokenID token;
@@ -83,9 +84,9 @@ public class FantomParserTokens
 							cat = (String) colorIds.get(name);
 						}
 						//System.out.println("New token: " + name + "(" + id + ") : " + cat);
-						token = new FanTokenID(name, id, cat);
+						token = new FanTokenID(name.name(), id, cat);
 						tokens.put(id, token);
-						tokenIdByName.put(name, id);
+						tokenIdByName.put(name.name(), id);
 					}
 				}
 			}

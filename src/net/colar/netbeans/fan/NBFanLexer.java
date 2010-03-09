@@ -8,9 +8,11 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import net.colar.netbeans.fan.parboiled.AstNode;
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.FantomParserTokens;
-import net.colar.netbeans.fan.parboiled.ParboiledUtils;
+import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
+import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerInput;
@@ -103,7 +105,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 			System.err.println("Lexer parse errors: " + StringUtils.join(result.parseErrors, "---\n"));
 		} else
 		{
-			Node lexerItems = ParboiledUtils.findFirstChildByLabel(result.parseTreeRoot, "lexerItems");
+			Node lexerItems = FanLexAstUtils.getFirstChild(result.parseTreeRoot, new NodeLabelPredicate(TokenName.LEXERITEMS.name()));
 			//System.out.println("--Tree--\n"+ParseTreeUtils.printNodeTree(result)+"\n----\n");
 			lexerIterator = lexerItems.getChildren().iterator();
 		}

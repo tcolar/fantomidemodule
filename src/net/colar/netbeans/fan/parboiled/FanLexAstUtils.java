@@ -5,14 +5,14 @@
 package net.colar.netbeans.fan.parboiled;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.swing.text.Document;
-import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
-import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
+import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.parboiled.Node;
@@ -87,6 +87,19 @@ public class FanLexAstUtils
 		return findRange(doc, ts, openingTokenID, closingTokenID, true);
 	}
 
+	public static boolean matchType(TokenId token, TokenName[] array)
+	{
+		for (TokenName t : array)
+		{
+			//System.out.println("Matching type: "+t+" VS "+type);
+			if (token.name().equals(t.name()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Find (backward) the opening token matching the closing one (balanced) and return the range between the two
 	 * @param doc
@@ -149,13 +162,89 @@ public class FanLexAstUtils
 		}
 	}
 
-	/**
-	 * Return the range (start/end position in source file) of an AST node
-	 * for a given FanParserResult (using the ANTLR tokenStream)
-	 * @param result
-	 * @param node
-	 * @return range or null if range is invalid
-	 */
+	public static OffsetRange getNodeRange(AstNode node)
+	{
+		return new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
+	}
+
+	public static AstNode getScopeNode(AstNode node)
+	{
+		AstNode nd = node;
+		while (nd != null)
+		{
+			if (nd.isScopeNode())
+			{
+				return nd;
+			}
+			nd = nd.getParent();
+		}
+		return null;
+	}
+
+	public static AstNode getFirstChild(AstNode parentNode, Predicate pred)
+	{
+		if (parentNode != null)
+		{
+			for (AstNode child : parentNode.getChildren())
+			{
+				if (pred.apply(child))
+				{
+					return child;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static List<AstNode> getChildren(AstNode parentNode, Predicate pred)
+	{
+		List<AstNode> nodes = new ArrayList<AstNode>();
+		if (parentNode != null)
+		{
+			for (AstNode child : parentNode.getChildren())
+			{
+				if (pred.apply(child))
+				{
+					nodes.add(child);
+				}
+			}
+		}
+		return nodes;
+	}
+
+	public static String getFirstChildText(AstNode parentNode, Predicate pred)
+	{
+		AstNode node = getFirstChild(parentNode, pred);
+		return node==null?null:node.getNodeText(true);
+	}
+
+	public static String getNodeText(Node<AstNode> node, InputBuffer inputBuffer)
+	{
+		int start = node.getStartLocation().getIndex();
+		int end = node.getEndLocation().getIndex();
+		return inputBuffer.extract(start, end);
+	}
+
+	public static OffsetRange getNodeRange(Node<AstNode> node)
+	{
+		return new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
+	}
+
+	public static Node getFirstChild(Node<AstNode> parentNode, NodeLabelPredicate pred)
+	{
+		if (parentNode != null)
+		{
+			for (Node<AstNode> child : parentNode.getChildren())
+			{
+				if (pred.apply(child))
+				{
+					return child;
+				}
+			}
+		}
+		return null;	}
+
+	/*
 	public static OffsetRange getNodeRange(FanParserTask result, CommonTree node)
 	{
 		if (node == null)
@@ -183,16 +272,12 @@ public class FanLexAstUtils
 		return range;
 	}
 
-	/**
-	 * Finds the closest(smallest) AST node at given token index
-	 * Returns root node if no better macth found.
-	 */
 	public static CommonTree findASTNodeAt(FanParserTask pResult, int tokenIndex)
 	{
 		//System.out.println("AstNode token: "+pResult.getTokenStream().get(index).toString());
 		//System.out.println("AstNode token type: "+pResult.getTokenStream().get(index).getType());
 		//System.out.println("AstNode token text: '"+pResult.getTokenStream().get(index).getText()+"'");
-		CommonTree node = findASTNodeAt(pResult, null/*pResult.getTree()*/, tokenIndex);
+		CommonTree node = findASTNodeAt(pResult, null, tokenIndex);
 		// If not found, return the root
 		if (node == null)
 		{
@@ -201,14 +286,6 @@ public class FanLexAstUtils
 		return node;
 	}
 
-	/**
-	 * Finds the closest(smallest) AST node at given lexerIndex (position in source doc.)
-	 * recursive
-	 * @param pResult
-	 * @param node
-	 * @param lexerIndex
-	 * @return Null if not found
-	 */
 	private static CommonTree findASTNodeAt(FanParserTask pResult, CommonTree node, int tokenIndex)
 	{
 		CommonTree result = null;
@@ -266,13 +343,6 @@ public class FanLexAstUtils
 		return result;
 	}
 
-	/**
-	 * Return the offset of the beginiing of this line (after a LineBreak or beginning of file)
-	 * @param seq
-	 * @param offset
-	 * @param semiIsNL Wether a ; is considered a beginning of line
-	 * @return
-	 */
 	public static int getLineBeginOffset(TokenSequence seq, int offset, boolean semiIsNL)
 	{
 		seq.move(offset);
@@ -291,13 +361,6 @@ public class FanLexAstUtils
 		return result;
 	}
 
-	/**
-	 * Move to next non whitespace token
-	 * @param seq
-	 * @param fromOfset starting offset
-	 * @param maxOffset look no further than this
-	 * @return true if non WS token found before maxOffset
-	 */
 	public static boolean moveToNextNonWSToken(TokenSequence seq, int fromOfset, int maxOffset)
 	{
 		if (fromOfset > maxOffset || fromOfset > seq.tokenCount())
@@ -316,13 +379,6 @@ public class FanLexAstUtils
 		return false;
 	}
 
-	/**
-	 * This leaves us just BEFORE the last non WS token
-	 * @param seq
-	 * @param fromOfset
-	 * @param minOffset
-	 * @return
-	 */
 	public static boolean moveToPrevNonWsToken(TokenSequence seq, int fromOfset, int minOffset)
 	{
 		if (fromOfset < minOffset || fromOfset < 0)
@@ -344,13 +400,6 @@ public class FanLexAstUtils
 		return false;
 	}
 
-	/**
-	 * Move to next non significant token (ie: non whitespace / comments/ doc token)
-	 * @param seq
-	 * @param fromOfset starting offset
-	 * @param maxOffset look no further than this
-	 * @return true if non significant token found before maxOffset
-	 */
 	public static boolean moveToNextSignificantToken(TokenSequence seq, int fromOfset, int maxOffset)
 	{
 		if (fromOfset > maxOffset || fromOfset > seq.tokenCount())
@@ -381,13 +430,6 @@ public class FanLexAstUtils
 		return false;
 	}
 
-	/**
-	 * Return the offset of the start of the next line.
-	 * Max offset is the maximum, if not found by then, return -1;
-	 * @param offset
-	 * @param maxOffset
-	 * @return
-	 */
 	public static int nextLineStartOffset(TokenSequence seq, int offset, int maxOffset)
 	{
 		//System.out.println(">nlso");
@@ -397,8 +439,6 @@ public class FanLexAstUtils
 			of += 1;
 		}
 		//System.out.println("of: "+of);
-		/*if(of > seq.)
-		return -1;*/
 		return of;
 	}
 
@@ -420,11 +460,6 @@ public class FanLexAstUtils
 		return result;
 	}
 
-	/**
-	 * Try to find a parent node matching the given type.
-	 * @param curNode
-	 * @return null if not found
-	 */
 	public static CommonTree findParentNodeWithin(final CommonTree theNode, int parentType, CommonTree within)
 	{
 		// don't want to mess with the original node.
@@ -495,11 +530,6 @@ public class FanLexAstUtils
 		return children;
 	}
 
-	/**
-	 * Dump a CommonTree node to system.out
-	 * @param t
-	 * @param indent 0 - used in recusrion.
-	 */
 	public static void dumpTree(CommonTree t, int indent)
 	{
 		if (t != null)
@@ -540,10 +570,6 @@ public class FanLexAstUtils
 		return getChildTextByType(result, node, -1);
 	}
 
-	/**
-	 * - if itemIndex==-1 return the whole content of the node
-	 * - if itemIndex!=-1 return the content of the subchild of the node at the given index
-	 */
 	public static String getChildTextByType(FanParserTask result, CommonTree node, int itemIndex)
 	{
 		String text = "";
@@ -575,12 +601,6 @@ public class FanLexAstUtils
 		return getSubChildTextByType(result, node, astType, -1);
 	}
 
-	/**
-	 * Return the content of the first subchild of given type
-	 * - Find the suchild node of the first matching type
-	 * - if itemIndex==-1 return the whole content of the node
-	 * - if itemIndex!=-1 return the content of the subchild of the node at the given index
-	 */
 	public static String getSubChildTextByType(FanParserTask result, CommonTree node, int astType, int itemIndex)
 	{
 		String text = "";
@@ -592,26 +612,12 @@ public class FanLexAstUtils
 		return text;
 	}
 
-	/**
-	 * Find the index of the last token of the given type
-	 * -1 if not found
-	 * @param result
-	 * @param node
-	 * @param type
-	 * @return
-	 */
 	public static int findLastTokenIndexByType(FanParserTask result, CommonTree node, int type)
 	{
 		int last = node.getTokenStopIndex();
 		return findPrevTokenByType(result, node, last, type);
 	}
 
-	/**
-	 * Return the start token index of a node
-	 * If a node has no start index check the first children with a startindex
-	 * @param termBase
-	 * @return
-	 */
 	public static int getTokenStart(CommonTree node)
 	{
 		int index = node.getTokenStartIndex();
@@ -627,25 +633,8 @@ public class FanLexAstUtils
 			}
 		}
 		return index;
-		/*int index2 = node.getTokenStartIndex();
-		if (index == -1)
-		{
-		return index2;
-		}
-		if (index2 == -1)
-		{
-		return index;
-		}
-		// Ok they are not -1
-		return index < index2 ? index : index2;*/
 	}
 
-	/**
-	 * Return the stop index of a node
-	 * If a node has no start index check the first children with a startindex
-	 * @param termBase
-	 * @return
-	 */
 	public static int getTokenStop(CommonTree node)
 	{
 		int index = node.getTokenStopIndex();
@@ -663,16 +652,6 @@ public class FanLexAstUtils
 			}
 		}
 		return index;
-		/*int index2 = node.getTokenStopIndex();
-		if (index2 == -1)
-		{
-		return index;
-		}
-		if (index == -1)
-		{
-		return index2;
-		}
-		return index2 > index ? index2 : index;*/
 	}
 
 	public static String getTokenStreamSlice(CommonTokenStream tokenStream, int start, int stop)
@@ -686,11 +665,6 @@ public class FanLexAstUtils
 		return text.toString();
 	}
 
-	/**
-	 * Convert the document offset (text location) to a token index
-	 * @param pResult
-	 * @return
-	 */
 	public static int offsetToTokenIndex(FanParserTask pResult, int index)
 	{
 		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
@@ -703,12 +677,6 @@ public class FanLexAstUtils
 		return result;
 	}
 
-	/**
-	 * Opposite of offsetToTokenIndex
-	 * @param pResult
-	 * @param index
-	 * @return
-	 */
 	public static int tokenIndexToOffset(FanParserTask pResult, int index)
 	{
 		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
@@ -758,78 +726,5 @@ public class FanLexAstUtils
 		}
 		return -1;
 	}
-
-	public static OffsetRange getNodeRange(AstNode node)
-	{
-		return new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
-	}
-
-	public static AstNode getScopeNode(AstNode node)
-	{
-		AstNode nd = node;
-		while (nd != null)
-		{
-			if (nd.isScopeNode())
-			{
-				return nd;
-			}
-			nd = nd.getParent();
-		}
-		return null;
-	}
-
-	/**
-	 * Find a node with given predicate
-	 * @param parentNode
-	 * @param name
 	 */
-	public static AstNode getFirstChild(AstNode parentNode, Predicate pred)
-	{
-		if (parentNode != null)
-		{
-			for (AstNode child : parentNode.getChildren())
-			{
-				if (pred.apply(child))
-				{
-					return child;
-				}
-			}
-		}
-		return null;
-	}
-
-	public static List<AstNode> getChildren(AstNode parentNode, Predicate pred)
-	{
-		List<AstNode> nodes = new ArrayList<AstNode>();
-		if (parentNode != null)
-		{
-			for (AstNode child : parentNode.getChildren())
-			{
-				if (pred.apply(child))
-				{
-					nodes.add(child);
-				}
-			}
-		}
-		return nodes;
-	}
-
-	public static String getFirstChildText(AstNode parentNode, Predicate pred)
-	{
-		AstNode node = getFirstChild(parentNode, pred);
-		return node==null?null:node.getNodeText(true);
-	}
-
-	public static String getNodeText(Node<AstNode> node, InputBuffer inputBuffer)
-	{
-		int start = node.getStartLocation().getIndex();
-		int end = node.getEndLocation().getIndex();
-		return inputBuffer.extract(start, end);
-	}
-
-	public static OffsetRange getNodeRange(Node<AstNode> node)
-	{
-		return new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
-	}
-
 }
