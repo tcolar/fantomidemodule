@@ -478,7 +478,7 @@ public class FantomParserTest implements JOTTestable
 		}
 		JOTTester.checkIf(label + " - parsing success", !result.hasErrors());
 		JOTTester.checkIf(label + " - root not null", result.parseTreeRoot != null);
-		JOTTester.checkIf(label + " - check name(" + nodeName + ")", result.parseTreeRoot.getLabel().equals(nodeName), result.parseTreeRoot.getLabel());
+		JOTTester.checkIf(label + " - check name(" + nodeName + ")", result.parseTreeRoot.getLabel().equalsIgnoreCase(nodeName), result.parseTreeRoot.getLabel());
 		if (value != null)
 		{
 			String txt = ParseTreeUtils.getNodeText(result.parseTreeRoot, result.inputBuffer);

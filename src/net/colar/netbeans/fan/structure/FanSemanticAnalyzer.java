@@ -82,7 +82,8 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	 */
 	private void scanTree(FanParserTask result, Node<AstNode> node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights)
 	{
-		if (node.getLabel().equals(TokenName.STRS.name()))
+		System.out.println("Node Lbl: "+node.getLabel()+" "+TokenName.STRS.name());
+		if (node.getLabel().equalsIgnoreCase(TokenName.STRS.name()))
 		{
 			addStrHighlights(result, newHighlights, node);
 		} else if (node.getValue() != null)
