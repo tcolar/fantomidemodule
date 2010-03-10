@@ -25,7 +25,6 @@ import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
  */
 public class FanResolvedType
 {
-
 	private final String asTypedType;
 	private final FanType dbType;
 	// whether it's used in a  nullable context : ex: Str? vs Str
@@ -592,23 +591,9 @@ public class FanResolvedType
 			}
 		}
 		if (sig.startsWith("[") && sig.endsWith("]"))
-		{// map
+		{// Full map
 			sig = sig.substring(1, sig.length() - 1);
-			int index = 0;
-			while (index != -1 && index < sig.length())
-			{
-				index = sig.indexOf(":", index);
-				if (index == -1)
-				{
-					break; // not found
-				}				// looking for ":" but NOT "::"
-				if (index > 1 && index < sig.length() - 1 && sig.charAt(index - 1) != ':' && sig.charAt(index + 1) != ':')
-				{
-					break; // found
-				}
-				// try next one
-				index++;
-			}
+			int index = findMapSeparatorIndex(sig);
 			if (index != -1 && index < sig.length() - 1)
 			{
 				FanResolvedType keyType = fromTypeSig(scopeNode, sig.substring(0, index).trim());
@@ -620,19 +605,43 @@ public class FanResolvedType
 			Vector<FanResolvedType> types = new Vector<FanResolvedType>();
 			sig = sig.substring(1, sig.length() - 1);
 			String[] parts = sig.split("->");
-			if (parts.length == 2)
-			{
 				String[] typeParts = parts[0].split(",");
 				for (int i = 0; i != typeParts.length; i++)
 				{
-					types.add(fromTypeSig(scopeNode, typeParts[i].trim()));
+					String formal=typeParts[i].trim();
+					String formalType = formal;
+					String formalName="";
+					int idx=formal.indexOf(" ");
+					if(idx!=-1)
+					{
+						formalType=formal.substring(0,idx).trim();
+						formalName=formal.substring(idx).trim();
+					}
+					// TODO: types can have names like Int a, Intb -> Int
+					// TODO: Make use of formalName -> will need them for scoping/completion etc...
+					types.add(fromTypeSig(scopeNode, formalType));
 				}
-				String returnType = parts[1].trim();
+				String returnType="Void"; // Default if not specified
+				if (parts.length == 2)
+				{
+					returnType = parts[1].trim();
+				}
 				type = new FanResolvedFuncType(scopeNode, types, fromTypeSig(scopeNode, returnType));
 			}
-		} else
-		{// simple type
-			type = makeFromLocalType(scopeNode, sig);
+		else
+		{	// check for simple map type like Sys:Int
+			int index = findMapSeparatorIndex(sig);
+			if (index != -1 && index < sig.length() - 1)
+			{
+				FanResolvedType keyType = fromTypeSig(scopeNode, sig.substring(0, index).trim());
+				FanResolvedType valType = fromTypeSig(scopeNode, sig.substring(index + 1).trim());
+				type = new FanResolvedMapType(scopeNode, keyType, valType);
+			}
+			else
+			{
+				// true simple type like Int or Sys::Int
+				type = makeFromLocalType(scopeNode, sig);
+			}
 		}
 
 		if (nullable)
@@ -680,5 +689,26 @@ public class FanResolvedType
 		FanType type = FanType.findByQualifiedName(qualifiedType);
 		return new FanResolvedType(node, qualifiedType, type);
 	}
+
+	private static int findMapSeparatorIndex(String sig)
+	{
+					int index = 0;
+			while (index != -1 && index < sig.length())
+			{
+				index = sig.indexOf(":", index);
+				if (index == -1)
+				{
+					break; // not found
+				}				// looking for ":" but NOT "::"
+				if (index > 1 && index < sig.length() - 1 && sig.charAt(index - 1) != ':' && sig.charAt(index + 1) != ':')
+				{
+					break; // found
+				}
+				// try next one
+				index++;
+			}
+			return index;
+	}
+
 
 }
