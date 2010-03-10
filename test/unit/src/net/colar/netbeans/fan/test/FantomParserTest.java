@@ -387,7 +387,7 @@ public class FantomParserTest implements JOTTestable
 		}
 	}
 
-	public ParsingResult<AstNode> parse(FantomParser parser, Rule rule, String input)
+	public static ParsingResult<AstNode> parse(FantomParser parser, Rule rule, String input)
 	{
 		long start = new Date().getTime();
 		ParsingResult<AstNode> result = RecoveringParseRunner.run(rule, input);
@@ -401,7 +401,7 @@ public class FantomParserTest implements JOTTestable
 		return result;
 	}
 
-	private void testAllFanFilesUnder(String folderPath, boolean lexerOnly) throws Exception
+	private static void testAllFanFilesUnder(String folderPath, boolean lexerOnly) throws Exception
 	{
 		File folder = new File(folderPath);
 		File[] files = folder.listFiles();
@@ -424,7 +424,7 @@ public class FantomParserTest implements JOTTestable
 		}
 	}
 
-	public void testFile(String filePath, boolean lexerOnly) throws Exception
+	public static void testFile(String filePath, boolean lexerOnly) throws Exception
 	{
 		try
 		{
@@ -464,12 +464,12 @@ public class FantomParserTest implements JOTTestable
 		}
 	}
 
-	public void testNodeName(String label, ParsingResult<AstNode> result, String nodeName) throws Exception
+	public static void testNodeName(String label, ParsingResult<AstNode> result, String nodeName) throws Exception
 	{
 		testNodeName(label, result, nodeName, null);
 	}
 
-	public void testNodeName(String label, ParsingResult<AstNode> result, String nodeName, String value) throws Exception
+	public static void testNodeName(String label, ParsingResult<AstNode> result, String nodeName, String value) throws Exception
 	{
 		if (result.hasErrors())
 		{
@@ -486,7 +486,7 @@ public class FantomParserTest implements JOTTestable
 		}
 	}
 
-	public void testAst(String filePath) throws Exception
+	public static void testAst(String filePath) throws Exception
 	{
 		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
 
