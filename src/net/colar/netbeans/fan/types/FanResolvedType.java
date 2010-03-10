@@ -35,7 +35,7 @@ public class FanResolvedType
 	private final String shortAsTypedType;
 	private final AstNode scopeNode;
 
-	private FanResolvedType(AstNode scopeNode, String enteredType, FanType type)
+	protected FanResolvedType(AstNode scopeNode, String enteredType, FanType type)
 	{
 		this.scopeNode = scopeNode;
 		this.asTypedType = enteredType;

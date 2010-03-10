@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.types;
 
 import java.util.List;
 import java.util.Vector;
+import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstNode;
 
 /**
@@ -19,9 +20,9 @@ public class FanResolvedFuncType extends FanResolvedType
 
 	public FanResolvedFuncType(AstNode scopeNode, Vector<FanResolvedType> types, FanResolvedType retType)
 	{
-		super(scopeNode, "sys::Func");
+		super(scopeNode, "sys::Func", FanType.findByQualifiedName("sys::Func"));
 		if(retType == null)
-			retType = new FanResolvedType(scopeNode, "sys::Void");
+			retType = FanResolvedType.makeFromDbType(scopeNode, "sys::Void");
 		this.retType = retType;
 		this.types = types;
 	}
