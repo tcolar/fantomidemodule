@@ -260,7 +260,7 @@ public class FanParserTask extends ParserResult
 				addError("Unresolved Java Item: " + qname, usingNode);
 			} else
 			{
-				addUsing(name, qname, usingNode, type);
+				addUsing(name, qname, usingNode);
 			}
 		} else
 		{
@@ -277,7 +277,7 @@ public class FanParserTask extends ParserResult
 				}
 
 				//Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
-				addUsing(name, type, usingNode, type);
+				addUsing(name, type, usingNode);
 			} else
 			{
 				// Adding all the types of a Pod
@@ -293,14 +293,14 @@ public class FanParserTask extends ParserResult
 					Vector<FanType> items = FanType.findPodTypes(name, "");
 					for (FanType t : items)
 					{
-						addUsing(t.getSimpleName(), t.getQualifiedName(), usingNode, type);
+						addUsing(t.getSimpleName(), t.getQualifiedName(), usingNode);
 					}
 				}
 			}
 		}
 	}
 
-	private void addUsing(String name, String qType, AstNode node, String text)
+	private void addUsing(String name, String qType, AstNode node)
 	{
 		AstNode scopeNode = FanLexAstUtils.getScopeNode(node);
 		if (scopeNode == null)
@@ -319,7 +319,8 @@ public class FanParserTask extends ParserResult
 				addError("Duplicated using: " + qType + " / " + "sys::" + name, node);
 			}
 		}
-		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, new FanResolvedType(qType));
+		FanResolvedType rType = new FanResolvedType(node, qType);
+		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, rType);
 	}
 
 	public ParsingResult<AstNode> getParsingResult()

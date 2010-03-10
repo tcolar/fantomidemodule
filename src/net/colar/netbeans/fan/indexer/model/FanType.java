@@ -4,8 +4,6 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
-//import net.colar.netbeans.fan.ast.FanTypeScope;
-import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.jot.logger.JOTLogger;

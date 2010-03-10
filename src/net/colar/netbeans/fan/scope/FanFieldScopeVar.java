@@ -27,7 +27,7 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 		super(fieldNode, name);
 		if (node.getKind() == AstKind.AST_CTOR_DEF)
 		{
-			type = new FanResolvedType(FanResolvedType.resolveThisType(node));
+			type = new FanResolvedType(fieldNode, FanResolvedType.resolveThisType(node));
 		} else
 		{
 			AstNode typeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));

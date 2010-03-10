@@ -167,7 +167,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			List<AstNode> children = FanLexAstUtils.getChildren(inheritance, new NodeKindPredicate(AstKind.AST_TYPE));
 			for (AstNode child : children)
 			{
-				FanResolvedType inhType = FanResolvedType.makeFromTypeSig(child);
+				FanResolvedType inhType = FanResolvedType.fromTypeSig(child, child.getNodeText(true));
 				String text = node.getNodeText(true);
 				if (!inhType.isResolved())
 				{

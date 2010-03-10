@@ -6,7 +6,7 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import net.colar.netbeans.fan.FanParserTask;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
@@ -24,6 +24,7 @@ import org.parboiled.support.InputLocation;
  */
 public class AstNode
 {
+
 	/** Reference to the parse Node, this AST node was created from*/
 	private final Node<AstNode> parseNode;
 	/** ParseNode path*/
@@ -43,28 +44,30 @@ public class AstNode
 	{
 		this.parseNode = parseNode;
 		this.kind = kind;
-		this.parsePath=path;
-		this.text=nodeText;
+		this.parsePath = path;
+		this.text = nodeText;
 	}
 
 	@Override
 	public String toString()
 	{
 		//ParseTreeUtils.getNodeText(parseNode, null)
-		String txt=text;
-		if(txt.indexOf("\n")>0)
-			txt=txt.substring(0, txt.indexOf("\n"))+"...";
-		String scope="";
-		if(isScopeNode())
+		String txt = text;
+		if (txt.indexOf("\n") > 0)
+		{
+			txt = txt.substring(0, txt.indexOf("\n")) + "...";
+		}
+		String scope = "";
+		if (isScopeNode())
 		{
 			scope = "\n\tSCOPE{";
-			for(FanAstScopeVarBase var : getLocalScopeVars().values())
+			for (FanAstScopeVarBase var : getLocalScopeVars().values())
 			{
-				scope+=var.toString()+"; ";
+				scope += var.toString() + "; ";
 			}
-			scope+="}";
+			scope += "}";
 		}
-		return kind +(scopeVars!=null?"":"[") + parsePath +"] : '"+txt+"'"+scope;
+		return kind + (scopeVars != null ? "" : "[") + parsePath + "] : '" + txt + "'" + scope;
 	}
 
 	public String getParsePath()
@@ -111,7 +114,7 @@ public class AstNode
 	{
 		if (nd != null)
 		{
-			System.out.println(inc+nd.toString() /*+ " "+ParseTreeUtils.getNodeText(nd.getParseNode(), buffer)*/);
+			System.out.println(inc + nd.toString() /*+ " "+ParseTreeUtils.getNodeText(nd.getParseNode(), buffer)*/);
 			for (AstNode subNode : nd.getChildren())
 			{
 				printNodeTree(subNode, inc + "  ", buffer);
@@ -152,6 +155,41 @@ public class AstNode
 		return scopeVars;
 	}
 
+	public Hashtable<String, FanAstScopeVarBase> getAllScopeVars()
+	{
+		Hashtable<String, FanAstScopeVarBase> vars = new Hashtable<String, FanAstScopeVarBase>();
+		AstNode scope = FanLexAstUtils.getScopeNode(this);
+		while (scope != null)
+		{
+			if (scope.isScopeNode())
+			{
+				for (FanAstScopeVarBase var : scope.getLocalScopeVars().values())
+				{
+					if (!vars.containsKey(var.getName()))
+					{
+						vars.put(var.getName(), var);
+					}
+				}
+				// TODO: add inherited slots
+			/*if (scope instanceof FanTypeScope)
+				{
+				Hashtable<String, FanSlot> inhSlots = ((FanTypeScope) scope).getInheritedSlots();
+				for (FanSlot slot : inhSlots.values())
+				{
+				if (!vars.containsKey(slot.getName()))
+				{
+				FanResolvedType type = FanResolvedType.fromTypeSig(slot.getReturnedType());
+				FanAstScopeVarBase var= null; //new FanAstScopeVar(scope, astNode, slot.getName(), type);
+				vars.put(slot.getName(), var);
+				}
+				}
+				}*/
+			}
+			scope = scope.getParent();
+		}
+		return vars;
+	}
+
 	/**
 	 * Add a scope var to the closest scope.
 	 * @param name
@@ -163,6 +201,7 @@ public class AstNode
 		FanAstScopeVar var = new FanAstScopeVar(this, varKind, name, type);
 		addScopeVar(var);
 	}
+
 	/**
 	 * Add a scope var to the closest scope.
 	 * @param name
@@ -172,18 +211,22 @@ public class AstNode
 	public void addScopeVar(FanAstScopeVarBase var)
 	{
 		AstNode scopeNode = FanLexAstUtils.getScopeNode(this);
-		if(scopeNode==null)
+		if (scopeNode == null)
+		{
 			return;
+		}
 		scopeNode.getLocalScopeVars().put(var.getName(), var);
 	}
 
 	public RootNode getRoot()
 	{
 		AstNode nd = this;
-		while(nd!=null)
+		while (nd != null)
 		{
-			if(nd instanceof RootNode)
+			if (nd instanceof RootNode)
+			{
 				return (RootNode) nd;
+			}
 			nd = nd.getParent();
 		}
 		return null;
@@ -197,8 +240,6 @@ public class AstNode
 	public String getNodeText(boolean strip)
 	{
 		//TODO: work on stripping comments and son on
-		return strip?text.trim() : text;
+		return strip ? text.trim() : text;
 	}
-
-
 }

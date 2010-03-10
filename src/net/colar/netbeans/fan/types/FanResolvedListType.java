@@ -4,6 +4,8 @@
 
 package net.colar.netbeans.fan.types;
 
+import net.colar.netbeans.fan.parboiled.AstNode;
+
 /**
  *
  * @author thibautc
@@ -12,9 +14,9 @@ public class FanResolvedListType extends FanResolvedType
 {
 	FanResolvedType itemType;
 
-	public FanResolvedListType(FanResolvedType itemType)
+	public FanResolvedListType(AstNode scopeNode, FanResolvedType itemType)
 	{
-		super("sys::List");
+		super(scopeNode, "sys::List");
 		this.itemType = itemType;
 	}
 

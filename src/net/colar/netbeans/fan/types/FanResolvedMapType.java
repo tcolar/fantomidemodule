@@ -4,6 +4,8 @@
 
 package net.colar.netbeans.fan.types;
 
+import net.colar.netbeans.fan.parboiled.AstNode;
+
 /**
  *
  * @author thibautc
@@ -13,9 +15,9 @@ public class FanResolvedMapType extends FanResolvedType
 	FanResolvedType keyType;
 	FanResolvedType valType;
 
-	public FanResolvedMapType(FanResolvedType keyType, FanResolvedType valType)
+	public FanResolvedMapType(AstNode scopeNode, FanResolvedType keyType, FanResolvedType valType)
 	{
-		super("sys::Map");
+		super(scopeNode, "sys::Map");
 		this.keyType = keyType;
 		this.valType = valType;
 	}

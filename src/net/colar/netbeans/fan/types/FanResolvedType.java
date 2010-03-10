@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan.types;
 
 import java.lang.reflect.Member;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 import net.colar.netbeans.fan.FanParserTask;
@@ -14,6 +15,7 @@ import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstNode;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 
 /**
  * Resolved type
@@ -31,14 +33,16 @@ public class FanResolvedType
 	// whether it's used in a static context: ex Str. vs str.
 	private boolean staticContext = false;
 	private final String shortAsTypedType;
+	private final AstNode scopeNode;
 
-	public FanResolvedType(String enteredType)
+	public FanResolvedType(AstNode scopeNode, String enteredType)
 	{
+		this.scopeNode = scopeNode;
 		this.asTypedType = enteredType;
 		shortAsTypedType = asTypedType.indexOf("::") != -1 ? asTypedType.substring(asTypedType.indexOf("::") + 2) : asTypedType;
 		if (enteredType != null && !enteredType.equals(FanIndexer.UNRESOLVED_TYPE))
 		{
-			dbType = FanType.findByQualifiedName(enteredType);
+			dbType = resolveType(enteredType);
 		} else
 		{
 			dbType = null;
@@ -74,12 +78,12 @@ public class FanResolvedType
 
 	public static FanResolvedType makeUnresolved()
 	{
-		return new FanResolvedType(FanIndexer.UNRESOLVED_TYPE);
+		return new FanResolvedType(null, FanIndexer.UNRESOLVED_TYPE);
 	}
 
 	public static FanResolvedType makeFromTypeSigWithWarning(AstNode node)
 	{
-		FanResolvedType result = makeFromTypeSig(node);
+		FanResolvedType result = fromTypeSig(node, node.getNodeText(true));
 		if (!result.isResolved())
 		{
 			String type = node.getNodeText(true);
@@ -90,10 +94,10 @@ public class FanResolvedType
 		return result;
 	}
 
-	public static FanResolvedType makeFromTypeSig(AstNode node)
+	/*public static FanResolvedType makeFromTypeSig(AstNode node)
 	{
 		return fromTypeSig(node.getNodeText(true));
-	}
+	}*/
 	/**
 	 * Resolve a type (type signature)
 	 * Recursive
@@ -411,7 +415,7 @@ public class FanResolvedType
 			{
 				if (member.getName().equalsIgnoreCase(slotName))
 				{
-					baseType = new FanResolvedType(FanIndexerFactory.getJavaIndexer().getReturnType(member));
+					baseType = new FanResolvedType(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
 					found = true;
 					break;
 				}
@@ -427,7 +431,7 @@ public class FanResolvedType
 			FanSlot slot = FanSlot.findByTypeAndName(baseType.getAsTypedType(), slotName);
 			if (slot != null)
 			{
-				baseType = fromTypeSig(slot.returnedType);
+				baseType = fromTypeSig(baseType.scopeNode, slot.returnedType);
 			} else
 			{
 				baseType = makeUnresolved();
@@ -572,7 +576,7 @@ public class FanResolvedType
 	 * @param sig
 	 * @return
 	 */
-	public static FanResolvedType fromTypeSig(String sig)
+	public static FanResolvedType fromTypeSig(AstNode scopeNode, String sig)
 	{
 		FanResolvedType type = makeUnresolved();
 		boolean nullable = false;
@@ -613,9 +617,9 @@ public class FanResolvedType
 			}
 			if (index != -1 && index < sig.length() - 1)
 			{
-				FanResolvedType keyType = fromTypeSig(sig.substring(0, index).trim());
-				FanResolvedType valType = fromTypeSig(sig.substring(index + 1).trim());
-				type = new FanResolvedMapType(keyType, valType);
+				FanResolvedType keyType = fromTypeSig(scopeNode, sig.substring(0, index).trim());
+				FanResolvedType valType = fromTypeSig(scopeNode, sig.substring(index + 1).trim());
+				type = new FanResolvedMapType(scopeNode, keyType, valType);
 			}
 		} else if (sig.startsWith("|") && sig.endsWith("|"))
 		{
@@ -627,14 +631,14 @@ public class FanResolvedType
 				String[] typeParts = parts[0].split(",");
 				for (int i = 0; i != typeParts.length; i++)
 				{
-					types.add(fromTypeSig(typeParts[i].trim()));
+					types.add(fromTypeSig(scopeNode, typeParts[i].trim()));
 				}
 				String returnType = parts[1].trim();
-				type = new FanResolvedFuncType(types, fromTypeSig(returnType));
+				type = new FanResolvedFuncType(scopeNode, types, fromTypeSig(scopeNode, returnType));
 			}
 		} else
 		{// simple type
-			type = new FanResolvedType(sig);
+			type = new FanResolvedType(scopeNode, sig);
 		}
 
 		if (nullable)
@@ -643,12 +647,32 @@ public class FanResolvedType
 		}
 		if (list)
 		{
-			type = new FanResolvedListType(type);
+			type = new FanResolvedListType(scopeNode, type);
 			if (nullableList)
 			{
 				type.setNullableContext(true);
 			}
 		}
 		return type;
+	}
+
+	/**
+	 * Resolve a local type (import or other slots)
+	 * @param enteredType
+	 * @return
+	 */
+	private FanType resolveType(String enteredType)
+	{
+		if(enteredType.indexOf("::") == -1)
+		{
+			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
+			if(types.containsKey(enteredType))
+				return types.get(enteredType).getType().getDbType();
+			else
+				// If not found in scope, try "implicit" imports (sys)
+				// TODO: Inherited stuff too
+				return FanType.findByQualifiedName("sys::"+enteredType);
+		}
+		return null;
 	}
 }
