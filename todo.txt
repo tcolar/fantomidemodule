@@ -1,3 +1,10 @@
+Allow for:
+using [java] java.lang  (no type specified)
+resolve type such as |This|?
+resolve type such as Str:Str
+
+
+
 blog about & have ant check for use of javax/swing/GroupLayout and error if it does
 To fix:
 - (select panel/design and in inspector right click root node/properties and chnage to not use java 1.6)

@@ -21,7 +21,7 @@ import org.openide.modules.ModuleInstall;
  */
 public class FanModuleInstall extends ModuleInstall
 {
-	// IF a breaking change is made to the prefs files compare to a previous vcersion, bump up the bumber
+	// IF a breaking change is made to the prefs files compare to a previous version, bump up the number
 	public static final String PROP_PREF_FILE_VERSION = "nb.fantom.prefs.version";
 	public static final int PREF_VERSION = 2;
 
