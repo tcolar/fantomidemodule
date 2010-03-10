@@ -319,7 +319,7 @@ public class FanParserTask extends ParserResult
 				addError("Duplicated using: " + qType + " / " + "sys::" + name, node);
 			}
 		}
-		FanResolvedType rType = new FanResolvedType(node, qType);
+		FanResolvedType rType = FanResolvedType.makeFromDbType(node, qType);
 		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, rType);
 	}
 

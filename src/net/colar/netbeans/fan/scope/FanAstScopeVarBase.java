@@ -17,7 +17,7 @@ public abstract class FanAstScopeVarBase
 
 	protected String name;
 	// The type of the field / or returned type for a method
-	protected FanResolvedType type = FanResolvedType.makeUnresolved();
+	protected FanResolvedType type = FanResolvedType.makeUnresolved(null);
 	protected ArrayList<FanAstScopeVarBase.ModifEnum> modifiers = new ArrayList<FanAstScopeVarBase.ModifEnum>();
 	protected AstNode node;
 	protected VarKind kind;

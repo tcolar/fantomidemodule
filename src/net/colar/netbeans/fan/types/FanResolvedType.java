@@ -35,18 +35,12 @@ public class FanResolvedType
 	private final String shortAsTypedType;
 	private final AstNode scopeNode;
 
-	public FanResolvedType(AstNode scopeNode, String enteredType)
+	private FanResolvedType(AstNode scopeNode, String enteredType, FanType type)
 	{
 		this.scopeNode = scopeNode;
 		this.asTypedType = enteredType;
 		shortAsTypedType = asTypedType.indexOf("::") != -1 ? asTypedType.substring(asTypedType.indexOf("::") + 2) : asTypedType;
-		if (enteredType != null && !enteredType.equals(FanIndexer.UNRESOLVED_TYPE))
-		{
-			dbType = resolveType(enteredType);
-		} else
-		{
-			dbType = null;
-		}
+		dbType=type;
 	}
 
 	public boolean isResolved()
@@ -76,9 +70,9 @@ public class FanResolvedType
 		return sb.toString();
 	}
 
-	public static FanResolvedType makeUnresolved()
+	public static FanResolvedType makeUnresolved(AstNode node)
 	{
-		return new FanResolvedType(null, FanIndexer.UNRESOLVED_TYPE);
+		return new FanResolvedType(node, FanIndexer.UNRESOLVED_TYPE, null);
 	}
 
 	public static FanResolvedType makeFromTypeSigWithWarning(AstNode node)
@@ -189,7 +183,7 @@ public class FanResolvedType
 		FanResolvedType type = resolveExpr(null, exprNode, lastGoodTokenIndex);
 		if (type == null)
 		{
-			type = makeUnresolved();
+			type = makeUnresolved(exprNode);
 		}
 		FanUtilities.GENERIC_LOGGER.debug("** resolvedType: " + type);
 		return type;
@@ -218,7 +212,7 @@ public class FanResolvedType
 		if (node == null || t == null)
 		{
 			FanUtilities.GENERIC_LOGGER.info("Node is empty! " + node.getParent().toString());
-			return makeUnresolved();
+			return makeUnresolved(node);
 		}
 		//System.out.println("Index: " + FanLexAstUtils.getTokenStart(node) + " VS " + index);
 		// Skip the imcomplete part past what we care about
@@ -415,14 +409,14 @@ public class FanResolvedType
 			{
 				if (member.getName().equalsIgnoreCase(slotName))
 				{
-					baseType = new FanResolvedType(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
+					baseType = makeFromLocalType(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
 					found = true;
 					break;
 				}
 			}
 			if (!found)
 			{
-				baseType = makeUnresolved();
+				baseType = makeUnresolved(baseType.scopeNode);
 			}
 
 		} else
@@ -434,7 +428,7 @@ public class FanResolvedType
 				baseType = fromTypeSig(baseType.scopeNode, slot.returnedType);
 			} else
 			{
-				baseType = makeUnresolved();
+				baseType = makeUnresolved(baseType.scopeNode);
 			}
 		}
 		return baseType;
@@ -578,7 +572,7 @@ public class FanResolvedType
 	 */
 	public static FanResolvedType fromTypeSig(AstNode scopeNode, String sig)
 	{
-		FanResolvedType type = makeUnresolved();
+		FanResolvedType type = makeUnresolved(scopeNode);
 		boolean nullable = false;
 		boolean list = false;
 		boolean nullableList = false;
@@ -638,7 +632,7 @@ public class FanResolvedType
 			}
 		} else
 		{// simple type
-			type = new FanResolvedType(scopeNode, sig);
+			type = makeFromLocalType(scopeNode, sig);
 		}
 
 		if (nullable)
@@ -656,23 +650,35 @@ public class FanResolvedType
 		return type;
 	}
 
-	/**
-	 * Resolve a local type (import or other slots)
-	 * @param enteredType
-	 * @return
-	 */
-	private FanType resolveType(String enteredType)
+	public static FanResolvedType makeFromLocalType(AstNode scopeNode, String enteredType)
 	{
+		FanType type=null;
 		if(enteredType.indexOf("::") == -1)
 		{
 			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
 			if(types.containsKey(enteredType))
-				return types.get(enteredType).getType().getDbType();
+				type=types.get(enteredType).getType().getDbType();
 			else
 				// If not found in scope, try "implicit" imports (sys)
 				// TODO: Inherited stuff too
-				return FanType.findByQualifiedName("sys::"+enteredType);
+				type = FanType.findByQualifiedName("sys::"+enteredType);
 		}
-		return null;
+		if(type==null)
+			return makeUnresolved(scopeNode);
+		return new FanResolvedType(scopeNode, enteredType, type);
 	}
+
+	/**
+	 * Make a type from the type database
+	 * (external type, like a 'using'
+	 * @param node
+	 * @param qualifiedType
+	 * @return
+	 */
+	public static FanResolvedType makeFromDbType(AstNode node, String qualifiedType)
+	{
+		FanType type = FanType.findByQualifiedName(qualifiedType);
+		return new FanResolvedType(node, qualifiedType, type);
+	}
+
 }
