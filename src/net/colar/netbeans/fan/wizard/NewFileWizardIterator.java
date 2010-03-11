@@ -78,6 +78,7 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 	public Set instantiate() throws IOException
 	{
 		NewFileWizardPanel1 panel = getPanel();
+		
 		String file = panel.getFile();
 		String name = panel.getName();
 		int combo = panel.getComboChoice();
@@ -110,6 +111,9 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 				view.addVariable("doEnum", Boolean.TRUE);
 				break;
 		}
+
+		FileObject license = FanUtilities.getRelativeFileObject(template, "../Licenses/FanDefaultLicense.txt");
+		view.addVariable("license", license.asText());
 
 		String templateText = template.asText();
 

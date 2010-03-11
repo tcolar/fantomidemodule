@@ -6,7 +6,6 @@ package net.colar.netbeans.fan.templates;
 
 import java.io.File;
 import java.io.PrintWriter;
-import net.jot.logger.JOTLogger;
 import net.jot.web.view.JOTViewParser;
 import net.jot.web.views.JOTLightweightView;
 import org.openide.filesystems.FileUtil;

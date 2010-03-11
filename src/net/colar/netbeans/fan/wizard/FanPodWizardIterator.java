@@ -46,9 +46,9 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		if (panels == null)
 		{
 			panels = new WizardDescriptor.Panel[]
-					{
-						new FanPodWizardPanel1(System.getProperty("user.dir")),
-					};
+				{
+					new FanPodWizardPanel1(System.getProperty("user.dir")),
+				};
 		}
 		return panels;
 	}
@@ -84,7 +84,6 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		FileObject fanFo = FileUtil.toFileObject(fan);
 		FileObject testFo = FileUtil.toFileObject(test);
 		FileObject buildFo = null;
-		FileObject podFo = null;
 		FileObject buildTemplate = Templates.getTemplate(wizard);
 
 		// Create main class
@@ -95,6 +94,8 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 			JOTLightweightView view = new TemplateView(buildTemplate, name);
 			view.addVariable("doClass", Boolean.TRUE);
 			view.addVariable("doMain", Boolean.TRUE);
+			FileObject license = FanUtilities.getRelativeFileObject(buildTemplate, "../../Licenses/FanDefaultLicense.txt");
+			view.addVariable("license", license.asText());
 			FileObject newTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../Fantom/FantomFile");
 			String templateText = newTemplate.asText();
 			//open it in editor
@@ -118,21 +119,22 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 			view.addVariable("desc", podDesc);
 
 			File buildFile = new File(pf, "build.fan");
-			File podFile = new File(pf, "pod.fan");
+
+			buildFo = FileUtil.toFileObject(buildFile);
+
+			FileObject license = FanUtilities.getRelativeFileObject(buildTemplate, "../../Licenses/FanDefaultLicense.txt");
+			view.addVariable("license", license.asText());
 
 			String buildText = buildTemplate.asText();
 
 			// create build.fan
 			TemplateUtils.createFromTemplate(view, buildText, buildFile);
 
-			buildFo = FileUtil.toFileObject(buildFile);
-			podFo = FileUtil.toFileObject(podFile);
 		}
 
 		// Look for nested projects to open as well:
 		LinkedHashSet resultSet = new LinkedHashSet();
 		resultSet.add(pfFo);
-		resultSet.add(podFo);
 		resultSet.add(fanFo);
 		resultSet.add(testFo);
 		if (buildFo != null)
@@ -233,8 +235,8 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		}
 
 		String[] res = new String[(beforeSteps.length - 1) + panels.length];
-		for (int i = 0; i <
-				res.length; i++)
+		for (int i = 0; i
+			< res.length; i++)
 		{
 			if (i < (beforeSteps.length - 1))
 			{
