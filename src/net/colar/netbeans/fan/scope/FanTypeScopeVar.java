@@ -6,7 +6,6 @@ package net.colar.netbeans.fan.scope;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstKind;
@@ -31,6 +30,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	public FanTypeScopeVar(AstNode typeDefNode, String name)
 	{
 		super(typeDefNode, name);
+		// not valid until parsed.
 	}
 
 	public void parse()
@@ -56,6 +56,8 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			kind = VarKind.TYPE_MIXIN;
 		}
 		AstNode nameNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
+		type=FanResolvedType.fromTypeSig(node, nameNode.getNodeText(true));
+
 		AstNode inheritance = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_INHERITANCE));
 
 		if (nameNode != null)
@@ -128,7 +130,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 							node.getRoot().getParserTask().addError("Orphaned modifier in slot.", slot);
 						}
 					}
-					if (slotVar != null) //shouldn't be
+					if (slotVar != null) //should be
 					{
 						node.addScopeVar(slotVar);
 					}

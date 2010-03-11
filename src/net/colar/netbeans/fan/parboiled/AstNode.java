@@ -6,7 +6,6 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;

@@ -89,7 +89,7 @@ public class FanParserTask extends ParserResult
 	public AstNode getAstTree()
 	{
 		Node<AstNode> nd = getParseNodeTree();
-		return nd==null?null:nd.getValue();
+		return nd == null ? null : nd.getValue();
 	}
 
 	/**
@@ -172,8 +172,10 @@ public class FanParserTask extends ParserResult
 					false, Severity.ERROR);
 				errors.add(error);
 			}
-			if(parsingResult.parseTreeRoot != null)
+			if (parsingResult.parseTreeRoot != null)
+			{
 				astRoot = parsingResult.parseTreeRoot.getValue();
+			}
 		} catch (Exception e)
 		{
 			addError("Parser error", e);
@@ -216,6 +218,7 @@ public class FanParserTask extends ParserResult
 					FanTypeScopeVar var = new FanTypeScopeVar(node, name);
 					var.parse();
 					AstNode scopeNode = FanLexAstUtils.getScopeNode(node);
+					System.out.println("Adding type scope var: "+name + var.toString());
 					scopeNode.getLocalScopeVars().put(name, var);
 					break;
 			}
@@ -240,7 +243,7 @@ public class FanParserTask extends ParserResult
 				}*/
 			}
 		}
-		int bkpt=0;
+		int bkpt = 0;
 	}
 
 	private void addUsing(AstNode usingNode)
@@ -253,14 +256,31 @@ public class FanParserTask extends ParserResult
 
 		if (ffi != null && ffi.toLowerCase().equals("java"))
 		{
-			String qname = type.replaceAll("::", "\\.");
-			// Individual Item
-			if (FanType.findByQualifiedName(qname) == null)
+			if (type.indexOf("::") != -1)
 			{
-				addError("Unresolved Java Item: " + qname, usingNode);
+				// Individual Item
+				String qname = type.replaceAll("::", "\\.");
+				if (FanType.findByQualifiedName(qname) == null)
+				{
+					addError("Unresolved Java Item: " + qname, usingNode);
+				} else
+				{
+					addUsing(name, qname, usingNode);
+				}
 			} else
 			{
-				addUsing(name, qname, usingNode);
+				// whole package
+				if (!FanType.hasPod(name))
+				{
+					addError("Unresolved Java package: " + name, usingNode);
+				} else
+				{
+					Vector<FanType> items = FanType.findPodTypes(name, "");
+					for (FanType t : items)
+					{
+						addUsing(t.getSimpleName(), t.getQualifiedName(), usingNode);
+					}
+				}
 			}
 		} else
 		{
@@ -309,15 +329,18 @@ public class FanParserTask extends ParserResult
 		}
 		if (scopeNode.getLocalScopeVars().containsKey(name))
 		{
-			addError("Duplicated using: " + qType + " / " + scopeNode.getLocalScopeVars().get(name), node);
+			// This is 'legal' ... maybe show a warning later ?
+			//addError("Duplicated using: " + qType + " / " + scopeNode.getLocalScopeVars().get(name), node);
+			System.out.println("Already have a using called: "+qType+ " (" + scopeNode.getLocalScopeVars().get(name)+")");
+			// Note: only keeping the 'last' definition (ie: override)
 		}
 		FanType type = FanType.findByPodAndType("sys", name);
 		if (type != null)
 		{
-			if (type.getPod().equals("sys"))
+			/*if (type.getPod().equals("sys"))
 			{
 				addError("Duplicated using: " + qType + " / " + "sys::" + name, node);
-			}
+			}*/
 		}
 		FanResolvedType rType = FanResolvedType.makeFromDbType(node, qType);
 		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, rType);
@@ -332,7 +355,6 @@ public class FanParserTask extends ParserResult
 	{
 		return pod;
 	}
-
 }
 
 
