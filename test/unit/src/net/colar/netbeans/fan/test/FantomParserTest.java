@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
+import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
@@ -30,7 +31,7 @@ public class FantomParserTest implements JOTTestable
 
 	public void jotTest() throws Throwable
 	{
-		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
+		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
 		ParsingResult<AstNode> result = null;
 
 		boolean singleTest = false;// Do just the 1 first test
@@ -43,10 +44,6 @@ public class FantomParserTest implements JOTTestable
 		{
 			try
 			{
-				//result = parse(parser, parser.slotDef(), "override CType? base { get { load; return *base } internal set}");
-				//testNodeName("singleTest1", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
-				//result = parse(parser, parser.ternaryExpr(), "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
-				//testNodeName("ternaryExpr2", result, "ternaryExpr", "col==0 ? key: Buf.fromBase64(map[key]).readAllStr");
 				testAst("/home/thibautc/dummy/fan/Main.fan");
 			} catch (Exception e)
 			{
@@ -403,24 +400,10 @@ public class FantomParserTest implements JOTTestable
 
 	private static void testAllFanFilesUnder(String folderPath, boolean lexerOnly) throws Exception
 	{
-		File folder = new File(folderPath);
-		File[] files = folder.listFiles();
+		List<File> files = NBTestUtilities.listAllFanFilesUnder(folderPath);
 		for (File f : files)
 		{
-			if (f.isDirectory())
-			{
-				testAllFanFilesUnder(f.getAbsolutePath(), lexerOnly);
-			} else
-			{
-				if (f.getName().equals("gamma.fan")) // Known invalid file
-				{
-					continue;
-				}
-				if (f.getName().endsWith(".fan") || f.getName().endsWith(".fwt"))
-				{
-					testFile(f.getAbsolutePath(), lexerOnly);
-				}
-			}
+			testFile(f.getAbsolutePath(), lexerOnly);
 		}
 	}
 
@@ -429,7 +412,7 @@ public class FantomParserTest implements JOTTestable
 		try
 		{
 			long start = new Date().getTime();
-			FantomParser parser = Parboiled.createParser(FantomParser.class, (Object)null);
+			FantomParser parser = Parboiled.createParser(FantomParser.class, (Object) null);
 
 			DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
 			byte[] buffer = new byte[dis.available()];
@@ -488,7 +471,7 @@ public class FantomParserTest implements JOTTestable
 
 	public static void testAst(String filePath) throws Exception
 	{
-		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
+		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
 
 		DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
 		byte[] buffer = new byte[dis.available()];

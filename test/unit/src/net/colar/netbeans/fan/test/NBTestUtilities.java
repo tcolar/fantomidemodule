@@ -5,6 +5,9 @@
 package net.colar.netbeans.fan.test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import net.jot.testing.JOTTester;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -26,4 +29,30 @@ public class NBTestUtilities {
 		Snapshot snap = source.createSnapshot();
 		return snap;
 	}
+
+	public static List<File> listAllFanFilesUnder(String folderPath) throws Exception
+	{
+		List<File> results = new ArrayList<File>();
+		File folder = new File(folderPath);
+		File[] files = folder.listFiles();
+		for (File f : files)
+		{
+			if (f.isDirectory())
+			{
+				results.addAll(listAllFanFilesUnder(f.getAbsolutePath()));
+			} else
+			{
+				if (f.getName().equals("gamma.fan")) // Known invalid file
+				{
+					continue;
+				}
+				if (f.getName().endsWith(".fan") || f.getName().endsWith(".fwt"))
+				{
+					results.add(f);
+				}
+			}
+		}
+		return results;
+	}
+
 }
