@@ -144,7 +144,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 	public String findPod(FileObject file)
 	{
-		Set<FileObject> fos = GlobalPathRegistry.getDefault().getSourceRoots();
+		/*Set<FileObject> fos = GlobalPathRegistry.getDefault().getSourceRoots();
 		for (FileObject fo : fos)
 		{
 			// It will return the "fan" or "test" subfolder, so we want the parent.
@@ -153,7 +153,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				return fo.getParent().getName();
 			}
 		}
-		return null;
+		return null;*/
+		return  FanUtilities.getPodForPath(file.getPath());
 	}
 
 	@Override
