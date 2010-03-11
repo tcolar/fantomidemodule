@@ -155,9 +155,9 @@
 		</folder>
 	</folder>
     <!-- Other custom resources used by Fan plugin-->
-	<folder name="Fantom">
+	<!--<folder name="Fantom">
 		<file name="pod.html" url="nbresloc:/net/colar/netbeans/fan/templates/pod.html"/>
-	</folder>
+	</folder>-->
 
 	<!-- Debugger menus -->
 	<folder name="Menu">

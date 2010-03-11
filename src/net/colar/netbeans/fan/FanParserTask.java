@@ -228,6 +228,7 @@ public class FanParserTask extends ParserResult
 		for (AstNode node : astRoot.getChildren())
 		{
 			// should be but check anyway in case of future change
+			//TODO: could aslo be a static block 
 			if (node.getKind() == AstKind.AST_TYPE_DEF)
 			{
 				/*Collection<FanAstScopeVarBase> vars = child.getScopeVars();

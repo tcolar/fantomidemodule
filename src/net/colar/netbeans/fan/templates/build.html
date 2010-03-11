@@ -10,10 +10,10 @@ using build
 **
 class Build : BuildPod
 {
-
-  override Void setup()
+  new make()
   {
-    podName     = "${name}"
+    podName = "${name}"
+    depends = ["sys 1.0"]
+    srcDirs = [`fan/`, `test/`]
   }
-
 }
