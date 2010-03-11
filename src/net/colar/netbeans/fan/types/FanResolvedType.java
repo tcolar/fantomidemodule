@@ -604,7 +604,8 @@ public class FanResolvedType
 		{
 			Vector<FanResolvedType> types = new Vector<FanResolvedType>();
 			sig = sig.substring(1, sig.length() - 1);
-			String[] parts = sig.split("->");
+			// Without -1 it will drop empty strings, causing |->| to have a zero length result array.
+			String[] parts = sig.split("->", -1);
 			String[] typeParts = parts[0].split(",");
 			for (int i = 0; i != typeParts.length; i++)
 			{
@@ -660,27 +661,57 @@ public class FanResolvedType
 	public static FanResolvedType makeFromLocalType(AstNode scopeNode, String enteredType)
 	{
 		FanType type = null;
-		if (enteredType.indexOf("::") == -1) // Not a qualified type
+		if (enteredType.indexOf("::") != -1)
+		{	// Qualified type
+			type = FanType.findByQualifiedName(enteredType);
+		}
+		else
 		{
 			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
 			if (types.containsKey(enteredType))
 			{
 				type = types.get(enteredType).getType().getDbType();
-			} else
+			}
+			// If not found in scope, try "implicit" imports
+			if (type == null)
 			{
-				// If not found in scope, try "implicit" imports
 				// first, other types in this pod
 				type = FanType.findByQualifiedName(scopeNode.getRoot().getPod() + "::" + enteredType);
-				// if still not found try in "sys" pod
-				if (type == null)
-				{
-					type = FanType.findByQualifiedName("sys::" + enteredType);
+
+			}
+			// if still not found try in "sys" pod
+			if (type == null)
+			{
+				type = FanType.findByQualifiedName("sys::" + enteredType);
+			}
+			// try Generic types
+			if (type == null && enteredType.length()==1 && enteredType.toUpperCase().equals(enteredType))
+			{
+				FanResolvedType objType=new FanResolvedType(scopeNode, enteredType, FanType.findByQualifiedName("sys::Obj"));
+				if (enteredType.equals("V") || enteredType.equals("K") || enteredType.equals("A") || enteredType.equals("B")
+					 || enteredType.equals("C") || enteredType.equals("D") || enteredType.equals("E") || enteredType.equals("F")
+					  || enteredType.equals("G") || enteredType.equals("H"))
+				{	// K, V: List/Map key and item types
+					// A-H : Function types
+					type = FanType.findByQualifiedName("sys::Obj");
+				} else if (enteredType.equals("L"))
+				{ // List
+					return new FanResolvedListType(scopeNode, objType);
+				}else if (enteredType.equals("M"))
+				{ // Map
+					return new FanResolvedMapType(scopeNode, objType, objType);
+				}else if (enteredType.equals("R"))
+				{ // Function
+					return new FanResolvedFuncType(scopeNode, new Vector<FanResolvedType>(), objType);
 				}
 			}
-		}
-		if (type == null)
-		{
-			return makeUnresolved(scopeNode);
+			if (type == null)
+			{
+				if (type == null)
+				{
+					return makeUnresolved(scopeNode);
+				}
+			}
 		}
 		return new FanResolvedType(scopeNode, enteredType, type);
 	}

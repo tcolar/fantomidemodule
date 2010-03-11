@@ -22,6 +22,7 @@ import org.openide.loaders.DataObjectNotFoundException;
  */
 public class FanUtilities
 {
+
 	public static final JOTLoggerLocation GENERIC_LOGGER = new JOTLoggerLocation("Generic (FanUtilities)");
 
 	/**
@@ -69,11 +70,11 @@ public class FanUtilities
 				if (nameExt.equals(".."))
 				{
 					curFile = curFile.getParent();
-					
+
 				} else
 				{
 					curFile = curFile.getFileObject(nameExt);
-					
+
 				}
 			}
 		}
@@ -113,7 +114,7 @@ public class FanUtilities
 	public static File getFanUserHome()
 	{
 		// netbeans.user: ex ~/.netbeans/fantom/
-		String nbHome=System.getProperty("netbeans.user");
+		String nbHome = System.getProperty("netbeans.user");
 		String fantomHome = nbHome + File.separator + "fantom" + File.separator;
 		File f = new File(fantomHome);
 		f.mkdirs();
@@ -128,24 +129,33 @@ public class FanUtilities
 	public static String getPodForPath(String path)
 	{
 		File folder = new File(path).getParentFile();
-		while(folder!=null)
+		String pod = null;
+		while (folder != null)
 		{
-			if(new File(folder, "build.fan").exists())
-				break;
-			folder=folder.getParentFile();
+			if (new File(folder, "build.fan").exists())
+			{
+				File buildFan = new File(folder, "build.fan");
+				fan.sys.File buildFile = new fan.sys.LocalFile(buildFan);
+				FanObj script = (FanObj) Env.cur().compileScript(buildFile).make();
+				String buildType = script.typeof().base().name();
+				//System.out.println("build type: "+buildType);
+				if(buildType.equals("BuildPod"))
+				{
+					pod = (String) script.typeof().field("podName").get(script);
+					break;
+				}
+				else if(buildType.equals("BuildScript"))
+				{
+					pod = folder.getName();
+					break;
+				}
+			}
+			folder = folder.getParentFile();
 		}
-		if(folder==null)
+		if (pod == null)
 		{
-			GENERIC_LOGGER.error("Could not find build.fan for: "+path);			
+			GENERIC_LOGGER.error("Could not find pod for: " + path);
 			return null;
-		}
-		// Use Fantom sys.jar to parse build script and resolve podName
-		fan.sys.File buildFile = new fan.sys.LocalFile(folder);
-		FanObj script = (FanObj)Env.cur().compileScript(buildFile).make();
-		String pod = (String) script.typeof().field("podName").get(script);
-		if(pod==null)
-		{
-			GENERIC_LOGGER.error("Could not resolve pod for: "+path);
 		}
 		return pod;
 	}

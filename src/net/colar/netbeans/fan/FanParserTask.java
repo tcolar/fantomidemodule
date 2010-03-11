@@ -218,7 +218,7 @@ public class FanParserTask extends ParserResult
 					FanTypeScopeVar var = new FanTypeScopeVar(node, name);
 					var.parse();
 					AstNode scopeNode = FanLexAstUtils.getScopeNode(node);
-					System.out.println("Adding type scope var: "+name + var.toString());
+					//System.out.println("Adding type scope var: "+name + var.toString());
 					scopeNode.getLocalScopeVars().put(name, var);
 					break;
 			}
