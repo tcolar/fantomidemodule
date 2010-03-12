@@ -48,6 +48,7 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 					// Add the param as a scope variable
 					if(block!=null)
 						block.addScopeVar(new FanAstScopeVar(typeNode, VarKind.LOCAL, pName, pType), false);
+					// if no block then it must be an abstract methd, no need to introduce the vars to scope
 				} else
 				{
 					param.getRoot().getParserTask().addError("Duplicated parameter name", id);
