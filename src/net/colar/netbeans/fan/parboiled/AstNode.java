@@ -195,10 +195,10 @@ public class AstNode
 	 * @param varKind
 	 * @param type
 	 */
-	public void addScopeVar(String name, VarKind varKind, FanResolvedType type)
+	public void addScopeVar(String name, VarKind varKind, FanResolvedType type, boolean allowDuplicates)
 	{
 		FanAstScopeVar var = new FanAstScopeVar(this, varKind, name, type);
-		addScopeVar(var);
+		addScopeVar(var, allowDuplicates);
 	}
 
 	/**
@@ -207,12 +207,16 @@ public class AstNode
 	 * @param varKind
 	 * @param type
 	 */
-	public void addScopeVar(FanAstScopeVarBase var)
+	public void addScopeVar(FanAstScopeVarBase var, boolean allowDuplicates)
 	{
 		AstNode scopeNode = FanLexAstUtils.getScopeNode(this);
 		if (scopeNode == null)
 		{
 			return;
+		}
+		if ( !allowDuplicates && scopeNode.getLocalScopeVars().containsKey(var.getName()))
+		{
+			getRoot().getParserTask().addError("Duplicated variable in scope: " + var.getName(), this);
 		}
 		scopeNode.getLocalScopeVars().put(var.getName(), var);
 	}

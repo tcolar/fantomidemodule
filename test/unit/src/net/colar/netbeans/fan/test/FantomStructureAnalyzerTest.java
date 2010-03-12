@@ -13,8 +13,6 @@ import org.netbeans.modules.parsing.api.Snapshot;
 /**
  * Test the structure analyzer
  *
- * Note: This doesn't run any indexing, so index database must be up to date before running.
- *
  * @author thibautc
  */
 public class FantomStructureAnalyzerTest extends FantomCSLTest

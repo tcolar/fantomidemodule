@@ -15,6 +15,7 @@ import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.modules.csl.api.Error;
@@ -218,33 +219,51 @@ public class FanParserTask extends ParserResult
 					FanTypeScopeVar var = new FanTypeScopeVar(node, name);
 					var.parse();
 					AstNode scopeNode = FanLexAstUtils.getScopeNode(node);
-					//System.out.println("Adding type scope var: "+name + var.toString());
-					scopeNode.getLocalScopeVars().put(name, var);
+					if (scopeNode.getAllScopeVars().containsKey(name))
+					{
+						addError("Duplicated type name", node);
+					} else
+					{
+						scopeNode.getLocalScopeVars().put(name, var);
+					}
 					break;
 			}
 		}
 
 		// Now do all the local scopes / variables
-		for (AstNode node : astRoot.getChildren())
+		parseVars(astRoot);
+		//FanLexAstUtils.dumpTree(astRoot, 0);
+	}
+
+	private void parseVars(AstNode node)
+	{
+		if (node == null)
 		{
-			// should be but check anyway in case of future change
-			//TODO: could aslo be a static block 
-			if (node.getKind() == AstKind.AST_TYPE_DEF)
-			{
-				/*Collection<FanAstScopeVarBase> vars = child.getScopeVars();
-				for (FanAstScopeVarBase slot : vars)
-				{
-				if (slot instanceof FanAstMethod)
-				{
-				FanMethodScope scope = new FanMethodScope(child, (FanAstMethod) slot);
-				child.addChild(scope);
-				scope.parse();
-				}
-				// otherwise it's a field, nothing to do with it
-				}*/
-			}
+			return;
 		}
-		int bkpt = 0;
+		switch (node.getKind())
+		{
+			case AST_LOCAL_DEF:
+				AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
+				AstNode typeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+				String name = idNode.getNodeText(true);
+				FanResolvedType type = FanResolvedType.makeUnresolved(node);
+				if (typeNode != null)
+				{
+					type = FanResolvedType.makeFromLocalType(typeNode, typeNode.getNodeText(true));
+				}
+				//TODO: else resolve from expression
+				node.addScopeVar(new FanAstScopeVar(node, VarKind.LOCAL, name, type), false);
+				break;
+			//case AST_ASSIGN: todo: check not already assigned / defined
+			// case AST_ASSIGN: check that it was assigned/defined before
+			default:
+				// recurse into children
+				for (AstNode child : node.getChildren())
+				{
+					parseVars(child);
+				}
+		}
 	}
 
 	private void addUsing(AstNode usingNode)
@@ -332,7 +351,7 @@ public class FanParserTask extends ParserResult
 		{
 			// This is 'legal' ... maybe show a warning later ?
 			//addError("Duplicated using: " + qType + " / " + scopeNode.getLocalScopeVars().get(name), node);
-			System.out.println("Already have a using called: "+qType+ " (" + scopeNode.getLocalScopeVars().get(name)+")");
+			System.out.println("Already have a using called: " + qType + " (" + scopeNode.getLocalScopeVars().get(name) + ")");
 			// Note: only keeping the 'last' definition (ie: override)
 		}
 		FanType type = FanType.findByPodAndType("sys", name);
@@ -340,11 +359,11 @@ public class FanParserTask extends ParserResult
 		{
 			/*if (type.getPod().equals("sys"))
 			{
-				addError("Duplicated using: " + qType + " / " + "sys::" + name, node);
+			addError("Duplicated using: " + qType + " / " + "sys::" + name, node);
 			}*/
 		}
 		FanResolvedType rType = FanResolvedType.makeFromDbType(node, qType);
-		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, rType);
+		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, rType, true);
 	}
 
 	public ParsingResult<AstNode> getParsingResult()

@@ -132,7 +132,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 					}
 					if (slotVar != null) //should be
 					{
-						node.addScopeVar(slotVar);
+						node.addScopeVar(slotVar, false);
 					}
 			}
 		}

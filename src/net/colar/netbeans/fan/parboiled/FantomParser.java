@@ -231,7 +231,7 @@ public class FantomParser extends BaseParser<AstNode>
 				PAR_L),
 			optional(params()),
 			PAR_R,
-			methodBody()), ast.newScopeNode(AstKind.AST_METHOD_DEF)); // nees own scope because of params
+			methodBody()), ast.newNode(AstKind.AST_METHOD_DEF)); // nees own scope because of params
 	}
 
 	public Rule ctorDef()
@@ -247,7 +247,7 @@ public class FantomParser extends BaseParser<AstNode>
 			firstOf(
 			enforcedSequence(KW_THIS, DOT, id(), enforcedSequence(PAR_L, optional(args()), PAR_R)),
 			enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), enforcedSequence(PAR_L, optional(args()), PAR_R))))),
-			methodBody()), ast.newScopeNode(AstKind.AST_CTOR_DEF));
+			methodBody()), ast.newNode(AstKind.AST_CTOR_DEF));
 	}
 
 	public Rule methodBody()
@@ -341,16 +341,16 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule localDef()
 	{
-		// slight chnage from teh grammar to match either:
+		// slight chnage from the grammar to match either:
 		// 'Int j', 'j:=27', 'Int j:=27'
 		return sequence(
 			firstOf(
 			// fan parser says if it's start with "id :=" or "Type, id", then it gotta be a localDef (enforce)
-			enforcedSequence(sequence(type(), id(), AS_INIT), OPT_LF(), expr()),
+			enforcedSequence(sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID), AS_INIT), OPT_LF(), expr()),
 			// same if it starts with "id :="
-			enforcedSequence(sequence(id(), AS_INIT), OPT_LF(), expr()),
+			enforcedSequence(sequence(id(), ast.newNode(AstKind.AST_ID), AS_INIT), OPT_LF(), expr()),
 			// var def with no value
-			sequence(type(), id())), ast.newNode(AstKind.AST_LOCAL_DEF),
+			sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID))), ast.newNode(AstKind.AST_LOCAL_DEF),
 			eos());
 	}
 

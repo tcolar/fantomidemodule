@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanTokenID;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
 import org.netbeans.api.lexer.Token;
@@ -243,6 +244,20 @@ public class FanLexAstUtils
 			}
 		}
 		return null;	}
+
+	public static void dumpTree(AstNode node, int indent)
+	{
+			StringBuffer sb = new StringBuffer(indent);
+			for (int i = 0; i < indent; i++)
+			{
+				sb = sb.append("  ");
+			}
+			for (AstNode child :node.getChildren())
+			{
+				FanUtilities.GENERIC_LOGGER.info(sb.toString() + child.toString());
+				dumpTree(child, indent + 1);
+			}
+	}
 
 	/*
 	public static OffsetRange getNodeRange(FanParserTask result, CommonTree node)

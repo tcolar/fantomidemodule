@@ -28,6 +28,8 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 
 		this.isCtor = isCtor;
 
+		AstNode block = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
+
 		// parameters
 		List<AstNode> params = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_PARAM));
 		for (AstNode param : params)
@@ -43,6 +45,9 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 				if (!parameters.containsKey(pName))
 				{
 					parameters.put(pName, pType);
+					// Add the param as a scope variable
+					if(block!=null)
+						block.addScopeVar(new FanAstScopeVar(typeNode, VarKind.LOCAL, pName, pType), false);
 				} else
 				{
 					param.getRoot().getParserTask().addError("Duplicated parameter name", id);
