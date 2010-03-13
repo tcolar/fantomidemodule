@@ -36,8 +36,10 @@ public class AstNode
 	private List<AstNode> children = new ArrayList<AstNode>();
 	/** Parent AST Node*/
 	private AstNode parent;
-	/**scope var table (hash) - Null if not a scoping Node*/
+	/**scope variables table (hash) - Null if not a scoping Node*/
 	private Hashtable<String, FanAstScopeVarBase> scopeVars = null;
+	/**Type of this node (say 'Str' or 'Bool') - used for completion, etc...*/
+	private FanResolvedType type;
 
 	public AstNode(AstKind kind, String path, Node<AstNode> parseNode, String nodeText)
 	{
@@ -45,6 +47,8 @@ public class AstNode
 		this.kind = kind;
 		this.parsePath = path;
 		this.text = nodeText;
+		// start unresolved, but ParserTask will fill it in.
+		this.type=FanResolvedType.makeUnresolved(this);
 	}
 
 	@Override
@@ -66,7 +70,8 @@ public class AstNode
 			}
 			scope += "}";
 		}
-		return kind + (scopeVars != null ? "" : "[") + parsePath + "] : '" + txt + "'" + scope;
+		String t = (type==null || !type.isResolved())?"":type.getShortAsTypedType();
+		return kind + "("+t+")[" + parsePath + "] : '" + txt + "'" + scope;
 	}
 
 	public String getParsePath()
@@ -244,5 +249,15 @@ public class AstNode
 	{
 		//TODO: work on stripping comments and son on
 		return strip ? text.trim() : text;
+	}
+
+	public void setType(FanResolvedType type)
+	{
+		this.type=type;
+	}
+
+	public FanResolvedType getType()
+	{
+		return type;
 	}
 }

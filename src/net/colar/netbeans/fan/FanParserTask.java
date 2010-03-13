@@ -14,6 +14,7 @@ import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
+import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
@@ -232,7 +233,7 @@ public class FanParserTask extends ParserResult
 
 		// Now do all the local scopes / variables
 		parseVars(astRoot);
-		//FanLexAstUtils.dumpTree(astRoot, 0);
+		FanLexAstUtils.dumpTree(astRoot, 0);
 	}
 
 	private void parseVars(AstNode node)
@@ -241,22 +242,66 @@ public class FanParserTask extends ParserResult
 		{
 			return;
 		}
+
+		FanResolvedType type = null;
+		String text = node.getNodeText(true);
+		List<AstNode> children = node.getChildren();
 		switch (node.getKind())
 		{
-			case AST_LOCAL_DEF:
-				AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
-				AstNode typeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
-				String name = idNode.getNodeText(true);
-				FanResolvedType type = FanResolvedType.makeUnresolved(node);
-				if (typeNode != null)
+			case AST_EXPR:
+				if (children.size() == 1)
 				{
-					type = FanResolvedType.makeFromLocalType(typeNode, typeNode.getNodeText(true));
+					AstNode child = children.get(0);
+					parseVars(child);
+					type = child.getType();
+				} else
+				{
+					// This should not happen (once code complete)
+					System.err.println("Unexpected # of children in expression: " + children.size() + " -> " + text);
 				}
-				//TODO: else resolve from expression
+				break;
+			case AST_CAST:
+				for(AstNode child : children)
+					parseVars(child);
+				AstNode castTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+				type = castTypeNode.getType();
+				//TODO: check if cast is valid
+				break;
+			case AST_LOCAL_DEF:
+				AstNode typeAndIdNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
+				AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
+				AstNode exprNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));
+				if (typeAndIdNode != null)
+				{
+					idNode=FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_ID));
+					AstNode typeNode = FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_TYPE));
+					parseVars(typeNode);
+					type = typeNode.getType();
+				}
+				
+				String name = idNode.getNodeText(true);
+
+				if (exprNode != null)
+				{
+					parseVars(exprNode);
+					if(type==null) // Prefer the type in TypeNode if specified
+					{
+						type = exprNode.getType();
+						//TODO: check types are compatible
+					}
+				}
 				node.addScopeVar(new FanAstScopeVar(node, VarKind.LOCAL, name, type), false);
 				break;
-			//case AST_ASSIGN: todo: check not already assigned / defined
-			// case AST_ASSIGN: check that it was assigned/defined before
+			case AST_LITTERAL_BASE:
+				Node<AstNode> parseNode = node.getParseNode().getChildren().get(0); // firstOf
+				type = resolveLitteral(node, parseNode);
+				break;
+			case AST_ID:
+				type = FanResolvedType.makeFromLocalType(node, text);
+				break;
+			case AST_TYPE:
+				type = FanResolvedType.fromTypeSig(node, text);
+				break;
 			default:
 				// recurse into children
 				for (AstNode child : node.getChildren())
@@ -264,6 +309,59 @@ public class FanParserTask extends ParserResult
 					parseVars(child);
 				}
 		}
+		node.setType(type);
+		if (type != null && !type.isResolved())
+		{
+			node.getRoot().getParserTask().addError("Could not resolve item type -> " + text, node);
+		}
+	}
+
+	public FanResolvedType resolveLitteral(AstNode astNode, Node<AstNode> parseNode)
+	{
+		FanResolvedType type = FanResolvedType.makeUnresolved(astNode);
+		String lbl = parseNode.getLabel();
+		String txt = astNode.getNodeText(true);
+		if (lbl.equalsIgnoreCase(TokenName.ID.name()))
+		{
+			type = FanResolvedType.makeFromLocalType(astNode, txt);
+		} else if (lbl.equalsIgnoreCase(TokenName.CHAR.name()))
+		{
+			type = FanResolvedType.fromTypeSig(astNode, "sys::Char");
+		} else if (lbl.equalsIgnoreCase(TokenName.NUMBER.name()))
+		{
+			char lastChar = txt.charAt(txt.length() - 1);
+			if (lastChar == 'f' || lastChar == 'F')
+			{
+				type = FanResolvedType.fromTypeSig(astNode, "sys::Float");
+			}
+			else if (lastChar == 'd' || lastChar == 'D')
+			{
+				type = FanResolvedType.fromTypeSig(astNode, "sys::Decimal");
+			} else if (Character.isLetter(lastChar) && lastChar != '_')
+			{
+				type = FanResolvedType.fromTypeSig(astNode, "sys::Duration");
+			} else if (txt.indexOf(".") != -1)
+			{
+				type = FanResolvedType.fromTypeSig(astNode, "sys::Float");
+			} else
+			{
+				type = FanResolvedType.fromTypeSig(astNode, "sys::Int"); // Default
+			}
+		} else if (lbl.equalsIgnoreCase(TokenName.STRS.name()))
+		{
+			type = FanResolvedType.fromTypeSig(astNode, "sys::Str");
+		} else if (lbl.equalsIgnoreCase(TokenName.URI.name()))
+		{
+			type = FanResolvedType.fromTypeSig(astNode, "sys::Uri");
+		} else if (lbl.equalsIgnoreCase(TokenName.KEYWORD.name()))
+		{
+			if (txt.equals("false") || txt.equals("true"))
+			{
+				type = FanResolvedType.fromTypeSig(astNode, "sys::Bool");
+			}
+			//TODO: Deal with null, super, this, it
+		}
+		return type;
 	}
 
 	private void addUsing(AstNode usingNode)

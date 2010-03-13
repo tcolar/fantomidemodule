@@ -341,17 +341,23 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule localDef()
 	{
-		// slight chnage from the grammar to match either:
+		// slight change from the grammar to match either:
 		// 'Int j', 'j:=27', 'Int j:=27'
 		return sequence(
 			firstOf(
 			// fan parser says if it's start with "id :=" or "Type, id", then it gotta be a localDef (enforce)
-			enforcedSequence(sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID), AS_INIT), OPT_LF(), expr()),
+			enforcedSequence(typeAndId(), AS_INIT, OPT_LF(), expr()),
 			// same if it starts with "id :="
 			enforcedSequence(sequence(id(), ast.newNode(AstKind.AST_ID), AS_INIT), OPT_LF(), expr()),
 			// var def with no value
-			sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID))), ast.newNode(AstKind.AST_LOCAL_DEF),
+			typeAndId()),
+			ast.newNode(AstKind.AST_LOCAL_DEF),
 			eos());
+	}
+
+	public Rule typeAndId()
+	{
+		return sequence(sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID)), ast.newNode(AstKind.AST_TYPE_AND_ID));
 	}
 
 	public Rule try_()
@@ -377,7 +383,7 @@ public class FantomParser extends BaseParser<AstNode>
 	// ----------- Expressions -------------------------------------------------
 	public Rule expr()
 	{
-		return assignExpr();
+		return sequence(assignExpr(), ast.newNode(AstKind.AST_EXPR));
 	}
 
 	public Rule assignExpr()
@@ -471,7 +477,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule castExpr()
 	{
-		return sequence(PAR_L, type(), PAR_R, parExpr());
+		return sequence(sequence(PAR_L, type(), ast.newNode(AstKind.AST_TYPE), PAR_R, parExpr()), ast.newNode(AstKind.AST_CAST));
 	}
 
 	public Rule groupedExpr()
@@ -500,7 +506,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule termBase()
 	{
 		// check for ID alone last (and not as part of idExpr) otherwise it would never check literal & typebase !
-		return firstOf(idExprReq(), litteral(), typeBase(), id());
+		return firstOf(idExprReq(), litteral(), typeBase(), sequence(id(), ast.newNode(AstKind.AST_ID)));
 	}
 
 	public Rule typeBase()
@@ -578,7 +584,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule idExpr()
 	{
 		// this can be either a local def(toto.value) or a call(toto.getValue or toto.getValue(<params>)) + opt. closure
-		return firstOf(idExprReq(), id());
+		return firstOf(idExprReq(), sequence(id(), ast.newNode(AstKind.AST_ID)));
 	}
 
 	public Rule idExprReq()
@@ -619,8 +625,8 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule litteralBase()
 	{
-		return firstOf(KW_NULL, KW_THIS, KW_SUPER, KW_IT, KW_TRUE, KW_FALSE,
-			strs(), uri(), number(), char_());
+		return sequence(firstOf(KW_NULL, KW_THIS, KW_SUPER, KW_IT, KW_TRUE, KW_FALSE,
+			strs(), uri(), number(), char_()), ast.newNode(AstKind.AST_LITTERAL_BASE));
 	}
 
 	public Rule list()
@@ -775,7 +781,7 @@ public class FantomParser extends BaseParser<AstNode>
 			);
 	}
 
-	/** Rewrote more like Fantom Parser (simpler & faster) - lokffor type base then listOfs, mapOfs notations
+	/** Rewrote more like Fantom Parser (simpler & faster) - look for type base then listOfs, mapOfs notations
 	 * Added check so that the "?" (nullable type indicator) cannot be separated from it's type (noSpace)
 	 * @return
 	 */
