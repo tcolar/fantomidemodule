@@ -874,7 +874,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			}
 			if (pod != null)
 			{
-				return fanDocToHtml(pod.doc());
+				return fanDocToHtml((String)pod.meta().get("pod.summary"));
 			}
 		}
 		return null;
