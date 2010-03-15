@@ -7,6 +7,7 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
@@ -216,7 +217,7 @@ public class FanLexAstUtils
 	public static String getFirstChildText(AstNode parentNode, Predicate pred)
 	{
 		AstNode node = getFirstChild(parentNode, pred);
-		return node==null?null:node.getNodeText(true);
+		return node == null ? null : node.getNodeText(true);
 	}
 
 	public static String getNodeText(Node<AstNode> node, InputBuffer inputBuffer)
@@ -243,503 +244,528 @@ public class FanLexAstUtils
 				}
 			}
 		}
-		return null;	}
+		return null;
+	}
+
+	public static AstNode findASTNodeAt(AstNode node, int offset)
+	{
+		if (node != null
+				&& offset >= node.getStartLocation().getIndex()
+				&& offset <= node.getEndLocation().getIndex())
+		{
+			for (AstNode child : node.getChildren())
+			{
+				AstNode found = findASTNodeAt(child, offset);
+				if (found != null)
+				{
+					return found;
+				}
+			}
+			return node;
+		}
+		return null;
+	}
 
 	public static void dumpTree(AstNode node, int indent)
 	{
-			StringBuffer sb = new StringBuffer(indent);
-			for (int i = 0; i < indent; i++)
-			{
-				sb = sb.append("  ");
-			}
-			for (AstNode child :node.getChildren())
-			{
-				FanUtilities.GENERIC_LOGGER.info(sb.toString() + child.toString());
-				dumpTree(child, indent + 1);
-			}
+		StringBuffer sb = new StringBuffer(indent);
+		for (int i = 0; i < indent; i++)
+		{
+			sb = sb.append("  ");
+		}
+		for (AstNode child : node.getChildren())
+		{
+			FanUtilities.GENERIC_LOGGER.info(sb.toString() + child.toString());
+			dumpTree(child, indent + 1);
+		}
 	}
+	// find the parsenode at the given doc index
+	/*public static void findNodeAt(FanParserTask result, int offset)
+	{
+	Node nd = result.getParseNodeTree();
+	}*/
 
 	/*
 	public static OffsetRange getNodeRange(FanParserTask result, CommonTree node)
 	{
-		if (node == null)
-		{
-			return null;
-		}
-		int start = getTokenStart(node);
-		int end = getTokenStop(node);
-		//System.out.println("Start: " + start + " End:" + end + " ");
-		// Cant figure why this happens, something must be wrong but no clue so far.
-		if (start > end)
-		{
-			int tmp = start;
-			start = end;
-			end = tmp;
-		}
-		if (start == -1)
-		{
-			return OffsetRange.NONE;
-		}
-		CommonTokenStream tokenStream = null;//result.getTokenStream();
-		CommonToken startToken = (CommonToken) tokenStream.get(start);
-		CommonToken endToken = (CommonToken) tokenStream.get(end);
-		OffsetRange range = new OffsetRange(startToken.getStartIndex(), endToken.getStopIndex() + 1);
-		return range;
+	if (node == null)
+	{
+	return null;
+	}
+	int start = getTokenStart(node);
+	int end = getTokenStop(node);
+	//System.out.println("Start: " + start + " End:" + end + " ");
+	// Cant figure why this happens, something must be wrong but no clue so far.
+	if (start > end)
+	{
+	int tmp = start;
+	start = end;
+	end = tmp;
+	}
+	if (start == -1)
+	{
+	return OffsetRange.NONE;
+	}
+	CommonTokenStream tokenStream = null;//result.getTokenStream();
+	CommonToken startToken = (CommonToken) tokenStream.get(start);
+	CommonToken endToken = (CommonToken) tokenStream.get(end);
+	OffsetRange range = new OffsetRange(startToken.getStartIndex(), endToken.getStopIndex() + 1);
+	return range;
 	}
 
 	public static CommonTree findASTNodeAt(FanParserTask pResult, int tokenIndex)
 	{
-		//System.out.println("AstNode token: "+pResult.getTokenStream().get(index).toString());
-		//System.out.println("AstNode token type: "+pResult.getTokenStream().get(index).getType());
-		//System.out.println("AstNode token text: '"+pResult.getTokenStream().get(index).getText()+"'");
-		CommonTree node = findASTNodeAt(pResult, null, tokenIndex);
-		// If not found, return the root
-		if (node == null)
-		{
-			node = null;//pResult.getRootScope().getAstNode();
-		}
-		return node;
+	//System.out.println("AstNode token: "+pResult.getTokenStream().get(index).toString());
+	//System.out.println("AstNode token type: "+pResult.getTokenStream().get(index).getType());
+	//System.out.println("AstNode token text: '"+pResult.getTokenStream().get(index).getText()+"'");
+	CommonTree node = findASTNodeAt(pResult, null, tokenIndex);
+	// If not found, return the root
+	if (node == null)
+	{
+	node = null;//pResult.getRootScope().getAstNode();
+	}
+	return node;
 	}
 
 	private static CommonTree findASTNodeAt(FanParserTask pResult, CommonTree node, int tokenIndex)
 	{
-		CommonTree result = null;
-		int start = getTokenStart(node);
-		int stop = getTokenStop(node);
-		//System.out.println("li:" + tokenIndex + " start:" + start + " stop:" + stop + " " + node.getType() + " " + getNodeContent(pResult, node));
-		// <= >= ??
-		if (start <= tokenIndex && stop >= tokenIndex)
-		{
-			result = node;
-			List<CommonTree> children = node.getChildren();
-			if (children != null)
-			{
-				Iterator<CommonTree> it = children.iterator();
-				while (it.hasNext())
-				{
-					CommonTree subNode = it.next();
-					CommonTree nextNode = findASTNodeAt(pResult, subNode, tokenIndex);
-					if (nextNode != null)
-					{
-						return nextNode;
-					}
-				}
-			}
-		}
-		//System.out.println("Result: " + result);
+	CommonTree result = null;
+	int start = getTokenStart(node);
+	int stop = getTokenStop(node);
+	//System.out.println("li:" + tokenIndex + " start:" + start + " stop:" + stop + " " + node.getType() + " " + getNodeContent(pResult, node));
+	// <= >= ??
+	if (start <= tokenIndex && stop >= tokenIndex)
+	{
+	result = node;
+	List<CommonTree> children = node.getChildren();
+	if (children != null)
+	{
+	Iterator<CommonTree> it = children.iterator();
+	while (it.hasNext())
+	{
+	CommonTree subNode = it.next();
+	CommonTree nextNode = findASTNodeAt(pResult, subNode, tokenIndex);
+	if (nextNode != null)
+	{
+	return nextNode;
+	}
+	}
+	}
+	}
+	//System.out.println("Result: " + result);
 
-		return result;
+	return result;
 	}
 
 	public static int getLineEndOffset(TokenSequence seq, int offset, boolean semiIsNL)
 	{
-		//System.out.println(">gleo " + offset);
-		int result = -1;
-		seq.move(offset);
-		// check if mve failed -> =~ end of stream
-		if (!seq.moveNext() || seq.offset() < offset)
-		{
-			return -1;
-		}
-		do
-		{
-			//System.out.println("seq: "+seq.offset());
-			// If this happens, we reached end of stream
-			int tokenType = seq.token().id().ordinal();
-			if (tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
-			{
-				result = seq.offset();
-				break;
-			}
-		} while (seq.moveNext());
-		// put it back where it was.
-		seq.move(offset);
-		//System.out.println("<gleo "+result);
-		return result;
+	//System.out.println(">gleo " + offset);
+	int result = -1;
+	seq.move(offset);
+	// check if mve failed -> =~ end of stream
+	if (!seq.moveNext() || seq.offset() < offset)
+	{
+	return -1;
+	}
+	do
+	{
+	//System.out.println("seq: "+seq.offset());
+	// If this happens, we reached end of stream
+	int tokenType = seq.token().id().ordinal();
+	if (tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
+	{
+	result = seq.offset();
+	break;
+	}
+	} while (seq.moveNext());
+	// put it back where it was.
+	seq.move(offset);
+	//System.out.println("<gleo "+result);
+	return result;
 	}
 
 	public static int getLineBeginOffset(TokenSequence seq, int offset, boolean semiIsNL)
 	{
-		seq.move(offset);
-		while (seq.movePrevious())
-		{
-			//System.out.println("seq2: "+seq.offset());
-			int tokenType = seq.token().id().ordinal();
-			if (tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
-			{
-				break;
-			}
-		}
-		int result = seq.offset() + 1;
-		// put it back where it was.
-		seq.move(offset);
-		return result;
+	seq.move(offset);
+	while (seq.movePrevious())
+	{
+	//System.out.println("seq2: "+seq.offset());
+	int tokenType = seq.token().id().ordinal();
+	if (tokenType == FanLexer.LB || (semiIsNL && tokenType == FanLexer.SP_SEMI))
+	{
+	break;
+	}
+	}
+	int result = seq.offset() + 1;
+	// put it back where it was.
+	seq.move(offset);
+	return result;
 	}
 
 	public static boolean moveToNextNonWSToken(TokenSequence seq, int fromOfset, int maxOffset)
 	{
-		if (fromOfset > maxOffset || fromOfset > seq.tokenCount())
-		{
-			return false;
-		}
-		seq.move(fromOfset);
-		while (seq.moveNext() && seq.offset() <= maxOffset)
-		{
-			int tokenType = seq.token().id().ordinal();
-			if (!matchType(tokenType, FanGrammarHelper.WS_TOKENS))
-			{
-				return true;
-			}
-		}
-		return false;
+	if (fromOfset > maxOffset || fromOfset > seq.tokenCount())
+	{
+	return false;
+	}
+	seq.move(fromOfset);
+	while (seq.moveNext() && seq.offset() <= maxOffset)
+	{
+	int tokenType = seq.token().id().ordinal();
+	if (!matchType(tokenType, FanGrammarHelper.WS_TOKENS))
+	{
+	return true;
+	}
+	}
+	return false;
 	}
 
 	public static boolean moveToPrevNonWsToken(TokenSequence seq, int fromOfset, int minOffset)
 	{
-		if (fromOfset < minOffset || fromOfset < 0)
-		{
-			return false;
-		}
-		seq.move(fromOfset);
-		while (seq.movePrevious() && seq.offset() >= minOffset)
-		{
-			Token tk = seq.token();
-			//System.out.println("nws: "+tk.id().name());
-			//System.out.println("nws type: "+tk.id().ordinal());
-			int tokenType = seq.token().id().ordinal();
-			if (!matchType(tokenType, FanGrammarHelper.WS_TOKENS))
-			{
-				return true;
-			}
-		}
-		return false;
+	if (fromOfset < minOffset || fromOfset < 0)
+	{
+	return false;
+	}
+	seq.move(fromOfset);
+	while (seq.movePrevious() && seq.offset() >= minOffset)
+	{
+	Token tk = seq.token();
+	//System.out.println("nws: "+tk.id().name());
+	//System.out.println("nws type: "+tk.id().ordinal());
+	int tokenType = seq.token().id().ordinal();
+	if (!matchType(tokenType, FanGrammarHelper.WS_TOKENS))
+	{
+	return true;
+	}
+	}
+	return false;
 	}
 
 	public static boolean moveToNextSignificantToken(TokenSequence seq, int fromOfset, int maxOffset)
 	{
-		if (fromOfset > maxOffset || fromOfset > seq.tokenCount())
-		{
-			return false;
-		}
-		while (seq.offset() <= maxOffset && seq.moveNext() && seq.offset() <= maxOffset)
-		{
-			int tokenType = seq.token().id().ordinal();
-			if (!matchType(tokenType, FanGrammarHelper.INSIGNIFICANT_TOKENS))
-			{
-				return true;
-			}
-		}
-		return false;
+	if (fromOfset > maxOffset || fromOfset > seq.tokenCount())
+	{
+	return false;
+	}
+	while (seq.offset() <= maxOffset && seq.moveNext() && seq.offset() <= maxOffset)
+	{
+	int tokenType = seq.token().id().ordinal();
+	if (!matchType(tokenType, FanGrammarHelper.INSIGNIFICANT_TOKENS))
+	{
+	return true;
+	}
+	}
+	return false;
 	}
 
 	public static boolean matchType(int type, int[] array)
 	{
-		for (int t : array)
-		{
-			//System.out.println("Matching type: "+t+" VS "+type);
-			if (t == type)
-			{
-				return true;
-			}
-		}
-		return false;
+	for (int t : array)
+	{
+	//System.out.println("Matching type: "+t+" VS "+type);
+	if (t == type)
+	{
+	return true;
+	}
+	}
+	return false;
 	}
 
 	public static int nextLineStartOffset(TokenSequence seq, int offset, int maxOffset)
 	{
-		//System.out.println(">nlso");
-		int of = getLineEndOffset(seq, offset, false);
-		if (of > -1)
-		{
-			of += 1;
-		}
-		//System.out.println("of: "+of);
-		return of;
+	//System.out.println(">nlso");
+	int of = getLineEndOffset(seq, offset, false);
+	if (of > -1)
+	{
+	of += 1;
+	}
+	//System.out.println("of: "+of);
+	return of;
 	}
 
 	public static int getPrevLineOffset(Document document, int startOfLine)
 	{
-		int result = -1;
-		TokenSequence seq = getFanTokenSequence(document);
-		seq.move(startOfLine);
-		while (seq.movePrevious())
-		{
-			FanUtilities.GENERIC_LOGGER.debug("seq3: " + seq.offset());
+	int result = -1;
+	TokenSequence seq = getFanTokenSequence(document);
+	seq.move(startOfLine);
+	while (seq.movePrevious())
+	{
+	FanUtilities.GENERIC_LOGGER.debug("seq3: " + seq.offset());
 
-			if (seq.token().id().ordinal() == FanLexer.LB)
-			{
-				break;
-			}
-		}
-		result = seq.offset();
-		return result;
+	if (seq.token().id().ordinal() == FanLexer.LB)
+	{
+	break;
+	}
+	}
+	result = seq.offset();
+	return result;
 	}
 
 	public static CommonTree findParentNodeWithin(final CommonTree theNode, int parentType, CommonTree within)
 	{
-		// don't want to mess with the original node.
-		CommonTree node = theNode;
-		if (node.getType() == parentType)
-		{
-			return node;
-		}
-		while (node != null && node != within)
-		{
-			//System.out.println(""+node.getType()+" VS "+parentType+" "+node.toStringTree());
-			if (node.getType() == parentType)
-			{
-				return node;
-			}
-			node = (CommonTree) node.getParent();
-		}
-		// not found
-		return null;
+	// don't want to mess with the original node.
+	CommonTree node = theNode;
+	if (node.getType() == parentType)
+	{
+	return node;
+	}
+	while (node != null && node != within)
+	{
+	//System.out.println(""+node.getType()+" VS "+parentType+" "+node.toStringTree());
+	if (node.getType() == parentType)
+	{
+	return node;
+	}
+	node = (CommonTree) node.getParent();
+	}
+	// not found
+	return null;
 	}
 
 	public static String getNodeContent(FanParserTask result, Tree node)
 	{
-		if (node == null)
-		{
-			return "";
-		}
-		OffsetRange range = getNodeRange(result, (CommonTree) node);
-		String text = "";
-		try
-		{
-			if (range != null)
-			{
-				text = result.getDocument().getText(range.getStart(), range.getLength());
-			}
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return text;
+	if (node == null)
+	{
+	return "";
+	}
+	OffsetRange range = getNodeRange(result, (CommonTree) node);
+	String text = "";
+	try
+	{
+	if (range != null)
+	{
+	text = result.getDocument().getText(range.getStart(), range.getLength());
+	}
+	} catch (Exception e)
+	{
+	e.printStackTrace();
+	}
+	return text;
 	}
 
 	public static List<CommonTree> getAllChildrenWithType(CommonTree node, int type)
 	{
-		return getAllChildrenWithType(node, type, false);
+	return getAllChildrenWithType(node, type, false);
 	}
 
 	public static CommonTree getFirstChildrenWithType(CommonTree node, int type)
 	{
-		List<CommonTree> children = getAllChildrenWithType(node, type, true);
-		return children.size() == 0 ? null : children.get(0);
+	List<CommonTree> children = getAllChildrenWithType(node, type, true);
+	return children.size() == 0 ? null : children.get(0);
 	}
 
 	private static List<CommonTree> getAllChildrenWithType(CommonTree node, int type, boolean returnFirst)
 	{
-		List<CommonTree> children = new ArrayList<CommonTree>();
-		for (CommonTree child : (List<CommonTree>) node.getChildren())
-		{
-			if (child.getType() == type)
-			{
-				children.add(child);
-				if (returnFirst)
-				{
-					return children;
-				}
-			}
-		}
-		return children;
+	List<CommonTree> children = new ArrayList<CommonTree>();
+	for (CommonTree child : (List<CommonTree>) node.getChildren())
+	{
+	if (child.getType() == type)
+	{
+	children.add(child);
+	if (returnFirst)
+	{
+	return children;
+	}
+	}
+	}
+	return children;
 	}
 
 	public static void dumpTree(CommonTree t, int indent)
 	{
-		if (t != null)
-		{
-			StringBuffer sb = new StringBuffer(indent);
-			for (int i = 0; i < indent; i++)
-			{
-				sb = sb.append("  ");
-			}
-			for (int i = 0; i < t.getChildCount(); i++)
-			{
-				FanUtilities.GENERIC_LOGGER.info(sb.toString() + t.getChild(i).toString());
-				dumpTree((CommonTree) t.getChild(i), indent + 1);
-			}
-		}
+	if (t != null)
+	{
+	StringBuffer sb = new StringBuffer(indent);
+	for (int i = 0; i < indent; i++)
+	{
+	sb = sb.append("  ");
+	}
+	for (int i = 0; i < t.getChildCount(); i++)
+	{
+	FanUtilities.GENERIC_LOGGER.info(sb.toString() + t.getChild(i).toString());
+	dumpTree((CommonTree) t.getChild(i), indent + 1);
+	}
+	}
 	}
 
 	public static boolean isParentNodeOf(CommonTree parent, CommonTree node)
 	{
-		if (node == null)
-		// we went back to the root and it did not match
-		{
-			return false;
-		}
-		if (node == parent)
-		// match
-		{
-			return true;
-		} else
-		// recurse to keep looking in uper levels
-		{
-			return isParentNodeOf(parent, (CommonTree) node.getParent());
-		}
+	if (node == null)
+	// we went back to the root and it did not match
+	{
+	return false;
+	}
+	if (node == parent)
+	// match
+	{
+	return true;
+	} else
+	// recurse to keep looking in uper levels
+	{
+	return isParentNodeOf(parent, (CommonTree) node.getParent());
+	}
 	}
 
 	public static String getChildTextByType(FanParserTask result, CommonTree node)
 	{
-		return getChildTextByType(result, node, -1);
+	return getChildTextByType(result, node, -1);
 	}
 
 	public static String getChildTextByType(FanParserTask result, CommonTree node, int itemIndex)
 	{
-		String text = "";
-		if (node != null)
-		{
-			if (itemIndex != -1 && itemIndex < node.getChildCount())
-			{
-				// return a specific child content (by index)
-				CommonTree node2 = (CommonTree) node.getChild(itemIndex);
-				if (node2 != null)
-				{
-					text = getNodeContent(result, node2);
-				}
-			} else
-			{
-				// return whole node content
-				text = getNodeContent(result, node);
-			}
-		}
-		if (text == null)
-		{
-			text = "";
-		}
-		return text;
+	String text = "";
+	if (node != null)
+	{
+	if (itemIndex != -1 && itemIndex < node.getChildCount())
+	{
+	// return a specific child content (by index)
+	CommonTree node2 = (CommonTree) node.getChild(itemIndex);
+	if (node2 != null)
+	{
+	text = getNodeContent(result, node2);
+	}
+	} else
+	{
+	// return whole node content
+	text = getNodeContent(result, node);
+	}
+	}
+	if (text == null)
+	{
+	text = "";
+	}
+	return text;
 	}
 
 	public static String getSubChildTextByType(FanParserTask result, CommonTree node, int astType)
 	{
-		return getSubChildTextByType(result, node, astType, -1);
+	return getSubChildTextByType(result, node, astType, -1);
 	}
 
 	public static String getSubChildTextByType(FanParserTask result, CommonTree node, int astType, int itemIndex)
 	{
-		String text = "";
-		if (node != null)
-		{
-			CommonTree node2 = (CommonTree) node.getFirstChildWithType(astType);
-			text = getChildTextByType(result, node2, itemIndex);
-		}
-		return text;
+	String text = "";
+	if (node != null)
+	{
+	CommonTree node2 = (CommonTree) node.getFirstChildWithType(astType);
+	text = getChildTextByType(result, node2, itemIndex);
+	}
+	return text;
 	}
 
 	public static int findLastTokenIndexByType(FanParserTask result, CommonTree node, int type)
 	{
-		int last = node.getTokenStopIndex();
-		return findPrevTokenByType(result, node, last, type);
+	int last = node.getTokenStopIndex();
+	return findPrevTokenByType(result, node, last, type);
 	}
 
 	public static int getTokenStart(CommonTree node)
 	{
-		int index = node.getTokenStartIndex();
-		if (node.getChildCount() > 0)
-		{
-			for (CommonTree child : (List<CommonTree>) node.getChildren())
-			{
-				int index2 = getTokenStart(child);
-				if (index2 != -1 && (index == -1 || index2 < index))
-				{
-					index = index2;
-				}
-			}
-		}
-		return index;
+	int index = node.getTokenStartIndex();
+	if (node.getChildCount() > 0)
+	{
+	for (CommonTree child : (List<CommonTree>) node.getChildren())
+	{
+	int index2 = getTokenStart(child);
+	if (index2 != -1 && (index == -1 || index2 < index))
+	{
+	index = index2;
+	}
+	}
+	}
+	return index;
 	}
 
 	public static int getTokenStop(CommonTree node)
 	{
-		int index = node.getTokenStopIndex();
-		if (node.getChildCount() > 0)
-		{
-			List<CommonTree> children = (List<CommonTree>) node.getChildren();
-			for (int i = children.size() - 1; i >= 0; i--)
-			{
-				CommonTree child = children.get(i);
-				int index2 = getTokenStop(child);
-				if (index2 != -1 && (index == -1 || index2 > index))
-				{
-					index = index2;
-				}
-			}
-		}
-		return index;
+	int index = node.getTokenStopIndex();
+	if (node.getChildCount() > 0)
+	{
+	List<CommonTree> children = (List<CommonTree>) node.getChildren();
+	for (int i = children.size() - 1; i >= 0; i--)
+	{
+	CommonTree child = children.get(i);
+	int index2 = getTokenStop(child);
+	if (index2 != -1 && (index == -1 || index2 > index))
+	{
+	index = index2;
+	}
+	}
+	}
+	return index;
 	}
 
 	public static String getTokenStreamSlice(CommonTokenStream tokenStream, int start, int stop)
 	{
-		List<CommonToken> tokens = (List<CommonToken>) tokenStream.getTokens(start, stop);
-		StringBuffer text = new StringBuffer();
-		for (CommonToken tk : tokens)
-		{
-			text.append(tk.getText());
-		}
-		return text.toString();
+	List<CommonToken> tokens = (List<CommonToken>) tokenStream.getTokens(start, stop);
+	StringBuffer text = new StringBuffer();
+	for (CommonToken tk : tokens)
+	{
+	text.append(tk.getText());
+	}
+	return text.toString();
 	}
 
 	public static int offsetToTokenIndex(FanParserTask pResult, int index)
 	{
-		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
-		int saved = ts.index();
-		ts.move(index);
-		ts.moveNext();
-		int result = ts.index();
-		// restore
-		ts.move(saved);
-		return result;
+	TokenSequence ts = getFanTokenSequence(pResult.getDocument());
+	int saved = ts.index();
+	ts.move(index);
+	ts.moveNext();
+	int result = ts.index();
+	// restore
+	ts.move(saved);
+	return result;
 	}
 
 	public static int tokenIndexToOffset(FanParserTask pResult, int index)
 	{
-		TokenSequence ts = getFanTokenSequence(pResult.getDocument());
-		int saved = ts.index();
-		ts.moveIndex(index);
-		ts.moveNext();
-		int result = ts.offset();
-		// restore
-		ts.move(saved);
-		return result;
+	TokenSequence ts = getFanTokenSequence(pResult.getDocument());
+	int saved = ts.index();
+	ts.moveIndex(index);
+	ts.moveNext();
+	int result = ts.offset();
+	// restore
+	ts.move(saved);
+	return result;
 	}
 
 	public static CommonTree findParentNode(CommonTree node, int AST_INC_DOTCALL)
 	{
-		return findParentNodeWithin(node, AST_INC_DOTCALL, getRootNode(node));
+	return findParentNodeWithin(node, AST_INC_DOTCALL, getRootNode(node));
 	}
 
 	public static CommonTree getRootNode(CommonTree node)
 	{
-		CommonTree result = null;
-		while (node != null)
-		{
-			result = node;
-			node = (CommonTree) node.getParent();
-		}
-		return result;
+	CommonTree result = null;
+	while (node != null)
+	{
+	result = node;
+	node = (CommonTree) node.getParent();
+	}
+	return result;
 	}
 
 	public static int findPrevTokenByType(FanParserTask result, CommonTree node, int startOffset, int type)
 	{
-		int first = node.getTokenStartIndex();
-		int last = node.getTokenStopIndex();
-		if (startOffset < last)
-		{
-			last = startOffset;
-		}
-		CommonTokenStream ts = null;//result.getTokenStream();
-		for (int i = last; i >= first; i--)
-		{
-			if (ts.get(i).getType() == type)
-			{
-				return i;
-			} else
-			{
-				//System.out.println("Skipping token:" + ts.get(i).getText());
-			}
-		}
-		return -1;
+	int first = node.getTokenStartIndex();
+	int last = node.getTokenStopIndex();
+	if (startOffset < last)
+	{
+	last = startOffset;
+	}
+	CommonTokenStream ts = null;//result.getTokenStream();
+	for (int i = last; i >= first; i--)
+	{
+	if (ts.get(i).getType() == type)
+	{
+	return i;
+	} else
+	{
+	//System.out.println("Skipping token:" + ts.get(i).getText());
+	}
+	}
+	return -1;
 	}
 	 */
 }

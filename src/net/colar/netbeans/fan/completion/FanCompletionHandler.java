@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import javax.swing.text.JTextComponent;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
@@ -20,8 +21,8 @@ import net.colar.netbeans.fan.indexer.FanJarsIndexer;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
+import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
-import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -31,7 +32,6 @@ import org.netbeans.modules.csl.api.ParameterInfo;
 import org.netbeans.modules.csl.spi.DefaultCompletionResult;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  * Code Completion
@@ -42,7 +42,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 	private static enum DocTypes
 	{
-
 		NA,
 		POD,
 		TYPE,
@@ -59,7 +58,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	public CodeCompletionResult complete(CodeCompletionContext context)
 	{
 		ArrayList<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
-		/*
+		
 		try
 		{
 			String prefix = context.getPrefix();
@@ -73,7 +72,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			preamble = cpl.getPreamble();
 			FanUtilities.GENERIC_LOGGER.debug("preamb: " + preamble);
 			FanParserTask result = (FanParserTask) context.getParserResult();
-			FanRootScope rootScope = null;//result.getRootScope();
+			AstNode rootScope = result.getRootScope();
 
 			switch (cpl.getCompletionType())
 			{
@@ -85,7 +84,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					break;
 				case ID:
 					proposeVars(proposals, context, prefix);
-					proposeDefinedTypes(proposals, anchor, prefix, rootScope);
 					docType = DocTypes.TYPE;
 					break;
 				case CALL:
@@ -101,7 +99,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				result.addError("Completion error", e);
 			}
 		}
-		 */
+		
 		DefaultCompletionResult completionResult = new DefaultCompletionResult(proposals, false);
 		return completionResult;
 	}
@@ -520,7 +518,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		/*FanParserTask result = (FanParserTask) context.getParserResult();
 		int index = FanLexAstUtils.offsetToTokenIndex(result, context.getCaretOffset());
 		CommonTree node = FanLexAstUtils.findASTNodeAt(result, index);
-		FanAstScope scope = null;//result.getRootScope().findClosestScope(node);
+		FanAstScope scope = n ull;//result.getRootScope().findClosestScope(node);
 		for (FanAstScopeVarBase var : scope.getScopeVarsRecursive())
 		{
 			if (var.getName().startsWith(prefix))

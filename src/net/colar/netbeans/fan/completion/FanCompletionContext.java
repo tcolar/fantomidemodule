@@ -7,6 +7,7 @@ import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
@@ -44,10 +45,8 @@ public class FanCompletionContext
 
 	public FanCompletionContext(CodeCompletionContext context)
 	{
-		/*this.context = context;
+		this.context = context;
 		result = (FanParserTask) context.getParserResult();
-
-		//result.dumpTree();
 
 		offset = context.getCaretOffset();
 		String prefix = context.getPrefix();
@@ -60,11 +59,13 @@ public class FanCompletionContext
 		isPrefixMatch = context.isPrefixMatch(); // ?
 		doc = result.getSnapshot().getSource().getDocument(true);
 		tokenStream = FanLexAstUtils.getFanTokenSequence(doc);
-		rootNode = null;//result.getTree();
-		curNode = FanLexAstUtils.findASTNodeAt(result, FanLexAstUtils.offsetToTokenIndex(result, offset));
+
+		AstNode rootNode = result.getAstTree();
+		int idx = offset==0?0:offset-1;
+		AstNode curNode = FanLexAstUtils.findASTNodeAt(rootNode, idx);
 
 		completionType = determineCompletionType();
-		FanUtilities.GENERIC_LOGGER.debug("Compl. type:" + completionType.toString());*/
+		FanUtilities.GENERIC_LOGGER.debug("Compl. type:" + completionType.toString());
 	}
 
 	/**
