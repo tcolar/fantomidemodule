@@ -516,10 +516,11 @@ public class FantomParser extends BaseParser<AstNode>
 				closure(),
 				dsl(), // DSL
 				// Optimized by grouping all the items that start with "type" (since looking for type if resource intensive)
-				sequence(type(), firstOf(
+				sequence(type(), ast.newNode(AstKind.AST_ID),
+				firstOf(
 					sequence(OP_POUND, optional(id())), // type/slot litteral
-					sequence(DOT, KW_SUPER), // named super
-					sequence(DOT, /*OPT_LF(),*/ idExpr()), // static call
+					sequence(sequence(DOT, KW_SUPER), ast.newNode(AstKind.AST_CALL)), // named super
+					sequence(sequence(DOT, idExpr()), ast.newNode(AstKind.AST_CALL)), // static call
 					sequence(PAR_L, expr(), PAR_R), // "simple"
 					itBlock() // ctor block
 				)));
@@ -551,34 +552,35 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		return sequence(OPT_LF(),
 				firstOf(safeDotCall(), safeDynCall(), dotCall(), dynCall(), indexExpr(),
-			callOp(), itBlock()/*, incDotCall()*/));
+			callOp(), itBlock(), incCall()));
 	}
 
 	public Rule dotCall()
 	{
 		// test not "..", as this would be a range
-		return enforcedSequence(sequence(DOT, testNot(DOT)), idExpr());
+		return sequence(enforcedSequence(sequence(DOT, testNot(DOT)), idExpr()), ast.newNode(AstKind.AST_CALL));
 	}
 
 	public Rule dynCall()
 	{
-		return enforcedSequence(OP_ARROW, idExpr());
+		return sequence(enforcedSequence(OP_ARROW, idExpr()), ast.newNode(AstKind.AST_CALL));
 	}
 
 	public Rule safeDotCall()
 	{
-		return enforcedSequence(OP_SAFE_CALL, idExpr());
+		return sequence(enforcedSequence(OP_SAFE_CALL, idExpr()),ast.newNode(AstKind.AST_CALL));
 	}
 
 	public Rule safeDynCall()
 	{
-		return enforcedSequence(OP_SAFE_DYN_CALL, idExpr());
+		return sequence(enforcedSequence(OP_SAFE_DYN_CALL, idExpr()), ast.newNode(AstKind.AST_CALL));
 	}
 
 	// incomplete dot call, make valid to allow for completion
-	public Rule incDotCall()
+	//TODO: this is not be shown as an error
+	public Rule incCall()
 	{
-		return DOT;
+		return sequence(firstOf(DOT, OP_SAFE_DYN_CALL), ast.newNode(AstKind.AST_INC_CALL));
 	}
 
 	public Rule idExpr()

@@ -400,7 +400,7 @@ public class FanResolvedType
 		if (baseType.getDbType().isJava())
 		{
 			// java slots
-			List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(baseType.getAsTypedType());
+			List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(baseType.getDbType().getQualifiedName());
 			boolean found = false;
 			// Returrning the first match .. because java has overloading this could be wrong
 			// However i assume overloaded methods return the same type (If it doesn't too bad, it's ugly coe anyway :) )
@@ -421,7 +421,7 @@ public class FanResolvedType
 		} else
 		{
 			// Fan slots
-			FanSlot slot = FanSlot.findByTypeAndName(baseType.getAsTypedType(), slotName);
+			FanSlot slot = FanSlot.findByTypeAndName(baseType.getDbType().getQualifiedName(), slotName);
 			if (slot != null)
 			{
 				baseType = fromTypeSig(baseType.scopeNode, slot.returnedType);

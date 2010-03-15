@@ -86,7 +86,8 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		if (node.getLabel().equalsIgnoreCase(TokenName.STRS.name()))
 		{
 			addStrHighlights(result, newHighlights, node);
-		} else if (node.getValue() != null)
+		}
+		else if (node.getValue() != null)
 		{
 			AstNode value = node.getValue();
 			switch (value.getKind())

@@ -230,67 +230,45 @@ public class FanParserTask extends ParserResult
 					break;
 			}
 		}
-
+		//TODO: should only do that within types, not root (or we mess with already done usings and fields etc...
 		// Now do all the local scopes / variables
-		parseVars(astRoot);
+		parseVars(astRoot, null);
 		FanLexAstUtils.dumpTree(astRoot, 0);
 	}
 
-	private void parseVars(AstNode node)
+	private void parseVars(AstNode node, FanResolvedType type)
 	{
 		if (node == null)
 		{
 			return;
 		}
 
-		FanResolvedType type = null;
 		String text = node.getNodeText(true);
 		List<AstNode> children = node.getChildren();
 		switch (node.getKind())
 		{
 			case AST_EXPR:
-				if (children.size() == 1)
+				for (AstNode child : children)
 				{
-					AstNode child = children.get(0);
-					parseVars(child);
+					parseVars(child, type);
 					type = child.getType();
-				} else
-				{
-					// This should not happen (once code complete)
-					System.err.println("Unexpected # of children in expression: " + children.size() + " -> " + text);
 				}
 				break;
+			case AST_CALL:
+				AstNode callChild = children.get(0);
+				String slotName = callChild.getNodeText(true);
+				if(slotName.startsWith("?.")) slotName=slotName.substring(2);
+				if(slotName.startsWith(".")) slotName=slotName.substring(1);
+				type = FanResolvedType.resolveSlotType(type, slotName);
+				break;
 			case AST_CAST:
-				for(AstNode child : children)
-					parseVars(child);
+				for (AstNode child : children)
+				{
+					parseVars(child, null);
+				}
 				AstNode castTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
 				type = castTypeNode.getType();
 				//TODO: check if cast is valid
-				break;
-			case AST_LOCAL_DEF:
-				AstNode typeAndIdNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
-				AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
-				AstNode exprNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));
-				if (typeAndIdNode != null)
-				{
-					idNode=FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_ID));
-					AstNode typeNode = FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_TYPE));
-					parseVars(typeNode);
-					type = typeNode.getType();
-				}
-				
-				String name = idNode.getNodeText(true);
-
-				if (exprNode != null)
-				{
-					parseVars(exprNode);
-					if(type==null) // Prefer the type in TypeNode if specified
-					{
-						type = exprNode.getType();
-						//TODO: check types are compatible
-					}
-				}
-				node.addScopeVar(new FanAstScopeVar(node, VarKind.LOCAL, name, type), false);
 				break;
 			case AST_LITTERAL_BASE:
 				Node<AstNode> parseNode = node.getParseNode().getChildren().get(0); // firstOf
@@ -302,11 +280,36 @@ public class FanParserTask extends ParserResult
 			case AST_TYPE:
 				type = FanResolvedType.fromTypeSig(node, text);
 				break;
+			case AST_LOCAL_DEF: // specila case, since it introduces scope vars
+				AstNode typeAndIdNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
+				AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
+				AstNode exprNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));
+				if (typeAndIdNode != null)
+				{
+					idNode = FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_ID));
+					AstNode typeNode = FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_TYPE));
+					parseVars(typeNode, null);
+					type = typeNode.getType();
+				}
+
+				String name = idNode.getNodeText(true);
+
+				if (exprNode != null)
+				{
+					parseVars(exprNode, null);
+					if (type == null) // Prefer the type in TypeNode if specified
+					{
+						type = exprNode.getType();
+						//TODO: check types are compatible
+					}
+				}
+				node.addScopeVar(new FanAstScopeVar(node, VarKind.LOCAL, name, type), false);
+				break;
 			default:
 				// recurse into children
 				for (AstNode child : node.getChildren())
 				{
-					parseVars(child);
+					parseVars(child, null);
 				}
 		}
 		node.setType(type);
@@ -333,8 +336,7 @@ public class FanParserTask extends ParserResult
 			if (lastChar == 'f' || lastChar == 'F')
 			{
 				type = FanResolvedType.fromTypeSig(astNode, "sys::Float");
-			}
-			else if (lastChar == 'd' || lastChar == 'D')
+			} else if (lastChar == 'd' || lastChar == 'D')
 			{
 				type = FanResolvedType.fromTypeSig(astNode, "sys::Decimal");
 			} else if (Character.isLetter(lastChar) && lastChar != '_')
