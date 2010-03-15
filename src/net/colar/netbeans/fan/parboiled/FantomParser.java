@@ -90,7 +90,7 @@ public class FantomParser extends BaseParser<AstNode>
 			sequence(optional(id()), // Not optional, but we want a valid ast for completion if missing
 			zeroOrMore(sequence(DOT, optional(id()))),// not enforced to allow completion
 			optional(sequence(SP_COLCOL, optional(id())))), ast.newNode(AstKind.AST_ID),// not enforced to allow completion
-			optional(sequence(KW_AS, optional(id()))),
+			optional(sequence(sequence(KW_AS, optional(id())), ast.newNode(AstKind.AST_USING_AS))),
 			eos()), ast.newNode(AstKind.AST_INC_USING), OPT_LF());
 	}
 

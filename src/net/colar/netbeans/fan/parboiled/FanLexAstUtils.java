@@ -250,8 +250,8 @@ public class FanLexAstUtils
 	public static AstNode findASTNodeAt(AstNode node, int offset)
 	{
 		if (node != null
-				&& offset >= node.getStartLocation().getIndex()
-				&& offset <= node.getEndLocation().getIndex())
+			&& offset >= node.getStartLocation().getIndex()
+			&& offset <= node.getEndLocation().getIndex())
 		{
 			for (AstNode child : node.getChildren())
 			{
@@ -263,6 +263,32 @@ public class FanLexAstUtils
 			}
 			return node;
 		}
+		return null;
+	}
+
+	public static AstNode findParentNode(final AstNode theNode, AstKind parentType)
+	{
+		return findParentNodeWithin(theNode, parentType, theNode.getRoot());
+	}
+	
+	public static AstNode findParentNodeWithin(final AstNode theNode, AstKind parentType, AstNode within)
+	{
+		// don't want to mess with the original node.
+		AstNode node = theNode;
+		if (node.getKind() == parentType)
+		{
+			return node;
+		}
+		while (node != null && node != within)
+		{
+			//System.out.println(""+node.getType()+" VS "+parentType+" "+node.toStringTree());
+			if (node.getKind() == parentType)
+			{
+				return node;
+			}
+			node = node.getParent();
+		}
+		// not found
 		return null;
 	}
 

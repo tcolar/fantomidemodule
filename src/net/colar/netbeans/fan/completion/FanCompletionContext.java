@@ -7,6 +7,7 @@ import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import org.netbeans.api.lexer.TokenSequence;
@@ -64,7 +65,7 @@ public class FanCompletionContext
 		int idx = offset==0?0:offset-1;
 		AstNode curNode = FanLexAstUtils.findASTNodeAt(rootNode, idx);
 
-		completionType = determineCompletionType();
+		completionType = determineCompletionType(curNode);
 		FanUtilities.GENERIC_LOGGER.debug("Compl. type:" + completionType.toString());
 	}
 
@@ -115,12 +116,9 @@ public class FanCompletionContext
 	 * - Propose protected slots only within "subtypes"
 	 *
 	 */
-	private completionTypes determineCompletionType()
+	private completionTypes determineCompletionType(AstNode node)
 	{
 		//result.dumpTree();
-		// We want the significant node before the cursor
-		/*FanLexAstUtils.moveToPrevNonWsToken(tokenStream, offset, 0);
-		CommonTree node = FanLexAstUtils.findASTNodeAt(result, tokenStream.index());
 		if (node==null)
 		{
 			FanUtilities.GENERIC_LOGGER.info("Node : Null !");
@@ -128,11 +126,11 @@ public class FanCompletionContext
 			return completionTypes.ROOT_LEVEL;
 		} else
 		{
-			FanUtilities.GENERIC_LOGGER.debug("Node : "+node.toStringTree());
-			CommonTree usingNode = FanLexAstUtils.findParentNode(node, FanParser.AST_USING_POD);
+			FanUtilities.GENERIC_LOGGER.debug("Node : "+node.toString());
+			AstNode usingNode = FanLexAstUtils.findParentNode(node, AstKind.AST_USING);
 			if (usingNode == null)
 			{
-				usingNode = FanLexAstUtils.findParentNode(node, FanParser.AST_INC_USING);
+				usingNode = FanLexAstUtils.findParentNode(node, AstKind.AST_INC_USING);
 			}
 			if (usingNode != null)
 			{
@@ -141,24 +139,24 @@ public class FanCompletionContext
 			}
 			// expression completion after a '.' or '?.'
 			//System.out.println("Node :" + node.toString() + " " + node.toStringTree());
-			CommonTree termExpr=FanLexAstUtils.findParentNode(node, FanParser.AST_TERM_EXPR);
+			AstNode termExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_EXPR);
 			if(termExpr!=null)
 			{
-				if(FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_STATIC_CALL, termExpr)!=null ||
+				/*if(FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_STATIC_CALL, termExpr)!=null ||
 					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_DOT_CALL, termExpr)!=null ||
 					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_INC_DOTCALL, termExpr)!=null||
 					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_INC_SAFEDOTCALL, termExpr)!=null||
-					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_SAFE_DOT_CALL, termExpr)!=null)
+					FanLexAstUtils.findParentNodeWithin(node, FanParser.AST_SAFE_DOT_CALL, termExpr)!=null)*/
 					return completionType.CALL;
 			}
 			// Default proposal for ID's (local vars etc..)
-			if(FanLexAstUtils.findParentNode(node, FanParser.AST_ID)!=null)
+			if(FanLexAstUtils.findParentNode(node, AstKind.AST_ID)!=null)
 			{
 				return completionType.ID;
 			}
 		}
 		// restore ts offset
-		//tokenStream.move(offset);*/
+		//tokenStream.move(offset);
 		return completionTypes.UNKNOWN;
 	}
 
