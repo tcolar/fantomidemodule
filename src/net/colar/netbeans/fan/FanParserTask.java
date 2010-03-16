@@ -230,9 +230,16 @@ public class FanParserTask extends ParserResult
 					break;
 			}
 		}
-		//TODO: should only do that within types, not root (or we mess with already done usings and fields etc...
 		// Now do all the local scopes / variables
-		parseVars(astRoot, null);
+		for (AstNode node : astRoot.getChildren())
+		{
+			switch (node.getKind())
+			{
+				case AST_TYPE_DEF:
+					parseVars(node, null);
+			}
+		}
+
 		FanLexAstUtils.dumpTree(astRoot, 0);
 	}
 
@@ -257,9 +264,16 @@ public class FanParserTask extends ParserResult
 			case AST_CALL:
 				AstNode callChild = children.get(0);
 				String slotName = callChild.getNodeText(true);
-				if(slotName.startsWith("?.")) slotName=slotName.substring(2);
-				if(slotName.startsWith(".")) slotName=slotName.substring(1);
+				if (slotName.startsWith("?."))
+				{
+					slotName = slotName.substring(2);
+				}
+				if (slotName.startsWith("."))
+				{
+					slotName = slotName.substring(1);
+				}
 				type = FanResolvedType.resolveSlotType(type, slotName);
+				//TODO: params
 				break;
 			case AST_CAST:
 				for (AstNode child : children)
@@ -355,14 +369,11 @@ public class FanParserTask extends ParserResult
 		} else if (lbl.equalsIgnoreCase(TokenName.URI.name()))
 		{
 			type = FanResolvedType.fromTypeSig(astNode, "sys::Uri");
-		} else if (lbl.equalsIgnoreCase(TokenName.KEYWORD.name()))
+		} else if (lbl.equals("true") || lbl.equals("false"))
 		{
-			if (txt.equals("false") || txt.equals("true"))
-			{
-				type = FanResolvedType.fromTypeSig(astNode, "sys::Bool");
-			}
-			//TODO: Deal with null, super, this, it
+			type = FanResolvedType.fromTypeSig(astNode, "sys::Bool");
 		}
+			//TODO: Deal with null, super, this, it
 		return type;
 	}
 
@@ -373,6 +384,8 @@ public class FanParserTask extends ParserResult
 		String ffi = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_USING_FFI));
 
 		String name = as != null ? as : type;
+		if(name.indexOf("::")>-1)
+			name=name.substring(name.indexOf("::")+2);
 
 		if (ffi != null && ffi.toLowerCase().equals("java"))
 		{
@@ -380,6 +393,7 @@ public class FanParserTask extends ParserResult
 			{
 				// Individual Item
 				String qname = type.replaceAll("::", "\\.");
+
 				if (FanType.findByQualifiedName(qname) == null)
 				{
 					addError("Unresolved Java Item: " + qname, usingNode);

@@ -62,8 +62,7 @@ public class FanCompletionContext
 		tokenStream = FanLexAstUtils.getFanTokenSequence(doc);
 
 		AstNode rootNode = result.getAstTree();
-		int idx = offset==0?0:offset-1;
-		AstNode curNode = FanLexAstUtils.findASTNodeAt(rootNode, idx);
+		AstNode curNode = FanLexAstUtils.findASTNodeAt(rootNode, offset);
 
 		completionType = determineCompletionType(curNode);
 		FanUtilities.GENERIC_LOGGER.debug("Compl. type:" + completionType.toString());

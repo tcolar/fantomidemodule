@@ -81,8 +81,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 			AstNode rootNode = result.getAstTree();
 			int offset = context.getCaretOffset();
-			int idx = offset == 0 ? 0 : offset - 1;
-			AstNode curNode = FanLexAstUtils.findASTNodeAt(rootNode, idx);
+			AstNode curNode = FanLexAstUtils.findASTNodeAt(rootNode, offset);
 
 			System.out.println("compl context: " + cpl.getCompletionType() + " preamb:" + preamble);
 
@@ -99,7 +98,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 					docType = DocTypes.TYPE;
 					break;
 				case CALL:
-					proposeCalls(proposals, context);
+					proposeCalls(proposals, context, curNode);
 					break;
 			}
 		} catch (Exception e)
@@ -154,16 +153,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 	public String findPod(FileObject file)
 	{
-		/*Set<FileObject> fos = GlobalPathRegistry.getDefault().getSourceRoots();
-		for (FileObject fo : fos)
-		{
-		// It will return the "fan" or "test" subfolder, so we want the parent.
-		if (FileUtil.isParentOf(fo, file))
-		{
-		return fo.getParent().getName();
-		}
-		}
-		return null;*/
 		return FanUtilities.getPodForPath(file.getPath());
 	}
 
@@ -290,7 +279,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		if (type.getDbType().isJava())
 		{
 			FanJarsIndexer indexer = FanIndexerFactory.getJavaIndexer();
-			List<Member> slots = indexer.findTypeSlots(type.getAsTypedType());
+			List<Member> slots = indexer.findTypeSlots(type.getDbType().getQualifiedName());
 			for (Member slot : slots)
 			{
 				if (slot.getName().toLowerCase().startsWith(prefix))
@@ -307,7 +296,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		} else
 		{
 			//TODO: get that from the scope ?
-			Vector<FanSlot> slots = FanSlot.getAllSlotsForType(type.getAsTypedType(), true);
+			Vector<FanSlot> slots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), true);
 			for (FanSlot slot : slots)
 			{
 				if (slot.getName().toLowerCase().startsWith(prefix))
@@ -385,9 +374,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	// TODO: setup nice icons(package/class etc..) in importproposals
 	private void proposeUsing(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, AstNode node)
 	{
-		if(node.getKind() == AstKind.AST_USING_AS)
+		if (node.getKind() == AstKind.AST_USING_AS)
+		{
 			return; // no completion after "as"
-
+		}
 		FanParserTask result = (FanParserTask) context.getParserResult();
 		Document doc = result.getSnapshot().getSource().getDocument(true);
 		AstNode curNode = FanLexAstUtils.findParentNode(node, AstKind.AST_USING);
@@ -414,7 +404,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		if (id.indexOf("::") != -1)
 		{
 			pod = id.substring(0, id.indexOf("::"));
-			id = id.substring(id.indexOf("::")+2);
+			id = id.substring(id.indexOf("::") + 2);
 		}
 
 		if (ffi != null)
@@ -452,48 +442,38 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	 * @param proposals
 	 * @param context
 	 */
-	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context)
+	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, AstNode node)
 	{
-		/*FanParserTask result = (FanParserTask) context.getParserResult();
+		AstNode expr = FanLexAstUtils.findParentNode(node, AstKind.AST_EXPR);
+		AstNode callNode = FanLexAstUtils.findParentNodeWithin(node, AstKind.AST_CALL, expr);
+		if (callNode == null)
+		{
+			callNode = FanLexAstUtils.findParentNodeWithin(node, AstKind.AST_INC_CALL, expr);
+		}
+		// find the type of the item on the LHS of the call.
+		FanResolvedType type = FanResolvedType.makeUnresolved(node);
+		for(AstNode child : expr.getChildren())
+		{
+			// If we foud the call node, stop here (keep the previosu node type)
+			if(child.getStartLocation().getIndex() == callNode.getStartLocation().getIndex())
+				break;
+			if(child.getType()!=null && child.getType().isResolved())
+				type = child.getType();
+		}
+		String txt = callNode.getNodeText(true);
+		System.out.println("Call text: " + txt+" type: "+type);
 		int offset = context.getCaretOffset();
-		// we want to look at offset -1 (ie: before the caret) so we are IN the expression, not just after.
-		if (offset > 0)
+		String prefix = txt;
+		int idx = prefix.indexOf(".");
+		if(idx>=0)
 		{
-		offset--;
+			prefix = prefix.substring(idx+1);
+			//offset += idx;
 		}
-		int tkIndex = FanLexAstUtils.offsetToTokenIndex(result, offset);
-		CommonTree curNode = FanLexAstUtils.findASTNodeAt(result, tkIndex);
-		FanUtilities.GENERIC_LOGGER.debug("Cur Node: " + curNode.toStringTree());
-		CommonTree exprNode = FanLexAstUtils.findParentNode(curNode, FanParser.AST_TERM_EXPR);
-		if (exprNode != null)
+		if (type!=null && type.isResolved())
 		{
-		FanUtilities.GENERIC_LOGGER.debug("Expr Node: " + exprNode.toStringTree());
-
-		int index = FanLexAstUtils.findPrevTokenByType(result, exprNode, offset, FanParser.DOT);
-		int index2 = FanLexAstUtils.findPrevTokenByType(result, exprNode, offset, FanParser.OP_SAFE_CALL);
-		index = index2 > index ? index2 : index;
-
-		String prefix = "";
-		if (exprNode.getTokenStopIndex() > index)
-		{
-		prefix = null;//result.getTokenStream().get(index + 1).getText();
+			proposeSlots(type, proposals, offset, prefix);
 		}
-		FanUtilities.GENERIC_LOGGER.debug("Prefix: " + prefix);
-		// we want to stop just before the Call token
-		index--;
-		if (index < 0)
-		{
-		// should not happen ?
-		FanUtilities.GENERIC_LOGGER.info("Call separator not found !");
-		return;
-		}
-		FanResolvedType type = FanResolvedType.makeFromExpr(result, null, index); // FIXME null
-		FanUtilities.GENERIC_LOGGER.debug("Type: " + type.toString());
-		if (type.isResolved())
-		{
-		proposeSlots(type, proposals, offset + 1, prefix);
-		}
-		}*/
 	}
 
 	private void proposeVars(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, String prefix, AstNode node)
