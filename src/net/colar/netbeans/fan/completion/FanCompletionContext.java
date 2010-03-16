@@ -125,6 +125,9 @@ public class FanCompletionContext
 			return completionTypes.ROOT_LEVEL;
 		} else
 		{
+			if(FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF) == null)
+				return completionTypes.ROOT_LEVEL;
+
 			FanUtilities.GENERIC_LOGGER.debug("Node : "+node.toString());
 			AstNode usingNode = FanLexAstUtils.findParentNode(node, AstKind.AST_USING);
 			if (usingNode == null)
@@ -136,6 +139,16 @@ public class FanCompletionContext
 				//System.out.println("usingNode :" + usingNode.toString() + " " + usingNode.toStringTree());
 				return completionTypes.IMPORT_POD;
 			}
+			// Default proposal for ID's (local vars etc..)
+			if(FanLexAstUtils.findParentNode(node, AstKind.AST_ID)!=null)
+			{
+				return completionType.ID;
+			}
+			// Type and ID are the "same"
+			if(FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE)!=null)
+			{
+				return completionType.ID;
+			}
 			// expression completion after a '.' or '?.'
 			//System.out.println("Node :" + node.toString() + " " + node.toStringTree());
 			AstNode callExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_CALL);
@@ -145,14 +158,7 @@ public class FanCompletionContext
 			{
 					return completionType.CALL;
 			}
-			// Default proposal for ID's (local vars etc..)
-			if(FanLexAstUtils.findParentNode(node, AstKind.AST_ID)!=null)
-			{
-				return completionType.ID;
-			}
 		}
-		if(FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF) == null)
-			return completionTypes.ROOT_LEVEL;
 		// restore ts offset
 		//tokenStream.move(offset);
 		return completionTypes.UNKNOWN;

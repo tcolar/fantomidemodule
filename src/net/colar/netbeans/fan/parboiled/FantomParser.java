@@ -282,7 +282,11 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule args()
 	{
-		return sequence(expr(), zeroOrMore(sequence(OPT_LF(), enforcedSequence(SP_COMMA, OPT_LF(), expr()))), OPT_LF());
+		return sequence(expr(), ast.newNode(AstKind.AST_ARG),
+			zeroOrMore(
+				sequence(OPT_LF(),
+				enforcedSequence(SP_COMMA, OPT_LF(), expr(), ast.newNode(AstKind.AST_ARG)))),
+			OPT_LF());
 	}
 
 	// ------------ Statements -------------------------------------------------

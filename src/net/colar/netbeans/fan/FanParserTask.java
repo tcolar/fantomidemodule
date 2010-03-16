@@ -273,7 +273,19 @@ public class FanParserTask extends ParserResult
 					slotName = slotName.substring(1);
 				}
 				type = FanResolvedType.resolveSlotType(type, slotName);
-				//TODO: params
+
+				List<AstNode> args = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ARG));
+				for(AstNode arg : args)
+				{
+					parseVars(arg, null);
+				}
+				//TODO: Check that param types matches slot declaration
+				break;
+			case AST_ARG:
+				// arg contains one expression - parse it to check for errors
+				AstNode argExprNode = node.getChildren().get(0);
+				parseVars(argExprNode, null);
+				type = argExprNode.getType();
 				break;
 			case AST_CAST:
 				for (AstNode child : children)
