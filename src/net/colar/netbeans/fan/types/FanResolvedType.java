@@ -397,6 +397,8 @@ public class FanResolvedType
 
 	public static FanResolvedType resolveSlotType(FanResolvedType baseType, String slotName)
 	{
+		if(baseType==null || !baseType.isResolved())
+			return FanResolvedType.makeUnresolved(null);
 		if (baseType.getDbType().isJava())
 		{
 			// java slots
