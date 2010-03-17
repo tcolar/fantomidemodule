@@ -243,14 +243,18 @@ public class FanType extends JOTModel
 
 	public static FanType findByQualifiedName(String qName)
 	{
+		//System.out.println(">find by fqdn: "+qName);
 		try
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, qName);
-			return (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOne();
+			FanType type = (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOne();
+			//System.out.println("< find by fqdn: "+qName);
+			return type;
 		} catch (Exception e)
 		{
 			JOTLogger.logException(FanType.class, "hasPodType error", e);
 		}
+		//System.out.println("< find by fqdn : NULL: "+qName);
 		return null;
 	}
 

@@ -24,7 +24,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 
 	String qName = "";
 	List<FanResolvedType> inheritedItems = new ArrayList<FanResolvedType>();
-	// To make it faster to lokup vars
+	// To make it faster to lookup vars
 	Hashtable<String, FanSlot> inheritedSlots = new Hashtable<String, FanSlot>();
 
 	public FanTypeScopeVar(AstNode typeDefNode, String name)
@@ -206,4 +206,11 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	{
 		return inheritedSlots;
 	}
+
+	public String getQName()
+	{
+		return qName;
+	}
+
+	
 }

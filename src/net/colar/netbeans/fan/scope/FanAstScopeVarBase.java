@@ -27,9 +27,19 @@ public abstract class FanAstScopeVarBase
 		IMPORT(1),
 		TYPE_CLASS(11), TYPE_MIXIN(12), TYPE_ENUM(13), TYPE_FACET(14), // fantom types
 		TYPE_JAVA_CLASS(21), TYPE_JAVA_INTERFACE(22), TYPE_JAVA_ENUM(23), TYPE_JAVA_ANNOTATION(24), // fantom types
-		FIELD(31), METHOD(32), //slots
+		FIELD(31), METHOD(32), CTOR(33), //slots
 		LOCAL(41), //local def
-		IMPLIED(51); // this, it etc...}
+		IMPLIED(51), INHERITED(55); // this, it etc...}
+
+		public static VarKind makeFromVal(int val)
+		{
+			for(VarKind vk : values())
+			{
+				if(vk.value() == val)
+					return vk;
+			}
+			throw new RuntimeException("Invalid Value for Varkind: "+val);
+		}
 		
 		private int val;
 
@@ -194,4 +204,11 @@ public abstract class FanAstScopeVarBase
 				}
 			}
 	}
+
+	public VarKind getKind()
+	{
+		return kind;
+	}
+
+	
 }

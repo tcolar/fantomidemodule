@@ -20,6 +20,7 @@ import fanx.fcode.FType;
 import fanx.fcode.FTypeRef;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -29,16 +30,22 @@ import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.NBFanParser;
 //import net.colar.netbeans.fan.ast.FanAstField;
 //import net.colar.netbeans.fan.ast.FanAstMethod;
+import net.colar.netbeans.fan.indexer.model.FanDocUsing;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 //import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.indexer.model.FanMethodParam;
-import net.colar.netbeans.fan.indexer.model.FanModelConstants;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
+import net.colar.netbeans.fan.parboiled.AstNode;
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.platform.FanPlatform;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
+import net.colar.netbeans.fan.scope.FanMethodScopeVar;
+import net.colar.netbeans.fan.scope.FanTypeScopeVar;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.builders.JOTQueryBuilder;
@@ -166,13 +173,16 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		if (platform.isConfigured())
 		{
 			// Don't do Fantom distro sources since we have binaries (faster)
-			log.info(platform.getFanHome()+" VS "+path);
+			log.info(platform.getFanHome() + " VS " + path);
 			if (FileUtil.isParentOf(platform.getFanHome(), FileUtil.toFileObject(new File(path))))
 			{
-				log.info("Skipping: "+path);
+				log.info("Skipping: " + path);
 				return;
 			}
-		}else{log.info("Platform not ready to index: "+path);}
+		} else
+		{
+			log.info("Platform not ready to index: " + path);
+		}
 
 		long then = new Date().getTime();
 		log.info("Indexing requested for: " + path);
@@ -206,7 +216,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		log.debug("Indexing parsed result for : " + path);
 
 		FanParserTask fanResult = (FanParserTask) parserResult;
-		//indexSrcDoc(path, fanResult.getRootScope()); // FIXME
+		indexSrcDoc(path, fanResult.getRootScope());
 	}
 
 	/**
@@ -215,7 +225,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	 * @param indexable
 	 * @param rootScope
 	 */
-	/*private void indexSrcDoc(String path, FanRootScope rootScope)
+	private void indexSrcDoc(String path, AstNode rootScope)
 	{
 		FanDocument doc = null;
 		try
@@ -233,46 +243,47 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				Vector<FanDocUsing> usings = FanDocUsing.findAllForDoc(null, doc.getId());
 				Vector<FanType> types = FanType.findAllForDoc(null, doc.getId());
 
+				Collection<FanAstScopeVarBase> vars = rootScope.getLocalScopeVars().values();
 				Vector<String> addedUsings = new Vector();
-				for (FanResolvedType type : rootScope.getUsing().values())
+				for (FanAstScopeVarBase var : vars)
 				{
-					String sig = type.getAsTypedType();
-					int foundIdx = -1;
-					for (int i = 0; i != usings.size(); i++)
+					if (var.getKind() == FanAstScopeVarBase.VarKind.IMPORT)
 					{
-						FanDocUsing using = usings.get(i);
-						if (using.getType().equals(sig))
+						FanResolvedType type = var.getType();
+						String sig = type.getAsTypedType();
+						int foundIdx = -1;
+						for (int i = 0; i != usings.size(); i++)
 						{
-							foundIdx = i;
-							break;
+							FanDocUsing using = usings.get(i);
+							if (using.getType().equals(sig))
+							{
+								foundIdx = i;
+								break;
+							}
+						}
+						if (foundIdx != -1)
+						{
+							// already in there, leave it alone
+							usings.remove(foundIdx);
+						} else
+						{
+							// there can be duplicates because of the way rootscope usings works
+							if (!addedUsings.contains(sig))
+							{
+								addedUsings.add(sig);
+								// new one, creating it
+								FanDocUsing using = new FanDocUsing();
+								using.setDocumentId(doc.getId());
+								using.setType(sig);
+								using.save();
+							}
 						}
 					}
-					if (foundIdx != -1)
-					{
-						// already in there, leave it alone
-						usings.remove(foundIdx);
-					} else
-					{
-						// there can be duplicates because of the way rootscope usings works
-						if (!addedUsings.contains(sig))
-						{
-							addedUsings.add(sig);
-							// new one, creating it
-							FanDocUsing using = new FanDocUsing();
-							using.setDocumentId(doc.getId());
-							using.setType(sig);
-							using.save();
-						}
-					}
-				}
 
-				// types
-				for (FanAstScope child : rootScope.getChildren())
-				{
-					// should be but check anyway in case of future change
-					if (child instanceof FanTypeScope)
+					// types
+					if (var instanceof FanTypeScopeVar)
 					{
-						FanTypeScope typeScope = (FanTypeScope) child;
+						FanTypeScopeVar typeScope = (FanTypeScopeVar) var;
 						JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, typeScope.getQName());
 						FanType dbType = (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOrCreateOne();
 						if (!dbType.isNew())
@@ -294,7 +305,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						dbType.setIsFinal(typeScope.hasModifier(FanAstScopeVarBase.ModifEnum.FINAL));
 						dbType.setQualifiedName(typeScope.getQName());
 						dbType.setSimpleName(typeScope.getName());
-						dbType.setPod(typeScope.getPod());
+						dbType.setPod(rootScope.getRoot().getPod());
 						dbType.setProtection(typeScope.getProtection());
 						dbType.setIsFromSource(true);
 
@@ -336,100 +347,85 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						// Slots
 						// Try to reuse existing db entries.
 						Vector<FanSlot> currentSlots = FanSlot.findAllForType(dbType.getId());
-						for (FanAstScopeVarBase slot : typeScope.getScopeVars())
+						Collection<FanAstScopeVarBase> localVars = FanLexAstUtils.getScopeNode(typeScope.getNode()).getLocalScopeVars().values();
+						for (FanAstScopeVarBase slot : localVars)
 						{
-							// determine kind of slot
-							FanModelConstants.SlotKind kind = FanModelConstants.SlotKind.FIELD;
-							if (slot instanceof FanMethodScopeVar)
+							if (slot.getKind() == VarKind.CTOR || slot.getKind() == VarKind.FIELD || slot.getKind() == VarKind.METHOD)
 							{
-								if (((FanMethodScopeVar) slot).isCtor())
+								JOTSQLCondition cond2 = new JOTSQLCondition("typeId", JOTSQLCondition.IS_EQUAL, dbType.getId());
+								JOTSQLCondition cond3 = new JOTSQLCondition("name", JOTSQLCondition.IS_EQUAL, slot.getName());
+								FanSlot dbSlot = (FanSlot) JOTQueryBuilder.selectQuery(null, FanSlot.class).where(cond2).where(cond3).findOrCreateOne();
+								if (!dbSlot.isNew())
 								{
-									kind = FanModelConstants.SlotKind.CTOR;
-								} else
-								{
-									kind = FanModelConstants.SlotKind.METHOD;
-								}
-							} else if (slot instanceof FanFieldScopeVar)
-							{
-								kind = FanModelConstants.SlotKind.FIELD;
-							} else
-							{
-								throw new RuntimeException("Unexpected Slot kind: " + slot.getClass().getName());
-							}
-
-							JOTSQLCondition cond2 = new JOTSQLCondition("typeId", JOTSQLCondition.IS_EQUAL, dbType.getId());
-							JOTSQLCondition cond3 = new JOTSQLCondition("name", JOTSQLCondition.IS_EQUAL, slot.getName());
-							FanSlot dbSlot = (FanSlot) JOTQueryBuilder.selectQuery(null, FanSlot.class).where(cond2).where(cond3).findOrCreateOne();
-							if (!dbSlot.isNew())
-							{
-								for (int i = 0; i != currentSlots.size(); i++)
-								{
-									FanSlot s = currentSlots.get(i);
-									if (s.getId() == dbSlot.getId())
+									for (int i = 0; i != currentSlots.size(); i++)
 									{
-										currentSlots.remove(i);
-										break;
-									}
-								}
-							}
-							dbSlot.setTypeId(dbType.getId());
-							dbSlot.setSlotKind(kind.value());
-							FanResolvedType slotType = slot.getType();
-							dbSlot.setReturnedType(slotType.toTypeSig(true));
-							dbSlot.setName(slot.getName());
-							dbSlot.setIsAbstract(slot.hasModifier(ModifEnum.ABSTRACT));
-							dbSlot.setIsNative(slot.hasModifier(ModifEnum.NATIVE));
-							dbSlot.setIsOverride(slot.hasModifier(ModifEnum.OVERRIDE));
-							dbSlot.setIsStatic(slot.hasModifier(ModifEnum.STATIC));
-							dbSlot.setIsVirtual(slot.hasModifier(ModifEnum.VIRTUAL));
-							dbSlot.setIsConst(slot.hasModifier(ModifEnum.CONST));
-							dbSlot.setProtection(slot.getProtection());
-							dbSlot.setIsNullable(slotType.isNullable());
-
-							dbSlot.save();
-
-							// deal with parameters of method/ctor
-							if (slot instanceof FanMethodScopeVar)
-							{
-								FanMethodScopeVar method = (FanMethodScopeVar) slot;
-								Hashtable<String, FanResolvedType> parameters = method.getParameters();
-
-								// Try to reuse existing db entries.
-								Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
-								for (String paramName : parameters.keySet())
-								{
-									FanResolvedType paramResult = parameters.get(paramName);
-									JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
-									FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).findOrCreateOne();
-									if (!dbParam.isNew())
-									{
-										for (int i = 0; i != currentParams.size(); i++)
+										FanSlot s = currentSlots.get(i);
+										if (s.getId() == dbSlot.getId())
 										{
-											FanMethodParam p = currentParams.get(i);
-											if (p.getId() == dbParam.getId())
-											{
-												currentParams.remove(i);
-												break;
-											}
+											currentSlots.remove(i);
+											break;
 										}
 									}
-									dbParam.setSlotId(dbSlot.getId());
-									dbParam.setName(paramName);
-									String pType = UNRESOLVED_TYPE; // can that happen ?
-									if (paramResult.isResolved())
-									{
-										pType = paramResult.getDbType().getQualifiedName();
-									}
-									dbParam.setQualifiedType(pType);
-									dbParam.setIsNullable(paramResult.isNullable());
-									//dbParam.setHasDefault();
-									dbParam.save();
+								}
+								dbSlot.setTypeId(dbType.getId());
+								dbSlot.setSlotKind(slot.getKind().value());
+								FanResolvedType slotType = slot.getType();
+								dbSlot.setReturnedType(slotType.toTypeSig(true));
+								dbSlot.setName(slot.getName());
+								dbSlot.setIsAbstract(slot.hasModifier(ModifEnum.ABSTRACT));
+								dbSlot.setIsNative(slot.hasModifier(ModifEnum.NATIVE));
+								dbSlot.setIsOverride(slot.hasModifier(ModifEnum.OVERRIDE));
+								dbSlot.setIsStatic(slot.hasModifier(ModifEnum.STATIC));
+								dbSlot.setIsVirtual(slot.hasModifier(ModifEnum.VIRTUAL));
+								dbSlot.setIsConst(slot.hasModifier(ModifEnum.CONST));
+								dbSlot.setProtection(slot.getProtection());
+								dbSlot.setIsNullable(slotType.isNullable());
 
-								} // end param loop
-								// Whatever param wasn't removed from the vector is not needed anymore.
-								for (FanMethodParam param : currentParams)
+								dbSlot.save();
+
+								// deal with parameters of method/ctor
+								if (slot instanceof FanMethodScopeVar)
 								{
-									param.delete();
+									FanMethodScopeVar method = (FanMethodScopeVar) slot;
+									Hashtable<String, FanResolvedType> parameters = method.getParameters();
+
+									// Try to reuse existing db entries.
+									Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
+									for (String paramName : parameters.keySet())
+									{
+										FanResolvedType paramResult = parameters.get(paramName);
+										JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
+										FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).findOrCreateOne();
+										if (!dbParam.isNew())
+										{
+											for (int i = 0; i != currentParams.size(); i++)
+											{
+												FanMethodParam p = currentParams.get(i);
+												if (p.getId() == dbParam.getId())
+												{
+													currentParams.remove(i);
+													break;
+												}
+											}
+										}
+										dbParam.setSlotId(dbSlot.getId());
+										dbParam.setName(paramName);
+										String pType = UNRESOLVED_TYPE; // can that happen ?
+										if (paramResult.isResolved())
+										{
+											pType = paramResult.getDbType().getQualifiedName();
+										}
+										dbParam.setQualifiedType(pType);
+										dbParam.setIsNullable(paramResult.isNullable());
+										//dbParam.setHasDefault();
+										dbParam.save();
+
+									} // end param loop
+									// Whatever param wasn't removed from the vector is not needed anymore.
+									for (FanMethodParam param : currentParams)
+									{
+										param.delete();
+									}
 								}
 							}
 						} // end slot loop
@@ -439,8 +435,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							s.delete();
 						}
 
+
 					}
-				} // end type loop
+				} // end type if
+
 
 				// all went well, set the tstamp - mark as good
 				doc.setTstamp(new Date().getTime());
@@ -474,7 +472,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				log.exception("Indexing 'rollback' failed for: " + path, e);
 			}
 		}
-	}*/
+	}
 
 	public static boolean checkIfNeedsReindexing(String path, long tstamp)
 	{
@@ -560,7 +558,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				doc.setTstamp(0L);
 				doc.setIsSource(false);
 				doc.save();
-				
+
 				Vector<FanType> types = FanType.findAllForDoc(null, doc.getId());
 				for (FType type : fpod.types)
 				{
@@ -633,21 +631,20 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					for (FSlot slot : slots)
 					{
 						// determine kind of slot
-						FanModelConstants.SlotKind kind = FanModelConstants.SlotKind.FIELD;
+						VarKind kind = VarKind.FIELD;
 						FTypeRef retType = null;
 						if (slot instanceof FField)
 						{
-							kind = FanModelConstants.SlotKind.FIELD;
 							retType = type.pod.typeRef(((FField) slot).type);
 						} else if (slot instanceof FMethod)
 						{
 							retType = type.pod.typeRef(((FMethod) slot).ret);
 							if (hasFlag(slot.flags, FConst.Ctor))
 							{
-								kind = FanModelConstants.SlotKind.CTOR;
+								kind = VarKind.CTOR;
 							} else
 							{
-								kind = FanModelConstants.SlotKind.METHOD;
+								kind = VarKind.METHOD;
 							}
 						} else
 						{
@@ -874,7 +871,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			}
 			if (pod != null)
 			{
-				return fanDocToHtml((String)pod.meta().get("pod.summary"));
+				return fanDocToHtml((String) pod.meta().get("pod.summary"));
 			}
 		}
 		return null;
@@ -1018,7 +1015,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public void fileAttributeChanged(FileAttributeEvent fae)
 	{
-		int bkpt=0;
+		int bkpt = 0;
 		// don't care
 	}
 
@@ -1143,6 +1140,5 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			jarsIndexer.indexJars(bg);
 			done = true;
 		}
-
 	}
 }

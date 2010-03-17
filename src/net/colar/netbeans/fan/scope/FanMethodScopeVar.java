@@ -25,7 +25,8 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 	{
 		// Same as a field basically.
 		super(node, name);
-
+		this.kind = isCtor?VarKind.CTOR:VarKind.METHOD;
+		
 		this.isCtor = isCtor;
 
 		AstNode block = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));

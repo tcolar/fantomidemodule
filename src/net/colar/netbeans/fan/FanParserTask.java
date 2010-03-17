@@ -240,7 +240,7 @@ public class FanParserTask extends ParserResult
 			}
 		}
 
-		FanLexAstUtils.dumpTree(astRoot, 0);
+		//FanLexAstUtils.dumpTree(astRoot, 0);
 	}
 
 	private void parseVars(AstNode node, FanResolvedType type)

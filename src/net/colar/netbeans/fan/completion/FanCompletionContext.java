@@ -125,9 +125,6 @@ public class FanCompletionContext
 			return completionTypes.ROOT_LEVEL;
 		} else
 		{
-			if(FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF) == null)
-				return completionTypes.ROOT_LEVEL;
-
 			FanUtilities.GENERIC_LOGGER.debug("Node : "+node.toString());
 			AstNode usingNode = FanLexAstUtils.findParentNode(node, AstKind.AST_USING);
 			if (usingNode == null)
@@ -139,12 +136,16 @@ public class FanCompletionContext
 				//System.out.println("usingNode :" + usingNode.toString() + " " + usingNode.toStringTree());
 				return completionTypes.IMPORT_POD;
 			}
+			// If not in "using" but not in a type either, propose root types only
+			if(FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF) == null)
+				return completionTypes.ROOT_LEVEL;
+
 			// Default proposal for ID's (local vars etc..)
 			if(FanLexAstUtils.findParentNode(node, AstKind.AST_ID)!=null)
 			{
 				return completionType.ID;
 			}
-			// Type and ID are the "same"
+			// Type and ID are same
 			if(FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE)!=null)
 			{
 				return completionType.ID;

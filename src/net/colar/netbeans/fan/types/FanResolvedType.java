@@ -662,6 +662,7 @@ public class FanResolvedType
 
 	public static FanResolvedType makeFromLocalType(AstNode scopeNode, String enteredType)
 	{
+		//System.out.println("Make from local type: "+enteredType);
 		FanType type = null;
 		if (enteredType.indexOf("::") != -1)
 		{	// Qualified type

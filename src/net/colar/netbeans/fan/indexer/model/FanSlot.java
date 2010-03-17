@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.indexer.model;
 import java.util.Vector;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.indexer.FanIndexer;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
 import net.jot.persistance.JOTSQLCondition;
@@ -211,17 +212,17 @@ public class FanSlot extends JOTModel
 
 	public boolean isCtor()
 	{
-		return slotKind == FanModelConstants.SlotKind.CTOR.value();
+		return slotKind == VarKind.CTOR.value();
 	}
 
 	public boolean isMethod()
 	{
-		return slotKind == FanModelConstants.SlotKind.METHOD.value();
+		return slotKind == VarKind.METHOD.value();
 	}
 
 	public boolean isField()
 	{
-		return slotKind == FanModelConstants.SlotKind.FIELD.value();
+		return slotKind == VarKind.FIELD.value();
 	}
 
 	public boolean isPrivate()

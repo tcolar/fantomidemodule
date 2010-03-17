@@ -10,14 +10,14 @@ package net.colar.netbeans.fan.indexer.model;
  */
 public class FanModelConstants
 {
-	public enum SlotKind
+	/*public enum SlotKind
 	{
 		FIELD(1), METHOD(10), CTOR(20);
 
 		final int val;
 		private SlotKind(int i) {val=i;}
 		public int value() {return val;}
-	}
+	}*/
 
 	/*public enum FfiKind
 	{

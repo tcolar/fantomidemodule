@@ -6,9 +6,13 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Vector;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
+import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
+import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.parboiled.Node;
 import org.parboiled.support.InputBuffer;
@@ -48,7 +52,7 @@ public class AstNode
 		this.parsePath = path;
 		this.text = nodeText;
 		// start unresolved, but ParserTask will fill it in.
-		this.type=FanResolvedType.makeUnresolved(this);
+		this.type = FanResolvedType.makeUnresolved(this);
 	}
 
 	@Override
@@ -70,8 +74,8 @@ public class AstNode
 			}
 			scope += "}";
 		}
-		String t = (type==null || !type.isResolved())?"":type.getShortAsTypedType();
-		return kind + "("+t+")[" + parsePath + "] : '" + txt + "'" + scope;
+		String t = (type == null || !type.isResolved()) ? "" : type.getShortAsTypedType();
+		return kind + "(" + t + ")[" + parsePath + "] : '" + txt + "'" + scope;
 	}
 
 	public String getParsePath()
@@ -173,21 +177,24 @@ public class AstNode
 					{
 						vars.put(var.getName(), var);
 					}
+					if (var instanceof FanTypeScopeVar)
+					{
+						// Add inherited slots
+						FanTypeScopeVar typeVar = (FanTypeScopeVar) var;
+						Hashtable<String, FanSlot> slots = typeVar.getInheritedSlots();
+						//List<FanResolvedType> inhItems = typeVar.getInheritedItems();
+						for (FanSlot slot : slots.values())
+						{
+							if (!vars.containsKey(slot.getName()))
+							{
+								FanResolvedType varType = FanResolvedType.makeFromDbType(scope, slot.getReturnedType());
+								VarKind varKind = VarKind.makeFromVal(slot.getSlotKind());
+								FanAstScopeVarBase newVar = new FanAstScopeVar(scope, varKind, slot.getName(), varType);
+								vars.put(slot.getName(), newVar);
+							}
+						}
+					}
 				}
-				// TODO: add inherited slots
-			/*if (scope instanceof FanTypeScope)
-				{
-				Hashtable<String, FanSlot> inhSlots = ((FanTypeScope) scope).getInheritedSlots();
-				for (FanSlot slot : inhSlots.values())
-				{
-				if (!vars.containsKey(slot.getName()))
-				{
-				FanResolvedType type = FanResolvedType.fromTypeSig(slot.getReturnedType());
-				FanAstScopeVarBase var= null; //new FanAstScopeVar(scope, astNode, slot.getName(), type);
-				vars.put(slot.getName(), var);
-				}
-				}
-				}*/
 			}
 			scope = scope.getParent();
 		}
@@ -219,7 +226,7 @@ public class AstNode
 		{
 			return;
 		}
-		if ( !allowDuplicates && scopeNode.getLocalScopeVars().containsKey(var.getName()))
+		if (!allowDuplicates && scopeNode.getLocalScopeVars().containsKey(var.getName()))
 		{
 			getRoot().getParserTask().addError("Duplicated variable in scope: " + var.getName(), this);
 		}
@@ -253,7 +260,7 @@ public class AstNode
 
 	public void setType(FanResolvedType type)
 	{
-		this.type=type;
+		this.type = type;
 	}
 
 	public FanResolvedType getType()

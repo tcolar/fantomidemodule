@@ -25,6 +25,7 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 	public FanFieldScopeVar(AstNode fieldNode, String name)
 	{
 		super(fieldNode, name);
+		this.kind = VarKind.FIELD;
 		if (node.getKind() == AstKind.AST_CTOR_DEF)
 		{
 			type = FanResolvedType.makeFromLocalType(fieldNode, FanResolvedType.resolveThisType(node));
