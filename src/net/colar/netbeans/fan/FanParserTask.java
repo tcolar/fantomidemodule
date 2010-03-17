@@ -240,9 +240,11 @@ public class FanParserTask extends ParserResult
 			}
 		}
 
-		//FanLexAstUtils.dumpTree(astRoot, 0);
+		FanLexAstUtils.dumpTree(astRoot, 0);
 	}
 
+	//TODO: don't show the whole stack of errors, but just the base.
+	// esp. for expressions, calls etc...
 	private void parseVars(AstNode node, FanResolvedType type)
 	{
 		if (node == null)
@@ -254,6 +256,41 @@ public class FanParserTask extends ParserResult
 		List<AstNode> children = node.getChildren();
 		switch (node.getKind())
 		{
+			case AST_CLOSURE:
+				AstNode closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
+				FanResolvedType retType=FanResolvedType.makeFromDbType(node, "sys::Void");
+				for (AstNode child : children)
+				{
+					if(child.getKind() == AstKind.AST_FORMAL)
+					{
+						AstNode formalName = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_ID));
+						AstNode formalTypeAndId = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
+						// TODO: try to deal with inference ??
+						FanResolvedType fType=FanResolvedType.makeFromDbType(child, "sys::Obj");
+						if(formalTypeAndId!=null)
+						{ // if inferred this is null
+							formalName = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_ID));
+							AstNode formalType = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_TYPE));
+							parseVars(formalType, null);
+							fType = formalType.getType();
+						}
+						// add the formals vars to the closure block scope
+						closureBlock.addScopeVar(formalName.getNodeText(true), VarKind.LOCAL, fType, true);
+					}
+					if(child.getKind() == AstKind.AST_TYPE)
+					{
+						// save the returned type
+						parseVars(child, type);
+						retType = child.getType();
+					}
+					if(child.getKind() == AstKind.AST_BLOCK)
+					{
+						// parse the block content
+						parseVars(child, type);
+					}
+				}
+				type = retType;
+				break;
 			case AST_EXPR:
 				for (AstNode child : children)
 				{

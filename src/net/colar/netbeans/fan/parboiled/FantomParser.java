@@ -539,7 +539,9 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule closure()
 	{
-		return sequence(OPT_LF(), funcType(), OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R));
+		return sequence(sequence(OPT_LF(), funcType(), OPT_LF(),
+			sequence(enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R), ast.newScopeNode(AstKind.AST_BLOCK))
+			), ast.newNode(AstKind.AST_CLOSURE));
 	}
 
 	public Rule itBlock()
@@ -851,9 +853,9 @@ public class FantomParser extends BaseParser<AstNode>
 			sequence(SP_PIPE,
 			firstOf(
 			// First we check for one with no formals |->| or |->Str|
-			enforcedSequence(OP_ARROW, optional(type())),
+			enforcedSequence(OP_ARROW, optional(sequence(type(), ast.newNode(AstKind.AST_TYPE)))),
 			// Then we check for one with formals |Int i| or maybe full: |Int i -> Str|
-			sequence(formals(), optional(enforcedSequence(OP_ARROW, optional(type()))))),
+			sequence(formals(), optional(enforcedSequence(OP_ARROW, optional(sequence(type(), ast.newNode(AstKind.AST_TYPE))))))),
 			SP_PIPE));
 	}
 
@@ -861,8 +863,8 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		// Allowing funcType within formals | |Int-Str a| -> Str|
 		return sequence(
-			typeAndOrId(),
-			zeroOrMore(enforcedSequence(SP_COMMA, typeAndOrId())));
+			formal(),
+			zeroOrMore(enforcedSequence(SP_COMMA, formal())));
 	}
 
 	public Rule typeList()
@@ -870,12 +872,16 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(type(), ast.newNode(AstKind.AST_TYPE), zeroOrMore(enforcedSequence(SP_COMMA, type(), ast.newNode(AstKind.AST_TYPE))));
 	}
 
-	public Rule typeAndOrId()
+	public Rule formal()
 	{
 		// Note it can be "type id", "type" or "id"
 		// but parser can't know if it's "type" or "id" so always recognize as type
 		// so would never actually hit id()
-		return firstOf(sequence(type(), id()), type()/*, id()*/);
+		return sequence(firstOf(
+			typeAndId(),
+			sequence(type(), ast.newNode(AstKind.AST_ID)))
+			/*, id()*/
+			, ast.newNode(AstKind.AST_FORMAL));
 	}
 	// ------------ Misc -------------------------------------------------------
 
