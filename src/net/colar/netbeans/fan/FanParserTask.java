@@ -292,10 +292,13 @@ public class FanParserTask extends ParserResult
 				type = retType;
 				break;
 			case AST_EXPR:
+				boolean first = true;
 				for (AstNode child : children)
 				{
 					parseVars(child, type);
-					type = child.getType();
+					if(first || child.getKind()==AstKind.AST_CALL)
+						type = child.getType();
+					first=false;
 				}
 				break;
 			case AST_CALL:

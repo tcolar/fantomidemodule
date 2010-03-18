@@ -4,6 +4,7 @@
 
 package net.colar.netbeans.fan.scope;
 
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.types.FanResolvedType;
 
@@ -19,5 +20,11 @@ public class FanAstScopeVar extends FanAstScopeVarBase
 		super(node, name);
 		super.type=type;
 		super.kind = kind;
+		if(type==null)
+		{
+			FanUtilities.GENERIC_LOGGER.error(getClass().getName()+" Null type for: "+name);
+			super.type = FanResolvedType.makeUnresolved(node);
+		}
+
 	}
 }

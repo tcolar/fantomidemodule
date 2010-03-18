@@ -103,7 +103,7 @@ public abstract class FanAstScopeVarBase
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append(" :").append(name).append(" -> ").append(type.toString()).append(" [");
+		StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append(" :").append(name).append(" -> ").append(type==null?"null":type.toString()).append(" [");
 		for (FanAstScopeVarBase.ModifEnum m : modifiers)
 		{
 			sb = sb.append(m.toString()).append(", ");

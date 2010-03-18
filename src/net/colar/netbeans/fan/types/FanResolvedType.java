@@ -673,6 +673,8 @@ public class FanResolvedType
 			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
 			if (types.containsKey(enteredType))
 			{
+				if(types.get(enteredType).getType()==null)
+					System.out.println();
 				type = types.get(enteredType).getType().getDbType();
 			}
 			// If not found in scope, try "implicit" imports

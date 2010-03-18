@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.scope;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstKind;
@@ -57,6 +58,11 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		}
 		AstNode nameNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		type=FanResolvedType.fromTypeSig(node, nameNode.getNodeText(true));
+		if(type==null)
+		{
+			FanUtilities.GENERIC_LOGGER.error(getClass().getName()+" Null type for: "+nameNode.getNodeText(true));
+			type= FanResolvedType.makeUnresolved(node);
+		}
 
 		AstNode inheritance = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_INHERITANCE));
 

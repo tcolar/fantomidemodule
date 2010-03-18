@@ -142,9 +142,9 @@ public class FantomParserTest implements JOTTestable
 			result = parse(parser, parser.id(), "ab_FG09__");
 			testNodeName("ID", result, "id");
 			// types
-			result = parse(parser, parser.typeAndOrId(), "ab_FG09__");
+			result = parse(parser, parser.formal(), "ab_FG09__");
 			testNodeName("TypeAndOrId", result, "typeAndOrId");
-			result = parse(parser, parser.typeAndOrId(), "ab_FG09__ ab_FG09__");
+			result = parse(parser, parser.formal(), "ab_FG09__ ab_FG09__");
 			testNodeName("TypeAndOrId 2", result, "typeAndOrId", "ab_FG09__ ab_FG09__");
 			result = parse(parser, parser.simpleType(), "myThingy");
 			testNodeName("SimpleType", result, "simpleType");

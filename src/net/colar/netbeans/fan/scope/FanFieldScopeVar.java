@@ -1,7 +1,6 @@
 /*
  * Thibaut Colar Mar 5, 2010
  */
-
 package net.colar.netbeans.fan.scope;
 
 import java.util.List;
@@ -29,14 +28,23 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 		if (node.getKind() == AstKind.AST_CTOR_DEF)
 		{
 			type = FanResolvedType.makeFromLocalType(fieldNode, FanResolvedType.resolveThisType(node));
+			if (type == null)
+			{
+				FanUtilities.GENERIC_LOGGER.error(getClass().getName() + " Null type for: " + node.getNodeText(true));
+			}
 		} else
 		{
 			AstNode typeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
 			typeString = typeNode.getNodeText(true);
 			type = FanResolvedType.makeFromTypeSigWithWarning(typeNode);
+			if (type == null)
+			{
+				FanUtilities.GENERIC_LOGGER.error(getClass().getName() + " Null type for: " + typeString);
+			}
 		}
 		if(type==null)
-			FanUtilities.GENERIC_LOGGER.info("Failed resolving slot type: "+node.getNodeText(false));
+			type= FanResolvedType.makeUnresolved(node);
+
 		//FanLexAstUtils.dumpTree(node, 0);
 		List<AstNode> modifs = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_MODIFIER));
 		for (AstNode m : modifs)

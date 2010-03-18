@@ -209,6 +209,7 @@ public class AstNode
 	 */
 	public void addScopeVar(String name, VarKind varKind, FanResolvedType type, boolean allowDuplicates)
 	{
+		//System.out.println("New scope var: "+name+":"+varKind+" -> "+type);
 		FanAstScopeVar var = new FanAstScopeVar(this, varKind, name, type);
 		addScopeVar(var, allowDuplicates);
 	}
