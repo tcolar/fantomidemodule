@@ -236,15 +236,20 @@ public class FanParserTask extends ParserResult
 			}
 		}
 		// Now do all the local scopes / variables
-		AstNode scopeNode = FanLexAstUtils.getScopeNode(astRoot);
-		for (FanAstScopeVarBase var : scopeNode.getLocalScopeVars().values())
+		for (AstNode node : astRoot.getChildren())
 		{
-			if(var.getKind()==VarKind.CTOR || var.getKind()==VarKind.CTOR || var.getKind()==VarKind.FIELD)
+			if (node.getKind() == AstKind.AST_TYPE_DEF)
 			{
-				AstNode node = var.getNode();
-				AstNode blockNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
-				if(blockNode!=null)
-					parseVars(blockNode, null);
+				for (FanAstScopeVarBase var : node.getLocalScopeVars().values())
+				{
+					// should be slots
+					AstNode bkNode = var.getNode();
+					AstNode blockNode = FanLexAstUtils.getFirstChild(bkNode, new NodeKindPredicate(AstKind.AST_BLOCK));
+					if (blockNode != null)
+					{
+						parseVars(blockNode, null);
+					}
+				}
 			}
 		}
 
@@ -266,16 +271,16 @@ public class FanParserTask extends ParserResult
 		{
 			case AST_CLOSURE:
 				AstNode closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
-				FanResolvedType retType=FanResolvedType.makeFromDbType(node, "sys::Void");
+				FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void");
 				for (AstNode child : children)
 				{
-					if(child.getKind() == AstKind.AST_FORMAL)
+					if (child.getKind() == AstKind.AST_FORMAL)
 					{
 						AstNode formalName = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_ID));
 						AstNode formalTypeAndId = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
 						// TODO: try to deal with inference ??
-						FanResolvedType fType=FanResolvedType.makeFromDbType(child, "sys::Obj");
-						if(formalTypeAndId!=null)
+						FanResolvedType fType = FanResolvedType.makeFromDbType(child, "sys::Obj");
+						if (formalTypeAndId != null)
 						{ // if inferred this is null
 							formalName = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_ID));
 							AstNode formalType = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_TYPE));
@@ -285,13 +290,13 @@ public class FanParserTask extends ParserResult
 						// add the formals vars to the closure block scope
 						closureBlock.addScopeVar(formalName.getNodeText(true), VarKind.LOCAL, fType, true);
 					}
-					if(child.getKind() == AstKind.AST_TYPE)
+					if (child.getKind() == AstKind.AST_TYPE)
 					{
 						// save the returned type
 						parseVars(child, type);
 						retType = child.getType();
 					}
-					if(child.getKind() == AstKind.AST_BLOCK)
+					if (child.getKind() == AstKind.AST_BLOCK)
 					{
 						// parse the block content
 						parseVars(child, type);
@@ -304,9 +309,11 @@ public class FanParserTask extends ParserResult
 				for (AstNode child : children)
 				{
 					parseVars(child, type);
-					if(first || child.getKind()==AstKind.AST_CALL)
+					if (first || child.getKind() == AstKind.AST_CALL)
+					{
 						type = child.getType();
-					first=false;
+					}
+					first = false;
 				}
 				break;
 			case AST_CALL:
@@ -323,7 +330,7 @@ public class FanParserTask extends ParserResult
 				type = FanResolvedType.resolveSlotType(type, slotName);
 
 				List<AstNode> args = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ARG));
-				for(AstNode arg : args)
+				for (AstNode arg : args)
 				{
 					parseVars(arg, null);
 				}
@@ -433,7 +440,7 @@ public class FanParserTask extends ParserResult
 		{
 			type = FanResolvedType.fromTypeSig(astNode, "sys::Bool");
 		}
-			//TODO: Deal with null, super, this, it
+		//TODO: Deal with null, super, this, it
 		return type;
 	}
 
@@ -444,8 +451,10 @@ public class FanParserTask extends ParserResult
 		String ffi = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_USING_FFI));
 
 		String name = as != null ? as : type;
-		if(name.indexOf("::")>-1)
-			name=name.substring(name.indexOf("::")+2);
+		if (name.indexOf("::") > -1)
+		{
+			name = name.substring(name.indexOf("::") + 2);
+		}
 
 		if (ffi != null && ffi.toLowerCase().equals("java"))
 		{
