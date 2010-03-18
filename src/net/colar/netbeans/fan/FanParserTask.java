@@ -240,7 +240,7 @@ public class FanParserTask extends ParserResult
 			}
 		}
 
-		FanLexAstUtils.dumpTree(astRoot, 0);
+		//FanLexAstUtils.dumpTree(astRoot, 0);
 	}
 
 	//TODO: don't show the whole stack of errors, but just the base.

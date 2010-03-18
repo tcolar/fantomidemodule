@@ -7,7 +7,6 @@ package net.colar.netbeans.fan;
 import java.io.File;
 import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTDBUpgrader;
-import net.jot.utils.JOTUtilities;
 
 /**
  * Handles DB upgrades
@@ -22,14 +21,23 @@ public class FanDbUpgrader extends JOTDBUpgrader
 	public void upgradeDb(String dbName, int fromVersion) throws Exception
 	{
 		// For now just whipeout the DB and let it rebuild
-		if(fromVersion != VERSION)
+		if (fromVersion != VERSION)
 		{
 			JOTLogger.info(this, "Indexer database version changed! - Deleting current index");
-			synchronized(this)
+			synchronized (this)
 			{
-				File dbHome = new File(FanUtilities.getFanUserHome().getAbsolutePath()+File.separator + "db"+File.separator+dbName+File.separator);
-				if(dbHome.exists())
-					JOTUtilities.deleteFolderContent(dbHome);
+				File dbHome = new File(FanUtilities.getFanUserHome().getAbsolutePath() + File.separator + "db" + File.separator);
+				if (dbHome.exists())
+				{
+					// Delete existing db data files
+					for (File f : dbHome.listFiles())
+					{
+						if (f.isFile() && f.getName().startsWith(dbName))
+						{
+							f.delete();
+						}
+					}
+				}
 			}
 		}
 	}
