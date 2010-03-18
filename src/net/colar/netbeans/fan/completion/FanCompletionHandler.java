@@ -295,7 +295,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			}
 		} else
 		{
-			//TODO: get that from the scope ?
 			Vector<FanSlot> slots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), true);
 			for (FanSlot slot : slots)
 			{
