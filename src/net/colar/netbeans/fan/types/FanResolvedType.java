@@ -14,7 +14,9 @@ import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
+import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
+import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 
 /**
@@ -508,36 +510,24 @@ public class FanResolvedType
 		return "sys::Int";
 	}
 
-	public static String resolveThisType(AstNode node)
+	public static FanResolvedType resolveThisType(AstNode node)
 	{
-		return FanIndexer.UNRESOLVED_TYPE; // FIXME
-		/*FanAstScope tscope = scope.getTypeScope();
-		// FIXME
-		if (tscope == null)
+		AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
+		if(typeNode!=null)
 		{
-		return FanIndexer.UNRESOLVED_TYPE;
+			return typeNode.getType();
 		}
-		return ((FanTypeScope) tscope).getQName();*/
+		return makeUnresolved(node);
 	}
 
-	public static String resolveSuper(AstNode node)
+	public static FanResolvedType resolveSuper(AstNode node)
 	{
-		// FIXME
-		return FanIndexer.UNRESOLVED_TYPE;
-		/*
-		FanAstScope tscope = scope;
-		while (tscope != null && !(tscope instanceof FanTypeScope))
+		/*AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
+		if(typeNode!=null)
 		{
-		tscope = tscope.getParent();
-		}
-		if (tscope != null)
-		{
-		FanResolvedType superType = ((FanTypeScope) tscope).getSuperClass();
-		return superType.getAsTypedType();
-		} else
-		{
-		return FanIndexer.UNRESOLVED_TYPE;
+			return typeNode.getType();
 		}*/
+		return makeUnresolved(node); // FIXME
 	}
 
 	/**

@@ -57,13 +57,16 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			kind = VarKind.TYPE_MIXIN;
 		}
 		AstNode nameNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
-		type=FanResolvedType.fromTypeSig(node, nameNode.getNodeText(true));
-		if(type==null)
-		{
-			FanUtilities.GENERIC_LOGGER.error(getClass().getName()+" Null type for: "+nameNode.getNodeText(true));
-			type= FanResolvedType.makeUnresolved(node);
-		}
 
+		type = FanResolvedType.fromTypeSig(node, nameNode.getNodeText(true));
+
+		if (type == null)
+		{
+			FanUtilities.GENERIC_LOGGER.error(getClass().getName() + " Null type for: " + nameNode.getNodeText(true));
+			type = FanResolvedType.makeUnresolved(node);
+		}
+		node.setType(type);
+		
 		AstNode inheritance = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_INHERITANCE));
 
 		if (nameNode != null)
@@ -88,6 +91,10 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 
 		// Deal with ineritance
 		parseInheritance(inheritance);
+	}
+
+	public void parseSlots()
+	{
 		// "cache" inherited slots, for faster var lookup later
 		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true);
 		for (FanSlot slot : slots)
@@ -95,10 +102,12 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			inheritedSlots.put(slot.getName(), slot);
 		}
 
-		// Deal with children - slots		
+		// Deal with children - slots
 		AstNode blockNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
-		if(blockNode==null)
+		if (blockNode == null)
+		{
 			return;
+		}
 		for (AstNode slot : blockNode.getChildren())
 		{
 			switch (slot.getKind())
@@ -179,14 +188,14 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 				String text = node.getNodeText(true);
 				if (!inhType.isResolved())
 				{
-					node.getRoot().getParserTask().addError("Unresolved inherited item : "+child.getNodeText(true), child);
+					node.getRoot().getParserTask().addError("Unresolved inherited item : " + child.getNodeText(true), child);
 				} else
 				{
 					FanType fanType = inhType.getDbType();
 					if (fanType.isFinal())
 					{
 						// this covers enums too
-						node.getRoot().getParserTask().addError("Can't inherit from a final class : "+child.getNodeText(true), child);
+						node.getRoot().getParserTask().addError("Can't inherit from a final class : " + child.getNodeText(true), child);
 					} else if (fanType.isClass())
 					{
 						if (hasInheritedClass())
@@ -217,6 +226,4 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	{
 		return qName;
 	}
-
-	
 }

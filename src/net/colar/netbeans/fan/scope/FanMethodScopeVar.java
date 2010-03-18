@@ -38,7 +38,7 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 			//System.out.println("Param Node: " + param.toStringTree());
 			AstNode id = FanLexAstUtils.getFirstChild(param, new NodeKindPredicate(AstKind.AST_ID));
 			AstNode typeNode = FanLexAstUtils.getFirstChild(param, new NodeKindPredicate(AstKind.AST_TYPE));
-			// shouldn;t be null, but we dont want to risk parser exceptions
+			// shouldn't be null, but we dont want to risk parser exceptions
 			if (typeNode != null && id != null)
 			{
 				String pName = id.getNodeText(true);

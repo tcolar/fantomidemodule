@@ -16,6 +16,7 @@ import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
@@ -218,8 +219,10 @@ public class FanParserTask extends ParserResult
 				case AST_TYPE_DEF:
 					String name = FanLexAstUtils.getFirstChildText(node, new NodeKindPredicate(AstKind.AST_ID));
 					FanTypeScopeVar var = new FanTypeScopeVar(node, name);
+					AstNode scopeNode = FanLexAstUtils.getScopeNode(node.getRoot());
+					// We parse the type base first and add it to scope right away
+					// So that parseSlots() can later resolve this & super.
 					var.parse();
-					AstNode scopeNode = FanLexAstUtils.getScopeNode(node.getRoot()); // root scope.
 					if (scopeNode.getAllScopeVars().containsKey(name))
 					{
 						addError("Duplicated type name", node);
@@ -227,20 +230,25 @@ public class FanParserTask extends ParserResult
 					{
 						scopeNode.getLocalScopeVars().put(name, var);
 					}
+					// Parse the slots
+					var.parseSlots();
 					break;
 			}
 		}
 		// Now do all the local scopes / variables
-		for (AstNode node : astRoot.getChildren())
+		AstNode scopeNode = FanLexAstUtils.getScopeNode(astRoot);
+		for (FanAstScopeVarBase var : scopeNode.getLocalScopeVars().values())
 		{
-			switch (node.getKind())
+			if(var.getKind()==VarKind.CTOR || var.getKind()==VarKind.CTOR || var.getKind()==VarKind.FIELD)
 			{
-				case AST_TYPE_DEF:
-					parseVars(node, null);
+				AstNode node = var.getNode();
+				AstNode blockNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
+				if(blockNode!=null)
+					parseVars(blockNode, null);
 			}
 		}
 
-		//FanLexAstUtils.dumpTree(astRoot, 0);
+		FanLexAstUtils.dumpTree(astRoot, 0);
 	}
 
 	//TODO: don't show the whole stack of errors, but just the base.

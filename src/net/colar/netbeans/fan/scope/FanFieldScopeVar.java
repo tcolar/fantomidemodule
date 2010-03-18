@@ -27,7 +27,7 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 		this.kind = VarKind.FIELD;
 		if (node.getKind() == AstKind.AST_CTOR_DEF)
 		{
-			type = FanResolvedType.makeFromLocalType(fieldNode, FanResolvedType.resolveThisType(node));
+			type = FanResolvedType.resolveThisType(node);
 			if (type == null)
 			{
 				FanUtilities.GENERIC_LOGGER.error(getClass().getName() + " Null type for: " + node.getNodeText(true));
@@ -44,7 +44,8 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 		}
 		if(type==null)
 			type= FanResolvedType.makeUnresolved(node);
-
+		
+		node.setType(type);
 		//FanLexAstUtils.dumpTree(node, 0);
 		List<AstNode> modifs = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_MODIFIER));
 		for (AstNode m : modifs)
