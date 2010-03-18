@@ -584,7 +584,7 @@ public class FanResolvedType
 		}
 		if (sig.endsWith("[]"))
 		{
-			sig = sig.substring(0, sig.length() - 1);
+			sig = sig.substring(0, sig.length() - 2);
 			list = true;
 			if (sig.endsWith("?"))
 			{
