@@ -54,13 +54,6 @@ public class FanStructureAnalyzer implements StructureScanner
 		try
 		{
 			FanParserTask task = (FanParserTask) result;
-			/*for(org.netbeans.modules.csl.api.Error err : task.getDiagnostics())
-			{
-				System.out.println(err.getDescription()+" "+err.getDisplayName()+" "+err.getFile());
-			}
-			if(task.getParsingResult()!=null)
-				AstNode.printNodeTree(task.getRootScope(), "", task.getParsingResult().inputBuffer);
-			*/
 			AstNode rootScope = task.getRootScope();
 			if(rootScope == null)
 				return items;

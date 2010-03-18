@@ -138,7 +138,7 @@ public class FantomParser extends BaseParser<AstNode>
 			// Static block missing from Fan grammar
 			zeroOrMore(firstOf(staticBlock(), slotDef())),
 			BRACKET_R), ast.newNode(AstKind.AST_BLOCK))),
-			ast.newNode(AstKind.AST_TYPE_DEF), OPT_LF());
+			ast.newScopeNode(AstKind.AST_TYPE_DEF), OPT_LF());
 	}
 
 	public Rule protection()

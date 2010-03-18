@@ -219,7 +219,7 @@ public class FanParserTask extends ParserResult
 					String name = FanLexAstUtils.getFirstChildText(node, new NodeKindPredicate(AstKind.AST_ID));
 					FanTypeScopeVar var = new FanTypeScopeVar(node, name);
 					var.parse();
-					AstNode scopeNode = FanLexAstUtils.getScopeNode(node);
+					AstNode scopeNode = FanLexAstUtils.getScopeNode(node.getRoot()); // root scope.
 					if (scopeNode.getAllScopeVars().containsKey(name))
 					{
 						addError("Duplicated type name", node);
