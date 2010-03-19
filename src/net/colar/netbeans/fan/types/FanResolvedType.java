@@ -68,7 +68,7 @@ public class FanResolvedType
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(asTypedType).append(" resolved:").append(" r:").append(isResolved())
+		StringBuilder sb = new StringBuilder(asTypedType).append(" r:").append(isResolved())
 			.append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
 		return sb.toString();
 	}
