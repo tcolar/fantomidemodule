@@ -37,7 +37,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	private static final Set<ColoringAttributes> ErrorSet = Collections.singleton(ColoringAttributes.UNDEFINED);
 	private volatile boolean cancelled = false;
 	private Map<OffsetRange, Set<ColoringAttributes>> highlights = null;
-	private static final Pattern INTERPOLATION = Pattern.compile("[^\\\\]\\$\\{?[a-zA-Z0-9\\.]*\\}?");
+	private static final Pattern INTERPOLATION = Pattern.compile("[^\\\\]\\$\\{?[a-zA-Z0-9\\.]*\\}\\(\\)?");
 
 	@Override
 	public Map getHighlights()

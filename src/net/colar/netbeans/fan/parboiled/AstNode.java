@@ -6,9 +6,7 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
-import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
@@ -59,23 +57,29 @@ public class AstNode
 	public String toString()
 	{
 		//ParseTreeUtils.getNodeText(parseNode, null)
-		String txt = text;
-		if (txt.indexOf("\n") > 0)
+		StringBuffer txt = new StringBuffer(kind.toString());
+		txt.append("(");
+		txt.append((type == null || !type.isResolved()) ? "" : type);
+		txt.append(") ");
+		if (text.indexOf("\n") >= 0)
 		{
-			txt = txt.substring(0, txt.indexOf("\n")) + "...";
+			txt.append(text.substring(0, text.indexOf("\n")));
 		}
-		String scope = "";
+		else
+		{
+			txt.append("'").append(text).append("'");
+		}
 		if (isScopeNode())
 		{
-			scope = "\n\tSCOPE{";
+			txt.append(" SCOPE{");
 			for (FanAstScopeVarBase var : getLocalScopeVars().values())
 			{
-				scope += var.toString() + "; ";
+				txt.append(var.toString()).append("; ");
 			}
-			scope += "}";
+			txt.append("}");
 		}
-		String t = (type == null || !type.isResolved()) ? "" : type.getShortAsTypedType();
-		return kind + "(" + t + ")[" + parsePath + "] : '" + txt + "'" + scope;
+		//txt.append(" [").append(parsePath).append("]");
+		return txt.toString();
 	}
 
 	public String getParsePath()
@@ -182,7 +186,6 @@ public class AstNode
 						// Add inherited slots
 						FanTypeScopeVar typeVar = (FanTypeScopeVar) var;
 						Hashtable<String, FanSlot> slots = typeVar.getInheritedSlots();
-						//List<FanResolvedType> inhItems = typeVar.getInheritedItems();
 						for (FanSlot slot : slots.values())
 						{
 							if (!vars.containsKey(slot.getName()))

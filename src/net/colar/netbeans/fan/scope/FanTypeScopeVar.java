@@ -95,7 +95,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 
 	public void parseSlots()
 	{
-		// "cache" inherited slots, for faster var lookup later
+		// Also "cache" inherited slots, for faster var lookup later
 		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true);
 		for (FanSlot slot : slots)
 		{

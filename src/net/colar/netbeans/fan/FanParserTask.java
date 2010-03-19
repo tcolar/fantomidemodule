@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
@@ -178,6 +179,8 @@ public class FanParserTask extends ParserResult
 			if (parsingResult.parseTreeRoot != null)
 			{
 				astRoot = parsingResult.parseTreeRoot.getValue();
+				// Removed orphaned(backtracked) AST nodes.
+				prune(astRoot);
 			}
 		} catch (Exception e)
 		{
@@ -306,6 +309,7 @@ public class FanParserTask extends ParserResult
 				break;
 			case AST_EXPR:
 				boolean first = true;
+				type=null;
 				for (AstNode child : children)
 				{
 					parseVars(child, type);
@@ -327,7 +331,12 @@ public class FanParserTask extends ParserResult
 				{
 					slotName = slotName.substring(1);
 				}
-				type = FanResolvedType.resolveSlotType(type, slotName);
+				//if a direct call like doThis(), then use this type as base
+				if(type==null)
+					type = FanResolvedType.makeFromLocalID(callChild, callChild.getNodeText(true));
+				else
+				// otherwise a slot of the base type like var.toStr()
+					type = FanResolvedType.resolveSlotType(type, slotName);
 
 				List<AstNode> args = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ARG));
 				for (AstNode arg : args)
@@ -335,6 +344,11 @@ public class FanParserTask extends ParserResult
 					parseVars(arg, null);
 				}
 				//TODO: Check that param types matches slot declaration
+				AstNode closure = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLOSURE));
+				if (closure != null)
+				{
+					parseVars(closure, null);
+				}
 				break;
 			case AST_ARG:
 				// arg contains one expression - parse it to check for errors
@@ -356,7 +370,7 @@ public class FanParserTask extends ParserResult
 				type = resolveLitteral(node, parseNode);
 				break;
 			case AST_ID:
-				type = FanResolvedType.makeFromLocalType(node, text);
+				type = FanResolvedType.makeFromLocalID(node, text);
 				break;
 			case AST_TYPE:
 				type = FanResolvedType.fromTypeSig(node, text);
@@ -384,6 +398,7 @@ public class FanParserTask extends ParserResult
 						//TODO: check types are compatible
 					}
 				}
+				type.setStaticContext(false);
 				node.addScopeVar(new FanAstScopeVar(node, VarKind.LOCAL, name, type), false);
 				break;
 			default:
@@ -393,6 +408,7 @@ public class FanParserTask extends ParserResult
 					parseVars(child, null);
 				}
 		}
+		System.out.println("ND_TYPE:" + node + " -> " + type);
 		node.setType(type);
 		if (type != null && !type.isResolved())
 		{
@@ -407,7 +423,7 @@ public class FanParserTask extends ParserResult
 		String txt = astNode.getNodeText(true);
 		if (lbl.equalsIgnoreCase(TokenName.ID.name()))
 		{
-			type = FanResolvedType.makeFromLocalType(astNode, txt);
+			type = FanResolvedType.makeFromLocalID(astNode, txt);
 		} else if (lbl.equalsIgnoreCase(TokenName.CHAR.name()))
 		{
 			type = FanResolvedType.fromTypeSig(astNode, "sys::Char");
@@ -546,6 +562,7 @@ public class FanParserTask extends ParserResult
 			}*/
 		}
 		FanResolvedType rType = FanResolvedType.makeFromDbType(node, qType);
+		rType.setStaticContext(true);
 		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, rType, true);
 	}
 
@@ -557,6 +574,36 @@ public class FanParserTask extends ParserResult
 	public String getPod()
 	{
 		return pod;
+	}
+
+	/**
+	 * During ParseNode construction, some astNodes that migth have been constructed from
+	 * some parseNode that where then "backtracked" (not the whoel sequence matched)
+	 * This looks for and remove those unwanted nodes.
+	 * @param node
+	 */
+	private void prune(AstNode node)
+	{
+		List<AstNode> children = node.getChildren();
+		List<AstNode> toBepruned = new ArrayList<AstNode>();
+		for (AstNode child : children)
+		{
+			Node<AstNode> parseNode = child.getParseNode();
+			// If the node is orphaned (no parent), that means it was backtracked out of.
+			if (parseNode.getParent() == null)
+			{
+				toBepruned.add(child);
+			} else
+			{
+				// recurse into children
+				prune(child);
+			}
+		}
+		// Drop the orphaned nodes
+		for (AstNode nd : toBepruned)
+		{
+			children.remove(nd);
+		}
 	}
 }
 

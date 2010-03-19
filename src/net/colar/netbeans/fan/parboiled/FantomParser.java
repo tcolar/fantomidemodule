@@ -610,10 +610,10 @@ public class FantomParser extends BaseParser<AstNode>
 	// require params or/and closure, otherwise it's just and ID (this would prevent termbase from checking literals)
 	public Rule call()
 	{
-		return sequence(id(), ast.newNode(AstKind.AST_ID),
+		return sequence(sequence(id(), ast.newNode(AstKind.AST_ID),
 			firstOf(
 			sequence(enforcedSequence(PAR_L, OPT_LF(), optional(args()), PAR_R), optional(closure())), //params & opt. closure
-			closure())); // closure only
+			closure())), ast.newNode(AstKind.AST_CALL)); // closure only
 	}
 
 	public Rule indexExpr()

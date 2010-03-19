@@ -3,6 +3,9 @@
  */
 package net.colar.netbeans.fan.indexer.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.indexer.FanIndexer;
@@ -251,9 +254,9 @@ public class FanSlot extends JOTModel
 		super.save(transaction);
 	}
 
-	public static Vector<FanSlot> getAllSlotsForType(String fanType, Boolean includeImpliedTypes)
+	public static List<FanSlot> getAllSlotsForType(String fanType, Boolean includeImpliedTypes)
 	{
-		Vector<String> types = new Vector<String>();
+		List<String> types = new ArrayList<String>();
 		return getAllSlotsForType(fanType, types, includeImpliedTypes);
 	}
 
@@ -263,9 +266,16 @@ public class FanSlot extends JOTModel
 	 * @param dbType
 	 * @return
 	 */
-	public static Vector<FanSlot> getAllSlotsForType(String fanType, Vector<String> doneTypes, boolean includeImpliedTypes)
+	public static List<FanSlot> getAllSlotsForType(String fanType, List<String> doneTypes, boolean includeImpliedTypes)
 	{
-		//System.out.println("############## " + fanType);
+		// If a type was already done, do not do again, also avoid potential cyclic dependencies etc...
+		if (doneTypes.contains(fanType))
+		{
+			//System.out.println("###### skipping: "+typeName);
+			return new ArrayList<FanSlot>();
+		}
+		System.out.println("############## " + fanType);
+		
 		doneTypes.add(fanType);
 		FanType dbType = FanType.findByQualifiedName(fanType);
 		if (dbType == null)
@@ -280,14 +290,8 @@ public class FanSlot extends JOTModel
 		{
 			String typeName = inh.getInheritedType();
 			//System.out.println("############## " + fanType + " : " + typeName);
-			// If a type was already done, do not do again, also avoid potential cyclic dependencies etc...
-			if (doneTypes.contains(typeName))
-			{
-				//System.out.println("###### skipping: "+typeName);
-				continue;
-			}
 			// add slots that are not already in
-			Vector<FanSlot> subSlots = getAllSlotsForType(typeName, includeImpliedTypes);
+			List<FanSlot> subSlots = getAllSlotsForType(typeName, includeImpliedTypes);
 			for (FanSlot s : subSlots)
 			{
 				boolean skip = false;

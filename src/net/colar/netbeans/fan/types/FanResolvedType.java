@@ -68,7 +68,8 @@ public class FanResolvedType
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(asTypedType).append(" resolved:").append(isResolved());
+		StringBuilder sb = new StringBuilder(asTypedType).append(" resolved:").append(" r:").append(isResolved())
+			.append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
 		return sb.toString();
 	}
 
@@ -412,7 +413,7 @@ public class FanResolvedType
 			{
 				if (member.getName().equalsIgnoreCase(slotName))
 				{
-					baseType = makeFromLocalType(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
+					baseType = makeFromLocalID(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
 					found = true;
 					break;
 				}
@@ -631,10 +632,11 @@ public class FanResolvedType
 			} else
 			{
 				// true simple type like Int or Sys::Int
-				type = makeFromLocalType(scopeNode, sig);
+				type = makeFromLocalID(scopeNode, sig);
 			}
 		}
 
+		type.setStaticContext(list);
 		if (nullable)
 		{
 			type.setNullableContext(true);
@@ -650,10 +652,11 @@ public class FanResolvedType
 		return type;
 	}
 
-	public static FanResolvedType makeFromLocalType(AstNode scopeNode, String enteredType)
+	public static FanResolvedType makeFromLocalID(AstNode scopeNode, String enteredType)
 	{
 		//System.out.println("Make from local type: "+enteredType);
 		FanType type = null;
+		boolean isStatic = true;
 		if (enteredType.indexOf("::") != -1)
 		{	// Qualified type
 			type = FanType.findByQualifiedName(enteredType);
@@ -663,9 +666,8 @@ public class FanResolvedType
 			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
 			if (types.containsKey(enteredType))
 			{
-				if(types.get(enteredType).getType()==null)
-					System.out.println();
 				type = types.get(enteredType).getType().getDbType();
+				isStatic =  types.get(enteredType).getType().isStaticContext();
 			}
 			// If not found in scope, try "implicit" imports
 			if (type == null)
@@ -708,7 +710,9 @@ public class FanResolvedType
 				}
 			}
 		}
-		return new FanResolvedType(scopeNode, enteredType, type);
+		FanResolvedType result = new FanResolvedType(scopeNode, enteredType, type);
+		result.setStaticContext(isStatic);
+		return result;
 	}
 
 	/**
