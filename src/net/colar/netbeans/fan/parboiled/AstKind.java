@@ -21,6 +21,7 @@ public enum AstKind
 	// More generic items
 	AST_BLOCK, AST_ID, AST_TYPE_AND_ID, AST_MODIFIER,
 	AST_INHERITANCE, AST_PARAM, AST_TYPE, AST_FORMAL, AST_CHILD,
+	AST_IT_BLOCK,
 	// incomplete/error items
 	AST_INC_USING, AST_INC_CALL, AST_ARG,
 	// Labels

@@ -523,8 +523,8 @@ public class FantomParser extends BaseParser<AstNode>
 				sequence(type(), ast.newNode(AstKind.AST_ID),
 				firstOf(
 					sequence(OP_POUND, optional(id())), // type/slot litteral
-					sequence(sequence(DOT, KW_SUPER), ast.newNode(AstKind.AST_CALL)), // named super
-					sequence(sequence(DOT, idExpr()), ast.newNode(AstKind.AST_CALL)), // static call
+					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_CALL)), // named super
+					sequence(DOT, idExpr()), // static call
 					sequence(PAR_L, expr(), PAR_R), // "simple"
 					itBlock() // ctor block
 				)));
@@ -551,7 +551,7 @@ public class FantomParser extends BaseParser<AstNode>
 			enforcedSequence(sequence(BRACKET_L,
 			// Note, don't allow field accesors to be parsed as itBlock
 			testNot(sequence(inFieldInit, OPT_LF(), firstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)/*, echo("Skipping itBlock")*/))),
-			zeroOrMore(stmt()), BRACKET_R));
+			zeroOrMore(stmt()), BRACKET_R), ast.newScopeNode(AstKind.AST_IT_BLOCK));
 	}
 
 	public Rule termChain()
@@ -564,22 +564,22 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule dotCall()
 	{
 		// test not "..", as this would be a range
-		return sequence(enforcedSequence(sequence(DOT, testNot(DOT)), idExpr()), ast.newNode(AstKind.AST_CALL));
+		return enforcedSequence(sequence(DOT, testNot(DOT)), idExpr());
 	}
 
 	public Rule dynCall()
 	{
-		return sequence(enforcedSequence(OP_ARROW, idExpr()), ast.newNode(AstKind.AST_CALL));
+		return enforcedSequence(OP_ARROW, idExpr());
 	}
 
 	public Rule safeDotCall()
 	{
-		return sequence(enforcedSequence(OP_SAFE_CALL, idExpr()),ast.newNode(AstKind.AST_CALL));
+		return enforcedSequence(OP_SAFE_CALL, idExpr());
 	}
 
 	public Rule safeDynCall()
 	{
-		return sequence(enforcedSequence(OP_SAFE_DYN_CALL, idExpr()), ast.newNode(AstKind.AST_CALL));
+		return enforcedSequence(OP_SAFE_DYN_CALL, idExpr());
 	}
 
 	// incomplete dot call, make valid to allow for completion
@@ -592,7 +592,10 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule idExpr()
 	{
 		// this can be either a local def(toto.value) or a call(toto.getValue or toto.getValue(<params>)) + opt. closure
-		return firstOf(idExprReq(), sequence(id(), ast.newNode(AstKind.AST_ID)));
+		return firstOf(idExprReq(), 
+				sequence(
+					sequence(id(), ast.newNode(AstKind.AST_ID))
+					,ast.newNode(AstKind.AST_CALL)));
 	}
 
 	public Rule idExprReq()

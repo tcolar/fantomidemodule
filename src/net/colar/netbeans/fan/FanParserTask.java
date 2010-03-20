@@ -4,11 +4,13 @@
  */
 package net.colar.netbeans.fan;
 
+import fan.sys.FanScheme;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.indexer.model.FanType;
@@ -172,8 +174,8 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-					false, Severity.ERROR);
+						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+						false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
@@ -309,7 +311,7 @@ public class FanParserTask extends ParserResult
 				break;
 			case AST_EXPR:
 				boolean first = true;
-				type=null;
+				type = null;
 				for (AstNode child : children)
 				{
 					parseVars(child, type);
@@ -332,11 +334,14 @@ public class FanParserTask extends ParserResult
 					slotName = slotName.substring(1);
 				}
 				//if a direct call like doThis(), then use this type as base
-				if(type==null)
+				if (type == null)
+				{
 					type = FanResolvedType.makeFromLocalID(callChild, callChild.getNodeText(true));
-				else
+				} else
 				// otherwise a slot of the base type like var.toStr()
+				{
 					type = FanResolvedType.resolveSlotType(type, slotName);
+				}
 
 				List<AstNode> args = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ARG));
 				for (AstNode arg : args)
@@ -364,6 +369,25 @@ public class FanParserTask extends ParserResult
 				AstNode castTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
 				type = castTypeNode.getType();
 				//TODO: check if cast is valid
+				break;
+			case AST_IT_BLOCK:
+				// introduce itblock scope variables
+				if(type!=null && type.getDbType()!=null)
+				{
+					List<FanSlot> itSlots=FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), false);
+					for(FanSlot itSlot : itSlots)
+					{
+						FanResolvedType varType = FanResolvedType.makeFromDbType(node, itSlot.getReturnedType());
+						VarKind varKind = VarKind.IMPLIED;//VarKind.makeFromVal(itSlot.getSlotKind());
+						FanAstScopeVarBase newVar = new FanAstScopeVar(node, varKind, itSlot.getName(), varType);
+						node.addScopeVar(newVar, true);
+					}
+				}
+				//TODO: deal with "it"
+				for (AstNode child : children)
+				{
+					parseVars(child, null);
+				}
 				break;
 			case AST_LITTERAL_BASE:
 				Node<AstNode> parseNode = node.getParseNode().getChildren().get(0); // firstOf
@@ -398,7 +422,10 @@ public class FanParserTask extends ParserResult
 						//TODO: check types are compatible
 					}
 				}
-				type.setStaticContext(false);
+				if (type != null)
+				{
+					type.setStaticContext(false);
+				}
 				node.addScopeVar(new FanAstScopeVar(node, VarKind.LOCAL, name, type), false);
 				break;
 			default:
