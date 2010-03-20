@@ -525,7 +525,7 @@ public class FantomParser extends BaseParser<AstNode>
 					sequence(OP_POUND, optional(id())), // type/slot litteral
 					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_CALL)), // named super
 					sequence(DOT, idExpr()), // static call
-					sequence(PAR_L, expr(), PAR_R), // "simple"
+					sequence(PAR_L, expr(), PAR_R), // simple ?? (ctor call)
 					itBlock() // ctor block
 				)));
 	}

@@ -78,7 +78,7 @@ public class AstNode
 			}
 			txt.append("}");
 		}
-		//txt.append(" [").append(parsePath).append("]");
+		txt.append(" [").append(parsePath).append("]");
 		return txt.toString();
 	}
 

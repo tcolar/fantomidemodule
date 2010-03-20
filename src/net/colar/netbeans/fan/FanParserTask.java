@@ -325,18 +325,18 @@ public class FanParserTask extends ParserResult
 			case AST_CALL:
 				AstNode callChild = children.get(0);
 				String slotName = callChild.getNodeText(true);
-				if (slotName.startsWith("?."))
+				/*if (slotName.startsWith("?."))
 				{
 					slotName = slotName.substring(2);
 				}
 				if (slotName.startsWith("."))
 				{
 					slotName = slotName.substring(1);
-				}
+				}*/
 				//if a direct call like doThis(), then use this type as base
 				if (type == null)
 				{
-					type = FanResolvedType.makeFromLocalID(callChild, callChild.getNodeText(true));
+					type = FanResolvedType.makeFromLocalID(callChild, slotName);
 				} else
 				// otherwise a slot of the base type like var.toStr()
 				{
@@ -435,6 +435,7 @@ public class FanParserTask extends ParserResult
 					parseVars(child, null);
 				}
 		}
+		//TODO: always parse children rather than in individual cases.
 		System.out.println("ND_TYPE:" + node + " -> " + type);
 		node.setType(type);
 		if (type != null && !type.isResolved())
