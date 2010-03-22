@@ -4,13 +4,11 @@
  */
 package net.colar.netbeans.fan;
 
-import fan.sys.FanScheme;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
-import net.colar.netbeans.fan.actions.FanLineFactory;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
@@ -22,7 +20,7 @@ import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
-import net.colar.netbeans.fan.scope.FanMethodScopeVar;
+import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedListType;
 import net.colar.netbeans.fan.types.FanResolvedMapType;
@@ -409,7 +407,7 @@ public class FanParserTask extends ParserResult
 					{
 						FanResolvedType varType = FanResolvedType.makeFromDbType(node, itSlot.getReturnedType());
 						VarKind varKind = VarKind.IMPLIED;//VarKind.makeFromVal(itSlot.getSlotKind());
-						FanAstScopeVarBase newVar = new FanAstScopeVar(node, varKind, itSlot.getName(), varType);
+						FanAstScopeVarBase newVar = new FanLocalScopeVar(node, varKind, itSlot.getName(), varType);
 						node.addScopeVar(newVar, true);
 					}
 				}
@@ -453,7 +451,7 @@ public class FanParserTask extends ParserResult
 				{
 					type.setStaticContext(false);
 				}
-				node.addScopeVar(new FanAstScopeVar(node, VarKind.LOCAL, name, type), false);
+				node.addScopeVar(new FanLocalScopeVar(node, VarKind.LOCAL, name, type), false);
 				break;
 			default:
 				// recurse into children

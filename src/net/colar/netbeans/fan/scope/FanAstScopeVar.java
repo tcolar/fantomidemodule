@@ -12,7 +12,7 @@ import net.colar.netbeans.fan.types.FanResolvedType;
  * scope variable
  * @author thibautc
  */
-public class FanAstScopeVar extends FanAstScopeVarBase
+public abstract class FanAstScopeVar extends FanAstScopeVarBase
 {
 
 	public FanAstScopeVar(AstNode node, VarKind kind, String name, FanResolvedType type)

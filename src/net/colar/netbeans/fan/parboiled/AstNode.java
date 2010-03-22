@@ -10,6 +10,7 @@ import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
+import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.parboiled.Node;
@@ -213,7 +214,7 @@ public class AstNode
 	public void addScopeVar(String name, VarKind varKind, FanResolvedType type, boolean allowDuplicates)
 	{
 		//System.out.println("New scope var: "+name+":"+varKind+" -> "+type);
-		FanAstScopeVar var = new FanAstScopeVar(this, varKind, name, type);
+		FanAstScopeVar var = new FanLocalScopeVar(this, varKind, name, type);
 		addScopeVar(var, allowDuplicates);
 	}
 

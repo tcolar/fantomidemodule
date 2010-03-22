@@ -48,7 +48,7 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 					parameters.put(pName, pType);
 					// Add the param as a scope variable
 					if(block!=null)
-						block.addScopeVar(new FanAstScopeVar(typeNode, VarKind.LOCAL, pName, pType), false);
+						block.addScopeVar(new FanLocalScopeVar(typeNode, VarKind.LOCAL, pName, pType), false);
 					// if no block then it must be an abstract methd, no need to introduce the vars to scope
 				} else
 				{

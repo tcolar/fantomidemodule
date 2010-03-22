@@ -27,6 +27,9 @@ import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
+import net.colar.netbeans.fan.scope.FanFieldScopeVar;
+import net.colar.netbeans.fan.scope.FanMethodScopeVar;
+import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
@@ -451,25 +454,29 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		}
 		// find the type of the item on the LHS of the call.
 		FanResolvedType type = FanResolvedType.makeUnresolved(node);
-		for(AstNode child : expr.getChildren())
+		for (AstNode child : expr.getChildren())
 		{
 			// If we foud the call node, stop here (keep the previosu node type)
-			if(child.getStartLocation().getIndex() == callNode.getStartLocation().getIndex())
+			if (child.getStartLocation().getIndex() == callNode.getStartLocation().getIndex())
+			{
 				break;
-			if(child.getType()!=null && child.getType().isResolved())
+			}
+			if (child.getType() != null && child.getType().isResolved())
+			{
 				type = child.getType();
+			}
 		}
 		String txt = callNode.getNodeText(true);
-		System.out.println("Call text: " + txt+" type: "+type);
+		System.out.println("Call text: " + txt + " type: " + type);
 		int offset = context.getCaretOffset();
 		String prefix = txt;
 		int idx = prefix.indexOf(".");
-		if(idx>=0)
+		if (idx >= 0)
 		{
-			prefix = prefix.substring(idx+1);
+			prefix = prefix.substring(idx + 1);
 			//offset += idx;
 		}
-		if (type!=null && type.isResolved())
+		if (type != null && type.isResolved())
 		{
 			proposeSlots(type, proposals, offset, prefix);
 		}
@@ -481,7 +488,28 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			if (var.getName().startsWith(prefix))
 			{
-				FanVarProposal prop = new FanVarProposal(var, context.getCaretOffset() - prefix.length());
+				CompletionProposal prop = null;
+				if (var instanceof FanTypeScopeVar)
+				{
+					prop = new FanTypeProposal(var.getType().getDbType(), context.getCaretOffset() - prefix.length(), null);
+				} else if (var instanceof FanMethodScopeVar || var instanceof FanFieldScopeVar)
+				{
+					FanFieldScopeVar fVar = ((FanFieldScopeVar) var);
+					/*if (fVar.getType().getDbType().isJava())
+					{
+						FanJarsIndexer indexer = FanIndexerFactory.getJavaIndexer();
+						List<Member> slots = indexer.findTypeSlots(type.getDbType().getQualifiedName());
+						Member member =
+					} else*/
+					{
+						FanSlot slot = FanSlot.findByTypeAndName(fVar.getTypeString(), fVar.getName());
+						prop = new FanSlotProposal(slot, context.getCaretOffset() - prefix.length());
+					}
+				}
+				if (prop == null)
+				{
+					prop = new FanVarProposal(var, context.getCaretOffset() - prefix.length());
+				}
 				proposals.add(prop);
 			}
 		}
