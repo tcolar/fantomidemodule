@@ -113,7 +113,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 					|| (car == '"' && tokenId.matches(TokenName.STRS) && next == '"' && prev != '\\')
 					|| (car == '`' && tokenId.matches(TokenName.URI) && next == '`' && prev != '\\')
 					|| //(car == '`' && ord == FanLexer.INC_URI && next=='`' && prev!='\\') ||
-					(car == '\'' && tokenId.matches(TokenName.CHAR) && next == '\'')
+					(car == '\'' && tokenId.matches(TokenName.CHAR_) && next == '\'')
 					|| (car == ']' && tokenId.matches(TokenName.SQ_BRACKET_R))
 					|| (car == ')' && tokenId.matches(TokenName.PAR_R))
 					|| (car == '}' && tokenId.matches(TokenName.BRACKET_R)))
@@ -134,7 +134,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
 		// If within those tokens, don't do anything special
 		if (tokenId.matches(TokenName.DSL)
-				|| tokenId.matches(TokenName.CHAR)
+				|| tokenId.matches(TokenName.CHAR_)
 				|| tokenId.matches(TokenName.DOC)
 				|| tokenId.matches(TokenName.UNIXLINE)
 				|| tokenId.matches(TokenName.COMMENT)

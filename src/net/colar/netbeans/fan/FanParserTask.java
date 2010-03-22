@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.actions.FanLineFactory;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
@@ -314,10 +315,7 @@ public class FanParserTask extends ParserResult
 				type = retType;
 				break;
 			case AST_INDEX_EXPR:
-				for (AstNode child : children)
-				{
-					parseVars(child, null);
-				}
+				parseChildren(node);
 				FanResolvedType slotType = FanResolvedType.resolveSlotType(type, "get");
 				if (type instanceof FanResolvedListType)
 				{
@@ -342,7 +340,8 @@ public class FanParserTask extends ParserResult
 				for (AstNode child : children)
 				{
 					parseVars(child, type);
-					if (first || child.getKind() == AstKind.AST_CALL)
+					if (first || child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_TYPE_CHECK
+						|| child.getKind() == AstKind.AST_RANGE)
 					{
 						type = child.getType();
 					}
@@ -381,13 +380,25 @@ public class FanParserTask extends ParserResult
 				type = argExprNode.getType();
 				break;
 			case AST_CAST:
-				for (AstNode child : children)
-				{
-					parseVars(child, null);
-				}
+				parseChildren(node);
 				AstNode castTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
 				type = castTypeNode.getType();
 				//TODO: check if cast is valid
+				break;
+			case AST_TYPE_CHECK:
+				parseChildren(node);
+				AstNode checkType = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+				if(text.startsWith("as")) // (cast)
+					type = checkType.getType();
+				else if(text.startsWith("is")) // is or isnot	-> boolean
+					type = FanResolvedType.makeFromDbType(node, "sys::Bool");
+				else
+					type = null; // shouldn't happen
+				break;
+			case AST_RANGE:
+				parseChildren(node);
+				AstNode rangeType = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CHILD));
+				type = new FanResolvedListType(node, rangeType.getType()); // list of
 				break;
 			case AST_IT_BLOCK:
 				// introduce itblock scope variables
@@ -403,10 +414,7 @@ public class FanParserTask extends ParserResult
 					}
 				}
 				//TODO: deal with "it"
-				for (AstNode child : children)
-				{
-					parseVars(child, null);
-				}
+				parseChildren(node);
 				break;
 			case AST_LITTERAL_BASE:
 				Node<AstNode> parseNode = node.getParseNode().getChildren().get(0); // firstOf
@@ -449,10 +457,7 @@ public class FanParserTask extends ParserResult
 				break;
 			default:
 				// recurse into children
-				for (AstNode child : node.getChildren())
-				{
-					parseVars(child, null);
-				}
+				parseChildren(node);
 		}
 		//TODO: always parse children rather than in individual cases.
 		System.out.println("ND_TYPE:" + node + " -> " + type);
@@ -460,6 +465,14 @@ public class FanParserTask extends ParserResult
 		if (type != null && !type.isResolved())
 		{
 			node.getRoot().getParserTask().addError("Could not resolve item type -> " + text, node);
+		}
+	}
+
+	private void parseChildren(AstNode node)
+	{
+		for (AstNode child : node.getChildren())
+		{
+			parseVars(child, null);
 		}
 	}
 
@@ -471,9 +484,9 @@ public class FanParserTask extends ParserResult
 		if (lbl.equalsIgnoreCase(TokenName.ID.name()))
 		{
 			type = FanResolvedType.makeFromLocalID(astNode, txt);
-		} else if (lbl.equalsIgnoreCase(TokenName.CHAR.name()))
+		} else if (lbl.equalsIgnoreCase(TokenName.CHAR_.name()))
 		{
-			type = FanResolvedType.fromTypeSig(astNode, "sys::Char");
+			type = FanResolvedType.fromTypeSig(astNode, "sys::Int");
 		} else if (lbl.equalsIgnoreCase(TokenName.NUMBER.name()))
 		{
 			char lastChar = txt.charAt(txt.length() - 1);
@@ -502,9 +515,8 @@ public class FanParserTask extends ParserResult
 		} else if (lbl.equals("true") || lbl.equals("false"))
 		{
 			type = FanResolvedType.fromTypeSig(astNode, "sys::Bool");
-		}
-		//TODO: Deal with null, super, this, it
-		else if(lbl.equals("null"))
+		} //TODO: Deal with null, super, this, it
+		else if (lbl.equals("null"))
 		{
 			type = new FanResolvedNullType(astNode);
 		}

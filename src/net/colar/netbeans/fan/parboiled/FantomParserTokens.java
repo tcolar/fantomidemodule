@@ -17,7 +17,7 @@ public class FantomParserTokens
 	// Lexer label names ... we want all tokens provided by the lexer() rule of the parser to be listed here
 	public enum TokenName{
 		COMMENT, UNIXLINE, DOC, LEXEROPS, LEXERSEPS, LEXERASSIGN, LEXERINIT, LEXERCOMPS, LEXERITEMS,
-		STRS, URI, CHAR, KEYWORD, ID, NUMBER, WHITESPACE, SPACING, LF, DSL, ANY, ERROR,
+		STRS, URI, CHAR_, KEYWORD, ID, NUMBER, WHITESPACE, SPACING, LF, DSL, ANY, ERROR,
 		//Items we use a lot in the lexer
 		SQ_BRACKET_L, SQ_BRACKET_R, BRACKET_L, BRACKET_R, PAR_L, PAR_R
 	}
@@ -35,7 +35,7 @@ public class FantomParserTokens
 		cats.put(TokenName.UNIXLINE, "DOC");
 		cats.put(TokenName.DSL, "DSL");
 		cats.put(TokenName.NUMBER, "number");
-		cats.put(TokenName.CHAR, "character");
+		cats.put(TokenName.CHAR_, "character");
 		cats.put(TokenName.KEYWORD, "keyword");
 		cats.put(TokenName.LEXEROPS, "operator");
 		cats.put(TokenName.LEXERSEPS, "separator");

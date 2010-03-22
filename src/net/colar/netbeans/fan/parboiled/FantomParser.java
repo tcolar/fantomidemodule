@@ -444,7 +444,11 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule typeCheckTail()
 	{
 		// changed to required, otherwise consumes all rangeExpr and compare never gets evaled
-		return enforcedSequence(firstOf(KW_IS, KW_ISNOT, KW_AS), type());
+		return sequence(enforcedSequence(
+				firstOf(KW_IS, KW_ISNOT, KW_AS),
+				type(),
+				ast.newNode(AstKind.AST_TYPE)),
+			ast.newNode(AstKind.AST_TYPE_CHECK));
 	}
 
 	public Rule compareTail()
@@ -456,8 +460,10 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule rangeExpr()
 	{
 		// changed to not be zeroOrMore(opt instead) as there can be only one range in an expression (no [1..3..5])
-		return sequence(addExpr(),
-			optional(enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr())));
+		return sequence(addExpr(), 
+			optional(sequence(
+				enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr(), ast.newNode(AstKind.AST_CHILD)),
+				ast.newNode(AstKind.AST_RANGE))));
 	}
 
 	public Rule addExpr()
@@ -586,7 +592,8 @@ public class FantomParser extends BaseParser<AstNode>
 	//TODO: this is not be shown as an error
 	public Rule incCall()
 	{
-		return sequence(firstOf(DOT, OP_SAFE_DYN_CALL), ast.newNode(AstKind.AST_INC_CALL));
+		return sequence(testNot(sequence(DOT, DOT)), // DOT DOT would be a range.
+			firstOf(DOT, OP_SAFE_DYN_CALL), ast.newNode(AstKind.AST_INC_CALL));
 	}
 
 	public Rule idExpr()
@@ -615,18 +622,18 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		return sequence(sequence(id(), ast.newNode(AstKind.AST_ID),
 			firstOf(
-			sequence(enforcedSequence(PAR_L, OPT_LF(), optional(args()), PAR_R), optional(closure())), //params & opt. closure
+			sequence(noSpace(), enforcedSequence(PAR_L, OPT_LF(), optional(args()), PAR_R), optional(closure())), //params & opt. closure
 			closure())), ast.newNode(AstKind.AST_CALL)); // closure only
 	}
 
 	public Rule indexExpr()
 	{
-		return sequence(SQ_BRACKET_L, expr(), ast.newNode(AstKind.AST_INDEX_EXPR), SQ_BRACKET_R);
+		return sequence(noSpace(), SQ_BRACKET_L, expr(), ast.newNode(AstKind.AST_INDEX_EXPR), SQ_BRACKET_R);
 	}
 
 	public Rule callOp()
 	{
-		return enforcedSequence(PAR_L, optional(args()), PAR_R, optional(closure()));
+		return enforcedSequence(noSpace(), PAR_L, optional(args()), PAR_R, optional(closure()));
 	}
 
 	public Rule litteral()
@@ -719,7 +726,7 @@ public class FantomParser extends BaseParser<AstNode>
 				unicodeChar(),
 				escapedChar(), // standard esapes
 				any()), //all else
-				SINGLE_Q).label(TokenName.CHAR.name());
+				SINGLE_Q).label(TokenName.CHAR_.name());
 	}
 
 	@Leaf
