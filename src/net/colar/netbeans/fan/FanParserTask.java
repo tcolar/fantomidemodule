@@ -21,7 +21,11 @@ import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
+import net.colar.netbeans.fan.scope.FanMethodScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
+import net.colar.netbeans.fan.types.FanResolvedListType;
+import net.colar.netbeans.fan.types.FanResolvedMapType;
+import net.colar.netbeans.fan.types.FanResolvedNullType;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -174,8 +178,8 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-						false, Severity.ERROR);
+					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+					false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
@@ -309,6 +313,29 @@ public class FanParserTask extends ParserResult
 				}
 				type = retType;
 				break;
+			case AST_INDEX_EXPR:
+				for (AstNode child : children)
+				{
+					parseVars(child, null);
+				}
+				FanResolvedType slotType = FanResolvedType.resolveSlotType(type, "get");
+				if (type instanceof FanResolvedListType)
+				{
+					type = ((FanResolvedListType) type).getItemType();
+				} else if (type instanceof FanResolvedMapType)
+				{
+					type = ((FanResolvedMapType) type).getValType();
+				} //Can also use index expression on any type with a get method
+				else if (slotType != null && slotType.isResolved())
+				{
+					type = slotType;
+				} else
+				{
+					type = null;
+					node.getRoot().getParserTask().addError("Index expression only valid on lists, maps -> " + text, node);
+				}
+				// TODO: check if list/map index key type is valid ?
+				break;
 			case AST_EXPR:
 				boolean first = true;
 				type = null;
@@ -325,14 +352,6 @@ public class FanParserTask extends ParserResult
 			case AST_CALL:
 				AstNode callChild = children.get(0);
 				String slotName = callChild.getNodeText(true);
-				/*if (slotName.startsWith("?."))
-				{
-					slotName = slotName.substring(2);
-				}
-				if (slotName.startsWith("."))
-				{
-					slotName = slotName.substring(1);
-				}*/
 				//if a direct call like doThis(), then use this type as base
 				if (type == null)
 				{
@@ -372,10 +391,10 @@ public class FanParserTask extends ParserResult
 				break;
 			case AST_IT_BLOCK:
 				// introduce itblock scope variables
-				if(type!=null && type.getDbType()!=null)
+				if (type != null && type.getDbType() != null)
 				{
-					List<FanSlot> itSlots=FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), false);
-					for(FanSlot itSlot : itSlots)
+					List<FanSlot> itSlots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), false);
+					for (FanSlot itSlot : itSlots)
 					{
 						FanResolvedType varType = FanResolvedType.makeFromDbType(node, itSlot.getReturnedType());
 						VarKind varKind = VarKind.IMPLIED;//VarKind.makeFromVal(itSlot.getSlotKind());
@@ -485,6 +504,10 @@ public class FanParserTask extends ParserResult
 			type = FanResolvedType.fromTypeSig(astNode, "sys::Bool");
 		}
 		//TODO: Deal with null, super, this, it
+		else if(lbl.equals("null"))
+		{
+			type = new FanResolvedNullType(astNode);
+		}
 		return type;
 	}
 

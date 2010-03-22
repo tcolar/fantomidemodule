@@ -621,7 +621,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule indexExpr()
 	{
-		return sequence(SQ_BRACKET_L, expr(), SQ_BRACKET_R);
+		return sequence(SQ_BRACKET_L, expr(), ast.newNode(AstKind.AST_INDEX_EXPR), SQ_BRACKET_R);
 	}
 
 	public Rule callOp()
