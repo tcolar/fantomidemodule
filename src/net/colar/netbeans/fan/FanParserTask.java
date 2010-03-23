@@ -375,7 +375,7 @@ public class FanParserTask extends ParserResult
 				AstNode closure = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLOSURE));
 				if (closure != null)
 				{
-					parseVars(closure, null);
+					parseVars(closure, type);
 				}
 				break;
 			case AST_ARG:
