@@ -34,6 +34,7 @@ public class FanVarProposal extends FanCompletionProposal
 		this.var = var;
 		this.name = var.getName();
 		html = name;
+		prefix=name;
 		this.anchor = anchor;
 		this.kind = ElementKind.VARIABLE;
 		FanBasicElementHandle handle = new FanBasicElementHandle(name, kind);

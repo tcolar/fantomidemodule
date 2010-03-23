@@ -333,13 +333,15 @@ public class FanParserTask extends ParserResult
 				// TODO: check if list/map index key type is valid ?
 				break;
 			case AST_EXPR:
+			case AST_ASSIGN_EXPR: // with the assignment we nned reset type to null (start a new expression)
+				// TODO: validate assignment type is compatible.
 				boolean first = true;
 				type = null;
 				for (AstNode child : children)
 				{
 					parseVars(child, type);
 					if (first || child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_TYPE_CHECK
-						|| child.getKind() == AstKind.AST_RANGE)
+						|| child.getKind() == AstKind.AST_RANGE || child.getKind() == AstKind.AST_ASSIGN_EXPR)
 					{
 						type = child.getType();
 					}
@@ -353,6 +355,7 @@ public class FanParserTask extends ParserResult
 				if (type == null)
 				{
 					type = FanResolvedType.makeFromLocalID(callChild, slotName);
+					//TODO: ctor call
 				} else
 				// otherwise a slot of the base type like var.toStr()
 				{
@@ -462,7 +465,7 @@ public class FanParserTask extends ParserResult
 		node.setType(type);
 		if (type != null && !type.isResolved())
 		{
-			node.getRoot().getParserTask().addError("Could not resolve item type -> " + text, node);
+			node.getRoot().getParserTask().addError("Could not resolve item -> " + text, node);
 		}
 	}
 
@@ -513,7 +516,7 @@ public class FanParserTask extends ParserResult
 		} else if (lbl.equals("true") || lbl.equals("false"))
 		{
 			type = FanResolvedType.fromTypeSig(astNode, "sys::Bool");
-		} //TODO: Deal with null, super, this, it
+		} 
 		else if (lbl.equals("null"))
 		{
 			type = new FanResolvedNullType(astNode);
@@ -527,6 +530,10 @@ public class FanParserTask extends ParserResult
 		else if (lbl.equals("this"))
 		{
 			type = FanResolvedType.resolveThisType(astNode);
+		}
+		else if (lbl.equals("super"))
+		{
+			type = FanResolvedType.resolveSuper(astNode);
 		}
 		return type;
 	}

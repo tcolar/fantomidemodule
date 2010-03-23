@@ -17,7 +17,10 @@ import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
+import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 
 /**
  * Resolved type
@@ -68,8 +71,7 @@ public class FanResolvedType
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(asTypedType).append(" r:").append(isResolved())
-			.append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
+		StringBuilder sb = new StringBuilder(asTypedType).append(" r:").append(isResolved()).append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
 		return sb.toString();
 	}
 
@@ -400,8 +402,10 @@ public class FanResolvedType
 
 	public static FanResolvedType resolveSlotType(FanResolvedType baseType, String slotName)
 	{
-		if(baseType==null || !baseType.isResolved())
+		if (baseType == null || !baseType.isResolved())
+		{
 			return FanResolvedType.makeUnresolved(null);
+		}
 		if (baseType.getDbType().isJava())
 		{
 			// java slots
@@ -514,7 +518,7 @@ public class FanResolvedType
 	public static FanResolvedType resolveThisType(AstNode node)
 	{
 		AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
-		if(typeNode!=null)
+		if (typeNode != null)
 		{
 			return typeNode.getType();
 		}
@@ -523,12 +527,35 @@ public class FanResolvedType
 
 	public static FanResolvedType resolveSuper(AstNode node)
 	{
-		/*AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
-		if(typeNode!=null)
+		//TODO: show an error if in mixin / enum ?
+		AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
+		if (typeNode != null)
 		{
-			return typeNode.getType();
-		}*/
-		return makeUnresolved(node); // FIXME
+			String name = FanLexAstUtils.getFirstChildText(typeNode, new NodeKindPredicate(AstKind.AST_ID));
+			if (name != null)
+			{
+				FanAstScopeVarBase var = node.getRoot().getLocalScopeVars().get(name);
+				if (var != null && var instanceof FanTypeScopeVar)
+				{
+					if (var.getKind() == VarKind.TYPE_MIXIN || var.getKind() == VarKind.TYPE_ENUM)
+					{
+						node.getRoot().getParserTask().addError("Cannot use 'super' within a mixin or enum.", node);
+					} else
+					{
+						List<FanResolvedType> types = ((FanTypeScopeVar) var).getInheritedItems();
+						for (FanResolvedType t : types)
+						{
+							if (t.isResolved() && t.getDbType().isClass())
+							{
+								return t;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return makeFromDbType(node, "sys::Obj");
 	}
 
 	/**
@@ -660,14 +687,13 @@ public class FanResolvedType
 		if (enteredType.indexOf("::") != -1)
 		{	// Qualified type
 			type = FanType.findByQualifiedName(enteredType);
-		}
-		else
+		} else
 		{
 			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
 			if (types.containsKey(enteredType))
 			{
 				type = types.get(enteredType).getType().getDbType();
-				isStatic =  types.get(enteredType).getType().isStaticContext();
+				isStatic = types.get(enteredType).getType().isStaticContext();
 			}
 			// If not found in scope, try "implicit" imports
 			if (type == null)
@@ -682,22 +708,22 @@ public class FanResolvedType
 				type = FanType.findByQualifiedName("sys::" + enteredType);
 			}
 			// try Generic types
-			if (type == null && enteredType.length()==1 && enteredType.toUpperCase().equals(enteredType))
+			if (type == null && enteredType.length() == 1 && enteredType.toUpperCase().equals(enteredType))
 			{
-				FanResolvedType objType=new FanResolvedType(scopeNode, enteredType, FanType.findByQualifiedName("sys::Obj"));
+				FanResolvedType objType = new FanResolvedType(scopeNode, enteredType, FanType.findByQualifiedName("sys::Obj"));
 				if (enteredType.equals("V") || enteredType.equals("K") || enteredType.equals("A") || enteredType.equals("B")
-					 || enteredType.equals("C") || enteredType.equals("D") || enteredType.equals("E") || enteredType.equals("F")
-					  || enteredType.equals("G") || enteredType.equals("H"))
+					|| enteredType.equals("C") || enteredType.equals("D") || enteredType.equals("E") || enteredType.equals("F")
+					|| enteredType.equals("G") || enteredType.equals("H"))
 				{	// K, V: List/Map key and item types
 					// A-H : Function types
 					type = FanType.findByQualifiedName("sys::Obj");
 				} else if (enteredType.equals("L"))
 				{ // List
 					return new FanResolvedListType(scopeNode, objType);
-				}else if (enteredType.equals("M"))
+				} else if (enteredType.equals("M"))
 				{ // Map
 					return new FanResolvedMapType(scopeNode, objType, objType);
-				}else if (enteredType.equals("R"))
+				} else if (enteredType.equals("R"))
 				{ // Function
 					return new FanResolvedFuncType(scopeNode, new Vector<FanResolvedType>(), objType);
 				}

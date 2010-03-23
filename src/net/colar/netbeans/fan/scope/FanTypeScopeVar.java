@@ -27,6 +27,8 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	List<FanResolvedType> inheritedItems = new ArrayList<FanResolvedType>();
 	// To make it faster to lookup vars
 	Hashtable<String, FanSlot> inheritedSlots = new Hashtable<String, FanSlot>();
+	// super type
+	FanResolvedType superType = FanResolvedType.makeFromDbType(null, "sys::Obj");
 
 	public FanTypeScopeVar(AstNode typeDefNode, String name)
 	{
@@ -226,4 +228,10 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	{
 		return qName;
 	}
+
+	public FanResolvedType getSuperType()
+	{
+		return superType;
+	}
+
 }

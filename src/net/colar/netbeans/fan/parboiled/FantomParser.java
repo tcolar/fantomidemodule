@@ -394,7 +394,7 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		// check '=' first as is most common
 		// moved localDef to statement since it can't be on the right hand side
-		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_OPS), OPT_LF(), assignExpr())));
+		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_OPS), OPT_LF(), assignExpr(), ast.newNode(AstKind.AST_ASSIGN_EXPR))));
 	}
 
 	public Rule ifExpr()
