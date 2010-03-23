@@ -402,7 +402,8 @@ public class FanResolvedType
 
 	public static FanResolvedType resolveSlotType(FanResolvedType baseType, String slotName)
 	{
-		if (baseType == null || !baseType.isResolved())
+		if (baseType == null || !baseType.isResolved() 
+			|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
 		{
 			return FanResolvedType.makeUnresolved(null);
 		}
@@ -411,8 +412,8 @@ public class FanResolvedType
 			// java slots
 			List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(baseType.getDbType().getQualifiedName());
 			boolean found = false;
-			// Returrning the first match .. because java has overloading this could be wrong
-			// However i assume overloaded methods return the same type (If it doesn't too bad, it's ugly coe anyway :) )
+			// Returning the first match .. because java has overloading this could be wrong
+			// However i assume overloaded methods return the same type (If it doesn't too bad, it's ugly code anyway :) )
 			for (Member member : members)
 			{
 				if (member.getName().equalsIgnoreCase(slotName))
@@ -430,14 +431,14 @@ public class FanResolvedType
 		} else
 		{
 			// Fan slots
-			FanSlot slot = FanSlot.findByTypeAndName(baseType.getDbType().getQualifiedName(), slotName);
-			if (slot != null)
+			for (FanSlot slot : FanSlot.getAllSlotsForType(baseType.getDbType().getQualifiedName(), true))
 			{
-				baseType = fromTypeSig(baseType.scopeNode, slot.returnedType);
-			} else
-			{
-				baseType = makeUnresolved(baseType.scopeNode);
+				if (slot.getName().equals(slotName))
+				{
+					return fromTypeSig(baseType.scopeNode, slot.returnedType);
+				}
 			}
+			baseType = makeUnresolved(baseType.scopeNode);
 		}
 		return baseType;
 	}
@@ -586,6 +587,7 @@ public class FanResolvedType
 
 	/**
 	 * Create type from the "Serialized" dbType
+	 * ie: sys::Str   or sys::Str? or sys::Str[]?
 	 * @param sig
 	 * @return
 	 */

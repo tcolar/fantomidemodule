@@ -394,7 +394,7 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		// check '=' first as is most common
 		// moved localDef to statement since it can't be on the right hand side
-		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_OPS), OPT_LF(), assignExpr(), ast.newNode(AstKind.AST_ASSIGN_EXPR))));
+		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_OPS), OPT_LF(), assignExpr(), ast.newNode(AstKind.AST_EXPR_ASSIGN))));
 	}
 
 	public Rule ifExpr()
@@ -448,7 +448,7 @@ public class FantomParser extends BaseParser<AstNode>
 				firstOf(KW_IS, KW_ISNOT, KW_AS),
 				type(),
 				ast.newNode(AstKind.AST_TYPE)),
-			ast.newNode(AstKind.AST_TYPE_CHECK));
+			ast.newNode(AstKind.AST_EXPR_TYPE_CHECK));
 	}
 
 	public Rule compareTail()
@@ -463,21 +463,21 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(addExpr(), 
 			optional(sequence(
 				enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr(), ast.newNode(AstKind.AST_CHILD)),
-				ast.newNode(AstKind.AST_RANGE))));
+				ast.newNode(AstKind.AST_EXPR_RANGE))));
 	}
 
 	public Rule addExpr()
 	{
 		return sequence(multExpr(),
 			// checking it's not '+=' or '-=', so we can let assignExpr happen
-			zeroOrMore(enforcedSequence(sequence(firstOf(OP_PLUS, OP_MINUS), testNot(AS_EQUAL)), OPT_LF(), multExpr())));
+			zeroOrMore(enforcedSequence(sequence(firstOf(OP_PLUS, OP_MINUS), testNot(AS_EQUAL)), OPT_LF(), multExpr(), ast.newNode(AstKind.AST_EXPR_ADD))));
 	}
 
 	public Rule multExpr()
 	{
 		return sequence(parExpr(),
 			// checking it's not '*=', '/=' or '%=', so we can let assignExpr happen
-			zeroOrMore(enforcedSequence(sequence(firstOf(OP_MULT, OP_DIV, OP_MODULO), testNot(AS_EQUAL)), OPT_LF(), parExpr())));
+			zeroOrMore(enforcedSequence(sequence(firstOf(OP_MULT, OP_DIV, OP_MODULO), testNot(AS_EQUAL)), OPT_LF(), parExpr(), ast.newNode(AstKind.AST_EXPR_MULT))));
 	}
 
 	public Rule parExpr()
@@ -487,7 +487,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule castExpr()
 	{
-		return sequence(sequence(PAR_L, type(), ast.newNode(AstKind.AST_TYPE), PAR_R, parExpr()), ast.newNode(AstKind.AST_CAST));
+		return sequence(sequence(PAR_L, type(), ast.newNode(AstKind.AST_TYPE), PAR_R, parExpr()), ast.newNode(AstKind.AST_EXR_CAST));
 	}
 
 	public Rule groupedExpr()
@@ -529,7 +529,7 @@ public class FantomParser extends BaseParser<AstNode>
 				sequence(type(), ast.newNode(AstKind.AST_ID),
 				firstOf(
 					sequence(OP_POUND, optional(id())), // type/slot litteral
-					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_CALL)), // named super
+					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_EXPR_CALL)), // named super
 					sequence(DOT, idExpr()), // static call
 					sequence(PAR_L, expr(), PAR_R), // simple ?? (ctor call)
 					itBlock() // ctor block
@@ -602,7 +602,7 @@ public class FantomParser extends BaseParser<AstNode>
 		return firstOf(idExprReq(), 
 				sequence(
 					sequence(id(), ast.newNode(AstKind.AST_ID))
-					,ast.newNode(AstKind.AST_CALL)));
+					,ast.newNode(AstKind.AST_EXPR_CALL)));
 	}
 
 	public Rule idExprReq()
@@ -623,12 +623,12 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(sequence(id(), ast.newNode(AstKind.AST_ID),
 			firstOf(
 			sequence(noSpace(), enforcedSequence(PAR_L, OPT_LF(), optional(args()), PAR_R), optional(closure())), //params & opt. closure
-			closure())), ast.newNode(AstKind.AST_CALL)); // closure only
+			closure())), ast.newNode(AstKind.AST_EXPR_CALL)); // closure only
 	}
 
 	public Rule indexExpr()
 	{
-		return sequence(noSpace(), SQ_BRACKET_L, expr(), ast.newNode(AstKind.AST_INDEX_EXPR), SQ_BRACKET_R);
+		return sequence(noSpace(), SQ_BRACKET_L, expr(), ast.newNode(AstKind.AST_EXPR_INDEX), SQ_BRACKET_R);
 	}
 
 	public Rule callOp()
@@ -644,7 +644,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule litteralBase()
 	{
 		return sequence(firstOf(KW_NULL, KW_THIS, KW_SUPER, KW_IT, KW_TRUE, KW_FALSE,
-			strs(), uri(), number(), char_()), ast.newNode(AstKind.AST_LITTERAL_BASE));
+			strs(), uri(), number(), char_()), ast.newNode(AstKind.AST_EXPR_LIT_BASE));
 	}
 
 	public Rule list()

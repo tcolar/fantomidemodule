@@ -32,7 +32,7 @@ public class FanLocalScopeVar extends FanAstScopeVar
 
 	public FanLocalScopeVar(AstNode node, FanSlot slot, String name)
 	{
-		super(node, VarKind.makeFromVal(slot.getSlotKind()), name, FanResolvedType.makeFromDbType(node, slot.getReturnedType()));
+		super(node, VarKind.makeFromVal(slot.getSlotKind()), name, FanResolvedType.fromTypeSig(node, slot.getReturnedType()));
 		this.slot = slot;
 
 		if (slot.isField())

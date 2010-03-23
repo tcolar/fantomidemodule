@@ -312,7 +312,7 @@ public class FanParserTask extends ParserResult
 				}
 				type = retType;
 				break;
-			case AST_INDEX_EXPR:
+			case AST_EXPR_INDEX:
 				parseChildren(node);
 				FanResolvedType slotType = FanResolvedType.resolveSlotType(type, "get");
 				if (type instanceof FanResolvedListType)
@@ -333,29 +333,33 @@ public class FanParserTask extends ParserResult
 				// TODO: check if list/map index key type is valid ?
 				break;
 			case AST_EXPR:
-			case AST_ASSIGN_EXPR: // with the assignment we nned reset type to null (start a new expression)
+			case AST_EXPR_ASSIGN: // with the assignment we need reset type to null (start a new expression)
+			case AST_EXPR_MULT:
+			case AST_EXPR_ADD:
 				// TODO: validate assignment type is compatible.
 				boolean first = true;
 				type = null;
 				for (AstNode child : children)
 				{
 					parseVars(child, type);
-					if (first || child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_TYPE_CHECK
-						|| child.getKind() == AstKind.AST_RANGE || child.getKind() == AstKind.AST_ASSIGN_EXPR)
+					// Those kinds take the right hand side type
+					// It block chnages the type because it makes it NOT staticContext
+					if (first || child.getKind() == AstKind.AST_EXPR_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
+						|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind()==AstKind.AST_EXPR_LIT_BASE
+						|| child.getKind() == AstKind.AST_IT_BLOCK)
 					{
 						type = child.getType();
 					}
 					first = false;
 				}
 				break;
-			case AST_CALL:
+			case AST_EXPR_CALL:
 				AstNode callChild = children.get(0);
 				String slotName = callChild.getNodeText(true);
 				//if a direct call like doThis(), then use this type as base
 				if (type == null)
 				{
 					type = FanResolvedType.makeFromLocalID(callChild, slotName);
-					//TODO: ctor call
 				} else
 				// otherwise a slot of the base type like var.toStr()
 				{
@@ -380,13 +384,13 @@ public class FanParserTask extends ParserResult
 				parseVars(argExprNode, null);
 				type = argExprNode.getType();
 				break;
-			case AST_CAST:
+			case AST_EXR_CAST:
 				parseChildren(node);
 				AstNode castTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
 				type = castTypeNode.getType();
 				//TODO: check if cast is valid
 				break;
-			case AST_TYPE_CHECK:
+			case AST_EXPR_TYPE_CHECK:
 				parseChildren(node);
 				AstNode checkType = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
 				if(text.startsWith("as")) // (cast)
@@ -396,7 +400,7 @@ public class FanParserTask extends ParserResult
 				else
 					type = null; // shouldn't happen
 				break;
-			case AST_RANGE:
+			case AST_EXPR_RANGE:
 				parseChildren(node);
 				AstNode rangeType = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CHILD));
 				type = new FanResolvedListType(node, rangeType.getType()); // list of
@@ -405,6 +409,7 @@ public class FanParserTask extends ParserResult
 				// introduce itblock scope variables
 				if (type != null && type.getDbType() != null)
 				{
+					type.setStaticContext(false);
 					List<FanSlot> itSlots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), false);
 					for (FanSlot itSlot : itSlots)
 					{
@@ -417,7 +422,7 @@ public class FanParserTask extends ParserResult
 				}
 				parseChildren(node);
 				break;
-			case AST_LITTERAL_BASE:
+			case AST_EXPR_LIT_BASE:
 				Node<AstNode> parseNode = node.getParseNode().getChildren().get(0); // firstOf
 				type = resolveLitteral(node, parseNode);
 				break;
@@ -526,14 +531,17 @@ public class FanParserTask extends ParserResult
 			FanAstScopeVarBase var = astNode.getAllScopeVars().get("it");
 			if(var!=null)
 				type = var.getType();
+			type.setStaticContext(false);
 		}
 		else if (lbl.equals("this"))
 		{
 			type = FanResolvedType.resolveThisType(astNode);
+			type.setStaticContext(false);
 		}
 		else if (lbl.equals("super"))
 		{
 			type = FanResolvedType.resolveSuper(astNode);
+			type.setStaticContext(false);
 		}
 		return type;
 	}
@@ -655,6 +663,10 @@ public class FanParserTask extends ParserResult
 	}
 
 	/**
+	 * TODO: this whole prunning stuff is a bit ugly
+	 * Should try to buod the AST properly using technizues here:
+	 * http://parboiled.hostingdelivered.com/viewtopic.php?f=3&t=9
+	 *
 	 * During ParseNode construction, some astNodes that migth have been constructed from
 	 * some parseNode that where then "backtracked" (not the whoel sequence matched)
 	 * This looks for and remove those unwanted nodes.
@@ -662,13 +674,26 @@ public class FanParserTask extends ParserResult
 	 */
 	private void prune(AstNode node)
 	{
+		Node<AstNode> rtNode=astRoot.getParseNode();
+		String rootLabel = "n/a";
+		while(rtNode!=null)
+		{
+			rootLabel = rtNode.getLabel();
+			rtNode=rtNode.getParent();
+		}
 		List<AstNode> children = node.getChildren();
 		List<AstNode> toBepruned = new ArrayList<AstNode>();
 		for (AstNode child : children)
 		{
 			Node<AstNode> parseNode = child.getParseNode();
-			// If the node is orphaned (no parent), that means it was backtracked out of.
-			if (parseNode.getParent() == null)
+			// If the node is orphaned (no link back to the root), that means it was backtracked out of.
+			String label = "N/A";
+			while(parseNode!=null)
+			{
+				label = parseNode.getLabel();
+				parseNode = parseNode.getParent();
+			}
+			if ( ! rootLabel.equals(label))
 			{
 				toBepruned.add(child);
 			} else
