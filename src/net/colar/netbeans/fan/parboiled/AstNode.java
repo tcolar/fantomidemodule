@@ -10,6 +10,7 @@ import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
+import net.colar.netbeans.fan.scope.FanFieldScopeVar;
 import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
@@ -191,9 +192,7 @@ public class AstNode
 						{
 							if (!vars.containsKey(slot.getName()))
 							{
-								FanResolvedType varType = FanResolvedType.makeFromDbType(scope, slot.getReturnedType());
-								VarKind varKind = VarKind.makeFromVal(slot.getSlotKind());
-								FanAstScopeVarBase newVar = new FanAstScopeVar(scope, varKind, slot.getName(), varType);
+								FanAstScopeVarBase newVar = new FanLocalScopeVar(scope, slot, slot.getName());
 								vars.put(slot.getName(), newVar);
 							}
 						}

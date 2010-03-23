@@ -405,9 +405,7 @@ public class FanParserTask extends ParserResult
 					List<FanSlot> itSlots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), false);
 					for (FanSlot itSlot : itSlots)
 					{
-						FanResolvedType varType = FanResolvedType.makeFromDbType(node, itSlot.getReturnedType());
-						VarKind varKind = VarKind.IMPLIED;//VarKind.makeFromVal(itSlot.getSlotKind());
-						FanAstScopeVarBase newVar = new FanLocalScopeVar(node, varKind, itSlot.getName(), varType);
+						FanAstScopeVarBase newVar = new FanLocalScopeVar(node, itSlot, itSlot.getName());
 						node.addScopeVar(newVar, true);
 					}
 				}
@@ -424,7 +422,7 @@ public class FanParserTask extends ParserResult
 			case AST_TYPE:
 				type = FanResolvedType.fromTypeSig(node, text);
 				break;
-			case AST_LOCAL_DEF: // specila case, since it introduces scope vars
+			case AST_LOCAL_DEF: // special case, since it introduces scope vars
 				AstNode typeAndIdNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
 				AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 				AstNode exprNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));

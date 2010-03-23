@@ -495,16 +495,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				} else if (var instanceof FanMethodScopeVar || var instanceof FanFieldScopeVar)
 				{
 					FanFieldScopeVar fVar = ((FanFieldScopeVar) var);
-					/*if (fVar.getType().getDbType().isJava())
-					{
-						FanJarsIndexer indexer = FanIndexerFactory.getJavaIndexer();
-						List<Member> slots = indexer.findTypeSlots(type.getDbType().getQualifiedName());
-						Member member =
-					} else*/
-					{
-						FanSlot slot = FanSlot.findByTypeAndName(fVar.getTypeString(), fVar.getName());
-						prop = new FanSlotProposal(slot, context.getCaretOffset() - prefix.length());
-					}
+					FanSlot slot = FanSlot.findByTypeAndName(fVar.getTypeString(), fVar.getName());
+					prop = new FanSlotProposal(slot, context.getCaretOffset() - prefix.length());
 				}
 				if (prop == null)
 				{

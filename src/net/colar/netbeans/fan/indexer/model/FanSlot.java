@@ -329,4 +329,6 @@ public class FanSlot extends JOTModel
 	{
 		return "FanSlot: " + id + " : " + getName() + "(" + getReturnedType() + ")";
 	}
+
+
 }

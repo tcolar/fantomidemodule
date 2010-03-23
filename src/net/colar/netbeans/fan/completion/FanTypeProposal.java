@@ -14,7 +14,7 @@ import net.colar.netbeans.fan.indexer.model.FanType;
 
 /**
  * Propose a Type such as Str or Int
- * ForcedNam is used for using with a "As" clause, if null just use type.name()
+ * ForcedName is used for using with a "As" clause, if null just use type.name()
  * @author thibautc
  */
 public class FanTypeProposal extends FanCompletionProposal
