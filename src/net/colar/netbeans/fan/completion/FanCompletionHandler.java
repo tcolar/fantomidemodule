@@ -496,7 +496,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				{
 					FanFieldScopeVar fVar = ((FanFieldScopeVar) var);
 					FanSlot slot = FanSlot.findByTypeAndName(fVar.getTypeString(), fVar.getName());
-					prop = new FanSlotProposal(slot, context.getCaretOffset() - prefix.length());
+					if(slot!=null)
+					{
+						prop = new FanSlotProposal(slot, context.getCaretOffset() - prefix.length());
+					}
 				}
 				if (prop == null)
 				{

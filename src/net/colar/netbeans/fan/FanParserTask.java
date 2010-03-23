@@ -408,8 +408,10 @@ public class FanParserTask extends ParserResult
 						FanAstScopeVarBase newVar = new FanLocalScopeVar(node, itSlot, itSlot.getName());
 						node.addScopeVar(newVar, true);
 					}
+					// add "it" to scope
+					FanAstScopeVarBase itVar = new FanLocalScopeVar(node, VarKind.IMPLIED, "it", type);
+					node.addScopeVar(itVar, true);
 				}
-				//TODO: deal with "it"
 				parseChildren(node);
 				break;
 			case AST_LITTERAL_BASE:
@@ -515,6 +517,16 @@ public class FanParserTask extends ParserResult
 		else if (lbl.equals("null"))
 		{
 			type = new FanResolvedNullType(astNode);
+		}
+		else if (lbl.equals("it"))
+		{
+			FanAstScopeVarBase var = astNode.getAllScopeVars().get("it");
+			if(var!=null)
+				type = var.getType();
+		}
+		else if (lbl.equals("this"))
+		{
+			type = FanResolvedType.resolveThisType(astNode);
 		}
 		return type;
 	}
