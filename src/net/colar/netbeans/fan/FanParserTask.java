@@ -26,6 +26,7 @@ import net.colar.netbeans.fan.types.FanResolvedListType;
 import net.colar.netbeans.fan.types.FanResolvedMapType;
 import net.colar.netbeans.fan.types.FanResolvedNullType;
 import net.colar.netbeans.fan.types.FanResolvedType;
+import net.colar.netbeans.fan.types.FanUnknownType;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
@@ -177,8 +178,8 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-					false, Severity.ERROR);
+						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+						false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
@@ -287,7 +288,25 @@ public class FanParserTask extends ParserResult
 						AstNode formalName = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_ID));
 						AstNode formalTypeAndId = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
 						// TODO: try to deal with inference ??
-						FanResolvedType fType = FanResolvedType.makeFromDbType(child, "sys::Obj");
+						/*
+						 * Closures like on each are inferred by the function parameter on the method being called.
+
+						For example each on a Field[] will have a parametered signature of each(|Field f| func) which is how f gets typed a Field.
+
+						The place it happens in my code is CallResolver.inferClosureTypeFromCall
+
+						Take a look at thru that code and see if it makes it clearer.  Remember it works with any method that takes a function.
+
+						For example if the method is:
+
+						foo(|Str, Int, Float| f)
+
+						Then
+
+						foo |a, b, c| {}  =>  foo |Str a, Int b, Float c| {}
+						 */
+						//FanResolvedType fType = FanResolvedType.makeFromDbType(child, "sys::Obj");
+						FanResolvedType fType = new FanUnknownType(node, text); //TODO: resolve formal type
 						if (formalTypeAndId != null)
 						{ // if inferred this is null
 							formalName = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_ID));
@@ -341,12 +360,17 @@ public class FanParserTask extends ParserResult
 				type = null;
 				for (AstNode child : children)
 				{
+					// If the type is unknow, no point looking any further
+					if (type instanceof FanUnknownType)
+					{
+						break;
+					}
 					parseVars(child, type);
 					// Those kinds take the right hand side type
 					// It block chnages the type because it makes it NOT staticContext
 					if (first || child.getKind() == AstKind.AST_EXPR_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
-						|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind()==AstKind.AST_EXPR_LIT_BASE
-						|| child.getKind() == AstKind.AST_IT_BLOCK)
+							|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
+							|| child.getKind() == AstKind.AST_IT_BLOCK)
 					{
 						type = child.getType();
 					}
@@ -356,6 +380,11 @@ public class FanParserTask extends ParserResult
 			case AST_EXPR_CALL:
 				AstNode callChild = children.get(0);
 				String slotName = callChild.getNodeText(true);
+				// If the type is unknow, no point looking any further
+				if (type instanceof FanUnknownType)
+				{
+					break;
+				}
 				//if a direct call like doThis(), then use this type as base
 				if (type == null)
 				{
@@ -393,12 +422,16 @@ public class FanParserTask extends ParserResult
 			case AST_EXPR_TYPE_CHECK:
 				parseChildren(node);
 				AstNode checkType = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
-				if(text.startsWith("as")) // (cast)
+				if (text.startsWith("as")) // (cast)
+				{
 					type = checkType.getType();
-				else if(text.startsWith("is")) // is or isnot	-> boolean
+				} else if (text.startsWith("is")) // is or isnot	-> boolean
+				{
 					type = FanResolvedType.makeFromDbType(node, "sys::Bool");
-				else
+				} else
+				{
 					type = null; // shouldn't happen
+				}
 				break;
 			case AST_EXPR_RANGE:
 				parseChildren(node);
@@ -521,24 +554,22 @@ public class FanParserTask extends ParserResult
 		} else if (lbl.equals("true") || lbl.equals("false"))
 		{
 			type = FanResolvedType.fromTypeSig(astNode, "sys::Bool");
-		} 
-		else if (lbl.equals("null"))
+		} else if (lbl.equals("null"))
 		{
 			type = new FanResolvedNullType(astNode);
-		}
-		else if (lbl.equals("it"))
+		} else if (lbl.equals("it"))
 		{
 			FanAstScopeVarBase var = astNode.getAllScopeVars().get("it");
-			if(var!=null)
+			if (var != null)
+			{
 				type = var.getType();
+			}
 			type.setStaticContext(false);
-		}
-		else if (lbl.equals("this"))
+		} else if (lbl.equals("this"))
 		{
 			type = FanResolvedType.resolveThisType(astNode);
 			type.setStaticContext(false);
-		}
-		else if (lbl.equals("super"))
+		} else if (lbl.equals("super"))
 		{
 			type = FanResolvedType.resolveSuper(astNode);
 			type.setStaticContext(false);
@@ -674,12 +705,12 @@ public class FanParserTask extends ParserResult
 	 */
 	private void prune(AstNode node)
 	{
-		Node<AstNode> rtNode=astRoot.getParseNode();
+		Node<AstNode> rtNode = astRoot.getParseNode();
 		String rootLabel = "n/a";
-		while(rtNode!=null)
+		while (rtNode != null)
 		{
 			rootLabel = rtNode.getLabel();
-			rtNode=rtNode.getParent();
+			rtNode = rtNode.getParent();
 		}
 		List<AstNode> children = node.getChildren();
 		List<AstNode> toBepruned = new ArrayList<AstNode>();
@@ -688,12 +719,12 @@ public class FanParserTask extends ParserResult
 			Node<AstNode> parseNode = child.getParseNode();
 			// If the node is orphaned (no link back to the root), that means it was backtracked out of.
 			String label = "N/A";
-			while(parseNode!=null)
+			while (parseNode != null)
 			{
 				label = parseNode.getLabel();
 				parseNode = parseNode.getParent();
 			}
-			if ( ! rootLabel.equals(label))
+			if (!rootLabel.equals(label))
 			{
 				toBepruned.add(child);
 			} else

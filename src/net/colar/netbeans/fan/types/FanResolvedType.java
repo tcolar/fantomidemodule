@@ -71,7 +71,7 @@ public class FanResolvedType
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(asTypedType).append(" r:").append(isResolved()).append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
+		StringBuilder sb = new StringBuilder(dbType==null?"null":dbType.getQualifiedName()).append(" r:").append(isResolved()).append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
 		return sb.toString();
 	}
 
@@ -694,8 +694,7 @@ public class FanResolvedType
 			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
 			if (types.containsKey(enteredType))
 			{
-				type = types.get(enteredType).getType().getDbType();
-				isStatic = types.get(enteredType).getType().isStaticContext();
+				return types.get(enteredType).getType();
 			}
 			// If not found in scope, try "implicit" imports
 			if (type == null)
