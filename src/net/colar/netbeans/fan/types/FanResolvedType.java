@@ -14,6 +14,7 @@ import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
+import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
@@ -71,7 +72,7 @@ public class FanResolvedType
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(dbType==null?"null":dbType.getQualifiedName()).append(" r:").append(isResolved()).append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
+		StringBuilder sb = new StringBuilder(dbType == null ? "null" : dbType.getQualifiedName()).append(" r:").append(isResolved()).append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
 		return sb.toString();
 	}
 
@@ -402,7 +403,7 @@ public class FanResolvedType
 
 	public static FanResolvedType resolveSlotType(FanResolvedType baseType, String slotName)
 	{
-		if (baseType == null || !baseType.isResolved() 
+		if (baseType == null || !baseType.isResolved()
 			|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
 		{
 			return FanResolvedType.makeUnresolved(null);
@@ -773,5 +774,90 @@ public class FanResolvedType
 			index++;
 		}
 		return index;
+	}
+
+	/**
+	 * Check wether type is compatible with baseType
+	 * In other words, wether type is of the same type as baseType or inherits from it
+	 * @param Type
+	 * @param baseType
+	 */
+	public static boolean isTypeCompatible(FanResolvedType type, FanResolvedType baseType)
+	{
+		if(type instanceof FanResolvedNullType)
+			return baseType.isNullable();
+		if(type==null || type.getDbType()==null)
+			return false;
+		if(type instanceof FanUnknownType || baseType instanceof FanUnknownType)
+			return true;
+		if(type.getDbType().getQualifiedName().equals(baseType.getDbType().getQualifiedName()))
+			return true;
+		return isTypeCompatible(getParentType(type), baseType);
+	}
+
+	/**
+	 * Gte the parent type of type (class it inherits from)
+	 * @param type
+	 * @return
+	 */
+	public static FanResolvedType getParentType(FanResolvedType type)
+	{
+		if(type==null)
+			return null;
+		if(type instanceof FanUnknownType)
+			return null;
+		if(type instanceof FanResolvedNullType)
+			return fromTypeSig(null, "sys::Obj?");
+		if(type.getDbType().isEnum())
+			return fromTypeSig(null, "sys::Enum");
+		if(type.getDbType().isMixin())
+			return null;
+		return FanTypeInheritance.findParentType(null, type);
+	}
+
+	/**
+	 * Creates a type with the most "generic" type common to all the items
+	 * For example {Int, Float} would give Num
+	 * @param itemsNode
+	 * @param items
+	 * @return
+	 */
+	public static FanResolvedType makeFromItemList(AstNode itemsNode, FanResolvedType[] items/*, int n*/)
+	{
+		if (items.length == 0)
+		{
+			return fromTypeSig(itemsNode, "sys::Obj?");
+		}
+		boolean nullable = false;
+		FanResolvedType best = null;
+		for (FanResolvedType item : items)
+		{
+			if (item == null)
+			{
+				nullable = true;
+				continue;
+			}
+			FanResolvedType t = item;
+			if (best == null)
+			{
+				best = t;
+				continue;
+			}
+			while (!isTypeCompatible(t, best)) // exetnds
+			{
+				best = getParentType(best); // get parent
+				if (best == null)
+				{
+					return nullable ? fromTypeSig(itemsNode, "sys::Obj?") : fromTypeSig(itemsNode, "sys::Obj");
+				}
+			}
+		}
+		if (best == null)
+		{
+			best = fromTypeSig(itemsNode, "sys::Obj");
+		}
+		if(nullable)
+			best.setNullableContext(true);
+		return best;
 	}
 }

@@ -96,10 +96,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		super();
 		indexerThread = new FanIndexerThread();
 		indexerThread.start();
-		if (FanPlatform.getInstance(false).isConfigured())
-		{
-			indexAll(false);
-		}
 	}
 
 	synchronized void warnIfNecessary()
@@ -116,6 +112,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		MainIndexer idx = new MainIndexer(backgroundJava);
 		idx.start();
+		if (!backgroundJava)
+		{
+			idx.waitFor();
+		}
+
 	}
 
 	public FanJarsIndexer getJarsIndexer()
@@ -1139,6 +1140,21 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			// Do this one in the background (might take a while and not needed for everyone)
 			jarsIndexer.indexJars(bg);
 			done = true;
+		}
+
+		public void waitFor()
+		{
+			while (!done && ! shutdown)
+			{
+				try
+				{
+					sleep(250);
+					yield();
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }

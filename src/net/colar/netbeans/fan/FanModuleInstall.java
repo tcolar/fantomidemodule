@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import net.colar.netbeans.fan.indexer.FanIndexer;
+import net.colar.netbeans.fan.indexer.FanIndexerFactory;
+import net.colar.netbeans.fan.platform.FanPlatform;
 import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTPersistanceManager;
 import net.jot.prefs.JOTPreferences;
@@ -58,6 +60,13 @@ public class FanModuleInstall extends ModuleInstall
 		{
 			e.printStackTrace();
 		}
+
+		//start indexer
+		if (FanPlatform.getInstance(false).isConfigured())
+		{
+			FanIndexerFactory.getIndexer().indexAll(false);
+		}
+
 		super.restored();
 	}
 

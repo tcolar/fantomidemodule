@@ -649,9 +649,9 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule list()
 	{
-		return sequence(
-			optional(type()), OPT_LF(),
-			SQ_BRACKET_L, OPT_LF(), listItems(), OPT_LF(), SQ_BRACKET_R);
+		return sequence(sequence(
+			optional(sequence(type(), ast.newNode(AstKind.AST_TYPE))), OPT_LF(),
+			SQ_BRACKET_L, OPT_LF(), listItems(), OPT_LF(), SQ_BRACKET_R), ast.newNode(AstKind.AST_LIST));
 	}
 
 	public Rule listItems()
@@ -664,10 +664,10 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule map()
 	{
-		return sequence(
-			optional(firstOf(mapType(), simpleMapType())),
+		return sequence(sequence(
+			optional(sequence(firstOf(mapType(), simpleMapType()), ast.newNode(AstKind.AST_TYPE))),
 			// Not enforced to allow resolving list of typed maps like [Str:Int][]
-			sequence(SQ_BRACKET_L, OPT_LF(), mapItems(), OPT_LF(), SQ_BRACKET_R));
+			sequence(SQ_BRACKET_L, OPT_LF(), mapItems(), OPT_LF(), SQ_BRACKET_R)),ast.newNode(AstKind.AST_MAP));
 	}
 
 	public Rule mapItems()
@@ -680,7 +680,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule mapPair()
 	{
 		// allowing all expressions is probably more than really needed
-		return sequence(expr(), enforcedSequence(SP_COL, expr()));
+		return sequence(sequence(expr(), enforcedSequence(SP_COL, expr())), ast.newNode(AstKind.AST_MAP_PAIR));
 	}
 
 	public Rule mapItem()

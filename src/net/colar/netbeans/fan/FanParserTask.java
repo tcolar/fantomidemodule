@@ -344,6 +344,10 @@ public class FanParserTask extends ParserResult
 				}
 				type = retType;
 				break;
+			case AST_LIST:
+				break;
+			case AST_MAP:
+				break;
 			case AST_EXPR_INDEX:
 				parseChildren(node);
 				FanResolvedType slotType = FanResolvedType.resolveSlotType(type, "get");

@@ -4,6 +4,7 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
 import net.jot.persistance.JOTSQLCondition;
@@ -47,6 +48,12 @@ public class FanTypeInheritance extends JOTModel
 		this.mainType = mainType;
 	}
 
+	/**
+	 * Find all the types mainType inherits from
+	 * @param transaction
+	 * @param mainType
+	 * @return
+	 */
 	public static Vector<FanTypeInheritance> findAllForMainType(JOTTransaction transaction, String mainType)
 	{
 		try
@@ -57,6 +64,26 @@ public class FanTypeInheritance extends JOTModel
 		{
 		}
 		return new Vector<FanTypeInheritance>();
+	}
+
+	/**
+	 * Use through FanResolvedType.getParentType
+	 * @param transaction
+	 * @param type
+	 */
+	public static FanResolvedType findParentType(JOTTransaction transaction, FanResolvedType type)
+	{
+		Vector<FanTypeInheritance> inhs = findAllForMainType(transaction, type.getDbType().getQualifiedName());
+		for(FanTypeInheritance inh :inhs)
+		{
+			FanResolvedType t = FanResolvedType.makeFromDbType(null, inh.getInheritedType());
+			if(t.isResolved() && t.getDbType().isClass())
+				return t;
+		}
+		if( ! type.getDbType().getQualifiedName().equals("sys::Obj")
+			&& ! type.getDbType().isMixin())
+			return FanResolvedType.makeFromDbType(null,"sys::Obj");
+		return null;
 	}
 
 }

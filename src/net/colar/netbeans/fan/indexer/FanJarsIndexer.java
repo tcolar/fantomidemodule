@@ -186,6 +186,7 @@ public class FanJarsIndexer implements FileChangeListener
 				}
 			}
 		}
+		log.info("Done Indexing jar: " + j);
 	}
 
 	private Class findClass(String name) throws ClassNotFoundException
@@ -704,25 +705,26 @@ public class FanJarsIndexer implements FileChangeListener
 							}
 						}
 					}
-					Thread.yield();
+					yield();
 				}
 			} catch (Throwable t)
 			{
 				log.exception("Pod indexing thread error", t);
 			}
-
 			done = true;
 		}
 
 		protected void waitFor()
 		{
-			while (!done)
+			while (!done && ! shutdown)
 			{
 				try
 				{
-					sleep(50);
+					sleep(250);
+					yield();
 				} catch (Exception e)
 				{
+					e.printStackTrace();
 				}
 			}
 		}
