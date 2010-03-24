@@ -140,7 +140,7 @@ public class FantomSrcParsingTest implements JOTTestable
 
 		public Project[] getOpenProjectsAPI()
 		{
-			System.out.println("getOpenPrjApis");
+			//System.out.println("getOpenPrjApis");
 			return null;
 		}
 
@@ -158,7 +158,7 @@ public class FantomSrcParsingTest implements JOTTestable
 
 		public Future<Project[]> openProjectsAPI()
 		{
-			System.out.println("apis");
+			//System.out.println("apis");
 			return null;
 		}
 
@@ -168,7 +168,7 @@ public class FantomSrcParsingTest implements JOTTestable
 
 		public Project getMainProject()
 		{
-			System.out.println("getMainProject");
+			//System.out.println("getMainProject");
 			return null;
 		}
 

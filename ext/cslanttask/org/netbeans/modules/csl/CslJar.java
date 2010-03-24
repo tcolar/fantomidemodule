@@ -226,7 +226,7 @@ public class CslJar extends JarWithModuleAttributes {
 
 
                 String mimeType = outerMime.getAttribute(FILENAME) + "/" + innerMime.getAttribute(FILENAME);
-                System.out.println("   Handling " + mimeType);
+                //System.out.println("   Handling " + mimeType);
 
                 boolean customEditorKit = false;
                 String cslLanguageClass = null;
@@ -278,13 +278,13 @@ public class CslJar extends JarWithModuleAttributes {
 						// property 'all_jars_path' set in build.xml to ${nbplatform.active.dir}/ide12/modules/ (plus whatever other path you jar libraries depencies in)
 						// ';' separated.
                         String allJarPaths = getProject().getProperty("all_jars_path");
-						System.out.println("alljarspath: "+allJarPaths);
+						//System.out.println("alljarspath: "+allJarPaths);
                         if (allJarPaths != null && allJarPaths.length() > 0) {
 							String[] jarPaths = allJarPaths.split(";");
 							for(String jarPath : jarPaths)
 							{
                             File jarFolder = new File(jarPath); // NOI18N
-						System.out.println("jarFolder: "+jarFolder.getAbsolutePath());
+							System.out.println("jarFolder: "+jarFolder.getAbsolutePath());
                             if (jarFolder.exists()) {
                                 // This is a hack! I should try to find a good classloader which loads in ALL the
                                 // jars needed by this module!! Can I use the classpath from the compilation step
@@ -300,8 +300,8 @@ public class CslJar extends JarWithModuleAttributes {
                             }
 							}
                         }
-						for(URL url : urls)
-							System.out.println("Url: "+url);
+						//for(URL url : urls)
+						//	System.out.println("Url: "+url);
 
                         ClassLoader myClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
 

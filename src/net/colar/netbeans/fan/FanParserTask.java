@@ -360,7 +360,7 @@ public class FanParserTask extends ParserResult
 				} else
 				{
 					type = null;
-					node.getRoot().getParserTask().addError("Index expression only valid on lists, maps -> " + text, node);
+					node.getRoot().getParserTask().addError("Index expression only valid on lists, maps or types with get method-> " + text, node);
 				}
 				// TODO: check if list/map index key type is valid ?
 				break;
@@ -502,7 +502,7 @@ public class FanParserTask extends ParserResult
 				parseChildren(node);
 		}
 		//TODO: always parse children rather than in individual cases.
-		System.out.println("ND_TYPE:" + node + " -> " + type);
+		//System.out.println("ND_TYPE:" + node + " -> " + type);
 		node.setType(type);
 		if (type != null && !type.isResolved())
 		{

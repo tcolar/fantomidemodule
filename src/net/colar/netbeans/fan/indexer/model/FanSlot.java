@@ -274,7 +274,7 @@ public class FanSlot extends JOTModel
 			//System.out.println("###### skipping: "+typeName);
 			return new ArrayList<FanSlot>();
 		}
-		System.out.println("############## " + fanType);
+		//System.out.println("############## " + fanType);
 		
 		doneTypes.add(fanType);
 		FanType dbType = FanType.findByQualifiedName(fanType);
