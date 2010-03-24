@@ -273,10 +273,11 @@ public class FanParserTask extends ParserResult
 		{
 			return;
 		}
-		// If base type is unknown ... so is child
+		// If base type is unknown ... so are child
 		if (type instanceof FanUnknownType)
 		{
 			node.setType(type);
+			// Note: all children(if any) will be "unknown" as well.
 			parseChildren(node);
 			return;
 		}
