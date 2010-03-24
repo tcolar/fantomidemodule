@@ -178,8 +178,8 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-						false, Severity.ERROR);
+					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+					false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
@@ -273,6 +273,13 @@ public class FanParserTask extends ParserResult
 		{
 			return;
 		}
+		// If base type is unknown ... so is child
+		if (type instanceof FanUnknownType)
+		{
+			node.setType(type);
+			parseChildren(node);
+			return;
+		}
 
 		String text = node.getNodeText(true);
 		List<AstNode> children = node.getChildren();
@@ -304,6 +311,11 @@ public class FanParserTask extends ParserResult
 						Then
 
 						foo |a, b, c| {}  =>  foo |Str a, Int b, Float c| {}
+						 *
+						 * fansh> t := List#.parameterize(["V":Str#])
+						sys::Str[]
+						fansh> t.method("each").signature
+						sys::Void each(|sys::Str,sys::Int->sys::Void| c)
 						 */
 						//FanResolvedType fType = FanResolvedType.makeFromDbType(child, "sys::Obj");
 						FanResolvedType fType = new FanUnknownType(node, text); //TODO: resolve formal type
@@ -360,17 +372,12 @@ public class FanParserTask extends ParserResult
 				type = null;
 				for (AstNode child : children)
 				{
-					// If the type is unknow, no point looking any further
-					if (type instanceof FanUnknownType)
-					{
-						break;
-					}
 					parseVars(child, type);
 					// Those kinds take the right hand side type
 					// It block chnages the type because it makes it NOT staticContext
 					if (first || child.getKind() == AstKind.AST_EXPR_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
-							|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
-							|| child.getKind() == AstKind.AST_IT_BLOCK)
+						|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
+						|| child.getKind() == AstKind.AST_IT_BLOCK)
 					{
 						type = child.getType();
 					}
@@ -380,11 +387,6 @@ public class FanParserTask extends ParserResult
 			case AST_EXPR_CALL:
 				AstNode callChild = children.get(0);
 				String slotName = callChild.getNodeText(true);
-				// If the type is unknow, no point looking any further
-				if (type instanceof FanUnknownType)
-				{
-					break;
-				}
 				//if a direct call like doThis(), then use this type as base
 				if (type == null)
 				{
