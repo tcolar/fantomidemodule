@@ -5,7 +5,6 @@ package net.colar.netbeans.fan.test;
 
 import java.util.prefs.Preferences;
 import net.colar.netbeans.fan.FanModuleInstall;
-import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.colar.netbeans.fan.test.mock.MockLookup;
@@ -30,19 +29,16 @@ public abstract class FantomCSLTest implements JOTTestable
 		// Addd the required trampoline impl.
 		MockLookup.setInstances(new MockTrampoline());
 
-		// Initialize the module (JavaOnTracks startup hooks)
-		FanModuleInstall mi = new FanModuleInstall();
-		mi.restored();
-
 		// Setup the test Platform
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, FantomParserTest.FAN_HOME);
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_DEBUG_PORT, "8080");
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx256m");
 		FanPlatform.getInstance().readSettings();
 
-		// Update the indexer - since needed for most features
+		// Initialize the module (JavaOnTracks startup hooks)
+		FanModuleInstall mi = new FanModuleInstall();
 		// Note: this will run the indexer (might take a while the first time)
-		FanIndexerFactory.getIndexer().indexAll(false);
+		mi.restored();
 
 		try
 		{
