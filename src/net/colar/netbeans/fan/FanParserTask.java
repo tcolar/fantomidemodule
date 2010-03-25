@@ -266,6 +266,7 @@ public class FanParserTask extends ParserResult
 	}
 	//TODO: don't show the whole stack of errors, but just the base.
 	// esp. for expressions, calls etc...
+
 	private void parseVars(AstNode node, FanResolvedType type)
 	{
 		if (node == null)
@@ -277,7 +278,7 @@ public class FanParserTask extends ParserResult
 		{
 			node.setType(type);
 			// Note: all children(if any) will be "unknown" as well.
-			for(AstNode nd :node.getChildren())
+			for (AstNode nd : node.getChildren())
 			{
 				parseVars(nd, type);
 			}
@@ -285,181 +286,31 @@ public class FanParserTask extends ParserResult
 		}
 
 		String text = node.getNodeText(true);
-		List<AstNode> children = node.getChildren();
 		switch (node.getKind())
 		{
 			case AST_CLOSURE:
-				AstNode closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
-				FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void");
-				for (AstNode child : children)
-				{
-					if (child.getKind() == AstKind.AST_FORMAL)
-					{
-						AstNode formalName = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_ID));
-						AstNode formalTypeAndId = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
-						// TODO: try to deal with inference ??
-						/*
-						 * Closures like on each are inferred by the function parameter on the method being called.
-
-						For example each on a Field[] will have a parametered signature of each(|Field f| func) which is how f gets typed a Field.
-
-						The place it happens in my code is CallResolver.inferClosureTypeFromCall
-
-						Take a look at thru that code and see if it makes it clearer.  Remember it works with any method that takes a function.
-
-						For example if the method is:
-
-						foo(|Str, Int, Float| f)
-
-						Then
-
-						foo |a, b, c| {}  =>  foo |Str a, Int b, Float c| {}
-						 *
-						 * fansh> t := List#.parameterize(["V":Str#])
-						sys::Str[]
-						fansh> t.method("each").signature
-						sys::Void each(|sys::Str,sys::Int->sys::Void| c)
-						 */
-						//FanResolvedType fType = FanResolvedType.makeFromDbType(child, "sys::Obj");
-						FanResolvedType fType = new FanUnknownType(node, text); //TODO: resolve formal type
-						if (formalTypeAndId != null)
-						{ // if inferred this is null
-							formalName = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_ID));
-							AstNode formalType = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_TYPE));
-							parseVars(formalType, null);
-							fType = formalType.getType();
-						}
-						// add the formals vars to the closure block scope
-						closureBlock.addScopeVar(formalName.getNodeText(true), VarKind.LOCAL, fType, true);
-					}
-					if (child.getKind() == AstKind.AST_TYPE)
-					{
-						// save the returned type
-						parseVars(child, type);
-						retType = child.getType();
-					}
-					if (child.getKind() == AstKind.AST_BLOCK)
-					{
-						// parse the block content
-						parseVars(child, type);
-					}
-				}
-				type = retType;
-				break;
-			case AST_LIST:
-				AstNode listTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
-				List<AstNode> listExprNodes = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_EXPR));
-				List<FanResolvedType> listTypes = new ArrayList();
-				for(AstNode listExpr : listExprNodes)
-				{
-					parseVars(listExpr, null);
-					listTypes.add(listExpr.getType());
-				}
-				if(listTypeNode!=null)
-				{   // if it's a typed list, use that as the type
-					parseVars(listTypeNode, null);
-					type = new FanResolvedListType(node, 
-							listTypeNode.getType());
-				}
-				else
-				{ // otherwise try to infer it from the expr Nodes
-					type = new FanResolvedListType(node,
-							FanResolvedType.makeFromItemList(node, listTypes));
-				}
-				break;
-			case AST_MAP:
-				AstNode mapTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
-				List<AstNode> mapPairNodes = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_MAP_PAIR));
-				List<FanResolvedType> mapKeyTypes = new ArrayList();
-				List<FanResolvedType> mapValTypes = new ArrayList();
-				for(AstNode mapPair : mapPairNodes)
-				{
-					AstNode mapKey=mapPair.getChildren().get(0);
-					AstNode mapVal=mapPair.getChildren().get(1);
-					parseVars(mapKey, null);
-					parseVars(mapVal, null);
-					mapKeyTypes.add(mapKey.getType());
-					mapValTypes.add(mapVal.getType());
-				}
-				if(mapTypeNode!=null)
-				{   // if it's a typed list, use that as the type
-					parseVars(mapTypeNode, null);
-					type = mapTypeNode.getType();
-				}
-				else
-				{ // otherwise try to infer it from the expr Nodes
-					type = new FanResolvedMapType(node, 
-							FanResolvedType.makeFromItemList(node, mapKeyTypes),
-							FanResolvedType.makeFromItemList(node, mapValTypes)
-							);
-				}
+				type = doClosure(node, type);
 				break;
 			case AST_EXPR_INDEX:
-				parseChildren(node);
-				FanResolvedType slotType = FanResolvedType.resolveSlotType(type, "get");
-				if (type instanceof FanResolvedListType)
-				{
-					type = ((FanResolvedListType) type).getItemType();
-				} else if (type instanceof FanResolvedMapType)
-				{
-					type = ((FanResolvedMapType) type).getValType();
-				} //Can also use index expression on any type with a get method
-				else if (slotType != null && slotType.isResolved())
-				{
-					type = slotType;
-				} else
-				{
-					type = null;
-					node.getRoot().getParserTask().addError("Index expression only valid on lists, maps or types with get method-> " + text, node);
-				}
-				// TODO: check if list/map index key type is valid ?
+				type = doIndexExpr(node, type);
+				break;
+			case AST_LIST:
+				// Index expressions, sometimes get parsed as Lists because the parser doesn't know a Type vs a variable
+				// so str[0] gets parsed as a list (like Str[0] would be) rather than an index expr
+				// so dolist takes care of that issue.
+				type = doList(node, type);
+				break;
+			case AST_MAP:
+				type = doMap(node, type);
 				break;
 			case AST_EXPR:
 			case AST_EXPR_ASSIGN: // with the assignment we need reset type to null (start a new expression)
 			case AST_EXPR_MULT:
 			case AST_EXPR_ADD:
-				// TODO: validate assignment type is compatible.
-				boolean first = true;
-				type = null;
-				for (AstNode child : children)
-				{
-					parseVars(child, type);
-					// Those kinds take the right hand side type
-					// It block chnages the type because it makes it NOT staticContext
-					if (first || child.getKind() == AstKind.AST_EXPR_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
-						|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
-						|| child.getKind() == AstKind.AST_IT_BLOCK)
-					{
-						type = child.getType();
-					}
-					first = false;
-				}
+				type = doExpr(node, type);
 				break;
 			case AST_EXPR_CALL:
-				AstNode callChild = children.get(0);
-				String slotName = callChild.getNodeText(true);
-				//if a direct call like doThis(), then use this type as base
-				if (type == null)
-				{
-					type = FanResolvedType.makeFromLocalID(callChild, slotName);
-				} else
-				// otherwise a slot of the base type like var.toStr()
-				{
-					//if(! (type instanceof FanUnknownType))
-						type = FanResolvedType.resolveSlotType(type, slotName);
-				}
-
-				List<AstNode> args = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ARG));
-				for (AstNode arg : args)
-				{
-					parseVars(arg, null);
-				}
-				//TODO: Check that param types matches slot declaration
-				AstNode closure = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLOSURE));
-				if (closure != null)
-				{
-					parseVars(closure, type);
-				}
+				type = doCall(node, type);
 				break;
 			case AST_ARG:
 				// arg contains one expression - parse it to check for errors
@@ -474,18 +325,7 @@ public class FanParserTask extends ParserResult
 				//TODO: check if cast is valid
 				break;
 			case AST_EXPR_TYPE_CHECK:
-				parseChildren(node);
-				AstNode checkType = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
-				if (text.startsWith("as")) // (cast)
-				{
-					type = checkType.getType();
-				} else if (text.startsWith("is")) // is or isnot	-> boolean
-				{
-					type = FanResolvedType.makeFromDbType(node, "sys::Bool");
-				} else
-				{
-					type = null; // shouldn't happen
-				}
+				type = doTypeCheckExpr(node, type);
 				break;
 			case AST_EXPR_RANGE:
 				parseChildren(node);
@@ -493,21 +333,7 @@ public class FanParserTask extends ParserResult
 				type = new FanResolvedListType(node, rangeType.getType()); // list of
 				break;
 			case AST_IT_BLOCK:
-				// introduce itblock scope variables
-				if (type != null && type.getDbType() != null)
-				{
-					type.setStaticContext(false);
-					List<FanSlot> itSlots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), false);
-					for (FanSlot itSlot : itSlots)
-					{
-						FanAstScopeVarBase newVar = new FanLocalScopeVar(node, itSlot, itSlot.getName());
-						node.addScopeVar(newVar, true);
-					}
-					// add "it" to scope
-					FanAstScopeVarBase itVar = new FanLocalScopeVar(node, VarKind.IMPLIED, "it", type);
-					node.addScopeVar(itVar, true);
-				}
-				parseChildren(node);
+				type = doItBlock(node, type);
 				break;
 			case AST_EXPR_LIT_BASE:
 				Node<AstNode> parseNode = node.getParseNode().getChildren().get(0); // firstOf
@@ -520,40 +346,13 @@ public class FanParserTask extends ParserResult
 				type = FanResolvedType.fromTypeSig(node, text);
 				break;
 			case AST_LOCAL_DEF: // special case, since it introduces scope vars
-				AstNode typeAndIdNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
-				AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
-				AstNode exprNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));
-				if (typeAndIdNode != null)
-				{
-					idNode = FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_ID));
-					AstNode typeNode = FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_TYPE));
-					parseVars(typeNode, null);
-					type = typeNode.getType();
-				}
-
-				String name = idNode.getNodeText(true);
-
-				if (exprNode != null)
-				{
-					parseVars(exprNode, null);
-					if (type == null) // Prefer the type in TypeNode if specified
-					{
-						type = exprNode.getType();
-						//TODO: check types are compatible
-					}
-				}
-				if (type != null)
-				{
-					type.setStaticContext(false);
-				}
-				node.addScopeVar(new FanLocalScopeVar(node, VarKind.LOCAL, name, type), false);
+				type = doLocalDef(node, type);
 				break;
 			default:
 				// recurse into children
 				parseChildren(node);
 		}
-		//TODO: always parse children rather than in individual cases.
-		//System.out.println("ND_TYPE:" + node + " -> " + type);
+		
 		node.setType(type);
 		if (type != null && !type.isResolved())
 		{
@@ -792,6 +591,277 @@ public class FanParserTask extends ParserResult
 		{
 			children.remove(nd);
 		}
+	}
+
+	private FanResolvedType doExpr(AstNode node, FanResolvedType type)
+	{
+		// TODO: validate assignment type is compatible.
+		boolean first = true;
+		type = null;
+		for (AstNode child : node.getChildren())
+		{
+			parseVars(child, type);
+			// Those kinds take the right hand side type
+			// It block chnages the type because it makes it NOT staticContext
+			if (first || child.getKind() == AstKind.AST_EXPR_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
+				|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
+				|| child.getKind() == AstKind.AST_IT_BLOCK)
+			{
+				type = child.getType();
+			}
+			first = false;
+		}
+		return type;
+	}
+
+	private FanResolvedType doCall(AstNode node, FanResolvedType type)
+	{
+		AstNode callChild = node.getChildren().get(0);
+		String slotName = callChild.getNodeText(true);
+		//if a direct call like doThis(), then use this type as base
+		if (type == null)
+		{
+			type = FanResolvedType.makeFromLocalID(callChild, slotName);
+		} else
+		// otherwise a slot of the base type like var.toStr()
+		{
+			//if(! (type instanceof FanUnknownType))
+			type = FanResolvedType.resolveSlotType(type, slotName);
+		}
+
+		List<AstNode> args = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ARG));
+		for (AstNode arg : args)
+		{
+			parseVars(arg, null);
+		}
+		//TODO: Check that param types matches slot declaration
+		AstNode closure = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLOSURE));
+		if (closure != null)
+		{
+			parseVars(closure, type);
+		}
+		return type;
+	}
+
+	private FanResolvedType doClosure(AstNode node, FanResolvedType type)
+	{
+		AstNode closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
+		FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void");
+		for (AstNode child : node.getChildren())
+		{
+			if (child.getKind() == AstKind.AST_FORMAL)
+			{
+				AstNode formalName = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_ID));
+				AstNode formalTypeAndId = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
+				// TODO: try to deal with inference ??
+						/*
+				 * Closures like on each are inferred by the function parameter on the method being called.
+
+				For example each on a Field[] will have a parametered signature of each(|Field f| func) which is how f gets typed a Field.
+
+				The place it happens in my code is CallResolver.inferClosureTypeFromCall
+
+				Take a look at thru that code and see if it makes it clearer.  Remember it works with any method that takes a function.
+
+				For example if the method is:
+
+				foo(|Str, Int, Float| f)
+
+				Then
+
+				foo |a, b, c| {}  =>  foo |Str a, Int b, Float c| {}
+				 *
+				 * fansh> t := List#.parameterize(["V":Str#])
+				sys::Str[]
+				fansh> t.method("each").signature
+				sys::Void each(|sys::Str,sys::Int->sys::Void| c)
+				 */
+				//FanResolvedType fType = FanResolvedType.makeFromDbType(child, "sys::Obj");
+				FanResolvedType fType = new FanUnknownType(node, node.getNodeText(true)); //TODO: resolve formal type
+				if (formalTypeAndId != null)
+				{ // if inferred this is null
+					formalName = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_ID));
+					AstNode formalType = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_TYPE));
+					parseVars(formalType, null);
+					fType = formalType.getType();
+				}
+				// add the formals vars to the closure block scope
+				closureBlock.addScopeVar(formalName.getNodeText(true), VarKind.LOCAL, fType, true);
+			}
+			if (child.getKind() == AstKind.AST_TYPE)
+			{
+				// save the returned type
+				parseVars(child, type);
+				retType = child.getType();
+			}
+			if (child.getKind() == AstKind.AST_BLOCK)
+			{
+				// parse the block content
+				parseVars(child, type);
+			}
+		}
+		type = retType;
+		return type;
+	}
+
+	/**
+	 *	Index expressions, sometimes get parsed as Lists because the parser doesn't know a Type vs a variable
+	 *	so str[0] gets parsed as a list (like Str[0] would be) rather than an index expr
+     *  So we deal with this here.
+	 * @param node
+	 * @param type
+	 * @return
+	 */
+	private FanResolvedType doList(AstNode node, FanResolvedType type)
+	{
+		AstNode listTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+		List<AstNode> listExprNodes = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_EXPR));
+		List<FanResolvedType> listTypes = new ArrayList();
+		if (listTypeNode != null)
+		{   // if it's a typed list, use that as the type
+			parseVars(listTypeNode, null);
+			type = new FanResolvedListType(node,
+				listTypeNode.getType());
+			
+			if(!type.isStaticContext())
+			{
+				// It's NOT a List at all after all, but an index expression (called on a var, not a Static type)!
+				return doIndexExpr(node, type);
+			}
+		}
+
+		for (AstNode listExpr : listExprNodes)
+		{
+			parseVars(listExpr, null);
+			listTypes.add(listExpr.getType());
+		}
+		if (listTypeNode == null)
+		{   // try to infer it from the expr Nodes
+			type = new FanResolvedListType(node,
+				FanResolvedType.makeFromItemList(node, listTypes));
+		}
+		return type;
+	}
+
+	private FanResolvedType doMap(AstNode node, FanResolvedType type)
+	{
+		AstNode mapTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+		List<AstNode> mapPairNodes = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_MAP_PAIR));
+		List<FanResolvedType> mapKeyTypes = new ArrayList();
+		List<FanResolvedType> mapValTypes = new ArrayList();
+		for (AstNode mapPair : mapPairNodes)
+		{
+			AstNode mapKey = mapPair.getChildren().get(0);
+			AstNode mapVal = mapPair.getChildren().get(1);
+			parseVars(mapKey, null);
+			parseVars(mapVal, null);
+			mapKeyTypes.add(mapKey.getType());
+			mapValTypes.add(mapVal.getType());
+		}
+		if (mapTypeNode != null)
+		{   // if it's a typed list, use that as the type
+			parseVars(mapTypeNode, null);
+			type = mapTypeNode.getType();
+		} else
+		{ // otherwise try to infer it from the expr Nodes
+			type = new FanResolvedMapType(node,
+				FanResolvedType.makeFromItemList(node, mapKeyTypes),
+				FanResolvedType.makeFromItemList(node, mapValTypes));
+		}
+		return type;
+	}
+
+	private FanResolvedType doIndexExpr(AstNode node, FanResolvedType type)
+	{
+		parseChildren(node);
+		FanResolvedType slotType = FanResolvedType.resolveSlotType(type, "get");
+		if (type instanceof FanResolvedListType)
+		{
+			type = ((FanResolvedListType) type).getItemType();
+		} else if (type instanceof FanResolvedMapType)
+		{
+			type = ((FanResolvedMapType) type).getValType();
+		} //Can also use index expression on any type with a get method
+		else if (slotType != null && slotType.isResolved())
+		{
+			type = slotType;
+		} else
+		{
+			type = null;
+			node.getRoot().getParserTask().addError("Index expression only valid on lists, maps or types with get method-> " + node.getNodeText(true), node);
+		}
+		// TODO: check if list/map index key type is valid ?
+		return type;
+	}
+
+	private FanResolvedType doTypeCheckExpr(AstNode node, FanResolvedType type)
+	{
+		String text = node.getNodeText(true);
+		parseChildren(node);
+		AstNode checkType = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+		if (text.startsWith("as")) // (cast)
+		{
+			type = checkType.getType();
+		} else if (text.startsWith("is")) // is or isnot	-> boolean
+		{
+			type = FanResolvedType.makeFromDbType(node, "sys::Bool");
+		} else
+		{
+			type = null; // shouldn't happen
+		}
+		return type;
+	}
+
+	private FanResolvedType doItBlock(AstNode node, FanResolvedType type)
+	{
+		// introduce itblock scope variables
+		if (type != null && type.getDbType() != null)
+		{
+			type.setStaticContext(false);
+			List<FanSlot> itSlots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), false);
+			for (FanSlot itSlot : itSlots)
+			{
+				FanAstScopeVarBase newVar = new FanLocalScopeVar(node, itSlot, itSlot.getName());
+				node.addScopeVar(newVar, true);
+			}
+			// add "it" to scope
+			FanAstScopeVarBase itVar = new FanLocalScopeVar(node, VarKind.IMPLIED, "it", type);
+			node.addScopeVar(itVar, true);
+		}
+		parseChildren(node);
+		return type;
+	}
+
+	private FanResolvedType doLocalDef(AstNode node, FanResolvedType type)
+	{
+		AstNode typeAndIdNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
+		AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
+		AstNode exprNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));
+		if (typeAndIdNode != null)
+		{
+			idNode = FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_ID));
+			AstNode typeNode = FanLexAstUtils.getFirstChild(typeAndIdNode, new NodeKindPredicate(AstKind.AST_TYPE));
+			parseVars(typeNode, null);
+			type = typeNode.getType();
+		}
+
+		String name = idNode.getNodeText(true);
+
+		if (exprNode != null)
+		{
+			parseVars(exprNode, null);
+			if (type == null) // Prefer the type in TypeNode if specified
+			{
+				type = exprNode.getType();
+				//TODO: check types are compatible
+			}
+		}
+		if (type != null)
+		{
+			type.setStaticContext(false);
+		}
+		node.addScopeVar(new FanLocalScopeVar(node, VarKind.LOCAL, name, type), false);
+		return type;
 	}
 }
 
