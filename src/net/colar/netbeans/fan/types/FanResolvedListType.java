@@ -31,4 +31,5 @@ public class FanResolvedListType extends FanResolvedType
 	{
 		return itemType.toTypeSig(fullyQualified)+"[]";
 	}
+
 }

@@ -264,7 +264,6 @@ public class FanParserTask extends ParserResult
 
 		FanLexAstUtils.dumpTree(astRoot, 0);
 	}
-
 	//TODO: don't show the whole stack of errors, but just the base.
 	// esp. for expressions, calls etc...
 	private void parseVars(AstNode node, FanResolvedType type)
@@ -345,8 +344,52 @@ public class FanParserTask extends ParserResult
 				type = retType;
 				break;
 			case AST_LIST:
+				AstNode listTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+				List<AstNode> listExprNodes = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_EXPR));
+				List<FanResolvedType> listTypes = new ArrayList();
+				for(AstNode listExpr : listExprNodes)
+				{
+					parseVars(listExpr, null);
+					listTypes.add(listExpr.getType());
+				}
+				if(listTypeNode!=null)
+				{   // if it's a typed list, use that as the type
+					parseVars(listTypeNode, null);
+					type = new FanResolvedListType(node, 
+							listTypeNode.getType());
+				}
+				else
+				{ // otherwise try to infer it from the expr Nodes
+					type = new FanResolvedListType(node,
+							FanResolvedType.makeFromItemList(node, listTypes));
+				}
 				break;
 			case AST_MAP:
+				AstNode mapTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+				List<AstNode> mapPairNodes = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_MAP_PAIR));
+				List<FanResolvedType> mapKeyTypes = new ArrayList();
+				List<FanResolvedType> mapValTypes = new ArrayList();
+				for(AstNode mapPair : mapPairNodes)
+				{
+					AstNode mapKey=mapPair.getChildren().get(0);
+					AstNode mapVal=mapPair.getChildren().get(1);
+					parseVars(mapKey, null);
+					parseVars(mapVal, null);
+					mapKeyTypes.add(mapKey.getType());
+					mapValTypes.add(mapVal.getType());
+				}
+				if(mapTypeNode!=null)
+				{   // if it's a typed list, use that as the type
+					parseVars(mapTypeNode, null);
+					type = mapTypeNode.getType();
+				}
+				else
+				{ // otherwise try to infer it from the expr Nodes
+					type = new FanResolvedMapType(node, 
+							FanResolvedType.makeFromItemList(node, mapKeyTypes),
+							FanResolvedType.makeFromItemList(node, mapValTypes)
+							);
+				}
 				break;
 			case AST_EXPR_INDEX:
 				parseChildren(node);

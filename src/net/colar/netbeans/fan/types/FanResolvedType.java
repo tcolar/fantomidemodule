@@ -96,7 +96,7 @@ public class FanResolvedType
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(dbType == null ? "null" : dbType.getQualifiedName()).append(" r:").append(isResolved()).append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
+		StringBuilder sb = new StringBuilder(dbType == null ? "null" : toTypeSig(true)).append(" r:").append(isResolved()).append(" s:").append(isStaticContext()).append(" n:").append(isNullable());
 		return sb.toString();
 	}
 
@@ -533,9 +533,9 @@ public class FanResolvedType
 	 * @param items
 	 * @return
 	 */
-	public static FanResolvedType makeFromItemList(AstNode itemsNode, FanResolvedType[] items/*, int n*/)
+	public static FanResolvedType makeFromItemList(AstNode itemsNode, List<FanResolvedType> items/*, int n*/)
 	{
-		if (items.length == 0)
+		if (items.size() == 0)
 		{
 			return fromTypeSig(itemsNode, "sys::Obj?");
 		}
