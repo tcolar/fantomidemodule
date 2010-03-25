@@ -277,7 +277,10 @@ public class FanParserTask extends ParserResult
 		{
 			node.setType(type);
 			// Note: all children(if any) will be "unknown" as well.
-			parseChildren(node);
+			for(AstNode nd :node.getChildren())
+			{
+				parseVars(nd, type);
+			}
 			return;
 		}
 
@@ -442,7 +445,8 @@ public class FanParserTask extends ParserResult
 				} else
 				// otherwise a slot of the base type like var.toStr()
 				{
-					type = FanResolvedType.resolveSlotType(type, slotName);
+					//if(! (type instanceof FanUnknownType))
+						type = FanResolvedType.resolveSlotType(type, slotName);
 				}
 
 				List<AstNode> args = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ARG));
