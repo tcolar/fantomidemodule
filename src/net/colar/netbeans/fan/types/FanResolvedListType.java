@@ -18,6 +18,8 @@ public class FanResolvedListType extends FanResolvedType
 	public FanResolvedListType(AstNode scopeNode, FanResolvedType itemType)
 	{
 		super(scopeNode, "sys::List", FanType.findByQualifiedName("sys::List"));
+		if(itemType==null)
+			throw new RuntimeException("Null item type");
 		this.itemType = itemType;
 	}
 

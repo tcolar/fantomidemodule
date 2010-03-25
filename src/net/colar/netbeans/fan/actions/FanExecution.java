@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.Future;
 import net.colar.netbeans.fan.FanUtilities;
+import net.jot.logger.JOTLogger;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory;
 import org.netbeans.api.extexecution.ExecutionDescriptor.LineConvertorFactory;
@@ -52,6 +53,17 @@ public class FanExecution
 	{
 	}
 
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder("Executing in [").append(workingDirectory).append("] ").append(command).append(" ");
+		for(String arg : commandArgs)
+		{
+			sb=sb.append(arg).append(" ");
+		}
+		return sb.toString();
+	}
+
 	public ExecutionDescriptor toExecutionDescriptor()
 	{
 		return descriptor;
@@ -73,6 +85,7 @@ public class FanExecution
 					descriptor, displayName);
 			//io = descriptor.getInputOutput();
 			// Start Service
+			JOTLogger.info(this, toString());
 			return service.run();
 			//io = InputOutputManager.getInputOutput(displayName, true, path).getInputOutput();
 		} catch (Exception ex)
@@ -103,8 +116,6 @@ public class FanExecution
 			cmdStr+=arg+", ";
 		}
 		cmdStr+="]";
-
-		FanUtilities.GENERIC_LOGGER.info("will execute: " + command + " " + cmdStr +" from: "+workingDirectory);
 
 		processBuilder = processBuilder.redirectErrorStream(redirect);
 		return processBuilder;

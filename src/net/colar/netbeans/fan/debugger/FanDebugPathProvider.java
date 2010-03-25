@@ -554,7 +554,13 @@ public class FanDebugPathProvider extends SourcePathProvider
 	@Override
 	public void setSourceRoots(String[] sourceRoots)
 	{
-		this.sourceRoots = sourceRoots;
+		List<String> roots = new ArrayList<String>();
+		for(String rt : sourceRoots)
+		{
+			if(rt!=null)
+				roots.add(rt);
+		}
+		this.sourceRoots = roots.toArray(new String[roots.size()]);
 	}
 
 	@Override
@@ -592,7 +598,9 @@ public class FanDebugPathProvider extends SourcePathProvider
 			int i = 0;
 			for (FileObject root : roots)
 			{
-				sourceRoots[i] = root.getPath();
+				String rt = root.getPath();
+				sourceRoots[i] = rt;
+				i++;
 			}
 		}
 		//System.out.println(getClass().getName() + " Update roots: " + sourceRoots.length);

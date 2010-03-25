@@ -289,6 +289,10 @@ public class FanResolvedType
 	 */
 	public static FanResolvedType fromTypeSig(AstNode scopeNode, String sig)
 	{
+		// this results in infinite recursion, so check for it.
+		if(sig==null || sig.length()==0)
+			throw new RuntimeException("Calling fromTypeSig with invalid sig");
+
 		FanResolvedType type = makeUnresolved(scopeNode);
 		boolean nullable = false;
 		boolean list = false;
@@ -336,6 +340,8 @@ public class FanResolvedType
 					formalType = formal.substring(0, idx).trim();
 					formalName = formal.substring(idx).trim();
 				}
+				if(formalType.length()==0)
+					formalType = "sys::Void";
 				// TODO: types can have names like Int a, Intb -> Int
 				// TODO: Make use of formalName -> will need them for scoping/completion etc...
 				types.add(fromTypeSig(scopeNode, formalType));

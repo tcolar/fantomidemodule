@@ -95,7 +95,7 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 			if (bkpts[i] instanceof LineBreakpoint)
 			{
 				LineBreakpoint bkpt = (LineBreakpoint)bkpts[i];
-				//System.out.println("BKPT: "+i+" "+bkpt.getSourcePath()+ bkpt.getLineNumber());
+				System.out.println("BKPT: "+i+" "+bkpt.getSourcePath()+ bkpt.getLineNumber());
 			}
 		}
 	}

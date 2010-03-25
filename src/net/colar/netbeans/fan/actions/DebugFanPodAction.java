@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.colar.netbeans.fan.actions;
 
 import java.io.File;
@@ -26,6 +25,7 @@ import org.openide.util.Lookup;
  */
 public class DebugFanPodAction extends FanAction
 {
+
 	public static final String COMMAND_DEBUG_FAN_POD = ActionProvider.COMMAND_DEBUG;
 
 	public DebugFanPodAction(FanProject project)
@@ -44,30 +44,40 @@ public class DebugFanPodAction extends FanAction
 	{
 		//TODO: only build if files changed
 		Future future = buildPodAction(context);
-		Object result=null;
+		Object result = null;
 		try
 		{
-			if(future!=null)
-				result=future.get();
-		}catch(Exception e){e.printStackTrace();}
-		// if build didn't fail, then run the pod.
-		if(result!=null)
+			if (future != null)
+			{
+				result = future.get();
+			}
+		} catch (Exception e)
 		{
-			if(((Integer)result)==0)
-				// true = debug mode
-				runPodAction(context, true);
+			e.printStackTrace();
 		}
-		// start JPDA
-		FanUtilities.GENERIC_LOGGER.info("Starting JPDA");
-		String portStr=FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT,"8000");
-		int port=new Integer(portStr).intValue();
-		try
+		// if build didn't fail, then run the pod.
+		if (result != null)
 		{
-			// TODO: this is kinda ugly - Use JPDASupport instead ??
-			Thread.sleep(1500);
-			JPDADebugger.attach("localhost", port, new Object[0]);
-		}catch(Exception e){e.printStackTrace();}
-		
+			if (((Integer) result) == 0)
+			// true = debug mode
+			{
+				runPodAction(context, true);
+			}
+
+			// start JPDA
+			FanUtilities.GENERIC_LOGGER.info("Starting JPDA");
+			String portStr = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT, "8000");
+			int port = new Integer(portStr).intValue();
+			try
+			{
+				// TODO: this is kinda ugly - Use JPDASupport instead ??
+				Thread.sleep(1500);
+				JPDADebugger.attach("localhost", port, new Object[0]);
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -76,23 +86,32 @@ public class DebugFanPodAction extends FanAction
 		return true;
 	}
 
-	private static Object[] createServices () {
-        try {
-            Map map = new HashMap ();
-            String sourceRoot = System.getProperty ("test.dir.src");
-            URL sourceUrl = new File(sourceRoot).toURI().toURL();
-            String sourceUrlStr = sourceUrl.toString() + "/";
-            sourceUrl = new URL(sourceUrlStr);
-            ClassPath cp = ClassPathSupport.createClassPath (new URL[] {
-                sourceUrl
-            });
-            map.put ("sourcepath", cp);
-            map.put ("baseDir", new File(sourceRoot).getParentFile());
-            return new Object[] { map };
-        } catch (MalformedURLException ex) {
-            //System.err.println("MalformedURLException: sourceRoot = '"+sourceRoot+"'.");
-            ex.printStackTrace();
-            return new Object[] {};
-        }
-    }
+	private static Object[] createServices()
+	{
+		try
+		{
+			Map map = new HashMap();
+			String sourceRoot = System.getProperty("test.dir.src");
+			URL sourceUrl = new File(sourceRoot).toURI().toURL();
+			String sourceUrlStr = sourceUrl.toString() + "/";
+			sourceUrl = new URL(sourceUrlStr);
+			ClassPath cp = ClassPathSupport.createClassPath(new URL[]
+				{
+					sourceUrl
+				});
+			map.put("sourcepath", cp);
+			map.put("baseDir", new File(sourceRoot).getParentFile());
+			return new Object[]
+				{
+					map
+				};
+		} catch (MalformedURLException ex)
+		{
+			//System.err.println("MalformedURLException: sourceRoot = '"+sourceRoot+"'.");
+			ex.printStackTrace();
+			return new Object[]
+				{
+				};
+		}
+	}
 }
