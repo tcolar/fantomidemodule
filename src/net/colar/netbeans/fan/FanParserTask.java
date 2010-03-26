@@ -6,6 +6,7 @@ package net.colar.netbeans.fan;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
@@ -167,6 +168,9 @@ public class FanParserTask extends ParserResult
 	 */
 	public void parse()
 	{
+		long start = new Date().getTime();
+		FanUtilities.GENERIC_LOGGER.debug("Starting parsing of: " + sourceName);
+
 		FantomParser parser = Parboiled.createParser(FantomParser.class, this);
 
 		try
@@ -193,6 +197,8 @@ public class FanParserTask extends ParserResult
 			addError("Parser error", e);
 			e.printStackTrace();
 		}
+
+		FanUtilities.GENERIC_LOGGER.info("Parsing completed in " + (new Date().getTime() - start) + " for : " + sourceName);
 	}
 
 	/**
@@ -200,6 +206,8 @@ public class FanParserTask extends ParserResult
 	 */
 	public void parseScope()
 	{
+		long start = new Date().getTime();
+		FanUtilities.GENERIC_LOGGER.debug("Starting parsing scope of: " + sourceName);
 		if (astRoot == null)
 		{
 			return;
@@ -262,7 +270,8 @@ public class FanParserTask extends ParserResult
 			}
 		}
 
-		FanLexAstUtils.dumpTree(astRoot, 0);
+		//FanLexAstUtils.dumpTree(astRoot, 0);
+		FanUtilities.GENERIC_LOGGER.info("Parsing of scope completed in " + (new Date().getTime() - start) + " for : " + sourceName);
 	}
 	//TODO: don't show the whole stack of errors, but just the base.
 	// esp. for expressions, calls etc...

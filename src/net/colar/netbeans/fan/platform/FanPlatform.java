@@ -11,7 +11,6 @@ import java.util.Set;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.project.FanProject;
-import net.jot.logger.JOTLogger;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;

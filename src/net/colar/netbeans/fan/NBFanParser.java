@@ -4,6 +4,7 @@
  */
 package net.colar.netbeans.fan;
 
+import java.util.Date;
 import javax.swing.event.ChangeListener;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -30,20 +31,18 @@ public class NBFanParser extends Parser
 	{
 		FanPlatform platform = FanPlatform.getInstance(false);
 		String path = snapshot.getSource().getFileObject().getPath();
-		if(platform ==null || ! FileUtil.isParentOf(platform.getFanHome(), snapshot.getSource().getFileObject()))
+		//if(platform ==null || ! FileUtil.isParentOf(platform.getFanHome(), snapshot.getSource().getFileObject()))
+		//{
+		parse(snapshot);
+		//}
+		/*else
 		{
-			parse(snapshot);
-		}
-		else
-		{
-			FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: "+path);
-		}
+		FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: "+path);
+		}*/
 	}
 
 	public void parse(Snapshot snapshot)
 	{
-		FanUtilities.GENERIC_LOGGER.debug("Starting parsing of: " + snapshot.getSource().getFileObject().getPath());
-
 		result = new FanParserTask(snapshot);
 		result.parse();
 		result.parseScope();
