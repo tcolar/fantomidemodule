@@ -22,7 +22,8 @@ import org.openide.util.WeakListeners;
 
 /**
  * Breakpoint action provider
- * Handles setting/unsettings breakpoints
+ * Handles setting/unsettings breakpoints request from JPDA
+ * 
  * Registered through annotation
  * @author thibautc
  */

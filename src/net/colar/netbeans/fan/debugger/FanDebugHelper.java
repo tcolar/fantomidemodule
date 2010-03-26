@@ -15,8 +15,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 
 /**
- * Helper utilities
- * Fan breapoint creator.
+ * Helper utilities for debugger / breapoints manager.
  * @author thibautc
  */
 public class FanDebugHelper

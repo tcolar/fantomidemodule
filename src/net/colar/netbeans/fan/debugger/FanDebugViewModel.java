@@ -12,9 +12,7 @@ import org.netbeans.spi.viewmodel.NodeModel;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 
 /**
- * //TODO: test/ fix / use FanDebugViewModel
- *
- * TODO: Doesn't always work even when called when regsitered in META-INF - why ???
+ * TODO: Bug ?? Doesn't always get used even when called when regsitered in META-INF - why ???
  *
  * Debugger breakpoint view pane impl.
  * @author thibautc
