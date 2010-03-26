@@ -32,7 +32,9 @@ public class FanDebugViewModel implements NodeModel
 		if(node instanceof LineBreakpoint)
 		{
 			LineBreakpoint lbp=(LineBreakpoint)node;
-			return lbp.getPrintText()+" : "+lbp.getLineNumber();
+			if(lbp.getURL().endsWith(".fan") || lbp.getURL().endsWith(".fwt"))
+				return lbp.getPrintText()+" : "+lbp.getLineNumber();
+			return lbp.toString();
 		}
 		if(node instanceof JPDABreakpoint)
 		{

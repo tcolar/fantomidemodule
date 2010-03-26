@@ -89,10 +89,13 @@ public class FanDebugPathProvider extends SourcePathProvider
 			if (prj != null)
 			{
 				SourceGroup[] sgs;
-				if(prj instanceof FanProject)
+				if (prj instanceof FanProject)
+				{
 					sgs = ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
-				else
+				} else
+				{
 					sgs = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+				}
 
 				for (SourceGroup sg : sgs)
 				{
@@ -164,23 +167,45 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getURL(String relativePath, boolean global)
 	{
+		if (relativePath.startsWith(File.separator))
+		{
+			relativePath = relativePath.substring(1);
+		}
+
 		FanUtilities.GENERIC_LOGGER.debug("+++ Initial path: " + relativePath);
 		String path = null;
 		if (relativePath != null && (relativePath.endsWith(".fan") || relativePath.endsWith(".fwt")))
 		{
-			//String prefix = "fan/";
-			String fanPath = relativePath.substring(relativePath.indexOf("/") + 1);
-			int index = fanPath.indexOf("/") + 1;
-			String podFolder = fanPath.substring(0, index);
-			fanPath = /*prefix +*/ fanPath.substring(index);
-			path = getURLPath(fanPath, podFolder + FanProject.HARDCODED_FAN_SRC_FOLDER + '/', false);
-			if (path != null)
+			// This is how the path looks, when coming from JPDA java breakpoint ("fan/myPod/Main.fan)
+			if (relativePath.startsWith("fan"+File.separator) || relativePath.startsWith("fanx"+File.separator))
 			{
-				return path;
+				path = relativePath.substring(relativePath.indexOf(File.separator)+1);
+				int index = path.indexOf(File.separator);
+				String fanPath = path.substring(index + 1);
+				String pod = path.substring(0, index);
+				path = getURLPath(fanPath, pod, false);
+				if (path != null)
+				{
+					return path;
+				}
+
+			} else
+			{
+				// normal source lookup, we get the path from getUrl()
+				// we will get something like dummy3/fan/Main.fan (the actual path under project root is just Main.fan) as specially crafted in getRelativePath()
+				int index = relativePath.lastIndexOf(File.separator) + 1;
+				String fanPath = relativePath.substring(index);
+				String pod = relativePath.substring(0, relativePath.indexOf(File.separator));
+				// We uwill check agaisnt "pod" to help find the right Source
+				path = getURLPath(fanPath, pod, false);
+				if (path != null)
+				{
+					return path;
+				}
 			}
 		}
 
-		// If not found in pods, then try standard
+		// If not a fan file, or not found in pods, then try "standard" way
 		path = getURLPath(relativePath, null, global);
 
 		return path;
@@ -195,34 +220,34 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 * @param global
 	 * @return
 	 */
-	private String getURLPath(String relativePath, String cpSuffix, boolean global)
+	private String getURLPath(String relativePath, String pod, boolean global)
 	{
 		//System.out.println(getClass().getName() + " getUrl :" + relativePath);
 		relativePath = normalize(relativePath);
 
 		// Try to find it.
-		FileObject fo = findResource(projectSources, cpSuffix, relativePath);
+		FileObject fo = findResource(projectSources, pod, relativePath);
 		if (fo == null)
 		{
-			fo = findResource(customSources, cpSuffix, relativePath);
+			fo = findResource(customSources, pod, relativePath);
 		}
 		if (fo == null)
 		{
-			fo = findResource(fanSources, cpSuffix, relativePath);
+			fo = findResource(fanSources, pod, relativePath);
 		}
-		// cpSuffix ==null means Don't look in the following path for fan sources(shouldn't be there)
-		if (cpSuffix == null && fo == null)
+		// pod ==null means Don't look in the following path for fan sources(shouldn't be there)
+		if (pod == null && fo == null)
 		{
-			fo = findResource(jdkSources, cpSuffix, relativePath);
+			fo = findResource(jdkSources, null, relativePath);
 		}
-		if (cpSuffix == null && fo == null && global)
+		if (pod == null && fo == null && global)
 		{
-			fo = findResource(globalSources, cpSuffix, relativePath);
+			fo = findResource(globalSources, null, relativePath);
 		}
 
 		if (fo == null)
 		{
-			FanUtilities.GENERIC_LOGGER.debug(getClass().getName() + " Url not found for "+relativePath);
+			FanUtilities.GENERIC_LOGGER.debug(getClass().getName() + " Url not found for " + relativePath);
 			return null;
 		}
 
@@ -264,6 +289,9 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 	/**
 	 * Returns relative path for given url.
+	 * In theoru that would return just Main.fan for example, but if we do that we won't be able
+	 * to resolve the source path correctly in getUrl()
+	 * So we craft a path such as MyPod/fan/Main.fan instead.
 	 *
 	 * @param url a url of resource file
 	 * @param directorySeparator a directory separator character
@@ -274,7 +302,6 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getRelativePath(String url, char directorySeparator, boolean includeExtension)
 	{
-		//System.out.println(getClass().getName() + " getRelative path for: " + url);
 		// 1) url -> FileObject
 		FileObject fo = null;
 		try
@@ -286,24 +313,40 @@ public class FanDebugPathProvider extends SourcePathProvider
 			return null;
 		}
 
+		String path = fo.getPath();
+		File folder = FanUtilities.getPodFolderForPath(path).getParentFile();
+		if (folder != null)
+		{ // Fantom sources
+			// construct an url like MyPod/fan/Main.fan - we will need the pod name in getUrl() to resolve the source location
+			if (path.startsWith(folder.getPath()))
+			{
+				String relPath = path.substring(folder.getPath().length());
+				// TODO: Ugly: I should lookup the java folder from build.fan rather than hardcoded
+				if (relPath.endsWith(".java") && relPath.startsWith("/java/"))
+				{
+					// Will have a fantom java path, such as : "fan/MyPod/main.java"
+					relPath = relPath.substring(6);
+				}
+				return relPath;
+			}
+		}
+		
+		// Otherwise do a "standard" lookup
 		String relativePath = null;
 		//TODO: globalSources.getResourceName(fo,	directorySeparator,	includeExtension);
-		if (relativePath == null)
+		// fallback to FileObject's class path
+		ClassPath cp = ClassPath.getClassPath(fo, ClassPath.SOURCE);
+		if (cp == null)
 		{
-			// fallback to FileObject's class path
-			ClassPath cp = ClassPath.getClassPath(fo, ClassPath.SOURCE);
-			if (cp == null)
-			{
-				cp = ClassPath.getClassPath(fo, ClassPath.COMPILE);
-			}
-
-			if (cp == null)
-			{
-				return null;
-			}
-
-			relativePath = cp.getResourceName(fo, directorySeparator, includeExtension);
+			cp = ClassPath.getClassPath(fo, ClassPath.COMPILE);
 		}
+
+		if (cp == null)
+		{
+			return null;
+		}
+
+		relativePath = cp.getResourceName(fo, directorySeparator, includeExtension);
 
 		return relativePath;
 	}
@@ -509,26 +552,25 @@ public class FanDebugPathProvider extends SourcePathProvider
 		}
 	}
 
-	private FileObject findResource(Set<ClassPath> classPaths, String cpSuffix, String path)
+	private FileObject findResource(Set<ClassPath> classPaths, String pod, String path)
 	{
 		FileObject fo = null;
 		for (ClassPath cp : classPaths)
 		{
-			if (cpSuffix == null)
+			if (pod == null)
 			{
 				fo = cp.findResource(path);
 				//System.out.println("---- Looking for " + path + "in " + cp.toString()+ "-> "+fo==null?"null":fo.getPath());
 			} else
 			{
-				String tail = cpSuffix + path;
 				//System.out.println("---- Searching all resources for " + path);
 				List<FileObject> fos = cp.findAllResources(path);
 				Iterator<FileObject> it = fos.iterator();
 				while (it.hasNext())
 				{
 					FileObject fob = it.next();
-					FanUtilities.GENERIC_LOGGER.debug("---- Checking " + fob.getPath() + " vs " + tail);
-					if (fob.getPath().endsWith(tail))
+					FanUtilities.GENERIC_LOGGER.debug("---- Checking " + fob.getPath() + " vs " + pod);
+					if (FanUtilities.getPodFolderForPath(fob.getPath()).getName().equals(pod))
 					{
 						fo = fob;
 						//System.out.println("---- MATCH " + fob.getPath() + " vs " + tail);
@@ -555,10 +597,12 @@ public class FanDebugPathProvider extends SourcePathProvider
 	public void setSourceRoots(String[] sourceRoots)
 	{
 		List<String> roots = new ArrayList<String>();
-		for(String rt : sourceRoots)
+		for (String rt : sourceRoots)
 		{
-			if(rt!=null)
+			if (rt != null)
+			{
 				roots.add(rt);
+			}
 		}
 		this.sourceRoots = roots.toArray(new String[roots.size()]);
 	}
