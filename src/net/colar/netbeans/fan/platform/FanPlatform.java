@@ -129,7 +129,7 @@ public class FanPlatform
 			File[] files = f.listFiles();
 			for (File file : files)
 			{
-				if (file.isDirectory() && new File(file, "pod.fan").exists())
+				if (file.isDirectory() && new File(file, "build.fan").exists())
 				{
 					addFolder(new File(file, FanProject.HARDCODED_JAVA_SRC_FOLDER));
 					addFolder(new File(file, FanProject.HARDCODED_FAN_SRC_FOLDER));

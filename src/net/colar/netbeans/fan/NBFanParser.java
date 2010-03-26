@@ -5,11 +5,13 @@
 package net.colar.netbeans.fan;
 
 import javax.swing.event.ChangeListener;
+import net.colar.netbeans.fan.platform.FanPlatform;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -26,7 +28,16 @@ public class NBFanParser extends Parser
 	@Override
 	public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException
 	{
-		parse(snapshot);
+		FanPlatform platform = FanPlatform.getInstance(false);
+		String path = snapshot.getSource().getFileObject().getPath();
+		if(platform ==null || ! FileUtil.isParentOf(platform.getFanHome(), snapshot.getSource().getFileObject()))
+		{
+			parse(snapshot);
+		}
+		else
+		{
+			FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: "+path);
+		}
 	}
 
 	public void parse(Snapshot snapshot)

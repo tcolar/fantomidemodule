@@ -330,6 +330,7 @@ public class FanParserTask extends ParserResult
 			case AST_EXPR_RANGE:
 				parseChildren(node);
 				AstNode rangeType = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CHILD));
+				// TODO: this comes up null sometimes !!!!
 				type = new FanResolvedListType(node, rangeType.getType()); // list of
 				break;
 			case AST_IT_BLOCK:
