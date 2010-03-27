@@ -4,7 +4,6 @@
  */
 package net.colar.netbeans.fan;
 
-import java.util.Date;
 import javax.swing.event.ChangeListener;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -12,7 +11,6 @@ import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -31,13 +29,19 @@ public class NBFanParser extends Parser
 	{
 		FanPlatform platform = FanPlatform.getInstance(false);
 		String path = snapshot.getSource().getFileObject().getPath();
-		//if(platform ==null || ! FileUtil.isParentOf(platform.getFanHome(), snapshot.getSource().getFileObject()))
-		//{
-		parse(snapshot);
-		//}
+		// We don't care for the standard NB indexer
+		// It's slow and annotying and we don't use it (have our on)
+		// So we don't allow it to run
+		// TODO: maybe I can make mmy own RespositoryUpdaterImpl that does nothing
+		//  instead of this ugly class name check hack.
+		String taskClass= task.getClass().getName();
+		if( ! taskClass.startsWith("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater"))
+		{
+			parse(snapshot);
+		}
 		/*else
 		{
-		FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: "+path);
+			FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: "+path);
 		}*/
 	}
 
