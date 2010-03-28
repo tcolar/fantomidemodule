@@ -372,7 +372,11 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule catch_()
 	{
-		return enforcedSequence(KW_CATCH, optional(enforcedSequence(PAR_L, type(), id(), PAR_R)), block());
+		return sequence(enforcedSequence(KW_CATCH,
+				optional(enforcedSequence(PAR_L, type(),
+				ast.newNode(AstKind.AST_TYPE), id(),
+				ast.newNode(AstKind.AST_ID), PAR_R)), block()),
+			ast.newNode(AstKind.AST_CATCH_BLOCK));
 	}
 
 	public Rule switch_()

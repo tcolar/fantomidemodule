@@ -358,6 +358,9 @@ public class FanParserTask extends ParserResult
 			case AST_IT_BLOCK:
 				type = doItBlock(node, type);
 				break;
+			case AST_CATCH_BLOCK:
+				type = doCatchBlock(node, type);
+				break;
 			case AST_EXPR_LIT_BASE:
 				Node<AstNode> parseNode = node.getParseNode().getChildren().get(0); // firstOf
 				type = resolveLitteral(node, parseNode);
@@ -890,12 +893,11 @@ public class FanParserTask extends ParserResult
 	private FanResolvedType doRangeExpr(AstNode node, FanResolvedType type)
 	{
 		parseChildren(node);
-		if(type==null)
+		if (type == null)
 		{
 			// a range like (0..5)
 			type = new FanResolvedListType(node, node.getChildren().get(0).getType());
-		}
-		else if (type instanceof FanResolvedListType)
+		} else if (type instanceof FanResolvedListType)
 		{
 			// a range like list[0..5]
 			type = ((FanResolvedListType) type).getItemType();
@@ -907,6 +909,23 @@ public class FanParserTask extends ParserResult
 		{
 			// a range like "mystring"[0..5]
 			type = FanResolvedType.resolveSlotType(type, "get");
+		}
+		return type;
+	}
+
+	private FanResolvedType doCatchBlock(AstNode node, FanResolvedType type)
+	{
+		AstNode typeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+		AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
+		AstNode blockNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
+		if (typeNode != null && idNode != null && blockNode!=null)
+		{
+			parseVars(typeNode, null);
+			// add exception variable to block scope
+			FanAstScopeVarBase itVar = new FanLocalScopeVar(node, VarKind.LOCAL, idNode.getNodeText(true), typeNode.getType());
+			blockNode.addScopeVar(itVar, true);
+			// Now parse the block
+			parseVars(blockNode, null);
 		}
 		return type;
 	}
