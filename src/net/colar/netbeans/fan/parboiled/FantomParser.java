@@ -460,10 +460,9 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule rangeExpr()
 	{
 		// changed to not be zeroOrMore(opt instead) as there can be only one range in an expression (no [1..3..5])
-		return sequence(addExpr(), 
-			optional(sequence(
-				enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr(), ast.newNode(AstKind.AST_CHILD)),
-				ast.newNode(AstKind.AST_EXPR_RANGE))));
+		return sequence(sequence(addExpr(), ast.newNode(AstKind.AST_EXPR),
+			optional(enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr(), ast.newNode(AstKind.AST_EXPR)))),
+				ast.newNode(AstKind.AST_EXPR_RANGE));
 	}
 
 	public Rule addExpr()
