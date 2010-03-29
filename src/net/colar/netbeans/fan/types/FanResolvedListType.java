@@ -31,7 +31,7 @@ public class FanResolvedListType extends FanResolvedType
 	@Override
 	public String toTypeSig(boolean fullyQualified)
 	{
-		return itemType.toTypeSig(fullyQualified)+"[]";
+		return itemType.toTypeSig(fullyQualified)+"[]"+(isNullable()?"?":"");
 	}
 
 }

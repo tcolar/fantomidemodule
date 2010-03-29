@@ -532,7 +532,7 @@ public class FantomParser extends BaseParser<AstNode>
 				sequence(type(), ast.newNode(AstKind.AST_ID),
 				firstOf(
 					sequence(OP_POUND, optional(id())), // type/slot litteral
-					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_EXPR_CALL)), // named super
+					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_CALL)), // named super
 					sequence(DOT, idExpr()), // static call
 					sequence(PAR_L, expr(), PAR_R), // simple ?? (ctor call)
 					itBlock() // ctor block
@@ -573,22 +573,22 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule dotCall()
 	{
 		// test not "..", as this would be a range
-		return enforcedSequence(sequence(DOT, testNot(DOT)), idExpr());
+		return sequence(enforcedSequence(sequence(DOT, testNot(DOT)), ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
 	}
 
 	public Rule dynCall()
 	{
-		return enforcedSequence(OP_ARROW, idExpr());
+		return sequence(enforcedSequence(OP_ARROW, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
 	}
 
 	public Rule safeDotCall()
 	{
-		return enforcedSequence(OP_SAFE_CALL, idExpr());
+		return sequence(enforcedSequence(OP_SAFE_CALL, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
 	}
 
 	public Rule safeDynCall()
 	{
-		return enforcedSequence(OP_SAFE_DYN_CALL, idExpr());
+		return sequence(enforcedSequence(OP_SAFE_DYN_CALL, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
 	}
 
 	// incomplete dot call, make valid to allow for completion
@@ -605,7 +605,7 @@ public class FantomParser extends BaseParser<AstNode>
 		return firstOf(idExprReq(), 
 				sequence(
 					sequence(id(), ast.newNode(AstKind.AST_ID))
-					,ast.newNode(AstKind.AST_EXPR_CALL)));
+					,ast.newNode(AstKind.AST_CALL)));
 	}
 
 	public Rule idExprReq()
@@ -626,7 +626,7 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(sequence(id(), ast.newNode(AstKind.AST_ID),
 			firstOf(
 			sequence(noSpace(), enforcedSequence(PAR_L, OPT_LF(), optional(args()), PAR_R), optional(closure())), //params & opt. closure
-			closure())), ast.newNode(AstKind.AST_EXPR_CALL)); // closure only
+			closure())), ast.newNode(AstKind.AST_CALL)); // closure only
 	}
 
 	public Rule indexExpr()

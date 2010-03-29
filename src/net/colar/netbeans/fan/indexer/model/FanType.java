@@ -351,7 +351,7 @@ public class FanType extends JOTModel
 	public static String getShortName(String qualifiedType)
 	{
 		if(qualifiedType != null && qualifiedType.indexOf("::")>-1)
-			return qualifiedType.substring(0, qualifiedType.indexOf("::"));
+			return qualifiedType.substring(qualifiedType.indexOf("::")+2);
 		return qualifiedType;
 	}
 

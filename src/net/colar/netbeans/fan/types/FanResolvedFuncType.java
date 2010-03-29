@@ -53,6 +53,7 @@ public class FanResolvedFuncType extends FanResolvedType
 		}
 		sig+= "->";
 		sig += retType.toTypeSig(fullyQualified) + "|";
+		sig += isNullable()?"?":"";
 		return sig;
 	}
 }

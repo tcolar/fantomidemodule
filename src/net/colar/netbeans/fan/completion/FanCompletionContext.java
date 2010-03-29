@@ -152,7 +152,7 @@ public class FanCompletionContext
 			}
 			// expression completion after a '.' or '?.'
 			//System.out.println("Node :" + node.toString() + " " + node.toStringTree());
-			AstNode callExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_EXPR_CALL);
+			AstNode callExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_CALL);
 			if(callExpr == null)
 				callExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_INC_CALL);
 			if(callExpr!=null)

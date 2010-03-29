@@ -36,7 +36,7 @@ public class FanResolvedMapType extends FanResolvedType
 	@Override
 	public String toTypeSig(boolean fullyQualified)
 	{
-		return "["+keyType.toTypeSig(fullyQualified)+" : "+valType.toTypeSig(fullyQualified)+"]";
+		return "["+keyType.toTypeSig(fullyQualified)+" : "+valType.toTypeSig(fullyQualified)+"]"+(isNullable()?"?":"");
 	}
 
 }

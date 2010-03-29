@@ -323,7 +323,13 @@ public class FanParserTask extends ParserResult
 			case AST_EXPR_ADD:
 				type = doExpr(node, type);
 				break;
-			case AST_EXPR_CALL:
+			case AST_CALL_EXPR:
+				// there is also an operator node, but we ignore it - will be used in doCall()
+				AstNode callNode =FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CALL));
+				parseVars(callNode, type);
+				type = callNode.getType();
+				break;
+			case AST_CALL:
 				type = doCall(node, type);
 				break;
 			case AST_ARG:
@@ -452,15 +458,15 @@ public class FanParserTask extends ParserResult
 			{
 				type = var.getType();
 			}
-			type.setStaticContext(false);
+			type = type.asStaticContext(false);
 		} else if (lbl.equals("this"))
 		{
 			type = FanResolvedType.resolveThisType(astNode);
-			type.setStaticContext(false);
+			type = type.asStaticContext(false);
 		} else if (lbl.equals("super"))
 		{
 			type = FanResolvedType.resolveSuper(astNode);
-			type.setStaticContext(false);
+			type = type.asStaticContext(false);
 		}
 		return type;
 	}
@@ -559,7 +565,7 @@ public class FanParserTask extends ParserResult
 			// Note: only keeping the 'last' definition (ie: override)
 		}
 		FanResolvedType rType = FanResolvedType.makeFromDbType(node, qType);
-		rType.setStaticContext(true);
+		rType = rType.asStaticContext(true);
 		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, rType, true);
 	}
 
@@ -630,9 +636,9 @@ public class FanParserTask extends ParserResult
 			parseVars(child, type);
 			// Those kinds take the right hand side type
 			// It block chnages the type because it makes it NOT staticContext
-			if (first || child.getKind() == AstKind.AST_EXPR_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
+			if (first || child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
 				|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
-				|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD)
+				|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD || child.getKind() == AstKind.AST_CALL_EXPR)
 			{
 				type = child.getType();
 			}
@@ -643,8 +649,10 @@ public class FanParserTask extends ParserResult
 
 	private FanResolvedType doCall(AstNode node, FanResolvedType type)
 	{
+
 		AstNode callChild = node.getChildren().get(0);
 		String slotName = callChild.getNodeText(true);
+
 		//if a direct call like doThis(), then use this type as base
 		if (type == null)
 		{
@@ -652,6 +660,29 @@ public class FanParserTask extends ParserResult
 		} else
 		// otherwise a slot of the base type like var.toStr()
 		{
+			// checking what call op we are dealing with
+			String op = ".";
+			AstNode callExpr = FanLexAstUtils.findParentNode(node, AstKind.AST_CALL_EXPR);
+			if (callExpr != null)
+			{
+				AstNode operator = FanLexAstUtils.getFirstChild(callExpr, new NodeKindPredicate(AstKind.LBL_OP));
+				if (operator != null)
+				{
+					op = operator.getNodeText(true);
+				}
+			}
+			// Can't resolve dynamic calls -> unknow type
+			if (op.endsWith("->"))
+			{
+				return new FanUnknownType(node, sourceName);
+			}
+
+			// If using null check call on non nullable object, show an error, but continue resolution
+			if (!type.isNullable() && op.startsWith("?"))
+			{
+				node.getRoot().getParserTask().addError("Null check call on non-nullable: " + type.toString(), node);
+			}
+
 			//if(! (type instanceof FanUnknownType))
 			type = FanResolvedType.resolveSlotType(type, slotName, this);
 		}
@@ -705,6 +736,7 @@ public class FanParserTask extends ParserResult
 				 */
 				//FanResolvedType fType = FanResolvedType.makeFromDbType(child, "sys::Obj");
 				FanResolvedType fType = new FanUnknownType(node, node.getNodeText(true)); //TODO: resolve formal type
+				System.out.println("TODO: deal with Formals in fanparserTask !");
 				if (formalTypeAndId != null)
 				{ // if inferred this is null
 					formalName = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_ID));
@@ -750,7 +782,7 @@ public class FanParserTask extends ParserResult
 			if (!listTypeNode.getType().isStaticContext())
 			{
 				// It's NOT a List at all after all, but an index expression (called on a var, not a Static type)!
-				return doIndexExpr(node, type);
+				return doIndexExpr(listTypeNode, listTypeNode.getType());
 			}
 
 			type = new FanResolvedListType(node,
@@ -818,7 +850,7 @@ public class FanParserTask extends ParserResult
 			node.getRoot().getParserTask().addError("Index expression only valid on lists, maps or types with get method-> " + node.getNodeText(true), node);
 		}
 		// TODO: check if list/map index key type is valid ?
-		return type;
+		return type.asStaticContext(false);
 	}
 
 	private FanResolvedType doTypeCheckExpr(AstNode node, FanResolvedType type)
@@ -836,7 +868,7 @@ public class FanParserTask extends ParserResult
 		{
 			type = null; // shouldn't happen
 		}
-		return type;
+		return type.asStaticContext(false);
 	}
 
 	private FanResolvedType doItBlock(AstNode node, FanResolvedType type)
@@ -844,7 +876,7 @@ public class FanParserTask extends ParserResult
 		// introduce itblock scope variables
 		if (type != null && type.getDbType() != null)
 		{
-			type.setStaticContext(false);
+			type = type.asStaticContext(false);
 			List<FanSlot> itSlots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), true, this);
 			for (FanSlot itSlot : itSlots)
 			{
@@ -885,7 +917,7 @@ public class FanParserTask extends ParserResult
 		}
 		if (type != null)
 		{
-			type.setStaticContext(false);
+			type = type.asStaticContext(false);
 		}
 		node.addScopeVar(new FanLocalScopeVar(node, VarKind.LOCAL, name, type), false);
 		return type;
@@ -901,11 +933,11 @@ public class FanParserTask extends ParserResult
 		} else if (type instanceof FanResolvedListType)
 		{
 			// a range like list[0..5]
-			type = ((FanResolvedListType) type).getItemType();
+			type = ((FanResolvedListType) type).getItemType().asStaticContext(false);
 		} else if (type instanceof FanResolvedMapType)
 		{
 			// a range like map[0..5]
-			type = ((FanResolvedMapType) type).getValType();
+			type = ((FanResolvedMapType) type).getValType().asStaticContext(false);
 		} else
 		{
 			// a range like "mystring"[0..5]
@@ -940,7 +972,7 @@ public class FanParserTask extends ParserResult
 	 */
 	public FanType findCachedQualifiedType(String qName)
 	{
-		if( ! typeCache.containsKey(qName))
+		if (!typeCache.containsKey(qName))
 		{
 			typeCache.put(qName, FanType.findByQualifiedName(qName));
 		}

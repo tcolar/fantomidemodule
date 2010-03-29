@@ -25,7 +25,7 @@ import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 
 /**
- * Resolved type
+ * Resolved type - Immutable (since we cache the base type, and we need static/nullable copy at time)
  * Store infos of a resolved type
  * Also contains the factory methods / logic to resolve a type expr.
  * @author tcolar
@@ -35,14 +35,19 @@ public class FanResolvedType
 
 	private final String asTypedType;
 	private final FanType dbType;
+	private final String shortAsTypedType;
+	private final AstNode scopeNode;
 	// whether it's used in a  nullable context : ex: Str? vs Str
 	private boolean nullableContext = false;
 	// whether it's used in a static context: ex Str. vs str.
 	private boolean staticContext = false;
-	private final String shortAsTypedType;
-	private final AstNode scopeNode;
 
 	protected FanResolvedType(AstNode scopeNode, String enteredType, FanType type)
+	{
+		this(scopeNode, enteredType, type, false, false);
+	}
+
+	protected FanResolvedType(AstNode scopeNode, String enteredType, FanType type, boolean asStatic, boolean asNullable)
 	{
 		this.scopeNode = scopeNode;
 		this.asTypedType = enteredType;
@@ -141,7 +146,7 @@ public class FanResolvedType
 	public static FanResolvedType resolveSlotType(FanResolvedType baseType, String slotName, FanParserTask task)
 	{
 		if (baseType == null || !baseType.isResolved()
-				|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
+			|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
 		{
 			return FanResolvedType.makeUnresolved(null);
 		}
@@ -175,8 +180,8 @@ public class FanResolvedType
 				{
 					FanResolvedType t = fromTypeSig(baseType.scopeNode, slot.returnedType);
 					if (baseType instanceof FanResolvedListType
-							|| baseType instanceof FanResolvedMapType
-							|| baseType instanceof FanResolvedFuncType)
+						|| baseType instanceof FanResolvedMapType
+						|| baseType instanceof FanResolvedFuncType)
 					{
 						int col = t.getAsTypedType().indexOf("::");
 						String n = t.getAsTypedType().substring(col + 2);
@@ -187,11 +192,13 @@ public class FanResolvedType
 						}
 
 					}
+					t = t.asStaticContext(false);
 					return t;
 				}
 			}
 			baseType = makeUnresolved(baseType.scopeNode);
 		}
+		baseType = baseType.asStaticContext(false);
 		return baseType;
 	}
 
@@ -206,9 +213,18 @@ public class FanResolvedType
 		return staticContext;
 	}
 
-	public void setNullableContext(boolean nullable)
+	/**
+	 * Return a copy with nullable context set as requested
+	 * @param nullable
+	 * @return
+	 */
+	public FanResolvedType asNullableContext(boolean nullable)
 	{
-		nullableContext = nullable;
+		if(nullableContext == nullable)
+			return this;
+		FanResolvedType copy = new FanResolvedType(scopeNode, asTypedType, dbType);
+		copy.nullableContext = nullable;
+		return copy;
 	}
 
 	/**
@@ -220,9 +236,13 @@ public class FanResolvedType
 		return nullableContext;
 	}
 
-	public void setStaticContext(boolean b)
+	public FanResolvedType asStaticContext(boolean b)
 	{
-		staticContext = b;
+		if(staticContext == b)
+			return this;
+		FanResolvedType copy = new FanResolvedType(scopeNode, asTypedType, dbType);
+		copy.staticContext = b;
+		return copy;
 	}
 
 	/**
@@ -390,14 +410,14 @@ public class FanResolvedType
 
 		if (nullable)
 		{
-			type.setNullableContext(true);
+			type = type.asNullableContext(true);
 		}
 		if (list)
 		{
 			type = new FanResolvedListType(scopeNode, type);
 			if (nullableList)
 			{
-				type.setNullableContext(true);
+				type = type.asNullableContext(true);
 			}
 		}
 		return type;
@@ -417,11 +437,12 @@ public class FanResolvedType
 	public static FanResolvedType makeFromLocalID(AstNode scopeNode, String enteredType)
 	{
 		//System.out.println("Make from local type: "+enteredType);
+		boolean toStatic=false;
 		FanType type = null;
-		boolean isStatic = true;
 		if (enteredType.indexOf("::") != -1)
 		{	// Qualified type
 			type = scopeNode.getRoot().getParserTask().findCachedQualifiedType(enteredType);
+			toStatic =true;
 		} else
 		{
 			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
@@ -434,20 +455,21 @@ public class FanResolvedType
 			{
 				// first, other types in this pod
 				type = scopeNode.getRoot().getParserTask().findCachedQualifiedType(scopeNode.getRoot().getPod() + "::" + enteredType);
-
+				toStatic =true;
 			}
 			// if still not found try in "sys" pod
 			if (type == null)
 			{
 				type = scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::" + enteredType);
+				toStatic =true;
 			}
 			// try Generic types
 			if (type == null && enteredType.length() == 1 && enteredType.toUpperCase().equals(enteredType))
 			{
 				FanResolvedType objType = new FanResolvedType(scopeNode, enteredType, scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::Obj"));
 				if (enteredType.equals("V") || enteredType.equals("K") || enteredType.equals("A") || enteredType.equals("B")
-						|| enteredType.equals("C") || enteredType.equals("D") || enteredType.equals("E") || enteredType.equals("F")
-						|| enteredType.equals("G") || enteredType.equals("H"))
+					|| enteredType.equals("C") || enteredType.equals("D") || enteredType.equals("E") || enteredType.equals("F")
+					|| enteredType.equals("G") || enteredType.equals("H"))
 				{	// K, V: List/Map key and item types
 					// A-H : Function types
 					type = scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::Obj");
@@ -471,7 +493,10 @@ public class FanResolvedType
 			}
 		}
 		FanResolvedType result = new FanResolvedType(scopeNode, enteredType, type);
-		result.setStaticContext(isStatic);
+		
+		if(toStatic)
+			result = result.asStaticContext(true);
+
 		return result;
 	}
 
@@ -485,10 +510,13 @@ public class FanResolvedType
 	public static FanResolvedType makeFromDbType(AstNode node, String qualifiedType)
 	{
 		FanType type = null;
-		if(node ==null)
+		if (node == null)
+		{
 			type = FanType.findByQualifiedName(qualifiedType);
-		else
+		} else
+		{
 			type = node.getRoot().getParserTask().findCachedQualifiedType(qualifiedType);
+		}
 		return new FanResolvedType(node, qualifiedType, type);
 	}
 
@@ -572,15 +600,19 @@ public class FanResolvedType
 		}
 
 		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, type.getDbType().getQualifiedName());
-		for(FanTypeInheritance inh :inhs)
+		for (FanTypeInheritance inh : inhs)
 		{
 			FanResolvedType t = FanResolvedType.makeFromDbType(type.getScopeNode(), inh.getInheritedType());
-			if(t.isResolved() && t.getDbType().isClass())
+			if (t.isResolved() && t.getDbType().isClass())
+			{
 				return t;
+			}
 		}
-		if( ! type.getDbType().getQualifiedName().equals("sys::Obj")
-			&& ! type.getDbType().isMixin())
-			return FanResolvedType.makeFromDbType(type.getScopeNode(),"sys::Obj");
+		if (!type.getDbType().getQualifiedName().equals("sys::Obj")
+			&& !type.getDbType().isMixin())
+		{
+			return FanResolvedType.makeFromDbType(type.getScopeNode(), "sys::Obj");
+		}
 		return null;
 	}
 
@@ -612,7 +644,7 @@ public class FanResolvedType
 				best = t;
 				continue;
 			}
-			while (! isTypeCompatible(t, best)) // exetnds
+			while (!isTypeCompatible(t, best)) // exetnds
 			{
 				best = getParentType(best); // get parent
 				if (best == null)
@@ -627,7 +659,7 @@ public class FanResolvedType
 		}
 		if (nullable)
 		{
-			best.setNullableContext(true);
+			best = best.asNullableContext(true);
 		}
 		return best;
 	}
@@ -673,7 +705,7 @@ public class FanResolvedType
 		{	// Not good
 			baseType.getScopeNode().getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), baseType.getScopeNode());
 		}
-		return t;
+		return t.asStaticContext(false);
 	}
 
 	private static FanResolvedType getFuncRetType(FanResolvedType baseType, String letter)

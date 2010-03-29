@@ -448,7 +448,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	private void proposeCalls(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, AstNode node)
 	{
 		AstNode expr = FanLexAstUtils.findParentNode(node, AstKind.AST_EXPR);
-		AstNode callNode = FanLexAstUtils.findParentNodeWithin(node, AstKind.AST_EXPR_CALL, expr);
+		AstNode callNode = FanLexAstUtils.findParentNodeWithin(node, AstKind.AST_CALL, expr);
 		if (callNode == null)
 		{
 			callNode = FanLexAstUtils.findParentNodeWithin(node, AstKind.AST_INC_CALL, expr);
