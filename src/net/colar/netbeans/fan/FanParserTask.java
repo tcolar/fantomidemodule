@@ -348,7 +348,7 @@ public class FanParserTask extends ParserResult
 				// if only one child, then it's really not a rangeExpr, but an addExpr
 				if (node.getChildren().size() == 1)
 				{
-					parseVars(node.getChildren().get(0), null);
+					parseVars(node.getChildren().get(0), type);
 					type = node.getChildren().get(0).getType();
 				} else
 				{
@@ -383,6 +383,10 @@ public class FanParserTask extends ParserResult
 		if (type != null && !type.isResolved())
 		{
 			node.getRoot().getParserTask().addError("Could not resolve item -> " + text, node);
+			FanUtilities.GENERIC_LOGGER.info(">Unresolved node");
+			FanLexAstUtils.dumpTree(node, 0);
+			//FanLexAstUtils.dumpTree(astRoot, 0);
+			FanUtilities.GENERIC_LOGGER.info("<Unresolved node");
 		}
 	}
 
@@ -631,7 +635,7 @@ public class FanParserTask extends ParserResult
 			// It block chnages the type because it makes it NOT staticContext
 			if (first || child.getKind() == AstKind.AST_EXPR_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
 					|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
-					|| child.getKind() == AstKind.AST_IT_BLOCK)
+					|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD)
 			{
 				type = child.getType();
 			}
@@ -664,7 +668,7 @@ public class FanParserTask extends ParserResult
 		AstNode closure = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLOSURE));
 		if (closure != null)
 		{
-			parseVars(closure, type);
+			parseVars(closure, null);
 		}
 		return type;
 	}
@@ -746,14 +750,14 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode != null)
 		{   // if it's a typed list, use that as the type
 			parseVars(listTypeNode, null);
-			type = new FanResolvedListType(node,
-					listTypeNode.getType());
-
-			if (!type.isStaticContext())
+			if ( ! listTypeNode.getType().isStaticContext())
 			{
 				// It's NOT a List at all after all, but an index expression (called on a var, not a Static type)!
 				return doIndexExpr(node, type);
 			}
+
+			type = new FanResolvedListType(node,
+					listTypeNode.getType());
 		}
 
 		for (AstNode listExpr : listExprNodes)

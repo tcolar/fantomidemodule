@@ -61,7 +61,7 @@ public class AstNode
 		//ParseTreeUtils.getNodeText(parseNode, null)
 		StringBuffer txt = new StringBuffer(kind.toString());
 		txt.append("(");
-		txt.append((type == null || !type.isResolved()) ? "" : type);
+		txt.append(type == null ? "" : type);
 		txt.append(") ");
 		if (text.indexOf("\n") >= 0)
 		{
