@@ -269,12 +269,12 @@ public class FanSlot extends JOTModel
 	public static List<FanSlot> getAllSlotsForType(String fanType, List<String> doneTypes, boolean includeImpliedTypes)
 	{
 		// If a type was already done, do not do again, also avoid potential cyclic dependencies etc...
+		System.out.println("############## " + fanType);
 		if (doneTypes.contains(fanType))
 		{
-			//System.out.println("###### skipping: "+typeName);
+			System.out.println("###### skipping: "+fanType);
 			return new ArrayList<FanSlot>();
 		}
-		//System.out.println("############## " + fanType);
 		
 		doneTypes.add(fanType);
 		FanType dbType = FanType.findByQualifiedName(fanType);

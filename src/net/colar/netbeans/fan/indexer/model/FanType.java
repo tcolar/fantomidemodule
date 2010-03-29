@@ -243,7 +243,7 @@ public class FanType extends JOTModel
 
 	public static FanType findByQualifiedName(String qName)
 	{
-		//System.out.println(">find by fqdn: "+qName);
+		System.out.println(">find by fqdn: "+qName);
 		try
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, qName);

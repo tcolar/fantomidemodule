@@ -933,6 +933,7 @@ public class FanParserTask extends ParserResult
 		}
 		return type;
 	}
+
 }
 
 
