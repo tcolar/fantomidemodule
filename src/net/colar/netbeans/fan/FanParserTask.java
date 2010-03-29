@@ -275,7 +275,7 @@ public class FanParserTask extends ParserResult
 			}
 		}
 
-		//FanLexAstUtils.dumpTree(astRoot, 0);
+		FanLexAstUtils.dumpTree(astRoot, 0);
 		FanUtilities.GENERIC_LOGGER.info("Parsing of scope completed in " + (new Date().getTime() - start) + " for : " + sourceName);
 	}
 	//TODO: don't show the whole stack of errors, but just the base.
@@ -638,7 +638,8 @@ public class FanParserTask extends ParserResult
 			// It block chnages the type because it makes it NOT staticContext
 			if (first || child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
 				|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
-				|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD || child.getKind() == AstKind.AST_CALL_EXPR)
+				|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD || child.getKind() == AstKind.AST_CALL_EXPR
+				|| child.getKind() == AstKind.AST_CLOSURE)
 			{
 				type = child.getType();
 			}
@@ -703,6 +704,7 @@ public class FanParserTask extends ParserResult
 
 	private FanResolvedType doClosure(AstNode node, FanResolvedType type)
 	{
+		System.out.println("Closure type: "+type);
 		AstNode closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
 		FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void");
 		for (AstNode child : node.getChildren())
@@ -736,13 +738,13 @@ public class FanParserTask extends ParserResult
 				 */
 				//FanResolvedType fType = FanResolvedType.makeFromDbType(child, "sys::Obj");
 				FanResolvedType fType = new FanUnknownType(node, node.getNodeText(true)); //TODO: resolve formal type
-				System.out.println("TODO: deal with Formals in fanparserTask !");
+				System.out.println("TODO: deal with Inferred Formals in fanparserTask !");
 				if (formalTypeAndId != null)
 				{ // if inferred this is null
 					formalName = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_ID));
 					AstNode formalType = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_TYPE));
 					parseVars(formalType, null);
-					fType = formalType.getType();
+					fType = formalType.getType().asStaticContext(false);
 				}
 				// add the formals vars to the closure block scope
 				closureBlock.addScopeVar(formalName.getNodeText(true), VarKind.LOCAL, fType, true);
@@ -955,7 +957,7 @@ public class FanParserTask extends ParserResult
 		{
 			parseVars(typeNode, null);
 			// add exception variable to block scope
-			FanAstScopeVarBase itVar = new FanLocalScopeVar(node, VarKind.LOCAL, idNode.getNodeText(true), typeNode.getType());
+			FanAstScopeVarBase itVar = new FanLocalScopeVar(node, VarKind.LOCAL, idNode.getNodeText(true), typeNode.getType().asStaticContext(false));
 			blockNode.addScopeVar(itVar, true);
 			// Now parse the block
 			parseVars(blockNode, null);
