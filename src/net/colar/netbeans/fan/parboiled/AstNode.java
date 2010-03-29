@@ -190,9 +190,9 @@ public class AstNode
 						Hashtable<String, FanAstScopeVarBase> inhVars = typeVar.getInheritedSlots();
 						for (FanAstScopeVarBase inhVar : inhVars.values())
 						{
-							if (!vars.containsKey(var.getName()))
+							if (!vars.containsKey(inhVar.getName()))
 							{
-								vars.put(var.getName(), inhVar);
+								vars.put(inhVar.getName(), inhVar);
 							}
 						}
 					}

@@ -943,7 +943,6 @@ public class FanParserTask extends ParserResult
 		if( ! typeCache.containsKey(qName))
 		{
 			typeCache.put(qName, FanType.findByQualifiedName(qName));
-
 		}
 		return typeCache.get(qName);
 	}

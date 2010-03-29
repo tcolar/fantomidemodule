@@ -248,20 +248,16 @@ public class FanType extends JOTModel
 	 */
 	public static FanType findByQualifiedName(String qName)
 	{
-		System.out.println(">find by fqdn: "+qName);
-		if(qName == null)
-			System.out.println(">");
+		//System.out.println(">find by fqdn: "+qName);
 		try
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, qName);
 			FanType type = (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOne();
-			System.out.println("<find by fqdn: "+qName);
 			return type;
 		} catch (Exception e)
 		{
 			JOTLogger.logException(FanType.class, "hasPodType error", e);
 		}
-		//System.out.println("< find by fqdn : NULL: "+qName);
 		return null;
 	}
 
@@ -357,12 +353,6 @@ public class FanType extends JOTModel
 		if(qualifiedType != null && qualifiedType.indexOf("::")>-1)
 			return qualifiedType.substring(0, qualifiedType.indexOf("::"));
 		return qualifiedType;
-		/*FanType type = findByQualifiedName(qualifiedType);
-		if (type != null)
-		{
-			return type.getSimpleName();
-		}
-		return qualifiedType;*/
 	}
 
 	public static Vector<FanType> findPodTypes(String pod, String prefix)

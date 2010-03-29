@@ -262,7 +262,6 @@ public class FanSlot extends JOTModel
 	}
 
 	/**
-	 * TODO: cache this ! - slow
 	 * Recursive
 	 * Get all slots, including inheritance
 	 * @param dbType
