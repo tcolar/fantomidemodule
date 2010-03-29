@@ -248,7 +248,7 @@ public class FanType extends JOTModel
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, qName);
 			FanType type = (FanType) JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).findOne();
-			//System.out.println("< find by fqdn: "+qName);
+			System.out.println("<find by fqdn: "+qName);
 			return type;
 		} catch (Exception e)
 		{

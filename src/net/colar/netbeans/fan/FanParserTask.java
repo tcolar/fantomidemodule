@@ -553,14 +553,6 @@ public class FanParserTask extends ParserResult
 			System.out.println("Already have a using called: " + qType + " (" + scopeNode.getLocalScopeVars().get(name) + ")");
 			// Note: only keeping the 'last' definition (ie: override)
 		}
-		FanType type = FanType.findByPodAndType("sys", name);
-		if (type != null)
-		{
-			/*if (type.getPod().equals("sys"))
-			{
-			addError("Duplicated using: " + qType + " / " + "sys::" + name, node);
-			}*/
-		}
 		FanResolvedType rType = FanResolvedType.makeFromDbType(node, qType);
 		rType.setStaticContext(true);
 		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, rType, true);

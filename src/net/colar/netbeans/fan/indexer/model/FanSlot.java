@@ -261,6 +261,7 @@ public class FanSlot extends JOTModel
 	}
 
 	/**
+	 * TODO: cache this ! - slow
 	 * Recursive
 	 * Get all slots, including inheritance
 	 * @param dbType
@@ -269,7 +270,7 @@ public class FanSlot extends JOTModel
 	public static List<FanSlot> getAllSlotsForType(String fanType, List<String> doneTypes, boolean includeImpliedTypes)
 	{
 		// If a type was already done, do not do again, also avoid potential cyclic dependencies etc...
-		System.out.println("############## " + fanType);
+		System.out.println("############## > gasft" + fanType);
 		if (doneTypes.contains(fanType))
 		{
 			System.out.println("###### skipping: "+fanType);
@@ -321,6 +322,7 @@ public class FanSlot extends JOTModel
 				slots.addAll(getAllSlotsForType("sys::Enum", includeImpliedTypes));
 			}
 		}
+		System.out.println("############## < gasft" + fanType);
 		return slots;
 	}
 

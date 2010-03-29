@@ -26,7 +26,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	String qName = "";
 	List<FanResolvedType> inheritedItems = new ArrayList<FanResolvedType>();
 	// To make it faster to lookup vars
-	Hashtable<String, FanSlot> inheritedSlots = new Hashtable<String, FanSlot>();
+	Hashtable<String, FanAstScopeVarBase> inheritedSlots = new Hashtable<String, FanAstScopeVarBase>();
 	// super type
 	FanResolvedType superType = FanResolvedType.makeFromDbType(null, "sys::Obj");
 
@@ -68,7 +68,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			type = FanResolvedType.makeUnresolved(node);
 		}
 		node.setType(type);
-		
+
 		AstNode inheritance = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_INHERITANCE));
 
 		if (nameNode != null)
@@ -101,7 +101,8 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true);
 		for (FanSlot slot : slots)
 		{
-			inheritedSlots.put(slot.getName(), slot);
+			FanAstScopeVarBase newVar = new FanLocalScopeVar(node, slot, slot.getName());
+			inheritedSlots.put(slot.getName(), newVar);
 		}
 
 		// Deal with children - slots
@@ -219,7 +220,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		return inheritedItems;
 	}
 
-	public Hashtable<String, FanSlot> getInheritedSlots()
+	public Hashtable<String, FanAstScopeVarBase> getInheritedSlots()
 	{
 		return inheritedSlots;
 	}
@@ -233,5 +234,4 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	{
 		return superType;
 	}
-
 }

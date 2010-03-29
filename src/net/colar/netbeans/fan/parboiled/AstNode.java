@@ -187,13 +187,12 @@ public class AstNode
 					{
 						// Add inherited slots
 						FanTypeScopeVar typeVar = (FanTypeScopeVar) var;
-						Hashtable<String, FanSlot> slots = typeVar.getInheritedSlots();
-						for (FanSlot slot : slots.values())
+						Hashtable<String, FanAstScopeVarBase> inhVars = typeVar.getInheritedSlots();
+						for (FanAstScopeVarBase inhVar : inhVars.values())
 						{
-							if (!vars.containsKey(slot.getName()))
+							if (!vars.containsKey(var.getName()))
 							{
-								FanAstScopeVarBase newVar = new FanLocalScopeVar(scope, slot, slot.getName());
-								vars.put(slot.getName(), newVar);
+								vars.put(var.getName(), inhVar);
 							}
 						}
 					}
