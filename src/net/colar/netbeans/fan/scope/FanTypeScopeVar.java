@@ -4,8 +4,10 @@
 package net.colar.netbeans.fan.scope;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
@@ -28,11 +30,12 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	// To make it faster to lookup vars
 	Hashtable<String, FanAstScopeVarBase> inheritedSlots = new Hashtable<String, FanAstScopeVarBase>();
 	// super type
-	FanResolvedType superType = FanResolvedType.makeFromDbType(null, "sys::Obj");
+	FanResolvedType superType;
 
 	public FanTypeScopeVar(AstNode typeDefNode, String name)
 	{
 		super(typeDefNode, name);
+		superType = FanResolvedType.makeFromDbType(typeDefNode, "sys::Obj");
 		// not valid until parsed.
 	}
 
@@ -95,10 +98,10 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		parseInheritance(inheritance);
 	}
 
-	public void parseSlots()
+	public void parseSlots(FanParserTask task)
 	{
 		// Also "cache" inherited slots, for faster var lookup later
-		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true);
+		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true, task);
 		for (FanSlot slot : slots)
 		{
 			FanAstScopeVarBase newVar = new FanLocalScopeVar(node, slot, slot.getName());

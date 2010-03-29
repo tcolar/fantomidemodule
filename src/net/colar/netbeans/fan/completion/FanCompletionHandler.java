@@ -298,7 +298,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			}
 		} else
 		{
-			List<FanSlot> slots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), true);
+			// Not using a cache here.
+			List<FanSlot> slots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), true, null);
 			for (FanSlot slot : slots)
 			{
 				if (slot.getName().toLowerCase().startsWith(prefix))

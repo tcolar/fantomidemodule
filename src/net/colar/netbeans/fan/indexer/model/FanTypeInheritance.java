@@ -66,24 +66,4 @@ public class FanTypeInheritance extends JOTModel
 		return new Vector<FanTypeInheritance>();
 	}
 
-	/**
-	 * Use through FanResolvedType.getParentType
-	 * @param transaction
-	 * @param type
-	 */
-	public static FanResolvedType findParentType(JOTTransaction transaction, FanResolvedType type)
-	{
-		Vector<FanTypeInheritance> inhs = findAllForMainType(transaction, type.getDbType().getQualifiedName());
-		for(FanTypeInheritance inh :inhs)
-		{
-			FanResolvedType t = FanResolvedType.makeFromDbType(null, inh.getInheritedType());
-			if(t.isResolved() && t.getDbType().isClass())
-				return t;
-		}
-		if( ! type.getDbType().getQualifiedName().equals("sys::Obj")
-			&& ! type.getDbType().isMixin())
-			return FanResolvedType.makeFromDbType(null,"sys::Obj");
-		return null;
-	}
-
 }

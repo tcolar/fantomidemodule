@@ -5,9 +5,11 @@
 package net.colar.netbeans.fan.types;
 
 import java.lang.reflect.Member;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
@@ -133,9 +135,10 @@ public class FanResolvedType
 	 * Resolve the type of a slot of the baseType, using the DB
 	 * @param baseType
 	 * @param slotName
+	 * @typeSlotsCache : optional 
 	 * @return
 	 */
-	public static FanResolvedType resolveSlotType(FanResolvedType baseType, String slotName)
+	public static FanResolvedType resolveSlotType(FanResolvedType baseType, String slotName, FanParserTask task)
 	{
 		if (baseType == null || !baseType.isResolved()
 				|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
@@ -166,7 +169,7 @@ public class FanResolvedType
 		} else
 		{
 			// Fan slots
-			for (FanSlot slot : FanSlot.getAllSlotsForType(baseType.getDbType().getQualifiedName(), true))
+			for (FanSlot slot : FanSlot.getAllSlotsForType(baseType.getDbType().getQualifiedName(), true, task))
 			{
 				if (slot.getName().equals(slotName))
 				{
@@ -418,7 +421,7 @@ public class FanResolvedType
 		boolean isStatic = true;
 		if (enteredType.indexOf("::") != -1)
 		{	// Qualified type
-			type = FanType.findByQualifiedName(enteredType);
+			type = scopeNode.getRoot().getParserTask().findCachedQualifiedType(enteredType);
 		} else
 		{
 			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
@@ -430,24 +433,24 @@ public class FanResolvedType
 			if (type == null)
 			{
 				// first, other types in this pod
-				type = FanType.findByQualifiedName(scopeNode.getRoot().getPod() + "::" + enteredType);
+				type = scopeNode.getRoot().getParserTask().findCachedQualifiedType(scopeNode.getRoot().getPod() + "::" + enteredType);
 
 			}
 			// if still not found try in "sys" pod
 			if (type == null)
 			{
-				type = FanType.findByQualifiedName("sys::" + enteredType);
+				type = scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::" + enteredType);
 			}
 			// try Generic types
 			if (type == null && enteredType.length() == 1 && enteredType.toUpperCase().equals(enteredType))
 			{
-				FanResolvedType objType = new FanResolvedType(scopeNode, enteredType, FanType.findByQualifiedName("sys::Obj"));
+				FanResolvedType objType = new FanResolvedType(scopeNode, enteredType, scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::Obj"));
 				if (enteredType.equals("V") || enteredType.equals("K") || enteredType.equals("A") || enteredType.equals("B")
 						|| enteredType.equals("C") || enteredType.equals("D") || enteredType.equals("E") || enteredType.equals("F")
 						|| enteredType.equals("G") || enteredType.equals("H"))
 				{	// K, V: List/Map key and item types
 					// A-H : Function types
-					type = FanType.findByQualifiedName("sys::Obj");
+					type = scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::Obj");
 				} else if (enteredType.equals("L"))
 				{ // List
 					return new FanResolvedListType(scopeNode, objType);
@@ -481,7 +484,11 @@ public class FanResolvedType
 	 */
 	public static FanResolvedType makeFromDbType(AstNode node, String qualifiedType)
 	{
-		FanType type = FanType.findByQualifiedName(qualifiedType);
+		FanType type = null;
+		if(node ==null)
+			type = FanType.findByQualifiedName(qualifiedType);
+		else
+			type = node.getRoot().getParserTask().findCachedQualifiedType(qualifiedType);
 		return new FanResolvedType(node, qualifiedType, type);
 	}
 
@@ -511,9 +518,8 @@ public class FanResolvedType
 	}
 
 	/**
-	 * Check wether type is compatible with baseType
+	 * Check wether current type is compatible with baseType
 	 * In other words, wether type is of the same type as baseType or inherits from it
-	 * @param Type
 	 * @param baseType
 	 */
 	public static boolean isTypeCompatible(FanResolvedType type, FanResolvedType baseType)
@@ -564,7 +570,18 @@ public class FanResolvedType
 		{
 			return null;
 		}
-		return FanTypeInheritance.findParentType(null, type);
+
+		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, type.getDbType().getQualifiedName());
+		for(FanTypeInheritance inh :inhs)
+		{
+			FanResolvedType t = FanResolvedType.makeFromDbType(type.getScopeNode(), inh.getInheritedType());
+			if(t.isResolved() && t.getDbType().isClass())
+				return t;
+		}
+		if( ! type.getDbType().getQualifiedName().equals("sys::Obj")
+			&& ! type.getDbType().isMixin())
+			return FanResolvedType.makeFromDbType(type.getScopeNode(),"sys::Obj");
+		return null;
 	}
 
 	/**
@@ -595,7 +612,7 @@ public class FanResolvedType
 				best = t;
 				continue;
 			}
-			while (!isTypeCompatible(t, best)) // exetnds
+			while (! isTypeCompatible(t, best)) // exetnds
 			{
 				best = getParentType(best); // get parent
 				if (best == null)

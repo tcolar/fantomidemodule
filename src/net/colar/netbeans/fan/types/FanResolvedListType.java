@@ -17,7 +17,7 @@ public class FanResolvedListType extends FanResolvedType
 
 	public FanResolvedListType(AstNode scopeNode, FanResolvedType itemType)
 	{
-		super(scopeNode, "sys::List", FanType.findByQualifiedName("sys::List"));
+		super(scopeNode, "sys::List", scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::List"));
 		if(itemType==null)
 			throw new RuntimeException("Null List item type");
 		this.itemType = itemType;

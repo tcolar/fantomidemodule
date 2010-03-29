@@ -241,9 +241,16 @@ public class FanType extends JOTModel
 		super.delete(trans);
 	}
 
+	/**
+	 * During parsing we use this through fanParserTask.findCachedQualifiedType (cached)
+	 * @param qName
+	 * @return
+	 */
 	public static FanType findByQualifiedName(String qName)
 	{
 		System.out.println(">find by fqdn: "+qName);
+		if(qName == null)
+			System.out.println(">");
 		try
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("qualifiedName", JOTSQLCondition.IS_EQUAL, qName);
@@ -347,12 +354,15 @@ public class FanType extends JOTModel
 
 	public static String getShortName(String qualifiedType)
 	{
-		FanType type = findByQualifiedName(qualifiedType);
+		if(qualifiedType != null && qualifiedType.indexOf("::")>-1)
+			return qualifiedType.substring(0, qualifiedType.indexOf("::"));
+		return qualifiedType;
+		/*FanType type = findByQualifiedName(qualifiedType);
 		if (type != null)
 		{
 			return type.getSimpleName();
 		}
-		return qualifiedType;
+		return qualifiedType;*/
 	}
 
 	public static Vector<FanType> findPodTypes(String pod, String prefix)

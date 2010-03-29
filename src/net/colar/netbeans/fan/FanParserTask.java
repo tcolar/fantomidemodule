@@ -7,6 +7,7 @@ package net.colar.netbeans.fan;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
@@ -63,6 +64,10 @@ public class FanParserTask extends ParserResult
 	// once parse() is called, will contain the parboiled parsing result
 	private ParsingResult<AstNode> parsingResult;
 	private AstNode astRoot;
+	// Cache types resolution, for performance
+	private HashMap<String, FanType> typeCache = new HashMap<String, FanType>();
+	// Cache slots resolution, for performance
+	private HashMap<String, List<FanSlot>> typeSlotsCache = new HashMap<String, List<FanSlot>>();
 
 	public FanParserTask(Snapshot snapshot)
 	{
@@ -182,8 +187,8 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-						false, Severity.ERROR);
+					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+					false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
@@ -248,7 +253,7 @@ public class FanParserTask extends ParserResult
 						scopeNode.getLocalScopeVars().put(name, var);
 					}
 					// Parse the slots
-					var.parseSlots();
+					var.parseSlots(this);
 					break;
 			}
 		}
@@ -479,7 +484,7 @@ public class FanParserTask extends ParserResult
 				// Individual Item
 				String qname = type.replaceAll("::", "\\.");
 
-				if (FanType.findByQualifiedName(qname) == null)
+				if (findCachedQualifiedType(qname) == null)
 				{
 					addError("Unresolved Java Item: " + qname, usingNode);
 				} else
@@ -510,7 +515,7 @@ public class FanParserTask extends ParserResult
 				if (!FanType.hasPod(data[0]))
 				{
 					addError("Unresolved Pod: " + data[0], usingNode);
-				} else if (FanType.findByQualifiedName(type) == null)
+				} else if (findCachedQualifiedType(type) == null)
 				{
 					addError("Unresolved Type: " + type, usingNode);
 				}
@@ -626,8 +631,8 @@ public class FanParserTask extends ParserResult
 			// Those kinds take the right hand side type
 			// It block chnages the type because it makes it NOT staticContext
 			if (first || child.getKind() == AstKind.AST_EXPR_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
-					|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
-					|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD)
+				|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
+				|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD)
 			{
 				type = child.getType();
 			}
@@ -648,7 +653,7 @@ public class FanParserTask extends ParserResult
 		// otherwise a slot of the base type like var.toStr()
 		{
 			//if(! (type instanceof FanUnknownType))
-			type = FanResolvedType.resolveSlotType(type, slotName);
+			type = FanResolvedType.resolveSlotType(type, slotName, this);
 		}
 
 		List<AstNode> args = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ARG));
@@ -742,14 +747,14 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode != null)
 		{   // if it's a typed list, use that as the type
 			parseVars(listTypeNode, null);
-			if ( ! listTypeNode.getType().isStaticContext())
+			if (!listTypeNode.getType().isStaticContext())
 			{
 				// It's NOT a List at all after all, but an index expression (called on a var, not a Static type)!
 				return doIndexExpr(node, type);
 			}
 
 			type = new FanResolvedListType(node,
-					listTypeNode.getType());
+				listTypeNode.getType());
 		}
 
 		for (AstNode listExpr : listExprNodes)
@@ -760,7 +765,7 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode == null)
 		{   // try to infer it from the expr Nodes
 			type = new FanResolvedListType(node,
-					FanResolvedType.makeFromItemList(node, listTypes));
+				FanResolvedType.makeFromItemList(node, listTypes));
 		}
 		return type;
 	}
@@ -787,8 +792,8 @@ public class FanParserTask extends ParserResult
 		} else
 		{ // otherwise try to infer it from the expr Nodes
 			type = new FanResolvedMapType(node,
-					FanResolvedType.makeFromItemList(node, mapKeyTypes),
-					FanResolvedType.makeFromItemList(node, mapValTypes));
+				FanResolvedType.makeFromItemList(node, mapKeyTypes),
+				FanResolvedType.makeFromItemList(node, mapValTypes));
 		}
 		return type;
 	}
@@ -796,7 +801,7 @@ public class FanParserTask extends ParserResult
 	private FanResolvedType doIndexExpr(AstNode node, FanResolvedType type)
 	{
 		parseChildren(node);
-		FanResolvedType slotType = FanResolvedType.resolveSlotType(type, "get");
+		FanResolvedType slotType = FanResolvedType.resolveSlotType(type, "get", this);
 		if (type instanceof FanResolvedListType)
 		{
 			type = ((FanResolvedListType) type).getItemType();
@@ -840,7 +845,7 @@ public class FanParserTask extends ParserResult
 		if (type != null && type.getDbType() != null)
 		{
 			type.setStaticContext(false);
-			List<FanSlot> itSlots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), false);
+			List<FanSlot> itSlots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), true, this);
 			for (FanSlot itSlot : itSlots)
 			{
 				FanAstScopeVarBase newVar = new FanLocalScopeVar(node, itSlot, itSlot.getName());
@@ -904,7 +909,7 @@ public class FanParserTask extends ParserResult
 		} else
 		{
 			// a range like "mystring"[0..5]
-			type = FanResolvedType.resolveSlotType(type, "get");
+			type = FanResolvedType.resolveSlotType(type, "get", this);
 		}
 		return type;
 	}
@@ -914,7 +919,7 @@ public class FanParserTask extends ParserResult
 		AstNode typeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
 		AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		AstNode blockNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
-		if (typeNode != null && idNode != null && blockNode!=null)
+		if (typeNode != null && idNode != null && blockNode != null)
 		{
 			parseVars(typeNode, null);
 			// add exception variable to block scope
@@ -926,6 +931,27 @@ public class FanParserTask extends ParserResult
 		return type;
 	}
 
+	/**
+	 * Resolves fanType for a qualified name
+	 * Uses a cache for performance reason (heavy DB actions).
+	 * Calls FanType.findByQualifiedName(qName)
+	 * @param qName
+	 * @return
+	 */
+	public FanType findCachedQualifiedType(String qName)
+	{
+		if( ! typeCache.containsKey(qName))
+		{
+			typeCache.put(qName, FanType.findByQualifiedName(qName));
+
+		}
+		return typeCache.get(qName);
+	}
+
+	public HashMap<String, List<FanSlot>> getTypeSlotCache()
+	{
+		return typeSlotsCache;
+	}
 }
 
 

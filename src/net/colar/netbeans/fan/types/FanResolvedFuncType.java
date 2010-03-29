@@ -20,7 +20,7 @@ public class FanResolvedFuncType extends FanResolvedType
 
 	public FanResolvedFuncType(AstNode scopeNode, Vector<FanResolvedType> types, FanResolvedType retType)
 	{
-		super(scopeNode, "sys::Func", FanType.findByQualifiedName("sys::Func"));
+		super(scopeNode, "sys::Func", scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::Func"));
 		if(retType == null)
 			retType = FanResolvedType.makeFromDbType(scopeNode, "sys::Void");
 		this.retType = retType;

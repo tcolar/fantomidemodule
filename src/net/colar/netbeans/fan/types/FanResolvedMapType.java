@@ -18,7 +18,7 @@ public class FanResolvedMapType extends FanResolvedType
 
 	public FanResolvedMapType(AstNode scopeNode, FanResolvedType keyType, FanResolvedType valType)
 	{
-		super(scopeNode, "sys::Map", FanType.findByQualifiedName("sys::Map"));
+		super(scopeNode, "sys::Map", scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::Map"));
 		this.keyType = keyType;
 		this.valType = valType;
 	}

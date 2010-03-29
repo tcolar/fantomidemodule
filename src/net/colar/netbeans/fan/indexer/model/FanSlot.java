@@ -4,9 +4,10 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
@@ -254,10 +255,10 @@ public class FanSlot extends JOTModel
 		super.save(transaction);
 	}
 
-	public static List<FanSlot> getAllSlotsForType(String fanType, Boolean includeImpliedTypes)
+	public static List<FanSlot> getAllSlotsForType(String fanType, Boolean includeImpliedTypes, FanParserTask task)
 	{
 		List<String> types = new ArrayList<String>();
-		return getAllSlotsForType(fanType, types, includeImpliedTypes);
+		return getAllSlotsForType(fanType, types, includeImpliedTypes, task);
 	}
 
 	/**
@@ -265,22 +266,32 @@ public class FanSlot extends JOTModel
 	 * Recursive
 	 * Get all slots, including inheritance
 	 * @param dbType
+	 * @param cache : optional cache
 	 * @return
 	 */
-	public static List<FanSlot> getAllSlotsForType(String fanType, List<String> doneTypes, boolean includeImpliedTypes)
+	public static List<FanSlot> getAllSlotsForType(String fanType, List<String> doneTypes, boolean includeImpliedTypes, FanParserTask task)
 	{
-		// If a type was already done, do not do again, also avoid potential cyclic dependencies etc...
-		System.out.println("############## > gasft" + fanType);
+		if(task!=null && task.getTypeSlotCache().containsKey(fanType))
+		{
+			return task.getTypeSlotCache().get(fanType);
+		}
+
+		// If a type was already done in this recursion, do not do again, also avoid potential cyclic dependencies etc...
 		if (doneTypes.contains(fanType))
 		{
-			System.out.println("###### skipping: "+fanType);
 			return new ArrayList<FanSlot>();
 		}
 		
 		doneTypes.add(fanType);
-		FanType dbType = FanType.findByQualifiedName(fanType);
+		FanType dbType=null;
+		if(task!=null)
+			dbType = task.findCachedQualifiedType(fanType);
+		else
+			dbType = FanType.findByQualifiedName(fanType);
 		if (dbType == null)
 		{
+			if(task!=null)
+				task.getTypeSlotCache().put(fanType, new Vector<FanSlot>(0));
 			return new Vector<FanSlot>(0);
 		}
 		Vector<FanSlot> slots = FanSlot.findAllForType(dbType.getId());
@@ -290,9 +301,8 @@ public class FanSlot extends JOTModel
 		for (FanTypeInheritance inh : inhs)
 		{
 			String typeName = inh.getInheritedType();
-			//System.out.println("############## " + fanType + " : " + typeName);
 			// add slots that are not already in
-			List<FanSlot> subSlots = getAllSlotsForType(typeName, includeImpliedTypes);
+			List<FanSlot> subSlots = getAllSlotsForType(typeName, includeImpliedTypes, task);
 			for (FanSlot s : subSlots)
 			{
 				boolean skip = false;
@@ -306,7 +316,6 @@ public class FanSlot extends JOTModel
 				}
 				if (!skip)
 				{
-					//System.out.println("############## " + fanType + "->" + s.name);
 					slots.add(s);
 				}
 			}
@@ -316,13 +325,14 @@ public class FanSlot extends JOTModel
 			// Add implicit super types
 			if (dbType.isClass() && !doneTypes.contains("sys::Obj"))
 			{
-				slots.addAll(getAllSlotsForType("sys::Obj", includeImpliedTypes));
+				slots.addAll(getAllSlotsForType("sys::Obj", includeImpliedTypes, task));
 			} else if (dbType.isEnum() && !doneTypes.contains("sys::Enum"))
 			{
-				slots.addAll(getAllSlotsForType("sys::Enum", includeImpliedTypes));
+				slots.addAll(getAllSlotsForType("sys::Enum", includeImpliedTypes, task));
 			}
 		}
-		System.out.println("############## < gasft" + fanType);
+		if(task!=null)
+			task.getTypeSlotCache().put(fanType, slots);
 		return slots;
 	}
 
