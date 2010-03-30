@@ -694,6 +694,7 @@ public class FanParserTask extends ParserResult
 			parseVars(arg, null);
 		}
 		//TODO: Check that param types matches slot declaration
+		//TODO: pass slot/slot type to tghe closure (need params for inference)
 		AstNode closure = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLOSURE));
 		if (closure != null)
 		{
