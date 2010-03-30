@@ -496,7 +496,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				} else if (var instanceof FanMethodScopeVar || var instanceof FanFieldScopeVar)
 				{
 					FanFieldScopeVar fVar = ((FanFieldScopeVar) var);
-					FanSlot slot = FanSlot.findByTypeAndName(fVar.getTypeString(), fVar.getName());
+					FanResolvedType slotBaseType =FanResolvedType.resolveSlotBaseType(fVar.getType(), fVar.getName(), null);
+					FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), fVar.getName());
 					if(slot!=null)
 					{
 						prop = new FanSlotProposal(slot, context.getCaretOffset() - prefix.length());

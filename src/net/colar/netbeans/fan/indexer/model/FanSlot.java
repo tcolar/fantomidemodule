@@ -185,6 +185,13 @@ public class FanSlot extends JOTModel
 		//return null;
 	}
 
+	/**
+	 * Note: this does not look into inheritance
+	 * Use FanResolvedType.resolveSlotBaseType() first to find the slot baseType
+	 * @param qualifiedType
+	 * @param slotName
+	 * @return
+	 */
 	public static FanSlot findByTypeAndName(String qualifiedType, String slotName)
 	{
 		try

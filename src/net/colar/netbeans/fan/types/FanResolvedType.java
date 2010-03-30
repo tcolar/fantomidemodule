@@ -137,13 +137,50 @@ public class FanResolvedType
 	}
 
 	/**
-	 * Resolve the type of a slot of the baseType, using the DB
+	 * Resolve the return type of a slot of the baseType(and it's supertypes), using the DB
 	 * @param baseType
 	 * @param slotName
 	 * @typeSlotsCache : optional 
 	 * @return
 	 */
 	public static FanResolvedType resolveSlotType(FanResolvedType baseType, String slotName, FanParserTask task)
+	{
+		FanResolvedType slotBaseType = resolveSlotBaseType(baseType, slotName, task);
+		if (slotBaseType.isResolved())
+		{
+			if (baseType.getDbType().isJava())
+			{
+				List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(slotBaseType.getQualifiedType());
+				for (Member member : members)
+				{
+					if (member.getName().equalsIgnoreCase(slotName))
+					{
+						return makeFromLocalID(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
+					}
+				}
+			} else
+			{
+				FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), slotName);
+				FanResolvedType t = fromTypeSig(baseType.scopeNode, slot.returnedType);
+				if (isGenericType(t))
+				{
+					t = fromGenerics(baseType, t);
+				}
+				return t;
+			}
+		}
+		return makeUnresolved(baseType.scopeNode);
+	}
+
+	/**
+	 * Find the type the slot is defined in
+	 *	IE: BaseType or any of it's super types
+	 * @param baseType
+	 * @param slotName
+	 * @param task
+	 * @return
+	 */
+	public static FanResolvedType resolveSlotBaseType(FanResolvedType baseType, String slotName, FanParserTask task)
 	{
 		if (baseType == null || !baseType.isResolved()
 			|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
@@ -154,23 +191,16 @@ public class FanResolvedType
 		{
 			// java slots
 			List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(baseType.getDbType().getQualifiedName());
-			boolean found = false;
 			// Returning the first match .. because java has overloading this could be wrong
-			// However i assume overloaded methods return the same type (If it doesn't too bad, it's ugly code anyway :) )
+			// However I assume overloaded methods return the same type (If it doesn't too bad, it's ugly code anyway :) )
 			for (Member member : members)
 			{
 				if (member.getName().equalsIgnoreCase(slotName))
 				{
-					baseType = makeFromLocalID(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
-					found = true;
-					break;
+					FanType slotBaseType = FanType.findByQualifiedName(member.getClass().getName());
+					return new FanResolvedType(null, slotBaseType.getQualifiedName(), slotBaseType);
 				}
 			}
-			if (!found)
-			{
-				baseType = makeUnresolved(baseType.scopeNode);
-			}
-
 		} else
 		{
 			// Fan slots
@@ -178,37 +208,22 @@ public class FanResolvedType
 			{
 				if (slot.getName().equals(slotName))
 				{
-					FanResolvedType t = fromTypeSig(baseType.scopeNode, slot.returnedType);
-					if (baseType instanceof FanResolvedListType
-						|| baseType instanceof FanResolvedMapType
-						|| baseType instanceof FanResolvedFuncType)
-					{
-						int col = t.getAsTypedType().indexOf("::");
-						String n = t.getAsTypedType().substring(col + 2);
-						String pod = t.getAsTypedType().substring(0, col);
-						if (pod.equals("sys") && n.length() == 1 && n.toUpperCase().equals(n))
-						{
-							t = fromGenerics(baseType, t);
-						}
-
-					}
-					t = t.asStaticContext(false);
-					return t;
+					FanType slotBaseType = FanType.findByID(slot.getTypeId());
+					return new FanResolvedType(null, slotBaseType.getQualifiedName(), slotBaseType);
 				}
 			}
-			baseType = makeUnresolved(baseType.scopeNode);
 		}
-		baseType = baseType.asStaticContext(false);
-		return baseType;
+		return makeUnresolved(baseType.scopeNode);
 	}
 
 	public static boolean isGenericType(FanResolvedType type)
 	{
 		String qt = type.asTypedType;
-		return qt!=null && qt.startsWith("sys::")
-				&& qt.length() == 6
-				&& Character.toUpperCase(qt.charAt(5)) == qt.charAt(5);
+		return qt != null && qt.startsWith("sys::")
+			&& qt.length() == 6
+			&& Character.toUpperCase(qt.charAt(5)) == qt.charAt(5);
 	}
+
 	/**
 	 * Wether this is a staitc variable or an instance
 	 * Example : "Str" -> 'Str' is of type Str and is a static type
@@ -227,8 +242,10 @@ public class FanResolvedType
 	 */
 	public FanResolvedType asNullableContext(boolean nullable)
 	{
-		if(nullableContext == nullable)
+		if (nullableContext == nullable)
+		{
 			return this;
+		}
 		FanResolvedType copy = new FanResolvedType(scopeNode, asTypedType, dbType);
 		copy.nullableContext = nullable;
 		return copy;
@@ -245,8 +262,10 @@ public class FanResolvedType
 
 	public FanResolvedType asStaticContext(boolean b)
 	{
-		if(staticContext == b)
+		if (staticContext == b)
+		{
 			return this;
+		}
 		FanResolvedType copy = new FanResolvedType(scopeNode, asTypedType, dbType);
 		copy.staticContext = b;
 		return copy;
@@ -444,12 +463,12 @@ public class FanResolvedType
 	public static FanResolvedType makeFromLocalID(AstNode scopeNode, String enteredType)
 	{
 		//System.out.println("Make from local type: "+enteredType);
-		boolean toStatic=false;
+		boolean toStatic = false;
 		FanType type = null;
 		if (enteredType.indexOf("::") != -1)
 		{	// Qualified type
 			type = scopeNode.getRoot().getParserTask().findCachedQualifiedType(enteredType);
-			toStatic =true;
+			toStatic = true;
 		} else
 		{
 			Hashtable<String, FanAstScopeVarBase> types = scopeNode.getAllScopeVars();
@@ -462,13 +481,13 @@ public class FanResolvedType
 			{
 				// first, other types in this pod
 				type = scopeNode.getRoot().getParserTask().findCachedQualifiedType(scopeNode.getRoot().getPod() + "::" + enteredType);
-				toStatic =true;
+				toStatic = true;
 			}
 			// if still not found try in "sys" pod
 			if (type == null)
 			{
 				type = scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::" + enteredType);
-				toStatic =true;
+				toStatic = true;
 			}
 			// try Generic types
 			if (type == null && enteredType.length() == 1 && enteredType.toUpperCase().equals(enteredType))
@@ -500,9 +519,11 @@ public class FanResolvedType
 			}
 		}
 		FanResolvedType result = new FanResolvedType(scopeNode, enteredType, type);
-		
-		if(toStatic)
+
+		if (toStatic)
+		{
 			result = result.asStaticContext(true);
+		}
 
 		return result;
 	}

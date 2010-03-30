@@ -30,9 +30,17 @@ public class FanLocalScopeVar extends FanAstScopeVar
 		super(node, kind, name, type);
 	}
 
-	public FanLocalScopeVar(AstNode node, FanSlot slot, String name)
+	private static FanResolvedType getSlotType(AstNode node, FanResolvedType baseType, FanSlot slot)
 	{
-		super(node, VarKind.makeFromVal(slot.getSlotKind()), name, FanResolvedType.fromTypeSig(node, slot.getReturnedType()));
+		FanResolvedType type = FanResolvedType.fromTypeSig(node, slot.getReturnedType());
+		if(FanResolvedType.isGenericType(type))
+			type = FanResolvedType.fromGenerics(baseType, type);
+		return type;
+	}
+
+	public FanLocalScopeVar(AstNode node, FanResolvedType baseType, FanSlot slot, String name)
+	{
+		super(node, VarKind.makeFromVal(slot.getSlotKind()), name, getSlotType(node, baseType, slot));
 		this.slot = slot;
 
 		if (slot.isField())

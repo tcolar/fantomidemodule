@@ -837,7 +837,8 @@ public class FanParserTask extends ParserResult
 	private FanResolvedType doClosureCall(AstNode node, FanResolvedType type, FanResolvedType baseType, String slotName)
 	{
 		System.out.println("Closure type: " + type);
-		FanSlot slot = FanSlot.findByTypeAndName(baseType.getQualifiedType(), slotName);
+		FanResolvedType slotBaseType =FanResolvedType.resolveSlotBaseType(baseType, slotName, this);
+		FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), slotName);
 		if (slot == null)
 		{
 			addError("Unresolved slot " + slotName, node);
@@ -879,6 +880,11 @@ public class FanParserTask extends ParserResult
 					itType = FanResolvedType.fromGenerics(baseType, itType);
 				}
 				itType = itType.asStaticContext(false);
+				//Deal with special case of 'This' as the formal type
+				if(itType.getQualifiedType().equals("sys::This"))
+				{
+					itType = baseType;
+				}
 			}
 			introduceItVariables(node, itType);
 			// parse the it block content
@@ -1071,7 +1077,7 @@ public class FanParserTask extends ParserResult
 			List<FanSlot> itSlots = FanSlot.getAllSlotsForType(itType.getDbType().getQualifiedName(), true, this);
 			for (FanSlot itSlot : itSlots)
 			{
-				FanAstScopeVarBase newVar = new FanLocalScopeVar(node, itSlot, itSlot.getName());
+				FanAstScopeVarBase newVar = new FanLocalScopeVar(node, itType, itSlot, itSlot.getName());
 				node.addScopeVar(newVar, true);
 			}
 			// add "it" to scope

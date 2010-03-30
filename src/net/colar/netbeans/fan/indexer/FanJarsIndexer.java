@@ -40,7 +40,7 @@ import org.openide.filesystems.FileUtil;
 
 /**
  * Index for Java classes.
- * We only store and type sin DB (no slts etc...)
+ * We only store and types in DB (no slots etc...)
  *
  * We resolve classes on a as-needed basis (lazy cache).
  *

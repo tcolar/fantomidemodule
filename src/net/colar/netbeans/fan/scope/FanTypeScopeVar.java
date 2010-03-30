@@ -104,7 +104,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true, task);
 		for (FanSlot slot : slots)
 		{
-			FanAstScopeVarBase newVar = new FanLocalScopeVar(node, slot, slot.getName());
+			FanAstScopeVarBase newVar = new FanLocalScopeVar(node, getType(), slot, slot.getName());
 			inheritedSlots.put(slot.getName(), newVar);
 		}
 
