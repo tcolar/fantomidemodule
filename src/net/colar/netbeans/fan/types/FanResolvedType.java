@@ -202,6 +202,13 @@ public class FanResolvedType
 		return baseType;
 	}
 
+	public static boolean isGenericType(FanResolvedType type)
+	{
+		String qt = type.asTypedType;
+		return qt!=null && qt.startsWith("sys::")
+				&& qt.length() == 6
+				&& Character.toUpperCase(qt.charAt(5)) == qt.charAt(5);
+	}
 	/**
 	 * Wether this is a staitc variable or an instance
 	 * Example : "Str" -> 'Str' is of type Str and is a static type
@@ -675,7 +682,7 @@ public class FanResolvedType
 	 * @param baseType
 	 * @return
 	 */
-	private static FanResolvedType fromGenerics(FanResolvedType baseType, FanResolvedType genericType)
+	public static FanResolvedType fromGenerics(FanResolvedType baseType, FanResolvedType genericType)
 	{
 		int col = genericType.getAsTypedType().indexOf("::");
 		String n = genericType.getAsTypedType().substring(col + 2);

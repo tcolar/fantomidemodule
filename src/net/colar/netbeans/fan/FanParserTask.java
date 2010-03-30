@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.completion.FanSlotProposal;
+import net.colar.netbeans.fan.indexer.model.FanMethodParam;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
@@ -24,6 +26,7 @@ import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
+import net.colar.netbeans.fan.types.FanResolvedFuncType;
 import net.colar.netbeans.fan.types.FanResolvedListType;
 import net.colar.netbeans.fan.types.FanResolvedMapType;
 import net.colar.netbeans.fan.types.FanResolvedNullType;
@@ -187,8 +190,8 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-					false, Severity.ERROR);
+						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+						false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
@@ -302,8 +305,10 @@ public class FanParserTask extends ParserResult
 		String text = node.getNodeText(true);
 		switch (node.getKind())
 		{
+			// TODO: remove this
 			case AST_CLOSURE:
-				type = doClosure(node, type);
+				// The closure will be done as part of doCall()
+				// so not doing now, skipping.
 				break;
 			case AST_EXPR_INDEX:
 				type = doIndexExpr(node, type);
@@ -325,7 +330,7 @@ public class FanParserTask extends ParserResult
 				break;
 			case AST_CALL_EXPR:
 				// there is also an operator node, but we ignore it - will be used in doCall()
-				AstNode callNode =FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CALL));
+				AstNode callNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CALL));
 				parseVars(callNode, type);
 				type = callNode.getType();
 				break;
@@ -637,9 +642,9 @@ public class FanParserTask extends ParserResult
 			// Those kinds take the right hand side type
 			// It block chnages the type because it makes it NOT staticContext
 			if (first || child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
-				|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
-				|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD || child.getKind() == AstKind.AST_CALL_EXPR
-				|| child.getKind() == AstKind.AST_CLOSURE)
+					|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
+					|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD || child.getKind() == AstKind.AST_CALL_EXPR
+					|| child.getKind() == AstKind.AST_CLOSURE)
 			{
 				type = child.getType();
 			}
@@ -650,7 +655,8 @@ public class FanParserTask extends ParserResult
 
 	private FanResolvedType doCall(AstNode node, FanResolvedType type)
 	{
-
+		// saving the base type, because we need it for closures
+		FanResolvedType baseType = type;
 		AstNode callChild = node.getChildren().get(0);
 		String slotName = callChild.getNodeText(true);
 
@@ -694,61 +700,73 @@ public class FanParserTask extends ParserResult
 			parseVars(arg, null);
 		}
 		//TODO: Check that param types matches slot declaration
-		//TODO: pass slot/slot type to tghe closure (need params for inference)
 		AstNode closure = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLOSURE));
 		if (closure != null)
 		{
-			parseVars(closure, null);
+			// Do the closure
+			/*type = */doClosure(closure, type, baseType, slotName);
 		}
 		return type;
 	}
 
-	private FanResolvedType doClosure(AstNode node, FanResolvedType type)
+	private FanResolvedType doClosure(AstNode node, FanResolvedType type, FanResolvedType baseType, String slotName)
 	{
-		System.out.println("Closure type: "+type);
+		System.out.println("Closure type: " + type);
+		FanSlot slot = FanSlot.findByTypeAndName(baseType.getQualifiedType(), slotName);
+		if (slot == null)
+		{
+			node.getRoot().getParserTask().addError("Unresolved slot " + slotName, node);
+			return FanResolvedType.makeUnresolved(node);
+		}
+		Vector<FanMethodParam> callParams = FanMethodParam.findAllForSlot(slot.getId());
 		AstNode closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
 		FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void");
+		int index = 0;
+		if (callParams.size() == 0)
+		{
+			node.getRoot().getParserTask().addError("Can't invoke a closure on a method that doesn't take parameters.", node);
+			return FanResolvedType.makeUnresolved(node);
+		}
+		String funcSig = callParams.get(0).getQualifiedType();
+		FanResolvedType funcType = FanResolvedType.fromTypeSig(node, funcSig);
+		List<FanResolvedType> formalTypes = ((FanResolvedFuncType) funcType).getTypes();
+		if (!funcType.isResolved() || !(funcType instanceof FanResolvedFuncType))
+		{
+			node.getRoot().getParserTask().addError("Can't invoke a closure on a method that doesn't take a function as it's first parameter", node);
+			return FanResolvedType.makeUnresolved(node);
+		}
 		for (AstNode child : node.getChildren())
 		{
 			if (child.getKind() == AstKind.AST_FORMAL)
 			{
 				AstNode formalName = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_ID));
 				AstNode formalTypeAndId = FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
-				// TODO: try to deal with inference ??
-						/*
-				 * Closures like on each are inferred by the function parameter on the method being called.
-
-				For example each on a Field[] will have a parametered signature of each(|Field f| func) which is how f gets typed a Field.
-
-				The place it happens in my code is CallResolver.inferClosureTypeFromCall
-
-				Take a look at thru that code and see if it makes it clearer.  Remember it works with any method that takes a function.
-
-				For example if the method is:
-
-				foo(|Str, Int, Float| f)
-
-				Then
-
-				foo |a, b, c| {}  =>  foo |Str a, Int b, Float c| {}
-				 *
-				 * fansh> t := List#.parameterize(["V":Str#])
-				sys::Str[]
-				fansh> t.method("each").signature
-				sys::Void each(|sys::Str,sys::Int->sys::Void| c)
-				 */
-				//FanResolvedType fType = FanResolvedType.makeFromDbType(child, "sys::Obj");
-				FanResolvedType fType = new FanUnknownType(node, node.getNodeText(true)); //TODO: resolve formal type
-				System.out.println("TODO: deal with Inferred Formals in fanparserTask !");
+				FanResolvedType fType = FanResolvedType.makeUnresolved(node);
 				if (formalTypeAndId != null)
-				{ // if inferred this is null
+				{	// typed formal
 					formalName = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_ID));
 					AstNode formalType = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_TYPE));
 					parseVars(formalType, null);
 					fType = formalType.getType().asStaticContext(false);
+					// TODO: check that it matches callParams
+				} else
+				{
+					// inferred
+					if (formalTypes.size() < index)
+					{
+						node.getRoot().getParserTask().addError("More formal types to be inferred than expected.", node);
+						fType = FanResolvedType.makeUnresolved(node);
+					}
+					fType = formalTypes.get(index);
+				}
+				// might be a generic type (likely even)
+				if (FanResolvedType.isGenericType(fType))
+				{
+					fType = FanResolvedType.fromGenerics(baseType, fType);
 				}
 				// add the formals vars to the closure block scope
 				closureBlock.addScopeVar(formalName.getNodeText(true), VarKind.LOCAL, fType, true);
+				index++;
 			}
 			if (child.getKind() == AstKind.AST_TYPE)
 			{
@@ -789,7 +807,7 @@ public class FanParserTask extends ParserResult
 			}
 
 			type = new FanResolvedListType(node,
-				listTypeNode.getType());
+					listTypeNode.getType());
 		}
 
 		for (AstNode listExpr : listExprNodes)
@@ -800,7 +818,7 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode == null)
 		{   // try to infer it from the expr Nodes
 			type = new FanResolvedListType(node,
-				FanResolvedType.makeFromItemList(node, listTypes));
+					FanResolvedType.makeFromItemList(node, listTypes));
 		}
 		return type;
 	}
@@ -827,8 +845,8 @@ public class FanParserTask extends ParserResult
 		} else
 		{ // otherwise try to infer it from the expr Nodes
 			type = new FanResolvedMapType(node,
-				FanResolvedType.makeFromItemList(node, mapKeyTypes),
-				FanResolvedType.makeFromItemList(node, mapValTypes));
+					FanResolvedType.makeFromItemList(node, mapKeyTypes),
+					FanResolvedType.makeFromItemList(node, mapValTypes));
 		}
 		return type;
 	}
@@ -849,7 +867,7 @@ public class FanParserTask extends ParserResult
 			type = slotType;
 		} else
 		{
-			type = null;
+			type = FanResolvedType.makeUnresolved(node);
 			node.getRoot().getParserTask().addError("Index expression only valid on lists, maps or types with get method-> " + node.getNodeText(true), node);
 		}
 		// TODO: check if list/map index key type is valid ?
