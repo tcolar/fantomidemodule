@@ -278,7 +278,7 @@ public class FanParserTask extends ParserResult
 			}
 		}
 
-		FanLexAstUtils.dumpTree(astRoot, 0);
+		//FanLexAstUtils.dumpTree(astRoot, 0);
 		FanUtilities.GENERIC_LOGGER.info("Parsing of scope completed in " + (new Date().getTime() - start) + " for : " + sourceName);
 	}
 	//TODO: don't show the whole stack of errors, but just the base.
