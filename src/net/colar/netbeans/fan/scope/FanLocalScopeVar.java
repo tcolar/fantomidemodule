@@ -19,7 +19,7 @@ public class FanLocalScopeVar extends FanAstScopeVar
 	Hashtable<String, FanResolvedType> parameters = new Hashtable<String, FanResolvedType>();
 
 	/**
-	 * Use thsi constructor for "implied/local" variables
+	 * Use this constructor for "implied/local" variables
 	 * @param node
 	 * @param kind
 	 * @param name
