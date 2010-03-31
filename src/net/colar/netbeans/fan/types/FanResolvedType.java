@@ -28,8 +28,8 @@ import net.colar.netbeans.fan.scope.FanTypeScopeVar;
  * Store infos of a resolved type
  * Also contains the factory methods / logic to resolve a type expr.
  *
- * All ResolvedType are strored unparameterized (generic stays in generic form)
- * Use parameterize() to get a parameterizer copy.
+ * All ResolvedType are storred unparameterized (generic stays in generic form)
+ * Use parameterize() to get a parameterizer (shallow) copy.
  *
  * @author tcolar
  */

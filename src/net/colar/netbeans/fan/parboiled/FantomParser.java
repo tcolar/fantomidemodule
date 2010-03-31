@@ -525,13 +525,13 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule typeBase()
 	{
 		return firstOf(
-				enforcedSequence(OP_POUND, id()), // slot litteral (without type)
+				enforcedSequence(sequence(OP_POUND, id()), ast.newNode(AstKind.AST_TYPE_LITTERAL)), // slot litteral (without type)
 				closure(),
 				dsl(), // DSL
 				// Optimized by grouping all the items that start with "type" (since looking for type if resource intensive)
 				sequence(type(), ast.newNode(AstKind.AST_ID),
 				firstOf(
-					sequence(OP_POUND, optional(id())), // type/slot litteral
+					sequence(sequence(OP_POUND, optional(id())), ast.newNode(AstKind.AST_TYPE_LITTERAL)), // type/slot litteral
 					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_CALL)), // named super
 					sequence(DOT, idExpr()), // static call
 					sequence(PAR_L, expr(), PAR_R), // simple ?? (ctor call)

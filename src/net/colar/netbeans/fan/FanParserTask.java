@@ -4,13 +4,18 @@
  */
 package net.colar.netbeans.fan;
 
+import fan.sys.FanScheme;
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.indexer.model.FanMethodParam;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
@@ -23,10 +28,11 @@ import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
+import net.colar.netbeans.fan.scope.FanFieldScopeVar;
 import net.colar.netbeans.fan.scope.FanLocalScopeVar;
+import net.colar.netbeans.fan.scope.FanMethodScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedFuncType;
-import net.colar.netbeans.fan.types.FanResolvedGenericType;
 import net.colar.netbeans.fan.types.FanResolvedListType;
 import net.colar.netbeans.fan.types.FanResolvedMapType;
 import net.colar.netbeans.fan.types.FanResolvedNullType;
@@ -57,6 +63,7 @@ import org.parboiled.support.ParsingResult;
 public class FanParserTask extends ParserResult
 {
 
+	public boolean dumpTree = false; // debug
 	List<Error> errors = new Vector<Error>(); // -> use parsingResult.errors ?
 	// full path of the source file
 	private final FileObject sourceFile;
@@ -278,7 +285,10 @@ public class FanParserTask extends ParserResult
 			}
 		}
 
-		FanLexAstUtils.dumpTree(astRoot, 0);
+		if (dumpTree)
+		{
+			FanLexAstUtils.dumpTree(astRoot, 0);
+		}
 		FanUtilities.GENERIC_LOGGER.info("Parsing of scope completed in " + (new Date().getTime() - start) + " for : " + sourceName);
 	}
 	//TODO: don't show the whole stack of errors, but just the base.
@@ -396,6 +406,9 @@ public class FanParserTask extends ParserResult
 					break;
 				case AST_LOCAL_DEF: // special case, since it introduces scope vars
 					type = doLocalDef(node, type);
+					break;
+				case AST_TYPE_LITTERAL: // 'Type#' or '#slot' or 'Type#slot'
+					type = doTypeLitteral(node, type);
 					break;
 				default:
 					// recurse into children
@@ -674,12 +687,12 @@ public class FanParserTask extends ParserResult
 			}
 			// Normal procedure
 			parseVars(child, type);
-			// Those kinds take the right hand side type
+			// Those kind take the right hand side type
 			// It block chnages the type because it makes it NOT staticContext
 			if (first || child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
 				|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
 				|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD || child.getKind() == AstKind.AST_CALL_EXPR
-				|| child.getKind() == AstKind.AST_CLOSURE)
+				|| child.getKind() == AstKind.AST_CLOSURE || child.getKind() == AstKind.AST_TYPE_LITTERAL)
 			{
 				type = child.getType();
 				// If part of the expr chain is unresolved (error), mark it unresolved
@@ -688,6 +701,9 @@ public class FanParserTask extends ParserResult
 				{
 					type = new FanUnknownType(node, child.getNodeText(true));
 				}
+			} else
+			{
+				// TODO: check what doesn't since it's probably less common than what does
 			}
 			first = false;
 		}
@@ -705,7 +721,7 @@ public class FanParserTask extends ParserResult
 	{
 		/*if (type instanceof FanResolvedGenericType)
 		{
-			type = ((FanResolvedGenericType) type).getPhysicalType();
+		type = ((FanResolvedGenericType) type).getPhysicalType();
 		}*/
 
 		// saving the base type, because we need it for closures
@@ -761,8 +777,10 @@ public class FanParserTask extends ParserResult
 		}
 		// we need to parameterize the result
 		// if baseType is null, then it probably couldn't return generics and if it did, then it would be "this", so leave it alone either way
-		if(baseType!=null)
+		if (baseType != null)
+		{
 			type = type.parameterize(baseType);
+		}
 		return type;
 	}
 
@@ -1178,6 +1196,70 @@ public class FanParserTask extends ParserResult
 	public HashMap<String, List<FanSlot>> getTypeSlotCache()
 	{
 		return typeSlotsCache;
+	}
+
+	private FanResolvedType doTypeLitteral(AstNode node, FanResolvedType type)
+	{
+		FanResolvedType baseType = type;
+		String slotId = node.getNodeText(true).substring(1); // always starts with #
+		boolean isTypeLit = type != null && slotId.length() == 0; // otherwise a slot
+		type = FanResolvedType.makeUnresolved(node);
+		if (isTypeLit)
+		{
+			type = FanResolvedType.makeFromDbType(node, "sys::Type");
+		} else
+		{// slot litteral
+			if (baseType != null && baseType.getDbType().isJava())
+			{
+				// Not even sure if this is suppose to work for java types, but covering it anyway
+				List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(baseType.getQualifiedType());
+				for (Member m : members)
+				{
+					if (m.getName().equalsIgnoreCase(slotId))
+					{
+						if (m instanceof Field)
+						{
+							type = FanResolvedType.makeFromDbType(node, "sys::Field");
+						} else
+						{
+							type = FanResolvedType.makeFromDbType(node, "sys::Method");
+						}
+					}
+				}
+			} else
+			{
+				// Fantom types
+				if (baseType == null)
+				{
+					// local slot
+					FanAstScopeVarBase var = node.getAllScopeVars().get(slotId);
+					if (var instanceof FanMethodScopeVar) // note: method inherits from field
+					{
+						type = FanResolvedType.makeFromDbType(node, "sys::Method");
+					} else
+					{
+						type = FanResolvedType.makeFromDbType(node, "sys::Field");
+					}
+				} else
+				{
+					// Type specified slots
+					FanSlot slot = FanSlot.findByTypeAndName(baseType.getQualifiedType(), slotId);
+					if (slot != null)
+					{
+						if (slot.isField())
+						{
+							type = FanResolvedType.makeFromDbType(node, "sys::Field");
+						} else
+						{
+							type = FanResolvedType.makeFromDbType(node, "sys::Method");
+						}
+					}
+				}
+			}
+		}
+		// we want an instance of the type
+		type = type.asStaticContext(false);
+		return type;
 	}
 }
 
