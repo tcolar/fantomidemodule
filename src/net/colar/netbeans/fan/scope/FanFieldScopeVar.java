@@ -27,7 +27,8 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 		this.kind = VarKind.FIELD;
 		if (node.getKind() == AstKind.AST_CTOR_DEF)
 		{
-			type = FanResolvedType.resolveThisType(node);
+			// ctor is always returning type sys::This
+			type = FanResolvedType.makeFromDbType(node, "sys::This");
 			if (type == null)
 			{
 				FanUtilities.GENERIC_LOGGER.error(getClass().getName() + " Null type for: " + node.getNodeText(true));

@@ -633,18 +633,20 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					{
 						// determine kind of slot
 						VarKind kind = VarKind.FIELD;
-						FTypeRef retType = null;
+						String retType = null;
 						if (slot instanceof FField)
 						{
-							retType = type.pod.typeRef(((FField) slot).type);
+							retType = type.pod.typeRef(((FField) slot).type).signature;
 						} else if (slot instanceof FMethod)
 						{
-							retType = type.pod.typeRef(((FMethod) slot).ret);
 							if (hasFlag(slot.flags, FConst.Ctor))
 							{
+								// This returns Void -> retType = type.pod.typeRef(((FMethod) slot).ret);
+								retType = "sys::This";
 								kind = VarKind.CTOR;
 							} else
 							{
+								retType = type.pod.typeRef(((FMethod) slot).ret).signature;
 								kind = VarKind.METHOD;
 							}
 						} else
@@ -669,7 +671,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						}
 						dbSlot.setTypeId(dbType.getId());
 						dbSlot.setSlotKind(kind.value());
-						dbSlot.setReturnedType(retType.signature);
+						dbSlot.setReturnedType(retType);
 						dbSlot.setName(slot.name);
 						dbSlot.setIsAbstract(hasFlag(slot.flags, FConst.Abstract));
 						dbSlot.setIsNative(hasFlag(slot.flags, FConst.Native));
@@ -678,7 +680,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						dbSlot.setIsVirtual(hasFlag(slot.flags, FConst.Virtual));
 						dbSlot.setIsConst(hasFlag(slot.flags, FConst.Const));
 						dbSlot.setProtection(getProtection(slot.flags));
-						dbSlot.setIsNullable(retType.isNullable());
+						dbSlot.setIsNullable(retType.trim().endsWith("?"));
 
 						dbSlot.save();
 
