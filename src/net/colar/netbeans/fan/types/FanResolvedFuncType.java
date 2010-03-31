@@ -14,8 +14,8 @@ import net.colar.netbeans.fan.parboiled.AstNode;
 public class FanResolvedFuncType extends FanResolvedType
 {
 
-	private FanResolvedType retType;
-	private List<FanResolvedType> types = new Vector<FanResolvedType>();
+	private final FanResolvedType retType;
+	private final List<FanResolvedType> types;
 
 	public FanResolvedFuncType(AstNode scopeNode, List<FanResolvedType> types, FanResolvedType retType)
 	{

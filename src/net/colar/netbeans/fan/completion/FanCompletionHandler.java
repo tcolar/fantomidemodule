@@ -31,6 +31,7 @@ import net.colar.netbeans.fan.scope.FanFieldScopeVar;
 import net.colar.netbeans.fan.scope.FanMethodScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
+import net.colar.netbeans.fan.types.FanResolvedGenericType;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -298,6 +299,10 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			}
 		} else
 		{
+			/*if(type instanceof FanResolvedGenericType)
+			{
+				type = ((FanResolvedGenericType)type).getPhysicalType();
+			}*/
 			// Not using a cache here.
 			List<FanSlot> slots = FanSlot.getAllSlotsForType(type.getDbType().getQualifiedName(), true, null);
 			for (FanSlot slot : slots)
@@ -496,7 +501,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 				} else if (var instanceof FanMethodScopeVar || var instanceof FanFieldScopeVar)
 				{
 					FanFieldScopeVar fVar = ((FanFieldScopeVar) var);
-					FanResolvedType slotBaseType =FanResolvedType.resolveSlotBaseType(fVar.getType(), fVar.getName(), null);
+					FanResolvedType slotBaseType = fVar.getType().resolveSlotBaseType(fVar.getName(), null);
 					FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), fVar.getName());
 					if(slot!=null)
 					{

@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.scope;
 import java.util.Hashtable;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.parboiled.AstNode;
+import net.colar.netbeans.fan.types.FanResolvedGenericType;
 import net.colar.netbeans.fan.types.FanResolvedType;
 
 /**
@@ -18,6 +19,13 @@ public class FanLocalScopeVar extends FanAstScopeVar
 	private FanSlot slot = null;
 	Hashtable<String, FanResolvedType> parameters = new Hashtable<String, FanResolvedType>();
 
+	private static FanResolvedType getNonGenericType(FanResolvedType type)
+	{
+		if(type instanceof FanResolvedGenericType)
+			type = ((FanResolvedGenericType)type).getPhysicalType();
+		return type;
+	}
+
 	/**
 	 * Use this constructor for "implied/local" variables
 	 * @param node
@@ -27,14 +35,14 @@ public class FanLocalScopeVar extends FanAstScopeVar
 	 */
 	public FanLocalScopeVar(AstNode node, VarKind kind, String name, FanResolvedType type)
 	{
-		super(node, kind, name, type);
+		super(node, kind, name, getNonGenericType(type));
 	}
 
 	private static FanResolvedType getSlotType(AstNode node, FanResolvedType baseType, FanSlot slot)
 	{
-		FanResolvedType type = FanResolvedType.fromTypeSig(node, slot.getReturnedType());
-		if(FanResolvedType.isGenericType(type))
-			type = FanResolvedType.fromGenerics(baseType, type);
+		FanResolvedType type = FanResolvedType.makeFromTypeSig(node, slot.getReturnedType());
+		//if(type.isGenericType())
+		//	type = type.parameterize(baseType);
 		return type;
 	}
 

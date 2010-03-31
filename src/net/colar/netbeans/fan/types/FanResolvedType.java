@@ -5,7 +5,6 @@
 package net.colar.netbeans.fan.types;
 
 import java.lang.reflect.Member;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -28,9 +27,13 @@ import net.colar.netbeans.fan.scope.FanTypeScopeVar;
  * Resolved type - Immutable (since we cache the base type, and we need static/nullable copy at time)
  * Store infos of a resolved type
  * Also contains the factory methods / logic to resolve a type expr.
+ *
+ * All ResolvedType are strored unparameterized (generic stays in generic form)
+ * Use parameterize() to get a parameterizer copy.
+ *
  * @author tcolar
  */
-public class FanResolvedType
+public class FanResolvedType implements Cloneable
 {
 
 	private final String asTypedType;
@@ -125,7 +128,7 @@ public class FanResolvedType
 	 */
 	public static FanResolvedType makeFromTypeSigWithWarning(AstNode node)
 	{
-		FanResolvedType result = fromTypeSig(node, node.getNodeText(true));
+		FanResolvedType result = makeFromTypeSig(node, node.getNodeText(true));
 		if (!result.isResolved())
 		{
 			String type = node.getNodeText(true);
@@ -143,9 +146,16 @@ public class FanResolvedType
 	 * @typeSlotsCache : optional 
 	 * @return
 	 */
-	public static FanResolvedType resolveSlotType(FanResolvedType baseType, String slotName, FanParserTask task)
+	public FanResolvedType resolveSlotType(String slotName, FanParserTask task)
 	{
-		FanResolvedType slotBaseType = resolveSlotBaseType(baseType, slotName, task);
+		FanResolvedType baseType = this;
+		// support for generics
+		if (baseType instanceof FanResolvedGenericType)
+		{
+			baseType = ((FanResolvedGenericType) baseType).getPhysicalType();
+		}
+
+		FanResolvedType slotBaseType = resolveSlotBaseType(slotName, task);
 		if (slotBaseType.isResolved())
 		{
 			if (baseType.getDbType().isJava())
@@ -155,17 +165,13 @@ public class FanResolvedType
 				{
 					if (member.getName().equalsIgnoreCase(slotName))
 					{
-						return makeFromLocalID(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
+						return makeFromTypeSig(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
 					}
 				}
 			} else
 			{
 				FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), slotName);
-				FanResolvedType t = fromTypeSig(baseType.scopeNode, slot.returnedType);
-				if (isGenericType(t))
-				{
-					t = fromGenerics(baseType, t);
-				}
+				FanResolvedType t = makeFromTypeSig(baseType.scopeNode, slot.returnedType);
 				return t;
 			}
 		}
@@ -173,15 +179,23 @@ public class FanResolvedType
 	}
 
 	/**
-	 * Find the type the slot is defined in
+	 * Find the type a slot is defined in
 	 *	IE: BaseType or any of it's super types
 	 * @param baseType
 	 * @param slotName
 	 * @param task
 	 * @return
 	 */
-	public static FanResolvedType resolveSlotBaseType(FanResolvedType baseType, String slotName, FanParserTask task)
+	public FanResolvedType resolveSlotBaseType(String slotName, FanParserTask task)
 	{
+		FanResolvedType baseType = this;
+
+		// support for generics
+		if (baseType instanceof FanResolvedGenericType)
+		{
+			baseType = ((FanResolvedGenericType) baseType).getPhysicalType();
+		}
+
 		if (baseType == null || !baseType.isResolved()
 			|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
 		{
@@ -198,7 +212,7 @@ public class FanResolvedType
 				if (member.getName().equalsIgnoreCase(slotName))
 				{
 					FanType slotBaseType = FanType.findByQualifiedName(member.getClass().getName());
-					return new FanResolvedType(null, slotBaseType.getQualifiedName(), slotBaseType);
+					return makeFromTypeSig(scopeNode, slotBaseType.getQualifiedName());
 				}
 			}
 		} else
@@ -209,19 +223,22 @@ public class FanResolvedType
 				if (slot.getName().equals(slotName))
 				{
 					FanType slotBaseType = FanType.findByID(slot.getTypeId());
-					return new FanResolvedType(null, slotBaseType.getQualifiedName(), slotBaseType);
+					return makeFromTypeSig(scopeNode, slotBaseType.getQualifiedName());
 				}
 			}
 		}
 		return makeUnresolved(baseType.scopeNode);
 	}
 
-	public static boolean isGenericType(FanResolvedType type)
+	private static boolean isGenericType(String enteredType)
 	{
-		String qt = type.asTypedType;
-		return qt != null && qt.startsWith("sys::")
-			&& qt.length() == 6
-			&& Character.toUpperCase(qt.charAt(5)) == qt.charAt(5);
+		String qt = enteredType;
+		if (qt.startsWith("sys::"))
+		{
+			qt = enteredType.substring(5);
+		}
+		return qt.length() == 1
+			&& Character.toUpperCase(qt.charAt(0)) == qt.charAt(0);
 	}
 
 	/**
@@ -246,9 +263,13 @@ public class FanResolvedType
 		{
 			return this;
 		}
-		FanResolvedType copy = new FanResolvedType(scopeNode, asTypedType, dbType);
-		copy.nullableContext = nullable;
-		return copy;
+		try
+		{
+			FanResolvedType copy = (FanResolvedType) clone();
+			copy.nullableContext = nullable;
+			return copy;
+		}catch(CloneNotSupportedException e){FanUtilities.GENERIC_LOGGER.exception("Clone error", e);}
+		return null;
 	}
 
 	/**
@@ -266,9 +287,13 @@ public class FanResolvedType
 		{
 			return this;
 		}
-		FanResolvedType copy = new FanResolvedType(scopeNode, asTypedType, dbType);
-		copy.staticContext = b;
-		return copy;
+		try
+		{
+			FanResolvedType copy = (FanResolvedType) clone();
+			copy.staticContext = b;
+			return copy;
+		}catch(CloneNotSupportedException e){FanUtilities.GENERIC_LOGGER.exception("Clone error", e);}
+		return null;
 	}
 
 	/**
@@ -308,7 +333,7 @@ public class FanResolvedType
 						node.getRoot().getParserTask().addError("Cannot use 'super' within a mixin or enum.", node);
 					} else
 					{
-						return getParentType(var.getType());
+						return var.getType().getParentType();
 					}
 				}
 			}
@@ -345,12 +370,12 @@ public class FanResolvedType
 	}
 
 	/**
-	 * Create type from the "Serialized" dbType
+	 * Create type from the a type signature ("Serialized" dbType)
 	 * ie: sys::Str   or sys::Str? or sys::Str[]?
 	 * @param sig
 	 * @return
 	 */
-	public static FanResolvedType fromTypeSig(AstNode scopeNode, String sig)
+	public static FanResolvedType makeFromTypeSig(AstNode scopeNode, String sig)
 	{
 		// this results in infinite recursion, so check for it.
 		if (sig == null || sig.length() == 0)
@@ -383,8 +408,8 @@ public class FanResolvedType
 			int index = findMapSeparatorIndex(sig);
 			if (index != -1 && index < sig.length() - 1)
 			{
-				FanResolvedType keyType = fromTypeSig(scopeNode, sig.substring(0, index).trim());
-				FanResolvedType valType = fromTypeSig(scopeNode, sig.substring(index + 1).trim());
+				FanResolvedType keyType = makeFromTypeSig(scopeNode, sig.substring(0, index).trim());
+				FanResolvedType valType = makeFromTypeSig(scopeNode, sig.substring(index + 1).trim());
 				type = new FanResolvedMapType(scopeNode, keyType, valType);
 			}
 		} else if (sig.startsWith("|") && sig.endsWith("|"))
@@ -398,39 +423,37 @@ public class FanResolvedType
 			{
 				String formal = typeParts[i].trim();
 				String formalType = formal;
-				String formalName = "";
+				//String formalName = "";
 				int idx = formal.indexOf(" ");
 				if (idx != -1)
 				{
 					formalType = formal.substring(0, idx).trim();
-					formalName = formal.substring(idx).trim();
+					//formalName = formal.substring(idx).trim();
 				}
 				if (formalType.length() == 0)
 				{
 					formalType = "sys::Void";
 				}
-				// TODO: types can have names like Int a, Intb -> Int
-				// TODO: Make use of formalName -> will need them for scoping/completion etc...
-				types.add(fromTypeSig(scopeNode, formalType));
+				types.add(makeFromTypeSig(scopeNode, formalType));
 			}
 			String returnType = "Void"; // Default if not specified
 			if (parts.length == 2)
 			{
 				returnType = parts[1].trim();
 			}
-			type = new FanResolvedFuncType(scopeNode, types, fromTypeSig(scopeNode, returnType));
+			type = new FanResolvedFuncType(scopeNode, types, makeFromTypeSig(scopeNode, returnType));
 		} else
 		{	// check for simple map type like Sys:Int
 			int index = findMapSeparatorIndex(sig);
 			if (index != -1 && index < sig.length() - 1)
 			{
-				FanResolvedType keyType = fromTypeSig(scopeNode, sig.substring(0, index).trim());
-				FanResolvedType valType = fromTypeSig(scopeNode, sig.substring(index + 1).trim());
+				FanResolvedType keyType = makeFromTypeSig(scopeNode, sig.substring(0, index).trim());
+				FanResolvedType valType = makeFromTypeSig(scopeNode, sig.substring(index + 1).trim());
 				type = new FanResolvedMapType(scopeNode, keyType, valType);
 			} else
 			{
 				// true simple type like Int or Sys::Int
-				type = makeFromLocalID(scopeNode, sig);
+				type = resolveInScope(scopeNode, sig);
 			}
 		}
 
@@ -450,7 +473,7 @@ public class FanResolvedType
 	}
 
 	/**
-	 * Resolve a local variable
+	 * Resolve a basic type(no list, map, function) in scope
 	 * - Try a fully resolved type (from db)
 	 * - Try to find in the current scope
 	 * - Try to find from implicit imported types other types in same pod, sys pod
@@ -460,12 +483,12 @@ public class FanResolvedType
 	 * @param enteredType
 	 * @return
 	 */
-	public static FanResolvedType makeFromLocalID(AstNode scopeNode, String enteredType)
+	private static FanResolvedType resolveInScope(AstNode scopeNode, String enteredType)
 	{
 		//System.out.println("Make from local type: "+enteredType);
 		boolean toStatic = false;
 		FanType type = null;
-		if (enteredType.indexOf("::") != -1)
+		if (enteredType.indexOf("::") != -1 && !isGenericType(enteredType))
 		{	// Qualified type
 			type = scopeNode.getRoot().getParserTask().findCachedQualifiedType(enteredType);
 			toStatic = true;
@@ -489,26 +512,14 @@ public class FanResolvedType
 				type = scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::" + enteredType);
 				toStatic = true;
 			}
-			// try Generic types
-			if (type == null && enteredType.length() == 1 && enteredType.toUpperCase().equals(enteredType))
+			// Deal with "fake" Generic types
+			if (type==null && isGenericType(enteredType))
 			{
-				FanResolvedType objType = new FanResolvedType(scopeNode, enteredType, scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::Obj"));
-				if (enteredType.equals("V") || enteredType.equals("K") || enteredType.equals("A") || enteredType.equals("B")
-					|| enteredType.equals("C") || enteredType.equals("D") || enteredType.equals("E") || enteredType.equals("F")
-					|| enteredType.equals("G") || enteredType.equals("H"))
-				{	// K, V: List/Map key and item types
-					// A-H : Function types
-					type = scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::Obj");
-				} else if (enteredType.equals("L"))
-				{ // List
-					return new FanResolvedListType(scopeNode, objType);
-				} else if (enteredType.equals("M"))
-				{ // Map
-					return new FanResolvedMapType(scopeNode, objType, objType);
-				} else if (enteredType.equals("R"))
-				{ // Function
-					return new FanResolvedFuncType(scopeNode, new Vector<FanResolvedType>(), objType);
+				if (!enteredType.startsWith("sys::"))
+				{
+					enteredType = "sys::" + enteredType;
 				}
+				return new FanResolvedGenericType(scopeNode, enteredType);
 			}
 			if (type == null)
 			{
@@ -519,7 +530,6 @@ public class FanResolvedType
 			}
 		}
 		FanResolvedType result = new FanResolvedType(scopeNode, enteredType, type);
-
 		if (toStatic)
 		{
 			result = result.asStaticContext(true);
@@ -531,6 +541,7 @@ public class FanResolvedType
 	/**
 	 * Make a type from the type database (doesn't look at the local scope)
 	 * (external type, like a 'using')
+	 * Does NOT support generics (as those are not real types stored in the DB)
 	 * @param node
 	 * @param qualifiedType
 	 * @return
@@ -539,7 +550,7 @@ public class FanResolvedType
 	{
 		FanType type = null;
 		if (node == null)
-		{
+		{	// typically, shouldnn't be null, but protect in case it is
 			type = FanType.findByQualifiedName(qualifiedType);
 		} else
 		{
@@ -575,71 +586,68 @@ public class FanResolvedType
 
 	/**
 	 * Check wether current type is compatible with baseType
-	 * In other words, wether type is of the same type as baseType or inherits from it
+	 * In other words, whether type is of the same type as baseType or inherits from it
 	 * @param baseType
 	 */
-	public static boolean isTypeCompatible(FanResolvedType type, FanResolvedType baseType)
+	public boolean isTypeCompatible(FanResolvedType baseType)
 	{
-		if (type instanceof FanResolvedNullType)
+		FanResolvedType t = this;
+		while (t != null)
 		{
-			return baseType.isNullable();
+			if (this instanceof FanResolvedNullType)
+			{
+				return baseType.isNullable();
+			}
+			if (this instanceof FanUnknownType || baseType instanceof FanUnknownType)
+			{
+				return true;
+			}
+			if (getDbType().getQualifiedName().equals(baseType.getDbType().getQualifiedName()))
+			{
+				return true;
+			}
+			t = t.getParentType();
 		}
-		if (type == null || type.getDbType() == null)
-		{
-			return false;
-		}
-		if (type instanceof FanUnknownType || baseType instanceof FanUnknownType)
-		{
-			return true;
-		}
-		if (type.getDbType().getQualifiedName().equals(baseType.getDbType().getQualifiedName()))
-		{
-			return true;
-		}
-		return isTypeCompatible(getParentType(type), baseType);
+		return false;
 	}
 
 	/**
-	 * Gte the parent type of type (class it inherits from)
+	 * Get the parent type of type (class it inherits from)
 	 * @param type
 	 * @return
 	 */
-	public static FanResolvedType getParentType(FanResolvedType type)
+	public FanResolvedType getParentType()
 	{
-		if (type == null)
+		if (this instanceof FanUnknownType)
 		{
 			return null;
 		}
-		if (type instanceof FanUnknownType)
+		if (this instanceof FanResolvedNullType)
 		{
-			return null;
+			return makeFromTypeSig(null, "sys::Obj?");
 		}
-		if (type instanceof FanResolvedNullType)
+		if (getDbType().isEnum())
 		{
-			return fromTypeSig(null, "sys::Obj?");
+			return makeFromTypeSig(null, "sys::Enum");
 		}
-		if (type.getDbType().isEnum())
-		{
-			return fromTypeSig(null, "sys::Enum");
-		}
-		if (type.getDbType().isMixin())
+		if (getDbType().isMixin())
 		{
 			return null;
 		}
 
-		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, type.getDbType().getQualifiedName());
+		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, getDbType().getQualifiedName());
 		for (FanTypeInheritance inh : inhs)
 		{
-			FanResolvedType t = FanResolvedType.makeFromDbType(type.getScopeNode(), inh.getInheritedType());
+			FanResolvedType t = FanResolvedType.makeFromDbType(getScopeNode(), inh.getInheritedType());
 			if (t.isResolved() && t.getDbType().isClass())
 			{
 				return t;
 			}
 		}
-		if (!type.getDbType().getQualifiedName().equals("sys::Obj")
-			&& !type.getDbType().isMixin())
+		if (!getDbType().getQualifiedName().equals("sys::Obj")
+			&& !getDbType().isMixin())
 		{
-			return FanResolvedType.makeFromDbType(type.getScopeNode(), "sys::Obj");
+			return FanResolvedType.makeFromDbType(getScopeNode(), "sys::Obj");
 		}
 		return null;
 	}
@@ -651,11 +659,11 @@ public class FanResolvedType
 	 * @param items
 	 * @return
 	 */
-	public static FanResolvedType makeFromItemList(AstNode itemsNode, List<FanResolvedType> items/*, int n*/)
+	public static FanResolvedType makeFromItemList(AstNode itemsNode, List<FanResolvedType> items)
 	{
 		if (items.size() == 0)
 		{
-			return fromTypeSig(itemsNode, "sys::Obj?");
+			return makeFromTypeSig(itemsNode, "sys::Obj?");
 		}
 		boolean nullable = false;
 		FanResolvedType best = null;
@@ -672,18 +680,18 @@ public class FanResolvedType
 				best = t;
 				continue;
 			}
-			while (!isTypeCompatible(t, best)) // exetnds
+			while (!t.isTypeCompatible(best)) // exetnds
 			{
-				best = getParentType(best); // get parent
+				best = best.getParentType(); // get parent
 				if (best == null)
 				{
-					return nullable ? fromTypeSig(itemsNode, "sys::Obj?") : fromTypeSig(itemsNode, "sys::Obj");
+					return nullable ? makeFromTypeSig(itemsNode, "sys::Obj?") : makeFromTypeSig(itemsNode, "sys::Obj");
 				}
 			}
 		}
 		if (best == null)
 		{
-			best = fromTypeSig(itemsNode, "sys::Obj");
+			best = makeFromTypeSig(itemsNode, "sys::Obj");
 		}
 		if (nullable)
 		{
@@ -692,54 +700,66 @@ public class FanResolvedType
 		return best;
 	}
 
-	private AstNode getScopeNode()
+	public AstNode getScopeNode()
 	{
 		return scopeNode;
 	}
 
 	/**
-	 * Resolve a generic type such as sys::L into the actual type
-	 * of generic for the given baseType
+	 * Take this type and return a parameterized version
+	 * (parameterize it against baseType)
 	 * @param baseType
+	 * @param genericType
 	 * @return
 	 */
-	public static FanResolvedType fromGenerics(FanResolvedType baseType, FanResolvedType genericType)
+	public FanResolvedType parameterize(FanResolvedType baseType)
 	{
-		int col = genericType.getAsTypedType().indexOf("::");
-		String n = genericType.getAsTypedType().substring(col + 2);
-		FanResolvedType t = makeUnresolved(null);
-		if (n.equals("L") && baseType instanceof FanResolvedListType)
-		{	// list type
-			t = baseType;
-		} else if (n.equals("V") && baseType instanceof FanResolvedListType)
-		{	// list value
-			t = ((FanResolvedListType) baseType).getItemType();
-		} else if (n.equals("M") && baseType instanceof FanResolvedMapType)
-		{	// map type
-			t = baseType;
-		} else if (n.equals("K") && baseType instanceof FanResolvedMapType)
-		{	// map key
-			t = ((FanResolvedMapType) baseType).getKeyType();
-		} else if (n.equals("V") && baseType instanceof FanResolvedMapType)
-		{	// map value
-			t = ((FanResolvedMapType) baseType).getValType();
-		} else if (n.equals("R") && baseType instanceof FanResolvedFuncType)
-		{	// function value
-			t = ((FanResolvedFuncType) baseType).getRetType();
-		} else if (baseType instanceof FanResolvedFuncType)
-		{	// function value (should be A-H)
-			t = getFuncRetType(baseType, n);
-		} else
-		{	// Not good
-			baseType.getScopeNode().getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), baseType.getScopeNode());
+		// Deal with generics
+		if (this instanceof FanResolvedGenericType)
+		{
+			int col = getAsTypedType().indexOf("::");
+			String n = getAsTypedType().substring(col + 2);
+			FanResolvedType t = makeUnresolved(null);
+			if (n.equals("L") && baseType instanceof FanResolvedListType)
+			{	// list type
+				t = baseType;
+			} else if (n.equals("V") && baseType instanceof FanResolvedListType)
+			{	// list value
+				t = ((FanResolvedListType) baseType).getItemType();
+			} else if (n.equals("M") && baseType instanceof FanResolvedMapType)
+			{	// map type
+				t = baseType;
+			} else if (n.equals("K") && baseType instanceof FanResolvedMapType)
+			{	// map key
+				t = ((FanResolvedMapType) baseType).getKeyType();
+			} else if (n.equals("V") && baseType instanceof FanResolvedMapType)
+			{	// map value
+				t = ((FanResolvedMapType) baseType).getValType();
+			} else if (n.equals("R") && baseType instanceof FanResolvedFuncType)
+			{	// function return value
+				t = ((FanResolvedFuncType) baseType).getRetType();
+			} else if (baseType instanceof FanResolvedFuncType)
+			{	// function value (should be A-H)
+				t = parameterizeFuncParam(((FanResolvedFuncType) baseType), n);
+			} else
+			{	// Not good
+				baseType.getScopeNode().getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), baseType.getScopeNode());
+			}
+			return t.asStaticContext(false);
 		}
-		return t.asStaticContext(false);
+		// Special case for "This"
+		if (isResolved() && getDbType().getQualifiedName().equals("sys::This"))
+		{
+			return baseType;
+		}
+		// Otherwise, leave it alone.
+		return this;
 	}
 
-	private static FanResolvedType getFuncRetType(FanResolvedType baseType, String letter)
+	private FanResolvedType parameterizeFuncParam(FanResolvedFuncType baseType, String letter)
 	{
+		List<FanResolvedType> types = baseType.getTypes();
 		FanResolvedType t = makeUnresolved(null);
-		List<FanResolvedType> types = ((FanResolvedFuncType) baseType).getTypes();
 		int index = -1;
 		if (letter.equals("A"))
 		{
@@ -769,10 +789,10 @@ public class FanResolvedType
 
 		if (index == -1)
 		{
-			baseType.getScopeNode().getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), baseType.getScopeNode());
+			getScopeNode().getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), getScopeNode());
 		} else if (types.size() < index)
 		{
-			baseType.getScopeNode().getRoot().getParserTask().addError("Generic '" + letter + "', but only " + types.size() + " func params in " + baseType.getQualifiedType(), baseType.getScopeNode());
+			getScopeNode().getRoot().getParserTask().addError("Generic '" + letter + "', but only " + types.size() + " func params in " + baseType.getQualifiedType(), getScopeNode());
 		} else
 		{
 			t = types.get(index);

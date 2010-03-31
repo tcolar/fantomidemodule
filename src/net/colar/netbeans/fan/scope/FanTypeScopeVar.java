@@ -63,7 +63,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		}
 		AstNode nameNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 
-		type = FanResolvedType.fromTypeSig(node, nameNode.getNodeText(true));
+		type = FanResolvedType.makeFromTypeSig(node, nameNode.getNodeText(true));
 
 		if (type == null)
 		{
@@ -190,7 +190,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			List<AstNode> children = FanLexAstUtils.getChildren(inheritance, new NodeKindPredicate(AstKind.AST_TYPE));
 			for (AstNode child : children)
 			{
-				FanResolvedType inhType = FanResolvedType.fromTypeSig(child, child.getNodeText(true));
+				FanResolvedType inhType = FanResolvedType.makeFromTypeSig(child, child.getNodeText(true));
 				String text = node.getNodeText(true);
 				if (!inhType.isResolved())
 				{

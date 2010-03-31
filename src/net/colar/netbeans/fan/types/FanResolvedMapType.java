@@ -4,7 +4,6 @@
 
 package net.colar.netbeans.fan.types;
 
-import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstNode;
 
 /**
@@ -13,8 +12,8 @@ import net.colar.netbeans.fan.parboiled.AstNode;
  */
 public class FanResolvedMapType extends FanResolvedType
 {
-	FanResolvedType keyType;
-	FanResolvedType valType;
+	private final FanResolvedType keyType;
+	private final FanResolvedType valType;
 
 	public FanResolvedMapType(AstNode scopeNode, FanResolvedType keyType, FanResolvedType valType)
 	{
