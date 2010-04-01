@@ -8,11 +8,10 @@ import java.io.FileInputStream;
 import java.util.Date;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomLexer;
-import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.jot.testing.JOTTestable;
 import net.jot.testing.JOTTester;
+import org.parboiled.BasicParseRunner;
 import org.parboiled.Parboiled;
-import org.parboiled.RecoveringParseRunner;
 import org.parboiled.common.StringUtils;
 import org.parboiled.support.ParsingResult;
 
@@ -29,7 +28,7 @@ public class FantomLexerTest implements JOTTestable
 		testFile(lexer, FantomParserTest.FAN_HOME+"/src/testSys/fan/ActorTest.fan");
 	}
 
-	public static void testFile(FantomLexer parser, String filePath) throws Exception
+	public static void testFile(FantomLexer lexer, String filePath) throws Exception
 	{
 		try
 		{
@@ -42,7 +41,7 @@ public class FantomLexerTest implements JOTTestable
 
 			// run the lexer
 			long start = new Date().getTime();
-			ParsingResult<AstNode> result = RecoveringParseRunner.run(parser.lexer(), testInput);
+			ParsingResult<AstNode> result = BasicParseRunner.run(lexer.lexer(), testInput);
 			long time = new Date().getTime() - start;
 			
 			if (result.hasErrors())
