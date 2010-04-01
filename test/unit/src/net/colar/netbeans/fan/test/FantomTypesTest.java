@@ -18,23 +18,23 @@ public class FantomTypesTest extends FantomCSLTest
 	public void cslTest() throws Throwable
 	{
 		// Testing isCompatible()
-		JOTTester.checkIf("Compatibility of Enum vs Obj", FanResolvedType.isTypeCompatible(mkt("sys::Enum"), mkt("sys::Obj")));
-		JOTTester.checkIf("Compatibility of Obj vs Obj", FanResolvedType.isTypeCompatible(mkt("sys::Obj"), mkt("sys::Obj")));
-		JOTTester.checkIf("Compatibility of mixin vs Obj", ! FanResolvedType.isTypeCompatible(mkt("web::Weblet"), mkt("sys::Obj")));
-		JOTTester.checkIf("Compatibility of Button vs Obj", FanResolvedType.isTypeCompatible(mkt("fwt::Button"), mkt("sys::Obj")));
-		JOTTester.checkIf("Compatibility of Button vs widget", FanResolvedType.isTypeCompatible(mkt("fwt::Button"), mkt("fwt::Widget")));
+		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum").isTypeCompatible(mkt("sys::Obj")));
+		JOTTester.checkIf("Compatibility of Obj vs Obj", mkt("sys::Obj").isTypeCompatible(mkt("sys::Obj")));
+		JOTTester.checkIf("Compatibility of mixin vs Obj", ! mkt("web::Weblet").isTypeCompatible(mkt("sys::Obj")));
+		JOTTester.checkIf("Compatibility of Button vs Obj", mkt("fwt::Button").isTypeCompatible(mkt("sys::Obj")));
+		JOTTester.checkIf("Compatibility of Button vs widget", mkt("fwt::Button").isTypeCompatible( mkt("fwt::Widget")));
 		// Testing getParent()
 		FanResolvedType t = mkt("sys::Actor");
-		FanResolvedType p = FanResolvedType.getParentType(t);
+		FanResolvedType p = t.getParentType();
 		JOTTester.checkIf("Actor parent is Obj", p.getDbType().getQualifiedName().equals("sys::Obj"), p.toString());
 		t = mkt("sys::Weekday");
-		p = FanResolvedType.getParentType(t);
+		p = t.getParentType();
 		JOTTester.checkIf("Weekday parent is Enum", p.getDbType().getQualifiedName().equals("sys::Enum"), p.toString());
 		t = mkt("sys::Enum");
-		p = FanResolvedType.getParentType(t);
+		p = t.getParentType();
 		JOTTester.checkIf("Enum parent is Obj", p.getDbType().getQualifiedName().equals("sys::Obj"), p.toString());
 		t = mkt("web::Weblet");
-		p = FanResolvedType.getParentType(t);
+		p = t.getParentType();
 		JOTTester.checkIf("Mixin parent is null", p==null, p==null?"null":p.toString());
 	}
 

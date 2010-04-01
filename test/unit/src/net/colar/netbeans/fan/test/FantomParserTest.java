@@ -27,7 +27,7 @@ import org.parboiled.support.ParsingResult;
 public class FantomParserTest implements JOTTestable
 {
 
-	public static final String FAN_HOME = "/home/thibautc/fantom-1.0.51";
+	public static final String FAN_HOME = "/home/thibautc/fantom-1.0.52";
 
 	public void jotTest() throws Throwable
 	{
@@ -35,16 +35,21 @@ public class FantomParserTest implements JOTTestable
 		ParsingResult<AstNode> result = null;
 
 		boolean singleTest = false;// Do just the 1 first test
-		boolean grammarTest = true; // Do all the grammar tests
+		boolean grammarTest = false; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
-		boolean fantomFilesTest = true; // parse fantom distro files
+		boolean fantomFilesTest = false; // parse fantom distro files
 		boolean fantomFilesLexerTest = true; // parse fantom distro files (lexer rules)
 
 		if (singleTest)
 		{
 			try
 			{
-				testAst("/home/thibautc/dummy/fan/Main.fan");
+				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
+				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
+				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
+				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
+				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
+				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
 			} catch (Exception e)
 			{
 				e.printStackTrace();
@@ -360,27 +365,27 @@ public class FantomParserTest implements JOTTestable
 		if (refFilesTest)
 		{
 			// Test real files   TODO: relative paths
-			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/test.fan", false);
-			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/hello.fan", false);
-			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/files.fan", false);
-			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/maps.fan", false);
+			testFile(parser, "/home/thibautc/NetBeansProjects/Fan/test/parser_test/test.fan", false);
+			testFile(parser, "/home/thibautc/NetBeansProjects/Fan/test/parser_test/hello.fan", false);
+			testFile(parser, "/home/thibautc/NetBeansProjects/Fan/test/parser_test/files.fan", false);
+			testFile(parser, "/home/thibautc/NetBeansProjects/Fan/test/parser_test/maps.fan", false);
 			//testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/sending.fan");
 		}
 
 		if (fantomFilesTest)
 		{
 			// Test all Fantom distro examples
-			testAllFanFilesUnder(FAN_HOME + "/examples/", false);
+			testAllFanFilesUnder(parser, FAN_HOME + "/examples/", false);
 			// Test all Fantom distro sources
-			testAllFanFilesUnder(FAN_HOME + "/src/", false);
+			testAllFanFilesUnder(parser, FAN_HOME + "/src/", false);
 		}
 
 		if (fantomFilesLexerTest)
 		{
 			// Test all Fantom distro examples
-			testAllFanFilesUnder(FAN_HOME + "/examples/", true);
+			testAllFanFilesUnder(parser, FAN_HOME + "/examples/", true);
 			// Test all Fantom distro sources
-			testAllFanFilesUnder(FAN_HOME + "/src/", true);
+			testAllFanFilesUnder(parser, FAN_HOME + "/src/", true);
 		}
 	}
 
@@ -398,21 +403,20 @@ public class FantomParserTest implements JOTTestable
 		return result;
 	}
 
-	private static void testAllFanFilesUnder(String folderPath, boolean lexerOnly) throws Exception
+	private static void testAllFanFilesUnder(FantomParser parser, String folderPath, boolean lexerOnly) throws Exception
 	{
 		List<File> files = NBTestUtilities.listAllFanFilesUnder(folderPath);
 		for (File f : files)
 		{
-			testFile(f.getAbsolutePath(), lexerOnly);
+			testFile(parser, f.getAbsolutePath(), lexerOnly);
 		}
 	}
 
-	public static void testFile(String filePath, boolean lexerOnly) throws Exception
+	public static void testFile(FantomParser parser, String filePath, boolean lexerOnly) throws Exception
 	{
 		try
 		{
-			long start = new Date().getTime();
-			FantomParser parser = Parboiled.createParser(FantomParser.class, (Object) null);
+			//FantomParser parser = Parboiled.createParser(FantomParser.class, (Object) null);
 
 			DataInputStream dis = new DataInputStream(new FileInputStream(filePath));
 			byte[] buffer = new byte[dis.available()];
@@ -420,6 +424,7 @@ public class FantomParserTest implements JOTTestable
 			dis.close();//TODO: finally
 			String testInput = new String(buffer);
 
+			long start = new Date().getTime();
 			ParsingResult<AstNode> result = RecoveringParseRunner.run((lexerOnly ? parser.lexer() : parser.compilationUnit()), testInput);
 
 			long length = new Date().getTime() - start;
