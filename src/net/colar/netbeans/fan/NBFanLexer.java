@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import net.colar.netbeans.fan.parboiled.AstNode;
@@ -36,7 +37,6 @@ public class NBFanLexer implements Lexer<FanTokenID>
 	// Iterator for the parser Nodes (like a token stream).
 	Iterator<Node<Object>> lexerIterator = null;
 	boolean inited = false;
-
 	FantomParser parser;
 
 	public static Collection<FanTokenID> getTokenIds()
@@ -96,6 +96,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 
 	private void parseInput()
 	{
+		System.out.println("Parsinput1 " + new Date().getTime());
 		LexerInput input = info.input();
 		// Read the whole data into a string (parboiled works of a string, not a stream)
 		StringBuffer data = new StringBuffer();
@@ -104,22 +105,33 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		{
 			data.append((char) i);
 		}
-		parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
+		System.out.println("Parsinput2 " + new Date().getTime());
+		parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
+		System.out.println("Parsinput3 " + new Date().getTime());
 
 		try
 		{
-		ParsingResult<AstNode> result = BasicParseRunner.run(parser.lexer(), data.toString());
-		if (result.hasErrors())
+			long start = new Date().getTime();
+			double id = Math.random();
+			System.out.println("Starting lexer :" + id);
+			ParsingResult<AstNode> result = BasicParseRunner.run(parser.lexer(), data.toString());
+			System.out.println("Finished lexing in " + (new Date().getTime() - start) + " :" + id);
+			System.out.println("Parsinput4 " + new Date().getTime());
+			if (result.hasErrors())
+			{
+				// This really should never happen, since lexer should be able to deal with almost anything.
+				System.err.println("Lexer parse errors: " + StringUtils.join(result.parseErrors, "---\n"));
+			} else
+			{
+				Node lexerItems = FanLexAstUtils.getFirstChild(result.parseTreeRoot, new NodeLabelPredicate(TokenName.LEXERITEMS.name()));
+				//System.out.println("--Tree--\n"+ParseTreeUtils.printNodeTree(result)+"\n----\n");
+				lexerIterator = lexerItems.getChildren().iterator();
+			}
+		} catch (IllegalStateException e)
 		{
-			// This really should never happen, since lexer should be able to deal with almost anything.
-			System.err.println("Lexer parse errors: " + StringUtils.join(result.parseErrors, "---\n"));
-		} else
-		{
-			Node lexerItems = FanLexAstUtils.getFirstChild(result.parseTreeRoot, new NodeLabelPredicate(TokenName.LEXERITEMS.name()));
-			//System.out.println("--Tree--\n"+ParseTreeUtils.printNodeTree(result)+"\n----\n");
-			lexerIterator = lexerItems.getChildren().iterator();
+			System.out.println("Lexer task terminated");
 		}
-		}catch(IllegalStateException e){System.out.println("Lexer task terminated");}
+		System.out.println("Parsinput5 " + new Date().getTime());
 	}
 
 	public Object state()
@@ -129,8 +141,5 @@ public class NBFanLexer implements Lexer<FanTokenID>
 
 	public void release()
 	{
-		System.out.println("Cancelling lexer task");
-		if(parser!=null)
-			parser.cancel();
 	}
 }

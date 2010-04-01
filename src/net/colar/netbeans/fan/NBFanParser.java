@@ -31,7 +31,7 @@ public class NBFanParser extends Parser
 		FanPlatform platform = FanPlatform.getInstance(false);
 		String path = snapshot.getSource().getFileObject().getPath();
 		// We don't care for the standard NB indexer
-		// It's slow and annotying and we don't use it (have our on)
+		// It's slow and annoying and we don't use it (have our on)
 		// So we don't allow it to run on the fan repo sources (we index those ourselved from binaries)
 		// TODO: maybe I can make mmy own RespositoryUpdaterImpl that does nothing
 		//  instead of this ugly class name check hack.
@@ -70,7 +70,7 @@ public class NBFanParser extends Parser
 	public void cancel()
 	{
 		if(result!=null)
-			result.invalidate();
+			result.cancel();
 		//throw new UnsupportedOperationException("Not supported yet.");
 	}
 

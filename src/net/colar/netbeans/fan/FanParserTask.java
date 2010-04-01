@@ -97,18 +97,6 @@ public class FanParserTask extends ParserResult
 	@Override
 	protected void invalidate()
 	{
-		invalidated = true;
-		if(parser!=null)
-			parser.cancel();
-	}
-
-	public boolean isInvalid()
-	{
-		if (isInvalid())
-		{
-			System.out.println("Bailing out of invalidated ParserTask.");
-		}
-		return invalidated;
 	}
 
 	/**
@@ -196,7 +184,7 @@ public class FanParserTask extends ParserResult
 	public void parse()
 	{
 		long start = new Date().getTime();
-		FanUtilities.GENERIC_LOGGER.debug("Starting parsing of: " + sourceName);
+		System.out.println("Starting parsing of: " + sourceName);
 
 		try
 		{
@@ -295,7 +283,7 @@ public class FanParserTask extends ParserResult
 			}
 		}
 		// Now do all the local scopes / variables
-		for (AstNode node : astRoot.getChildren())
+		/*for (AstNode node : astRoot.getChildren())
 		{
 			if (node.getKind() == AstKind.AST_TYPE_DEF)
 			{
@@ -319,7 +307,7 @@ public class FanParserTask extends ParserResult
 					}
 				}
 			}
-		}
+		}*/
 
 		if (dumpTree)
 		{
@@ -1305,6 +1293,13 @@ public class FanParserTask extends ParserResult
 		// we want an instance of the type
 		type = type.asStaticContext(false);
 		return type;
+	}
+
+	void cancel()
+	{
+		System.out.println("Parser cancel called");
+		if(parser!=null)
+			parser.cancel();
 	}
 }
 

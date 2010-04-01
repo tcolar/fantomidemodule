@@ -228,7 +228,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			prevLine = doc.getText(prevBegin, prevEnd - prevBegin);
 		}
 		int indent = GsfUtilities.getLineIndent(doc, caretOffset);
-
+		int origIndent = indent;
 
 		// If user enters { after one of the identing patterns, we need to dedent
 		if (car == '{' && line.trim().startsWith("{") && above > -1)
@@ -265,7 +265,9 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 			}
 		}
 		// set the indentation
-		GsfUtilities.setLineIndentation(doc, caretOffset, indent);
+		// this seem to be slow (calls lexer many times ?), so do only when needed
+		if(indent != origIndent)
+			GsfUtilities.setLineIndentation(doc, caretOffset, indent);
 		return false;
 	}
 

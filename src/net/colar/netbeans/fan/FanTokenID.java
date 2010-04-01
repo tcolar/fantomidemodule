@@ -65,11 +65,12 @@ public class FanTokenID implements TokenId
 	public boolean matches(TokenName name)
 	{
 		TokenId tk = FantomParserTokens.getTokenByName(name);
-		if(tk==null)
+		if (tk == null)
+		{
 			return false;
+		}
 		return tk.ordinal() == ordinal;
 	}
-
 	/**
 	 * Basic language hierarchy impl.
 	 * (Static init block)

@@ -1172,12 +1172,11 @@ public class FantomParser extends BaseParser<AstNode>
 	// ============ Simulate a lexer ===========================================
 	// This should just create tokens for the items we want to highlight(color) in the IDE
 	// It should be able to deal with "anything" and not ever fail if possible.
-	public Rule lexer()
+	/*public Rule lexer()
 	{
 		// If any changes made here, keep in sync with lexerTokens list in FantomParserTokens.java
 		return sequence(
 			zeroOrMore(firstOf(
-			checkCancel(),
 			comment(), unixLine(), doc(),
 			strs(), uri(), char_(), dsl(),
 			lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
@@ -1187,18 +1186,13 @@ public class FantomParser extends BaseParser<AstNode>
 			// "Any" includes "everything else" - items withough highlighting.
 			// "Any" is also is a catchall for other unexpected items (should not happen)
 			eoi()); // until end of file
-	}
-	public boolean checkCancel()
+	}*/
+	public Rule lexer()
 	{
-		// We check here for cancelation rqeuest, because terminal is most often called
-		// also used by both lexer & parser
-		if(cancel)
-		{
-			System.out.println("Will throw exception!");
-			throw new IllegalStateException("ParserTask was invalidated.");
-		}
-		return false;
+		return sequence(zeroOrMore(any()), eoi());
+		//return sequence(zeroOrMore(charRange(Character.MIN_VALUE, Character.MAX_VALUE)), eoi());
 	}
+
 	public Rule lexerOps()
 	{
 		return firstOf(OP_2MINUS, OP_2PLUS, OP_AND, OP_ARROW, AS_INIT, OP_BANG, OP_CURRY, OP_DIV, OP_ELVIS,
