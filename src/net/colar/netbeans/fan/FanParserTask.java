@@ -60,6 +60,7 @@ import org.parboiled.support.ParsingResult;
 public class FanParserTask extends ParserResult
 {
 
+	boolean invalidated = false;
 	public boolean dumpTree = false; // debug
 	List<Error> errors = new Vector<Error>(); // -> use parsingResult.errors ?
 	// full path of the source file
@@ -75,13 +76,16 @@ public class FanParserTask extends ParserResult
 	private HashMap<String, FanType> typeCache = new HashMap<String, FanType>();
 	// Cache slots resolution, for performance
 	private HashMap<String, List<FanSlot>> typeSlotsCache = new HashMap<String, List<FanSlot>>();
+	private FantomParser parser;
 
 	public FanParserTask(Snapshot snapshot)
 	{
 		super(snapshot);
+		invalidated = false;
 		sourceName = snapshot.getSource().getFileObject().getName();
 		sourceFile = FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
 		pod = FanUtilities.getPodForPath(sourceFile.getPath());
+		parser = Parboiled.createParser(FantomParser.class, this);
 	}
 
 	@Override
@@ -93,7 +97,18 @@ public class FanParserTask extends ParserResult
 	@Override
 	protected void invalidate()
 	{
-		// what should this do ?
+		invalidated = true;
+		if(parser!=null)
+			parser.cancel();
+	}
+
+	public boolean isInvalid()
+	{
+		if (isInvalid())
+		{
+			System.out.println("Bailing out of invalidated ParserTask.");
+		}
+		return invalidated;
 	}
 
 	/**
@@ -183,19 +198,26 @@ public class FanParserTask extends ParserResult
 		long start = new Date().getTime();
 		FanUtilities.GENERIC_LOGGER.debug("Starting parsing of: " + sourceName);
 
-		FantomParser parser = Parboiled.createParser(FantomParser.class, this);
-
 		try
 		{
-			parsingResult = RecoveringParseRunner.run(parser.compilationUnit(), getSnapshot().getText().toString());
+			//TODO: can we drop out of there if invalidated ?
+			try
+			{
+				parsingResult = RecoveringParseRunner.run(parser.compilationUnit(), getSnapshot().getText().toString());
+			} catch (IllegalStateException e)
+			{
+				// The task was cancelled, bailing out
+				System.out.print("Parser task was cancelled.");
+				return;
+			}
 			// Copy parboiled parse error into a CSL errrors
 			for (ParseError err : parsingResult.parseErrors)
 			{
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-					false, Severity.ERROR);
+						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+						false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
@@ -227,6 +249,10 @@ public class FanParserTask extends ParserResult
 		// First run : lookup using statements
 		for (AstNode node : astRoot.getChildren())
 		{
+			if (invalidated)
+			{
+				return; // bailing out if task cancelled
+			}
 			switch (node.getKind())
 			{
 				case AST_INC_USING:
@@ -243,6 +269,10 @@ public class FanParserTask extends ParserResult
 		// Second pass, lookup types and slots
 		for (AstNode node : astRoot.getChildren())
 		{
+			if (invalidated)
+			{
+				return; // bailing out if task cancelled
+			}
 			switch (node.getKind())
 			{
 				case AST_TYPE_DEF:
@@ -271,12 +301,21 @@ public class FanParserTask extends ParserResult
 			{
 				for (FanAstScopeVarBase var : node.getLocalScopeVars().values())
 				{
-					// should be slots
+					if (invalidated)
+					{
+						return; // bailing out if task cancelled
+					}					// should be slots
 					AstNode bkNode = var.getNode();
 					AstNode blockNode = FanLexAstUtils.getFirstChild(bkNode, new NodeKindPredicate(AstKind.AST_BLOCK));
 					if (blockNode != null)
 					{
-						parseVars(blockNode, null);
+						try
+						{
+							parseVars(blockNode, null);
+						}catch(IllegalStateException e)
+						{
+							return; // task cancelled
+						}
 					}
 				}
 			}
@@ -293,6 +332,11 @@ public class FanParserTask extends ParserResult
 
 	private void parseVars(AstNode node, FanResolvedType type)
 	{
+		if (invalidated)
+		{
+			throw new IllegalStateException("Parser task was invalidated");
+		}
+
 		if (node == null)
 		{
 			return;
@@ -361,9 +405,13 @@ public class FanParserTask extends ParserResult
 					type = node.getChildren().get(0).getType();
 					break;
 				case AST_EXR_CAST:
-					parseChildren(node);
+					// take the cast type
 					AstNode castTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+					parseVars(castTypeNode, null);
 					type = castTypeNode.getType();
+					// then parse the expression separately
+					AstNode castExpr = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));
+					parseVars(castExpr, null);
 					//TODO: check if cast is valid
 					break;
 				case AST_EXPR_TYPE_CHECK:
@@ -684,12 +732,11 @@ public class FanParserTask extends ParserResult
 			}
 			// Normal procedure
 			parseVars(child, type);
-			// Those kind take the right hand side type
-			// It block chnages the type because it makes it NOT staticContext
-			if (first || child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_EXPR_TYPE_CHECK
-				|| child.getKind() == AstKind.AST_EXPR_RANGE || child.getKind() == AstKind.AST_EXPR_ASSIGN || child.getKind() == AstKind.AST_EXPR_LIT_BASE
-				|| child.getKind() == AstKind.AST_IT_BLOCK || child.getKind() == AstKind.AST_EXPR_ADD || child.getKind() == AstKind.AST_CALL_EXPR
-				|| child.getKind() == AstKind.AST_CLOSURE || child.getKind() == AstKind.AST_TYPE_LITTERAL)
+			// we take type of right hand side if first in expression
+			// and not one of the special type we don't want the rhs for
+			if (first || (child.getKind() != AstKind.AST_EXPR_ADD // add/mult operation cannot chnage the type
+					&& child.getKind() != AstKind.AST_EXPR_MULT //same
+					/*&& child.getKind() != AstKind.AST_EXPR*/)) // new/sub expression
 			{
 				type = child.getType();
 				// If part of the expr chain is unresolved (error), mark it unresolved
@@ -698,10 +745,11 @@ public class FanParserTask extends ParserResult
 				{
 					type = new FanUnknownType(node, child.getNodeText(true));
 				}
-			} else
-			{
-				// TODO: check what doesn't since it's probably less common than what does
-			}
+			} //else
+			//{
+			//	System.out.println("Not taking rhs type for "+node.getKind());
+			// TODO: check what doesn't since it's probably less common than what does
+			//}
 			first = false;
 		}
 		return type;
@@ -860,7 +908,7 @@ public class FanParserTask extends ParserResult
 	 */
 	private FanResolvedType doClosureCall(AstNode node, FanResolvedType type, FanResolvedType baseType, String slotName)
 	{
-		System.out.println("Closure type: " + type);
+		//System.out.println("Closure type: " + type);
 		FanResolvedType slotBaseType = baseType.resolveSlotBaseType(slotName, this);
 		FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), slotName);
 		if (slot == null)
@@ -992,7 +1040,7 @@ public class FanParserTask extends ParserResult
 			}
 
 			type = new FanResolvedListType(node,
-				listTypeNode.getType());
+					listTypeNode.getType());
 		}
 
 		for (AstNode listExpr : listExprNodes)
@@ -1003,7 +1051,7 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode == null)
 		{   // try to infer it from the expr Nodes
 			type = new FanResolvedListType(node,
-				FanResolvedType.makeFromItemList(node, listTypes));
+					FanResolvedType.makeFromItemList(node, listTypes));
 		}
 		return type;
 	}
@@ -1030,8 +1078,8 @@ public class FanParserTask extends ParserResult
 		} else
 		{ // otherwise try to infer it from the expr Nodes
 			type = new FanResolvedMapType(node,
-				FanResolvedType.makeFromItemList(node, mapKeyTypes),
-				FanResolvedType.makeFromItemList(node, mapValTypes));
+					FanResolvedType.makeFromItemList(node, mapKeyTypes),
+					FanResolvedType.makeFromItemList(node, mapValTypes));
 		}
 		return type;
 	}

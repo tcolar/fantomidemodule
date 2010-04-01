@@ -18,7 +18,8 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.parboiled.Node;
-import org.parboiled.RecoveringParseRunner;
+import org.parboiled.BasicParseRunner;
+import org.parboiled.Parboiled;
 import org.parboiled.common.StringUtils;
 import org.parboiled.support.ParsingResult;
 
@@ -34,6 +35,9 @@ public class NBFanLexer implements Lexer<FanTokenID>
 	private LexerRestartInfo<FanTokenID> info;
 	// Iterator for the parser Nodes (like a token stream).
 	Iterator<Node<Object>> lexerIterator = null;
+	boolean inited = false;
+
+	FantomParser parser;
 
 	public static Collection<FanTokenID> getTokenIds()
 	{
@@ -49,10 +53,17 @@ public class NBFanLexer implements Lexer<FanTokenID>
 
 	public Token<FanTokenID> nextToken()
 	{
-		if (lexerIterator == null)
+		if (!inited)
 		{
-			// on the first bextToken() call we parse the input (init the lexerIterator)
-			parseInput();
+			synchronized (this)
+			{
+				if (!inited)
+				{
+					inited = true;
+					// on the first nextToken() call we parse the input (init the lexerIterator)
+					parseInput();
+				}
+			}
 		}
 		if (lexerIterator == null)
 		{
@@ -64,20 +75,20 @@ public class NBFanLexer implements Lexer<FanTokenID>
 			Node<Object> node = lexerIterator.next();
 			// the node we get is the "firstOf" parent node, we want the child of it.
 			node = node.getChildren().get(0);
-			int nodeStart=node.getStartLocation().getIndex();
-			int nodeEnd=node.getEndLocation().getIndex();
+			int nodeStart = node.getStartLocation().getIndex();
+			int nodeEnd = node.getEndLocation().getIndex();
 
 			//System.err.println("Node: " + node.getLabel()+" "+nodeStart+" "+nodeEnd);
 
 			FanTokenID tk = FantomParserTokens.getTokenByName(node.getLabel());
 			// Lexer will fail if null token returned, so use the default error token "error" in case that happens
-			if(tk == null)
+			if (tk == null)
 			{
 				//System.err.println("Unknown token: " + node.getLabel());
-				tk= FantomParserTokens.getTokenByName(TokenName.ERROR);
+				tk = FantomParserTokens.getTokenByName(TokenName.ERROR);
 			}
 
-			result = info.tokenFactory().createToken(tk, (nodeEnd-nodeStart));
+			result = info.tokenFactory().createToken(tk, (nodeEnd - nodeStart));
 			//System.err.println("Token: " + result.id().name() + "(" + result.id().primaryCategory() + ")");
 		}
 		return result;
@@ -93,12 +104,11 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		{
 			data.append((char) i);
 		}
-		//System.out.println("Data: " + data);
-		// FIXME: this gives a classNotFound !
-		//FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
-		FantomParser parser = new FantomParser(null);
+		parser = Parboiled.createParser(FantomParser.class, (FanParserTask)null);
 
-		ParsingResult<AstNode> result = RecoveringParseRunner.run(parser.lexer(), data.toString());
+		try
+		{
+		ParsingResult<AstNode> result = BasicParseRunner.run(parser.lexer(), data.toString());
 		if (result.hasErrors())
 		{
 			// This really should never happen, since lexer should be able to deal with almost anything.
@@ -109,6 +119,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 			//System.out.println("--Tree--\n"+ParseTreeUtils.printNodeTree(result)+"\n----\n");
 			lexerIterator = lexerItems.getChildren().iterator();
 		}
+		}catch(IllegalStateException e){System.out.println("Lexer task terminated");}
 	}
 
 	public Object state()
@@ -118,5 +129,8 @@ public class NBFanLexer implements Lexer<FanTokenID>
 
 	public void release()
 	{
+		System.out.println("Cancelling lexer task");
+		if(parser!=null)
+			parser.cancel();
 	}
 }

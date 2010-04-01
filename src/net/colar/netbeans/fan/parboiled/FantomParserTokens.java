@@ -60,10 +60,10 @@ public class FantomParserTokens
 			FanUtilities.GENERIC_LOGGER.info("FantomparserToken: Null token passed");
 			return getTokenByName(TokenName.ERROR);
 		}
-		Integer id = tokenIdByName.get(name);
+		Integer id = tokenIdByName.get(name.toUpperCase());
 		if(id==null)
 		{
-			FanUtilities.GENERIC_LOGGER.info("FantomparserToken: No scuh token: "+name);
+			FanUtilities.GENERIC_LOGGER.info("FantomparserToken: No such token: "+name);
 			return getTokenByName(TokenName.ERROR);
 		}
 		return tokens.get(id);

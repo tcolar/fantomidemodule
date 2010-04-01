@@ -69,6 +69,8 @@ public class NBFanParser extends Parser
 	@Override
 	public void cancel()
 	{
+		if(result!=null)
+			result.invalidate();
 		//throw new UnsupportedOperationException("Not supported yet.");
 	}
 

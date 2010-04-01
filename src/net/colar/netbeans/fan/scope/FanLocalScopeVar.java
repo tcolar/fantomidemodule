@@ -21,6 +21,7 @@ public class FanLocalScopeVar extends FanAstScopeVar
 
 	private static FanResolvedType getNonGenericType(FanResolvedType type)
 	{
+		//Loval vars can't be generic
 		if(type instanceof FanResolvedGenericType)
 			type = ((FanResolvedGenericType)type).getPhysicalType();
 		return type;

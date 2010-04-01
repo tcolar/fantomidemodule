@@ -39,7 +39,7 @@ public class FantomParser extends BaseParser<AstNode>
 	boolean noSimpleMap = false; // to disallow ambigous simpleMaps in certain situations (within another map, ternaryExpr)
 	/**Parse task that kicked in this parser*/
 	final FanParserTask parserTask;
-
+	public boolean cancel;
 
 	public FantomParser(FanParserTask parserTask)
 	{
@@ -490,7 +490,7 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule castExpr()
 	{
-		return sequence(sequence(PAR_L, type(), ast.newNode(AstKind.AST_TYPE), PAR_R, parExpr()), ast.newNode(AstKind.AST_EXR_CAST));
+		return sequence(sequence(PAR_L, type(), ast.newNode(AstKind.AST_TYPE), PAR_R, parExpr(), ast.newNode(AstKind.AST_EXPR)), ast.newNode(AstKind.AST_EXR_CAST));
 	}
 
 	public Rule groupedExpr()
@@ -1177,6 +1177,7 @@ public class FantomParser extends BaseParser<AstNode>
 		// If any changes made here, keep in sync with lexerTokens list in FantomParserTokens.java
 		return sequence(
 			zeroOrMore(firstOf(
+			checkCancel(),
 			comment(), unixLine(), doc(),
 			strs(), uri(), char_(), dsl(),
 			lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
@@ -1186,6 +1187,17 @@ public class FantomParser extends BaseParser<AstNode>
 			// "Any" includes "everything else" - items withough highlighting.
 			// "Any" is also is a catchall for other unexpected items (should not happen)
 			eoi()); // until end of file
+	}
+	public boolean checkCancel()
+	{
+		// We check here for cancelation rqeuest, because terminal is most often called
+		// also used by both lexer & parser
+		if(cancel)
+		{
+			System.out.println("Will throw exception!");
+			throw new IllegalStateException("ParserTask was invalidated.");
+		}
+		return false;
 	}
 	public Rule lexerOps()
 	{
@@ -1208,6 +1220,12 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule lexerInit()
 	{
 		return AS_INIT.label(TokenName.LEXERINIT.name());
+	}
+
+	public void cancel()
+	{
+		System.out.println("cancel called!");
+		cancel=true;
 	}
 
 }
