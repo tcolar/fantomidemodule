@@ -36,6 +36,8 @@ import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 public class FanResolvedType implements Cloneable
 {
 
+	public enum TypeKind{SIMPLE, LIST, MAP, FUNC}
+
 	private final String asTypedType;
 	private final FanType dbType;
 	private final String shortAsTypedType;
@@ -56,6 +58,11 @@ public class FanResolvedType implements Cloneable
 		this.asTypedType = enteredType;
 		shortAsTypedType = asTypedType.indexOf("::") != -1 ? asTypedType.substring(asTypedType.indexOf("::") + 2) : asTypedType;
 		dbType = type;
+		// Java types are always nullable
+		if(dbType!=null && dbType.isJava())
+		{
+			nullableContext = true;
+		}
 	}
 
 	/**
@@ -344,29 +351,33 @@ public class FanResolvedType implements Cloneable
 
 	/**
 	 * "Serialize" the type into a db signature
-	 * TODO: too basic
+	 * Overloaded as needed in subclasses
 	 * @param fullyQualified
 	 * @return
 	 */
 	public String toTypeSig(boolean fullyQualified)
 	{
+		String fq;
 		if (isResolved())
 		{
 			if (fullyQualified)
 			{
-				return dbType.getQualifiedName();
+				fq=dbType.getQualifiedName();
 			} else
 			{
-				return dbType.getSimpleName();
+				fq=dbType.getSimpleName();
 			}
 		}
 		if (fullyQualified)
 		{
-			return getAsTypedType();
+			fq=getAsTypedType();
 		} else
 		{
-			return getShortAsTypedType();
+			fq=getShortAsTypedType();
 		}
+		if(isNullable())
+			fq+="?";
+		return fq;
 	}
 
 	/**
@@ -550,7 +561,7 @@ public class FanResolvedType implements Cloneable
 	{
 		FanType type = null;
 		if (node == null)
-		{	// typically, shouldnn't be null, but protect in case it is
+		{	// typically, shouldn't be null, but protect in case it is
 			type = FanType.findByQualifiedName(qualifiedType);
 		} else
 		{
@@ -738,6 +749,9 @@ public class FanResolvedType implements Cloneable
 			} else if (n.equals("R") && baseType instanceof FanResolvedFuncType)
 			{	// function return value
 				t = ((FanResolvedFuncType) baseType).getRetType();
+			} else if(n.equals("R") && baseType.getQualifiedType().equals("sys::Func"))
+			{
+				t = baseType;
 			} else if (baseType instanceof FanResolvedFuncType)
 			{	// function value (should be A-H)
 				t = parameterizeFuncParam(((FanResolvedFuncType) baseType), n);
@@ -799,4 +813,5 @@ public class FanResolvedType implements Cloneable
 		}
 		return t;
 	}
+
 }

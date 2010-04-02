@@ -30,7 +30,6 @@ public class FanSlot extends JOTModel
 	public Integer slotKind = -1; // field, method, constructor
 	// qualified type of a field or returntype for method/ctor
 	public String returnedType = FanIndexer.UNRESOLVED_TYPE;
-	public boolean isNullable = false;
 	// protection
 	public Integer protection = -1; // private, public(default), internal, protected
 	// flags / modifiers
@@ -160,16 +159,6 @@ public class FanSlot extends JOTModel
 	public void setIsConst(Boolean isConst)
 	{
 		this.isConst = isConst;
-	}
-
-	public void setIsNullable(boolean nullable)
-	{
-		this.isNullable = nullable;
-	}
-
-	public Boolean isNullable()
-	{
-		return isNullable;
 	}
 
 	public static Vector<FanSlot> findAllForType(long type)

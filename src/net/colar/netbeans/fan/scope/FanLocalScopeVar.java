@@ -17,7 +17,7 @@ public class FanLocalScopeVar extends FanAstScopeVar
 {
 
 	private FanSlot slot = null;
-	Hashtable<String, FanResolvedType> parameters = new Hashtable<String, FanResolvedType>();
+	//Hashtable<String, FanResolvedType> parameters = new Hashtable<String, FanResolvedType>();
 
 	private static FanResolvedType getNonGenericType(FanResolvedType type)
 	{

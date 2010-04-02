@@ -44,6 +44,7 @@ import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanMethodScopeVar;
+import net.colar.netbeans.fan.scope.FanScopeMethodParam;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.logger.JOTLoggerLocation;
@@ -380,7 +381,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 								dbSlot.setIsVirtual(slot.hasModifier(ModifEnum.VIRTUAL));
 								dbSlot.setIsConst(slot.hasModifier(ModifEnum.CONST));
 								dbSlot.setProtection(slot.getProtection());
-								dbSlot.setIsNullable(slotType.isNullable());
 
 								dbSlot.save();
 
@@ -388,15 +388,17 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 								if (slot instanceof FanMethodScopeVar)
 								{
 									FanMethodScopeVar method = (FanMethodScopeVar) slot;
-									Hashtable<String, FanResolvedType> parameters = method.getParameters();
+									Hashtable<String, FanScopeMethodParam> parameters = method.getParameters();
 
 									// Try to reuse existing db entries.
 									Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
+									int paramIndex=0;
 									for (String paramName : parameters.keySet())
 									{
-										FanResolvedType paramResult = parameters.get(paramName);
+										FanScopeMethodParam paramResult = parameters.get(paramName);
 										JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
-										FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).findOrCreateOne();
+										JOTSQLCondition cond5 = new JOTSQLCondition("paramIndex", JOTSQLCondition.IS_EQUAL, paramIndex);
+										FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).where(cond5).findOrCreateOne();
 										if (!dbParam.isNew())
 										{
 											for (int i = 0; i != currentParams.size(); i++)
@@ -412,15 +414,16 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 										dbParam.setSlotId(dbSlot.getId());
 										dbParam.setName(paramName);
 										String pType = UNRESOLVED_TYPE; // can that happen ?
-										if (paramResult.isResolved())
+										if (paramResult.getType().isResolved())
 										{
-											pType = paramResult.getDbType().getQualifiedName();
+											pType = paramResult.getType().toTypeSig(true);
 										}
 										dbParam.setQualifiedType(pType);
-										dbParam.setIsNullable(paramResult.isNullable());
-										//dbParam.setHasDefault();
+										dbParam.setParamIndex(paramIndex);
+										dbParam.setHasDefault(paramResult.hasDefaultValue());
 										dbParam.save();
 
+										paramIndex++;
 									} // end param loop
 									// Whatever param wasn't removed from the vector is not needed anymore.
 									for (FanMethodParam param : currentParams)
@@ -680,7 +683,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						dbSlot.setIsVirtual(hasFlag(slot.flags, FConst.Virtual));
 						dbSlot.setIsConst(hasFlag(slot.flags, FConst.Const));
 						dbSlot.setProtection(getProtection(slot.flags));
-						dbSlot.setIsNullable(retType.trim().endsWith("?"));
 
 						dbSlot.save();
 
@@ -692,10 +694,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							FMethodVar[] parameters = method.params();
 							// Try to reuse existing db entries.
 							Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
+							int paramIndex=0;
 							for (FMethodVar param : parameters)
 							{
 								JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
-								FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).findOrCreateOne();
+								JOTSQLCondition cond5 = new JOTSQLCondition("paramIndex", JOTSQLCondition.IS_EQUAL, paramIndex);
+								FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).where(cond5).findOrCreateOne();
 								if (!dbParam.isNew())
 								{
 									for (int i = 0; i != currentParams.size(); i++)
@@ -712,11 +716,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 								dbParam.setSlotId(dbSlot.getId());
 								dbParam.setName(param.name);
 								dbParam.setQualifiedType(tRef.signature);
-								dbParam.setIsNullable(tRef.isNullable());
 								dbParam.setHasDefault(param.def != null);
+								dbParam.setParamIndex(paramIndex);
 
 								dbParam.save();
 
+								paramIndex++;
 							} // end param loop
 							// Whatever param wasn't removed from the vector is not needed anymore.
 							for (FanMethodParam param : currentParams)

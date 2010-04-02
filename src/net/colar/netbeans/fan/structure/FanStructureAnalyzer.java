@@ -17,6 +17,7 @@ import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanFieldScopeVar;
 import net.colar.netbeans.fan.scope.FanMethodScopeVar;
+import net.colar.netbeans.fan.scope.FanScopeMethodParam;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.modules.csl.api.ElementKind;
@@ -98,7 +99,7 @@ public class FanStructureAnalyzer implements StructureScanner
 							returnType = "";
 						}
 						// method params
-						Hashtable<String, FanResolvedType> parameters = m.getParameters();
+						Hashtable<String, FanScopeMethodParam> parameters = m.getParameters();
 						String params = "";
 						for (String pname : parameters.keySet())
 						{
@@ -106,7 +107,7 @@ public class FanStructureAnalyzer implements StructureScanner
 							{
 								params += ", ";
 							}
-							String pType = parameters.get(pname).toTypeSig(false);
+							String pType = parameters.get(pname).getType().toTypeSig(false);
 							if (pType.equals(FanIndexer.UNRESOLVED_TYPE))
 							{
 								pType = "";

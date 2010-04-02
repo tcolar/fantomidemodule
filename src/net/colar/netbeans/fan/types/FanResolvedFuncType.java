@@ -42,11 +42,11 @@ public class FanResolvedFuncType extends FanResolvedType
 		boolean first=true;
 		for(FanResolvedType type : types)
 		{
-			if(!first)
+			if( ! first)
 			{
-				first = false;
 				sig+=", ";
 			}
+			first = false;
 			sig+=type.toTypeSig(fullyQualified);
 		}
 		sig+= "->";

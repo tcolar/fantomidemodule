@@ -182,6 +182,23 @@ public class FanLexAstUtils
 		return null;
 	}
 
+	/**
+	 * Check whether the parentNode is a direct wrapper of the given nodeKind
+	 * @param parentNode
+	 * @param pred
+	 * @return
+	 */
+	public static boolean isWrappingNode(AstNode parentNode, Predicate pred)
+	{
+		if(pred.apply(parentNode))
+			return true;
+		if(parentNode.getChildren().size()==1)
+		{
+			return isWrappingNode(parentNode.getChildren().get(0), pred);
+		}
+		return false;
+	}
+
 	public static AstNode getFirstChildRecursive(AstNode parentNode, Predicate pred)
 	{
 		AstNode nd = getFirstChild(parentNode, pred);

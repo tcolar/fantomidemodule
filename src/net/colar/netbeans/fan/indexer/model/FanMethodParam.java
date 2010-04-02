@@ -20,8 +20,8 @@ public class FanMethodParam extends JOTModel
 	public Long slotId = -1L;
 	public String name = "";
 	public String qualifiedType = ""; // qualified type of the parameter
-	public boolean isNullable = false;
-	private boolean hasDefault = false;
+	public boolean hasDefault = false;
+	public int paramIndex = 0;
 
 	@Override
 	protected void customize(JOTModelMapping mapping)
@@ -60,23 +60,12 @@ public class FanMethodParam extends JOTModel
 		this.slotId = slotId;
 	}
 
-	public boolean isNullable()
-	{
-		return isNullable;
-	}
-
-	public void setIsNullable(boolean isNullable)
-	{
-		this.isNullable = isNullable;
-	}
-
-
 	public static Vector<FanMethodParam> findAllForSlot(long id)
 	{
 		try
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, id);
-			return (Vector<FanMethodParam>)JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond).find().getAllResults();
+			return (Vector<FanMethodParam>)JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond).orderBy("PARAM_INDEX").find().getAllResults();
 		}
 		catch(Exception e)
 		{
@@ -93,4 +82,15 @@ public class FanMethodParam extends JOTModel
 	{
 		return hasDefault;
 	}
+
+	public void setParamIndex(int paramIndex)
+	{
+		this.paramIndex=paramIndex;
+	}
+
+	public int getParamIndex()
+	{
+		return paramIndex;
+	}
+
 }

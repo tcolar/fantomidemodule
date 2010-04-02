@@ -109,9 +109,8 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		try
 		{
 			long start = new Date().getTime();
-			double id = Math.random();
 			ParsingResult<AstNode> result = BasicParseRunner.run(parser.lexer(), data.toString());
-			System.out.println("Finished lexing in " + (new Date().getTime() - start) + " :" + id);
+			System.out.println("Finished lexing in " + (new Date().getTime() - start));
 			if (result.hasErrors() || !result.matched)
 			{
 				// This really should never happen, since lexer should be able to deal with almost anything.

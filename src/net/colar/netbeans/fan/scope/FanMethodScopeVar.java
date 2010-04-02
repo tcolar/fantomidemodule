@@ -19,7 +19,7 @@ import net.colar.netbeans.fan.types.FanResolvedType;
 public class FanMethodScopeVar extends FanFieldScopeVar
 {
 	boolean isCtor = false;
-	Hashtable<String, FanResolvedType> parameters = new Hashtable<String, FanResolvedType>();
+	Hashtable<String, FanScopeMethodParam> parameters = new Hashtable<String, FanScopeMethodParam>();
 
 	public FanMethodScopeVar(AstNode node, String name, boolean isCtor)
 	{
@@ -38,14 +38,16 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 			//System.out.println("Param Node: " + param.toStringTree());
 			AstNode id = FanLexAstUtils.getFirstChild(param, new NodeKindPredicate(AstKind.AST_ID));
 			AstNode typeNode = FanLexAstUtils.getFirstChild(param, new NodeKindPredicate(AstKind.AST_TYPE));
+			AstNode exprNode = FanLexAstUtils.getFirstChild(param, new NodeKindPredicate(AstKind.AST_EXPR));
 			// shouldn't be null, but we dont want to risk parser exceptions
 			if (typeNode != null && id != null)
 			{
 				String pName = id.getNodeText(true);
 				FanResolvedType pType = FanResolvedType.makeFromTypeSigWithWarning(typeNode);
+				FanScopeMethodParam mp = new FanScopeMethodParam(pType, exprNode);
 				if (!parameters.containsKey(pName))
 				{
-					parameters.put(pName, pType);
+					parameters.put(pName, mp);
 					// Add the param as a scope variable
 					if(block!=null)
 						block.addScopeVar(new FanLocalScopeVar(typeNode, VarKind.LOCAL, pName, pType.asStaticContext(false)), false);
@@ -58,7 +60,7 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 		}
 	}
 
-	public Hashtable<String, FanResolvedType> getParameters()
+	public Hashtable<String, FanScopeMethodParam> getParameters()
 	{
 		return parameters;
 	}

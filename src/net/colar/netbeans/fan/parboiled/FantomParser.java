@@ -1176,23 +1176,22 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		// If any changes made here, keep in sync with lexerTokens list in FantomParserTokens.java
 		return sequence(
-			zeroOrMore(firstOf(
-			comment(), unixLine(), doc(),
-			strs(), uri(), char_(), dsl(),
-			lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
-			BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R, DOT, AT, DSL_CLOSE, DSL_OPEN, // other known items
-			keyword(), id(), number(),
-			whiteSpace(), 
-			any().label(TokenName.UNEXPECTED.name()))).label("lexerItems"),
-			// "Any" includes "everything else" - items withough highlighting.
-			// "Any" is also is a catchall for other unexpected items (should not happen)
+			zeroOrMore(lexerItem()).label("lexerItems"),
 			optional(eoi())); // until end of file
 	}
 
-	public boolean myany()
+	public Rule lexerItem()
 	{
-		getContext().getCurrentLocation().getChar();
-		return true;
+		return firstOf(
+			comment().label(TokenName.COMMENT.name()), unixLine().label(TokenName.UNIXLINE.name()), doc(),
+			strs().label(TokenName.STRS.name()), uri(), char_(), dsl(),
+			lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
+			BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R, DOT, AT, DSL_CLOSE, DSL_OPEN, // other known items
+			keyword().label(TokenName.KEYWORD.name()), id().label(TokenName.ID.name()), number(),
+			whiteSpace(),
+			// "Any" includes "everything else" - items withough highlighting.
+			// "Any" is also is a catchall for other unexpected items (should not happen)
+			any().label(TokenName.UNEXPECTED.name()));
 	}
 
 	public Rule lexerOps()
