@@ -96,7 +96,6 @@ public class NBFanLexer implements Lexer<FanTokenID>
 
 	private void parseInput()
 	{
-		System.out.println("Parsinput1 " + new Date().getTime());
 		LexerInput input = info.input();
 		// Read the whole data into a string (parboiled works of a string, not a stream)
 		StringBuffer data = new StringBuffer();
@@ -105,33 +104,26 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		{
 			data.append((char) i);
 		}
-		System.out.println("Parsinput2 " + new Date().getTime());
 		parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
-		System.out.println("Parsinput3 " + new Date().getTime());
 
 		try
 		{
 			long start = new Date().getTime();
 			double id = Math.random();
-			System.out.println("Starting lexer :" + id);
 			ParsingResult<AstNode> result = BasicParseRunner.run(parser.lexer(), data.toString());
 			System.out.println("Finished lexing in " + (new Date().getTime() - start) + " :" + id);
-			System.out.println("Parsinput4 " + new Date().getTime());
-			if (result.hasErrors())
+			if (result.hasErrors() || !result.matched)
 			{
 				// This really should never happen, since lexer should be able to deal with almost anything.
 				System.err.println("Lexer parse errors: " + StringUtils.join(result.parseErrors, "---\n"));
-			} else
-			{
-				Node lexerItems = FanLexAstUtils.getFirstChild(result.parseTreeRoot, new NodeLabelPredicate(TokenName.LEXERITEMS.name()));
-				//System.out.println("--Tree--\n"+ParseTreeUtils.printNodeTree(result)+"\n----\n");
-				lexerIterator = lexerItems.getChildren().iterator();
+				throw new RuntimeException("Lexer did not match content");
 			}
+			Node lexerItems = FanLexAstUtils.getFirstChild(result.parseTreeRoot, new NodeLabelPredicate(TokenName.LEXERITEMS.name()));
+			lexerIterator = lexerItems.getChildren().iterator();
 		} catch (IllegalStateException e)
 		{
-			System.out.println("Lexer task terminated");
+			System.out.println("Lexer task cancelled");
 		}
-		System.out.println("Parsinput5 " + new Date().getTime());
 	}
 
 	public Object state()

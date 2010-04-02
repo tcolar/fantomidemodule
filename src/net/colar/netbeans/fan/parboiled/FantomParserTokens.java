@@ -17,9 +17,9 @@ public class FantomParserTokens
 	// Lexer label names ... we want all tokens provided by the lexer() rule of the parser to be listed here
 	public enum TokenName{
 		COMMENT, UNIXLINE, DOC, LEXEROPS, LEXERSEPS, LEXERASSIGN, LEXERINIT, LEXERCOMPS, LEXERITEMS,
-		STRS, URI, CHAR_, KEYWORD, ID, NUMBER, WHITESPACE, SPACING, LF, DSL, ANY, ERROR,
+		STRS, URI, CHAR_, KEYWORD, ID, NUMBER, WHITESPACE, SPACING, LF, DSL, ANY, ERROR, UNEXPECTED,
 		//Items we use a lot in the lexer
-		SQ_BRACKET_L, SQ_BRACKET_R, BRACKET_L, BRACKET_R, PAR_L, PAR_R
+		SQ_BRACKET_L, SQ_BRACKET_R, BRACKET_L, BRACKET_R, PAR_L, PAR_R, DOT, AT, DSL_OPEN, DSL_CLOSE
 	}
 
 	// lazy inited
@@ -45,6 +45,7 @@ public class FantomParserTokens
 		cats.put(TokenName.STRS, "string");
 		cats.put(TokenName.URI, "string");
 		cats.put(TokenName.ERROR, "error"); //error token in case of problem with lexer
+		cats.put(TokenName.UNEXPECTED, "error"); //should NOT happen
 		return cats;
 	}
 
@@ -71,7 +72,7 @@ public class FantomParserTokens
 
 	public static FanTokenID getTokenByName(TokenName name)
 	{
-		return getTokenByName(name.name());
+		return getTokenByName(name.name().toUpperCase());
 	}
 
 	/**

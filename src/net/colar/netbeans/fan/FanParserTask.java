@@ -43,6 +43,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.nodes.ChildFactory;
 import org.parboiled.Node;
 import org.parboiled.Parboiled;
 import org.parboiled.RecoveringParseRunner;
@@ -204,8 +205,8 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-						false, Severity.ERROR);
+					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+					false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
@@ -283,7 +284,7 @@ public class FanParserTask extends ParserResult
 			}
 		}
 		// Now do all the local scopes / variables
-		/*for (AstNode node : astRoot.getChildren())
+		for (AstNode node : astRoot.getChildren())
 		{
 			if (node.getKind() == AstKind.AST_TYPE_DEF)
 			{
@@ -300,14 +301,14 @@ public class FanParserTask extends ParserResult
 						try
 						{
 							parseVars(blockNode, null);
-						}catch(IllegalStateException e)
+						} catch (IllegalStateException e)
 						{
 							return; // task cancelled
 						}
 					}
 				}
 			}
-		}*/
+		}
 
 		if (dumpTree)
 		{
@@ -347,7 +348,8 @@ public class FanParserTask extends ParserResult
 			switch (node.getKind())
 			{
 				case AST_EXPR_INDEX:
-					type = doIndexExpr(node, type);
+					AstNode indexEpr = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));
+					type = doIndexExpr(indexEpr, type);
 					break;
 				case AST_LIST:
 					// Index expressions, sometimes get parsed as Lists because the parser doesn't know a Type vs a variable
@@ -452,13 +454,16 @@ public class FanParserTask extends ParserResult
 			// We don't want exception to be propagated to user as an exception
 			// Do mark a parsing error however
 			type = FanResolvedType.makeUnresolved(node);
-			addError("Unexpected Parsing error: " + e.getMessage(), node);
+			addError("Unexpected Parsing error: " + e.toString(), node);
 			FanUtilities.GENERIC_LOGGER.exception("Error parsing node: " + text, e);
 		}
 		node.setType(type);
 		if (type != null && !type.isResolved())
 		{
+			// TODO: temp until fully working type resolution
 			addError("Could not resolve item -> " + text, node);
+			//type = new FanUnknownType(node, text);
+
 			FanUtilities.GENERIC_LOGGER.info(">Unresolved node");
 			FanLexAstUtils.dumpTree(node, 0);
 			//FanLexAstUtils.dumpTree(astRoot, 0);
@@ -723,8 +728,8 @@ public class FanParserTask extends ParserResult
 			// we take type of right hand side if first in expression
 			// and not one of the special type we don't want the rhs for
 			if (first || (child.getKind() != AstKind.AST_EXPR_ADD // add/mult operation cannot chnage the type
-					&& child.getKind() != AstKind.AST_EXPR_MULT //same
-					/*&& child.getKind() != AstKind.AST_EXPR*/)) // new/sub expression
+				&& child.getKind() != AstKind.AST_EXPR_MULT //same
+				/*&& child.getKind() != AstKind.AST_EXPR*/)) // new/sub expression
 			{
 				type = child.getType();
 				// If part of the expr chain is unresolved (error), mark it unresolved
@@ -752,17 +757,12 @@ public class FanParserTask extends ParserResult
 	 */
 	private FanResolvedType doCall(AstNode node, FanResolvedType type, AstNode forcedClosure)
 	{
-		/*if (type instanceof FanResolvedGenericType)
-		{
-		type = ((FanResolvedGenericType) type).getPhysicalType();
-		}*/
-
 		// saving the base type, because we need it for closures
 		FanResolvedType baseType = type;
 		AstNode callChild = node.getChildren().get(0);
 		String slotName = callChild.getNodeText(true);
 
-		//if a direct call like doThis(), then use this type as base
+		//if a direct call like doThis(), then search scope for type/slot
 		if (type == null)
 		{
 			type = FanResolvedType.makeFromTypeSig(callChild, slotName);
@@ -896,8 +896,13 @@ public class FanParserTask extends ParserResult
 	 */
 	private FanResolvedType doClosureCall(AstNode node, FanResolvedType type, FanResolvedType baseType, String slotName)
 	{
-		//System.out.println("Closure type: " + type);
+		if (baseType == null) // local call
+		{
+			baseType = FanResolvedType.resolveThisType(node);
+		}
+
 		FanResolvedType slotBaseType = baseType.resolveSlotBaseType(slotName, this);
+
 		FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), slotName);
 		if (slot == null)
 		{
@@ -1024,11 +1029,11 @@ public class FanParserTask extends ParserResult
 			if (!listTypeNode.getType().isStaticContext())
 			{
 				// It's NOT a List at all after all, but an index expression (called on a var, not a Static type)!
-				return doIndexExpr(listTypeNode, listTypeNode.getType());
+				return doIndexExpr(listExprNodes.get(0), listTypeNode.getType());
 			}
 
 			type = new FanResolvedListType(node,
-					listTypeNode.getType());
+				listTypeNode.getType());
 		}
 
 		for (AstNode listExpr : listExprNodes)
@@ -1039,7 +1044,7 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode == null)
 		{   // try to infer it from the expr Nodes
 			type = new FanResolvedListType(node,
-					FanResolvedType.makeFromItemList(node, listTypes));
+				FanResolvedType.makeFromItemList(node, listTypes));
 		}
 		return type;
 	}
@@ -1066,16 +1071,33 @@ public class FanParserTask extends ParserResult
 		} else
 		{ // otherwise try to infer it from the expr Nodes
 			type = new FanResolvedMapType(node,
-					FanResolvedType.makeFromItemList(node, mapKeyTypes),
-					FanResolvedType.makeFromItemList(node, mapValTypes));
+				FanResolvedType.makeFromItemList(node, mapKeyTypes),
+				FanResolvedType.makeFromItemList(node, mapValTypes));
 		}
 		return type;
 	}
 
-	private FanResolvedType doIndexExpr(AstNode node, FanResolvedType type)
+	/**
+	 * Note that we get the content of the index expression (exprNode)
+	 * @param exprNode
+	 * @param type
+	 * @return
+	 */
+	private FanResolvedType doIndexExpr(AstNode exprNode, FanResolvedType type)
 	{
-		parseChildren(node);
-		FanResolvedType slotType = type.resolveSlotType("get", this);
+		parseVars(exprNode, null);
+		FanResolvedType slotType = null;
+		//TODO: -> not good, (also) look whether child expr is range or not, could be a map keyed by a list
+		if (exprNode.getType().getQualifiedType().equals("sys::List")) // a range
+		{
+			// in case of a range, it's a call to slice()
+			slotType = type.resolveSlotType("slice", this);
+		} else
+		{
+			// otherwise to get()
+			slotType = type.resolveSlotType("get", this);
+		}
+
 		if (type instanceof FanResolvedListType)
 		{
 			type = ((FanResolvedListType) type).getItemType();
@@ -1088,8 +1110,8 @@ public class FanParserTask extends ParserResult
 			type = slotType;
 		} else
 		{
-			type = FanResolvedType.makeUnresolved(node);
-			addError("Index expression only valid on lists, maps or types with get method-> " + node.getNodeText(true), node);
+			type = FanResolvedType.makeUnresolved(exprNode);
+			addError("Index expression only valid on lists, maps or types with get method-> " + exprNode.getNodeText(true), exprNode);
 		}
 		// TODO: check if list/map index key type is valid ?
 		return type.asStaticContext(false);
@@ -1188,7 +1210,7 @@ public class FanParserTask extends ParserResult
 		} else
 		{
 			// a range like "mystring"[0..5]
-			type = type.resolveSlotType("get", this);
+			type = type.resolveSlotType("slice", this);
 		}
 		return type;
 	}
@@ -1298,8 +1320,10 @@ public class FanParserTask extends ParserResult
 	void cancel()
 	{
 		System.out.println("Parser cancel called");
-		if(parser!=null)
+		if (parser != null)
+		{
 			parser.cancel();
+		}
 	}
 }
 

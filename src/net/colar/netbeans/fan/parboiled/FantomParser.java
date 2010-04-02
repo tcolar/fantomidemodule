@@ -1080,10 +1080,10 @@ public class FantomParser extends BaseParser<AstNode>
 	public final Rule QUOTE = terminal("\"");
 	public final Rule TICK = terminal("`");
 	public final Rule SINGLE_Q = terminal("'");
-	public final Rule DOT = terminal(".");
-	public final Rule AT = terminal("@");
-	public final Rule DSL_OPEN = terminal("<|");
-	public final Rule DSL_CLOSE = terminal("|>");
+	public final Rule DOT = terminal(".").label(TokenName.DOT.name());
+	public final Rule AT = terminal("@").label(TokenName.AT.name());
+	public final Rule DSL_OPEN = terminal("<|").label(TokenName.DSL_OPEN.name());
+	public final Rule DSL_CLOSE = terminal("|>").label(TokenName.DSL_CLOSE.name());
 	public final Rule SQ_BRACKET_L = terminal("[").label(TokenName.SQ_BRACKET_L.name());
 	public final Rule SQ_BRACKET_R = terminal("]").label(TokenName.SQ_BRACKET_R.name());
 	public final Rule BRACKET_L = terminal("{").label(TokenName.BRACKET_L.name());
@@ -1172,7 +1172,7 @@ public class FantomParser extends BaseParser<AstNode>
 	// ============ Simulate a lexer ===========================================
 	// This should just create tokens for the items we want to highlight(color) in the IDE
 	// It should be able to deal with "anything" and not ever fail if possible.
-	/*public Rule lexer()
+	public Rule lexer()
 	{
 		// If any changes made here, keep in sync with lexerTokens list in FantomParserTokens.java
 		return sequence(
@@ -1180,17 +1180,19 @@ public class FantomParser extends BaseParser<AstNode>
 			comment(), unixLine(), doc(),
 			strs(), uri(), char_(), dsl(),
 			lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
-			BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R,
+			BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R, DOT, AT, DSL_CLOSE, DSL_OPEN, // other known items
 			keyword(), id(), number(),
-			whiteSpace(), any())).label("lexerItems"),
+			whiteSpace(), 
+			any().label(TokenName.UNEXPECTED.name()))).label("lexerItems"),
 			// "Any" includes "everything else" - items withough highlighting.
 			// "Any" is also is a catchall for other unexpected items (should not happen)
-			eoi()); // until end of file
-	}*/
-	public Rule lexer()
+			optional(eoi())); // until end of file
+	}
+
+	public boolean myany()
 	{
-		return sequence(zeroOrMore(any()), eoi());
-		//return sequence(zeroOrMore(charRange(Character.MIN_VALUE, Character.MAX_VALUE)), eoi());
+		getContext().getCurrentLocation().getChar();
+		return true;
 	}
 
 	public Rule lexerOps()
