@@ -872,7 +872,14 @@ public class FanParserTask extends ParserResult
 					// parse the closure (but does not take it's type)
 					if(closureNode.getKind() == AstKind.AST_IT_BLOCK)
 					{
-						doItBlock(closureNode, baseType);
+						if(infTypes.size()==0)
+						{
+							addError("No parmeters expected in function, can't do itBlock closure", closureNode);
+						}
+						else
+						{
+							doItBlock(closureNode, infTypes.get(0));
+						}
 					}
 					else
 					{
