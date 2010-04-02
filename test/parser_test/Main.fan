@@ -15,29 +15,31 @@ class Main
   **
   static Void main()
   {
-    Int counter := 0
-    //ok
     list := ["one", "two", "three"]
-    //ok
     f := |->| { echo("hi there") }
-    //ok
-    g := |->Int| { return ++counter }
-    //ok
-    list.each |Str val| { echo(val.decapitalize) }
-    // Failed infference
-    list.each |val| { val.upper }
-    // Failed infference
-    list.each |v, i| { v.upper }
-    // ok
+    f.isImmutable
+    f2 := |Int a, Int b->Int| { return a + b }
+    nine := f2(4,5)
+    counter := 0
+    f3 := |->Int| { return ++counter }
+    f3.isImmutable
+    evens := list.findAll(|Int v->Bool| { return v%2==0 })
+    evens2 := list.findAll() |Int v->Bool| { return v%2==0 }
+    evens3 := list.findAll |Int v->Bool| { return v%2==0 }
+    s := evens3.size
+    list.each |Str val, Int index| { echo("$index = $val") }
+    list.each |Str v, Int i| { echo("$i = $v") }
+    list.each |v, i| { i.abs }
+
     ["a", "b", "c"].each |Str s| { echo(s.upper) }
-    // Failed infference
-    ["a", "b", "c"].each |s| { echo(s.upper) }
-    //ok
-    stuff := this.typeof.inheritance.findAll |Type type, Type type2 -> Bool|
-        {type2.doc ;return type.isAbstract}
-    stuff[0].base
-    // Failed infference - it
     ["a", "b", "c"].each { echo(it.upper) }
+    ["a", "b", "c"].each { echo(upper) }
+    ["a", "b", "c"].each { echo(it.upper) }
+
+    list9 := Str[,].with { filla(x,3) }
+    list10 := Str[,] { fill("x", 3) }
+
+    b := Button {text=""}
   }
 
 

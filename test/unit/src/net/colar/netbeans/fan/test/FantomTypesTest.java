@@ -4,6 +4,7 @@
 
 package net.colar.netbeans.fan.test;
 
+import net.colar.netbeans.fan.types.FanResolvedListType;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.testing.JOTTester;
 
@@ -17,6 +18,14 @@ public class FantomTypesTest extends FantomCSLTest
 	@Override
 	public void cslTest() throws Throwable
 	{
+		// Testing type sign stuff
+		/*FanResolvedType t = FanResolvedType.makeFromTypeSig(null, "Str");
+		JOTTester.checkIf("Type sig 1", t.getQualifiedType().equals("Str") && ! t.isNullable());
+		t = FanResolvedType.makeFromTypeSig(null, "Str?");
+		JOTTester.checkIf("Type sig 2", t.getQualifiedType().equals("Str") && t.isNullable());
+		t = FanResolvedType.makeFromTypeSig(null, "Str[]");
+		JOTTester.checkIf("Type sig 3", (t instanceof FanResolvedListType) && t.toTypeSig(true).equals("sys::Str[]"));*/
+		
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum").isTypeCompatible(mkt("sys::Obj")));
 		JOTTester.checkIf("Compatibility of Obj vs Obj", mkt("sys::Obj").isTypeCompatible(mkt("sys::Obj")));
