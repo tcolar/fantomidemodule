@@ -13,6 +13,7 @@ import net.jot.testing.JOTTester;
 import org.parboiled.BasicParseRunner;
 import org.parboiled.Parboiled;
 import org.parboiled.common.StringUtils;
+import org.parboiled.support.Characters;
 import org.parboiled.support.ParsingResult;
 
 /**
@@ -24,8 +25,13 @@ public class FantomLexerTest implements JOTTestable
 
 	public void jotTest() throws Throwable
 	{
+		for(char c : Characters.allBut(Characters.EOI).getChars())
+		{
+			System.out.println("char: "+c);
+		}
 		FantomLexer lexer = Parboiled.createParser(FantomLexer.class);
 		testFile(lexer, FantomParserTest.FAN_HOME+"/src/testSys/fan/ActorTest.fan");
+		testFile(lexer, "/tmp/test.txt");
 	}
 
 	public static void testFile(FantomLexer lexer, String filePath) throws Exception
