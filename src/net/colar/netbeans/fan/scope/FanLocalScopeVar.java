@@ -37,6 +37,7 @@ public class FanLocalScopeVar extends FanAstScopeVar
 	public FanLocalScopeVar(AstNode node, VarKind kind, String name, FanResolvedType type)
 	{
 		super(node, kind, name, getNonGenericType(type));
+		type=type.asStaticContext(false);
 	}
 
 	private static FanResolvedType getSlotType(AstNode node, FanResolvedType baseType, FanSlot slot)

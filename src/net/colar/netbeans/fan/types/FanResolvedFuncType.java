@@ -4,7 +4,6 @@
 package net.colar.netbeans.fan.types;
 
 import java.util.List;
-import java.util.Vector;
 import net.colar.netbeans.fan.parboiled.AstNode;
 
 /**

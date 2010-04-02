@@ -7,7 +7,6 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Document;
-import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
@@ -179,6 +178,18 @@ public class FanLexAstUtils
 				return nd;
 			}
 			nd = nd.getParent();
+		}
+		return null;
+	}
+
+	public static AstNode getFirstChildRecursive(AstNode parentNode, Predicate pred)
+	{
+		AstNode nd = getFirstChild(parentNode, pred);
+		if(nd!=null)
+			return nd;
+		for(AstNode subNode : parentNode.getChildren())
+		{
+			return getFirstChildRecursive(subNode, pred);
 		}
 		return null;
 	}

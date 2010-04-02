@@ -43,9 +43,13 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 				FanUtilities.GENERIC_LOGGER.error(getClass().getName() + " Null type for: " + typeString);
 			}
 		}
-		if(type==null)
-			type= FanResolvedType.makeUnresolved(node);
-		
+		if (type == null)
+		{
+			type = FanResolvedType.makeUnresolved(node);
+		}
+
+		type = type.asStaticContext(false);
+
 		node.setType(type);
 		//FanLexAstUtils.dumpTree(node, 0);
 		List<AstNode> modifs = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_MODIFIER));
