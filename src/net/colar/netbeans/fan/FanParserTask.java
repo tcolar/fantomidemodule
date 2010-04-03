@@ -831,7 +831,7 @@ public class FanParserTask extends ParserResult
 		// if baseType is null, then it probably couldn't return generics and if it did, then it would be "this", so leave it alone either way
 		if (baseType != null)
 		{
-			type = type.parameterize(baseType);
+			type = type.parameterize(baseType, node);
 		}
 		return type;
 	}
@@ -865,7 +865,7 @@ public class FanParserTask extends ParserResult
 						for (FanResolvedType t : ((FanResolvedFuncType) func).getTypes())
 						{
 							// might be a generic type
-							t = t.parameterize(baseType);
+							t = t.parameterize(baseType, closureNode);
 							infTypes.add(t);
 						}
 					}

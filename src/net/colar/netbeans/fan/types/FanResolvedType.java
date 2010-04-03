@@ -723,7 +723,7 @@ public class FanResolvedType implements Cloneable
 	 * @param genericType
 	 * @return
 	 */
-	public FanResolvedType parameterize(FanResolvedType baseType)
+	public FanResolvedType parameterize(FanResolvedType baseType, AstNode errNode)
 	{
 		// Deal with generics
 		if (this instanceof FanResolvedGenericType)
@@ -757,7 +757,7 @@ public class FanResolvedType implements Cloneable
 				t = parameterizeFuncParam(((FanResolvedFuncType) baseType), n);
 			} else
 			{	// Not good
-				baseType.getScopeNode().getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), baseType.getScopeNode());
+				errNode.getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), errNode);
 			}
 			return t.asStaticContext(false);
 		}
