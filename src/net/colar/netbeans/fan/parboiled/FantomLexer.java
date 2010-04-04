@@ -1,20 +1,29 @@
 /*
  * Thibaut Colar Apr 1, 2010
  */
-
 package net.colar.netbeans.fan.parboiled;
 
-import org.parboiled.BaseParser;
 import org.parboiled.Rule;
 
 /**
- * Dummy test lexer
  * @author thibautc
  */
-public class FantomLexer extends BaseParser<AstNode>
+public class FantomLexer extends FantomParser
 {
-	public Rule lexer()
+
+	public FantomLexer()
 	{
-		return sequence(zeroOrMore(any()), eoi());
+		super(null);
 	}
+
+	/**
+	 * Note: We don't allow extra spacing trailing items as in the parser here
+	 * @return
+	 */
+	@Override
+	public Rule spacing()
+	{
+		return toRule(false);
+	}
+
 }

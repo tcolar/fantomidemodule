@@ -12,7 +12,7 @@ import net.colar.netbeans.fan.FanUtilities;
  * This creates the tokens important to the lexer (syntax highlighting)
  * @author thibautc
  */
-public class FantomParserTokens
+public class FantomLexerTokens
 {
 	// Lexer label names ... we want all tokens provided by the lexer() rule of the parser to be listed here
 	public enum TokenName{

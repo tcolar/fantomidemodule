@@ -5,8 +5,8 @@
 package net.colar.netbeans.fan;
 
 import java.util.Collection;
-import net.colar.netbeans.fan.parboiled.FantomParserTokens;
-import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
+import net.colar.netbeans.fan.parboiled.FantomLexerTokens;
+import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.spi.lexer.LanguageHierarchy;
@@ -64,7 +64,7 @@ public class FanTokenID implements TokenId
 	 */
 	public boolean matches(TokenName name)
 	{
-		TokenId tk = FantomParserTokens.getTokenByName(name);
+		TokenId tk = FantomLexerTokens.getTokenByName(name);
 		if (tk == null)
 		{
 			return false;
@@ -87,7 +87,7 @@ public class FanTokenID implements TokenId
 		@Override
 		protected Collection<FanTokenID> createTokenIds()
 		{
-			return FantomParserTokens.getTokens().values();
+			return FantomLexerTokens.getTokens().values();
 		}
 
 		@Override

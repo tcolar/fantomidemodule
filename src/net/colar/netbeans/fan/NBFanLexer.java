@@ -10,9 +10,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.FantomLexer;
 import net.colar.netbeans.fan.parboiled.FantomParser;
-import net.colar.netbeans.fan.parboiled.FantomParserTokens;
-import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
+import net.colar.netbeans.fan.parboiled.FantomLexerTokens;
+import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.Lexer;
@@ -32,12 +33,12 @@ import org.parboiled.support.ParsingResult;
 public class NBFanLexer implements Lexer<FanTokenID>
 {
 
-	private static Hashtable<Integer, FanTokenID> tokenIds = FantomParserTokens.getTokens();
+	private static Hashtable<Integer, FanTokenID> tokenIds = FantomLexerTokens.getTokens();
 	private LexerRestartInfo<FanTokenID> info;
 	// Iterator for the parser Nodes (like a token stream).
 	Iterator<Node<Object>> lexerIterator = null;
 	boolean inited = false;
-	FantomParser parser;
+	FantomLexer lexer;
 
 	public static Collection<FanTokenID> getTokenIds()
 	{
@@ -80,12 +81,12 @@ public class NBFanLexer implements Lexer<FanTokenID>
 
 			//System.err.println("Node: " + node.getLabel()+" "+nodeStart+" "+nodeEnd);
 
-			FanTokenID tk = FantomParserTokens.getTokenByName(node.getLabel());
+			FanTokenID tk = FantomLexerTokens.getTokenByName(node.getLabel());
 			// Lexer will fail if null token returned, so use the default error token "error" in case that happens
 			if (tk == null)
 			{
 				//System.err.println("Unknown token: " + node.getLabel());
-				tk = FantomParserTokens.getTokenByName(TokenName.ERROR);
+				tk = FantomLexerTokens.getTokenByName(TokenName.ERROR);
 			}
 
 			result = info.tokenFactory().createToken(tk, (nodeEnd - nodeStart));
@@ -104,12 +105,12 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		{
 			data.append((char) i);
 		}
-		parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
+		lexer = Parboiled.createParser(FantomLexer.class);
 
 		try
 		{
 			long start = new Date().getTime();
-			ParsingResult<AstNode> result = BasicParseRunner.run(parser.lexer(), data.toString());
+			ParsingResult<AstNode> result = BasicParseRunner.run(lexer.lexer(), data.toString());
 			System.out.println("Finished lexing in " + (new Date().getTime() - start));
 			if (result.hasErrors() || !result.matched)
 			{
@@ -125,6 +126,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		}
 	}
 
+	
 	public Object state()
 	{
 		return null;

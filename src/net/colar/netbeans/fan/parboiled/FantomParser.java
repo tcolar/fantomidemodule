@@ -7,7 +7,7 @@ import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
 import org.parboiled.support.Leaf;
-import net.colar.netbeans.fan.parboiled.FantomParserTokens.TokenName;
+import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
 
 /**
  * Parboiled parser for the Fantom Language
@@ -1168,67 +1168,70 @@ public class FantomParser extends BaseParser<AstNode>
 		return true;
 	}
 
-	// ============ Simulate a lexer ===========================================
+	public void cancel()
+	{
+		System.out.println("cancel called!");
+		cancel=true;
+	}
+
+		// ============ Simulate a lexer ===========================================
 	// This should just create tokens for the items we want to highlight(color) in the IDE
 	// It should be able to deal with "anything" and not ever fail if possible.
 	public Rule lexer()
 	{
 		// If any changes made here, keep in sync with lexerTokens list in FantomParserTokens.java
 		return sequence(
-			zeroOrMore(lexerItem()).label("lexerItems"),
-			optional(eoi())); // until end of file
+				zeroOrMore(lexerItem()).label("lexerItems"),
+				optional(eoi())); // until end of file
 	}
 
 	public Rule lexerItem()
 	{
 		return firstOf(
-			comment(), unixLine(), doc(),
-			strs(), uri(), char_(), dsl(),
-			lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
-			BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R, DOT, AT, DSL_CLOSE, DSL_OPEN, // other known items
-			keyword(), lexerId(), number(),
-			whiteSpace(),
-			// "Any" includes "everything else" - items withough highlighting.
-			// "Any" is also is a catchall for other unexpected items (should not happen)
-			any().label(TokenName.UNEXPECTED.name()));
+				comment(), unixLine(), doc(),
+				strs(), uri(), char_(), dsl(),
+				lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(), // operators/separators
+				BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R, DOT, AT, DSL_CLOSE, DSL_OPEN, // other known items
+				keyword(), lexerId(), number(),
+				whiteSpace(),
+				// "Any" includes "everything else" - items withough highlighting.
+				// "Any" is also is a catchall for other unexpected items (should not happen)
+				any().label(TokenName.UNEXPECTED.name()));
 	}
 
 	public Rule lexerId()
 	{
 		// same as ID but don't allow space/commennts
 		return sequence(testNot(keyword()),
-			sequence(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
-			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9'))))
-			).label(TokenName.LEXERID.name());
+				sequence(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
+				zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9'))))).label(TokenName.LEXERID.name());
 	}
 
 	public Rule lexerOps()
 	{
 		return firstOf(OP_2MINUS, OP_2PLUS, OP_AND, OP_ARROW, AS_INIT, OP_BANG, OP_CURRY, OP_DIV, OP_ELVIS,
-			OP_MINUS, OP_MODULO, OP_MULT, OP_OR, OP_PLUS, OP_POUND, OP_RANGE, OP_RANGE_EXCL, OP_SAFE_CALL,
-			OP_SAFE_DYN_CALL).label(TokenName.LEXEROPS.name());
+				OP_MINUS, OP_MODULO, OP_MULT, OP_OR, OP_PLUS, OP_POUND, OP_RANGE, OP_RANGE_EXCL, OP_SAFE_CALL,
+				OP_SAFE_DYN_CALL).label(TokenName.LEXEROPS.name());
 	}
+
 	public Rule lexerSeps()
 	{
 		return firstOf(SP_COL, SP_COLCOL, SP_COMMA, SP_PIPE, SP_QMARK, SP_SEMI).label(TokenName.LEXERSEPS.name());
 	}
+
 	public Rule lexerComps()
 	{
 		return firstOf(CP_COMPARATORS, CP_EQUALITY).label(TokenName.LEXERCOMPS.name());
 	}
+
 	public Rule lexerAssign()
 	{
 		return firstOf(AS_EQUAL, AS_OPS).label(TokenName.LEXERASSIGN.name());
 	}
+
 	public Rule lexerInit()
 	{
 		return AS_INIT.label(TokenName.LEXERINIT.name());
-	}
-
-	public void cancel()
-	{
-		System.out.println("cancel called!");
-		cancel=true;
 	}
 
 }
