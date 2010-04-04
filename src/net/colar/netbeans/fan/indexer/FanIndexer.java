@@ -392,7 +392,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 									// Try to reuse existing db entries.
 									Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
-									int paramIndex=0;
+									int paramIndex = 0;
 									for (String paramName : parameters.keySet())
 									{
 										FanScopeMethodParam paramResult = parameters.get(paramName);
@@ -599,7 +599,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					dbType.setKind(getKind(type));
 
 					dbType.setIsAbstract(hasFlag(flags,
-						FConst.Abstract));
+							FConst.Abstract));
 					dbType.setIsConst(hasFlag(flags, FConst.Const));
 					dbType.setIsFinal(hasFlag(flags, FConst.Final));
 					dbType.setQualifiedName(sig);
@@ -607,7 +607,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					dbType.setPod(typeRef.podName);
 					dbType.setProtection(getProtection(type.flags));
 					dbType.setIsFromSource(
-						false);
+							false);
 
 					dbType.save();
 					// Slots
@@ -694,7 +694,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							FMethodVar[] parameters = method.params();
 							// Try to reuse existing db entries.
 							Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
-							int paramIndex=0;
+							int paramIndex = 0;
 							for (FMethodVar param : parameters)
 							{
 								JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
@@ -713,9 +713,17 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 									}
 								}
 								FTypeRef tRef = type.pod.typeRef(param.type);
+								String signature = tRef.signature;
+								// Temp Workaround for Fantom bug 1056
+								// http://fantom.org/sidewalk/topic/1056#c7687
+								if (dbSlot.getName().equals("with") && dbType.getQualifiedName().equals("sys::Obj"))
+								{
+									signature = "|sys::This->sys::Void|";
+								}
+								// end workaround
 								dbParam.setSlotId(dbSlot.getId());
 								dbParam.setName(param.name);
-								dbParam.setQualifiedType(tRef.signature);
+								dbParam.setQualifiedType(signature);
 								dbParam.setHasDefault(param.def != null);
 								dbParam.setParamIndex(paramIndex);
 
@@ -754,7 +762,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						String mainType = typeRef.signature;
 						String inhType = item.signature;
 						if (inhType.equals("sys::Obj")
-							|| inhType.equals("sys::Enum"))
+								|| inhType.equals("sys::Enum"))
 						{
 							// Those types are implied, no need to pollute the DB
 							continue;
@@ -993,7 +1001,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		String path = fe.getFile().getPath();
 		log.debug("File created: " + path);
 		requestIndexing(
-			path);
+				path);
 	}
 
 	public void fileChanged(FileEvent fe)
@@ -1001,7 +1009,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		String path = fe.getFile().getPath();
 		log.debug("File changed: " + path);
 		requestIndexing(
-			path);
+				path);
 	}
 
 	public void fileDeleted(FileEvent fe)
@@ -1151,7 +1159,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 		public void waitFor()
 		{
-			while (!done && ! shutdown)
+			while (!done && !shutdown)
 			{
 				try
 				{

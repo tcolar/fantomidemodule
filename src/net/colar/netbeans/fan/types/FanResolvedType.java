@@ -304,6 +304,20 @@ public class FanResolvedType implements Cloneable
 	}
 
 	/**
+	 * Resolve the "local" type, either "it" if an itBlock
+	 * If not in an in block just return "this" type
+	 * @param node
+	 * @return
+	 */
+	public static FanResolvedType resolveItType(AstNode node)
+	{
+		FanAstScopeVarBase var = node.getAllScopeVars().get("it");
+		if(var!=null)
+			return var.getType();
+		else
+			return resolveThisType(node);
+	}
+	/**
 	 * Resolve the type of "this" for a specific node (within the type definition).
 	 * @param node
 	 * @return
@@ -764,7 +778,7 @@ public class FanResolvedType implements Cloneable
 		// Special case for "This"
 		if (isResolved() && getDbType().getQualifiedName().equals("sys::This"))
 		{
-			return baseType;
+			return baseType.asStaticContext(false);
 		}
 		// Otherwise, leave it alone.
 		return this;

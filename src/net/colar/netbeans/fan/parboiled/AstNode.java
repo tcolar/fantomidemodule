@@ -231,7 +231,7 @@ public class AstNode
 		}
 		if (!allowDuplicates && scopeNode.getLocalScopeVars().containsKey(var.getName()))
 		{
-			getRoot().getParserTask().addError("Duplicated variable in scope: " + var==null?"null":var.getName(), this);
+			getRoot().getParserTask().addError("Duplicated variable in scope: " + (var==null?"null":var.getName()), this);
 		}
 		scopeNode.getLocalScopeVars().put(var.getName(), var);
 	}

@@ -277,7 +277,7 @@ public class FantomParser extends BaseParser<AstNode>
 			BRACKET_L,
 			optional(sequence(OPT_LF(), enforcedSequence(GET, firstOf(block(), eos())))),
 			optional(sequence(OPT_LF(), optional(protection()), enforcedSequence(SET, firstOf(block(), eos())))),
-			BRACKET_R)); // do not consume trailing LF, since fieldDef looks for EOS
+			BRACKET_R), ast.newNode(AstKind.AST_FIELD_ACCESSOR)); // do not consume trailing LF, since fieldDef looks for EOS
 	}
 
 	public Rule args()
@@ -321,13 +321,13 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule for_()
 	{
-		return enforcedSequence(KW_FOR, PAR_L,
+		return sequence(enforcedSequence(KW_FOR, PAR_L,
 			// LocalDef consumes the SEMI as part of loking for EOS, so rewrote to deal with this
 			firstOf(SP_SEMI, firstOf(localDef(), sequence(expr(), SP_SEMI))),
 			firstOf(SP_SEMI, sequence(expr(), SP_SEMI)),
 			optional(expr()),
 			PAR_R,
-			block());
+			block()), ast.newScopeNode(AstKind.AST_FOR_LOOP)); // introducing a scopr for the loop var
 	}
 
 	public Rule if_()
@@ -592,7 +592,7 @@ public class FantomParser extends BaseParser<AstNode>
 	}
 
 	// incomplete dot call, make valid to allow for completion
-	//TODO: this is not be shown as an error
+	//TODO: this is not shown as an error
 	public Rule incCall()
 	{
 		return sequence(testNot(sequence(DOT, DOT)), // DOT DOT would be a range.
