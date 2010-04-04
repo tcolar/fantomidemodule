@@ -140,7 +140,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	{
 		if (node != null)
 		{
-			OffsetRange range = FanLexAstUtils.getNodeRange(node);
+			OffsetRange range = node.getRelevantTextRange();
 			if (range != null)
 			{
 				newHighlights.put(range, colorAttributes);

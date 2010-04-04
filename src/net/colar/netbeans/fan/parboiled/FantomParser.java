@@ -773,8 +773,7 @@ public class FantomParser extends BaseParser<AstNode>
 			zeroOrMore(sequence(zeroOrMore("_"), digit())),
 			optional(fraction()),
 			optional(exponent()))),
-			optional(nbType()),
-			OPT_SP).label(TokenName.NUMBER.name());
+			optional(nbType())).label(TokenName.NUMBER.name());
 	}
 
 	@Leaf
@@ -1183,15 +1182,24 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule lexerItem()
 	{
 		return firstOf(
-			comment().label(TokenName.COMMENT.name()), unixLine().label(TokenName.UNIXLINE.name()), doc(),
-			strs().label(TokenName.STRS.name()), uri(), char_(), dsl(),
+			comment(), unixLine(), doc(),
+			strs(), uri(), char_(), dsl(),
 			lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(),  // operators/separators
 			BRACKET_L, BRACKET_R, SQ_BRACKET_L, SQ_BRACKET_R, PAR_L, PAR_R, DOT, AT, DSL_CLOSE, DSL_OPEN, // other known items
-			keyword().label(TokenName.KEYWORD.name()), id().label(TokenName.ID.name()), number(),
+			keyword(), lexerId(), number(),
 			whiteSpace(),
 			// "Any" includes "everything else" - items withough highlighting.
 			// "Any" is also is a catchall for other unexpected items (should not happen)
 			any().label(TokenName.UNEXPECTED.name()));
+	}
+
+	public Rule lexerId()
+	{
+		// same as ID but don't allow space/commennts
+		return sequence(testNot(keyword()),
+			sequence(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
+			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9'))))
+			).label(TokenName.LEXERID.name());
 	}
 
 	public Rule lexerOps()

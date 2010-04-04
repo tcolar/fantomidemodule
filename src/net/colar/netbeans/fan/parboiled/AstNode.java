@@ -6,14 +6,13 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
-import net.colar.netbeans.fan.scope.FanFieldScopeVar;
 import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.parboiled.Node;
 import org.parboiled.support.InputBuffer;
 import org.parboiled.support.InputLocation;
@@ -36,6 +35,10 @@ public class AstNode
 	private final AstKind kind;
 	/** Node text */
 	private final String text;
+	/**lazy-init Text minus the 'non-relavant" parts (spacing/comments)*/
+	private String relevantText;
+	/**lazy-init Range of the relevant text*/
+	private OffsetRange relevantTextRange;
 	/** Children AST nodes */
 	private List<AstNode> children = new ArrayList<AstNode>();
 	/** Parent AST Node*/
@@ -255,10 +258,11 @@ public class AstNode
 	 * @param node
 	 * @return
 	 */
-	public String getNodeText(boolean strip)
+	public String getNodeText(boolean relevantOnly)
 	{
-		//TODO: work on stripping comments and son on
-		return strip ? text.trim() : text;
+		if(relevantOnly && relevantText==null)
+			computeRelevant();
+		return relevantOnly ? relevantText : text;
 	}
 
 	public void setType(FanResolvedType type)
@@ -270,4 +274,32 @@ public class AstNode
 	{
 		return type;
 	}
+
+	public OffsetRange getRelevantTextRange()
+	{
+		if(relevantText==null)
+			computeRelevant();
+		return relevantTextRange;
+	}
+
+	private void computeRelevant()
+	{
+		// remove trailing spacing
+		relevantText=text;
+		if(kind==AstKind.AST_ID || kind==AstKind.AST_TYPE)
+		{
+			if(relevantText.indexOf("/*")>-1)
+				relevantText=relevantText.substring(0,relevantText.indexOf("/*"));
+			if(relevantText.indexOf("//")>-1)
+				relevantText=relevantText.substring(0,relevantText.indexOf("//"));
+		}
+		relevantText = relevantText.trim();
+		int startOffset = relevantText.length()>0?text.indexOf(relevantText.charAt(0)):0;
+		int endOffset = startOffset + relevantText.length();
+		relevantTextRange = new OffsetRange(
+				getStartLocation().getIndex()+startOffset,
+				getStartLocation().getIndex()+endOffset);
+	}
+
+
 }

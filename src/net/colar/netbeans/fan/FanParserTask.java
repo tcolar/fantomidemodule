@@ -171,7 +171,7 @@ public class FanParserTask extends ParserResult
 			return;
 		}
 		String key = "FanParserTask";
-		OffsetRange range = FanLexAstUtils.getNodeRange(node);
+		OffsetRange range = node.getRelevantTextRange();
 		int start = range.getStart();
 		int end = range.getEnd();
 		//System.out.println("Start: "+start+"End:"+end);
