@@ -9,8 +9,6 @@
  */
 package net.colar.netbeans.fan.wizard;
 
-import java.awt.event.ActionEvent;
-
 /**
  * Main UI panel for project/pod properties
  * @author thibautc
@@ -37,6 +35,21 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         buildTargetLbl = new javax.swing.JLabel();
         mainMethod = new javax.swing.JTextField();
         buildTarget = new javax.swing.JTextField();
+        dependenciesLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        dependenciesTable = new javax.swing.JTable();
+        dependenciesEditButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        metasList = new javax.swing.JList();
+        metasEditButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        indexesList = new javax.swing.JList();
+        indexesEditButton = new javax.swing.JButton();
+        metasLabel = new javax.swing.JLabel();
+        indexesLabel = new javax.swing.JLabel();
+        outputDirectoryLabel = new javax.swing.JLabel();
+        outputDirectoryField = new javax.swing.JTextField();
+        outputDirectoryEditButton = new javax.swing.JButton();
 
         mainMethodLbl.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.mainMethodLbl.text")); // NOI18N
 
@@ -47,6 +60,75 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         buildTarget.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.buildTarget.text")); // NOI18N
         buildTarget.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buildTargetActionPerformed(evt);
+            }
+        });
+
+        dependenciesLabel.setLabelFor(dependenciesTable);
+        dependenciesLabel.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.dependenciesLabel.text")); // NOI18N
+
+        dependenciesTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(dependenciesTable);
+
+        dependenciesEditButton.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.dependenciesEditButton.text")); // NOI18N
+        dependenciesEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dependenciesEditButtonActionPerformed(evt);
+            }
+        });
+
+        metasList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(metasList);
+
+        metasEditButton.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.metasEditButton.text")); // NOI18N
+        metasEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                metasEditButtonActionPerformed(evt);
+            }
+        });
+
+        indexesList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(indexesList);
+
+        indexesEditButton.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.indexesEditButton.text")); // NOI18N
+        indexesEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                indexesEditButtonActionPerformed(evt);
+            }
+        });
+
+        metasLabel.setLabelFor(metasList);
+        metasLabel.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.metasLabel.text")); // NOI18N
+
+        indexesLabel.setLabelFor(indexesList);
+        indexesLabel.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.indexesLabel.text")); // NOI18N
+
+        outputDirectoryLabel.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outputDirectoryLabel.text")); // NOI18N
+
+        outputDirectoryField.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outputDirectoryField.text")); // NOI18N
+
+        outputDirectoryEditButton.setLabel(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outputDirectoryEditButton.label")); // NOI18N
+        outputDirectoryEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputDirectoryEditButtonActionPerformed(evt);
             }
         });
 
@@ -58,11 +140,29 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(mainMethodLbl)
-                    .add(buildTargetLbl))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(buildTarget)
-                    .add(mainMethod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE))
+                    .add(buildTargetLbl)
+                    .add(dependenciesLabel)
+                    .add(metasLabel)
+                    .add(indexesLabel)
+                    .add(outputDirectoryLabel))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(mainMethod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, buildTarget, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, outputDirectoryField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(indexesEditButton)
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                    .add(dependenciesEditButton)
+                                    .add(metasEditButton)))
+                            .add(outputDirectoryEditButton))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -76,15 +176,79 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(buildTargetLbl)
                     .add(buildTarget, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(228, Short.MAX_VALUE))
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(layout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(dependenciesLabel)
+                            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(layout.createSequentialGroup()
+                        .add(40, 40, 40)
+                        .add(dependenciesEditButton)))
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(layout.createSequentialGroup()
+                        .add(27, 27, 27)
+                        .add(metasEditButton))
+                    .add(layout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(metasLabel)
+                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 79, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(layout.createSequentialGroup()
+                        .add(indexesLabel)
+                        .add(5, 5, 5)
+                        .add(indexesEditButton))
+                    .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 80, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(outputDirectoryEditButton)
+                    .add(outputDirectoryLabel))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+        private void dependenciesEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dependenciesEditButtonActionPerformed
+            // TODO add your handling code here:
+        }//GEN-LAST:event_dependenciesEditButtonActionPerformed
+
+        private void metasEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metasEditButtonActionPerformed
+            // TODO add your handling code here:
+        }//GEN-LAST:event_metasEditButtonActionPerformed
+
+        private void indexesEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indexesEditButtonActionPerformed
+            // TODO add your handling code here:
+        }//GEN-LAST:event_indexesEditButtonActionPerformed
+
+        private void outputDirectoryEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputDirectoryEditButtonActionPerformed
+            // TODO add your handling code here:
+        }//GEN-LAST:event_outputDirectoryEditButtonActionPerformed
+        private void buildTargetActionPerformed(java.awt.event.ActionEvent evt)
+        {
+            
+        }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField buildTarget;
     private javax.swing.JLabel buildTargetLbl;
+    private javax.swing.JButton dependenciesEditButton;
+    private javax.swing.JLabel dependenciesLabel;
+    private javax.swing.JTable dependenciesTable;
+    private javax.swing.JButton indexesEditButton;
+    private javax.swing.JLabel indexesLabel;
+    private javax.swing.JList indexesList;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField mainMethod;
     private javax.swing.JLabel mainMethodLbl;
+    private javax.swing.JButton metasEditButton;
+    private javax.swing.JLabel metasLabel;
+    private javax.swing.JList metasList;
+    private javax.swing.JButton outputDirectoryEditButton;
+    private javax.swing.JTextField outputDirectoryField;
+    private javax.swing.JLabel outputDirectoryLabel;
     // End of variables declaration//GEN-END:variables
 
 	public void setBuildTarget(String target)
