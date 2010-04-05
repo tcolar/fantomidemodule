@@ -4,7 +4,6 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import net.colar.netbeans.fan.FanParserTask;
@@ -161,7 +160,8 @@ public class FanSlot extends JOTModel
 		this.isConst = isConst;
 	}
 
-	public static Vector<FanSlot> findAllForType(long type)
+	@SuppressWarnings("unchecked")
+        public static Vector<FanSlot> findAllForType(long type)
 	{
 		try
 		{
