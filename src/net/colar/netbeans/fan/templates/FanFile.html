@@ -27,8 +27,15 @@ mixin ${name}
 }
 </jot:if>
 <jot:if eval="doEnum">
-enum ${name}
+enum class ${name}
 {
     // TODO
+}
+</jot:if>
+<jot:if eval="doFacet">
+facet class ${name}
+{
+    const Str name := ""
+    const Bool autoCreate
 }
 </jot:if>
