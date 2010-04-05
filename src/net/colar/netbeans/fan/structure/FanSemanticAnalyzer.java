@@ -24,6 +24,7 @@ import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.parboiled.Node;
+import org.parboiled.google.base.Predicate;
 
 /**
  * The semantic Analyzer looks at the structure(AST tree),
@@ -131,7 +132,8 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		// We can't mess the enumset, so work of a copy (slower though)
 		Set<ColoringAttributes> newAttributes = EnumSet.copyOf(colorAttributes);
 
-		AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
+		@SuppressWarnings("unchecked")
+                AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		if (hasModifier(node, "static"))
 		{
 			newAttributes.add(ColoringAttributes.STATIC);
