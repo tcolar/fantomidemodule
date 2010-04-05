@@ -31,7 +31,6 @@ import net.colar.netbeans.fan.scope.FanFieldScopeVar;
 import net.colar.netbeans.fan.scope.FanMethodScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
-import net.colar.netbeans.fan.types.FanResolvedGenericType;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -191,7 +190,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	@Override
 	public Set<String> getApplicableTemplates(ParserResult result, int arg1, int arg2)
 	{
-		return (Set<String>) Collections.EMPTY_SET;
+		return Collections.emptySet();
 	}
 
 	@Override
@@ -380,6 +379,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 	}
 
 	// TODO: setup nice icons(package/class etc..) in importproposals
+        @SuppressWarnings("unchecked")
 	private void proposeUsing(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, AstNode node)
 	{
 		if (node.getKind() == AstKind.AST_USING_AS)
