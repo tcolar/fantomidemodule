@@ -110,6 +110,9 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 			case 3:// enum
 				view.addVariable("doEnum", Boolean.TRUE);
 				break;
+                        case 4: // facet
+                                view.addVariable("doFacet", Boolean.TRUE);
+                                break;
 		}
 
 		FileObject license = FanUtilities.getRelativeFileObject(template, "../Licenses/FanDefaultLicense.txt");
