@@ -98,7 +98,7 @@ public class FantomLexerTokens
 						String cat = "";
 						if (colorIds.containsKey(name))
 						{
-							cat = (String) colorIds.get(name);
+							cat = colorIds.get(name);
 						}
 						//System.out.println("New token: " + name + "(" + id + ") : " + cat);
 						token = new FanTokenID(name.name(), id, cat);
