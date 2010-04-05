@@ -22,6 +22,7 @@ import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
+import org.parboiled.google.base.Predicate;
 
 /**
  * Resolved type - Immutable (since we cache the base type, and we need static/nullable copy at time)
@@ -338,6 +339,7 @@ public class FanResolvedType implements Cloneable
 	 * @param node
 	 * @return
 	 */
+        @SuppressWarnings("unchecked")
 	public static FanResolvedType resolveSuper(AstNode node)
 	{
 		AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
