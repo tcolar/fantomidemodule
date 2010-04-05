@@ -41,6 +41,7 @@ import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.ChildFactory;
@@ -78,6 +79,7 @@ public class FanParserTask extends ParserResult
 	// Cache slots resolution, for performance
 	private HashMap<String, List<FanSlot>> typeSlotsCache = new HashMap<String, List<FanSlot>>();
 	private FantomParser parser;
+	private boolean localScopeDone;
 
 	public FanParserTask(Snapshot snapshot)
 	{
@@ -226,8 +228,10 @@ public class FanParserTask extends ParserResult
 
 	/**
 	 * Call after parsing to add scope variables / type resolution to the AST tree
+	 * This does the "global" items - as needed by the indexer
+	 * such as types, slots & their params
 	 */
-	public void parseScope()
+	public void parseGlobalScope()
 	{
 		long start = new Date().getTime();
 		FanUtilities.GENERIC_LOGGER.debug("Starting parsing scope of: " + sourceName);
@@ -270,6 +274,7 @@ public class FanParserTask extends ParserResult
 					AstNode scopeNode = FanLexAstUtils.getScopeNode(node.getRoot());
 					// We parse the type base first and add it to scope right away
 					// So that parseSlots() can later resolve this & super.
+					System.out.print(name);
 					var.parse();
 					if (scopeNode.getAllScopeVars().containsKey(name))
 					{
@@ -278,10 +283,38 @@ public class FanParserTask extends ParserResult
 					{
 						scopeNode.getLocalScopeVars().put(name, var);
 					}
-					// Parse the slots
+					// Parse the slot definitions
 					var.parseSlots(this);
 					break;
 			}
+		}
+
+		if (dumpTree)
+		{
+			FanLexAstUtils.dumpTree(astRoot, 0);
+		}
+		FanUtilities.GENERIC_LOGGER.info("Parsing of scope completed in " + (new Date().getTime() - start) + " for : " + sourceName);
+	}
+	//TODO: don't show the whole stack of errors, but just the base.
+	// esp. for expressions, calls etc...
+
+	/**
+	 * This parses the local scopes (inside slots)
+	 * This is not needed by the indexer, so is called from
+	 * the FanSemanticAnalyzer.
+	 * It highlights errors as well
+	 */
+	public void parseLocalScopes()
+	{
+		// Semantic analyzer seem to make multiple calls sometimes
+		// don't allow that.
+		synchronized (this)
+		{
+			if (localScopeDone)
+			{
+				return;
+			}
+			localScopeDone = true;
 		}
 		// Now do all the local scopes / variables
 		for (AstNode node : astRoot.getChildren())
@@ -309,16 +342,14 @@ public class FanParserTask extends ParserResult
 				}
 			}
 		}
-
-		if (dumpTree)
-		{
-			FanLexAstUtils.dumpTree(astRoot, 0);
-		}
-		FanUtilities.GENERIC_LOGGER.info("Parsing of scope completed in " + (new Date().getTime() - start) + " for : " + sourceName);
 	}
-	//TODO: don't show the whole stack of errors, but just the base.
-	// esp. for expressions, calls etc...
 
+	/**
+	 * Recursive - called by parseLocalScope
+	 * Parse the blocks / expressions
+	 * @param node
+	 * @param type
+	 */
 	private void parseVars(AstNode node, FanResolvedType type)
 	{
 		if (invalidated)
@@ -348,16 +379,16 @@ public class FanParserTask extends ParserResult
 			switch (node.getKind())
 			{
 				/*case AST_FIELD_ACCESSOR:
-					AstNode fNode = FanLexAstUtils.findParentNode(node, AstKind.AST_FIELD_DEF);
-					if (fNode != null)
-					{
-						AstNode fieldType = FanLexAstUtils.getFirstChild(fNode, new NodeKindPredicate(AstKind.AST_TYPE));
-						// introduce "it" to scope
-						FanAstScopeVarBase itVar = new FanLocalScopeVar(node, VarKind.IMPLIED, "it", fieldType.getType());
-						node.addScopeVar(itVar, true);
-					}
-					parseChildren(node);
-					break;*/
+				AstNode fNode = FanLexAstUtils.findParentNode(node, AstKind.AST_FIELD_DEF);
+				if (fNode != null)
+				{
+				AstNode fieldType = FanLexAstUtils.getFirstChild(fNode, new NodeKindPredicate(AstKind.AST_TYPE));
+				// introduce "it" to scope
+				FanAstScopeVarBase itVar = new FanLocalScopeVar(node, VarKind.IMPLIED, "it", fieldType.getType());
+				node.addScopeVar(itVar, true);
+				}
+				parseChildren(node);
+				break;*/
 				case AST_EXPR_INDEX:
 					AstNode indexEpr = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));
 					type = doIndexExpr(indexEpr, type);
@@ -997,7 +1028,7 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode != null)
 		{   // if it's a typed list, use that as the type
 			parseVars(listTypeNode, null);
-			if (!listTypeNode.getType().isStaticContext() && listExprNodes.size()>0)
+			if (!listTypeNode.getType().isStaticContext() && listExprNodes.size() > 0)
 			{
 				// It's NOT a List at all after all, but an index expression (called on a var, not a Static type)!
 				return doIndexExpr(listExprNodes.get(0), listTypeNode.getType());

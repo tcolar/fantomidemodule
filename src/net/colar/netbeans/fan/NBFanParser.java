@@ -52,7 +52,7 @@ public class NBFanParser extends Parser
 	{
 		result = new FanParserTask(snapshot);
 		result.parse();
-		result.parseScope();
+		result.parseGlobalScope();
 	}
 
 	@Override

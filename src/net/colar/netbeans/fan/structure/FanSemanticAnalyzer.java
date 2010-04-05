@@ -37,7 +37,8 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	private static final Set<ColoringAttributes> ErrorSet = Collections.singleton(ColoringAttributes.UNDEFINED);
 	private volatile boolean cancelled = false;
 	private Map<OffsetRange, Set<ColoringAttributes>> highlights = null;
-	private static final Pattern INTERPOLATION = Pattern.compile("[^\\\\]\\$\\{?[a-zA-Z0-9\\.]*\\}\\(\\)?");
+	// not nearly perfect
+	private static final Pattern INTERPOLATION = Pattern.compile("[^\\\\]\\$\\{?[a-zA-Z0-9\\.\\(\\)]*\\}?");
 
 	@Override
 	public Map getHighlights()
@@ -49,10 +50,14 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	public void run(Result result, SchedulerEvent event)
 	{
 		FanParserTask res = (FanParserTask) result;
+
+		// #### Call the local scope parsing #####
+		res.parseLocalScopes();
+
 		Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap<OffsetRange, Set<ColoringAttributes>>();
 		if (res.getParseNodeTree() != null)
 		{
-			scanTree(res, res.getParseNodeTree(), newHighlights);
+			scanTree(res, res.getAstTree(), newHighlights);
 			highlights = newHighlights.size() == 0 ? null : newHighlights;
 		}
 	}
@@ -80,40 +85,42 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	 * @param ast
 	 * @param newHighlights
 	 */
-	private void scanTree(FanParserTask result, Node<AstNode> node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights)
+	private void scanTree(FanParserTask result, AstNode node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights)
 	{
-		//System.out.println("Node Lbl: "+node.getLabel()+" "+TokenName.STRS.name());
-		if (node.getLabel().equalsIgnoreCase(TokenName.STRS.name()))
+		System.out.println("Node Lbl: "+node.getLabel()+" "+TokenName.STRS.name());
+		if (node != null)
 		{
-			addStrHighlights(result, newHighlights, node);
-		}
-		else if (node.getValue() != null)
-		{
-			AstNode value = node.getValue();
-			switch (value.getKind())
+			switch (node.getKind())
 			{
+				case AST_EXPR_LIT_BASE:
+					if (node.getType().isResolved() &&
+						node.getType().getQualifiedType().equalsIgnoreCase("sys::Str"))
+					{
+						addStrHighlights(result, newHighlights, node.getParseNode());
+					}
+					break;
 				case AST_TYPE_DEF:
-					addIdToHighlights(result, newHighlights, value, ColoringAttributes.CLASS_SET);
+					addIdToHighlights(result, newHighlights, node, ColoringAttributes.CLASS_SET);
 					break;
 				case AST_CTOR_DEF:
-					addIdToHighlights(result, newHighlights, value, ColoringAttributes.CONSTRUCTOR_SET);
+					addIdToHighlights(result, newHighlights, node, ColoringAttributes.CONSTRUCTOR_SET);
 					break;
 				case AST_METHOD_DEF:
-					addIdToHighlights(result, newHighlights, value, ColoringAttributes.METHOD_SET);
+					addIdToHighlights(result, newHighlights, node, ColoringAttributes.METHOD_SET);
 					break;
 				case AST_FIELD_DEF: // global field
-					addIdToHighlights(result, newHighlights, value, ColoringAttributes.GLOBAL_SET);
+					addIdToHighlights(result, newHighlights, node, ColoringAttributes.GLOBAL_SET);
 					break;
 				// static field ?
 				case AST_PARAM:
 					//case AST_CTOR_CHAIN:
-					addToHighlights(result, newHighlights, value, ColoringAttributes.PARAMETER_SET);
+					addToHighlights(result, newHighlights, node, ColoringAttributes.PARAMETER_SET);
 					break;
 			}
 		}
 
 		// recurse into subnodes
-		for (Node<AstNode> subNode : node.getChildren())
+		for (AstNode subNode : node.getChildren())
 		{
 			scanTree(result, subNode, newHighlights);
 		}
