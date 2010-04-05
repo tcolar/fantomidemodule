@@ -93,7 +93,7 @@ public class FantomSrcParsingTest implements JOTTestable
 		{
 			Source source = Source.create(FileUtil.toFileObject(f));
 			Snapshot snapshot = source.createSnapshot();
-			parser.parse(snapshot);
+			parser.parse(snapshot, false);
 			FanParserTask result = (FanParserTask) parser.getResult();
 			List<? extends org.netbeans.modules.csl.api.Error> errors = result.getDiagnostics();
 			// Look for failed parsing (antlr)

@@ -300,14 +300,13 @@ public class FanParserTask extends ParserResult
 
 	/**
 	 * This parses the local scopes (inside slots)
-	 * This is not needed by the indexer, so is called from
-	 * the FanSemanticAnalyzer.
+	 * This is not needed by the indexer, so we don't do it when called
+	 * from the indexer (see NBFanParser)
 	 * It highlights errors as well
 	 */
 	public void parseLocalScopes()
 	{
-		// Semantic analyzer seem to make multiple calls sometimes
-		// don't allow that.
+		// don't allow that multiple calls
 		synchronized (this)
 		{
 			if (localScopeDone)

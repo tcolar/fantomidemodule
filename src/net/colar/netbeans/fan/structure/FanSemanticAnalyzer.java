@@ -52,9 +52,6 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	{
 		FanParserTask res = (FanParserTask) result;
 
-		// #### Call the local scope parsing #####
-		res.parseLocalScopes();
-
 		Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap<OffsetRange, Set<ColoringAttributes>>();
 		if (res.getParseNodeTree() != null)
 		{
@@ -88,7 +85,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	 */
 	private void scanTree(FanParserTask result, AstNode node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights)
 	{
-		System.out.println("Node Lbl: "+node.getLabel()+" "+TokenName.STRS.name());
+		//System.out.println("Node Lbl: "+node.getLabel()+" "+TokenName.STRS.name());
 		if (node != null)
 		{
 			switch (node.getKind())

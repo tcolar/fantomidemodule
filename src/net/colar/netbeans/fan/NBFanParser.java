@@ -28,31 +28,36 @@ public class NBFanParser extends Parser
 	@Override
 	public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException
 	{
+		// TODO: maybe I can make my own RespositoryUpdaterImpl that does nothing
+		//  instead of this ugly class name check hack.
+		String taskClass = task.getClass().getName();
+		boolean isIndexing = taskClass.startsWith("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater");
+
 		FanPlatform platform = FanPlatform.getInstance(false);
 		String path = snapshot.getSource().getFileObject().getPath();
 		// We don't care for the standard NB indexer
 		// It's slow and annoying and we don't use it (have our on)
 		// So we don't allow it to run on the fan repo sources (we index those ourselved from binaries)
-		// TODO: maybe I can make mmy own RespositoryUpdaterImpl that does nothing
-		//  instead of this ugly class name check hack.
-		String taskClass= task.getClass().getName();
-		if( platform == null ||
-			! FileUtil.isParentOf(platform.getFanHome(), snapshot.getSource().getFileObject()) ||
-			! taskClass.startsWith("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater"))
+		if (platform == null
+				|| !FileUtil.isParentOf(platform.getFanHome(), snapshot.getSource().getFileObject())
+				|| !isIndexing)
 		{
-			parse(snapshot);
-		}
-		else
+			parse(snapshot, isIndexing);
+		} else
 		{
-			FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: "+path);
+			FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: " + path);
 		}
 	}
 
-	public void parse(Snapshot snapshot)
+	public void parse(Snapshot snapshot, boolean isIndexing)
 	{
 		result = new FanParserTask(snapshot);
 		result.parse();
 		result.parseGlobalScope();
+		if (!isIndexing)
+		{
+			result.parseLocalScopes();
+		}
 	}
 
 	@Override
@@ -69,8 +74,10 @@ public class NBFanParser extends Parser
 	@Override
 	public void cancel()
 	{
-		if(result!=null)
+		if (result != null)
+		{
 			result.cancel();
+		}
 		//throw new UnsupportedOperationException("Not supported yet.");
 	}
 

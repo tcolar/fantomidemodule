@@ -198,7 +198,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		NBFanParser parser = new NBFanParser();
 		try
 		{
-			parser.parse(snapshot);
+			parser.parse(snapshot, true);
 		} catch (Throwable e)
 		{
 			log.exception("Parsing failed for: " + path, e);
