@@ -9,7 +9,6 @@ import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.jot.testing.JOTTester;
-import org.netbeans.modules.parsing.spi.SchedulerEvent;
 
 /**
  *

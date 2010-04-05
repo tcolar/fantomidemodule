@@ -34,22 +34,17 @@ public class FantomParserTest implements JOTTestable
 		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
 		ParsingResult<AstNode> result = null;
 
-		boolean singleTest = false;// Do just the 1 first test
-		boolean grammarTest = false; // Do all the grammar tests
+		boolean singleTest = true;// Do just the 1 first test
+		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
-		boolean fantomFilesTest = false; // parse fantom distro files
+		boolean fantomFilesTest = true; // parse fantom distro files
 		boolean fantomFilesLexerTest = true; // parse fantom distro files (lexer rules)
 
 		if (singleTest)
 		{
 			try
 			{
-				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
-				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
-				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
-				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
-				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
-				testFile(parser, FAN_HOME+"/src/testSys/fan/ActorTest.fan",true);
+				testFile(parser, FAN_HOME+"/examples/fwt/demo.fan",false);
 			} catch (Exception e)
 			{
 				e.printStackTrace();
