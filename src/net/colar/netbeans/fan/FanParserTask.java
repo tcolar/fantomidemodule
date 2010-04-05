@@ -997,7 +997,7 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode != null)
 		{   // if it's a typed list, use that as the type
 			parseVars(listTypeNode, null);
-			if (!listTypeNode.getType().isStaticContext())
+			if (!listTypeNode.getType().isStaticContext() && listExprNodes.size()>0)
 			{
 				// It's NOT a List at all after all, but an index expression (called on a var, not a Static type)!
 				return doIndexExpr(listExprNodes.get(0), listTypeNode.getType());

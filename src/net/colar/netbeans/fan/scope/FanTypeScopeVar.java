@@ -24,18 +24,14 @@ import net.colar.netbeans.fan.types.FanResolvedType;
 public class FanTypeScopeVar extends FanAstScopeVarBase
 {
 	// qualified Name
-
 	String qName = "";
 	List<FanResolvedType> inheritedItems = new ArrayList<FanResolvedType>();
 	// To make it faster to lookup vars
 	Hashtable<String, FanAstScopeVarBase> inheritedSlots = new Hashtable<String, FanAstScopeVarBase>();
-	// super type
-	FanResolvedType superType;
 
 	public FanTypeScopeVar(AstNode typeDefNode, String name)
 	{
 		super(typeDefNode, name);
-		superType = FanResolvedType.makeFromDbType(typeDefNode, "sys::Obj");
 		// not valid until parsed.
 	}
 
@@ -233,8 +229,4 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		return qName;
 	}
 
-	public FanResolvedType getSuperType()
-	{
-		return superType;
-	}
 }
