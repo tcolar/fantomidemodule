@@ -8,6 +8,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Classloader made of the fan jars
@@ -35,10 +36,10 @@ public class FanJavaClassLoader extends URLClassLoader
 			String sep = File.separator;
 			File extDir = new File(Env.cur().homeDir().osPath(), "lib" + sep + "java" + sep + "ext");
 			File platDir = new File(extDir, Env.cur().platform());
-			ArrayList acc = new ArrayList();
+			List<URL> acc = new ArrayList<URL>();
 			addExtJars(acc, extDir);
 			addExtJars(acc, platDir);
-			return (URL[]) acc.toArray(new URL[acc.size()]);
+			return acc.toArray(new URL[acc.size()]);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -46,7 +47,7 @@ public class FanJavaClassLoader extends URLClassLoader
 		}
 	}
 
-	private static void addExtJars(ArrayList acc, File extDir) throws Exception
+	private static void addExtJars(List<URL> acc, File extDir) throws Exception
 	{
 		File[] list = extDir.listFiles();
 		for (int i = 0; list != null && i < list.length; ++i)
