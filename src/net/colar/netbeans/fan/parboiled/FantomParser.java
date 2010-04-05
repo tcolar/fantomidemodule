@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.parboiled;
 
 import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseParser;
+import org.parboiled.Context;
 import org.parboiled.Rule;
 import org.parboiled.support.Leaf;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
@@ -409,9 +410,11 @@ public class FantomParser extends BaseParser<AstNode>
 			optional(firstOf(elvisTail(), ternaryTail())));
 	}
 
+	//TODO: ternary expression absolutely ille the parser, doing some strange crazy backtracking
+	// needs to be investigated / fixed
 	public Rule ternaryTail()
 	{
-		return enforcedSequence(sequence(OPT_LF(), SP_QMARK), OPT_LF(), setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), OPT_LF(), SP_COL, OPT_LF(), ifExprBody());
+		return enforcedSequence(sequence(OPT_LF(), SP_QMARK), echo("ternary"), OPT_LF(), setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), OPT_LF(), SP_COL, OPT_LF(), ifExprBody());
 	}
 
 	public Rule elvisTail()
@@ -828,8 +831,8 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(),
 			optional(
 			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(optional(SP_QMARK), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(SP_QMARK)); // nullable
+			sequence(optional(sequence(noSpace(),SP_QMARK)), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			optional(sequence(noSpace(),SP_QMARK))); // nullable
 	}
  
 	// all types except simple map
@@ -839,8 +842,8 @@ public class FantomParser extends BaseParser<AstNode>
 			firstOf(funcType(), mapType(), simpleType()),
 			optional(
 			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(optional(SP_QMARK), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(SP_QMARK)); // nullable
+			sequence(optional(sequence(noSpace(),SP_QMARK)), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			optional(sequence(noSpace(),SP_QMARK))); // nullable
 	}
  
 	public Rule simpleType()
@@ -1234,4 +1237,16 @@ public class FantomParser extends BaseParser<AstNode>
 		return AS_INIT.label(TokenName.LEXERINIT.name());
 	}
 
+	@Override
+	public Context<AstNode> getContext()
+	{
+		Context<AstNode> ctx = super.getContext();
+		int now=ctx.getCurrentLocation().getIndex();
+		int before=ctx.getCurrentLocation().getIndex()-10;
+		if(before<0)
+			before=0;
+		String t = ctx.getInputBuffer().extract(before, now);
+		System.out.println("get ctx: @"+now+" : "+t);
+		return ctx;
+	}
 }
