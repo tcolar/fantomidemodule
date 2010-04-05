@@ -154,6 +154,7 @@ public class FanType extends JOTModel
 	 * @return
 	 * @throws Exception
 	 */
+        @SuppressWarnings("unchecked")
 	public static Vector<FanType> findAllForDoc(JOTTransaction transaction, long doc) throws Exception
 	{
 		JOTSQLCondition cond = new JOTSQLCondition("srcDocId", JOTSQLCondition.IS_EQUAL, doc);
@@ -280,6 +281,7 @@ public class FanType extends JOTModel
 		return null;
 	}
 
+        @SuppressWarnings("unchecked")
 	public static Vector<String> findAllPackagesNames()
 	{
 		try
@@ -287,7 +289,7 @@ public class FanType extends JOTModel
 			Vector<String> results = new Vector<String>();
 			JOTSQLCondition cond = new JOTSQLCondition("kind", JOTSQLCondition.IS_GREATER, 20);
 			JOTQueryResult result = JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).find();
-			for (FanType type : (Vector<FanType>) result.getAllResults())
+            for (FanType type : (Vector<FanType>) result.getAllResults())
 			{
 				if (!results.contains(type.getPod()))
 				{
@@ -301,7 +303,8 @@ public class FanType extends JOTModel
 		}
 	}
 
-	public static Vector<String> findAllPodNames()
+	@SuppressWarnings("unchecked")
+        public static Vector<String> findAllPodNames()
 	{
 		//TODO: inneficient .... use DISTINCT ?
 		try
@@ -309,7 +312,8 @@ public class FanType extends JOTModel
 			Vector<String> results = new Vector<String>();
 			JOTSQLCondition cond = new JOTSQLCondition("kind", JOTSQLCondition.IS_LOWER, 20);
 			JOTQueryResult result = JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).find();
-			for (FanType type : (Vector<FanType>) result.getAllResults())
+                        Vector<FanType> v = result.getAllResults();
+			for (FanType type : v)
 			{
 				if (!results.contains(type.getPod()))
 				{
@@ -335,13 +339,14 @@ public class FanType extends JOTModel
 		}
 	}
 
-	public static Vector<FanType> findAllFantomTypes(String prefix)
+	@SuppressWarnings("unchecked")
+        public static Vector<FanType> findAllFantomTypes(String prefix)
 	{
 		try
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("simpleName", JOTSQLCondition.IS_LIKE, prefix + "%");
 			JOTSQLCondition cond2 = new JOTSQLCondition("kind", JOTSQLCondition.IS_LOWER, 20);
-			return JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).where(cond2).find().getAllResults();
+			return (Vector<FanType>)JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).where(cond2).find().getAllResults();
 		} catch (Exception e)
 		{
 			throw new RuntimeException(e);
@@ -355,7 +360,8 @@ public class FanType extends JOTModel
 		return qualifiedType;
 	}
 
-	public static Vector<FanType> findPodTypes(String pod, String prefix)
+	@SuppressWarnings("unchecked")
+        public static Vector<FanType> findPodTypes(String pod, String prefix)
 	{
 		try
 		{
