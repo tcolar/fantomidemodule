@@ -38,6 +38,7 @@ public class FanLexAstUtils
 		TokenSequence ts = getFanTokenSequence(doc);
 		ts.move(caretIndex);
 		ts.moveNext();
+                @SuppressWarnings("unchecked")
 		Token<? extends FanTokenID> token = ts.token();
 		return token;
 	}
@@ -188,6 +189,7 @@ public class FanLexAstUtils
 	 * @param pred
 	 * @return
 	 */
+        @SuppressWarnings("unchecked")
 	public static boolean isWrappingNode(AstNode parentNode, Predicate pred)
 	{
 		if(pred.apply(parentNode))
@@ -211,7 +213,8 @@ public class FanLexAstUtils
 		return null;
 	}
 
-	public static AstNode getFirstChild(AstNode parentNode, Predicate pred)
+	@SuppressWarnings("unchecked")
+        public static AstNode getFirstChild(AstNode parentNode, Predicate pred)
 	{
 		if (parentNode != null)
 		{
@@ -226,7 +229,7 @@ public class FanLexAstUtils
 		return null;
 	}
 
-	public static List<AstNode> getChildren(AstNode parentNode, Predicate pred)
+	public static List<AstNode> getChildren(AstNode parentNode, Predicate<AstNode> pred)
 	{
 		List<AstNode> nodes = new ArrayList<AstNode>();
 		if (parentNode != null)
@@ -242,7 +245,7 @@ public class FanLexAstUtils
 		return nodes;
 	}
 
-	public static String getFirstChildText(AstNode parentNode, Predicate pred)
+	public static String getFirstChildText(AstNode parentNode, Predicate<AstNode> pred)
 	{
 		AstNode node = getFirstChild(parentNode, pred);
 		return node == null ? null : node.getNodeText(true);
@@ -260,7 +263,8 @@ public class FanLexAstUtils
 		return new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
 	}
 
-	public static Node getFirstChild(Node<AstNode> parentNode, NodeLabelPredicate pred)
+        @SuppressWarnings("unchecked")
+	public static Node<AstNode> getFirstChild(Node<AstNode> parentNode, NodeLabelPredicate pred)
 	{
 		if (parentNode != null)
 		{
