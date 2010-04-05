@@ -125,7 +125,10 @@ public class FanPodWizardPanel1 implements WizardDescriptor.Panel
 	{
 		return getPanel().getPodDesc();
 	}
-
+        String getPodVersion()
+        {
+            return getPanel().getPodVersion();
+        }
 	boolean getCreateBuildFile()
 	{
 		return getPanel().getCreateBuildFile();
@@ -134,6 +137,30 @@ public class FanPodWizardPanel1 implements WizardDescriptor.Panel
 	String getMainClassName()
 	{
 		return getPanel().getMainClassName();
+	}
+        String getDependencies()
+        {
+            return getPanel().getDependencies();
+        }
+        String getIndex()
+        {
+            return getPanel().getIndex();
+        }
+        String getMeta()
+        {
+            return getPanel().getMeta();
+        }
+        String getOutDir()
+        {
+            return getPanel().getOutputDirectory();
+        }
+	boolean getDocApi()
+	{
+            return getPanel().getDocApi();
+	}
+	boolean getDocSrc()
+	{
+            return getPanel().getDocSrc();
 	}
 }
 
