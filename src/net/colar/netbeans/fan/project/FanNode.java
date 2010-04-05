@@ -109,7 +109,7 @@ public class FanNode extends FilterNode
 	@Override
 	public Action[] getActions(boolean popup)
 	{
-		actions = new Vector();
+		actions = new Vector<Action>();
 
 		if (isRoot || isPod)
 		{
