@@ -18,8 +18,6 @@ import net.colar.netbeans.fan.actions.RunFanShellAction;
 import net.colar.netbeans.fan.actions.TestFanPodAction;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.LifecycleManager;
-import org.openide.actions.DeleteAction;
-import org.openide.actions.FindAction;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
