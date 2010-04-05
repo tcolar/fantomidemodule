@@ -18,7 +18,7 @@ import org.openide.filesystems.FileObject;
  */
 public class FanClassPathImpl implements ClassPathImplementation
 {
-	private static List<PathResourceImplementation> resources = new ArrayList();
+	private static List<PathResourceImplementation> resources = new ArrayList<PathResourceImplementation>();
 
 	public FanClassPathImpl(FileObject fo)
 	{
