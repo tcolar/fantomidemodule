@@ -4,7 +4,6 @@
 package net.colar.netbeans.fan.scope;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
@@ -16,6 +15,7 @@ import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.types.FanResolvedType;
+import org.parboiled.google.base.Predicate;
 
 /**
  *
@@ -35,6 +35,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		// not valid until parsed.
 	}
 
+        @SuppressWarnings("unchecked")
 	public void parse()
 	{
 		if (node == null)
@@ -107,6 +108,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		}
 
 		// Deal with children - slots
+                @SuppressWarnings("unchecked")
 		AstNode blockNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
 		if (blockNode == null)
 		{
@@ -117,10 +119,12 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			switch (slot.getKind())
 			{
 				case AST_SLOT_DEF:
+                                        @SuppressWarnings("unchecked")
 					List<String> slotModifs = new ArrayList<String>();
 					FanFieldScopeVar slotVar = null;
 					for (AstNode child : slot.getChildren())
 					{
+                                                @SuppressWarnings("unchecked")
 						String slotName = FanLexAstUtils.getFirstChildText(child, new NodeKindPredicate(AstKind.AST_ID));
 						switch (child.getKind())
 						{
@@ -185,6 +189,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	{
 		if (inheritance != null)
 		{
+                        @SuppressWarnings("unchecked")
 			List<AstNode> children = FanLexAstUtils.getChildren(inheritance, new NodeKindPredicate(AstKind.AST_TYPE));
 			for (AstNode child : children)
 			{
