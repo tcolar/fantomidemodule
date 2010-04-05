@@ -410,11 +410,9 @@ public class FantomParser extends BaseParser<AstNode>
 			optional(firstOf(elvisTail(), ternaryTail())));
 	}
 
-	//TODO: ternary expression absolutely ille the parser, doing some strange crazy backtracking
-	// needs to be investigated / fixed
 	public Rule ternaryTail()
 	{
-		return enforcedSequence(sequence(OPT_LF(), SP_QMARK), echo("ternary"), OPT_LF(), setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), OPT_LF(), SP_COL, OPT_LF(), ifExprBody());
+		return enforcedSequence(sequence(OPT_LF(), SP_QMARK), OPT_LF(), setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), OPT_LF(), SP_COL, OPT_LF(), ifExprBody());
 	}
 
 	public Rule elvisTail()
@@ -776,7 +774,7 @@ public class FantomParser extends BaseParser<AstNode>
 			zeroOrMore(sequence(zeroOrMore("_"), digit())),
 			optional(fraction()),
 			optional(exponent()))),
-			optional(nbType())).label(TokenName.NUMBER.name());
+			optional(nbType()), OPT_SP).label(TokenName.NUMBER.name());
 	}
 
 	@Leaf
@@ -1241,7 +1239,7 @@ public class FantomParser extends BaseParser<AstNode>
 	 * Helps with debugging parser, not for normal use
 	 * @return
 	 */
-	@Override
+	/*@Override
 	public Context<AstNode> getContext()
 	{
 		Context<AstNode> ctx = super.getContext();
@@ -1252,5 +1250,5 @@ public class FantomParser extends BaseParser<AstNode>
 		String t = ctx.getInputBuffer().extract(before, now);
 		System.out.println("get ctx: @"+now+" : "+t);
 		return ctx;
-	}
+	}*/
 }

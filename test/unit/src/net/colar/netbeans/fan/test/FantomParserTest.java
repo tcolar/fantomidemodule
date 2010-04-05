@@ -34,7 +34,7 @@ public class FantomParserTest implements JOTTestable
 		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
 		ParsingResult<AstNode> result = null;
 
-		boolean singleTest = true;// Do just the 1 first test
+		boolean singleTest = false;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
 		boolean fantomFilesTest = true; // parse fantom distro files
@@ -44,7 +44,11 @@ public class FantomParserTest implements JOTTestable
 		{
 			try
 			{
-				testFile(parser, FAN_HOME+"/examples/fwt/demo.fan",false);
+				testFile(FAN_HOME+"/examples/fwt/demo.fan",false);
+				//result = parse(parser, parser.ifExprBody(), "3 : 5");
+				//testNodeName("Ternary expr", result, "ifExprBody", "3");
+				//result = parse(parser, parser.localDef(), "Int i := a>b ? 3 : 5");
+				//testNodeName("Ternary expr", result, "localDef", "Int i := a>b ? 3 : 5");
 			} catch (Exception e)
 			{
 				e.printStackTrace();
@@ -360,27 +364,27 @@ public class FantomParserTest implements JOTTestable
 		if (refFilesTest)
 		{
 			// Test real files   TODO: relative paths
-			testFile(parser, "/home/thibautc/NetBeansProjects/Fan/test/parser_test/test.fan", false);
-			testFile(parser, "/home/thibautc/NetBeansProjects/Fan/test/parser_test/hello.fan", false);
-			testFile(parser, "/home/thibautc/NetBeansProjects/Fan/test/parser_test/files.fan", false);
-			testFile(parser, "/home/thibautc/NetBeansProjects/Fan/test/parser_test/maps.fan", false);
+			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/test.fan", false);
+			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/hello.fan", false);
+			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/files.fan", false);
+			testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/maps.fan", false);
 			//testFile("/home/thibautc/NetBeansProjects/Fan/test/parser_test/sending.fan");
 		}
 
 		if (fantomFilesTest)
 		{
 			// Test all Fantom distro examples
-			testAllFanFilesUnder(parser, FAN_HOME + "/examples/", false);
+			testAllFanFilesUnder(FAN_HOME + "/examples/", false);
 			// Test all Fantom distro sources
-			testAllFanFilesUnder(parser, FAN_HOME + "/src/", false);
+			testAllFanFilesUnder(FAN_HOME + "/src/", false);
 		}
 
 		if (fantomFilesLexerTest)
 		{
 			// Test all Fantom distro examples
-			testAllFanFilesUnder(parser, FAN_HOME + "/examples/", true);
+			testAllFanFilesUnder(FAN_HOME + "/examples/", true);
 			// Test all Fantom distro sources
-			testAllFanFilesUnder(parser, FAN_HOME + "/src/", true);
+			testAllFanFilesUnder(FAN_HOME + "/src/", true);
 		}
 	}
 
@@ -398,17 +402,20 @@ public class FantomParserTest implements JOTTestable
 		return result;
 	}
 
-	private static void testAllFanFilesUnder(FantomParser parser, String folderPath, boolean lexerOnly) throws Exception
+	private static void testAllFanFilesUnder(String folderPath, boolean lexerOnly) throws Exception
 	{
 		List<File> files = NBTestUtilities.listAllFanFilesUnder(folderPath);
 		for (File f : files)
 		{
-			testFile(parser, f.getAbsolutePath(), lexerOnly);
+			testFile(f.getAbsolutePath(), lexerOnly);
 		}
 	}
 
-	public static void testFile(FantomParser parser, String filePath, boolean lexerOnly) throws Exception
+	public static void testFile(String filePath, boolean lexerOnly) throws Exception
 	{
+		// parser caches stuuf, so using a new one each time to avoid OOM
+		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
+
 		try
 		{
 			//FantomParser parser = Parboiled.createParser(FantomParser.class, (Object) null);
