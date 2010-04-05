@@ -19,6 +19,7 @@ public class FanGlobalSettings extends AdvancedOption
 	private static FanGlobalSettings instance;
 	private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
+        @SuppressWarnings("deprecation")
 	private FanGlobalSettings()
 	{
 		super();
