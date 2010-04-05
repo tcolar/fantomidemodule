@@ -21,6 +21,7 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 
 	protected String typeString;
 
+        @SuppressWarnings("unchecked")
 	public FanFieldScopeVar(AstNode fieldNode, String name)
 	{
 		super(fieldNode, name);
