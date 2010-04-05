@@ -46,7 +46,7 @@ public class FantomStructureAnalyzerTest extends FantomCSLTest
 		Snapshot snap = NBTestUtilities.fileToSnapshot(file);
 		FanParserTask task = new FanParserTask(snap);
 		task.parse();
-		task.parseScope();
+		task.parseGlobalScope();
 		if (task.getParsingResult().hasErrors())
 		{
 			for (org.netbeans.modules.csl.api.Error err : task.getDiagnostics())
