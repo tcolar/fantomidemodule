@@ -4,7 +4,6 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
-import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
 import net.jot.persistance.JOTSQLCondition;
@@ -54,6 +53,7 @@ public class FanTypeInheritance extends JOTModel
 	 * @param mainType
 	 * @return
 	 */
+        @SuppressWarnings("unchecked")
 	public static Vector<FanTypeInheritance> findAllForMainType(JOTTransaction transaction, String mainType)
 	{
 		try
