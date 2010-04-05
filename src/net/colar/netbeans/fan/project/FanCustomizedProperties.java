@@ -28,7 +28,7 @@ public class FanCustomizedProperties implements CustomizerProvider
 	private ProjectCustomizer.CategoryComponentProvider panelProvider;
 	private final FanProject project;
 	private Category[] categories;
-	Map panels = new HashMap();
+	Map<Category,JComponent> panels = new HashMap<Category,JComponent>();
 
 	public FanCustomizedProperties(FanProject project)
 	{
@@ -41,7 +41,7 @@ public class FanCustomizedProperties implements CustomizerProvider
 			"Pod Settings",
 			"Pod Settings",
 			null,
-			null);
+			(Category[]) null);
 		// ! panel order used in actionPerformed !
 		categories = new Category[]
 		{
@@ -77,18 +77,17 @@ public class FanCustomizedProperties implements CustomizerProvider
 
 	private static class PanelProvider implements ProjectCustomizer.CategoryComponentProvider
 	{
-
-		private Map panels;
+		private Map<Category, JComponent> panels;
 		private JPanel EMPTY_PANEL = new JPanel();
 
-		public PanelProvider(Map panels)
+		public PanelProvider(Map<Category,JComponent> panels)
 		{
 			this.panels = panels;
 		}
 
 		public JComponent create(ProjectCustomizer.Category category)
 		{
-			JComponent panel = (JComponent) panels.get(category);
+			JComponent panel = panels.get(category);
 			return panel == null ? EMPTY_PANEL : panel;
 		}
 	}
