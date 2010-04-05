@@ -6,7 +6,6 @@ package net.colar.netbeans.fan.completion;
 
 import java.util.Collections;
 import net.colar.netbeans.fan.structure.FanBasicElementHandle;
-import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.openide.util.ImageUtilities;
 
@@ -20,7 +19,7 @@ public class FanImportProposal extends FanCompletionProposal
 	{
 		this.name=kw;
 		this.anchor=anchor;
-		this.modifiers=Collections.EMPTY_SET;
+		this.modifiers=Collections.emptySet();
 		this.kind=ElementKind.PACKAGE;
 		this.element=new FanBasicElementHandle(name, kind);
 		if( ! isJava)
