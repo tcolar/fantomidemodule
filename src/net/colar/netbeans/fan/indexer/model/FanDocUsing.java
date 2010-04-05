@@ -25,7 +25,7 @@ public class FanDocUsing extends JOTModel
 	{
 		mapping.defineFieldSize("qualifiedType", 255);
 	}
-
+        @SuppressWarnings("unchecked")
 	public static Vector<FanDocUsing> findAllForDoc(JOTTransaction transaction, long doc) throws Exception
 	{
 		JOTSQLCondition cond = new JOTSQLCondition("documentId", JOTSQLCondition.IS_EQUAL, doc);
