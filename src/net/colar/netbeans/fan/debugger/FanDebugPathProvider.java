@@ -56,14 +56,14 @@ public class FanDebugPathProvider extends SourcePathProvider
 	private static final Pattern thisDirectoryPattern = Pattern.compile("(/|\\A)\\./");
 	private static final Pattern parentDirectoryPattern = Pattern.compile("(/|\\A)([^/]+?)/\\.\\./");
 	// open prjs
-	private Set<ClassPath> projectSources = new HashSet();
+	private Set<ClassPath> projectSources = new HashSet<ClassPath>();
 	// fan distro sources
-	private Set<ClassPath> fanSources = new HashSet();
-	private Set<ClassPath> jdkSources = new HashSet();
+	private Set<ClassPath> fanSources = new HashSet<ClassPath>();
+	private Set<ClassPath> jdkSources = new HashSet<ClassPath>();
 	// All resources known to IDE...
-	private Set<ClassPath> globalSources = new HashSet();
+	private Set<ClassPath> globalSources = new HashSet<ClassPath>();
 	// user provided paths (through listener)
-	private Set<ClassPath> customSources = new HashSet();
+	private Set<ClassPath> customSources = new HashSet<ClassPath>();
 	private PropertyChangeSupport pcs;
 	private PathRegistryListener pathRegistryListener;
 	private String[] sourceRoots;
@@ -535,7 +535,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 	private Set<FileObject> findAllResources(String path)
 	{
-		Set<FileObject> fos = new HashSet();
+		Set<FileObject> fos = new HashSet<FileObject>();
 		findAllResources(fos, globalSources, path);
 		return fos;
 	}
@@ -615,7 +615,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 	private void updateRoots()
 	{
-		Set<FileObject> roots = new HashSet();
+		Set<FileObject> roots = new HashSet<FileObject>();
 		for (ClassPath cp : projectSources)
 		{
 			Collections.addAll(roots, cp.getRoots());
@@ -696,7 +696,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 			boolean changed = false;
 			synchronized (FanDebugPathProvider.this)
 			{
-				jdkSources = new HashSet();
+				jdkSources = new HashSet<ClassPath>();
 				for (JavaPlatform jp : platforms)
 				{
 					jdkSources.add(jp.getSourceFolders());
