@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.Future;
-import net.colar.netbeans.fan.FanUtilities;
 import net.jot.logger.JOTLogger;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory;
@@ -36,7 +35,7 @@ public class FanExecution
 
 	private String command;
 	private String workingDirectory;
-	private Vector<String> commandArgs=new Vector();
+	private Vector<String> commandArgs=new Vector<String>();
 	//private String path;
 	private String displayName;
 	private boolean redirect;
