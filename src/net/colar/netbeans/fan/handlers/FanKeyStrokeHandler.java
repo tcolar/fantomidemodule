@@ -395,6 +395,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	 * @return
 	 */
 	@Override
+        @SuppressWarnings("unchecked")
 	public OffsetRange findMatching(
 			Document document, int caretOffset)
 	{
