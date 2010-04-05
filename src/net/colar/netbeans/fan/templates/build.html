@@ -13,8 +13,14 @@ class Build : BuildPod
   new make()
   {
     podName = "${name}"
-	summary = "${desc}"
-    depends = ["sys 1.0"]
-    srcDirs = [`fan/`, `test/`]
+    summary = "${desc}"
+    version = Version.fromStr("${version}")
+    depends = [${dependencies}]
+    srcDirs = [${srcDirs}]
+    outDir  = `${outDir}`
+    index   = [${indexes}]
+    metas   = [${metas}]
+    docSrc  = ${docSrc}
+    docApi  = ${docApi}
   }
 }
