@@ -5,7 +5,6 @@
 package net.colar.netbeans.fan.structure;
 
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.Set;
 import net.colar.netbeans.fan.FanLanguage;
 import org.netbeans.modules.csl.api.ElementHandle;
@@ -61,7 +60,7 @@ public class FanBasicElementHandle implements ElementHandle
 
 	public Set<Modifier> getModifiers()
 	{
-		return Collections.EMPTY_SET;
+		return Collections.emptySet();
 	}
 
 	public boolean signatureEquals(ElementHandle arg0)
