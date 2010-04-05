@@ -31,9 +31,9 @@ import org.openide.util.lookup.Lookups;
  */
 public class FanProject implements Project, ProjectInformation
 {
-	public static final String HARDCODED_JAVA_SRC_FOLDER = "java";
-	public static final String HARDCODED_FAN_SRC_FOLDER = "fan";
-	public static final String HARDCODED_TEST_SRC_FOLDER = "test";
+	//public static final String HARDCODED_JAVA_SRC_FOLDER = "java";
+	//public static final String HARDCODED_FAN_SRC_FOLDER = "fan";
+	//public static final String HARDCODED_TEST_SRC_FOLDER = "test";
 	private final FileObject dir;
 	private final Lookup lkp;
 	final RequestProcessor rp;

@@ -130,9 +130,10 @@ public class FanPlatform
 			{
 				if (file.isDirectory() && new File(file, "build.fan").exists())
 				{
-					addFolder(new File(file, FanProject.HARDCODED_JAVA_SRC_FOLDER));
-					addFolder(new File(file, FanProject.HARDCODED_FAN_SRC_FOLDER));
-					addFolder(new File(file, FanProject.HARDCODED_TEST_SRC_FOLDER));
+					addFolder(file);
+					//addFolder(new File(file, FanProject.HARDCODED_JAVA_SRC_FOLDER));
+					//addFolder(new File(file, FanProject.HARDCODED_FAN_SRC_FOLDER));
+					//addFolder(new File(file, FanProject.HARDCODED_TEST_SRC_FOLDER));
 				}
 			}
 			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, sourcePaths.toArray(new ClassPath[sourcePaths.size()]));

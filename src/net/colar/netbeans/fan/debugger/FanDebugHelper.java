@@ -50,14 +50,14 @@ public class FanDebugHelper
 			bp.setStratum("Fan");
 			bp.setHidden(false);
 			bp.setSourceName(name);
-			bp.setPrintText("[" + pod + "] " + FanProject.HARDCODED_FAN_SRC_FOLDER + "/" + path);
+			bp.setPrintText("[" + pod + "] " + "/" + path);
 			/*
 			 * SourcePath is required to match path in jar (LineBreakPointImpl check this)
 			 * so we have no choice but to give that path rather than the 'real' path
 			 * Our custom FanSourcePathProvider takes care of finding the right source file
 			 * given this 'jar' path.
 			 */
-			bp.setSourcePath(FanProject.HARDCODED_FAN_SRC_FOLDER + "/" + pod + "/" + path);
+			bp.setSourcePath(pod + "/" + path);
 			bp.setPreferredClassName(filter);
 			bp.setSuspend(LineBreakpoint.SUSPEND_ALL);
 			FanUtilities.GENERIC_LOGGER.debug("bp class:" + bp.getPreferredClassName());
@@ -100,7 +100,7 @@ public class FanDebugHelper
 		String relativePath = url;
 		if (fo != null)
 		{
-			FileObject srcFolder = prjDir.getFileObject(FanProject.HARDCODED_FAN_SRC_FOLDER);
+			FileObject srcFolder = prjDir;
 			if (srcFolder != null)
 			{
 				prjDir = srcFolder;
@@ -136,7 +136,7 @@ public class FanDebugHelper
 			path = path.substring(0, path.lastIndexOf("."));
 		}
 		path = path.replace('/', '.');
-		return FanProject.HARDCODED_FAN_SRC_FOLDER + "." + pod + "." + path + "*";
+		return "fan." + pod + "." + path + "*";
 	}
 
 	private static FileObject getUrlFo(String url)

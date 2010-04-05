@@ -35,9 +35,10 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 	{
 		this.project = project;
 		Set<FileObject> srcRoots = new HashSet();
-		srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_JAVA_SRC_FOLDER));
-		srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_FAN_SRC_FOLDER));
-		srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_TEST_SRC_FOLDER));
+		srcRoots.add(project.getProjectDirectory());
+		//srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_JAVA_SRC_FOLDER));
+		//srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_FAN_SRC_FOLDER));
+		//srcRoots.add(project.getProjectDirectory().getFileObject(FanProject.HARDCODED_TEST_SRC_FOLDER));
 
 		Project[] projects = OpenProjects.getDefault().getOpenProjects();
 		if (projects != null)
