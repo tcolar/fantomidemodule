@@ -192,10 +192,10 @@ public class FanDebugPathProvider extends SourcePathProvider
 			} else
 			{
 				// normal source lookup, we get the path from getUrl()
-				// we will get something like dummy3/fan/Main.fan (the actual path under project root is just Main.fan) as specially crafted in getRelativePath()
-				int index = relativePath.lastIndexOf(File.separator) + 1;
+				// we will get something like dummy3/fan/Main.fan (the actual path under project root is just fan/Main.fan) as specially crafted in getRelativePath()
+				int index = relativePath.indexOf(File.separator) + 1;
 				String fanPath = relativePath.substring(index);
-				String pod = relativePath.substring(0, relativePath.indexOf(File.separator));
+				String pod = relativePath.substring(0, index-1);
 				// We uwill check agaisnt "pod" to help find the right Source
 				path = getURLPath(fanPath, pod, false);
 				if (path != null)
@@ -572,7 +572,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 					FanUtilities.GENERIC_LOGGER.debug("---- Checking " + fob.getPath() + " vs " + pod);
 					if (FanUtilities.getPodFolderForPath(fob.getPath()).getName().equals(pod))
 					{
-						fo = fob;
+ 						fo = fob;
 						//System.out.println("---- MATCH " + fob.getPath() + " vs " + tail);
 						break;
 					}

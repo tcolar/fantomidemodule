@@ -162,7 +162,9 @@ public class FanUtilities
 
 	public static File getPodFolderForPath(String path)
 	{
-		File folder = new File(path).getParentFile();
+		File folder = new File(path);
+		if(folder.isFile())
+			folder = folder.getParentFile();
 		while (folder != null)
 		{
 			File f = new File(folder, "build.fan");
@@ -172,7 +174,7 @@ public class FanUtilities
 			}
 			folder = folder.getParentFile();
 		}
-		return folder;
+		return null;
 	}
 
 }

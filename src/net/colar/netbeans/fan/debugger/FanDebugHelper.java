@@ -45,7 +45,7 @@ public class FanDebugHelper
 			String name = getName(url);
 			String path = getPath(prj.getProjectDirectory(), url);
 			String pod = getPod(prj);
-			String filter = getClassFilter(pod, path);
+			String filter = getClassFilter(pod, name);
 
 			bp.setStratum("Fan");
 			bp.setHidden(false);
@@ -56,8 +56,9 @@ public class FanDebugHelper
 			 * so we have no choice but to give that path rather than the 'real' path
 			 * Our custom FanSourcePathProvider takes care of finding the right source file
 			 * given this 'jar' path.
+			 * The binary path is fan.{podname}.{typename}
 			 */
-			bp.setSourcePath(pod + "/" + path);
+			bp.setSourcePath("fan/"+pod + "/" + name);
 			bp.setPreferredClassName(filter);
 			bp.setSuspend(LineBreakpoint.SUSPEND_ALL);
 			FanUtilities.GENERIC_LOGGER.debug("bp class:" + bp.getPreferredClassName());
@@ -129,14 +130,13 @@ public class FanDebugHelper
 	 * @param path
 	 * @return
 	 */
-	private static String getClassFilter(String pod, String path)
+	private static String getClassFilter(String pod, String name)
 	{
-		if (path.endsWith(".fan") || path.endsWith(".fwt"))
+		if (name.endsWith(".fan") || name.endsWith(".fwt"))
 		{
-			path = path.substring(0, path.lastIndexOf("."));
+			name = name.substring(0, name.lastIndexOf("."));
 		}
-		path = path.replace('/', '.');
-		return "fan." + pod + "." + path + "*";
+		return "fan." + pod + "." + name + "*";
 	}
 
 	private static FileObject getUrlFo(String url)
