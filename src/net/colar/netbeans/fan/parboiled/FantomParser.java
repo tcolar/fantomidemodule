@@ -1237,6 +1237,10 @@ public class FantomParser extends BaseParser<AstNode>
 		return AS_INIT.label(TokenName.LEXERINIT.name());
 	}
 
+	/**
+	 * Helps with debugging parser, not for normal use
+	 * @return
+	 */
 	@Override
 	public Context<AstNode> getContext()
 	{
