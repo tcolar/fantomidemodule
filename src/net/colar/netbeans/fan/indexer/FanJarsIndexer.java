@@ -22,7 +22,6 @@ import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
-//import net.colar.netbeans.fan.ast.FanTypeScope;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
@@ -614,7 +613,7 @@ public class FanJarsIndexer implements FileChangeListener
 		readPackages();
 		if (pack != null && !packagesCache.contains(pack))
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		Vector<FanType> types = FanType.findPodTypes(pack, prefix);
 		ArrayList<String> items = new ArrayList<String>();
