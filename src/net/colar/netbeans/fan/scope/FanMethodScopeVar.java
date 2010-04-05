@@ -21,6 +21,7 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 	boolean isCtor = false;
 	Hashtable<String, FanScopeMethodParam> parameters = new Hashtable<String, FanScopeMethodParam>();
 
+        @SuppressWarnings("unchecked")
 	public FanMethodScopeVar(AstNode node, String name, boolean isCtor)
 	{
 		// Same as a field basically.
