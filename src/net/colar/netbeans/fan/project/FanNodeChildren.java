@@ -28,10 +28,11 @@ public class FanNodeChildren extends FilterNode.Children
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Node[] createNodes(Node object)
     {
-	Node origChild = (Node) object;
-	DataObject dob = (DataObject) origChild.getLookup().lookup(DataObject.class);
+	Node origChild = object;
+	DataObject dob = origChild.getLookup().lookup(DataObject.class);
 
 	if (dob != null)
 	{
