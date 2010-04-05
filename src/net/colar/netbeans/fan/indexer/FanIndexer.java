@@ -246,7 +246,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				Vector<FanType> types = FanType.findAllForDoc(null, doc.getId());
 
 				Collection<FanAstScopeVarBase> vars = rootScope.getLocalScopeVars().values();
-				Vector<String> addedUsings = new Vector();
+				Vector<String> addedUsings = new Vector<String>();
 				for (FanAstScopeVarBase var : vars)
 				{
 					if (var.getKind() == FanAstScopeVarBase.VarKind.IMPORT)
@@ -613,7 +613,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					// Slots
 					// Try to reuse existing db entries.
 					Vector<FanSlot> currentSlots = FanSlot.findAllForType(dbType.getId());
-					Vector<FSlot> slots = new Vector();
+					Vector<FSlot> slots = new Vector<FSlot>();
 					slots.addAll(Arrays.asList(type.fields));
 					// It's a bit odd but type.methods has the fields in as well
 					// I guess because Fan creates "internal" field getter/setters ?
@@ -966,12 +966,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		} //System.out.println("Html doc: "+html);
 		return html;
 	}
-
+        @SuppressWarnings("unchecked")
 	private void cleanupOldDocs()
 	{
 		try
 		{
-			Vector<FanDocument> docs = JOTQueryBuilder.selectQuery(null, FanDocument.class).find().getAllResults();
+			Vector<FanDocument> docs = (Vector<FanDocument>)JOTQueryBuilder.selectQuery(null, FanDocument.class).find().getAllResults();
 			for (FanDocument doc : docs)
 			{
 				String path = doc.getPath();
