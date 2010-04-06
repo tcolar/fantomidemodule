@@ -24,6 +24,7 @@ import org.parboiled.google.base.Predicate;
 public class FanTypeScopeVar extends FanAstScopeVarBase
 {
 	// qualified Name
+
 	String qName = "";
 	List<FanResolvedType> inheritedItems = new ArrayList<FanResolvedType>();
 	// To make it faster to lookup vars
@@ -35,24 +36,28 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		// not valid until parsed.
 	}
 
-        @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public void parse()
 	{
 		if (node == null)
 		{
 			return;
 		}
-		if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLASS)) != null)
-		{
-			kind = VarKind.TYPE_CLASS;
-
-		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ENUM)) != null)
+		if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ENUM)) != null)
 		{ //TODO: Deal with enum val defs ?
 			kind = VarKind.TYPE_ENUM;
 
 		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_FACET)) != null)
 		{
 			kind = VarKind.TYPE_FACET;
+
+		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLASS)) != null)
+		{
+			kind = VarKind.TYPE_CLASS;
+
+		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ENUM)) != null)
+		{ //TODO: Deal with enum val defs ?
+			kind = VarKind.TYPE_ENUM;
 
 		} else if (FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_MIXIN)) != null)
 		{
@@ -62,7 +67,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 
 		type = FanResolvedType.makeFromTypeSig(node, nameNode.getNodeText(true));
 
-		if (type == null)
+		if (type == null || !type.isResolved())
 		{
 			FanUtilities.GENERIC_LOGGER.error(getClass().getName() + " Null type for: " + nameNode.getNodeText(true));
 			type = FanResolvedType.makeUnresolved(node);
@@ -98,17 +103,16 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	public void parseSlots(FanParserTask task)
 	{
 		// Also "cache" inherited slots, for faster var lookup later
-		System.out.print(">getallslots "+name);
-					List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true, task);
+		System.out.print(">getallslots " + name);
+		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true, task);
 		System.out.print("<getallslots");
-							for (FanSlot slot : slots)
+		for (FanSlot slot : slots)
 		{
 			FanAstScopeVarBase newVar = new FanLocalScopeVar(node, getType(), slot, slot.getName());
 			inheritedSlots.put(slot.getName(), newVar);
 		}
-
 		// Deal with children - slots
-                @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		AstNode blockNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
 		if (blockNode == null)
 		{
@@ -119,12 +123,11 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			switch (slot.getKind())
 			{
 				case AST_SLOT_DEF:
-                                        @SuppressWarnings("unchecked")
-					List<String> slotModifs = new ArrayList<String>();
+					@SuppressWarnings("unchecked") List<String> slotModifs = new ArrayList<String>();
 					FanFieldScopeVar slotVar = null;
 					for (AstNode child : slot.getChildren())
 					{
-                                                @SuppressWarnings("unchecked")
+						@SuppressWarnings("unchecked")
 						String slotName = FanLexAstUtils.getFirstChildText(child, new NodeKindPredicate(AstKind.AST_ID));
 						switch (child.getKind())
 						{
@@ -189,7 +192,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	{
 		if (inheritance != null)
 		{
-                        @SuppressWarnings("unchecked")
+			@SuppressWarnings("unchecked")
 			List<AstNode> children = FanLexAstUtils.getChildren(inheritance, new NodeKindPredicate(AstKind.AST_TYPE));
 			for (AstNode child : children)
 			{
@@ -235,5 +238,4 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	{
 		return qName;
 	}
-
 }
