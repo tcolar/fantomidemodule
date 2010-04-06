@@ -1,3 +1,8 @@
+indexing:
+- deal with inner classes
+- see what's wrong with examples/fwt/demo.fan
+- search "local types" (in file) first, so it doesn't have to be indexed (yet) to be found, when file as class1 depending on class2
+
 update completion for function types to complete like
 b.call |->| {}    rather than  b.call(f)
 
