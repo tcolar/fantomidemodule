@@ -147,10 +147,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	 */
 	public void requestIndexing(String path)
 	{
-            if (FanPlatform.getInstance() == null ||
-                FanPlatform.getInstance().getFanHome() == null) {
-                return;
-            }
+		if (FanPlatform.getInstance() == null
+			|| FanPlatform.getInstance().getFanHome() == null)
+		{
+			return;
+		}
 		boolean isPod = path.toLowerCase().endsWith(".pod");
 
 		FileObject fo = FileUtil.toFileObject(new File(path));
@@ -165,7 +166,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		if (isPod)
 		{
 			fanPodsToBeIndexed.put(path, new Date().getTime());
-		} else if (!FileUtil.isParentOf(FanPlatform.getInstance().getFanHome(), fo))
+		} else if (!FileUtil.isParentOf(FanPlatform.getInstance().getFanSrcHome(), fo))
 		{
 			fanSrcToBeIndexed.put(path, new Date().getTime());
 		}
@@ -176,14 +177,15 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	private void indexSrc(String path)
 	{
 		FanPlatform platform = FanPlatform.getInstance(true);
-                if (null == platform || platform.getFanHome() == null) {
-                    return;
-                }
+		if (null == platform || platform.getFanHome() == null)
+		{
+			return;
+		}
 		if (platform.isConfigured())
 		{
 			// Don't do Fantom distro sources since we have binaries (faster)
 			log.info(platform.getFanHome() + " VS " + path);
-			if (FileUtil.isParentOf(platform.getFanHome(), FileUtil.toFileObject(new File(path))))
+			if (FileUtil.isParentOf(platform.getFanSrcHome(), FileUtil.toFileObject(new File(path))))
 			{
 				log.info("Skipping: " + path);
 				return;
@@ -509,9 +511,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	public void indexFantomPods(boolean runInBackground)
 	{
 		FanPlatform platform = FanPlatform.getInstance(true);
-                if (null == platform) {
-                    return;
-                }
+		if (null == platform)
+		{
+			return;
+		}
 		if (platform.isConfigured())
 		{
 			try
@@ -609,7 +612,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					dbType.setKind(getKind(type));
 
 					dbType.setIsAbstract(hasFlag(flags,
-							FConst.Abstract));
+						FConst.Abstract));
 					dbType.setIsConst(hasFlag(flags, FConst.Const));
 					dbType.setIsFinal(hasFlag(flags, FConst.Final));
 					dbType.setQualifiedName(sig);
@@ -617,7 +620,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					dbType.setPod(typeRef.podName);
 					dbType.setProtection(getProtection(type.flags));
 					dbType.setIsFromSource(
-							false);
+						false);
 
 					dbType.save();
 					// Slots
@@ -772,7 +775,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						String mainType = typeRef.signature;
 						String inhType = item.signature;
 						if (inhType.equals("sys::Obj")
-								|| inhType.equals("sys::Enum"))
+							|| inhType.equals("sys::Enum"))
 						{
 							// Those types are implied, no need to pollute the DB
 							continue;
@@ -885,10 +888,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public static String getPodDoc(String podName)
 	{
-                FanPlatform platform = FanPlatform.getInstance(true);
-                if (null == platform) {
-                    return null;
-                }
+		FanPlatform platform = FanPlatform.getInstance(true);
+		if (null == platform)
+		{
+			return null;
+		}
 		if (platform.isConfigured())
 		{
 			Pod pod = null;
@@ -931,10 +935,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public static String getDoc(FanType type)
 	{
-                FanPlatform platform = FanPlatform.getInstance(true);
-                if (null == platform) {
-                    return null;
-                }
+		FanPlatform platform = FanPlatform.getInstance(true);
+		if (null == platform)
+		{
+			return null;
+		}
 		if (platform != null && platform.isConfigured())
 		{
 			try
@@ -965,9 +970,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			return null;
 		}
 		FanPlatform platform = FanPlatform.getInstance(true);
-                if (platform == null) {
-                    return null;
-                }
+		if (platform == null)
+		{
+			return null;
+		}
 		if (!platform.isConfigured())
 		{
 			return fandoc;
@@ -987,12 +993,13 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		} //System.out.println("Html doc: "+html);
 		return html;
 	}
-        @SuppressWarnings("unchecked")
+
+	@SuppressWarnings("unchecked")
 	private void cleanupOldDocs()
 	{
 		try
 		{
-			Vector<FanDocument> docs = (Vector<FanDocument>)JOTQueryBuilder.selectQuery(null, FanDocument.class).find().getAllResults();
+			Vector<FanDocument> docs = (Vector<FanDocument>) JOTQueryBuilder.selectQuery(null, FanDocument.class).find().getAllResults();
 			for (FanDocument doc : docs)
 			{
 				String path = doc.getPath();
@@ -1022,7 +1029,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		String path = fe.getFile().getPath();
 		log.debug("File created: " + path);
 		requestIndexing(
-				path);
+			path);
 	}
 
 	public void fileChanged(FileEvent fe)
@@ -1030,7 +1037,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		String path = fe.getFile().getPath();
 		log.debug("File changed: " + path);
 		requestIndexing(
-				path);
+			path);
 	}
 
 	public void fileDeleted(FileEvent fe)

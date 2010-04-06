@@ -91,13 +91,14 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	private int scanFolder(FileObject root, int nb)
 	{
 		FanPlatform platform = FanPlatform.getInstance(true);
-                if (platform == null || platform.getFanHome() == null) {
-                    return 0;
-                }
+		if (platform == null || platform.getFanHome() == null)
+		{
+			return 0;
+		}
 		if (platform.isConfigured())
 		{
-			// Don't do Fantom distro sources since we have binaries (faster)
-			if (FileUtil.isParentOf(platform.getFanHome(), root))
+			// Don't do Fantom distro source sources since we have binaries (faster)
+			if (FileUtil.isParentOf(platform.getFanSrcHome(), root))
 			{
 				return nb;
 			}
