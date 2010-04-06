@@ -65,6 +65,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 //import org.netbeans.modules.java.source.indexing.JavaBinaryIndexer;
+import javax.swing.JOptionPane;
 
 /**
  * This indexer is backed by a DB(H2 database)
@@ -146,7 +147,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	 */
 	public void requestIndexing(String path)
 	{
-
+            if (FanPlatform.getInstance() == null ||
+                FanPlatform.getInstance().getFanHome() == null) {
+                return;
+            }
 		boolean isPod = path.toLowerCase().endsWith(".pod");
 
 		FileObject fo = FileUtil.toFileObject(new File(path));
@@ -171,7 +175,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	// Might need a separte ANTLR grammar though.
 	private void indexSrc(String path)
 	{
-		FanPlatform platform = FanPlatform.getInstance(false);
+		FanPlatform platform = FanPlatform.getInstance(true);
+                if (null == platform || platform.getFanHome() == null) {
+                    return;
+                }
 		if (platform.isConfigured())
 		{
 			// Don't do Fantom distro sources since we have binaries (faster)
@@ -501,7 +508,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public void indexFantomPods(boolean runInBackground)
 	{
-		FanPlatform platform = FanPlatform.getInstance(false);
+		FanPlatform platform = FanPlatform.getInstance(true);
+                if (null == platform) {
+                    return;
+                }
 		if (platform.isConfigured())
 		{
 			try
@@ -875,7 +885,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public static String getPodDoc(String podName)
 	{
-		if (FanPlatform.getInstance(false).isConfigured())
+                FanPlatform platform = FanPlatform.getInstance(true);
+                if (null == platform) {
+                    return null;
+                }
+		if (platform.isConfigured())
 		{
 			Pod pod = null;
 			try
@@ -917,7 +931,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public static String getDoc(FanType type)
 	{
-		if (FanPlatform.getInstance(false).isConfigured())
+                FanPlatform platform = FanPlatform.getInstance(true);
+                if (null == platform) {
+                    return null;
+                }
+		if (platform != null && platform.isConfigured())
 		{
 			try
 			{
@@ -946,7 +964,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		{
 			return null;
 		}
-		FanPlatform platform = FanPlatform.getInstance(false);
+		FanPlatform platform = FanPlatform.getInstance(true);
+                if (platform == null) {
+                    return null;
+                }
 		if (!platform.isConfigured())
 		{
 			return fandoc;
