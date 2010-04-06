@@ -37,8 +37,11 @@ import org.parboiled.google.base.Predicate;
 public class FanResolvedType implements Cloneable
 {
 
-	public enum TypeKind{SIMPLE, LIST, MAP, FUNC}
+	public enum TypeKind
+	{
 
+		SIMPLE, LIST, MAP, FUNC
+	}
 	private final String asTypedType;
 	private final FanType dbType;
 	private final String shortAsTypedType;
@@ -60,7 +63,7 @@ public class FanResolvedType implements Cloneable
 		shortAsTypedType = asTypedType.indexOf("::") != -1 ? asTypedType.substring(asTypedType.indexOf("::") + 2) : asTypedType;
 		dbType = type;
 		// Java types are always nullable
-		if(dbType!=null && dbType.isJava())
+		if (dbType != null && dbType.isJava())
 		{
 			nullableContext = true;
 		}
@@ -276,7 +279,10 @@ public class FanResolvedType implements Cloneable
 			FanResolvedType copy = (FanResolvedType) clone();
 			copy.nullableContext = nullable;
 			return copy;
-		}catch(CloneNotSupportedException e){FanUtilities.GENERIC_LOGGER.exception("Clone error", e);}
+		} catch (CloneNotSupportedException e)
+		{
+			FanUtilities.GENERIC_LOGGER.exception("Clone error", e);
+		}
 		return null;
 	}
 
@@ -300,7 +306,10 @@ public class FanResolvedType implements Cloneable
 			FanResolvedType copy = (FanResolvedType) clone();
 			copy.staticContext = b;
 			return copy;
-		}catch(CloneNotSupportedException e){FanUtilities.GENERIC_LOGGER.exception("Clone error", e);}
+		} catch (CloneNotSupportedException e)
+		{
+			FanUtilities.GENERIC_LOGGER.exception("Clone error", e);
+		}
 		return null;
 	}
 
@@ -313,11 +322,15 @@ public class FanResolvedType implements Cloneable
 	public static FanResolvedType resolveItType(AstNode node)
 	{
 		FanAstScopeVarBase var = node.getAllScopeVars().get("it");
-		if(var!=null)
+		if (var != null)
+		{
 			return var.getType();
-		else
+		} else
+		{
 			return resolveThisType(node);
+		}
 	}
+
 	/**
 	 * Resolve the type of "this" for a specific node (within the type definition).
 	 * @param node
@@ -339,7 +352,7 @@ public class FanResolvedType implements Cloneable
 	 * @param node
 	 * @return
 	 */
-        @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public static FanResolvedType resolveSuper(AstNode node)
 	{
 		AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
@@ -378,21 +391,23 @@ public class FanResolvedType implements Cloneable
 		{
 			if (fullyQualified)
 			{
-				fq=dbType.getQualifiedName();
+				fq = dbType.getQualifiedName();
 			} else
 			{
-				fq=dbType.getSimpleName();
+				fq = dbType.getSimpleName();
 			}
 		}
 		if (fullyQualified)
 		{
-			fq=getAsTypedType();
+			fq = getAsTypedType();
 		} else
 		{
-			fq=getShortAsTypedType();
+			fq = getShortAsTypedType();
 		}
-		if(isNullable())
-			fq+="?";
+		if (isNullable())
+		{
+			fq += "?";
+		}
 		return fq;
 	}
 
@@ -463,10 +478,14 @@ public class FanResolvedType implements Cloneable
 				}
 				types.add(makeFromTypeSig(scopeNode, formalType));
 			}
-			String returnType = "Void"; // Default if not specified
+			String returnType = "sys::Void"; // Default if not specified
 			if (parts.length == 2)
 			{
-				returnType = parts[1].trim();
+				// for a sig without a return type like |->| we keep returnType as Void
+				if (parts[1].trim().length() > 0)
+				{
+					returnType = parts[1].trim();
+				}
 			}
 			type = new FanResolvedFuncType(scopeNode, types, makeFromTypeSig(scopeNode, returnType));
 		} else
@@ -540,7 +559,7 @@ public class FanResolvedType implements Cloneable
 				toStatic = true;
 			}
 			// Deal with "fake" Generic types
-			if (type==null && isGenericType(enteredType))
+			if (type == null && isGenericType(enteredType))
 			{
 				if (!enteredType.startsWith("sys::"))
 				{
@@ -649,17 +668,17 @@ public class FanResolvedType implements Cloneable
 		{
 			return this;
 		}
-		if( ! this.isResolved())
+		if (!this.isResolved())
 		{
 			return makeUnresolved(scopeNode);
 		}
 		if (this instanceof FanResolvedNullType)
 		{
-			return makeFromTypeSig(null, "sys::Obj?");
+			return makeFromTypeSig(scopeNode, "sys::Obj?");
 		}
 		if (getDbType().isEnum())
 		{
-			return makeFromTypeSig(null, "sys::Enum");
+			return makeFromTypeSig(scopeNode, "sys::Enum");
 		}
 		if (getDbType().isMixin())
 		{
@@ -769,7 +788,7 @@ public class FanResolvedType implements Cloneable
 			} else if (n.equals("R") && baseType instanceof FanResolvedFuncType)
 			{	// function return value
 				t = ((FanResolvedFuncType) baseType).getRetType();
-			} else if(n.equals("R") && baseType.getQualifiedType().equals("sys::Func"))
+			} else if (n.equals("R") && baseType.getQualifiedType().equals("sys::Func"))
 			{
 				t = baseType;
 			} else if (baseType instanceof FanResolvedFuncType)
@@ -833,5 +852,4 @@ public class FanResolvedType implements Cloneable
 		}
 		return t;
 	}
-
 }
