@@ -43,6 +43,7 @@
 			<fileset dir="test/unit/data"/>
 		</copy>
 		<java classname="net.jot.testing.JOTTester" classpathref="project.class.path" dir="/tmp/fantom/">
+			<jvmarg value="-Xmx256M"/>
 			<!-- First arg(required) is to your classes (to be tested) folder -->
 			<arg value="classes"/>
 			<arg value="-includePackages=net.colar.netbeans.fan.test.*" />
