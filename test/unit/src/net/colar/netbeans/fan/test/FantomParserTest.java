@@ -26,7 +26,7 @@ import org.parboiled.support.ParsingResult;
  */
 public class FantomParserTest implements JOTTestable
 {
-
+	//TODO: put this in a props file
 	public static final String FAN_HOME = "/home/thibautc/fantom-1.0.52";
 
 	public void jotTest() throws Throwable

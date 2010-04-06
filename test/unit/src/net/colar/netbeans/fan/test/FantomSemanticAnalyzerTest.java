@@ -1,7 +1,6 @@
 /*
  * Thibaut Colar Mar 11, 2010
  */
-
 package net.colar.netbeans.fan.test;
 
 import java.io.File;
@@ -9,6 +8,7 @@ import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.jot.testing.JOTTester;
+import org.netbeans.modules.parsing.api.Snapshot;
 
 /**
  *
@@ -16,9 +16,11 @@ import net.jot.testing.JOTTester;
  */
 public class FantomSemanticAnalyzerTest extends FantomCSLTest
 {
+
 	public void cslTest() throws Throwable
 	{
-		testAllFanFilesUnder(FantomParserTest.FAN_HOME + "/examples/");
+		// NOTE: semantic analyzer needs the files to be indexed first
+		//testAllFanFilesUnder(FantomParserTest.FAN_HOME + "/examples/");
 		testAllFanFilesUnder(FantomParserTest.FAN_HOME + "/src/");
 	}
 
@@ -27,27 +29,41 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		List<File> files = NBTestUtilities.listAllFanFilesUnder(folderPath);
 		for (File f : files)
 		{
-			Exception e = null;
 			try
 			{
-				FanParserTask task = FantomStructureAnalyzerTest.analyzeFile(f);
+				Snapshot snap = NBTestUtilities.fileToSnapshot(f);
+				FanParserTask task = new FanParserTask(snap);
 				analyze(task);
-
-			} catch (Exception ex)
+			} catch (Exception e)
 			{
-				e = ex;
 				e.printStackTrace();
+				JOTTester.checkIf("Exception during semantic analysis " + f.getPath(), false);
 			}
-			JOTTester.checkIf("SemanticAnalysis of: " + f.getAbsolutePath(), e == null);
 		}
 	}
 
-	public static void analyze(FanParserTask task)
+	public static void analyze(FanParserTask task) throws Exception
 	{
+		task.parse();
+		task.parseGlobalScope();
+		task.parseLocalScopes();
 		FanSemanticAnalyzer analyzer = new FanSemanticAnalyzer();
-		//SchedulerEvent evt = new SchedulerEvent(task);
 		analyzer.run(task, null);
-		//TODO: check for errors.
+		boolean hasErr = false;
+		if (task.getDiagnostics().size() > 0)
+		{
+			for (org.netbeans.modules.csl.api.Error err : task.getDiagnostics())
+			{
+				String desc = err.getDisplayName();
+				// Avoid known false positives (we don't index java.awt & javax.swing by default)
+				if (!desc.contains("java.awt") && !desc.contains("javax.swing") && !desc.contains("javax.script") && !desc.contains("ScriptEngine"))
+				{
+					hasErr = true;
+					System.err.println("Error: " + err);
+				}
+			}
+		}
+		JOTTester.checkIf("Semantic errors in " + task.getSourceFile().getPath(), !hasErr);
 	}
 
 	public static void main(String[] args)
