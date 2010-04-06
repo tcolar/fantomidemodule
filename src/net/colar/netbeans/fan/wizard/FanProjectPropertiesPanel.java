@@ -125,7 +125,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
 
         outputDirectoryField.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outputDirectoryField.text")); // NOI18N
 
-        outputDirectoryEditButton.setLabel(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outputDirectoryEditButton.label")); // NOI18N
+        outputDirectoryEditButton.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outputDirectoryEditButton.label")); // NOI18N
         outputDirectoryEditButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 outputDirectoryEditButtonActionPerformed(evt);
