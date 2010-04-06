@@ -647,7 +647,11 @@ public class FanResolvedType implements Cloneable
 	{
 		if (this instanceof FanUnknownType)
 		{
-			return null;
+			return this;
+		}
+		if( ! this.isResolved())
+		{
+			return makeUnresolved(scopeNode);
 		}
 		if (this instanceof FanResolvedNullType)
 		{
