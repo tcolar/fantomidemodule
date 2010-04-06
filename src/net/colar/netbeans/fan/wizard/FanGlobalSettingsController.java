@@ -41,7 +41,11 @@ public class FanGlobalSettingsController extends OptionsPanelController
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_DEBUG_PORT, debugPort);
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_RUN_OPTIONS, runOptions);
 		// reread the plaform settings
-		FanPlatform.getInstance(false).update();
+		FanPlatform platform = FanPlatform.getInstance(true);
+                if (null == platform) {
+                    return;
+                }
+                platform.update();
 		changed = false;
 	}
 
