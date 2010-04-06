@@ -24,6 +24,7 @@ import org.openide.modules.ModuleInstall;
 public class FanModuleInstall extends ModuleInstall
 {
 	// IF a breaking change is made to the prefs files compare to a previous version, bump up the number
+
 	public static final String PROP_PREF_FILE_VERSION = "nb.fantom.prefs.version";
 	public static final int PREF_VERSION = 2;
 
@@ -62,10 +63,11 @@ public class FanModuleInstall extends ModuleInstall
 		}
 
 		//start indexer
-                FanPlatform platform = FanPlatform.getInstance(true);
-                if (null == platform) {
-                    return;
-                }
+		FanPlatform platform = FanPlatform.getInstance(true);
+		if (null == platform)
+		{
+			return;
+		}
 		if (platform.isConfigured())
 		{
 			FanIndexerFactory.getIndexer().indexAll(false);
@@ -130,7 +132,7 @@ public class FanModuleInstall extends ModuleInstall
 		props2.setProperty("db.fs.root_folder.windows", dbFolder.getAbsolutePath() + File.separator);
 		props2.setProperty("db.fs.root_folder.others", dbFolder.getAbsolutePath() + File.separator);
 		// VERSION
-		props2.setProperty(PROP_PREF_FILE_VERSION, ""+PREF_VERSION);
+		props2.setProperty(PROP_PREF_FILE_VERSION, "" + PREF_VERSION);
 		FileOutputStream fos2 = new FileOutputStream(prefFile);
 		props2.store(fos2, "");
 		fos2.close();
@@ -159,12 +161,13 @@ public class FanModuleInstall extends ModuleInstall
 			Properties props = new Properties();
 			props.load(fis);
 			String version = props.getProperty(PROP_PREF_FILE_VERSION);
-			if(version!=null && version.compareTo(""+PREF_VERSION) >= 0)
+			if (version != null && version.compareTo("" + PREF_VERSION) >= 0)
+			{
 				return false;
+			}
 		} catch (Exception e)
 		{
 		}
 		return true;
 	}
-
 }
