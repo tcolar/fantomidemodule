@@ -102,6 +102,7 @@ public class FanPlatform
 		{
 			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
 		}
+		// throw an exception ?
 		return instance;
 	}
 

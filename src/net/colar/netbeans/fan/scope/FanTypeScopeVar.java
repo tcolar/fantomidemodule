@@ -64,6 +64,8 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			kind = VarKind.TYPE_MIXIN;
 		}
 		AstNode nameNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
+		if(nameNode==null)
+			return;
 
 		type = FanResolvedType.makeFromTypeSig(node, nameNode.getNodeText(true));
 
@@ -76,10 +78,8 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 
 		AstNode inheritance = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_INHERITANCE));
 
-		if (nameNode != null)
-		{
-			name = nameNode.getNodeText(true);
-		}
+		name = nameNode.getNodeText(true);
+
 		qName = node.getRoot().getPod() + "::" + name;
 
 		List<AstNode> modifs = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_MODIFIER));
