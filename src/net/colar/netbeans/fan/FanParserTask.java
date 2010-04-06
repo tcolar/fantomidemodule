@@ -306,7 +306,7 @@ public class FanParserTask extends ParserResult
 	 */
 	public void parseLocalScopes()
 	{
-		// don't allow that multiple calls
+		// don't allow multiple calls
 		synchronized (this)
 		{
 			if (localScopeDone)
@@ -499,7 +499,6 @@ public class FanParserTask extends ParserResult
 		{
 			// TODO: temp until fully working type resolution
 			addError("Could not resolve item -> " + text, node);
-			//type = new FanUnknownType(node, text);
 
 			FanUtilities.GENERIC_LOGGER.info(">Unresolved node");
 			FanLexAstUtils.dumpTree(node, 0);
@@ -1086,36 +1085,31 @@ public class FanParserTask extends ParserResult
 	 */
 	private FanResolvedType doIndexExpr(AstNode exprNode, FanResolvedType type)
 	{
-		parseVars(exprNode, null);
-		FanResolvedType slotType = null;
-		if (FanLexAstUtils.isWrappingNode(exprNode,
-				new NodeKindPredicate(AstKind.AST_EXPR_RANGE)))
+		FanResolvedType baseType = type;
+		parseVars(exprNode, type);
+		AstNode range = FanLexAstUtils.getFirstChildRecursive(exprNode, new NodeKindPredicate(AstKind.AST_EXPR_RANGE));
+		// It's kinda twisted, but the expr will have a range ast node either way
+		// however in the case of a "real" range it has 2 children expr (otherwise just 1 expr)
+		if (range!=null && range.getChildren().size()==2)
 		{
 			// in case of a range, it's a call to slice()
-			slotType = type.resolveSlotType("slice", this);
+			type = type.resolveSlotType("slice", this);
+			if(!type.isResolved())
+			{
+				addError("Range expression only valid on types with a 'slice' method." + exprNode.getNodeText(true), exprNode);
+			}
 		} else
 		{
-			// otherwise to get()
-			slotType = type.resolveSlotType("get", this);
+			// otherwise to get() (including list/maps)
+			type = type.resolveSlotType("get", this);
+			if(!type.isResolved())
+			{
+				addError("Index expression only valid on types with 'get' method-> " + exprNode.getNodeText(true), exprNode);
+			}
 		}
 
-		if (type instanceof FanResolvedListType)
-		{
-			type = ((FanResolvedListType) type).getItemType();
-		} else if (type instanceof FanResolvedMapType)
-		{
-			type = ((FanResolvedMapType) type).getValType();
-		} //Can also use index expression on any type with a get method
-		else if (slotType != null && slotType.isResolved())
-		{
-			type = slotType;
-		} else
-		{
-			type = FanResolvedType.makeUnresolved(exprNode);
-			addError("Index expression only valid on lists, maps or types with get method-> " + exprNode.getNodeText(true), exprNode);
-		}
 		// TODO: check if list/map index key type is valid ?
-		return type.asStaticContext(false);
+		return type.parameterize(baseType, exprNode).asStaticContext(false);
 	}
 
 	private FanResolvedType doTypeCheckExpr(AstNode node, FanResolvedType type)
