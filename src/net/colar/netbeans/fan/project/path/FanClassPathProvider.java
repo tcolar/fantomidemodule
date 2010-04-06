@@ -86,7 +86,10 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 		}
 		}*/
 		// Fan distro sources
-		FanPlatform fan = FanPlatform.getInstance(false);
+		FanPlatform fan = FanPlatform.getInstance(true);
+                if (fan == null) {
+                    throw new RuntimeException("Fantom SDK is not defined");
+                }
 		if (fan.isConfigured())
 		{
 			Set<ClassPath> cps = fan.getSourceClassPaths();
