@@ -276,7 +276,9 @@ public class FanParserTask extends ParserResult
 					// So that parseSlots() can later resolve this & super.
 					System.out.print(name);
 					var.parse();
-					if (scopeNode.getAllScopeVars().containsKey(name))
+					if (scopeNode.getAllScopeVars().containsKey(name) &&
+						// If we have a "suing" with the same name, we take precedence
+						scopeNode.getAllScopeVars().get(name).getKind() != VarKind.IMPORT)
 					{
 						addError("Duplicated type name", node);
 					} else

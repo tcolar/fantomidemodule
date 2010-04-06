@@ -129,6 +129,7 @@ public class FanUtilities
 	public static String getPodForPath(String path)
 	{
 		File folder = new File(path).getParentFile();
+		File scriptFolder = folder;
 		String pod = null;
 		while (folder != null)
 		{
@@ -155,7 +156,8 @@ public class FanUtilities
 		if (pod == null)
 		{
 			GENERIC_LOGGER.error("Could not find pod for: " + path);
-			return null;
+			// Must be a script, make-up a "pod" from folder name .. should probably normalize it
+			return "_SCRIPT_"+scriptFolder.getName();
 		}
 		return pod;
 	}
