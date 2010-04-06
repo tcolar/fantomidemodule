@@ -63,12 +63,7 @@ public class FanModuleInstall extends ModuleInstall
 		}
 
 		//start indexer
-		FanPlatform platform = FanPlatform.getInstance(true);
-		if (null == platform)
-		{
-			return;
-		}
-		if (platform.isConfigured())
+		if (FanPlatform.isConfigured())
 		{
 			FanIndexerFactory.getIndexer().indexAll(false);
 		}

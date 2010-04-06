@@ -4,14 +4,12 @@
 package net.colar.netbeans.fan.indexer;
 
 import net.colar.netbeans.fan.FanUtilities;
-import net.colar.netbeans.fan.platform.FanPlatform;
 import net.jot.logger.JOTLogger;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
 import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  * Indexer Factory impl.
@@ -88,44 +86,9 @@ public class FanIndexerFactory extends CustomIndexerFactory
 	 * @param nb
 	 * @return
 	 */
-	private int scanFolder(FileObject root, int nb)
+	public int scanFolder(FileObject root, int nb)
 	{
-		FanPlatform platform = FanPlatform.getInstance(true);
-		if (platform == null || platform.getFanHome() == null)
-		{
-			return 0;
-		}
-		if (platform.isConfigured())
-		{
-			// Don't do Fantom distro source sources since we have binaries (faster)
-			if (FileUtil.isParentOf(platform.getFanSrcHome(), root))
-			{
-				return nb;
-			}
-		}
-
-		FileObject[] children = root.getChildren();
-		for (FileObject child : children)
-		{
-			if (child.isFolder())
-			{
-				//recurse
-				nb = scanFolder(child, nb);
-			} else
-			{
-				if (child.hasExt("fan") || child.hasExt("fwt"))
-				{
-					if (FanIndexer.checkIfNeedsReindexing(child.getPath(), child.lastModified().getTime()))
-					{
-						JOTLogger.info(this, "ReIndexing: " + root);
-
-						nb++;
-						indexer.requestIndexing(child.getPath());
-					}
-				}
-			}
-		}
-		return nb;
+		return indexer.indexSrcFolder(root, nb);
 	}
 
 	@Override

@@ -119,14 +119,11 @@ public class FanDebugPathProvider extends SourcePathProvider
 		}
 		// Fan distro sources
 		//TODO: those are already in open projects path ????
-		FanPlatform fan = FanPlatform.getInstance(true);
-                if (null == fan) {
-                    throw new RuntimeException("Fantom SDK not defined");
-                }
-		if (fan.isConfigured())
-		{
-			fanSources = fan.getSourceClassPaths();
-		}
+        if (FanPlatform.isConfigured()) {
+            throw new RuntimeException("Fantom SDK not defined");
+        }
+
+		fanSources = FanPlatform.getInstance().getSourceClassPaths();
 
 		// update roots list
 		updateRoots();

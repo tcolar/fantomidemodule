@@ -24,7 +24,7 @@ import org.openide.filesystems.FileUtil;
  */
 public class FanPlatform
 {
-	//TODO: too much hardcoded
+	private static boolean configWarningAlreadyDisplayed=false;
 
 	private Set<ClassPath> sourcePaths = null;
 	private static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
@@ -33,18 +33,16 @@ public class FanPlatform
 	private static FanPlatform instance = new FanPlatform();
 	public final static String FAN_CLASS = "fanx.tools.Fan";
 	public final static String FAN_SH = "fansh";
-	//private String fanBin;
-	//private String fanshBin;
 	private String fanHome;
 	private String podsDir;
 	private String fanSrc;
 
-	public FanPlatform()
+	private FanPlatform()
 	{
 		readSettings();
 	}
 
-	public void readSettings()
+	private void readSettings()
 	{
 		fanHome = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME);
 		if (fanHome != null)
@@ -67,6 +65,11 @@ public class FanPlatform
 		sourcePaths = null;
 	}
 
+	public static void updateFromSettings()
+	{
+		instance.readSettings();
+	}
+
 	public static boolean checkFanHome(String path)
 	{
 		if (path != null && !"".equals(path))
@@ -81,19 +84,21 @@ public class FanPlatform
 		return false;
 	}
 
-	public boolean isConfigured()
+	public static boolean isConfigured()
 	{
-		return fanHome != null && !"".equals(fanHome);
+		// print the first time isConfigured is called
+		if (instance.fanHome == null && ! configWarningAlreadyDisplayed)
+		{
+			configWarningAlreadyDisplayed = true;
+			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
+		}
+		return instance!=null && instance.fanHome != null && !"".equals(instance.fanHome);
 	}
 
 	public static FanPlatform getInstance()
 	{
-		return getInstance(true);
-	}
-
-	public static FanPlatform getInstance(boolean checkNull)
-	{
-		if (checkNull && instance.fanHome == null)
+		// Also show the error each time getInstance() it's called, if not configured
+		if ( ! isConfigured())
 		{
 			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
 		}
@@ -290,10 +295,10 @@ public class FanPlatform
 		return FileUtil.toFileObject(f);
 	}
 
-	public void update()
+	public static void update()
 	{
 		// called when FAN_HOME is changed/updated.
-		readSettings();
+		updateFromSettings();
 		FanIndexerFactory.getIndexer().indexAll(true);
 	}
 

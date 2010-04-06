@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan;
 
 import javax.swing.event.ChangeListener;
+import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
@@ -33,13 +34,10 @@ public class NBFanParser extends Parser
 		String taskClass = task.getClass().getName();
 		boolean isIndexing = taskClass.startsWith("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater");
 
-		FanPlatform platform = FanPlatform.getInstance(true);
 		String path = snapshot.getSource().getFileObject().getPath();
 		// We don't allow NB parser to run on fantom sources (we index those ourselved from binaries)
 		// allow other fantom distro files to be however (such as examples)
-		if (platform == null || !platform.isConfigured()
-			|| !FileUtil.isParentOf(platform.getFanSrcHome(), snapshot.getSource().getFileObject())
-			|| !isIndexing)
+		if (FanIndexer.isAllowedIndexing(snapshot.getSource().getFileObject()))
 		{
 			parse(snapshot, isIndexing);
 		} else

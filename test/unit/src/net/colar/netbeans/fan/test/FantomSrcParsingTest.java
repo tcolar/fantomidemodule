@@ -73,7 +73,7 @@ public class FantomSrcParsingTest implements JOTTestable
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, "/home/thibautc/fantom/");
 		JOTTester.checkIf("Fan home setup check ", FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME) != null);
 
-		FanPlatform.getInstance(false).readSettings();
+		FanPlatform.updateFromSettings();
 		// Do it in the foreground .. waitFor()
 		FanIndexerFactory.getIndexer().indexAll(false);
 		//TODO: this causes indexing ... so maybe we can add some index unit tests here (using golden source files)

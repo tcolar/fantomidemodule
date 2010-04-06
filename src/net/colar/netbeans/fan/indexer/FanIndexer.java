@@ -27,6 +27,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import net.colar.netbeans.fan.FanParserTask;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.NBFanParser;
 //import net.colar.netbeans.fan.ast.FanAstField;
 //import net.colar.netbeans.fan.ast.FanAstMethod;
@@ -65,7 +66,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 //import org.netbeans.modules.java.source.indexing.JavaBinaryIndexer;
-import javax.swing.JOptionPane;
 
 /**
  * This indexer is backed by a DB(H2 database)
@@ -110,6 +110,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		}
 	}
 
+	/**
+	 * Rerun whole indexing (called on FAN_HOME change, see FanPlatform)
+	 * @param backgroundJava
+	 */
 	public void indexAll(boolean backgroundJava)
 	{
 		MainIndexer idx = new MainIndexer(backgroundJava);
@@ -166,7 +170,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		if (isPod)
 		{
 			fanPodsToBeIndexed.put(path, new Date().getTime());
-		} else if (!FileUtil.isParentOf(FanPlatform.getInstance().getFanSrcHome(), fo))
+		} else if (isAllowedIndexing(fo))
 		{
 			fanSrcToBeIndexed.put(path, new Date().getTime());
 		}
@@ -176,23 +180,16 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	// Might need a separte ANTLR grammar though.
 	private void indexSrc(String path)
 	{
-		FanPlatform platform = FanPlatform.getInstance(true);
-		if (null == platform || platform.getFanHome() == null)
-		{
-			return;
-		}
-		if (platform.isConfigured())
-		{
-			// Don't do Fantom distro sources since we have binaries (faster)
-			log.info(platform.getFanHome() + " VS " + path);
-			if (FileUtil.isParentOf(platform.getFanSrcHome(), FileUtil.toFileObject(new File(path))))
-			{
-				log.info("Skipping: " + path);
-				return;
-			}
-		} else
+		if (!FanPlatform.isConfigured())
 		{
 			log.info("Platform not ready to index: " + path);
+			return;
+		}
+
+		if (!isAllowedIndexing(FileUtil.toFileObject(new File(path))))
+		{
+			log.info("Skipping: " + path);
+			return;
 		}
 
 		long then = new Date().getTime();
@@ -510,35 +507,31 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public void indexFantomPods(boolean runInBackground)
 	{
-		FanPlatform platform = FanPlatform.getInstance(true);
-		if (null == platform)
+		if (!FanPlatform.isConfigured())
 		{
 			return;
 		}
-		if (platform.isConfigured())
+		try
 		{
-			try
-			{
-				String podsDir = platform.getPodsDir();
-				File f = new File(podsDir);
-				// listen to changes in pod folder
-				FileUtil.addRecursiveListener(this, f);
-				// index the pods if not up to date
-				File[] pods = f.listFiles();
+			String podsDir = FanPlatform.getInstance().getPodsDir();
+			File f = new File(podsDir);
+			// listen to changes in pod folder
+			FileUtil.addRecursiveListener(this, f);
+			// index the pods if not up to date
+			File[] pods = f.listFiles();
 
-				for (File pod : pods)
+			for (File pod : pods)
+			{
+				String path = pod.getAbsolutePath();
+				if (checkIfNeedsReindexing(path, pod.lastModified()))
 				{
-					String path = pod.getAbsolutePath();
-					if (checkIfNeedsReindexing(path, pod.lastModified()))
-					{
-						requestIndexing(path);
-					}
+					requestIndexing(path);
 				}
-			} catch (Throwable t)
-			{
-				log.exception("Pod indexing thread error", t);
-
 			}
+		} catch (Throwable t)
+		{
+			log.exception("Pod indexing thread error", t);
+
 		}
 		if (!runInBackground)
 		{
@@ -886,27 +879,63 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		return ModifEnum.PUBLIC.value();
 	}
 
+	/**
+	 * Index a fantom source folder recursively
+	 * @param root
+	 * @param nb - nb of files parsed
+	 * @return
+	 */
+	public int indexSrcFolder(FileObject root, int nb)
+	{
+		if (!FanPlatform.isConfigured())
+		{
+			return 0;
+		}
+		if (!isAllowedIndexing(root))
+		{
+			return nb;
+		}
+
+		FileObject[] children = root.getChildren();
+		for (FileObject child : children)
+		{
+			if (child.isFolder())
+			{
+				//recurse
+				nb = indexSrcFolder(child, nb);
+			} else
+			{
+				if (child.hasExt("fan") || child.hasExt("fwt"))
+				{
+					if (FanIndexer.checkIfNeedsReindexing(child.getPath(), child.lastModified().getTime()))
+					{
+						log.info("ReIndexing: " + root);
+						nb++;
+						requestIndexing(child.getPath());
+					}
+				}
+			}
+		}
+		return nb;
+	}
+
 	public static String getPodDoc(String podName)
 	{
-		FanPlatform platform = FanPlatform.getInstance(true);
-		if (null == platform)
+		if (!FanPlatform.isConfigured())
 		{
 			return null;
 		}
-		if (platform.isConfigured())
+		Pod pod = null;
+		try
 		{
-			Pod pod = null;
-			try
-			{
-				pod = Pod.find(podName);
-			} catch (RuntimeException e)
-			{
-				log.debug("Pod doc not found for " + podName);
-			}
-			if (pod != null)
-			{
-				return fanDocToHtml((String) pod.meta().get("pod.summary"));
-			}
+			pod = Pod.find(podName);
+		} catch (RuntimeException e)
+		{
+			log.debug("Pod doc not found for " + podName);
+		}
+		if (pod != null)
+		{
+			return fanDocToHtml((String) pod.meta().get("pod.summary"));
 		}
 		return null;
 	}
@@ -935,25 +964,21 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 	public static String getDoc(FanType type)
 	{
-		FanPlatform platform = FanPlatform.getInstance(true);
-		if (null == platform)
+		if (!FanPlatform.isConfigured())
 		{
 			return null;
 		}
-		if (platform != null && platform.isConfigured())
+		try
 		{
-			try
+			Pod pod = Pod.find(type.getPod());
+			Type t = pod.type(type.getSimpleName());
+			if (t != null)
 			{
-				Pod pod = Pod.find(type.getPod());
-				Type t = pod.type(type.getSimpleName());
-				if (t != null)
-				{
-					return fanDocToHtml(t.doc());
-				}
-			} catch (RuntimeException e)
-			{
-				log.debug("Type doc not found for " + type);
+				return fanDocToHtml(t.doc());
 			}
+		} catch (RuntimeException e)
+		{
+			log.debug("Type doc not found for " + type);
 		}
 		return null;
 	}
@@ -969,12 +994,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		{
 			return null;
 		}
-		FanPlatform platform = FanPlatform.getInstance(true);
-		if (platform == null)
-		{
-			return null;
-		}
-		if (!platform.isConfigured())
+		if (!FanPlatform.isConfigured())
 		{
 			return fandoc;
 		}
@@ -1174,8 +1194,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			// start the indexing thread
 			// index Fantom libs right aways
 			long then = new Date().getTime();
-			// we want to wait for pods, since we want them done first
+			// index first existing pods
+			// we want to wait for pods, since we want them done first (there might be pods without sources)
 			indexFantomPods(false);
+			// then index from source
+			indexSrcFolder(FanPlatform.getInstance().getFanSrcHome(), 0);
+
 			long now = new Date().getTime();
 			log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");
 			// sources indexes will be called  through scanStarted()
@@ -1199,5 +1223,18 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				}
 			}
 		}
+	}
+
+	public static boolean isAllowedIndexing(FileObject srcFile)
+	{
+		/*if ( ! FanPlatform.getInstance(false).isConfigured())
+		{
+		return true;
+		}
+
+		boolean skip = FileUtil.isParentOf(FanPlatform.getInstance().getFanSrcHome(), srcFile);
+
+		return ! skip;*/
+		return true;
 	}
 }

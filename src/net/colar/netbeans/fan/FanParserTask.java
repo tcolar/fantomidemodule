@@ -1253,7 +1253,7 @@ public class FanParserTask extends ParserResult
 	 */
 	public FanType findCachedQualifiedType(String qName)
 	{
-		if (!typeCache.containsKey(qName))
+		if ( ! typeCache.containsKey(qName))
 		{
 			typeCache.put(qName, FanType.findByQualifiedName(qName));
 		}

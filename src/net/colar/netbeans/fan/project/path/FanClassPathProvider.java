@@ -86,21 +86,18 @@ public class FanClassPathProvider implements ClassPathProvider, PropertyChangeLi
 		}
 		}*/
 		// Fan distro sources
-		FanPlatform fan = FanPlatform.getInstance(true);
-                if (fan == null) {
-                    throw new RuntimeException("Fantom SDK is not defined");
-                }
-		if (fan.isConfigured())
+		if (!FanPlatform.isConfigured())
 		{
-			Set<ClassPath> cps = fan.getSourceClassPaths();
-			if (cps != null)
+			throw new RuntimeException("Fantom SDK is not defined");
+		}
+		Set<ClassPath> cps = FanPlatform.getInstance().getSourceClassPaths();
+		if (cps != null)
+		{
+			for (ClassPath cp : cps)
 			{
-				for (ClassPath cp : cps)
+				for (FileObject root : cp.getRoots())
 				{
-					for (FileObject root : cp.getRoots())
-					{
-						srcRoots.add(root);
-					}
+					srcRoots.add(root);
 				}
 			}
 		}

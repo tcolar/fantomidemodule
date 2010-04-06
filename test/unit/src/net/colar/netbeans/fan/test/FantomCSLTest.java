@@ -33,7 +33,7 @@ public abstract class FantomCSLTest implements JOTTestable
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, FantomParserTest.FAN_HOME);
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_DEBUG_PORT, "8080");
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx256m");
-		FanPlatform.getInstance().readSettings();
+		FanPlatform.updateFromSettings();
 
 		// Initialize the module (JavaOnTracks startup hooks)
 		FanModuleInstall mi = new FanModuleInstall();
