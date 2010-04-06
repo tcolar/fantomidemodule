@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
-import net.colar.netbeans.fan.project.FanProject;
+import javax.swing.JOptionPane;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -29,6 +29,7 @@ public class FanPlatform
 	private Set<ClassPath> sourcePaths = null;
 	private static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
 	private static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac");
+        private static final String ARCH = System.getProperty("os.arch").toLowerCase();
 	private static FanPlatform instance = new FanPlatform();
 	public final static String FAN_CLASS = "fanx.tools.Fan";
 	public final static String FAN_SH = "fansh";
@@ -68,7 +69,7 @@ public class FanPlatform
 
 	public static boolean checkFanHome(String path)
 	{
-		if (path != null)
+		if (path != null && !"".equals(path))
 		{
 			File f = new File(path);
 			if (f.exists() && f.isDirectory())
@@ -82,7 +83,7 @@ public class FanPlatform
 
 	public boolean isConfigured()
 	{
-		return fanHome != null;
+		return fanHome != null && !"".equals(fanHome);
 	}
 
 	public static FanPlatform getInstance()
@@ -94,8 +95,7 @@ public class FanPlatform
 	{
 		if (checkNull && instance.fanHome == null)
 		{
-			//TODO: handle this cleanly (warning dialog)
-			throw new RuntimeException("Fan Home is undefined, update Netbeans options!");
+                    JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
 		}
 		return instance;
 	}
@@ -245,7 +245,8 @@ public class FanPlatform
 		{
 			os = "win";
 		}
-		extDir += s + os;
+
+		extDir += s + os + "-" + ("i386".equals(ARCH) ? "x86" : ("amd64".equals(ARCH) ? "x86_64" : ARCH));
 		dir = new File(extDir);
 		if (dir.exists() && dir.isDirectory())
 		{
@@ -264,24 +265,28 @@ public class FanPlatform
 
 	private String buildLibraryPath()
 	{
-		String s = File.separator;
-		String extDir = fanHome + "lib" + s + "java" + s + "ext";
-		String os = "linux";
-		if (IS_MAC)
-		{
-			os = "mac";
-		} else if (IS_WIN)
-		{
-			os = "win";
-		}
-		extDir += s + os;
-		return extDir;
+            String s = File.separator;
+            String extDir = fanHome + "lib" + s + "java" + s + "ext";
+            String os = "linux";
+            if (IS_MAC)
+            {
+                    os = "mac";
+            } else if (IS_WIN)
+            {
+                    os = "win";
+            }
+            extDir += s + os;
+            return extDir;
 	}
 
 	public FileObject getFanHome()
 	{
-		File f=new File(fanHome);
-		return FileUtil.toFileObject(f);
+            if ("".equals(fanHome) || fanHome == null) {
+                JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
+                return null;
+            }
+            File f=new File(fanHome);
+            return FileUtil.toFileObject(f);
 	}
 
 	public void update()
