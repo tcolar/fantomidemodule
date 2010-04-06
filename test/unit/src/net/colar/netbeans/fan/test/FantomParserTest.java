@@ -24,15 +24,13 @@ import org.parboiled.support.ParsingResult;
  * Test new parboiled based parser
  * @author thibautc
  */
-public class FantomParserTest implements JOTTestable
+public class FantomParserTest extends FantomCSLTest
 {
-	//TODO: put this in a props file
-	public static final String FAN_HOME = "/home/thibautc/fantom-1.0.52";
-
-	public void jotTest() throws Throwable
+	public void cslTest() throws Throwable
 	{
 		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
 		ParsingResult<AstNode> result = null;
+		String fanHome = prefs.getString("fantom.home");
 
 		boolean singleTest = false;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
@@ -44,7 +42,7 @@ public class FantomParserTest implements JOTTestable
 		{
 			try
 			{
-				testFile(FAN_HOME+"/examples/fwt/demo.fan",false);
+				testFile(fanHome+"/examples/fwt/demo.fan",false);
 				//result = parse(parser, parser.ifExprBody(), "3 : 5");
 				//testNodeName("Ternary expr", result, "ifExprBody", "3");
 				//result = parse(parser, parser.localDef(), "Int i := a>b ? 3 : 5");
@@ -374,17 +372,17 @@ public class FantomParserTest implements JOTTestable
 		if (fantomFilesTest)
 		{
 			// Test all Fantom distro examples
-			testAllFanFilesUnder(FAN_HOME + "/examples/", false);
+			testAllFanFilesUnder(fanHome + "/examples/", false);
 			// Test all Fantom distro sources
-			testAllFanFilesUnder(FAN_HOME + "/src/", false);
+			testAllFanFilesUnder(fanHome + "/src/", false);
 		}
 
 		if (fantomFilesLexerTest)
 		{
 			// Test all Fantom distro examples
-			testAllFanFilesUnder(FAN_HOME + "/examples/", true);
+			testAllFanFilesUnder(fanHome + "/examples/", true);
 			// Test all Fantom distro sources
-			testAllFanFilesUnder(FAN_HOME + "/src/", true);
+			testAllFanFilesUnder(fanHome + "/src/", true);
 		}
 	}
 

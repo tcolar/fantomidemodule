@@ -19,8 +19,10 @@ public class FantomStructureAnalyzerTest extends FantomCSLTest
 {
 	public void cslTest() throws Throwable
 	{
-		testAllFanFilesUnder(FantomParserTest.FAN_HOME + "/examples/");
-		testAllFanFilesUnder(FantomParserTest.FAN_HOME + "/src/");
+		String fanHome = prefs.getString("fantom.home");
+
+		testAllFanFilesUnder(fanHome + "/examples/");
+		testAllFanFilesUnder(fanHome + "/src/");
 	}
 
 	private static void testAllFanFilesUnder(String folderPath) throws Exception

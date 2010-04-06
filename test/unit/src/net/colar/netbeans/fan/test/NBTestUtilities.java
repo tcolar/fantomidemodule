@@ -1,13 +1,13 @@
 /*
  * Thibaut Colar Mar 10, 2010
  */
-
 package net.colar.netbeans.fan.test;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import net.jot.testing.JOTTester;
+import net.jot.prefs.JOTPropertiesPreferences;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -19,8 +19,9 @@ import org.openide.filesystems.FileUtil;
  *
  * @author thibautc
  */
-public class NBTestUtilities {
-	
+public class NBTestUtilities
+{
+
 	public static Snapshot fileToSnapshot(File f)
 	{
 		FileObject fo = FileUtil.toFileObject(f);

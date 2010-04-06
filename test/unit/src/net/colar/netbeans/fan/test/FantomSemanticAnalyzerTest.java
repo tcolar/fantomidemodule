@@ -19,9 +19,9 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 
 	public void cslTest() throws Throwable
 	{
+		String fanHome = prefs.getString("fantom.home");
 		// NOTE: semantic analyzer needs the files to be indexed first
-		//testAllFanFilesUnder(FantomParserTest.FAN_HOME + "/examples/");
-		testAllFanFilesUnder(FantomParserTest.FAN_HOME + "/src/");
+		testAllFanFilesUnder(fanHome + "/src/");
 	}
 
 	private static void testAllFanFilesUnder(String folderPath) throws Exception

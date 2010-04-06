@@ -3,11 +3,14 @@
  */
 package net.colar.netbeans.fan.test;
 
+import java.io.InputStream;
 import java.util.prefs.Preferences;
 import net.colar.netbeans.fan.FanModuleInstall;
+import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.colar.netbeans.fan.test.mock.MockLookup;
+import net.jot.prefs.JOTPropertiesPreferences;
 import net.jot.testing.JOTTestable;
 import org.netbeans.junit.internal.MemoryPreferencesFactory;
 
@@ -19,8 +22,14 @@ import org.netbeans.junit.internal.MemoryPreferencesFactory;
 public abstract class FantomCSLTest implements JOTTestable
 {
 
+	public JOTPropertiesPreferences prefs;
+
 	public void jotTest() throws Throwable
 	{
+		prefs = new JOTPropertiesPreferences();
+		InputStream is = getClass().getResourceAsStream("test.properties");
+		prefs.loadFrom(is);
+
 		// Set netbeans props
 		System.setProperty("netbeans.full.hack", "true"); // NOI18N
 		System.setProperty("java.util.prefs.PreferencesFactory",
@@ -30,7 +39,7 @@ public abstract class FantomCSLTest implements JOTTestable
 		MockLookup.setInstances(new MockTrampoline());
 
 		// Setup the test Platform
-		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, FantomParserTest.FAN_HOME);
+		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, prefs.getString("fantom.home"));
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_DEBUG_PORT, "8080");
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx256m");
 		FanPlatform.updateFromSettings();
@@ -40,13 +49,16 @@ public abstract class FantomCSLTest implements JOTTestable
 		// Note: this will run the indexer (might take a while the first time)
 		mi.restored();
 
+		// wait for indexer to be done
+		FanIndexerFactory.getIndexer().waitForEmptyFantomQueue();
+
 		try
 		{
 			// Run the user test
 			cslTest();
 		} catch (Throwable t)
 		{
-			throw(t);
+			throw (t);
 		} finally
 		{
 			// try to always shutdown properly
