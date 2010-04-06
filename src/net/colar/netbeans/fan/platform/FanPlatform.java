@@ -29,7 +29,7 @@ public class FanPlatform
 	private Set<ClassPath> sourcePaths = null;
 	private static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
 	private static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac");
-        private static final String ARCH = System.getProperty("os.arch").toLowerCase();
+	private static final String ARCH = System.getProperty("os.arch").toLowerCase();
 	private static FanPlatform instance = new FanPlatform();
 	public final static String FAN_CLASS = "fanx.tools.Fan";
 	public final static String FAN_SH = "fansh";
@@ -60,7 +60,7 @@ public class FanPlatform
 
 			// Set fan.home property, so we casn use Fan code later
 			System.setProperty("fan.home", fanHome);
-			// boot fan env.
+			// boot fan env - sometimes throws an exception !
 			Sys.boot();
 		}
 		// force updating paths
@@ -95,24 +95,15 @@ public class FanPlatform
 	{
 		if (checkNull && instance.fanHome == null)
 		{
-                    JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
+			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
 		}
 		return instance;
 	}
 
-	/*public String getFanBinaryPath()
-	{
-	return fanBin;
-	}*/
 	public String getFanSrcPath()
 	{
 		return fanSrc;
 	}
-
-	/*public String getFanShellBinaryPath()
-	{
-	return fanshBin;
-	}*/
 
 	/**
 	 * Add Fan Source items (pods src)
@@ -131,9 +122,6 @@ public class FanPlatform
 				if (file.isDirectory() && new File(file, "build.fan").exists())
 				{
 					addFolder(file);
-					//addFolder(new File(file, FanProject.HARDCODED_JAVA_SRC_FOLDER));
-					//addFolder(new File(file, FanProject.HARDCODED_FAN_SRC_FOLDER));
-					//addFolder(new File(file, FanProject.HARDCODED_TEST_SRC_FOLDER));
 				}
 			}
 			GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, sourcePaths.toArray(new ClassPath[sourcePaths.size()]));
@@ -147,7 +135,6 @@ public class FanPlatform
 		{
 			ClassPath jcp = ClassPathSupport.createClassPath(folder.getAbsolutePath());
 			sourcePaths.add(jcp);
-			//System.out.println("### " + folder.getAbsolutePath());
 		}
 	}
 
@@ -198,11 +185,13 @@ public class FanPlatform
 		}
 
 		// custom options
-		String option=FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx128m");
+		String option = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx128m");
 		String[] options = option.split(" ");
-		for(String opt : options)
+		for (String opt : options)
+		{
 			fanExec.addCommandArg(opt);
-		
+		}
+
 
 		//OSX only flag needed for SWT (as in fanlaunch)
 		if (IS_MAC)
@@ -265,28 +254,40 @@ public class FanPlatform
 
 	public String buildLibraryPath()
 	{
-            String s = File.separator;
-            String extDir = fanHome + "lib" + s + "java" + s + "ext";
-            String os = "linux";
-            if (IS_MAC)
-            {
-                    os = "mac";
-            } else if (IS_WIN)
-            {
-                    os = "win";
-            }
-            extDir += s + os;
-            return extDir;
+		String s = File.separator;
+		String extDir = fanHome + "lib" + s + "java" + s + "ext";
+		String os = "linux";
+		if (IS_MAC)
+		{
+			os = "mac";
+		} else if (IS_WIN)
+		{
+			os = "win";
+		}
+		extDir += s + os;
+		return extDir;
 	}
 
 	public FileObject getFanHome()
 	{
-            if ("".equals(fanHome) || fanHome == null) {
-                JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
-                return null;
-            }
-            File f=new File(fanHome);
-            return FileUtil.toFileObject(f);
+		if ("".equals(fanHome) || fanHome == null)
+		{
+			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
+			return null;
+		}
+		File f = new File(fanHome);
+		return FileUtil.toFileObject(f);
+	}
+
+	public FileObject getFanSrcHome()
+	{
+		if ("".equals(fanHome) || fanHome == null)
+		{
+			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
+			return null;
+		}
+		File f = new File(fanSrc);
+		return FileUtil.toFileObject(f);
 	}
 
 	public void update()
