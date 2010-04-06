@@ -33,8 +33,12 @@ public class NBFanParser extends Parser
 		String taskClass = task.getClass().getName();
 		boolean isIndexing = taskClass.startsWith("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater");
 
-		FanPlatform platform = FanPlatform.getInstance(false);
+		FanPlatform platform = FanPlatform.getInstance(true);
 		String path = snapshot.getSource().getFileObject().getPath();
+                if (platform == null || platform.getFanHome() == null) {
+                    FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: " + path);
+                    return;
+                }
 		// We don't care for the standard NB indexer
 		// It's slow and annoying and we don't use it (have our on)
 		// So we don't allow it to run on the fan repo sources (we index those ourselved from binaries)
