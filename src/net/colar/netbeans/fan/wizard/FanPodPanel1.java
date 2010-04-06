@@ -18,7 +18,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.SwingUtilities;
 import java.awt.Window;
 import java.awt.Dialog;
-
+import net.colar.netbeans.fan.platform.FanPlatform;
 /*
  * New Fan project/pod wizard panel
  *
@@ -559,7 +559,7 @@ public final class FanPodPanel1 extends JPanel
                 public Integer doInBackground() {
                     final File f = new File(FanPodPanel1.this.getOutputDirectory());
                     final File[] directories = new File[] {
-                        new File("/usr/share/fantom/lib/fan/"),
+                        new File(FanPlatform.getInstance().buildLibraryPath()),
                         new File((f.exists() && f.isAbsolute()) ? getOutputDirectory() : getProjectFolder() + "/" + getOutputDirectory() + "/")
                     };
                     final String[] descriptions = { "Fantom System Pods", "User Pods"};
