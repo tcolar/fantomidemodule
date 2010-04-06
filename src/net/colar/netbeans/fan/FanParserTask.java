@@ -10,6 +10,7 @@ import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
@@ -41,10 +42,8 @@ import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.nodes.ChildFactory;
 import org.parboiled.Node;
 import org.parboiled.Parboiled;
 import org.parboiled.RecoveringParseRunner;
@@ -1090,11 +1089,11 @@ public class FanParserTask extends ParserResult
 		AstNode range = FanLexAstUtils.getFirstChildRecursive(exprNode, new NodeKindPredicate(AstKind.AST_EXPR_RANGE));
 		// It's kinda twisted, but the expr will have a range ast node either way
 		// however in the case of a "real" range it has 2 children expr (otherwise just 1 expr)
-		if (range!=null && range.getChildren().size()==2)
+		if (range != null && range.getChildren().size() == 2)
 		{
 			// in case of a range, it's a call to slice()
 			type = type.resolveSlotType("slice", this);
-			if(!type.isResolved())
+			if (!type.isResolved())
 			{
 				addError("Range expression only valid on types with a 'slice' method." + exprNode.getNodeText(true), exprNode);
 			}
@@ -1102,7 +1101,7 @@ public class FanParserTask extends ParserResult
 		{
 			// otherwise to get() (including list/maps)
 			type = type.resolveSlotType("get", this);
-			if(!type.isResolved())
+			if (!type.isResolved())
 			{
 				addError("Index expression only valid on types with 'get' method-> " + exprNode.getNodeText(true), exprNode);
 			}
@@ -1144,10 +1143,15 @@ public class FanParserTask extends ParserResult
 		{
 			itType = itType.asStaticContext(false);
 			List<FanSlot> itSlots = FanSlot.getAllSlotsForType(itType.getDbType().getQualifiedName(), true, this);
+			Hashtable<String, FanAstScopeVarBase> curvars = node.getAllScopeVars();
 			for (FanSlot itSlot : itSlots)
 			{
-				FanAstScopeVarBase newVar = new FanLocalScopeVar(node, itType, itSlot, itSlot.getName());
-				node.addScopeVar(newVar, true);
+				// itVar cannot "take over" existing variables
+				if (!curvars.containsKey(itSlot.getName()))
+				{
+					FanAstScopeVarBase newVar = new FanLocalScopeVar(node, itType, itSlot, itSlot.getName());
+					node.addScopeVar(newVar, false);
+				}
 			}
 			// add "it" to scope
 			FanAstScopeVarBase itVar = new FanLocalScopeVar(node, VarKind.IMPLIED, "it", itType);
