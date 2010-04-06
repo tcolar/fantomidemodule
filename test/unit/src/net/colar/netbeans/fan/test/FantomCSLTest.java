@@ -39,6 +39,7 @@ public abstract class FantomCSLTest implements JOTTestable
 		MockLookup.setInstances(new MockTrampoline());
 
 		// Setup the test Platform
+		System.setProperty("netbeans.user", prefs.getString("test.home")); // the user it will run in, should probably use some netbeans prop instaed
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, prefs.getString("fantom.home"));
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_DEBUG_PORT, "8080");
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx256m");
