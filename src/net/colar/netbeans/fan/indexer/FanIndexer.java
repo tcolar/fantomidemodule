@@ -92,6 +92,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	Hashtable<String, Long> toBeDeleted = new Hashtable<String, Long>();
 	private FanJarsIndexer jarsIndexer;
 	private boolean alreadyWarned;
+	private MainIndexer mainIndexer;
 
 	public FanIndexer()
 	{
@@ -116,11 +117,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	 */
 	public void indexAll(boolean backgroundJava)
 	{
-		MainIndexer idx = new MainIndexer(backgroundJava);
-		idx.start();
+		mainIndexer = new MainIndexer(backgroundJava);
+		mainIndexer.start();
 		if (!backgroundJava)
 		{
-			idx.waitFor();
+			mainIndexer.waitFor();
 		}
 
 	}
@@ -151,11 +152,8 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	 */
 	public void requestIndexing(String path)
 	{
-		if (FanPlatform.getInstance() == null
-			|| FanPlatform.getInstance().getFanHome() == null)
-		{
+		if( ! FanPlatform.isConfigured())
 			return;
-		}
 		boolean isPod = path.toLowerCase().endsWith(".pod");
 
 		FileObject fo = FileUtil.toFileObject(new File(path));
@@ -1081,6 +1079,28 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 	{
 		int bkpt = 0;
 		// don't care
+	}
+
+	public void waitForEmptyFantomQueue()
+	{
+		while (true)
+		{
+			if (mainIndexer != null)
+			{
+				mainIndexer.waitFor();
+				if (fanPodsToBeIndexed.size() == 0 && fanSrcToBeIndexed.size() == 0)
+				{
+					return;
+				}
+			}
+			try
+			{
+				Thread.sleep(500);
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/*********************************************************************
