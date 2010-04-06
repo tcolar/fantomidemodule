@@ -490,8 +490,8 @@ public class FanParserTask extends ParserResult
 			}
 		} catch (Exception e)
 		{
-			// We don't want exception to be propagated to user as an exception
-			// Do mark a parsing error however
+			// We don't want exception to be propagated to user as an exception (prevents fixing it in IDE)
+			// Do mark a global parsing error however
 			type = FanResolvedType.makeUnresolved(node);
 			addError("Unexpected Parsing error: " + e.toString(), node);
 			FanUtilities.GENERIC_LOGGER.exception("Error parsing node: " + text, e);
@@ -499,12 +499,10 @@ public class FanParserTask extends ParserResult
 		node.setType(type);
 		if (type != null && !type.isResolved())
 		{
-			// TODO: temp until fully working type resolution
 			addError("Could not resolve item -> " + text, node);
 
 			FanUtilities.GENERIC_LOGGER.info(">Unresolved node");
 			FanLexAstUtils.dumpTree(node, 0);
-			//FanLexAstUtils.dumpTree(astRoot, 0);
 			FanUtilities.GENERIC_LOGGER.info("<Unresolved node");
 		}
 	}
