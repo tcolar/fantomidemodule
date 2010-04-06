@@ -35,16 +35,11 @@ public class NBFanParser extends Parser
 
 		FanPlatform platform = FanPlatform.getInstance(true);
 		String path = snapshot.getSource().getFileObject().getPath();
-                if (platform == null || platform.getFanHome() == null) {
-                    FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: " + path);
-                    return;
-                }
-		// We don't care for the standard NB indexer
-		// It's slow and annoying and we don't use it (have our on)
-		// So we don't allow it to run on the fan repo sources (we index those ourselved from binaries)
-		if (platform == null
-				|| !FileUtil.isParentOf(platform.getFanHome(), snapshot.getSource().getFileObject())
-				|| !isIndexing)
+		// We don't allow NB parser to run on fantom sources (we index those ourselved from binaries)
+		// allow other fantom distro files to be however (such as examples)
+		if (platform == null || !platform.isConfigured()
+			|| !FileUtil.isParentOf(platform.getFanSrcHome(), snapshot.getSource().getFileObject())
+			|| !isIndexing)
 		{
 			parse(snapshot, isIndexing);
 		} else
