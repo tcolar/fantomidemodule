@@ -263,7 +263,7 @@ public class FanPlatform
 		return cp;
 	}
 
-	private String buildLibraryPath()
+	public String buildLibraryPath()
 	{
             String s = File.separator;
             String extDir = fanHome + "lib" + s + "java" + s + "ext";
