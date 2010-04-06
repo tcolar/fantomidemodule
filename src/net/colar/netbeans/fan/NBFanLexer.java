@@ -11,7 +11,6 @@ import java.util.Iterator;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.FantomLexer;
-import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
@@ -95,6 +94,7 @@ public class NBFanLexer implements Lexer<FanTokenID>
 		return result;
 	}
 
+        @SuppressWarnings("unchecked")
 	private void parseInput()
 	{
 		LexerInput input = info.input();
