@@ -263,14 +263,16 @@ public class FanPodSourcesPanel extends javax.swing.JDialog {
     private void createDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createDirButtonActionPerformed
         final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
             public Integer doInBackground() {
-                final DefaultMutableTreeNode node = (DefaultMutableTreeNode)sourceTree.getSelectionPath().getLastPathComponent();
-                final String curDir = (String) node.getUserObject();
-                final String newDir = JOptionPane.showInputDialog(FanPodSourcesPanel.this, "Enter directory to create", curDir + File.separator);
-                if (newDir != null || !"".equals(newDir) || !curDir.equals(newDir)) {
-                    final File f = new File(newDir);
-                    f.mkdirs();
-                    selected.add(newDir);
-                    localInit();
+                if (sourceTree.getSelectionPath() != null) {
+                    final DefaultMutableTreeNode node = (DefaultMutableTreeNode)sourceTree.getSelectionPath().getLastPathComponent();
+                    final String curDir = (String) node.getUserObject();
+                    final String newDir = JOptionPane.showInputDialog(FanPodSourcesPanel.this, "Enter directory to create", curDir + File.separator);
+                    if (newDir != null || !"".equals(newDir) || !curDir.equals(newDir)) {
+                        final File f = new File(newDir);
+                        f.mkdirs();
+                        selected.add(newDir);
+                        localInit();
+                    }
                 }
                 return 0;
             }
@@ -298,14 +300,14 @@ public class FanPodSourcesPanel extends javax.swing.JDialog {
                                 options,
                                 options[0]);
                     if (n == 1) {
-                        if (selected.contains(directory)) {
-                            selected.remove(directory);
-                        }
                         final File f = new File(directory);
                         if (!f.delete()) {
                             JOptionPane.showMessageDialog(FanPodSourcesPanel.this,
                                     "Directory is not empty!");
                             return 0;
+                        }
+                        else if (selected.contains(directory)) {
+                            selected.remove(directory);
                         }
                         localInit();
                     }
