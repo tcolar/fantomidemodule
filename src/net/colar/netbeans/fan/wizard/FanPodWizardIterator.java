@@ -99,9 +99,9 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		FileObject buildTemplate = Templates.getTemplate(wizard);
 
 		// Create main class
-		if (panel.getMainClassName() != null)
+                String name = panel.getMainClassName();
+		if (name != null)
 		{
-			String name = panel.getMainClassName();
 			File mainFile = new File(fan, name + ".fan");
 			JOTLightweightView view = new TemplateView(buildTemplate, name);
 			view.addVariable("doClass", Boolean.TRUE);
@@ -114,12 +114,24 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 			TemplateUtils.createFromTemplate(view, templateText, mainFile);
 			FanUtilities.openFileInEditor(mainFile);
 			// save main class in props
-			File props = new File(pf.getAbsolutePath() + File.separator + FanProjectProperties.PROJ_PROPS_PATH);
+			/*File props = new File(pf.getAbsolutePath() + File.separator + FanProjectProperties.PROJ_PROPS_PATH);
 			props.getParentFile().mkdirs();
 			Hashtable<String, String> map = new Hashtable<String, String>();
 			map.put(FanProjectProperties.MAIN_METHOD, name + ".main");
-			FanProjectProperties.createFromScratch(map, props);
+			FanProjectProperties.createFromScratch(map, props);*/
 		}
+                // save main class in props
+                File props = new File(pf.getAbsolutePath() + File.separator + FanProjectProperties.PROJ_PROPS_PATH);
+                props.getParentFile().mkdirs();
+                Hashtable<String, String> map = new Hashtable<String, String>();
+                if (name != null) {
+                    map.put(FanProjectProperties.MAIN_METHOD, name + ".main");
+                }
+                if (createBuildFile) {
+                    String buildFanTemplate = buildTemplate.getPath();
+                    map.put(FanProjectProperties.BUILD_FAN_TEMPLATE, buildFanTemplate);
+                }
+                FanProjectProperties.createFromScratch(map, props);
 
 
 		// Create the build file LAST, because as soon as that is created,
