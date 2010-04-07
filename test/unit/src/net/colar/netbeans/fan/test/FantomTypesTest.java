@@ -16,7 +16,6 @@ import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.testing.JOTTester;
 import org.parboiled.Parboiled;
 import org.parboiled.RecoveringParseRunner;
-import org.parboiled.Rule;
 import org.parboiled.support.ParsingResult;
 
 /**
@@ -53,7 +52,7 @@ public class FantomTypesTest extends FantomCSLTest
 
 		// checking expressions
 		checkExpr("5", "sys::Int", false, false);
-		AstNode resultNode=checkExpr("null", "null:null?", true, false);
+		AstNode resultNode=checkExpr("null", "null::null?", true, false);
 		JOTTester.checkIf("checking null type", resultNode.getType() instanceof FanResolvedNullType);
 
 		resultNode=checkExpr("|str| { echo(str) }", "|sys::Obj?->sys::Void|", false, false);
@@ -64,24 +63,15 @@ public class FantomTypesTest extends FantomCSLTest
 		checkExpr("(0..<20).toList", "sys::Int[]", false, false);
 		checkExpr("\"abc\".split[0]", "sys::Str", false, false);
 		checkExpr("\"abc\".split[0..2]", "sys::Str[]", false, false);
-		//    verify(zc[0].isRO)
-		//    verifyJoin(map, '|', ["(0=zero)", "(1=one)", "(2=two)"]) |Str v, Int k->Str| { return "($k=$v)" }
-		//    MxA? a := MxClsAB.make as MxA;
-		//  verifyEq(a.toStr, "MxClsAB!")
-		//    m := Regex<|^a.*d$|>.matcher("abcd")
-		//     verifyEq(0xff.and(0x0f), 0x0f)
-		//    ExprTest? b := this
-		//	verifyEq(b?.mInt(4)?.toHex(2), "04")
-		//    x = null
-		//    verifyEq(x?.fInt?.toHex, null)
-		//	    verify(EnumAbc.A is EnumAbc)
-		//	    verifySame(Type.of(Month.jan), Month#)
-		//	    verifyEq(buildTest { it.x="x" },    ["x", ""])
+		checkExpr("Obj", "sys::Obj", false, true);
+		checkExpr("Obj()", "sys::Obj", false, false);
+		checkExpr("Str.defVal", "sys::Str", false, false);
+		checkExpr("\"abc\".isEmpty", "sys::Bool", false, false);
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));
 		JOTTester.checkIf("Compatibility of Obj vs Obj", mkt("sys::Obj", node).isTypeCompatible(mkt("sys::Obj", node)));
-		JOTTester.checkIf("Compatibility of mixin vs Obj", !mkt("web::Weblet", node).isTypeCompatible(mkt("sys::Obj", node)));
+		JOTTester.checkIf("Un-Compatibility of mixin vs Obj", ! mkt("web::Weblet", node).isTypeCompatible(mkt("sys::Obj", node)));
 		JOTTester.checkIf("Compatibility of Button vs Obj", mkt("fwt::Button", node).isTypeCompatible(mkt("sys::Obj", node)));
 		JOTTester.checkIf("Compatibility of Button vs widget", mkt("fwt::Button", node).isTypeCompatible(mkt("fwt::Widget", node)));
 
