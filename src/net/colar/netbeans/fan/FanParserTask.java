@@ -84,9 +84,9 @@ public class FanParserTask extends ParserResult
 	{
 		super(snapshot);
 		invalidated = false;
-		sourceName = snapshot==null?null:snapshot.getSource().getFileObject().getName();
-		sourceFile = snapshot==null?null:FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
-		pod = snapshot==null?null:FanUtilities.getPodForPath(sourceFile.getPath());
+		sourceName = snapshot == null ? null : snapshot.getSource().getFileObject().getName();
+		sourceFile = snapshot == null ? null : FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
+		pod = snapshot == null ? null : FanUtilities.getPodForPath(sourceFile.getPath());
 		parser = Parboiled.createParser(FantomParser.class, this);
 	}
 
@@ -206,15 +206,15 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-						false, Severity.ERROR);
+					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+					false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
 			{
 				astRoot = parsingResult.parseTreeRoot.getValue();
 				// Removed orphaned(backtracked) AST nodes.
-				prune(astRoot);
+				prune(astRoot, getRootLabel(astRoot));
 			}
 		} catch (Exception e)
 		{
@@ -281,8 +281,8 @@ public class FanParserTask extends ParserResult
 					System.out.print(name);
 					var.parse();
 					if (scopeNode.getAllScopeVars().containsKey(name)
-							&& // If we have a "suing" with the same name, we take precedence
-							scopeNode.getAllScopeVars().get(name).getKind() != VarKind.IMPORT)
+						&& // If we have a "suing" with the same name, we take precedence
+						scopeNode.getAllScopeVars().get(name).getKind() != VarKind.IMPORT)
 					{
 						addError("Duplicated type name", node);
 					} else
@@ -490,6 +490,12 @@ public class FanParserTask extends ParserResult
 				case AST_TYPE_LITTERAL: // 'Type#' or '#slot' or 'Type#slot'
 					type = doTypeLitteral(node, type);
 					break;
+				case DUMMY_ROOT_NODE:
+					// have dummy_root_node (for testing) carry it's child type
+					AstNode dummyChild = node.getChildren().get(0);
+					parseVars(dummyChild, type);
+					type = dummyChild.getType();
+					break;
 				default:
 					// recurse into children
 					parseChildren(node);
@@ -563,6 +569,8 @@ public class FanParserTask extends ParserResult
 		} else if (lbl.equals("null"))
 		{
 			type = new FanResolvedNullType(astNode);
+			// null is always nullable :)
+			type = type.asNullableContext(true);
 		} else if (lbl.equals("it"))
 		{
 			FanAstScopeVarBase var = astNode.getAllScopeVars().get("it");
@@ -570,17 +578,15 @@ public class FanParserTask extends ParserResult
 			{
 				type = var.getType();
 			}
-			type = type.asStaticContext(false);
 		} else if (lbl.equals("this"))
 		{
 			type = FanResolvedType.resolveThisType(astNode);
-			type = type.asStaticContext(false);
 		} else if (lbl.equals("super"))
 		{
 			type = FanResolvedType.resolveSuper(astNode);
-			type = type.asStaticContext(false);
 		}
-		return type;
+		// Literal are never static context
+		return type.asStaticContext(false);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -702,15 +708,8 @@ public class FanParserTask extends ParserResult
 	 * This looks for and remove those unwanted nodes.
 	 * @param node
 	 */
-	private void prune(AstNode node)
+	public void prune(AstNode node, String rootLabel)
 	{
-		Node<AstNode> rtNode = astRoot.getParseNode();
-		String rootLabel = "n/a";
-		while (rtNode != null)
-		{
-			rootLabel = rtNode.getLabel();
-			rtNode = rtNode.getParent();
-		}
 		List<AstNode> children = node.getChildren();
 		List<AstNode> toBepruned = new ArrayList<AstNode>();
 		for (AstNode child : children)
@@ -729,7 +728,7 @@ public class FanParserTask extends ParserResult
 			} else
 			{
 				// recurse into children
-				prune(child);
+				prune(child, rootLabel);
 			}
 		}
 		// Drop the orphaned nodes
@@ -737,6 +736,18 @@ public class FanParserTask extends ParserResult
 		{
 			children.remove(nd);
 		}
+	}
+
+	public String getRootLabel(AstNode rootNode)
+	{
+		Node<AstNode> parseNode = rootNode.getParseNode();
+		String rootLabel = "n/a";
+		while (parseNode != null)
+		{
+			rootLabel = parseNode.getLabel();
+			parseNode = parseNode.getParent();
+		}
+		return rootLabel;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -773,8 +784,8 @@ public class FanParserTask extends ParserResult
 			// we take type of right hand side if first in expression
 			// and not one of the special type we don't want the rhs for
 			if (first || (child.getKind() != AstKind.AST_EXPR_ADD // add/mult operation cannot chnage the type
-					&& child.getKind() != AstKind.AST_EXPR_MULT //same
-					/*&& child.getKind() != AstKind.AST_EXPR*/)) // new/sub expression
+				&& child.getKind() != AstKind.AST_EXPR_MULT //same
+				/*&& child.getKind() != AstKind.AST_EXPR*/)) // new/sub expression
 			{
 				type = child.getType();
 				// If part of the expr chain is unresolved (error), mark it unresolved
@@ -1043,7 +1054,7 @@ public class FanParserTask extends ParserResult
 			}
 
 			type = new FanResolvedListType(node,
-					listTypeNode.getType());
+				listTypeNode.getType());
 		}
 
 		for (AstNode listExpr : listExprNodes)
@@ -1054,7 +1065,7 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode == null)
 		{   // try to infer it from the expr Nodes
 			type = new FanResolvedListType(node,
-					FanResolvedType.makeFromItemList(node, listTypes));
+				FanResolvedType.makeFromItemList(node, listTypes));
 		}
 		return type;
 	}
@@ -1082,8 +1093,8 @@ public class FanParserTask extends ParserResult
 		} else
 		{ // otherwise try to infer it from the expr Nodes
 			type = new FanResolvedMapType(node,
-					FanResolvedType.makeFromItemList(node, mapKeyTypes),
-					FanResolvedType.makeFromItemList(node, mapValTypes));
+				FanResolvedType.makeFromItemList(node, mapKeyTypes),
+				FanResolvedType.makeFromItemList(node, mapValTypes));
 		}
 		return type;
 	}
@@ -1110,7 +1121,8 @@ public class FanParserTask extends ParserResult
 			{
 				addError("Range expression only valid on types with a 'slice' method." + exprNode.getNodeText(true), exprNode);
 			}
-		} else
+		}
+		else
 		{
 			// otherwise to get() (including list/maps)
 			type = type.resolveSlotType("get", this);
@@ -1211,10 +1223,8 @@ public class FanParserTask extends ParserResult
 		parseChildren(node);
 		if (type == null)
 		{
-			// a range like (0..5)
-			//type = new FanResolvedListType(node, node.getChildren().get(0).getType());
-			FanResolvedType rangeType = FanResolvedType.makeFromDbType(node, "sys::Int");
-			type = new FanResolvedListType(node, rangeType);
+			// a range like (0..5) - always a range of Int
+			type = FanResolvedType.makeFromDbType(node, "sys::Range");
 		} else if (type instanceof FanResolvedListType)
 		{
 			// a range like list[0..5]

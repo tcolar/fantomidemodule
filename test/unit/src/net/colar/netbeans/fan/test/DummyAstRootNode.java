@@ -8,9 +8,10 @@ package net.colar.netbeans.fan.test;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.RootNode;
+import org.netbeans.modules.csl.api.OffsetRange;
 
 /**
- *
+ * Dummy minimal rootNode for unit testing
  * @author tcolar
  */
 class DummyAstRootNode extends RootNode
@@ -25,6 +26,18 @@ class DummyAstRootNode extends RootNode
 	public RootNode getRoot()
 	{
 		return this;
+	}
+
+	@Override
+	public OffsetRange getRelevantTextRange()
+	{
+		return new OffsetRange(0, 0);
+	}
+
+	@Override
+	public String getNodeText(boolean relevantOnly)
+	{
+		return "Dummy";
 	}
 
 }

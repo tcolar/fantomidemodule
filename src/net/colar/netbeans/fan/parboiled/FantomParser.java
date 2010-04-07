@@ -5,7 +5,6 @@ package net.colar.netbeans.fan.parboiled;
 
 import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseParser;
-import org.parboiled.Context;
 import org.parboiled.Rule;
 import org.parboiled.support.Leaf;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
@@ -1255,6 +1254,6 @@ public class FantomParser extends BaseParser<AstNode>
 	// for unit tsting
 	public Rule testExpr()
 	{
-		return sequence(expr(), ast.newRootNode(AstKind.DUMMY_NODE, parserTask));
+		return sequence(expr(), ast.newRootNode(AstKind.DUMMY_ROOT_NODE, parserTask));
 	}
 }

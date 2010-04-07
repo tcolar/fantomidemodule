@@ -30,5 +30,5 @@ public enum AstKind
 	// Labels
 	LBL_CLASS, LBL_ENUM, LBL_MIXIN, LBL_FACET, LBL_OP,
 	// for unit testing
-	DUMMY_NODE
+	DUMMY_NODE, DUMMY_ROOT_NODE
 }

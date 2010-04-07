@@ -160,11 +160,6 @@ public class FanResolvedType implements Cloneable
 	public FanResolvedType resolveSlotType(String slotName, FanParserTask task)
 	{
 		FanResolvedType baseType = this;
-		// support for generics
-		if (baseType instanceof FanResolvedGenericType)
-		{
-			baseType = ((FanResolvedGenericType) baseType).getPhysicalType();
-		}
 
 		FanResolvedType slotBaseType = resolveSlotBaseType(slotName, task);
 		if (slotBaseType.isResolved())
@@ -201,10 +196,22 @@ public class FanResolvedType implements Cloneable
 	{
 		FanResolvedType baseType = this;
 
-		// support for generics
+		// slot resoltuion need to be made of "base" types (no lists, maps)
 		if (baseType instanceof FanResolvedGenericType)
 		{
 			baseType = ((FanResolvedGenericType) baseType).getPhysicalType();
+		}
+		else if (baseType instanceof FanResolvedListType)
+		{
+			baseType = FanResolvedListType.makeFromDbType(scopeNode, "sys::List");
+		}
+		else if (baseType instanceof FanResolvedMapType)
+		{
+			baseType = FanResolvedListType.makeFromDbType(scopeNode, "sys::Map");
+		}
+		else if (baseType instanceof FanResolvedFuncType)
+		{
+			baseType = FanResolvedListType.makeFromDbType(scopeNode, "sys::Func");
 		}
 
 		if (baseType == null || !baseType.isResolved()
@@ -631,7 +638,7 @@ public class FanResolvedType implements Cloneable
 	}
 
 	/**
-	 * Check wether current type is compatible with baseType
+	 * Check whether current type is compatible with baseType
 	 * In other words, whether type is of the same type as baseType or inherits from it
 	 * @param baseType
 	 */
@@ -648,7 +655,9 @@ public class FanResolvedType implements Cloneable
 			{
 				return true;
 			}
-			if (getDbType().getQualifiedName().equals(baseType.getDbType().getQualifiedName()))
+			// TODO: might not work for generics
+			if (t.getDbType().getQualifiedName().equals(baseType.getDbType().getQualifiedName())
+				&& t.getClass().getName().equals(baseType.getClass().getName()))
 			{
 				return true;
 			}
