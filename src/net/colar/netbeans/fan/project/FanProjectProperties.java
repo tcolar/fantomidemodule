@@ -26,16 +26,20 @@ import org.openide.util.MutexException;
  */
 public class FanProjectProperties
 {
-
+        public static final String BUILD_FAN_TEMPLATE = "build.fan.template";
 	public static final String DEFAULT_MAIN_METHOD = "Main.main";
 	public static final String DEFAULT_BUILD_TARGET = "";
 	public static final String PROJ_PROPS_PATH = "nbproject/project.properties";
 	public static final String PRIVATE_PROPS_PATH = "nbproject/private/private.properties";
 	public static final String MAIN_METHOD = "pod.main.method";
 	public static final String BUILD_TARGET = "build.target";
+        public static final String DEFAULT_BUILD_TEMPLATE = "build.html";
+
 	private final FanProject project;
 	private volatile String mainMethod;
 	private volatile String buildTarget;
+        private volatile String buildFileTemplate;
+
 	private File propFile = null;
 
 	public FanProjectProperties(FanProject project)
@@ -64,7 +68,13 @@ public class FanProjectProperties
 	{
 		this.mainMethod = method;
 	}
-
+        public String getBuildFileTemplate()
+        {
+            return buildFileTemplate;
+        }
+        public void setBuildFileTemplate(String var) {
+            buildFileTemplate = var;
+        }
 	public void save()
 	{
 		try
@@ -101,6 +111,10 @@ public class FanProjectProperties
 		{
 			projectProperties.put(BUILD_TARGET, buildTarget);
 		}
+                if (buildFileTemplate != null)
+                {
+                    projectProperties.put(BUILD_FAN_TEMPLATE, buildFileTemplate);
+                }
 		dest.getParentFile().mkdirs();
 		FileOutputStream fos = new FileOutputStream(dest);
 		projectProperties.store(fos, "Fantom Project Properties");
@@ -128,6 +142,7 @@ public class FanProjectProperties
 			props.load(fis);
 			mainMethod = props.getProperty(MAIN_METHOD, DEFAULT_MAIN_METHOD);
 			buildTarget = props.getProperty(BUILD_TARGET, DEFAULT_BUILD_TARGET);
+                        buildFileTemplate = props.getProperty(BUILD_FAN_TEMPLATE, DEFAULT_BUILD_TEMPLATE);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
