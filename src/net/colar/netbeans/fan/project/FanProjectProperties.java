@@ -44,8 +44,10 @@ public class FanProjectProperties
 		this.project = project;
 		propFile = new File(project.getProjectDirectory() + File.separator + PROJ_PROPS_PATH);
 		load();
-		FileObject fo = FileUtil.toFileObject(propFile);
-		fo.addFileChangeListener(new FanPropsListener());
+                if (propFile.exists()) {
+                    FileObject fo = FileUtil.toFileObject(propFile);
+                    fo.addFileChangeListener(new FanPropsListener());
+                }
 	}
 
 	public FanProject getProject()
