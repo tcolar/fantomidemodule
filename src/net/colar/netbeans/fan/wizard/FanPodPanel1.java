@@ -22,7 +22,6 @@ import javax.swing.tree.*;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
-import javax.swing.table.TableCellEditor;
 import javax.swing.SwingUtilities;
 
 /*
