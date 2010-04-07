@@ -28,17 +28,14 @@ class Main
     s := evens3.size
     list.each |Str val, Int index| { echo("$index = $val") }
     list.each |Str v, Int i| { echo("$i = $v") }
-    list.each |v, i| { i.abs }
 
     ["a", "b", "c"].each |Str s| { echo(s.upper) }
     ["a", "b", "c"].each { echo(it.upper) }
     ["a", "b", "c"].each { echo(upper) }
     ["a", "b", "c"].each { echo(it.upper) }
 
-    list9 := Str[,].with { filla(x,3) }
+    list9 := Str[,].with { fill("x",3) }
     list10 := Str[,] { fill("x", 3) }
-
-    b := Button {text=""}
   }
     **
     ** Main method
