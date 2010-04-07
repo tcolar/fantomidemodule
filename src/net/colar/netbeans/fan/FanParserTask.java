@@ -424,7 +424,7 @@ public class FanParserTask extends ParserResult
 				case AST_CLOSURE:
 					// Only comne here for a closure that is NOT part of a call (function def)
 					// closure calls are handled by docall()
-					type = doClosure(node, null);
+					type = doClosure(node, null, 0);
 					break;
 				case AST_CALL:
 					type = doCall(node, type, null);
@@ -930,7 +930,7 @@ public class FanParserTask extends ParserResult
 						}
 					} else
 					{
-						doClosure(closureNode, infTypes);
+						doClosure(closureNode, infTypes, argIndex);
 					}
 				}
 			}
@@ -945,18 +945,17 @@ public class FanParserTask extends ParserResult
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private FanResolvedFuncType doClosure(AstNode node, List<FanResolvedType> paramTypes)
+	private FanResolvedFuncType doClosure(AstNode node, List<FanResolvedType> paramTypes, int argIndex)
 	{
 		FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void");
 		AstNode closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
 		// Will store resolved types
 		List<FanResolvedType> formalTypes = new ArrayList<FanResolvedType>();
-		int cpt = 0;
 		for (AstNode child : node.getChildren())
 		{
 			if (child.getKind() == AstKind.AST_FORMAL)
 			{
-				FanResolvedType t = doFormal(child, closureBlock, paramTypes, cpt);
+				FanResolvedType t = doFormal(child, closureBlock, paramTypes, argIndex);
 				if (t != null && !t.isResolved())
 				{
 					addError("Couldn't resolve formal definition: " + node.getNodeText(true), node);
@@ -972,7 +971,6 @@ public class FanParserTask extends ParserResult
 				// parse the block content
 				parseVars(child, null);
 			}
-			cpt++;
 		}
 		return new FanResolvedFuncType(node, formalTypes, retType);
 	}
@@ -1003,8 +1001,9 @@ public class FanParserTask extends ParserResult
 		{
 			if (inferredTypes == null)
 			{
-				addError("Can't have inferred formals in closure definition.", node);
-				fType = FanResolvedType.makeUnresolved(node);
+				//addError("Can't have inferred formals in closure definition.", node);
+				// actually that's allowed, just uses sys::Obj?
+				fType = FanResolvedType.makeFromTypeSig(node, "sys::Obj?");
 			} else if (index > inferredTypes.size())
 			{
 				addError("More inferred formals than expected.", node);
