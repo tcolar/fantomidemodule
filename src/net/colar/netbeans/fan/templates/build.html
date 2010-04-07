@@ -17,10 +17,11 @@ class Build : BuildPod
     version = Version.fromStr("${version}")
     depends = [${dependencies}]
     srcDirs = [${srcDirs}]
-    outDir  = `${outDir}`
+    resDirs = [${resDirs}]
+    docApi  = ${docApi}
+    docSrc  = ${docSrc}
+    outDir  = ${outDir}
     index   = [${indexes}]
     meta    = [${metas}]
-    docSrc  = ${docSrc}
-    docApi  = ${docApi}
   }
 }
