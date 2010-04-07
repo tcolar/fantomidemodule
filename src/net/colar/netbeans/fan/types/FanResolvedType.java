@@ -415,8 +415,8 @@ public class FanResolvedType implements Cloneable
 		{
 			fq += "?";
 		}
-		if(fq.indexOf("n/a")>=0)
-			System.out.println("breakpoint");
+		//if(fq.indexOf("n/a")>=0)
+		//	System.out.println("breakpoint");
 		return fq;
 	}
 

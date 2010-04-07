@@ -21,7 +21,7 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 
 	protected String typeString;
 
-        @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
 	public FanFieldScopeVar(AstNode fieldNode, String name)
 	{
 		super(fieldNode, name);
@@ -38,6 +38,7 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 		{
 			AstNode typeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
 			typeString = typeNode.getNodeText(true);
+			// slots return type are never staticContext
 			type = FanResolvedType.makeFromTypeSigWithWarning(typeNode);
 			if (type == null)
 			{

@@ -826,8 +826,10 @@ public class FanParserTask extends ParserResult
 			// constructor call or local slot
 			type = FanResolvedType.makeFromTypeSig(callChild, name);
 			type = type.parameterize(baseType, callChild);
-			if (type.isStaticContext())
+			type = type.asStaticContext(false); // call is always not staticContext
+			if (type.isStaticContext() && type.getQualifiedType().equals(baseType.getQualifiedType()))
 			{ // It was a constructor call
+				// once we make the call to make, it's not staticContext anymore
 				baseType = type;
 				name = "make";
 			}
@@ -860,6 +862,7 @@ public class FanParserTask extends ParserResult
 			//if(! (type instanceof FanUnknownType))
 			type = type.resolveSlotType(name, this);
 			type = type.parameterize(baseType, node);
+			type = type.asStaticContext(false); // result of call never staticContext
 		}
 
 		// parse args
@@ -958,7 +961,7 @@ public class FanParserTask extends ParserResult
 	@SuppressWarnings("unchecked")
 	private FanResolvedFuncType doClosure(AstNode node, List<FanResolvedType> paramTypes, int argIndex)
 	{
-		FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void");
+		FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void").asStaticContext(false);
 		AstNode closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
 		// Will store resolved types
 		List<FanResolvedType> formalTypes = new ArrayList<FanResolvedType>();
@@ -1000,7 +1003,7 @@ public class FanParserTask extends ParserResult
 	{
 		AstNode formalName = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		AstNode formalTypeAndId = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
-		FanResolvedType fType = FanResolvedType.makeFromDbType(node, "sys::Void");
+		FanResolvedType fType = FanResolvedType.makeFromDbType(node, "sys::Void").asStaticContext(false);
 		if (formalTypeAndId != null)
 		{	// typed formal
 			formalName = FanLexAstUtils.getFirstChild(formalTypeAndId, new NodeKindPredicate(AstKind.AST_ID));
@@ -1121,8 +1124,7 @@ public class FanParserTask extends ParserResult
 			{
 				addError("Range expression only valid on types with a 'slice' method." + exprNode.getNodeText(true), exprNode);
 			}
-		}
-		else
+		} else
 		{
 			// otherwise to get() (including list/maps)
 			type = type.resolveSlotType("get", this);
