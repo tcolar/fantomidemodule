@@ -4,6 +4,7 @@
 // History:
 //   2-Apr-2010  tcolar  Creation
 //
+using compiler
 
 **
 ** Main
@@ -13,7 +14,8 @@ class Main
 
   Void doTest()
   {
-    echo("hello")
+      ExprId.thisExpr
+    /*echo("hello")
     list := ["one", "two", "three"]
     f := |->| { echo("hi there") }
     f.isImmutable
@@ -35,7 +37,7 @@ class Main
     ["a", "b", "c"].each { echo(it.upper) }
 
     list9 := Str[,].with { fill("x",3) }
-    list10 := Str[,] { fill("x", 3) }
+    list10 := Str[,] { fill("x", 3) }*/
   }
     **
     ** Main method
