@@ -1153,7 +1153,16 @@ public final class FanPodPanel1 extends JPanel
                     sb.append(", ");
                 }
                 sb.append("\"");
-                sb.append(indexList.getModel().getElementAt(i).toString());
+                final String[] elems = indexList.getModel().getElementAt(i).toString().split(":");
+                if (elems.length > 2) {
+                    for (int j = 3; j < elems.length; j++) {
+                        elems[2] += elems[j];
+                    }
+                    elems[1] += "::" + elems[2];
+                }
+                sb.append(elems[0].trim());
+                sb.append("\" : \"");
+                sb.append(elems[1].trim());
                 sb.append("\"");
             }
             return sb.toString();
@@ -1179,7 +1188,16 @@ public final class FanPodPanel1 extends JPanel
                     sb.append(", ");
                 }
                 sb.append("\"");
-                sb.append(metaList.getModel().getElementAt(i).toString());
+                final String[] elems = metaList.getModel().getElementAt(i).toString().split(":");
+                if (elems.length > 2) {
+                    for (int j = 3; j < elems.length; j++) {
+                        elems[2] += elems[j];
+                    }
+                    elems[1] += "::" + elems[2];
+                }
+                sb.append(elems[0].trim());
+                sb.append("\" : \"");
+                sb.append(elems[1].trim());
                 sb.append("\"");
             }
             return sb.toString();
