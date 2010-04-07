@@ -344,18 +344,13 @@
                           <Component id="docApiCheckBox" min="-2" max="-2" attributes="0"/>
                           <Component id="docSrcCheckBox" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="sourceDirectoryBrowseButton" min="-2" max="-2" attributes="0"/>
-                                      <Component id="resourceDirectoryBrowseButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="outputDirectoryBrowseButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="sourceDirectoryBrowseButton" min="-2" max="-2" attributes="0"/>
+                              <Component id="resourceDirectoryBrowseButton" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="outputDirectoryBrowseButton" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="resourceDefaultButton" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="sourceDefaultButton" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
