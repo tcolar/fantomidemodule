@@ -5,20 +5,26 @@
 package net.colar.netbeans.fan.wizard;
 
 import java.io.File;
+import java.util.regex.Pattern;
+import java.util.TreeSet;
+import java.util.SortedSet;
+import java.util.Set;
+import java.util.HashSet;
+
+import net.colar.netbeans.fan.utils.DependencyPair;
+import net.colar.netbeans.fan.platform.FanPlatform;
+
+import java.awt.Window;
+import java.awt.Dialog;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.DefaultListModel;
-import java.util.regex.Pattern;
+import javax.swing.tree.*;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
-import java.util.TreeSet;
-import java.util.SortedSet;
-import net.colar.netbeans.fan.utils.DependencyPair;
 import javax.swing.table.TableCellEditor;
 import javax.swing.SwingUtilities;
-import java.awt.Window;
-import java.awt.Dialog;
-import net.colar.netbeans.fan.platform.FanPlatform;
+
 /*
  * New Fan project/pod wizard panel
  *
@@ -26,20 +32,22 @@ import net.colar.netbeans.fan.platform.FanPlatform;
  */
 public final class FanPodPanel1 extends JPanel
 {
-        private SortedSet<DependencyPair> dependencies;
-	private String dir;
-	private static final String DEFAULT_PRJ = "FanPrj1";
-	private final JFileChooser chooser;
-	public final static Pattern VALID_NAME = Pattern.compile("[ a-zA-Z0-9_-]+");
-	private FanPodWizardPanel1 parent;
 
-	public FanPodPanel1(FanPodWizardPanel1 parent, String dir)
+        public FanPodPanel1(FanPodWizardPanel1 parent, String dir)
 	{
 		super();
 		this.parent = parent;
 		initComponents();
                 dependencies = new TreeSet<DependencyPair>();
                 dependencies.add(new DependencyPair("sys", "1.0"));
+                dependenciesTable.setModel(new DefaultTableModel(
+                    new Object [][] {
+                        {"sys", "1.0"}
+                    }   ,
+                    new String [] {
+                        "PodFile", "Version"
+                    }
+                ));
 
 		nameField.setText(DEFAULT_PRJ);
 		this.dir = dir;
@@ -54,16 +62,10 @@ public final class FanPodPanel1 extends JPanel
 		chooser.setApproveButtonText("Select");
                 podVersionField.setText("");
                 outputDirectoryField.setText("out");
-                dependenciesTable.setModel(new DefaultTableModel(
-                    new Object [][] {
-                        {"sys", "1.0"}
-                    }   ,
-                    new String [] {
-                        "PodFile", "Version"
-                    }
-                ));
                 indexList.setModel(new DefaultListModel());
                 metaList.setModel(new DefaultListModel());
+                initTree(sourceDirectoryTree, dir, sourceDirs);
+                initTree(resourceDirectoryTree, dir, resourceDirs);
 	}
 
 	@Override
@@ -71,7 +73,11 @@ public final class FanPodPanel1 extends JPanel
 	{
 		return "New Fantom Project";
 	}
-
+        private void initTree(final javax.swing.JTree tree, final String path, final Set<String> set) {
+            final DefaultMutableTreeNode node = new DefaultMutableTreeNode(path);
+            tree.setModel(new DefaultTreeModel(node));
+            set.clear();
+        }
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -81,7 +87,7 @@ public final class FanPodPanel1 extends JPanel
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        basicPanel = new javax.swing.JPanel();
+        podInfoPanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
         locationLabel = new javax.swing.JLabel();
         folderLabel = new javax.swing.JLabel();
@@ -91,7 +97,6 @@ public final class FanPodPanel1 extends JPanel
         locationField = new javax.swing.JTextField();
         podDescField = new javax.swing.JTextField();
         folderField = new javax.swing.JTextField();
-        outputDirectoryBrowseButton = new javax.swing.JButton();
         errorLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         mainClassCheckbox = new javax.swing.JCheckBox();
@@ -99,10 +104,24 @@ public final class FanPodPanel1 extends JPanel
         mainClassField = new javax.swing.JTextField();
         podVersionLabel = new javax.swing.JLabel();
         podVersionField = new javax.swing.JTextField();
-        outputDirectoryField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
-        outputDirectoryLabel = new javax.swing.JLabel();
-        specialPanel = new javax.swing.JPanel();
+        pathsPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        sourceDirectoryTree = new javax.swing.JTree();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        resourceDirectoryTree = new javax.swing.JTree();
+        jLabel3 = new javax.swing.JLabel();
+        outputDirectoryField = new javax.swing.JTextField();
+        outputDirectoryBrowseButton = new javax.swing.JButton();
+        resourceDirectoryBrowseButton = new javax.swing.JButton();
+        sourceDirectoryBrowseButton = new javax.swing.JButton();
+        docApiCheckBox = new javax.swing.JCheckBox();
+        docSrcCheckBox = new javax.swing.JCheckBox();
+        sourceDefaultButton = new javax.swing.JButton();
+        resourceDefaultButton = new javax.swing.JButton();
+        dependencyPanel = new javax.swing.JPanel();
         dependenciesScrollPane = new javax.swing.JScrollPane();
         dependenciesTable = new javax.swing.JTable();
         dependenciesLabel = new javax.swing.JLabel();
@@ -115,14 +134,12 @@ public final class FanPodPanel1 extends JPanel
         metaScrollPane = new javax.swing.JScrollPane();
         metaList = new javax.swing.JList();
         editListButton = new javax.swing.JButton();
-        docSrcCheckBox = new javax.swing.JCheckBox();
-        docApiCheckBox = new javax.swing.JCheckBox();
         nextPageButton = new javax.swing.JButton();
         previousPageButton = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(600, 600));
 
-        basicPanel.setName("podVersionField"); // NOI18N
+        podInfoPanel.setName("podVersionField"); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.nameLabel.text")); // NOI18N
 
@@ -188,13 +205,6 @@ public final class FanPodPanel1 extends JPanel
         folderField.setEditable(false);
         folderField.setText(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.folderField.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(outputDirectoryBrowseButton, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.outputDirectoryBrowseButton.text")); // NOI18N
-        outputDirectoryBrowseButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                outputDirectoryBrowseButtonActionPerformed(evt);
-            }
-        });
-
         errorLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
         org.openide.awt.Mnemonics.setLocalizedText(errorLabel, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.errorLabel.text")); // NOI18N
@@ -226,8 +236,6 @@ public final class FanPodPanel1 extends JPanel
             }
         });
 
-        outputDirectoryField.setText(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.outputDirectoryField.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.browseButton.text")); // NOI18N
         browseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -235,91 +243,75 @@ public final class FanPodPanel1 extends JPanel
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(outputDirectoryLabel, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.outputDirectoryLabel.text_1")); // NOI18N
-
-        org.jdesktop.layout.GroupLayout basicPanelLayout = new org.jdesktop.layout.GroupLayout(basicPanel);
-        basicPanel.setLayout(basicPanelLayout);
-        basicPanelLayout.setHorizontalGroup(
-            basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(basicPanelLayout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout podInfoPanelLayout = new org.jdesktop.layout.GroupLayout(podInfoPanel);
+        podInfoPanel.setLayout(podInfoPanelLayout);
+        podInfoPanelLayout.setHorizontalGroup(
+            podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(podInfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(errorLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
-                    .add(basicPanelLayout.createSequentialGroup()
-                        .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(podInfoPanelLayout.createSequentialGroup()
+                        .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(locationLabel)
-                            .add(basicPanelLayout.createSequentialGroup()
-                                .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(podInfoPanelLayout.createSequentialGroup()
+                                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(nameLabel)
                                     .add(folderLabel)
                                     .add(podVersionLabel)
                                     .add(podDescLabel)
-                                    .add(outputDirectoryLabel)
                                     .add(mainClassLabel))
-                                .add(42, 42, 42)
-                                .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(48, 48, 48)
+                                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(nameField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
-                                    .add(basicPanelLayout.createSequentialGroup()
+                                    .add(podInfoPanelLayout.createSequentialGroup()
                                         .add(locationField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 320, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                         .add(18, 18, 18)
                                         .add(browseButton))
                                     .add(org.jdesktop.layout.GroupLayout.TRAILING, folderField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
                                     .add(podDescField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
                                     .add(podVersionField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
-                                    .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                                        .add(mainClassField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 390, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .add(org.jdesktop.layout.GroupLayout.LEADING, basicPanelLayout.createSequentialGroup()
-                                            .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 314, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                            .add(18, 18, 18)
-                                            .add(outputDirectoryBrowseButton))))))
+                                    .add(mainClassField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 390, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
                         .add(53, 53, 53))
                     .add(buildFileCheckbox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 216, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(basicPanelLayout.createSequentialGroup()
+                    .add(podInfoPanelLayout.createSequentialGroup()
                         .add(mainClassCheckbox)
                         .add(18, 18, 18)
                         .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        basicPanelLayout.setVerticalGroup(
-            basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(basicPanelLayout.createSequentialGroup()
-                .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(basicPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(nameLabel)
-                            .add(nameField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(18, 18, 18)
-                        .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(locationLabel)
-                            .add(locationField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(browseButton))
-                        .add(18, 18, 18)
-                        .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(folderField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(folderLabel))
-                        .add(18, 18, 18)
-                        .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(podDescField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(podDescLabel))
-                        .add(18, 18, 18)
-                        .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(podVersionField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(podVersionLabel)))
-                    .add(basicPanelLayout.createSequentialGroup()
-                        .add(229, 229, 229)
-                        .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(outputDirectoryBrowseButton)
-                            .add(outputDirectoryLabel))))
+        podInfoPanelLayout.setVerticalGroup(
+            podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(podInfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(nameLabel)
+                    .add(nameField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(18, 18, 18)
+                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(locationLabel)
+                    .add(locationField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(browseButton))
+                .add(18, 18, 18)
+                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(folderField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(folderLabel))
+                .add(18, 18, 18)
+                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(podDescField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(podDescLabel))
+                .add(18, 18, 18)
+                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(podVersionField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(podVersionLabel))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(buildFileCheckbox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(jSeparator1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
                     .add(mainClassCheckbox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(basicPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(podInfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(mainClassField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(mainClassLabel))
                 .add(261, 261, 261)
@@ -327,7 +319,134 @@ public final class FanPodPanel1 extends JPanel
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.basicPanel.TabConstraints.tabTitle"), basicPanel); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.podInfoPanel.TabConstraints.tabTitle"), podInfoPanel); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.jLabel1.text_1")); // NOI18N
+
+        jScrollPane1.setViewportView(sourceDirectoryTree);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.jLabel2.text")); // NOI18N
+
+        jScrollPane2.setViewportView(resourceDirectoryTree);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.jLabel3.text")); // NOI18N
+
+        outputDirectoryField.setText(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.outputDirectoryField.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(outputDirectoryBrowseButton, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.outputDirectoryBrowseButton.text")); // NOI18N
+        outputDirectoryBrowseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputDirectoryBrowseButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(resourceDirectoryBrowseButton, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.resourceDirectoryBrowseButton.text")); // NOI18N
+        resourceDirectoryBrowseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resourceDirectoryBrowseButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(sourceDirectoryBrowseButton, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.sourceDirectoryBrowseButton.text")); // NOI18N
+        sourceDirectoryBrowseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sourceDirectoryBrowseButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(docApiCheckBox, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.docApiCheckBox.text")); // NOI18N
+        docApiCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                docApiCheckBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(docSrcCheckBox, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.docSrcCheckBox.text")); // NOI18N
+        docSrcCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                docSrcCheckBoxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(sourceDefaultButton, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.sourceDefaultButton.text")); // NOI18N
+        sourceDefaultButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sourceDefaultButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(resourceDefaultButton, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.resourceDefaultButton.text")); // NOI18N
+        resourceDefaultButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resourceDefaultButtonActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pathsPanelLayout = new org.jdesktop.layout.GroupLayout(pathsPanel);
+        pathsPanel.setLayout(pathsPanelLayout);
+        pathsPanelLayout.setHorizontalGroup(
+            pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pathsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel1)
+                    .add(jLabel2)
+                    .add(jLabel3))
+                .add(36, 36, 36)
+                .add(pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, outputDirectoryField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .add(docApiCheckBox)
+                    .add(docSrcCheckBox))
+                .add(18, 18, 18)
+                .add(pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(pathsPanelLayout.createSequentialGroup()
+                        .add(8, 8, 8)
+                        .add(pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(sourceDirectoryBrowseButton)
+                                .add(resourceDirectoryBrowseButton))
+                            .add(outputDirectoryBrowseButton)))
+                    .add(resourceDefaultButton)
+                    .add(sourceDefaultButton))
+                .addContainerGap())
+        );
+        pathsPanelLayout.setVerticalGroup(
+            pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pathsPanelLayout.createSequentialGroup()
+                .add(pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pathsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel1)
+                            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 94, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(pathsPanelLayout.createSequentialGroup()
+                                .add(sourceDirectoryBrowseButton)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(sourceDefaultButton)))
+                        .add(18, 18, 18)
+                        .add(pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 92, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel2)
+                            .add(pathsPanelLayout.createSequentialGroup()
+                                .add(resourceDirectoryBrowseButton)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(resourceDefaultButton))))
+                    .add(pathsPanelLayout.createSequentialGroup()
+                        .add(234, 234, 234)
+                        .add(pathsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel3)
+                            .add(outputDirectoryBrowseButton))))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(docApiCheckBox)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(docSrcCheckBox)
+                .add(55, 55, 55))
+        );
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.pathsPanel.TabConstraints.tabTitle"), pathsPanel); // NOI18N
 
         dependenciesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -383,74 +502,57 @@ public final class FanPodPanel1 extends JPanel
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(docSrcCheckBox, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.docSrcCheckBox.text")); // NOI18N
-        docSrcCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                docSrcCheckBoxActionPerformed(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(docApiCheckBox, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.docApiCheckBox.text")); // NOI18N
-
-        org.jdesktop.layout.GroupLayout specialPanelLayout = new org.jdesktop.layout.GroupLayout(specialPanel);
-        specialPanel.setLayout(specialPanelLayout);
-        specialPanelLayout.setHorizontalGroup(
-            specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(specialPanelLayout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout dependencyPanelLayout = new org.jdesktop.layout.GroupLayout(dependencyPanel);
+        dependencyPanel.setLayout(dependencyPanelLayout);
+        dependencyPanelLayout.setHorizontalGroup(
+            dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(dependencyPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(dependenciesLabel)
                     .add(indexLabel)
                     .add(metaLabel))
                 .add(18, 18, 18)
-                .add(specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(docSrcCheckBox)
-                    .add(docApiCheckBox)
-                    .add(specialPanelLayout.createSequentialGroup()
-                        .add(specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(indexScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, dependenciesScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
-                            .add(metaScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(editListButton)
-                            .add(indexEditButton)
-                            .add(dependenciesButton))))
+                .add(dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(indexScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, dependenciesScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+                    .add(metaScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(editListButton)
+                    .add(indexEditButton)
+                    .add(dependenciesButton))
                 .addContainerGap())
         );
-        specialPanelLayout.setVerticalGroup(
-            specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(specialPanelLayout.createSequentialGroup()
-                .add(specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(specialPanelLayout.createSequentialGroup()
+        dependencyPanelLayout.setVerticalGroup(
+            dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(dependencyPanelLayout.createSequentialGroup()
+                .add(dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(dependencyPanelLayout.createSequentialGroup()
                         .add(27, 27, 27)
-                        .add(specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(dependenciesButton)
                             .add(dependenciesScrollPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 94, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                    .add(specialPanelLayout.createSequentialGroup()
+                    .add(dependencyPanelLayout.createSequentialGroup()
                         .add(50, 50, 50)
                         .add(dependenciesLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .add(18, 18, 18)
-                .add(specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(indexLabel)
                     .add(indexEditButton)
                     .add(indexScrollPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 77, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(17, 17, 17)
-                .add(specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(metaLabel)
-                    .add(specialPanelLayout.createSequentialGroup()
+                    .add(dependencyPanelLayout.createSequentialGroup()
                         .add(1, 1, 1)
-                        .add(specialPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(dependencyPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(editListButton)
                             .add(metaScrollPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 78, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(docSrcCheckBox)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(docApiCheckBox)
-                .addContainerGap())
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.specialPanel.TabConstraints.tabTitle"), specialPanel); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.dependencyPanel.TabConstraints.tabTitle"), dependencyPanel); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(nextPageButton, org.openide.util.NbBundle.getMessage(FanPodPanel1.class, "FanPodPanel1.nextPageButton.text")); // NOI18N
         nextPageButton.addActionListener(new java.awt.event.ActionListener() {
@@ -471,19 +573,19 @@ public final class FanPodPanel1 extends JPanel
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
+                .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 564, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(layout.createSequentialGroup()
-                        .addContainerGap()
                         .add(previousPageButton)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 407, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 425, Short.MAX_VALUE)
                         .add(nextPageButton)))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 411, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 366, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(previousPageButton)
@@ -491,20 +593,6 @@ public final class FanPodPanel1 extends JPanel
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void outputDirectoryBrowseButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_outputDirectoryBrowseButtonActionPerformed
-    {//GEN-HEADEREND:event_outputDirectoryBrowseButtonActionPerformed
-        final JFileChooser fChooser = new JFileChooser();
-        fChooser.setMultiSelectionEnabled(false);
-	fChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-	fChooser.setApproveButtonText("Select");
-        int val = fChooser.showDialog(this, "Select");
-        if (val == JFileChooser.APPROVE_OPTION)
-	{
-            outputDirectoryField.setText(fChooser.getSelectedFile().getPath());
-            updateFolder();
-        }
-    }//GEN-LAST:event_outputDirectoryBrowseButtonActionPerformed
 
     private void nameFieldCaretUpdate(javax.swing.event.CaretEvent evt)//GEN-FIRST:event_nameFieldCaretUpdate
     {//GEN-HEADEREND:event_nameFieldCaretUpdate
@@ -520,24 +608,24 @@ public final class FanPodPanel1 extends JPanel
 
     private void nameFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_nameFieldKeyReleased
     {//GEN-HEADEREND:event_nameFieldKeyReleased
-		String name = nameField.getText();
-		podDescField.setText(name);
-		updateFolder();
+        String name = nameField.getText();
+        podDescField.setText(name);
+        updateFolder();
     }//GEN-LAST:event_nameFieldKeyReleased
 
     private void locationFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_locationFieldKeyReleased
     {//GEN-HEADEREND:event_locationFieldKeyReleased
-		updateFolder();
+        updateFolder();
     }//GEN-LAST:event_locationFieldKeyReleased
 
     private void podDescFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_podDescFieldKeyReleased
     {//GEN-HEADEREND:event_podDescFieldKeyReleased
-		updateFolder();
+        updateFolder();
     }//GEN-LAST:event_podDescFieldKeyReleased
 
 	private void mainClassFieldKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_mainClassFieldKeyReleased
 	{//GEN-HEADEREND:event_mainClassFieldKeyReleased
-		updateFolder();
+            updateFolder();
 	}//GEN-LAST:event_mainClassFieldKeyReleased
 
 	private void podDescFieldActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_podDescFieldActionPerformed
@@ -562,9 +650,17 @@ public final class FanPodPanel1 extends JPanel
                         new File(FanPlatform.getInstance().buildLibraryPath()),
                         new File((f.exists() && f.isAbsolute()) ? getOutputDirectory() : getProjectFolder() + "/" + getOutputDirectory() + "/")
                     };
-                    final String[] descriptions = { "Fantom System Pods", "User Pods"};
-                    final FanPodDependencyPanel podChooser = new FanPodDependencyPanel();
-                    int val = podChooser.showDialog(FanPodPanel1.this, "Select Dependencies", directories, descriptions, dependencies);
+
+                    final java.awt.Window window = SwingUtilities.getWindowAncestor(FanPodPanel1.this);
+                    final FanPodDependencyPanel podChooser;
+
+                    if (window instanceof java.awt.Frame) {
+                        podChooser = new FanPodDependencyPanel((java.awt.Frame) window, "Select Dependencies");
+                    }
+                    else {
+                        podChooser = new FanPodDependencyPanel((java.awt.Dialog) window, "Select Dependencies");
+                    }
+                    int val = podChooser.showDialog(directories, dependencies);
                     if (val == JFileChooser.APPROVE_OPTION)
                     {
                         dependencies = podChooser.getSelected();
@@ -641,12 +737,21 @@ public final class FanPodPanel1 extends JPanel
         }//GEN-LAST:event_editListButtonActionPerformed
 
         private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-		int val = chooser.showDialog(this, "Select");
-		if (val == JFileChooser.APPROVE_OPTION)
-		{
-			locationField.setText(chooser.getSelectedFile().getPath());
-			updateFolder();
-		}
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    int val = chooser.showDialog(FanPodPanel1.this, "Select");
+                    if (val == JFileChooser.APPROVE_OPTION)
+                    {
+                        final String s = chooser.getSelectedFile().getPath();
+                        locationField.setText(s);
+                        initTree(sourceDirectoryTree, s, sourceDirs);
+                        initTree(resourceDirectoryTree, s, resourceDirs);
+                        updateFolder();
+                    }
+                    return 0;
+                }
+            };
+            sw.execute();
         }//GEN-LAST:event_browseButtonActionPerformed
 
         private void mainClassFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mainClassFieldActionPerformed
@@ -654,59 +759,177 @@ public final class FanPodPanel1 extends JPanel
         }//GEN-LAST:event_mainClassFieldActionPerformed
 
         private void nextPageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextPageButtonActionPerformed
-            jTabbedPane1.setSelectedIndex(1);
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    currentTab++;
+                    if (currentTab > MAX_TAB) {
+                        currentTab = MIN_TAB;
+                    }
+                    jTabbedPane1.setSelectedIndex(currentTab);
+                    return 0;
+                }
+            };
+            sw.execute();
         }//GEN-LAST:event_nextPageButtonActionPerformed
 
         private void previousPageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousPageButtonActionPerformed
-            jTabbedPane1.setSelectedIndex(0);
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    currentTab--;
+                    if (currentTab < MIN_TAB) {
+                        currentTab = MAX_TAB;
+                    }
+                    jTabbedPane1.setSelectedIndex(currentTab);
+                    return 0;
+                }
+            };
+            sw.execute();
         }//GEN-LAST:event_previousPageButtonActionPerformed
 
+        private void sourceDirectoryBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourceDirectoryBrowseButtonActionPerformed
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    final java.awt.Window window = SwingUtilities.getWindowAncestor(FanPodPanel1.this);
+                    final FanPodSourcesPanel podChooser;
+                    if (window instanceof java.awt.Frame) {
+                        podChooser = new FanPodSourcesPanel((java.awt.Frame) window, "Select Source Directories");
+                    }
+                    else {
+                        podChooser = new FanPodSourcesPanel((java.awt.Dialog) window, "Select Source Directories");
+                    }
+                    int val = podChooser.showDialog(new File(folderField.getText()), sourceDirs);
+                    if (val == JFileChooser.APPROVE_OPTION)
+                    {
+                        sourceDirs.clear();
+                        sourceDirs.addAll(podChooser.getSelected());
+                        final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(folderField.getText());
+                        for (String s : sourceDirs) {
+                            rootNode.add(new DefaultMutableTreeNode(s));
+                        }
+                        sourceDirectoryTree.setModel(new DefaultTreeModel(rootNode));
+                    }
+                    return 0;
+                }
+            };
+            sw.execute();
+        }//GEN-LAST:event_sourceDirectoryBrowseButtonActionPerformed
+
+        private void resourceDirectoryBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resourceDirectoryBrowseButtonActionPerformed
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    final java.awt.Window window = SwingUtilities.getWindowAncestor(FanPodPanel1.this);
+                    final FanPodSourcesPanel podChooser;
+                    if (window instanceof java.awt.Frame) {
+                        podChooser = new FanPodSourcesPanel((java.awt.Frame) window, "Select Resource Directories");
+                    }
+                    else {
+                        podChooser = new FanPodSourcesPanel((java.awt.Dialog) window, "Select Resource Directories");
+                    }
+                    int val = podChooser.showDialog(new File(folderField.getText()), resourceDirs);
+                    if (val == JFileChooser.APPROVE_OPTION)
+                    {
+                        resourceDirs.clear();
+                        resourceDirs.addAll(podChooser.getSelected());
+                        final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(folderField.getText());
+                        for (String s : resourceDirs) {
+                            rootNode.add(new DefaultMutableTreeNode(s));
+                        }
+                        resourceDirectoryTree.setModel(new DefaultTreeModel(rootNode));
+                    }
+                    return 0;
+                }
+            };
+            sw.execute();
+        }//GEN-LAST:event_resourceDirectoryBrowseButtonActionPerformed
+
+        private void outputDirectoryBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputDirectoryBrowseButtonActionPerformed
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    int val = chooser.showDialog(FanPodPanel1.this, "Select");
+                    if (val == JFileChooser.APPROVE_OPTION)
+                    {
+                        outputDirectoryField.setText(chooser.getSelectedFile().getPath());
+                        updateFolder();
+                    }
+                    return 0;
+                }
+            };
+            sw.execute();
+        }//GEN-LAST:event_outputDirectoryBrowseButtonActionPerformed
+
         private void docSrcCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_docSrcCheckBoxActionPerformed
-            // TODO add your handling code here:
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    if (docSrcCheckBox.isSelected()) {
+                        docApiCheckBox.setSelected(true);
+                    }
+                    return 0;
+                }
+            };
+            sw.execute();
         }//GEN-LAST:event_docSrcCheckBoxActionPerformed
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel basicPanel;
-    private javax.swing.JButton browseButton;
-    private javax.swing.JCheckBox buildFileCheckbox;
-    private javax.swing.JButton dependenciesButton;
-    private javax.swing.JLabel dependenciesLabel;
-    private javax.swing.JScrollPane dependenciesScrollPane;
-    private javax.swing.JTable dependenciesTable;
-    private javax.swing.JCheckBox docApiCheckBox;
-    private javax.swing.JCheckBox docSrcCheckBox;
-    private javax.swing.JButton editListButton;
-    private javax.swing.JLabel errorLabel;
-    private javax.swing.JTextField folderField;
-    private javax.swing.JLabel folderLabel;
-    private javax.swing.JButton indexEditButton;
-    private javax.swing.JLabel indexLabel;
-    private javax.swing.JList indexList;
-    private javax.swing.JScrollPane indexScrollPane;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField locationField;
-    private javax.swing.JLabel locationLabel;
-    private javax.swing.JCheckBox mainClassCheckbox;
-    private javax.swing.JTextField mainClassField;
-    private javax.swing.JLabel mainClassLabel;
-    private javax.swing.JLabel metaLabel;
-    private javax.swing.JList metaList;
-    private javax.swing.JScrollPane metaScrollPane;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JLabel nameLabel;
-    private javax.swing.JButton nextPageButton;
-    private javax.swing.JButton outputDirectoryBrowseButton;
-    private javax.swing.JTextField outputDirectoryField;
-    private javax.swing.JLabel outputDirectoryLabel;
-    private javax.swing.JTextField podDescField;
-    private javax.swing.JLabel podDescLabel;
-    private javax.swing.JTextField podVersionField;
-    private javax.swing.JLabel podVersionLabel;
-    private javax.swing.JButton previousPageButton;
-    private javax.swing.JPanel specialPanel;
-    // End of variables declaration//GEN-END:variables
+        private void docApiCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_docApiCheckBoxActionPerformed
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    if (!docApiCheckBox.isSelected()) {
+                        docSrcCheckBox.setSelected(false);
+                    }
+                    return 0;
+                }
+            };
+            sw.execute();
+        }//GEN-LAST:event_docApiCheckBoxActionPerformed
 
+        private void sourceDefaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourceDefaultButtonActionPerformed
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    sourceDirs.clear();
+                    final String s = folderField.getText();
+                    final String[] dirs = { "fan/", "test/" };
+                    for (int i = 0; i < dirs.length; i++) {
+                        final String dir = s + File.separator + dirs[i];
+                        final File f = new File(dir);
+                        if (!f.exists()) {
+                            f.mkdirs();
+                        }
+                        sourceDirs.add(dir);
+                    }
+                    final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(folderField.getText());
+                    for (final String str : sourceDirs) {
+                        rootNode.add(new DefaultMutableTreeNode(str));
+                    }
+                    sourceDirectoryTree.setModel(new DefaultTreeModel(rootNode));
+                    return 0;
+                }
+            };
+            sw.execute();
+        }//GEN-LAST:event_sourceDefaultButtonActionPerformed
+
+        private void resourceDefaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resourceDefaultButtonActionPerformed
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    resourceDirs.clear();
+                    final String s = folderField.getText();
+                    final String[] dirs = { "res/" };
+                    for (int i = 0; i < dirs.length; i++) {
+                        final String dir = s + File.separator + dirs[i];
+                        final File f = new File(dir);
+                        if (!f.exists()) {
+                            f.mkdirs();
+                        }
+                        resourceDirs.add(dir);
+                    }
+                    final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(folderField.getText());
+                    for (final String str : resourceDirs) {
+                        rootNode.add(new DefaultMutableTreeNode(str));
+                    }
+                    resourceDirectoryTree.setModel(new DefaultTreeModel(rootNode));
+                    return 0;
+                }
+            };
+            sw.execute();
+        }//GEN-LAST:event_resourceDefaultButtonActionPerformed
 	// custom
         @Override
 	public boolean isValid()
@@ -758,85 +981,104 @@ public final class FanPodPanel1 extends JPanel
 
 	private void updateFolder()
 	{
-		dir = locationField.getText();
-		dir += (dir.endsWith(File.separator) ? "" : File.separator) + nameField.getText();
-		folderField.setText(dir);
-		// will recheck that it's valid
-		parent.fireChangeEvent();
+            dir = locationField.getText();
+            dir += (dir.endsWith(File.separator) ? "" : File.separator) + nameField.getText();
+            folderField.setText(dir);
+            // will recheck that it's valid
+            parent.fireChangeEvent();
 	}
 
-	private boolean checkName(String text)
+	private boolean checkName(final String text)
 	{
-		if(text==null || text.length()==0)
-			return false;
-		return VALID_NAME.matcher(text).matches();
+            if(text==null || text.length()==0) {
+                return false;
+            }
+            return VALID_NAME.matcher(text).matches();
 	}
 
-	String getProjectFolder()
+	public String getProjectFolder()
 	{
-		return folderField.getText();
+            return folderField.getText();
 	}
-        void setProjectFolder(String val) {
-            folderField.setText(val);
+        public void setProjectFolder(final String val) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    folderField.setText(val);
+                    return 0;
+                }
+            };
+            sw.execute();
         }
-	String getPodName()
+	public String getPodName()
 	{
-		return nameField.getText();
+            return nameField.getText();
 	}
-        void setPodName(String val) {
-            nameField.setText(val);
+        public void setPodName(final String val) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    nameField.setText(val);
+                    return 0;
+                }
+            };
+            sw.execute();
         }
-	String getPodDesc()
+	public String getPodDesc()
 	{
-		return podDescField.getText();
+            return podDescField.getText();
 	}
-        void setPodDesc(String val) {
-            podDescField.setText(val);
+        public void setPodDesc(final String val) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    podDescField.setText(val);
+                    return 0;
+                }
+            };
+            sw.execute();
         }
-        String getPodVersion() {
+        public String getPodVersion() {
             return podVersionField.getText();
         }
-        void setPodVersion(String val) {
-            podVersionField.setText(val);
+        public void setPodVersion(final String val) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    podVersionField.setText(val);
+                    return 0;
+                }
+            };
+            sw.execute();
         }
-        String getOutputDirectory() {
-            return outputDirectoryField.getText();
+        public String getOutputDirectory() {
+            return "`" + outputDirectoryField.getText() + "`";
         }
-        void setOutputDirectory(String val) {
-            outputDirectoryField.setText(val);
+        public void setOutputDirectory(final String val) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    outputDirectoryField.setText(val.replaceAll("`",""));
+                    return 0;
+                }
+            };
+            sw.execute();
         }
-        String getDependencies() {
+        public String getDependencies() {
             final StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < dependenciesTable.getRowCount(); i++) {
-                if (i != 0) {
+            for (final DependencyPair pair : dependencies) {
+                if (sb.length() != 0) {
                     sb.append(", ");
                 }
                 sb.append("\"");
-                TableCellEditor te = dependenciesTable.getCellEditor(i, 0);
-                if (null != te) {
-                    final Object o = te.getCellEditorValue();
-                    if (null != o) {
-                        sb.append(o.toString());
-                    }
-                }
-                sb.append(' ');
-                te = dependenciesTable.getCellEditor(i, 1);
-                if (null != te) {
-                    final Object o = te.getCellEditorValue();
-                    if (null != o) {
-                        sb.append(o.toString());
-                    }
-                }
+                sb.append(pair.getPodName());
+                sb.append(" ");
+                sb.append(pair.getVersion());
                 sb.append("\"");
             }
             return sb.toString();
         }
-        void setDependencies(final String val) {
+        public void setDependencies(final String val) {
             if (null == val) {
                 return;
             }
+            dependencies.clear();
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
-                @Override
                 public Integer doInBackground() {
                     final DefaultTableModel tm = (DefaultTableModel)dependenciesTable.getModel();
                     for (int i = tm.getRowCount() -1; i >= 0; i--) {
@@ -848,6 +1090,7 @@ public final class FanPodPanel1 extends JPanel
                         final String[] line = deps[i].trim().split(" ");
                         if (line.length == 2) {
                             tm.addRow(new Object[]{line[0], line[1]});
+                            dependencies.add(new DependencyPair(line[0], line[1]));
                         }
                     }
                     return 0;
@@ -855,37 +1098,56 @@ public final class FanPodPanel1 extends JPanel
             };
             sw.execute();
         }
-	String getMainClassName()
+	public String getMainClassName()
 	{
-		return mainClassCheckbox.isSelected()?mainClassField.getText():null;
+            return mainClassCheckbox.isSelected()?mainClassField.getText():null;
 	}
-        void setMainClassName(String val) {
-            boolean b = false;
-            String s = "";
-            if (val != null && !val.equals("")) {
-                s = val;
-                b = true;
-            }
-            mainClassCheckbox.setSelected(b);
-            mainClassField.setText(s);
+        public void setMainClassName(final String val) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    boolean b = false;
+                    String s = "";
+                    if (val != null && !val.equals("")) {
+                        s = val;
+                        b = true;
+                    }
+                    mainClassCheckbox.setSelected(b);
+                    mainClassField.setText(s);
+                    return 0;
+                }
+            };
+            sw.execute();
+
         }
-	boolean getCreateBuildFile()
+	public boolean getCreateBuildFile()
 	{
-		return buildFileCheckbox.isSelected();
+            return buildFileCheckbox.isSelected();
 	}
-        void setCreateBuildFile(boolean val) {
-            buildFileCheckbox.setSelected(val);
+        public void setCreateBuildFile(final boolean val) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    buildFileCheckbox.setSelected(val);
+                    return 0;
+                }
+            };
+            sw.execute();
         }
-        void setIndex(String var) {
-            ((DefaultListModel)indexList.getModel()).clear();
-            var = var.trim().replaceAll("\"", "");
-            String[] indexes = var.split(",");
-            for (int i = 0; i < indexes.length; i++) {
-                ((DefaultListModel)indexList.getModel()).add(i, indexes[i]);
-            }
+        public void setIndex(final String var) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    ((DefaultListModel)indexList.getModel()).clear();
+                    String str = var.trim().replaceAll("\"", "");
+                    final String[] indexes = str.split(",");
+                    for (int i = 0; i < indexes.length; i++) {
+                        ((DefaultListModel)indexList.getModel()).add(i, indexes[i]);
+                    }
+                    return 0;
+                }
+            };
+            sw.execute();
         }
-        String getIndex() {
-            StringBuilder sb = new StringBuilder();
+        public String getIndex() {
+            final StringBuilder sb = new StringBuilder();
             for (int i = 0; i < indexList.getModel().getSize(); i++ ) {
                 if (i != 0) {
                     sb.append(", ");
@@ -896,16 +1158,22 @@ public final class FanPodPanel1 extends JPanel
             }
             return sb.toString();
         }
-        void setMeta(String var) {
-            ((DefaultListModel)metaList.getModel()).clear();
-            var = var.trim().replaceAll("\"", "");
-            String[] metas = var.split(",");
-            for (int i = 0; i < metas.length; i++) {
-                ((DefaultListModel)metaList.getModel()).add(i, metas[i]);
-            }
+        public void setMeta(final String var) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    ((DefaultListModel)metaList.getModel()).clear();
+                    final String str = var.trim().replaceAll("\"", "");
+                    final String[] metas = str.split(",");
+                    for (int i = 0; i < metas.length; i++) {
+                        ((DefaultListModel)metaList.getModel()).add(i, metas[i]);
+                    }
+                    return 0;
+                }
+            };
+            sw.execute();
         }
-        String getMeta() {
-            StringBuilder sb = new StringBuilder();
+        public String getMeta() {
+            final StringBuilder sb = new StringBuilder();
             for (int i = 0; i < metaList.getModel().getSize(); i++ ) {
                 if (i != 0) {
                     sb.append(", ");
@@ -916,17 +1184,176 @@ public final class FanPodPanel1 extends JPanel
             }
             return sb.toString();
         }
-        boolean getDocApi() {
+        public boolean getDocApi() {
             return docApiCheckBox.isSelected();
         }
-        boolean getDocSrc() {
+        public boolean getDocSrc() {
             return docSrcCheckBox.isSelected();
         }
-        void setDocApi(boolean var) {
-            docApiCheckBox.setSelected(var);
+        public void setDocApi(final boolean var) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    docApiCheckBox.setSelected(var);
+                    return 0;
+                }
+            };
+            sw.execute();
+
         }
-        void setDocSrc(boolean var) {
-            docSrcCheckBox.setSelected(var);
+        public void setDocSrc(final boolean var) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    docSrcCheckBox.setSelected(var);
+                    return 0;
+                }
+            };
+            sw.execute();
         }
+        public String getSourceDirs() {
+            final StringBuilder sb = new StringBuilder();
+            final String rootDir = getProjectFolder();
+            for (String s : sourceDirs) {
+                s = s.replaceAll(rootDir, "");
+                if (s.startsWith("/")) {
+                    s = s.substring(1);
+                }
+                if (!s.endsWith("/")) {
+                    s += "/";
+                }
+                if (sb.length() != 0) {
+                    sb.append(", ");
+                }
+                sb.append("`");
+                sb.append(s);
+                sb.append("`");
+            }
+            return sb.toString();
+        }
+        public void setSourceDirs(final String s) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    final String p = s.replaceAll("`", "");
+                    String rootDir = getProjectFolder();
+                    final String[] elems = p.split(",");
+                    if (!rootDir.endsWith("/")) {
+                        rootDir += "/";
+                    }
+                    sourceDirs.clear();
+                    for (int i = 0; i < elems.length; i++) {
+                        final String str = rootDir + elems[i].trim();
+                        sourceDirs.add(str);
+                    }
+                    initTree(sourceDirectoryTree, rootDir, sourceDirs);
+                    return 0;
+                }
+            };
+            sw.execute();
+        }
+        public String getResourceDirs() {
+            final StringBuilder sb = new StringBuilder();
+            final String rootDir = getProjectFolder();
+            for (String s : resourceDirs) {
+                s = s.replaceAll(rootDir, "");
+                if (s.startsWith("/")) {
+                    s = s.substring(1);
+                }
+                if (!s.endsWith("/")) {
+                    s += "/";
+                }
+                if (sb.length() != 0) {
+                    sb.append(", ");
+                }
+                sb.append("`");
+                sb.append(s);
+                sb.append("`");
+            }
+            return sb.toString();
+        }
+        public void setResourceDirs(final String s) {
+            final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
+                public Integer doInBackground() {
+                    final String p = s.replaceAll("`", "");
+                    String rootDir = getProjectFolder();
+                    final String[] elems = p.split(",");
+                    if (!rootDir.endsWith("/")) {
+                        rootDir += "/";
+                    }
+                    resourceDirs.clear();
+                    for (int i = 0; i < elems.length; i++) {
+                        final String str = rootDir + elems[i].trim();
+                        resourceDirs.add(str);
+                    }
+                    initTree(resourceDirectoryTree, rootDir, resourceDirs);
+                    return 0;
+                }
+            };
+            sw.execute();
+        }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton browseButton;
+    private javax.swing.JCheckBox buildFileCheckbox;
+    private javax.swing.JButton dependenciesButton;
+    private javax.swing.JLabel dependenciesLabel;
+    private javax.swing.JScrollPane dependenciesScrollPane;
+    private javax.swing.JTable dependenciesTable;
+    private javax.swing.JPanel dependencyPanel;
+    private javax.swing.JCheckBox docApiCheckBox;
+    private javax.swing.JCheckBox docSrcCheckBox;
+    private javax.swing.JButton editListButton;
+    private javax.swing.JLabel errorLabel;
+    private javax.swing.JTextField folderField;
+    private javax.swing.JLabel folderLabel;
+    private javax.swing.JButton indexEditButton;
+    private javax.swing.JLabel indexLabel;
+    private javax.swing.JList indexList;
+    private javax.swing.JScrollPane indexScrollPane;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField locationField;
+    private javax.swing.JLabel locationLabel;
+    private javax.swing.JCheckBox mainClassCheckbox;
+    private javax.swing.JTextField mainClassField;
+    private javax.swing.JLabel mainClassLabel;
+    private javax.swing.JLabel metaLabel;
+    private javax.swing.JList metaList;
+    private javax.swing.JScrollPane metaScrollPane;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JButton nextPageButton;
+    private javax.swing.JButton outputDirectoryBrowseButton;
+    private javax.swing.JTextField outputDirectoryField;
+    private javax.swing.JPanel pathsPanel;
+    private javax.swing.JTextField podDescField;
+    private javax.swing.JLabel podDescLabel;
+    private javax.swing.JPanel podInfoPanel;
+    private javax.swing.JTextField podVersionField;
+    private javax.swing.JLabel podVersionLabel;
+    private javax.swing.JButton previousPageButton;
+    private javax.swing.JButton resourceDefaultButton;
+    private javax.swing.JButton resourceDirectoryBrowseButton;
+    private javax.swing.JTree resourceDirectoryTree;
+    private javax.swing.JButton sourceDefaultButton;
+    private javax.swing.JButton sourceDirectoryBrowseButton;
+    private javax.swing.JTree sourceDirectoryTree;
+    // End of variables declaration//GEN-END:variables
+
+        private Set<String> sourceDirs = new HashSet<String>();
+        private Set<String> resourceDirs = new HashSet<String>();
+        private SortedSet<DependencyPair> dependencies;
+	private String dir;
+	private static final String DEFAULT_PRJ = "FanPrj1";
+	private final JFileChooser chooser;
+	public final static Pattern VALID_NAME = Pattern.compile("[ a-zA-Z0-9_-]+");
+	private FanPodWizardPanel1 parent;
+        private int currentTab = 0;
+        private static final int MIN_TAB = 0;
+        private static final int MAX_TAB = 2;
+
 }
 
