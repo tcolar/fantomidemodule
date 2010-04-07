@@ -1018,7 +1018,7 @@ public class FanParserTask extends ParserResult
 				//addError("Can't have inferred formals in closure definition.", node);
 				// actually that's allowed, just uses sys::Obj?
 				fType = FanResolvedType.makeFromTypeSig(node, "sys::Obj?");
-			} else if (index > inferredTypes.size())
+			} else if (index >= inferredTypes.size())
 			{
 				addError("More inferred formals than expected.", node);
 				fType = FanResolvedType.makeUnresolved(node);
