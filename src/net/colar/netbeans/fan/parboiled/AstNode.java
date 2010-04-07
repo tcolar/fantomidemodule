@@ -239,6 +239,7 @@ public class AstNode
 		scopeNode.getLocalScopeVars().put(var.getName(), var);
 	}
 
+	// TODO: should juts lazy init 
 	public RootNode getRoot()
 	{
 		AstNode nd = this;
