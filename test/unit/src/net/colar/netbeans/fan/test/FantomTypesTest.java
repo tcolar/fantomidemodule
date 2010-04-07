@@ -7,12 +7,8 @@ import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.types.FanResolvedListType;
-import net.colar.netbeans.fan.types.FanResolvedNullType;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.testing.JOTTester;
-import org.apache.lucene.document.Document;
-import org.netbeans.modules.parsing.api.Snapshot;
-import org.netbeans.modules.parsing.api.Source;
 import org.parboiled.Parboiled;
 import org.parboiled.RecoveringParseRunner;
 import org.parboiled.support.ParsingResult;
@@ -106,7 +102,7 @@ public class FantomTypesTest extends FantomCSLTest
 	private void checkExpr(String expr, String typeSig, boolean isNullable, boolean isStatic) throws Exception
 	{
 		FanParserTask task = new FanParserTask(null);
-		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
+		FantomParser parser = Parboiled.createParser(FantomParser.class, task);
 		ParsingResult<AstNode> result = RecoveringParseRunner.run(parser.testExpr(), expr);
 		AstNode node = result.parseTreeRoot.getValue();
 		task.parseVars(node, null);
