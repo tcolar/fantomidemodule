@@ -77,6 +77,8 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		boolean createBuildFile = panel.getCreateBuildFile();
                 boolean docApi = panel.getDocApi();
                 boolean docSrc = panel.getDocSrc();
+                String sourceDirs = panel.getSourceDirs();
+                String resourceDirs = panel.getResourceDirs();
                 
 		// create project
 		File pf = FileUtil.normalizeFile(new File(podFolder));
@@ -129,13 +131,14 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 			view.addVariable("desc", podDesc);
                         view.addVariable("version", podVersion);
                         view.addVariable("dependencies", dependencies);
-                        // TODO Must not be hard-coded
-                        view.addVariable("srcDirs", "`fan/`, `test`");
+                        view.addVariable("srcDirs", sourceDirs);
+                        view.addVariable("resDirs", resourceDirs);
                         view.addVariable("outDir", outDir);
                         view.addVariable("indexes", indexes);
                         view.addVariable("metas", metas);
                         view.addVariable("docSrc", Boolean.toString(docSrc));
                         view.addVariable("docApi", Boolean.toString(docApi));
+
 			File buildFile = new File(pf, "build.fan");
 
 			buildFo = FileUtil.toFileObject(buildFile);
@@ -144,6 +147,9 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 			view.addVariable("license", license.asText());
 
 			String buildText = buildTemplate.asText();
+
+                        // Take out the empty lines from the build.fan file, which can happen
+                        // when some of the params don't have values.
                         Pattern p = Pattern.compile("^.*\\[\\]$", Pattern.MULTILINE);
                         Matcher m = p.matcher(buildText);
                         buildText = m.replaceAll("");
