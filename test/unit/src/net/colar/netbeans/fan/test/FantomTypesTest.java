@@ -53,8 +53,7 @@ public class FantomTypesTest extends FantomCSLTest
 
 		// checking expressions
 		checkExpr("5", "sys::Int", false, false);
-		checkExpr("(0..<20)", "sys::Int[]", false, false);
-		AstNode resultNode=checkExpr("null", "n/a:n/a?", true, false);
+		AstNode resultNode=checkExpr("null", "null:null?", true, false);
 		JOTTester.checkIf("checking null type", resultNode.getType() instanceof FanResolvedNullType);
 
 		resultNode=checkExpr("|str| { echo(str) }", "|sys::Obj?->sys::Void|", false, false);

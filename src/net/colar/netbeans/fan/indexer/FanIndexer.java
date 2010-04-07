@@ -417,11 +417,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 										}
 										dbParam.setSlotId(dbSlot.getId());
 										dbParam.setName(paramName);
-										String pType = UNRESOLVED_TYPE; // can that happen ?
-										if (paramResult.getType().isResolved())
-										{
-											pType = paramResult.getType().toTypeSig(true);
-										}
+										String pType = pType = paramResult.getType().toTypeSig(true);
 										dbParam.setQualifiedType(pType);
 										dbParam.setParamIndex(paramIndex);
 										dbParam.setHasDefault(paramResult.hasDefaultValue());

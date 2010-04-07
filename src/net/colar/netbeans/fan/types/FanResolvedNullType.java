@@ -14,7 +14,7 @@ public class FanResolvedNullType extends FanResolvedType
 {
 	public FanResolvedNullType(AstNode node)
 	{
-		super(node, "null", new FanDummyType());
+		super(node, "null", new FanDummyType("null::null"));
 	}
 
 }

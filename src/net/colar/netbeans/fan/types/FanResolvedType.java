@@ -415,6 +415,8 @@ public class FanResolvedType implements Cloneable
 		{
 			fq += "?";
 		}
+		if(fq.indexOf("n/a")>=0)
+			System.out.println("breakpoint");
 		return fq;
 	}
 
@@ -565,7 +567,7 @@ public class FanResolvedType implements Cloneable
 				type = scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::" + enteredType);
 				toStatic = true;
 			}
-			// Deal with "fake" Generic types
+			// Deal with Generic types
 			if (type == null && isGenericType(enteredType))
 			{
 				if (!enteredType.startsWith("sys::"))

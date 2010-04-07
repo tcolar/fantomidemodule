@@ -15,7 +15,7 @@ public class FanResolvedGenericType extends FanResolvedType
 
 	public FanResolvedGenericType(AstNode node, String enteredType)
 	{
-		super(node, enteredType, new FanDummyType());
+		super(node, enteredType, new FanDummyType(enteredType));
 	}
 
 	/**

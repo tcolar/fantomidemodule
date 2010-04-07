@@ -11,16 +11,17 @@ import net.jot.persistance.JOTTransaction;
 public class FanDummyType extends FanType
 {
 
-	public FanDummyType()
+	public FanDummyType(String typeString)
 	{
 		super.id = -2;
+		// we need qualifiedName to be filled in for indexing generics
+		super.qualifiedName = typeString;
 		super.isAbstract = false;
 		super.isConst = false;
 		super.isFinal = false;
 		super.pod = "n/a";
 		super.protection = 0;
-		super.qualifiedName = "n/a:n/a";
-		super.simpleName = "n/a";
+		super.simpleName = getShortName(typeString);
 	}
 
 	@Override
