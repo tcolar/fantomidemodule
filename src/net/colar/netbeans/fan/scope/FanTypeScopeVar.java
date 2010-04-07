@@ -15,7 +15,6 @@ import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.types.FanResolvedType;
-import org.parboiled.google.base.Predicate;
 
 /**
  *
@@ -103,9 +102,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	public void parseSlots(FanParserTask task)
 	{
 		// Also "cache" inherited slots, for faster var lookup later
-		System.out.print(">getallslots " + name);
 		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true, task);
-		System.out.print("<getallslots");
 		for (FanSlot slot : slots)
 		{
 			FanAstScopeVarBase newVar = new FanLocalScopeVar(node, getType(), slot, slot.getName());
