@@ -29,4 +29,6 @@ public enum AstKind
 	AST_INC_USING, AST_INC_CALL, AST_ARG,
 	// Labels
 	LBL_CLASS, LBL_ENUM, LBL_MIXIN, LBL_FACET, LBL_OP,
+	// for unit testing
+	DUMMY_NODE
 }

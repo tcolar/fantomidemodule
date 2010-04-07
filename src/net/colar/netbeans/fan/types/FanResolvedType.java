@@ -397,7 +397,7 @@ public class FanResolvedType implements Cloneable
 				fq = dbType.getSimpleName();
 			}
 		}
-		if (fullyQualified)
+		else if (fullyQualified)
 		{
 			fq = getAsTypedType();
 		} else

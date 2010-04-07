@@ -84,9 +84,9 @@ public class FanParserTask extends ParserResult
 	{
 		super(snapshot);
 		invalidated = false;
-		sourceName = snapshot.getSource().getFileObject().getName();
-		sourceFile = FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
-		pod = FanUtilities.getPodForPath(sourceFile.getPath());
+		sourceName = snapshot==null?null:snapshot.getSource().getFileObject().getName();
+		sourceFile = snapshot==null?null:FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
+		pod = snapshot==null?null:FanUtilities.getPodForPath(sourceFile.getPath());
 		parser = Parboiled.createParser(FantomParser.class, this);
 	}
 
@@ -230,7 +230,7 @@ public class FanParserTask extends ParserResult
 	 * This does the "global" items - as needed by the indexer
 	 * such as types, slots & their params
 	 */
-        @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public void parseGlobalScope()
 	{
 		long start = new Date().getTime();
@@ -270,15 +270,19 @@ public class FanParserTask extends ParserResult
 			{
 				case AST_TYPE_DEF:
 					String name = FanLexAstUtils.getFirstChildText(node, new NodeKindPredicate(AstKind.AST_ID));
+					if (name == null)
+					{
+						break;
+					}
 					FanTypeScopeVar var = new FanTypeScopeVar(node, name);
 					AstNode scopeNode = FanLexAstUtils.getScopeNode(node.getRoot());
 					// We parse the type base first and add it to scope right away
 					// So that parseSlots() can later resolve this & super.
 					System.out.print(name);
 					var.parse();
-					if (scopeNode.getAllScopeVars().containsKey(name) &&
-						// If we have a "suing" with the same name, we take precedence
-						scopeNode.getAllScopeVars().get(name).getKind() != VarKind.IMPORT)
+					if (scopeNode.getAllScopeVars().containsKey(name)
+							&& // If we have a "suing" with the same name, we take precedence
+							scopeNode.getAllScopeVars().get(name).getKind() != VarKind.IMPORT)
 					{
 						addError("Duplicated type name", node);
 					} else
@@ -306,7 +310,7 @@ public class FanParserTask extends ParserResult
 	 * from the indexer (see NBFanParser)
 	 * It highlights errors as well
 	 */
-        @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public void parseLocalScopes()
 	{
 		// don't allow multiple calls
@@ -352,8 +356,8 @@ public class FanParserTask extends ParserResult
 	 * @param node
 	 * @param type
 	 */
-        @SuppressWarnings("unchecked")
-	private void parseVars(AstNode node, FanResolvedType type)
+	@SuppressWarnings("unchecked")
+	public void parseVars(AstNode node, FanResolvedType type)
 	{
 		if (invalidated)
 		{
@@ -579,7 +583,7 @@ public class FanParserTask extends ParserResult
 		return type;
 	}
 
-        @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private void addUsing(AstNode usingNode)
 	{
 		String type = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_ID));
@@ -735,8 +739,8 @@ public class FanParserTask extends ParserResult
 		}
 	}
 
-        @SuppressWarnings("unchecked")
-        private FanResolvedType doExpr(AstNode node, FanResolvedType type)
+	@SuppressWarnings("unchecked")
+	private FanResolvedType doExpr(AstNode node, FanResolvedType type)
 	{
 		// TODO: validate assignment type is compatible.
 		boolean first = true;
@@ -796,8 +800,8 @@ public class FanParserTask extends ParserResult
 	 * @param forcedClosure :  when we have an itBlock, we need to send it as if it was a closure
 	 * @return
 	 */
-         @SuppressWarnings("unchecked")
-        private FanResolvedType doCall(AstNode node, FanResolvedType type, AstNode forcedClosure)
+	@SuppressWarnings("unchecked")
+	private FanResolvedType doCall(AstNode node, FanResolvedType type, AstNode forcedClosure)
 	{
 		// saving the base type, because we need it for closures
 		FanResolvedType baseType = type;
@@ -940,8 +944,8 @@ public class FanParserTask extends ParserResult
 	 * @param callAgainst : When called against a function (call) pass the expected parameters (for inference)
 	 * @return
 	 */
-         @SuppressWarnings("unchecked")
-        private FanResolvedFuncType doClosure(AstNode node, List<FanResolvedType> paramTypes)
+	@SuppressWarnings("unchecked")
+	private FanResolvedFuncType doClosure(AstNode node, List<FanResolvedType> paramTypes)
 	{
 		FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void");
 		AstNode closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
@@ -982,8 +986,8 @@ public class FanParserTask extends ParserResult
 	 * @param index
 	 * @return
 	 */
-         @SuppressWarnings("unchecked")
-         private FanResolvedType doFormal(AstNode node, AstNode closureBlock, List<FanResolvedType> inferredTypes, int index)
+	@SuppressWarnings("unchecked")
+	private FanResolvedType doFormal(AstNode node, AstNode closureBlock, List<FanResolvedType> inferredTypes, int index)
 	{
 		AstNode formalName = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		AstNode formalTypeAndId = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
@@ -1024,7 +1028,7 @@ public class FanParserTask extends ParserResult
 	 * @param type
 	 * @return
 	 */
-         @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private FanResolvedType doList(AstNode node, FanResolvedType type)
 	{
 		AstNode listTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
@@ -1056,7 +1060,7 @@ public class FanParserTask extends ParserResult
 		return type;
 	}
 
-         @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private FanResolvedType doMap(AstNode node, FanResolvedType type)
 	{
 		AstNode mapTypeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
@@ -1091,7 +1095,7 @@ public class FanParserTask extends ParserResult
 	 * @param type
 	 * @return
 	 */
-         @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private FanResolvedType doIndexExpr(AstNode exprNode, FanResolvedType type)
 	{
 		FanResolvedType baseType = type;
@@ -1121,7 +1125,7 @@ public class FanParserTask extends ParserResult
 		return type.parameterize(baseType, exprNode).asStaticContext(false);
 	}
 
-         @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private FanResolvedType doTypeCheckExpr(AstNode node, FanResolvedType type)
 	{
 		String text = node.getNodeText(true);
@@ -1170,7 +1174,7 @@ public class FanParserTask extends ParserResult
 		}
 	}
 
-        @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private FanResolvedType doLocalDef(AstNode node, FanResolvedType type)
 	{
 		AstNode typeAndIdNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
@@ -1228,8 +1232,8 @@ public class FanParserTask extends ParserResult
 		return type;
 	}
 
-        @SuppressWarnings("unchecked")
-        private FanResolvedType doCatchBlock(AstNode node, FanResolvedType type)
+	@SuppressWarnings("unchecked")
+	private FanResolvedType doCatchBlock(AstNode node, FanResolvedType type)
 	{
 		AstNode typeNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
 		AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
@@ -1255,7 +1259,7 @@ public class FanParserTask extends ParserResult
 	 */
 	public FanType findCachedQualifiedType(String qName)
 	{
-		if ( ! typeCache.containsKey(qName))
+		if (!typeCache.containsKey(qName))
 		{
 			typeCache.put(qName, FanType.findByQualifiedName(qName));
 		}

@@ -1251,4 +1251,10 @@ public class FantomParser extends BaseParser<AstNode>
 		System.out.println("get ctx: @"+now+" : "+t);
 		return ctx;
 	}*/
+
+	// for unit tsting
+	public Rule testExpr()
+	{
+		return sequence(expr(), ast.newRootNode(AstKind.DUMMY_NODE, parserTask));
+	}
 }
