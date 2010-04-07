@@ -111,56 +111,63 @@ public class FanPodWizardPanel1 implements WizardDescriptor.Panel
 		return (FanPodPanel1) getComponent();
 	}
 
-	String getPodName()
+	public String getPodName()
 	{
-		return getPanel().getPodName();
+            return getPanel().getPodName();
 	}
 
-	String getProjectFolder()
+	public String getProjectFolder()
 	{
-		return getPanel().getProjectFolder();
+            return getPanel().getProjectFolder();
 	}
 
-	String getPodDesc()
+	public String getPodDesc()
 	{
-		return getPanel().getPodDesc();
+            return getPanel().getPodDesc();
 	}
-        String getPodVersion()
+        public String getPodVersion()
         {
             return getPanel().getPodVersion();
         }
-	boolean getCreateBuildFile()
+	public boolean getCreateBuildFile()
 	{
-		return getPanel().getCreateBuildFile();
+            return getPanel().getCreateBuildFile();
 	}
-
-	String getMainClassName()
+	public String getMainClassName()
 	{
-		return getPanel().getMainClassName();
+            return getPanel().getMainClassName();
 	}
-        String getDependencies()
+        public String getDependencies()
         {
             return getPanel().getDependencies();
         }
-        String getIndex()
+        public String getIndex()
         {
             return getPanel().getIndex();
         }
-        String getMeta()
+        public String getMeta()
         {
             return getPanel().getMeta();
         }
-        String getOutDir()
+        public String getOutDir()
         {
             return getPanel().getOutputDirectory();
         }
-	boolean getDocApi()
+	public boolean getDocApi()
 	{
             return getPanel().getDocApi();
 	}
-	boolean getDocSrc()
+	public boolean getDocSrc()
 	{
             return getPanel().getDocSrc();
 	}
+        public String getSourceDirs()
+        {
+            return getPanel().getSourceDirs();
+        }
+        public String getResourceDirs()
+        {
+            return getPanel().getResourceDirs();
+        }
 }
 
