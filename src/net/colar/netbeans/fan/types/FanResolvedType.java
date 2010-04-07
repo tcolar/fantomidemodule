@@ -176,6 +176,12 @@ public class FanResolvedType implements Cloneable
 				}
 			} else
 			{
+				if (slotBaseType.getDbType().isEnum())
+				{
+					// TODO: index Enum values.
+					// Always of type is Obj?
+					return makeFromTypeSig(scopeNode, "sys::Obj?");
+				}
 				FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), slotName);
 				FanResolvedType t = makeFromTypeSig(baseType.scopeNode, slot.returnedType);
 				return t;
@@ -200,16 +206,13 @@ public class FanResolvedType implements Cloneable
 		if (baseType instanceof FanResolvedGenericType)
 		{
 			baseType = ((FanResolvedGenericType) baseType).getPhysicalType();
-		}
-		else if (baseType instanceof FanResolvedListType)
+		} else if (baseType instanceof FanResolvedListType)
 		{
 			baseType = FanResolvedListType.makeFromDbType(scopeNode, "sys::List");
-		}
-		else if (baseType instanceof FanResolvedMapType)
+		} else if (baseType instanceof FanResolvedMapType)
 		{
 			baseType = FanResolvedListType.makeFromDbType(scopeNode, "sys::Map");
-		}
-		else if (baseType instanceof FanResolvedFuncType)
+		} else if (baseType instanceof FanResolvedFuncType)
 		{
 			baseType = FanResolvedListType.makeFromDbType(scopeNode, "sys::Func");
 		}
@@ -235,6 +238,11 @@ public class FanResolvedType implements Cloneable
 			}
 		} else
 		{
+			if (baseType.getDbType().isEnum())
+			{
+				// TODO: Index enums values
+				return baseType;
+			}
 			// Fan slots
 			for (FanSlot slot : FanSlot.getAllSlotsForType(baseType.getDbType().getQualifiedName(), true, task))
 			{
@@ -403,8 +411,7 @@ public class FanResolvedType implements Cloneable
 			{
 				fq = dbType.getSimpleName();
 			}
-		}
-		else if (fullyQualified)
+		} else if (fullyQualified)
 		{
 			fq = getAsTypedType();
 		} else
