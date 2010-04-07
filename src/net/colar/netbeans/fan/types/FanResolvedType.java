@@ -179,8 +179,8 @@ public class FanResolvedType implements Cloneable
 				if (slotBaseType.getDbType().isEnum())
 				{
 					// TODO: index Enum values.
-					// Always of type is Obj?
-					return makeFromTypeSig(scopeNode, "sys::Obj?");
+					// Enum value type is itself
+					return slotBaseType;
 				}
 				FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), slotName);
 				FanResolvedType t = makeFromTypeSig(baseType.scopeNode, slot.returnedType);
