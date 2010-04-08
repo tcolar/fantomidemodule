@@ -823,6 +823,8 @@ public class FanParserTask extends ParserResult
 	{
 		// saving the base type, because we need it for closures
 		FanResolvedType baseType = type;
+		if(node.getChildren().size()==0)
+			System.out.println();
 		AstNode callChild = node.getChildren().get(0);
 		String name = callChild.getNodeText(true);
 

@@ -717,13 +717,13 @@ public class FanResolvedType implements Cloneable
 	{
 		if (items.size() == 0)
 		{
-			return makeFromTypeSig(itemsNode, "sys::Obj?");
+			return makeFromTypeSig(itemsNode, "sys::Obj");
 		}
 		boolean nullable = false;
 		FanResolvedType best = null;
 		for (FanResolvedType item : items)
 		{
-			if (item == null)
+			if (item == null || (item instanceof FanResolvedNullType))
 			{
 				nullable = true;
 				continue;
@@ -734,7 +734,7 @@ public class FanResolvedType implements Cloneable
 				best = t;
 				continue;
 			}
-			while (!t.isTypeCompatible(best)) // exetnds
+			while (!t.isTypeCompatible(best)) // extends
 			{
 				best = best.getParentType(); // get parent
 				if (best == null)

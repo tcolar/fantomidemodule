@@ -80,8 +80,7 @@ public class FantomTypesTest extends FantomCSLTest
 		checkExpr("[3,4]", "sys::Int[]", false, false);
 		checkExpr("[3, 2f ,4]", "sys::Num[]", false, false);
 
-		// FXME:
-		checkExpr("[3,null,4]", "sys::Int[]?", true, false);
+		checkExpr("[3,null,4]", "sys::Int?[]", false, false);
 		t = FanResolvedType.makeFromTypeSig(node, "Obj?[]");
 		check(t, "sys::Obj?[]", false, false);
 		t = FanResolvedType.makeFromTypeSig(node, "Obj[]?");
@@ -94,7 +93,6 @@ public class FantomTypesTest extends FantomCSLTest
 
 		resultNode = checkExpr("|str| { echo(str) }", "|sys::Obj?->sys::Void|", false, false);
 		AstNode block = FanLexAstUtils.getFirstChildRecursive(resultNode, new NodeKindPredicate(AstKind.AST_BLOCK));
-		//JOTTester.checkIf("Infered Closure type", block != null && block.getAllScopeVars().get("str").getType().toTypeSig(true).equals("sys::Obj?"));
 		resultNode = checkExpr("|Int i| { echo(i) }", "|sys::Int->sys::Void|", false, false);
 		block = FanLexAstUtils.getFirstChildRecursive(resultNode, new NodeKindPredicate(AstKind.AST_BLOCK));
 		checkExpr("Button {text=\"aa\"; it.text=\"aa\"}", null, false, false);
