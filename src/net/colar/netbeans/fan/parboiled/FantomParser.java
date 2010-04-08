@@ -535,8 +535,18 @@ public class FantomParser extends BaseParser<AstNode>
 					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_CALL)), // named super
 					sequence(DOT, idExpr()), // static call
 					sequence(PAR_L, expr(), PAR_R), // simple ?? (ctor call)
-					itBlock() // ctor block
+					ctorBlock() // ctor block
 				)));
+	}
+
+	public Rule ctorBlock()
+	{
+		return sequence(
+			OPT_LF(),
+			enforcedSequence(sequence(BRACKET_L,
+			// Note, don't allow field accesors to be parsed as ctorBlock
+			testNot(sequence(inFieldInit, OPT_LF(), firstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)))),
+			zeroOrMore(stmt()), BRACKET_R), ast.newScopeNode(AstKind.AST_CTOR_BLOCK));
 	}
 
 	public Rule dsl()
