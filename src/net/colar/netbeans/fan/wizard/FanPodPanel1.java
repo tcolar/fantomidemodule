@@ -60,7 +60,7 @@ public final class FanPodPanel1 extends JPanel
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setApproveButtonText("Select");
                 podVersionField.setText("");
-                outputDirectoryField.setText("out");
+                outputDirectoryField.setText("out/lib/fan/");
                 indexList.setModel(new DefaultListModel());
                 metaList.setModel(new DefaultListModel());
                 initTree(sourceDirectoryTree, dir, sourceDirs);
@@ -644,10 +644,11 @@ public final class FanPodPanel1 extends JPanel
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 @Override
                 public Integer doInBackground() {
-                    final File f = new File(FanPodPanel1.this.getOutputDirectory());
+                    final String outDir = FanPodPanel1.this.getOutputDirectory().replaceAll("`", "");
+                    final File f = new File(outDir);
                     final File[] directories = new File[] {
                         new File(FanPlatform.getInstance().buildLibraryPath()),
-                        new File((f.exists() && f.isAbsolute()) ? getOutputDirectory() : getProjectFolder() + "/" + getOutputDirectory() + "/")
+                        new File((f.exists() && f.isAbsolute()) ? outDir : getProjectFolder() + "/" + outDir )
                     };
 
                     final java.awt.Window window = SwingUtilities.getWindowAncestor(FanPodPanel1.this);
@@ -847,7 +848,18 @@ public final class FanPodPanel1 extends JPanel
                     int val = chooser.showDialog(FanPodPanel1.this, "Select");
                     if (val == JFileChooser.APPROVE_OPTION)
                     {
-                        outputDirectoryField.setText(chooser.getSelectedFile().getPath());
+                        String s = chooser.getSelectedFile().getPath();
+                        if (!s.endsWith("/")) {
+                            s += "/";
+                        }
+                        if (!s.endsWith("lib/fan/")) {
+                            s += "lib/fan/";
+                        }
+                        final File f = new File(s);
+                        if (!f.exists()) {
+                            f.mkdirs();
+                        }
+                        outputDirectoryField.setText(s);
                         updateFolder();
                     }
                     return 0;
@@ -1047,7 +1059,18 @@ public final class FanPodPanel1 extends JPanel
             sw.execute();
         }
         public String getOutputDirectory() {
-            return "`" + outputDirectoryField.getText() + "`";
+            String s = outputDirectoryField.getText();
+            if (!s.endsWith("/")) {
+                s += "/";
+            }
+            if (!s.endsWith("lib/fan/")) {
+                s += "lib/fan/";
+            }
+            final File f = new File(s);
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+            return "`" + s + "`";
         }
         public void setOutputDirectory(final String val) {
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
