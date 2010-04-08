@@ -59,7 +59,7 @@ public class FanMethodParam extends JOTModel
 	{
 		this.slotId = slotId;
 	}
-        @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
 	public static Vector<FanMethodParam> findAllForSlot(long id)
 	{
 		try

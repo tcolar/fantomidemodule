@@ -34,6 +34,7 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 
 		// parameters
 		List<AstNode> params = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_PARAM));
+		int cpt=0;
 		for (AstNode param : params)
 		{
 			//System.out.println("Param Node: " + param.toStringTree());
@@ -45,7 +46,7 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 			{
 				String pName = id.getNodeText(true);
 				FanResolvedType pType = FanResolvedType.makeFromTypeSigWithWarning(typeNode);
-				FanScopeMethodParam mp = new FanScopeMethodParam(pType, exprNode);
+				FanScopeMethodParam mp = new FanScopeMethodParam(pType, exprNode, cpt);
 				if (!parameters.containsKey(pName))
 				{
 					parameters.put(pName, mp);
@@ -58,6 +59,7 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 					param.getRoot().getParserTask().addError("Duplicated parameter name", id);
 				}
 			}
+			cpt++;
 		}
 	}
 

@@ -18,8 +18,7 @@ import fanx.fcode.FSlot;
 import fanx.fcode.FStore;
 import fanx.fcode.FType;
 import fanx.fcode.FTypeRef;
-import java.io.File;
-import java.util.Arrays;
+import java.io.File;import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -396,12 +395,11 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
 									// Try to reuse existing db entries.
 									Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
-									int paramIndex = 0;
 									for (String paramName : parameters.keySet())
 									{
 										FanScopeMethodParam paramResult = parameters.get(paramName);
 										JOTSQLCondition cond4 = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, dbSlot.getId());
-										JOTSQLCondition cond5 = new JOTSQLCondition("paramIndex", JOTSQLCondition.IS_EQUAL, paramIndex);
+										JOTSQLCondition cond5 = new JOTSQLCondition("paramIndex", JOTSQLCondition.IS_EQUAL, paramResult.getOrder());
 										FanMethodParam dbParam = (FanMethodParam) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond4).where(cond5).findOrCreateOne();
 										if (!dbParam.isNew())
 										{
@@ -419,11 +417,10 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 										dbParam.setName(paramName);
 										String pType = pType = paramResult.getType().toTypeSig(true);
 										dbParam.setQualifiedType(pType);
-										dbParam.setParamIndex(paramIndex);
+										dbParam.setParamIndex(paramResult.getOrder());
 										dbParam.setHasDefault(paramResult.hasDefaultValue());
 										dbParam.save();
 
-										paramIndex++;
 									} // end param loop
 									// Whatever param wasn't removed from the vector is not needed anymore.
 									for (FanMethodParam param : currentParams)

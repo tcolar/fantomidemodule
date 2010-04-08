@@ -443,8 +443,6 @@ public class FanResolvedType implements Cloneable
 
 		FanResolvedType type = makeUnresolved(scopeNode);
 		boolean nullable = false;
-		boolean list = false;
-		boolean nullableList = false;
 		if (sig.endsWith("?"))
 		{
 			sig = sig.substring(0, sig.length() - 1);
@@ -453,14 +451,10 @@ public class FanResolvedType implements Cloneable
 		if (sig.endsWith("[]"))
 		{
 			sig = sig.substring(0, sig.length() - 2);
-			list = true;
-			if (sig.endsWith("?"))
-			{
-				sig = sig.substring(0, sig.length() - 1);
-				nullableList = true;
-			}
+			FanResolvedType listType = makeFromTypeSig(scopeNode, sig);
+			type = new FanResolvedListType(scopeNode, listType);
 		}
-		if (sig.startsWith("[") && sig.endsWith("]"))
+		else if (sig.startsWith("[") && sig.endsWith("]"))
 		{// Full map
 			sig = sig.substring(1, sig.length() - 1);
 			int index = findMapSeparatorIndex(sig);
@@ -522,14 +516,6 @@ public class FanResolvedType implements Cloneable
 		if (nullable)
 		{
 			type = type.asNullableContext(true);
-		}
-		if (list)
-		{
-			type = new FanResolvedListType(scopeNode, type);
-			if (nullableList)
-			{
-				type = type.asNullableContext(true);
-			}
 		}
 		return type;
 	}

@@ -15,11 +15,13 @@ public class FanScopeMethodParam
 
 	private final AstNode defaultValNode;
 	private FanResolvedType type;
+	private final int order; // order of the parameter (first, second ...)
 
-	public FanScopeMethodParam(FanResolvedType type, AstNode defaultValNode)
+	public FanScopeMethodParam(FanResolvedType type, AstNode defaultValNode, int order)
 	{
 		this.defaultValNode = defaultValNode;
 		this.type = type;
+		this.order=order;
 	}
 
 	public AstNode getDefaultValNode()
@@ -36,4 +38,10 @@ public class FanScopeMethodParam
 	{
 		return defaultValNode != null;
 	}
+
+	public int getOrder()
+	{
+		return order;
+	}
+	
 }
