@@ -3,19 +3,24 @@
  */
 package net.colar.netbeans.fan.test;
 
+import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
+import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
+import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedListType;
 import net.colar.netbeans.fan.types.FanResolvedNullType;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.testing.JOTTester;
 import org.parboiled.Parboiled;
 import org.parboiled.RecoveringParseRunner;
+import org.parboiled.common.StringUtils;
 import org.parboiled.support.ParsingResult;
 
 /**
@@ -32,13 +37,19 @@ public class FantomTypesTest extends FantomCSLTest
 		"web::Weblet", "fwt::Button", "fwt::Widget"
 	};
 
+	/*static FanAstScopeVarBase[] scopeVars =
+	{
+		new FanAstScopeVar(null, VarKind.METHOD, FanResolvedType.mak) {} {}
+	};*/
+
 	@Override
 	public void cslTest() throws Throwable
 	{
 		// Dummy task & rootNode to pass along
 		FanParserTask task = new FanParserTask(null);
 		DummyAstRootNode node = new DummyAstRootNode(task);
-		addUsingsToNode(node);
+		addUsingsToNode(node, testUsings);
+		addObjectSlotsToNode(node, task);
 
 		// Testing type signature stuff
 		FanResolvedType t = FanResolvedType.makeFromTypeSig(node, "sys::Str");
@@ -83,18 +94,18 @@ public class FantomTypesTest extends FantomCSLTest
 
 		resultNode = checkExpr("|str| { echo(str) }", "|sys::Obj?->sys::Void|", false, false);
 		AstNode block = FanLexAstUtils.getFirstChildRecursive(resultNode, new NodeKindPredicate(AstKind.AST_BLOCK));
-		JOTTester.checkIf("Infered Closure type", block != null && block.getAllScopeVars().get("str").getType().toTypeSig(true).equals("sys::Obj?"));
-		resultNode = checkExpr("|Int i| { echo(str) }", "|sys::Int->sys::Void|", false, false);
+		//JOTTester.checkIf("Infered Closure type", block != null && block.getAllScopeVars().get("str").getType().toTypeSig(true).equals("sys::Obj?"));
+		resultNode = checkExpr("|Int i| { echo(i) }", "|sys::Int->sys::Void|", false, false);
 		block = FanLexAstUtils.getFirstChildRecursive(resultNode, new NodeKindPredicate(AstKind.AST_BLOCK));
 		checkExpr("Button {text=\"aa\"; it.text=\"aa\"}", null, false, false);
 		checkExpr("Button.make {text=\"aa\"; it.text=\"aa\"}", null, false, false);
-		checkExpr("Button().make() {text=\"aa\"; it.text=\"aa\"}", null, false, false);
+		checkExpr("Button.make() {text=\"aa\"; it.text=\"aa\"}", null, false, false);
 		checkExpr("Str[,].with { fill(\"x\", 3) }", null, false, false);
 		checkExpr("Str[,] { fill(\"x\", 3) }", null, false, false);
 		checkExpr("[\"a\", \"b\"].each { echo(toStr); echo(it.toStr) }", null, false, false);
-		checkExpr("[5:3].each |Str val| { echo(val); echo(it.val) }", null, false, false);
-		// todo: methods that take function as not first param
-		// same for constructors
+		checkExpr("[5:3].each |Str val| { echo(val)}", null, false, false);
+		checkExpr("Actor(ActorPool()) |msg| {echo(msg)}", null, false, false);
+		checkExpr("Actor.make(ActorPool()) |msg| {echo(msg)}", null, false, false);
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));
@@ -169,11 +180,15 @@ public class FantomTypesTest extends FantomCSLTest
 		FanParserTask task = new FanParserTask(null);
 		FantomParser parser = Parboiled.createParser(FantomParser.class, task);
 		ParsingResult<AstNode> result = RecoveringParseRunner.run(parser.testExpr(), expr);
-		JOTTester.checkIf("Expr as errors: "+expr, result.hasErrors(), result.parseErrors.toString());
+		JOTTester.checkIf("Checking for parsing errors: "+expr, ! result.hasErrors(), StringUtils.join(result.parseErrors,"\n"));
 		AstNode node = result.parseTreeRoot.getValue();
 		task.prune(node, task.getRootLabel(node));
-		addUsingsToNode(node);
+		addUsingsToNode(node, testUsings);
+		addObjectSlotsToNode(node, task);
 		task.parseVars(node, null);
+		//System.out.println("Node for "+expr+" : ");
+		//FanLexAstUtils.dumpTree(node, 0);
+		JOTTester.checkIf("Checking for Semantic errors: "+expr, task.getDiagnostics().isEmpty(), StringUtils.join(task.getDiagnostics(),"\n"));
 		FanResolvedType t = node.getType();
 		check(expr, t, typeSig, isNullable, isStatic);
 		return node;
@@ -190,12 +205,23 @@ public class FantomTypesTest extends FantomCSLTest
 		}
 	}
 
-	private void addUsingsToNode(AstNode node)
+	public static void addUsingsToNode(AstNode node, String[] usings)
 	{
-		for (String using : testUsings)
+		for (String using : usings)
 		{
 			String shortName = using.substring(using.indexOf("::") + 2);
 			node.addScopeVar(shortName, VarKind.IMPORT, FanResolvedType.makeFromDbType(node, using), false);
+		}
+	}
+
+	public static void addObjectSlotsToNode(AstNode node, FanParserTask task)
+	{
+		FanResolvedType baseType=FanResolvedType.makeFromDbType(node, "sys::Obj");
+		List<FanSlot> slots = FanSlot.getAllSlotsForType("sys::Obj", false, task);
+		for (FanSlot slot : slots)
+		{
+			FanAstScopeVarBase newVar = new FanLocalScopeVar(node, baseType, slot, slot.getName());
+			node.addScopeVar(newVar, true);
 		}
 	}
 }
