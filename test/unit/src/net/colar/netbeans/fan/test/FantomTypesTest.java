@@ -26,8 +26,11 @@ public class FantomTypesTest extends FantomCSLTest
 {
 	// List some fq imports we will use in the tests, so we can add them to the node's scope
 	// Note: no need to add the 'sys' types (implied)
-	static String[] testUsings={"web::Weblet", "fwt::Button", "fwt::Widget"};
 
+	static String[] testUsings =
+	{
+		"web::Weblet", "fwt::Button", "fwt::Widget"
+	};
 
 	@Override
 	public void cslTest() throws Throwable
@@ -52,13 +55,13 @@ public class FantomTypesTest extends FantomCSLTest
 
 		// checking expressions
 		checkExpr("5", "sys::Int", false, false);
-		AstNode resultNode=checkExpr("null", "null::null?", true, false);
+		AstNode resultNode = checkExpr("null", "null::null?", true, false);
 		JOTTester.checkIf("checking null type", resultNode.getType() instanceof FanResolvedNullType);
 
-		resultNode=checkExpr("|str| { echo(str) }", "|sys::Obj?->sys::Void|", false, false);
-		AstNode block=FanLexAstUtils.getFirstChildRecursive(resultNode, new NodeKindPredicate(AstKind.AST_BLOCK));
-		JOTTester.checkIf("Infered Closure type", block!=null && block.getAllScopeVars().get("str").getType().toTypeSig(true).equals("sys::Obj?"));
-		
+		resultNode = checkExpr("|str| { echo(str) }", "|sys::Obj?->sys::Void|", false, false);
+		AstNode block = FanLexAstUtils.getFirstChildRecursive(resultNode, new NodeKindPredicate(AstKind.AST_BLOCK));
+		JOTTester.checkIf("Infered Closure type", block != null && block.getAllScopeVars().get("str").getType().toTypeSig(true).equals("sys::Obj?"));
+
 		checkExpr("0..<20", "sys::Range", false, false);
 		checkExpr("(0..<20).toList", "sys::Int[]", false, false);
 		checkExpr("\"abc\".split[0]", "sys::Str", false, false);
@@ -67,11 +70,25 @@ public class FantomTypesTest extends FantomCSLTest
 		checkExpr("Obj()", "sys::Obj", false, false);
 		checkExpr("Str.defVal", "sys::Str", false, false);
 		checkExpr("\"abc\".isEmpty", "sys::Bool", false, false);
+		checkExpr("[3,4]", "sys::Int[]", false, false);
+		checkExpr("[3, 2f ,4]", "sys::Num[]", false, false);
+
+		// FXME:
+		checkExpr("[3,null,4]", "sys::Int[]?", true, false);
+		t = FanResolvedType.makeFromTypeSig(node, "Obj?[]");
+		check(t, "sys::Obj?[]", false, false);
+		t = FanResolvedType.makeFromTypeSig(node, "Obj[]?");
+		check(t, "sys::Obj[]?", true, false);
+		t = FanResolvedType.makeFromTypeSig(node, "Str[][]?");
+		check(t, "sys::Str[][]?", true, false);
+		JOTTester.checkIf("List of List type",
+				(t instanceof FanResolvedListType)
+				&& ((FanResolvedListType) t).getItemType().toTypeSig(true).equals("sys::Str[]"), t.toString());
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));
 		JOTTester.checkIf("Compatibility of Obj vs Obj", mkt("sys::Obj", node).isTypeCompatible(mkt("sys::Obj", node)));
-		JOTTester.checkIf("Un-Compatibility of mixin vs Obj", ! mkt("web::Weblet", node).isTypeCompatible(mkt("sys::Obj", node)));
+		JOTTester.checkIf("Un-Compatibility of mixin vs Obj", !mkt("web::Weblet", node).isTypeCompatible(mkt("sys::Obj", node)));
 		JOTTester.checkIf("Compatibility of Button vs Obj", mkt("fwt::Button", node).isTypeCompatible(mkt("sys::Obj", node)));
 		JOTTester.checkIf("Compatibility of Button vs widget", mkt("fwt::Button", node).isTypeCompatible(mkt("fwt::Widget", node)));
 
@@ -110,7 +127,7 @@ public class FantomTypesTest extends FantomCSLTest
 
 	private void check(String infoStr, FanResolvedType t, String typeSig, boolean isNullable, boolean isStatic) throws Exception
 	{
-		boolean good = t!=null
+		boolean good = t != null
 				&& t.isResolved()
 				&& t.toTypeSig(true).equals(typeSig)
 				&& t.isNullable() == isNullable
@@ -132,6 +149,7 @@ public class FantomTypesTest extends FantomCSLTest
 		FanParserTask task = new FanParserTask(null);
 		FantomParser parser = Parboiled.createParser(FantomParser.class, task);
 		ParsingResult<AstNode> result = RecoveringParseRunner.run(parser.testExpr(), expr);
+		JOTTester.checkIf("Expr as errors: "+expr, result.hasErrors(), result.parseErrors.toString());
 		AstNode node = result.parseTreeRoot.getValue();
 		task.prune(node, task.getRootLabel(node));
 		addUsingsToNode(node);
@@ -154,9 +172,9 @@ public class FantomTypesTest extends FantomCSLTest
 
 	private void addUsingsToNode(AstNode node)
 	{
-		for(String using : testUsings)
+		for (String using : testUsings)
 		{
-			String shortName = using.substring(using.indexOf("::")+2);
+			String shortName = using.substring(using.indexOf("::") + 2);
 			node.addScopeVar(shortName, VarKind.IMPORT, FanResolvedType.makeFromDbType(node, using), false);
 		}
 	}
