@@ -426,7 +426,18 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     int val = chooser.showDialog(FanProjectPropertiesPanel.this, "Select");
                     if (val == JFileChooser.APPROVE_OPTION)
                     {
-                        outputDirectoryField.setText(chooser.getSelectedFile().getPath());
+                                                String s = chooser.getSelectedFile().getPath();
+                        if (!s.endsWith("/")) {
+                            s += "/";
+                        }
+                        if (!s.endsWith("lib/fan/")) {
+                            s += "lib/fan/";
+                        }
+                        final File f = new File(s);
+                        if (!f.exists()) {
+                            f.mkdirs();
+                        }
+                        outputDirectoryField.setText(s);
                     }
                     return 0;
                 }
@@ -466,10 +477,11 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 @Override
                 public Integer doInBackground() {
-                    final File f = new File(FanProjectPropertiesPanel.this.getOutputDirectory());
+                    final String outDir = FanProjectPropertiesPanel.this.getOutputDirectory().replaceAll("`", "");
+                    final File f = new File(outDir);
                     final File[] directories = new File[] {
                         new File(FanPlatform.getInstance().buildLibraryPath()),
-                        new File((f.exists() && f.isAbsolute()) ? getOutputDirectory() : dir + "/" + getOutputDirectory() + "/")
+                        new File((f.exists() && f.isAbsolute()) ? outDir : dir + "/" + outDir )
                     };
 
                     final java.awt.Window window = SwingUtilities.getWindowAncestor(FanProjectPropertiesPanel.this);
@@ -706,7 +718,18 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             sw.execute();
         }
         public String getOutputDirectory() {
-            return "`" + outputDirectoryField.getText() + "`";
+            String s = outputDirectoryField.getText();
+            if (!s.endsWith("/")) {
+                s += "/";
+            }
+            if (!s.endsWith("lib/fan/")) {
+                s += "lib/fan/";
+            }
+            final File f = new File(s);
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+            return "`" + s + "`";
         }
         public void setOutputDirectory(final String val) {
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
