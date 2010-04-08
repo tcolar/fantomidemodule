@@ -58,10 +58,6 @@ public class FantomTypesTest extends FantomCSLTest
 		AstNode resultNode = checkExpr("null", "null::null?", true, false);
 		JOTTester.checkIf("checking null type", resultNode.getType() instanceof FanResolvedNullType);
 
-		resultNode = checkExpr("|str| { echo(str) }", "|sys::Obj?->sys::Void|", false, false);
-		AstNode block = FanLexAstUtils.getFirstChildRecursive(resultNode, new NodeKindPredicate(AstKind.AST_BLOCK));
-		JOTTester.checkIf("Infered Closure type", block != null && block.getAllScopeVars().get("str").getType().toTypeSig(true).equals("sys::Obj?"));
-
 		checkExpr("0..<20", "sys::Range", false, false);
 		checkExpr("(0..<20).toList", "sys::Int[]", false, false);
 		checkExpr("\"abc\".split[0]", "sys::Str", false, false);
@@ -84,6 +80,21 @@ public class FantomTypesTest extends FantomCSLTest
 		JOTTester.checkIf("List of List type",
 				(t instanceof FanResolvedListType)
 				&& ((FanResolvedListType) t).getItemType().toTypeSig(true).equals("sys::Str[]"), t.toString());
+
+		resultNode = checkExpr("|str| { echo(str) }", "|sys::Obj?->sys::Void|", false, false);
+		AstNode block = FanLexAstUtils.getFirstChildRecursive(resultNode, new NodeKindPredicate(AstKind.AST_BLOCK));
+		JOTTester.checkIf("Infered Closure type", block != null && block.getAllScopeVars().get("str").getType().toTypeSig(true).equals("sys::Obj?"));
+		resultNode = checkExpr("|Int i| { echo(str) }", "|sys::Int->sys::Void|", false, false);
+		block = FanLexAstUtils.getFirstChildRecursive(resultNode, new NodeKindPredicate(AstKind.AST_BLOCK));
+		checkExpr("Button {text=\"aa\"; it.text=\"aa\"}", null, false, false);
+		checkExpr("Button.make {text=\"aa\"; it.text=\"aa\"}", null, false, false);
+		checkExpr("Button().make() {text=\"aa\"; it.text=\"aa\"}", null, false, false);
+		checkExpr("Str[,].with { fill(\"x\", 3) }", null, false, false);
+		checkExpr("Str[,] { fill(\"x\", 3) }", null, false, false);
+		checkExpr("[\"a\", \"b\"].each { echo(toStr); echo(it.toStr) }", null, false, false);
+		checkExpr("[5:3].each |Str val| { echo(val); echo(it.val) }", null, false, false);
+		// todo: methods that take function as not first param
+		// same for constructors
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));
@@ -125,11 +136,20 @@ public class FantomTypesTest extends FantomCSLTest
 		check(t.getAsTypedType(), t, typeSig, isNullable, isStatic);
 	}
 
+	/**
+	 * if typeSig is null, not checked
+	 * @param infoStr
+	 * @param t
+	 * @param typeSig
+	 * @param isNullable
+	 * @param isStatic
+	 * @throws Exception
+	 */
 	private void check(String infoStr, FanResolvedType t, String typeSig, boolean isNullable, boolean isStatic) throws Exception
 	{
 		boolean good = t != null
 				&& t.isResolved()
-				&& t.toTypeSig(true).equals(typeSig)
+				&& (typeSig!=null && t.toTypeSig(true).equals(typeSig))
 				&& t.isNullable() == isNullable
 				&& t.isStaticContext() == isStatic;
 		String expected = "got: " + t + ", expected: " + typeSig + ", ST:" + isStatic + ", NL:" + isNullable;
