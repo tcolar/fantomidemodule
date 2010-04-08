@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.swing.event.ChangeListener;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.project.FanProjectProperties;
+import net.colar.netbeans.fan.project.FanBuild;
 import net.colar.netbeans.fan.templates.TemplateUtils;
 import net.colar.netbeans.fan.templates.TemplateView;
 import net.jot.web.views.JOTLightweightView;
@@ -66,36 +67,19 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 	public Set instantiate() throws IOException
 	{
 		FanPodWizardPanel1 panel = getPanel();
-		String podFolder = panel.getProjectFolder();
-		String podName = panel.getPodName();
-		String podDesc = panel.getPodDesc();
-                String podVersion = panel.getPodVersion();
-                String dependencies = panel.getDependencies();
-                String metas = panel.getMeta();
-                String indexes = panel.getIndex();
-                String outDir = panel.getOutDir();
-		boolean createBuildFile = panel.getCreateBuildFile();
-                boolean docApi = panel.getDocApi();
-                boolean docSrc = panel.getDocSrc();
-                String sourceDirs = panel.getSourceDirs();
-                String resourceDirs = panel.getResourceDirs();
-                
 		// create project
+                String podFolder = panel.getProjectFolder();
 		File pf = FileUtil.normalizeFile(new File(podFolder));
 		pf.mkdirs();
 		FileObject pfFo = FileUtil.toFileObject(pf);
+
+                boolean createBuildFile = panel.getCreateBuildFile();
+                
 		// fan sources folder
 		File fan = FileUtil.normalizeFile(new File(pf, "fan"));
 		fan.mkdirs();
-		File test = FileUtil.normalizeFile(new File(pf, "test"));
-		test.mkdirs();
-                File out = FileUtil.normalizeFile(new File(pf, "out"));
-                out.mkdirs();
-		//build.fan
-		FileObject fanFo = FileUtil.toFileObject(fan);
-		FileObject testFo = FileUtil.toFileObject(test);
-                FileObject outFo = FileUtil.toFileObject(out);
-		FileObject buildFo = null;
+                FileObject fanFo = FileUtil.toFileObject(fan);
+
 		FileObject buildTemplate = Templates.getTemplate(wizard);
 
 		// Create main class
@@ -133,68 +117,44 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
                 }
                 FanProjectProperties.createFromScratch(map, props);
 
-
 		// Create the build file LAST, because as soon as that is created,
 		// NB will recognize this as a project, so we want everything(props) to be ready by then
 		if (createBuildFile)
 		{
-			JOTLightweightView view = new TemplateView(buildTemplate, podName);
-
-			view.addVariable("desc", podDesc);
-                        view.addVariable("version", podVersion);
-                        view.addVariable("dependencies", dependencies);
-                        view.addVariable("srcDirs", sourceDirs);
-                        view.addVariable("resDirs", resourceDirs);
-                        view.addVariable("outDir", outDir);
-                        view.addVariable("indexes", indexes);
-                        view.addVariable("metas", metas);
-                        view.addVariable("docSrc", Boolean.toString(docSrc));
-                        view.addVariable("docApi", Boolean.toString(docApi));
-
-			File buildFile = new File(pf, "build.fan");
-
-			buildFo = FileUtil.toFileObject(buildFile);
-
-			FileObject license = FanUtilities.getRelativeFileObject(buildTemplate, "../../Licenses/FanDefaultLicense.txt");
-			view.addVariable("license", license.asText());
-
-			String buildText = buildTemplate.asText();
-
-                        // Take out the empty lines from the build.fan file, which can happen
-                        // when some of the params don't have values.
-                        Pattern p = Pattern.compile("^.*\\[\\]$", Pattern.MULTILINE);
-                        Matcher m = p.matcher(buildText);
-                        buildText = m.replaceAll("");
-                        p = Pattern.compile("^.*= $", Pattern.MULTILINE);
-                        m = p.matcher(buildText);
-                        buildText = m.replaceAll("");
-                        p = Pattern.compile("^.*= \"\"$", Pattern.MULTILINE);
-                        m = p.matcher(buildText);
-                        buildText = m.replaceAll("");
-                        p = Pattern.compile("^.*= Version.fromStr\\(\"\"\\)$", Pattern.MULTILINE);
-                        m = p.matcher(buildText);
-                        buildText = m.replaceAll("");
-
-			// create build.fan
-			TemplateUtils.createFromTemplate(view, buildText, buildFile);
-
+                    FanBuild build = new FanBuild(podFolder);
+                    build.setPodName(panel.getPodName());
+                    build.setPodDescription(panel.getPodDesc());
+                    build.setPodVersion(panel.getPodVersion());
+                    build.setDependencies(panel.getDependencies());
+                    build.setMeta(panel.getMeta());
+                    build.setIndex(panel.getIndex());
+                    build.setOutputDirectory(panel.getOutDir());
+                    build.setDocSrc(panel.getDocSrc());
+                    build.setDocApi(panel.getDocApi());
+                    build.setSourceDirs(panel.getSourceDirs());
+                    build.setResourceDirs(panel.getResourceDirs());
+                    build.create(Templates.getTemplate(wizard).getPath());
 		}
+                File b = new File(podFolder, "build.fan");
+                FileObject buildFo = null;
+                if (b.exists()) {
+                    buildFo = FileUtil.toFileObject(b);
+                }
 
 		// Look for nested projects to open as well:
 		LinkedHashSet<FileObject> resultSet = new LinkedHashSet<FileObject>();
 		resultSet.add(pfFo);
 		resultSet.add(fanFo);
-		resultSet.add(testFo);
 		if (buildFo != null)
 		{
-			resultSet.add(buildFo);
+                    resultSet.add(buildFo);
 		}
 
 		File parent = pf.getParentFile();
 		// Always open top dir as a project:
 		if (parent != null && parent.exists())
 		{
-			ProjectChooser.setProjectsFolder(parent);
+                    ProjectChooser.setProjectsFolder(parent);
 		}
 
 		return resultSet;
