@@ -149,7 +149,7 @@ public class FantomTypesTest extends FantomCSLTest
 	{
 		boolean good = t != null
 				&& t.isResolved()
-				&& (typeSig!=null && t.toTypeSig(true).equals(typeSig))
+				&& (typeSig==null || t.toTypeSig(true).equals(typeSig))
 				&& t.isNullable() == isNullable
 				&& t.isStaticContext() == isStatic;
 		String expected = "got: " + t + ", expected: " + typeSig + ", ST:" + isStatic + ", NL:" + isNullable;
