@@ -31,11 +31,13 @@ import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.scope.FanMethodScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedFuncType;
+import net.colar.netbeans.fan.types.FanResolvedGenericType;
 import net.colar.netbeans.fan.types.FanResolvedListType;
 import net.colar.netbeans.fan.types.FanResolvedMapType;
 import net.colar.netbeans.fan.types.FanResolvedNullType;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import net.colar.netbeans.fan.types.FanUnknownType;
+import net.colar.netbeans.fan.utils.GenericPair;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
@@ -206,8 +208,8 @@ public class FanParserTask extends ParserResult
 				// key, displayName, description, file, start, end, lineError?, severity
 				String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
 				Error error = DefaultError.createDefaultError(msg, msg, msg,
-						sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
-						false, Severity.ERROR);
+					sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
+					false, Severity.ERROR);
 				errors.add(error);
 			}
 			if (parsingResult.parseTreeRoot != null)
@@ -281,8 +283,8 @@ public class FanParserTask extends ParserResult
 					System.out.print(name);
 					var.parse();
 					if (scopeNode.getAllScopeVars().containsKey(name)
-							&& // If we have a "suing" with the same name, we take precedence
-							scopeNode.getAllScopeVars().get(name).getKind() != VarKind.IMPORT)
+						&& // If we have a "using" with the same name, we take precedence
+						scopeNode.getAllScopeVars().get(name).getKind() != VarKind.IMPORT)
 					{
 						addError("Duplicated type name", node);
 					} else
@@ -422,9 +424,21 @@ public class FanParserTask extends ParserResult
 					type = callNode.getType();
 					break;
 				case AST_CLOSURE:
-					// Only comne here for a closure that is NOT part of a call (function def)
-					// closure calls are handled by docall()
-					type = doClosure(node, null);
+					// standalone closure -> closure definition
+					// closure calls are dealt with in doExpr
+					type = doClosureDef(node, null);
+					break;
+				case AST_IT_BLOCK:
+				// itBlocks that are not following a call or callExpr are in fact constructor block
+				// the ones following call or callExpr are dealt with in doExpr as a closure
+				// NO BREAK
+				case AST_CTOR_BLOCK:
+					if (type == null)
+					{
+						addError("Unexpected constructor block", node);
+					}
+
+					doClosureCall(node, type, "with", 0);
 					break;
 				case AST_CALL:
 					type = doCall(node, type, null);
@@ -466,14 +480,6 @@ public class FanParserTask extends ParserResult
 					{
 						type = doRangeExpr(node, type);
 					}
-					break;
-				case AST_IT_BLOCK:
-					// itBlocks are as part of a closure dealt with in doExpr().
-					addError("Orphaned itBlock: " + text, node);
-					break;
-				case AST_CTOR_BLOCK:
-					// Those might be mistaken for a closure doExpr() takes care of this
-					type = doCtorBlock(node, type);
 					break;
 				case AST_CATCH_BLOCK:
 					type = doCatchBlock(node, type);
@@ -763,56 +769,34 @@ public class FanParserTask extends ParserResult
 		List<AstNode> children = node.getChildren();
 		for (int i = 0; i != children.size(); i++)
 		{
-			// Check for special procedure
 			// when a itBlock follows a call, it's actually a sort of closure call (with block)
 			AstNode child = children.get(i);
-			if (child.getKind() == AstKind.AST_CALL_EXPR
-					|| child.getKind() == AstKind.AST_CALL)
+			if (child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_CALL_EXPR)
 			{
 				if (i + 1 < children.size())
 				{
 					AstNode nextChild = children.get(i + 1);
 					if (nextChild.getKind() == AstKind.AST_IT_BLOCK)
 					{
-						AstNode callNode = child.getKind() == AstKind.AST_CALL
-								? child
-								: FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_CALL));
+						AstNode callChild = child.getKind() == AstKind.AST_CALL
+							? child
+							: FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_CALL)); // call expr
 						// parse the whole thing as a closure call
-						type = doCall(callNode, type, nextChild);
-						// skp next child since we juts did it
+						type = doCall(callChild, type, nextChild);
+						// skip next child since we juts did it
 						i++;
 						continue;
 					}
 				}
-			} // Yet another such scenario
-			// parse might think 'method {closure}' is a ctorBlock but it's a closure call
-			/*else if (child.getKind() == AstKind.AST_ID)
-			{
-				// we need to parse it to see whether staticContext
-				parseVars(child, null);
-				if (i + 1 < children.size()
-						&& !child.getType().isStaticContext())
-				{
-					AstNode nextChild = children.get(i + 1);
-					if (nextChild.getKind() == AstKind.AST_CTOR_BLOCK)
-					{
-						// parse the whole thing as a closure call
-						FanResolvedType itType = FanResolvedType.resolveItType(node);
-						doClosureCall(nextChild, itType, child.getNodeText(true), 0);
-						// skp next child since we juts did it
-						i++;
-						continue;
-					}
-				}
-			}*/
+			}
 
 			// Normal procedure
 			parseVars(child, type);
 			// we take type of right hand side if first in expression
 			// and not one of the special type we don't want the rhs for
 			if (first || (child.getKind() != AstKind.AST_EXPR_ADD // add/mult operation cannot chnage the type
-					&& child.getKind() != AstKind.AST_EXPR_MULT //same
-					/*&& child.getKind() != AstKind.AST_EXPR*/)) // new/sub expression
+				&& child.getKind() != AstKind.AST_EXPR_MULT //same
+				/*&& child.getKind() != AstKind.AST_EXPR*/)) // new/sub expression
 			{
 				type = child.getType();
 				// If part of the expr chain is unresolved (error), mark it unresolved
@@ -821,11 +805,7 @@ public class FanParserTask extends ParserResult
 				{
 					type = new FanUnknownType(node, child.getNodeText(true));
 				}
-			} //else
-			//{
-			//	System.out.println("Not taking rhs type for "+node.getKind());
-			// TODO: check what doesn't since it's probably less common than what does
-			//}
+			}
 			first = false;
 		}
 		return type;
@@ -852,12 +832,13 @@ public class FanParserTask extends ParserResult
 			baseType = FanResolvedType.resolveItType(callChild);
 			// constructor call or local slot
 			type = FanResolvedType.makeFromTypeSig(callChild, name);
-			type = type.parameterize(baseType, callChild);
-			type = type.asStaticContext(false); // call is always not staticContext
-			if (type.isStaticContext() && type.getQualifiedType().equals(baseType.getQualifiedType()))
+			type = type.parameterize(baseType, callChild).asStaticContext(false); // call is always not staticContext
+			FanAstScopeVarBase childVar = callChild.getAllScopeVars().get(callChild.getNodeText(true));
+			// If not in scope, then not a local slot.
+			if (childVar == null || (childVar.getKind() != VarKind.FIELD && childVar.getKind() != VarKind.METHOD))
 			{ // It was a constructor call
 				// once we make the call to make, it's not staticContext anymore
-				baseType = type;
+				baseType = type.asStaticContext(false);
 				name = "make";
 			}
 		} else
@@ -904,18 +885,18 @@ public class FanParserTask extends ParserResult
 				doClosureCall(closure, baseType, name, argIndex);
 			} else
 			{
-				// otherwsie, do normal parsing
+				// otherwise, do normal parsing
 				parseVars(arg, null);
 			}
 			argIndex++;
 		}
 
-		// deal with the sepcial trailing closure argument (if any)
+		// deal with the special trailing closure argument (if any)
 		//TODO: Check that param types matches slot declaration
-		AstNode closure = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLOSURE));
-		if (closure != null || forcedClosure != null)
+		AstNode closure = forcedClosure != null ? forcedClosure : FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CLOSURE));
+		if (closure != null)
 		{
-			doClosureCall(forcedClosure != null ? forcedClosure : closure, baseType, name, argIndex);
+			doClosureCall(closure, baseType, name, argIndex);
 		}
 		// we need to parameterize the result
 		// if baseType is null, then it probably couldn't return generics and if it did, then it would be "this", so leave it alone either way
@@ -933,7 +914,7 @@ public class FanParserTask extends ParserResult
 		FanSlot slot = FanSlot.findByTypeAndName(slotBase.getQualifiedType(), slotName);
 		if (slot == null)
 		{
-			addError("Can't call closure on " + slotBase.getQualifiedType() + "." + slotName, closureNode);
+			addError("Can't find closure call slot: " + slotBase.getQualifiedType() + "." + slotName, closureNode);
 		} else
 		{
 			List<FanMethodParam> params = FanMethodParam.findAllForSlot(slot.getId());
@@ -959,71 +940,81 @@ public class FanParserTask extends ParserResult
 							infTypes.add(t);
 						}
 					}
-					// parse the closure (but does not take it's type)
-					if (closureNode.getKind() == AstKind.AST_IT_BLOCK)
+
+					FanResolvedFuncType closureFunc = doClosureDef(closureNode, infTypes);
+					AstNode closureBlock = closureNode.getKind() == AstKind.AST_CLOSURE
+						? FanLexAstUtils.getFirstChild(closureNode, new NodeKindPredicate(AstKind.AST_BLOCK))
+						: closureNode;
+					// introduce the function variables
+					boolean anyVars = false;
+					for (int i = 0; i != closureFunc.getTypes().size(); i++)
 					{
-						if (infTypes.size() == 0)
+						String name = closureFunc.getTypeNames().get(i);
+						FanResolvedType type = closureFunc.getTypes().get(i);
+						if (name != null)
 						{
-							addError("No parmeters expected in function, can't do itBlock closure", closureNode);
-						} else
-						{
-							doCtorBlock(closureNode, infTypes.get(0));
+							closureBlock.addScopeVar(name, VarKind.LOCAL, type, false);
+							anyVars = true;
 						}
-					} else
-					{
-						doClosure(closureNode, infTypes);
 					}
+					if (anyVars == false)
+					{
+						FanResolvedType varType = closureFunc.getTypes().size() > 0 ? closureFunc.getTypes().get(0) : baseType;
+						introduceItVariables(closureBlock, varType);	// parse the block
+					}
+					parseChildren(closureBlock);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Simple closure like |Str a, Int b->| { echo("hi there") }
-	 * a.k.a closure definition
-	 * @param node
-	 * @param callAgainst : When called against a function (call) pass the expected parameters (for inference)
+	 *
+	 * @param closureDefNode, can be null if not a closure defintion (itBlock / ctorblock)
+	 * @param blockNode
+	 * @param paramTypes
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private FanResolvedFuncType doClosure(AstNode node, List<FanResolvedType> paramTypes)
+	private FanResolvedFuncType doClosureDef(AstNode closureDefNode, List<FanResolvedType> paramTypes)
 	{
-		FanResolvedType retType = FanResolvedType.makeFromDbType(node, "sys::Void").asStaticContext(false);
-		AstNode closureBlock = null;
-		if (node.getKind() == AstKind.AST_CTOR_BLOCK
-				|| node.getKind() == AstKind.AST_IT_BLOCK)
-		{
-			closureBlock = node;
-		} else if(node.getKind() == AstKind.AST_CLOSURE)
-		{
-			closureBlock = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_BLOCK));
-		}
+		FanResolvedType retType = FanResolvedType.makeFromDbType(closureDefNode, "sys::Void").asStaticContext(false);
+		FanResolvedFuncType result = null;
 		// Will store resolved types
 		List<FanResolvedType> formalTypes = new ArrayList<FanResolvedType>();
 		int index = 0;
-		for (AstNode child : node.getChildren())
-		{
-			if (child.getKind() == AstKind.AST_FORMAL)
+		List<String> formalNames = new ArrayList<String>();
+		if (closureDefNode != null)
+		{	// fully qualified closure (with parameters)
+			for (AstNode child : closureDefNode.getChildren())
 			{
-				FanResolvedType t = doFormal(child, closureBlock, paramTypes, index);
-				if (t != null && !t.isResolved())
+				if (child.getKind() == AstKind.AST_FORMAL)
 				{
-					addError("Couldn't resolve formal definition: " + node.getNodeText(true), node);
+					GenericPair<String, FanResolvedType> pair = doFormal(child, paramTypes, index);
+					FanResolvedType t = pair.getSecond();
+					if (t != null && !t.isResolved())
+					{
+						addError("Couldn't resolve formal definition: " + child.getNodeText(true), child);
+					}
+					String name = pair.getFirst();
+					formalTypes.add(t);
+					formalNames.add(name);
+				} else if (child.getKind() == AstKind.AST_TYPE)
+				{
+					// save the returned type
+					parseVars(child, null);
+					retType = child.getType();
 				}
-				formalTypes.add(t);
-			} else if (child.getKind() == AstKind.AST_TYPE)
-			{
-				// save the returned type
-				parseVars(child, null);
-				retType = child.getType();
-			} else if (child.getKind() == AstKind.AST_BLOCK)
-			{
-				// parse the block content
-				parseVars(child, null);
+				index++;
 			}
-			index++;
+			result = new FanResolvedFuncType(closureDefNode, formalTypes, retType);
+			result.setTypeNames(formalNames);
+		} else
+		{
+			formalTypes.add(FanResolvedType.makeFromDbType(null, "sys::This"));
+			result = new FanResolvedFuncType(null, formalTypes, FanResolvedType.makeFromDbType(null, "sys::Void"));
 		}
-		return new FanResolvedFuncType(node, formalTypes, retType);
+		return result;
 	}
 
 	/**
@@ -1036,7 +1027,7 @@ public class FanParserTask extends ParserResult
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private FanResolvedType doFormal(AstNode node, AstNode closureBlock, List<FanResolvedType> inferredTypes, int index)
+	private GenericPair<String, FanResolvedType> doFormal(AstNode node, List<FanResolvedType> inferredTypes, int index)
 	{
 		AstNode formalName = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		AstNode formalTypeAndId = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE_AND_ID));
@@ -1065,9 +1056,7 @@ public class FanParserTask extends ParserResult
 			}
 		}
 
-		// add the formals vars to the closure block scope
-		closureBlock.addScopeVar(formalName.getNodeText(true), VarKind.LOCAL, fType, true);
-		return fType;
+		return new GenericPair(formalName == null ? null : formalName.getNodeText(true), fType);
 	}
 
 	/**
@@ -1094,7 +1083,7 @@ public class FanParserTask extends ParserResult
 			}
 
 			type = new FanResolvedListType(node,
-					listTypeNode.getType());
+				listTypeNode.getType());
 		}
 
 		for (AstNode listExpr : listExprNodes)
@@ -1105,7 +1094,7 @@ public class FanParserTask extends ParserResult
 		if (listTypeNode == null)
 		{   // try to infer it from the expr Nodes
 			type = new FanResolvedListType(node,
-					FanResolvedType.makeFromItemList(node, listTypes));
+				FanResolvedType.makeFromItemList(node, listTypes));
 		}
 		return type;
 	}
@@ -1133,8 +1122,8 @@ public class FanParserTask extends ParserResult
 		} else
 		{ // otherwise try to infer it from the expr Nodes
 			type = new FanResolvedMapType(node,
-					FanResolvedType.makeFromItemList(node, mapKeyTypes),
-					FanResolvedType.makeFromItemList(node, mapValTypes));
+				FanResolvedType.makeFromItemList(node, mapKeyTypes),
+				FanResolvedType.makeFromItemList(node, mapValTypes));
 		}
 		return type;
 	}
@@ -1192,14 +1181,6 @@ public class FanParserTask extends ParserResult
 			type = null; // shouldn't happen
 		}
 		return type.asStaticContext(false);
-	}
-
-	private FanResolvedType doCtorBlock(AstNode node, FanResolvedType type)
-	{
-		// introduce itblock scope variables
-		introduceItVariables(node, type);
-		parseChildren(node);
-		return type;
 	}
 
 	private void introduceItVariables(AstNode node, FanResolvedType itType)

@@ -15,6 +15,8 @@ public class FanResolvedFuncType extends FanResolvedType
 
 	private final FanResolvedType retType;
 	private final List<FanResolvedType> types;
+	// helper to carry type names when daling with structures
+	private List<String> typeNames;
 
 	public FanResolvedFuncType(AstNode scopeNode, List<FanResolvedType> types, FanResolvedType retType)
 	{
@@ -54,4 +56,16 @@ public class FanResolvedFuncType extends FanResolvedType
 		sig += isNullable()?"?":"";
 		return sig;
 	}
+
+	public List<String> getTypeNames()
+	{
+		return typeNames;
+	}
+
+	public void setTypeNames(List<String> typeNames)
+	{
+		this.typeNames = typeNames;
+	}
+
+	
 }

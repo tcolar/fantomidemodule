@@ -358,7 +358,7 @@ public class FanResolvedType implements Cloneable
 		{
 			return typeNode.getType();
 		}
-		return makeUnresolved(node);
+		return FanResolvedType.makeFromDbType(node, "sys::Obj");
 	}
 
 	/**
@@ -525,8 +525,8 @@ public class FanResolvedType implements Cloneable
 	 * - Try a fully resolved type (from db)
 	 * - Try to find in the current scope
 	 * - Try to find from implicit imported types other types in same pod, sys pod
-	 * - Try to resolve Genric types (L, V etc...)
-	 * - Fallbnack to unresolved if failed resolving
+	 * - Try to resolve Generic types (L, V etc...)
+	 * - Fallback to unresolved if failed resolving
 	 * @param scopeNode
 	 * @param enteredType
 	 * @return

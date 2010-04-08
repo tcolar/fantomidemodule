@@ -214,7 +214,7 @@ public class FanLexAstUtils
 	}
 
 	@SuppressWarnings("unchecked")
-        public static AstNode getFirstChild(AstNode parentNode, Predicate pred)
+    public static AstNode getFirstChild(AstNode parentNode, Predicate pred)
 	{
 		if (parentNode != null)
 		{
