@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 import javax.swing.JOptionPane;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
+import net.colar.netbeans.fan.project.FanBuild;
 import net.colar.netbeans.fan.project.FanProjectProperties;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -17,6 +18,8 @@ import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
+import java.io.File;
+import java.util.Properties;
 
 /**
  * Command / Action Base
@@ -95,7 +98,7 @@ public abstract class FanAction
 		if (file != null)
 		{
 			String podName = file.getName();
-			String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
+			String path = FileUtil.toFile(file).getAbsolutePath();
 			// see if user specified custom main method
 			String target = podName + "::" + FanProjectProperties.getProperties(project).getMainMethod();
 			if (target == null || target.length()==0)
@@ -107,6 +110,18 @@ public abstract class FanAction
 			fanExec.setDisplayName((debug?"Debug ":"")+file.getName());
 			fanExec.setWorkingDirectory(path);
 			FanPlatform.getInstance().buildFanCall(fanExec, debug);
+                        FanBuild build = new FanBuild(project.getProjectDirectory().getPath());
+                        build.parse();
+                        String od =  build.getOutputDirectory();
+                        File f = new File(od);
+                        if (!f.isAbsolute()) {
+                            String s = path;
+                            if (!s.endsWith("/")) {
+                                s += "/";
+                            }
+                            od = s + od;
+                        }
+                        fanExec.setOutputDirectory(od);
 			fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 			fanExec.addCommandArg(target);
 			return fanExec.run();
@@ -181,6 +196,7 @@ public abstract class FanAction
 				fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 				fanExec.addCommandArg("build.fan");
 				fanExec.addCommandArg(target);
+                                fanExec.setOutputDirectory(null);
 				return fanExec.run();
 			}
 		}
