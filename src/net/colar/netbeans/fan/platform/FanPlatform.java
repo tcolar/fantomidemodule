@@ -270,7 +270,7 @@ public class FanPlatform
 		{
 			os = "win";
 		}
-		extDir += s + os;
+		extDir += s + os + "-" + ("i386".equals(ARCH) ? "x86" : ("amd64".equals(ARCH) ? "x86_64" : ARCH));
 		return extDir;
 	}
 
