@@ -33,4 +33,10 @@ public class FanResolvedListType extends FanResolvedType
 		return itemType.toTypeSig(fullyQualified)+"[]"+(isNullable()?"?":"");
 	}
 
+	@Override
+	public FanResolvedType parameterize(FanResolvedType baseType, AstNode errNode)
+	{
+		return new FanResolvedListType(getScopeNode(),
+				itemType.parameterize(baseType, errNode));
+	}
 }

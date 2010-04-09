@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.types;
 
+import java.util.ArrayList;
 import java.util.List;
 import net.colar.netbeans.fan.parboiled.AstNode;
 
@@ -46,7 +47,7 @@ public class FanResolvedFuncType extends FanResolvedType
 		{
 			if( ! first)
 			{
-				sig+=", ";
+				sig+=",";
 			}
 			first = false;
 			sig+=type.toTypeSig(fullyQualified);
@@ -67,5 +68,17 @@ public class FanResolvedFuncType extends FanResolvedType
 		this.typeNames = typeNames;
 	}
 
+	@Override
+	public FanResolvedType parameterize(FanResolvedType baseType, AstNode errNode)
+	{
+		List<FanResolvedType> pTypes= new ArrayList<FanResolvedType>(types.size());
+		for(FanResolvedType t : types)
+		{
+			pTypes.add(t.parameterize(baseType, errNode));
+		}
+		return new FanResolvedFuncType(getScopeNode(),
+			pTypes,
+			retType.parameterize(baseType, errNode));
+	}
 	
 }

@@ -22,7 +22,6 @@ import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
-import org.parboiled.google.base.Predicate;
 
 /**
  * Resolved type - Immutable (since we cache the base type, and we need static/nullable copy at time)
@@ -36,6 +35,9 @@ import org.parboiled.google.base.Predicate;
  */
 public class FanResolvedType implements Cloneable
 {
+	// for unit testing
+
+	public static String forcedThisType = null;
 
 	public enum TypeKind
 	{
@@ -353,6 +355,10 @@ public class FanResolvedType implements Cloneable
 	 */
 	public static FanResolvedType resolveThisType(AstNode node)
 	{
+		if (forcedThisType != null)
+		{
+			return FanResolvedType.makeFromDbType(node, forcedThisType);
+		}
 		AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
 		if (typeNode != null)
 		{
@@ -453,8 +459,7 @@ public class FanResolvedType implements Cloneable
 			sig = sig.substring(0, sig.length() - 2);
 			FanResolvedType listType = makeFromTypeSig(scopeNode, sig);
 			type = new FanResolvedListType(scopeNode, listType);
-		}
-		else if (sig.startsWith("[") && sig.endsWith("]"))
+		} else if (sig.startsWith("[") && sig.endsWith("]"))
 		{// Full map
 			sig = sig.substring(1, sig.length() - 1);
 			int index = findMapSeparatorIndex(sig);
@@ -762,6 +767,7 @@ public class FanResolvedType implements Cloneable
 	/**
 	 * Take this type and return a parameterized version
 	 * (parameterize it against baseType)
+	 * // overriden in list/map/function
 	 * @param baseType
 	 * @param genericType
 	 * @return
