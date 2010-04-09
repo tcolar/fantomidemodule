@@ -19,7 +19,6 @@ import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import java.io.File;
-import java.util.Properties;
 
 /**
  * Command / Action Base
@@ -106,7 +105,9 @@ public abstract class FanAction
 				// otherwise use default
 				target = podName + "::" + "Main" + "." + "main";
 			}
+                        String runtimeArguments = FanProjectProperties.getProperties(project).getRuntimeArguments();
 			FanExecution fanExec = new FanExecution();
+                        fanExec.setRuntimeArguments(runtimeArguments);
 			fanExec.setDisplayName((debug?"Debug ":"")+file.getName());
 			fanExec.setWorkingDirectory(path);
 			FanPlatform.getInstance().buildFanCall(fanExec, debug);
@@ -190,6 +191,7 @@ public abstract class FanAction
 			{
 				String path = FileUtil.toFile(file).getAbsolutePath();
 				FanExecution fanExec = new FanExecution();
+                                fanExec.setRuntimeArguments(null);
 				fanExec.setDisplayName(file.getName());
 				fanExec.setWorkingDirectory(path);
 				FanPlatform.getInstance().buildFanCall(fanExec);
