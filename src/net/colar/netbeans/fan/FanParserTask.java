@@ -551,7 +551,11 @@ public class FanParserTask extends ParserResult
 		} else if (lbl.equalsIgnoreCase(TokenName.NUMBER.name()))
 		{
 			char lastChar = txt.charAt(txt.length() - 1);
-			if (lastChar == 'f' || lastChar == 'F')
+			if(txt.toLowerCase().startsWith("0x"))
+			{
+				type = FanResolvedType.makeFromTypeSig(astNode, "sys::Int");
+			}
+			else if (lastChar == 'f' || lastChar == 'F')
 			{
 				type = FanResolvedType.makeFromTypeSig(astNode, "sys::Float");
 			} else if (lastChar == 'd' || lastChar == 'D')

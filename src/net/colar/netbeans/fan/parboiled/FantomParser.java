@@ -627,7 +627,7 @@ public class FantomParser extends BaseParser<AstNode>
 	// require '*' otherwise it's just and ID (this would prevent termbase from checking literals)
 	public Rule field()
 	{
-		return sequence(OP_MULT, id());
+		return sequence(OP_MULT, id(), ast.newNode(AstKind.AST_ID));
 	}
 
 	// require params or/and closure, otherwise it's just and ID (this would prevent termbase from checking literals)
