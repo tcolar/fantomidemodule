@@ -105,23 +105,6 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 
 	public void parseSlots(FanParserTask task)
 	{
-		if (kind == VarKind.TYPE_ENUM)
-		{
-			// Add compiler generated enum slots
-			// vals
-			FanDummySlot vals = new FanDummySlot("vals", getQName() + "[]", VarKind.FIELD.value());
-			vals.setIsStatic(true);
-			FanAstScopeVarBase valsVar = new FanLocalScopeVar(node, getType(), vals, vals.getName());
-			inheritedSlots.put(valsVar.getName(), valsVar);
-			// fromStr
-			FanDummySlot fromStr = new FanDummySlot("fromStr", getQName(), VarKind.METHOD.value());
-			fromStr.setIsStatic(true);
-			fromStr.addDummyParam(new FanDummyParam(-2, "str", getQName(), 0, false));
-			FanAstScopeVarBase fromStrVar = new FanLocalScopeVar(node, getType(), fromStr, fromStr.getName());
-			inheritedSlots.put(fromStrVar.getName(), fromStrVar);
-			// enum values
-		}
-
 		// Also "cache" inherited slots, for faster var lookup later
 		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true, task);
 		for (FanSlot slot : slots)
@@ -136,6 +119,48 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		{
 			return;
 		}
+
+		// Deal with enum definitions
+		if (kind == VarKind.TYPE_ENUM)
+		{
+			// Add compiler generated enum slots
+			// vals
+			FanDummySlot vals = new FanDummySlot("vals", getQName() + "[]", VarKind.FIELD.value());
+			vals.setIsStatic(true);
+			FanAstScopeVarBase valsVar = new FanLocalScopeVar(node, getType(), vals, vals.getName());
+			node.addScopeVar(valsVar, true);
+			// fromStr
+			FanDummySlot fromStr = new FanDummySlot("fromStr", getQName(), VarKind.METHOD.value());
+			fromStr.setIsStatic(true);
+			fromStr.addDummyParam(new FanDummyParam(-2, "str", getQName(), 0, false));
+			FanAstScopeVarBase fromStrVar = new FanLocalScopeVar(node, getType(), fromStr, fromStr.getName());
+			node.addScopeVar(fromStrVar, true);
+			// enum values (fields)
+			List<String> enumNames = new ArrayList<String>();
+			AstNode enumDefs = FanLexAstUtils.getFirstChild(blockNode, new NodeKindPredicate(AstKind.AST_ENUM_DEFS));
+			if (enumDefs != null)
+			{
+				List<AstNode> enums = FanLexAstUtils.getChildren(enumDefs, new NodeKindPredicate(AstKind.AST_ENUM_NAME));
+				for (AstNode enumName : enums)
+				{
+					String nm = enumName.getNodeText(true);
+					if (!enumNames.contains(nm))
+					{
+						enumNames.add(nm);
+						FanDummySlot val = new FanDummySlot(nm, getQName(), VarKind.FIELD.value());
+						val.setIsStatic(true);
+						val.setIsConst(true);
+						FanAstScopeVarBase valVar = new FanLocalScopeVar(node, getType(), val, val.getName());
+						node.addScopeVar(valVar, true);
+					} else
+					{
+						node.getRoot().getParserTask().addError("Duplicated Enum value name: " + nm, enumName);
+					}
+				}
+			}
+		}
+
+		// "Mormal slots"
 		for (AstNode slot : blockNode.getChildren())
 		{
 			switch (slot.getKind())

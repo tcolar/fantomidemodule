@@ -1156,7 +1156,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 						String path = it.nextElement();
 						Long l = fanPodsToBeIndexed.get(path);
 						long now = new Date().getTime();
-						if (l.longValue() < now - 1000)
+						if (l!=null && l.longValue() < now - 1000)
 						{
 							fanPodsToBeIndexed.remove(path);
 							indexPod(path);

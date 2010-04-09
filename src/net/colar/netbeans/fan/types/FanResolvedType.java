@@ -178,13 +178,11 @@ public class FanResolvedType implements Cloneable
 				}
 			} else
 			{
-				if (slotBaseType.getDbType().isEnum())
-				{
-					// TODO: index Enum values.
-					// Enum value type is itself
-					return slotBaseType;
-				}
 				FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), slotName);
+				if (slot == null)
+				{
+					return FanResolvedType.makeUnresolved(baseType.scopeNode);
+				}
 				FanResolvedType t = makeFromTypeSig(baseType.scopeNode, slot.returnedType);
 				return t;
 			}
@@ -691,7 +689,7 @@ public class FanResolvedType implements Cloneable
 		}
 		/*if (getDbType().isMixin())
 		{
-			return makeFromTypeSig(scopeNode, "sys::Obj");
+		return makeFromTypeSig(scopeNode, "sys::Obj");
 		}*/
 
 		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, getDbType().getQualifiedName());

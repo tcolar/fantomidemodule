@@ -135,6 +135,11 @@ public class FantomTypesTest extends FantomCSLTest
 		checkExpr("compile(\"class Foo {}\") {it.isScript = false}", null, false, false); //compile method in CompilerTest
 		FanResolvedType.forcedThisType = null;
 		checkExpr("WebUtil.parseMultiPart(\"abc\").null, null) |h, in| {}", null, false, false);
+		
+		// enums
+		checkExpr("Month.vals", null, false, false);
+		checkExpr("Month.fromStr(\"abc)\"", null, false, false);
+		checkExpr("Month.mar", null, false, false);
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));

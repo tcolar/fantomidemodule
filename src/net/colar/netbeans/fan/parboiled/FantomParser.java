@@ -174,13 +174,13 @@ public class FantomParser extends BaseParser<AstNode>
 	//------------------- Slot Def ---------------------------------------------
 	public Rule enumValDefs()
 	{
-		return sequence(enumValDef(), zeroOrMore(sequence(SP_COMMA, enumValDef())), eos());
+		return sequence(sequence(enumValDef(), zeroOrMore(sequence(SP_COMMA, enumValDef())), ast.newNode(AstKind.AST_ENUM_DEFS)), eos());
 	}
 
 	public Rule enumValDef()
 	{
 		// Fantom grammar is missing "doc"
-		return sequence(OPT_LF(), optional(doc()), id(), optional(enforcedSequence(PAR_L, optional(args()), PAR_R)));
+		return sequence(OPT_LF(), optional(doc()), id(), ast.newNode(AstKind.AST_ENUM_NAME), optional(enforcedSequence(PAR_L, optional(args()), PAR_R)));
 	}
 
 	public Rule slotDef()

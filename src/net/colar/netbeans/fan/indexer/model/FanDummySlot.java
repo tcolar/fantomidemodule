@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan.indexer.model;
 
 import java.util.Vector;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 import net.jot.persistance.JOTTransaction;
 
 /**
@@ -22,6 +23,8 @@ public class FanDummySlot extends FanSlot
 		super.returnedType = returnType;
 		super.slotKind = slotKind;
 		super.name=name;
+		// Default to public
+		super.protection=ModifEnum.PUBLIC.value();
 	}
 
 	@Override
