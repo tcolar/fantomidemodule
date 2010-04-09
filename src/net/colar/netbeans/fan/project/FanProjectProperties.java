@@ -26,19 +26,22 @@ import org.openide.util.MutexException;
  */
 public class FanProjectProperties
 {
-        public static final String BUILD_FAN_TEMPLATE = "build.fan.template";
 	public static final String DEFAULT_MAIN_METHOD = "Main.main";
 	public static final String DEFAULT_BUILD_TARGET = "";
 	public static final String PROJ_PROPS_PATH = "nbproject/project.properties";
 	public static final String PRIVATE_PROPS_PATH = "nbproject/private/private.properties";
+        public static final String DEFAULT_BUILD_TEMPLATE = "build.html";
+        public static final String DEFAULT_RUNTIME_ARGUMENTS = "";
 	public static final String MAIN_METHOD = "pod.main.method";
 	public static final String BUILD_TARGET = "build.target";
-        public static final String DEFAULT_BUILD_TEMPLATE = "build.html";
+        public static final String BUILD_FAN_TEMPLATE = "build.fan.template";
+        public static final String RUNTIME_ARGUMENTS = "runtime.arguments";
 
 	private final FanProject project;
 	private volatile String mainMethod;
 	private volatile String buildTarget;
         private volatile String buildFileTemplate;
+        private volatile String runtimeArguments;
 
 	private File propFile = null;
 
@@ -63,7 +66,6 @@ public class FanProjectProperties
 	{
 		return mainMethod;
 	}
-
 	public void setMainMethod(String method)
 	{
 		this.mainMethod = method;
@@ -75,13 +77,28 @@ public class FanProjectProperties
         public void setBuildFileTemplate(String var) {
             buildFileTemplate = var;
         }
-	public void save()
+        public String getRuntimeArguments() {
+            return runtimeArguments;
+        }
+        public void setRuntimeArguments(final String var) {
+            runtimeArguments = var;
+        }
+	public void setBuildTarget(String target)
+	{
+		buildTarget = target;
+	}
+
+	public String getBuildTarget()
+	{
+		return buildTarget;
+	}
+
+        public void save()
 	{
 		try
 		{
 			ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Void>()
 			{
-
 				public Void run() throws IOException
 				{
 					saveProperties(propFile);
@@ -115,6 +132,10 @@ public class FanProjectProperties
                 {
                     projectProperties.put(BUILD_FAN_TEMPLATE, buildFileTemplate);
                 }
+                if (runtimeArguments != null)
+                {
+                    projectProperties.put(RUNTIME_ARGUMENTS, runtimeArguments);
+                }
 		dest.getParentFile().mkdirs();
 		FileOutputStream fos = new FileOutputStream(dest);
 		projectProperties.store(fos, "Fantom Project Properties");
@@ -143,6 +164,7 @@ public class FanProjectProperties
 			mainMethod = props.getProperty(MAIN_METHOD, DEFAULT_MAIN_METHOD);
 			buildTarget = props.getProperty(BUILD_TARGET, DEFAULT_BUILD_TARGET);
                         buildFileTemplate = props.getProperty(BUILD_FAN_TEMPLATE, DEFAULT_BUILD_TEMPLATE);
+                        runtimeArguments = props.getProperty(RUNTIME_ARGUMENTS, DEFAULT_RUNTIME_ARGUMENTS);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -159,16 +181,6 @@ public class FanProjectProperties
 			}
 		}
 
-	}
-
-	public void setBuildTarget(String target)
-	{
-		buildTarget = target;
-	}
-
-	public String getBuildTarget()
-	{
-		return buildTarget;
 	}
 
 	public static FanProjectProperties getProperties(FanProject prj)
@@ -190,13 +202,11 @@ public class FanProjectProperties
 			e.printStackTrace();
 		}
 		//FanProjectProperties curProps=project.getLookup().lookup(FanProjectProperties.class);
-
 	}
 
 	// listener for props file changes
 	private class FanPropsListener implements FileChangeListener
 	{
-
 		public void fileChanged(FileEvent event)
 		{
 			//System.out.println("Props file changed :" + event.getFile().getPath());
