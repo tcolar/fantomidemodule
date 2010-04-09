@@ -111,7 +111,7 @@ public class FantomTypesTest extends FantomCSLTest
 		check(t, "|sys::Int->sys::Void|", false, false);
 		t = FanResolvedType.makeFromTypeSig(node, "|Int,Str,Str:Int->Str:Bool|");
 		check(t, "|sys::Int,sys::Str,[sys::Str:sys::Int]->[sys::Str:sys::Bool]|", false, false);
-		checkExpr("[Str:Str].keys.random", null, false, false);
+		checkExpr("[Str:Str].keys.random", null, true, false);
 
 		// closures / itblocks
 		resultNode = checkExpr("|str| { echo(str) }", "|sys::Obj?->sys::Void|", false, false);
@@ -137,7 +137,7 @@ public class FantomTypesTest extends FantomCSLTest
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));
 		JOTTester.checkIf("Compatibility of Obj vs Obj", mkt("sys::Obj", node).isTypeCompatible(mkt("sys::Obj", node)));
-		JOTTester.checkIf("Un-Compatibility of mixin vs Obj", !mkt("web::Weblet", node).isTypeCompatible(mkt("sys::Obj", node)));
+		JOTTester.checkIf("Un-Compatibility of mixin vs Enum", !mkt("web::Weblet", node).isTypeCompatible(mkt("sys::Enum", node)));
 		JOTTester.checkIf("Compatibility of Button vs Obj", mkt("fwt::Button", node).isTypeCompatible(mkt("sys::Obj", node)));
 		JOTTester.checkIf("Compatibility of Button vs widget", mkt("fwt::Button", node).isTypeCompatible(mkt("fwt::Widget", node)));
 
@@ -153,7 +153,7 @@ public class FantomTypesTest extends FantomCSLTest
 		JOTTester.checkIf("Enum parent is Obj", p.getDbType().getQualifiedName().equals("sys::Obj"), p.toString());
 		t = mkt("web::Weblet", node);
 		p = t.getParentType();
-		JOTTester.checkIf("Mixin parent is null", p == null, p == null ? "null" : p.toString());
+		JOTTester.checkIf("Mixin parent is Obj", p.getDbType().getQualifiedName().equals("sys::Obj"), p.toString());
 	}
 
 	private FanResolvedType mkt(String qType, AstNode node)

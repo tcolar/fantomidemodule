@@ -318,12 +318,15 @@ public class FanSlot extends JOTModel
 		if (includeImpliedTypes)
 		{
 			// Add implicit super types
-			if (dbType.isClass() && !doneTypes.contains("sys::Obj"))
+			// for enum, add implicit enum (this will add Obj as well)
+			if (dbType.isEnum() && !doneTypes.contains("sys::Enum"))
+			{			
+				slots.addAll(getAllSlotsForType("sys::Enum", false, task));
+			}
+			// and everybody get the Obj slots. (Todo: mixins too? -> apparently yes)
+			if (!doneTypes.contains("sys::Obj"))
 			{
-				slots.addAll(getAllSlotsForType("sys::Obj", includeImpliedTypes, task));
-			} else if (dbType.isEnum() && !doneTypes.contains("sys::Enum"))
-			{
-				slots.addAll(getAllSlotsForType("sys::Enum", includeImpliedTypes, task));
+				slots.addAll(getAllSlotsForType("sys::Obj", false, task));
 			}
 		}
 		if(task!=null)

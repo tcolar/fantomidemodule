@@ -689,10 +689,10 @@ public class FanResolvedType implements Cloneable
 		{
 			return makeFromTypeSig(scopeNode, "sys::Enum");
 		}
-		if (getDbType().isMixin())
+		/*if (getDbType().isMixin())
 		{
-			return null;
-		}
+			return makeFromTypeSig(scopeNode, "sys::Obj");
+		}*/
 
 		Vector<FanTypeInheritance> inhs = FanTypeInheritance.findAllForMainType(null, getDbType().getQualifiedName());
 		for (FanTypeInheritance inh : inhs)
@@ -703,8 +703,7 @@ public class FanResolvedType implements Cloneable
 				return t;
 			}
 		}
-		if (!getDbType().getQualifiedName().equals("sys::Obj")
-			&& !getDbType().isMixin())
+		if (!getDbType().getQualifiedName().equals("sys::Obj"))
 		{
 			return FanResolvedType.makeFromDbType(getScopeNode(), "sys::Obj");
 		}
