@@ -53,7 +53,6 @@ public final class FanPodPanel1 extends JPanel
 		locationField.setText(dir);
 		String loc = dir + (dir.endsWith(File.separator) ? "" : File.separator) + DEFAULT_PRJ;
 		folderField.setText(loc);
-		nameField.setText("");
 		podDescField.setText("");
 		chooser = new JFileChooser();
 		chooser.setMultiSelectionEnabled(false);
@@ -663,7 +662,8 @@ public final class FanPodPanel1 extends JPanel
                     int val = podChooser.showDialog(directories, dependencies);
                     if (val == JFileChooser.APPROVE_OPTION)
                     {
-                        dependencies = podChooser.getSelected();
+                        dependencies.clear();
+                        dependencies.addAll(podChooser.getSelected());
                         final StringBuilder sb = new StringBuilder();
                         for (final DependencyPair s : dependencies) {
                             if (sb.length() != 0) {
