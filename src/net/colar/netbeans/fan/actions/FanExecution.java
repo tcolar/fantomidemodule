@@ -33,6 +33,7 @@ public class FanExecution
 {
 	// execution commands
 
+        private String runtimeArguments;
         private String outputDirectory;
 	private String command;
 	private String workingDirectory;
@@ -119,6 +120,16 @@ public class FanExecution
 			}
 			cmdStr+=arg+", ";
 		}
+                if (null != runtimeArguments && !"".equals(runtimeArguments)) {
+                    String[] args = runtimeArguments.split(" ");
+                    for (int i = 0; i < args.length; i++) {
+			if (args[i] != null && args[i].trim().length() > 0)
+			{
+                            processBuilder = processBuilder.addArgument(args[i].trim());
+			}
+			cmdStr+=args[i]+", ";
+                    }
+                }
 		cmdStr+="]";
                 
 		processBuilder = processBuilder.redirectErrorStream(redirect);
@@ -150,7 +161,12 @@ public class FanExecution
 		if(arg!=null && arg.length()>0)
                     commandArgs.add(arg);
 	}
-
+        public synchronized void setOutputDirectory(String var) {
+            outputDirectory = var;
+        }
+        public synchronized void setRuntimeArguments(String var) {
+            runtimeArguments = var;
+        }
 	public synchronized String getWorkingDirectory()
 	{
 		return workingDirectory;
@@ -319,7 +335,4 @@ public class FanExecution
 	{
 		return null;
 	}
-        public synchronized void setOutputDirectory(String var) {
-            outputDirectory = var;
-        }
 }
