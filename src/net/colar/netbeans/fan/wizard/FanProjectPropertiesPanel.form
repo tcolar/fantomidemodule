@@ -16,25 +16,25 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jTabbedPane1" alignment="1" pref="585" max="32767" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="prevTabButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="407" max="32767" attributes="0"/>
+                      <EmptySpace pref="419" max="32767" attributes="0"/>
                       <Component id="nextTabButton" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="jTabbedPane1" alignment="0" pref="585" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Component id="jTabbedPane1" min="-2" pref="262" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="jTabbedPane1" min="-2" pref="268" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="prevTabButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="nextTabButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -66,34 +66,21 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="outputDirectoryLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="podNameField" pref="407" max="32767" attributes="0"/>
-                                  <Component id="podDescriptionField" alignment="1" pref="407" max="32767" attributes="0"/>
-                                  <Component id="podVersionField" alignment="0" pref="407" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="outputDirectoryField" min="-2" pref="318" max="-2" attributes="0"/>
+                              <EmptySpace pref="31" max="32767" attributes="0"/>
+                              <Component id="outputDirectoryEditButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="mainMethodLbl1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="outputDirectoryLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="outputDirectoryField" min="-2" pref="318" max="-2" attributes="0"/>
-                                      <EmptySpace pref="53" max="32767" attributes="0"/>
-                                      <Component id="outputDirectoryEditButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="mainMethodField" alignment="0" pref="407" max="32767" attributes="1"/>
-                              </Group>
-                          </Group>
+                          <Component id="podNameField" alignment="1" pref="407" max="32767" attributes="0"/>
+                          <Component id="podDescriptionField" alignment="1" pref="407" max="32767" attributes="0"/>
+                          <Component id="podVersionField" alignment="0" pref="407" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -117,37 +104,18 @@
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="podVersionField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="mainMethodField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="mainMethodLbl1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="outputDirectoryLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="outputDirectoryField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="outputDirectoryEditButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="outputDirectoryLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="28" max="32767" attributes="0"/>
+                      <EmptySpace pref="77" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="mainMethodLbl1">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPropertiesPanel.mainMethodLbl1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="mainMethodField">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPropertiesPanel.mainMethodField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JLabel" name="outputDirectoryLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -236,21 +204,21 @@
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="docSrcCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="docApiCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jScrollPane1" max="32767" attributes="1"/>
-                                  <Component id="jScrollPane2" alignment="1" pref="343" max="32767" attributes="1"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jScrollPane2" pref="343" max="32767" attributes="1"/>
+                                  <Component id="jScrollPane1" alignment="1" pref="343" max="32767" attributes="1"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="sourceEditButton" max="32767" attributes="1"/>
-                                  <Component id="sourceDefaultsButton" alignment="1" max="32767" attributes="1"/>
-                                  <Component id="resourceDefaultsButton" alignment="1" max="32767" attributes="1"/>
-                                  <Component id="resourceEditButton" alignment="1" max="32767" attributes="1"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="resourceDefaultsButton" max="32767" attributes="1"/>
+                                  <Component id="resourceEditButton" pref="65" max="32767" attributes="1"/>
+                                  <Component id="sourceDefaultsButton" max="32767" attributes="1"/>
+                                  <Component id="sourceEditButton" alignment="1" pref="65" max="32767" attributes="1"/>
                               </Group>
                           </Group>
                       </Group>
@@ -263,28 +231,33 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane1" min="-2" pref="67" max="-2" attributes="1"/>
                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="1">
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="sourceEditButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="19" max="32767" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="sourceDefaultsButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" min="-2" pref="67" max="-2" attributes="1"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="resourceEditButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="resourceDefaultsButton" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPane2" min="-2" pref="68" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="docApiCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="docSrcCheckBox" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jScrollPane2" alignment="0" min="-2" pref="68" max="-2" attributes="1"/>
+                                  <Group type="102" alignment="0" attributes="1">
+                                      <Component id="resourceEditButton" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="resourceDefaultsButton" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="docApiCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="docSrcCheckBox" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -446,7 +419,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="metaEditButton" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPane5" alignment="0" pref="51" max="32767" attributes="0"/>
+                          <Component id="jScrollPane5" alignment="0" pref="57" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -569,6 +542,84 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="metaEditButtonActionPerformed"/>
               </Events>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="jPanel4">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Run Parameters">
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPropertiesPanel.jPanel4.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="mainMethodLbl2" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="mainMethodField" pref="413" max="32767" attributes="1"/>
+                          <Component id="runtimeArgumentsField" alignment="0" pref="413" max="32767" attributes="1"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="mainMethodLbl2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="mainMethodField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="runtimeArgumentsField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="108" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="mainMethodLbl2">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPropertiesPanel.mainMethodLbl2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="mainMethodField">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPropertiesPanel.mainMethodField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel9">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPropertiesPanel.jLabel9.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="runtimeArgumentsField">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="FanProjectPropertiesPanel.runtimeArgumentsField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
