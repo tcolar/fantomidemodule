@@ -4,6 +4,7 @@
 
 package net.colar.netbeans.fan.types;
 
+import net.colar.netbeans.fan.indexer.model.FanDummyType;
 import net.colar.netbeans.fan.parboiled.AstNode;
 
 /**

@@ -62,7 +62,7 @@ public class FanSlotProposal extends FanCompletionProposal
 			{
 				rHtml = "";
 			}
-			Vector<FanMethodParam> params = FanMethodParam.findAllForSlot(slot.getId());
+			Vector<FanMethodParam> params = slot.getAllParameters();
 			//Param[] params = (Param[]) slot.m.params().asArray(Param.class);
 			for (FanMethodParam p : params)
 			{

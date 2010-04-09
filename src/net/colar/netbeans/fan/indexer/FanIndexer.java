@@ -394,7 +394,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 									Hashtable<String, FanScopeMethodParam> parameters = method.getParameters();
 
 									// Try to reuse existing db entries.
-									Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
+									Vector<FanMethodParam> currentParams = dbSlot.getAllParameters();
 									for (String paramName : parameters.keySet())
 									{
 										FanScopeMethodParam paramResult = parameters.get(paramName);
@@ -690,7 +690,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 							FMethod method = (FMethod) slot;
 							FMethodVar[] parameters = method.params();
 							// Try to reuse existing db entries.
-							Vector<FanMethodParam> currentParams = FanMethodParam.findAllForSlot(dbSlot.getId());
+							Vector<FanMethodParam> currentParams = dbSlot.getAllParameters();
 							int paramIndex = 0;
 							for (FMethodVar param : parameters)
 							{

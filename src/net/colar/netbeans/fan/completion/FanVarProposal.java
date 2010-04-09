@@ -104,7 +104,7 @@ public class FanVarProposal extends FanCompletionProposal
 				{
 					rHtml = "";
 				}
-				Vector<FanMethodParam> params = FanMethodParam.findAllForSlot(slot.getId());
+				Vector<FanMethodParam> params = slot.getAllParameters();
 				for (FanMethodParam p : params)
 				{
 					if (args.length() > 0)

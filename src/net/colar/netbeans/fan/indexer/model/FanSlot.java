@@ -202,7 +202,7 @@ public class FanSlot extends JOTModel
 	@Override
 	public void delete(JOTTransaction trans) throws Exception
 	{
-		Vector<FanMethodParam> params = FanMethodParam.findAllForSlot(getId());
+		Vector<FanMethodParam> params = getAllParameters();
 		for (FanMethodParam param : params)
 		{
 			param.delete(trans);
@@ -332,6 +332,20 @@ public class FanSlot extends JOTModel
 		if(task!=null)
 			task.getTypeSlotCache().put(fanType, slots);
 		return slots;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Vector<FanMethodParam> getAllParameters()
+	{
+		try
+		{
+			JOTSQLCondition cond = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, id);
+			return (Vector<FanMethodParam>)JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond).orderBy("PARAM_INDEX").find().getAllResults();
+		}
+		catch(Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import java.util.Hashtable;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.indexer.model.FanDummyParam;
+import net.colar.netbeans.fan.indexer.model.FanDummySlot;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstKind;
@@ -63,8 +65,10 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 			kind = VarKind.TYPE_MIXIN;
 		}
 		AstNode nameNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
-		if(nameNode==null)
+		if (nameNode == null)
+		{
 			return;
+		}
 
 		type = FanResolvedType.makeFromTypeSig(node, nameNode.getNodeText(true));
 
@@ -101,6 +105,23 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 
 	public void parseSlots(FanParserTask task)
 	{
+		if (kind == VarKind.TYPE_ENUM)
+		{
+			// Add compiler generated enum slots
+			// vals
+			FanDummySlot vals = new FanDummySlot("vals", getQName() + "[]", VarKind.FIELD.value());
+			vals.setIsStatic(true);
+			FanAstScopeVarBase valsVar = new FanLocalScopeVar(node, getType(), vals, vals.getName());
+			inheritedSlots.put(valsVar.getName(), valsVar);
+			// fromStr
+			FanDummySlot fromStr = new FanDummySlot("fromStr", getQName(), VarKind.METHOD.value());
+			fromStr.setIsStatic(true);
+			fromStr.addDummyParam(new FanDummyParam(-2, "str", getQName(), 0, false));
+			FanAstScopeVarBase fromStrVar = new FanLocalScopeVar(node, getType(), fromStr, fromStr.getName());
+			inheritedSlots.put(fromStrVar.getName(), fromStrVar);
+			// enum values
+		}
+
 		// Also "cache" inherited slots, for faster var lookup later
 		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true, task);
 		for (FanSlot slot : slots)

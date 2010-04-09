@@ -4,11 +4,8 @@
 
 package net.colar.netbeans.fan.indexer.model;
 
-import java.util.Vector;
 import net.jot.persistance.JOTModel;
 import net.jot.persistance.JOTModelMapping;
-import net.jot.persistance.JOTSQLCondition;
-import net.jot.persistance.builders.JOTQueryBuilder;
 
 /**
  * DB model for a method/constructor parameters
@@ -58,19 +55,6 @@ public class FanMethodParam extends JOTModel
 	public void setSlotId(long slotId)
 	{
 		this.slotId = slotId;
-	}
-    @SuppressWarnings("unchecked")
-	public static Vector<FanMethodParam> findAllForSlot(long id)
-	{
-		try
-		{
-			JOTSQLCondition cond = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, id);
-			return (Vector<FanMethodParam>)JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond).orderBy("PARAM_INDEX").find().getAllResults();
-		}
-		catch(Exception e)
-		{
-			throw new RuntimeException(e);
-		}
 	}
 
 	public void setHasDefault(boolean b)

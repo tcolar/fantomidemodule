@@ -1,4 +1,4 @@
-package net.colar.netbeans.fan.types;
+package net.colar.netbeans.fan.indexer.model;
 
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.jot.persistance.JOTTransaction;

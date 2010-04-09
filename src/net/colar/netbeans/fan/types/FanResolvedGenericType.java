@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.types;
 
+import net.colar.netbeans.fan.indexer.model.FanDummyType;
 import java.util.Vector;
 import net.colar.netbeans.fan.parboiled.AstNode;
 

@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.colar.netbeans.fan.test;
+package net.colar.netbeans.fan.test.mock;
 
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.parboiled.AstKind;
@@ -14,7 +14,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
  * Dummy minimal rootNode for unit testing
  * @author tcolar
  */
-class DummyAstRootNode extends RootNode
+public class DummyAstRootNode extends RootNode
 {
 	public DummyAstRootNode(FanParserTask task)
 	{

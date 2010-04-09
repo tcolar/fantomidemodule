@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.test;
 
+import net.colar.netbeans.fan.test.mock.MockTrampoline;
 import java.io.InputStream;
 import java.util.prefs.Preferences;
 import net.colar.netbeans.fan.FanModuleInstall;

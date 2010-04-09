@@ -925,7 +925,7 @@ public class FanParserTask extends ParserResult
 			addError("Can't find closure call slot: " + slotBase.getQualifiedType() + "." + slotName, closureNode);
 		} else
 		{
-			List<FanMethodParam> params = FanMethodParam.findAllForSlot(slot.getId());
+			List<FanMethodParam> params = slot.getAllParameters();
 			if (argIndex > params.size())
 			{
 				addError("Too many parameters in closure call.", closureNode);
@@ -936,7 +936,7 @@ public class FanParserTask extends ParserResult
 					// One extra parameter VS expected -> trying 'with' call
 					slotBase = baseType.resolveSlotBaseType("with", this);
 					slot = FanSlot.findByTypeAndName(slotBase.getQualifiedType(), "with");
-					params = FanMethodParam.findAllForSlot(slot.getId());
+					params = slot.getAllParameters();
 					argIndex = 0;
 				}
 				FanResolvedType func = FanResolvedType.makeFromTypeSig(closureNode, params.get(argIndex).getQualifiedType());
@@ -945,7 +945,7 @@ public class FanParserTask extends ParserResult
 					// This could happen, because of defaulted parameters, try a 'with' as well then .. probably too loose
 					slotBase = baseType.resolveSlotBaseType("with", this);
 					slot = FanSlot.findByTypeAndName(slotBase.getQualifiedType(), "with");
-					params = FanMethodParam.findAllForSlot(slot.getId());
+					params = slot.getAllParameters();
 					argIndex = 0;
 					func = FanResolvedType.makeFromTypeSig(closureNode, params.get(argIndex).getQualifiedType());
 				}

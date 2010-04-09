@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.test;
 
+import net.colar.netbeans.fan.test.mock.DummyAstRootNode;
 import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
@@ -30,6 +31,7 @@ import org.parboiled.support.ParsingResult;
 public class FantomTypesTest extends FantomCSLTest
 {
 	// List some fq imports we will use in the tests, so we can add them to the node's scope (sys types implied)
+
 	static String[] testUsings =
 	{
 		"web::Weblet", "fwt::Button", "fwt::Widget", "web::WebUtil"
@@ -89,8 +91,8 @@ public class FantomTypesTest extends FantomCSLTest
 		t = FanResolvedType.makeFromTypeSig(node, "Str[][]?");
 		check(t, "sys::Str[][]?", true, false);
 		JOTTester.checkIf("List of List type",
-				(t instanceof FanResolvedListType)
-				&& ((FanResolvedListType) t).getItemType().toTypeSig(true).equals("sys::Str[]"), t.toString());
+			(t instanceof FanResolvedListType)
+			&& ((FanResolvedListType) t).getItemType().toTypeSig(true).equals("sys::Str[]"), t.toString());
 
 		// maps
 		t = FanResolvedType.makeFromTypeSig(node, "[sys::Str : sys::Str]");
@@ -186,10 +188,10 @@ public class FantomTypesTest extends FantomCSLTest
 	private void check(String infoStr, FanResolvedType t, String typeSig, boolean isNullable, boolean isStatic) throws Exception
 	{
 		boolean good = t != null
-				&& t.isResolved()
-				&& (typeSig==null || t.toTypeSig(true).equals(typeSig))
-				&& t.isNullable() == isNullable
-				&& t.isStaticContext() == isStatic;
+			&& t.isResolved()
+			&& (typeSig == null || t.toTypeSig(true).equals(typeSig))
+			&& t.isNullable() == isNullable
+			&& t.isStaticContext() == isStatic;
 		String expected = "got: " + t + ", expected: " + typeSig + ", ST:" + isStatic + ", NL:" + isNullable;
 		JOTTester.checkIf("Checking " + infoStr, good, expected);
 	}
@@ -207,7 +209,7 @@ public class FantomTypesTest extends FantomCSLTest
 		FanParserTask task = new FanParserTask(null);
 		FantomParser parser = Parboiled.createParser(FantomParser.class, task);
 		ParsingResult<AstNode> result = RecoveringParseRunner.run(parser.testExpr(), expr);
-		JOTTester.checkIf("Checking for parsing errors: "+expr, ! result.hasErrors(), StringUtils.join(result.parseErrors,"\n"));
+		JOTTester.checkIf("Checking for parsing errors: " + expr, !result.hasErrors(), StringUtils.join(result.parseErrors, "\n"));
 		AstNode node = result.parseTreeRoot.getValue();
 		task.prune(node, task.getRootLabel(node));
 		addUsingsToNode(node, testUsings);
@@ -215,7 +217,7 @@ public class FantomTypesTest extends FantomCSLTest
 		task.parseVars(node, null);
 		//System.out.println("Node for "+expr+" : ");
 		//FanLexAstUtils.dumpTree(node, 0);
-		JOTTester.checkIf("Checking for Semantic errors: "+expr, task.getDiagnostics().isEmpty(), StringUtils.join(task.getDiagnostics(),"\n"));
+		JOTTester.checkIf("Checking for Semantic errors: " + expr, task.getDiagnostics().isEmpty(), StringUtils.join(task.getDiagnostics(), "\n"));
 		FanResolvedType t = node.getType();
 		check(expr, t, typeSig, isNullable, isStatic);
 		return node;
@@ -243,15 +245,15 @@ public class FantomTypesTest extends FantomCSLTest
 
 	public static void addTypeSlotsToNode(AstNode node, FanParserTask task, String[] types)
 	{
-		for(String type : types)
+		for (String type : types)
 		{
-		FanResolvedType baseType=FanResolvedType.makeFromDbType(node, type);
-		List<FanSlot> slots = FanSlot.getAllSlotsForType(type, false, task);
-		for (FanSlot slot : slots)
-		{
-			FanAstScopeVarBase newVar = new FanLocalScopeVar(node, baseType, slot, slot.getName());
-			node.addScopeVar(newVar, true);
-		}
+			FanResolvedType baseType = FanResolvedType.makeFromDbType(node, type);
+			List<FanSlot> slots = FanSlot.getAllSlotsForType(type, false, task);
+			for (FanSlot slot : slots)
+			{
+				FanAstScopeVarBase newVar = new FanLocalScopeVar(node, baseType, slot, slot.getName());
+				node.addScopeVar(newVar, true);
+			}
 		}
 	}
 }
