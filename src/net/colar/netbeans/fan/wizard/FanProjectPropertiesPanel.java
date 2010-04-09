@@ -35,7 +35,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
 {
 
 	/** Creates new form FanProjectPropertiesPanel */
-	public FanProjectPropertiesPanel( String dir)
+	public FanProjectPropertiesPanel(final String dir)
 	{
             super();
             this.dir = dir;
@@ -58,8 +58,6 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        mainMethodLbl1 = new javax.swing.JLabel();
-        mainMethodField = new javax.swing.JTextField();
         outputDirectoryLabel1 = new javax.swing.JLabel();
         outputDirectoryField = new javax.swing.JTextField();
         outputDirectoryEditButton = new javax.swing.JButton();
@@ -95,12 +93,13 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         jScrollPane5 = new javax.swing.JScrollPane();
         metaList = new javax.swing.JList();
         metaEditButton = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        mainMethodLbl2 = new javax.swing.JLabel();
+        mainMethodField = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        runtimeArgumentsField = new javax.swing.JTextField();
         prevTabButton = new javax.swing.JButton();
         nextTabButton = new javax.swing.JButton();
-
-        mainMethodLbl1.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.mainMethodLbl1.text")); // NOI18N
-
-        mainMethodField.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.mainMethodField.text")); // NOI18N
 
         outputDirectoryLabel1.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outputDirectoryLabel1.text")); // NOI18N
 
@@ -132,27 +131,19 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             .add(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel4)
+                    .add(jLabel5)
+                    .add(jLabel6)
+                    .add(outputDirectoryLabel1))
+                .add(40, 40, 40)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel1Layout.createSequentialGroup()
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel4)
-                            .add(jLabel5)
-                            .add(jLabel6))
-                        .add(46, 46, 46)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(podNameField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
-                            .add(podDescriptionField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, podVersionField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)))
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(mainMethodLbl1)
-                            .add(outputDirectoryLabel1))
-                        .add(40, 40, 40)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jPanel1Layout.createSequentialGroup()
-                                .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 318, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 53, Short.MAX_VALUE)
-                                .add(outputDirectoryEditButton))
-                            .add(mainMethodField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE))))
+                        .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 318, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 31, Short.MAX_VALUE)
+                        .add(outputDirectoryEditButton))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, podNameField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, podDescriptionField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
+                    .add(podVersionField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -172,14 +163,10 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     .add(podVersionField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(18, 18, 18)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(mainMethodField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(mainMethodLbl1))
-                .add(18, 18, 18)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(outputDirectoryLabel1)
                     .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(outputDirectoryEditButton)
-                    .add(outputDirectoryLabel1))
-                .addContainerGap(28, Short.MAX_VALUE))
+                    .add(outputDirectoryEditButton))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -238,15 +225,15 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     .add(docSrcCheckBox)
                     .add(docApiCheckBox)
                     .add(jPanel2Layout.createSequentialGroup()
-                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                            .add(jScrollPane1)
-                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                            .add(sourceEditButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(sourceDefaultsButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(resourceDefaultsButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(resourceEditButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .add(resourceEditButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                            .add(sourceDefaultsButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, sourceEditButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -254,24 +241,27 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             .add(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 67, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabel1)
                     .add(jPanel2Layout.createSequentialGroup()
                         .add(sourceEditButton)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 19, Short.MAX_VALUE)
-                        .add(sourceDefaultsButton))
-                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 67, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(18, 18, 18)
+                        .add(18, 18, 18)
+                        .add(sourceDefaultsButton)))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel2Layout.createSequentialGroup()
-                        .add(resourceEditButton)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 68, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jPanel2Layout.createSequentialGroup()
+                                .add(resourceEditButton)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .add(resourceDefaultsButton)))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(resourceDefaultsButton))
-                    .add(jLabel2)
-                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 68, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(docApiCheckBox)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(docSrcCheckBox))
+                        .add(docApiCheckBox)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(docSrcCheckBox))
+                    .add(jLabel2))
+                .add(19, 19, 19))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -374,11 +364,50 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                 .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(metaEditButton)
                     .add(jLabel8)
-                    .add(jScrollPane5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
+                    .add(jScrollPane5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
+
+        mainMethodLbl2.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.mainMethodLbl2.text")); // NOI18N
+
+        mainMethodField.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.mainMethodField.text")); // NOI18N
+
+        jLabel9.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.jLabel9.text")); // NOI18N
+
+        runtimeArgumentsField.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.runtimeArgumentsField.text")); // NOI18N
+
+        org.jdesktop.layout.GroupLayout jPanel4Layout = new org.jdesktop.layout.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(mainMethodLbl2)
+                    .add(jLabel9))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(mainMethodField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                    .add(runtimeArgumentsField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel4Layout.createSequentialGroup()
+                .add(37, 37, 37)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(mainMethodLbl2)
+                    .add(mainMethodField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(44, 44, 44)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel9)
+                    .add(runtimeArgumentsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(108, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.jPanel4.TabConstraints.tabTitle"), jPanel4); // NOI18N
 
         prevTabButton.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.prevTabButton.text_1")); // NOI18N
         prevTabButton.addActionListener(new java.awt.event.ActionListener() {
@@ -398,21 +427,21 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
-                    .add(layout.createSequentialGroup()
-                        .addContainerGap()
+            .add(layout.createSequentialGroup()
+                .addContainerGap()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                         .add(prevTabButton)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 407, Short.MAX_VALUE)
-                        .add(nextTabButton)))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 419, Short.MAX_VALUE)
+                        .add(nextTabButton))
+                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 262, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 268, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(prevTabButton)
                     .add(nextTabButton))
@@ -426,7 +455,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     int val = chooser.showDialog(FanProjectPropertiesPanel.this, "Select");
                     if (val == JFileChooser.APPROVE_OPTION)
                     {
-                                                String s = chooser.getSelectedFile().getPath();
+                        String s = chooser.getSelectedFile().getPath();
                         if (!s.endsWith("/")) {
                             s += "/";
                         }
@@ -496,7 +525,8 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     int val = podChooser.showDialog(directories, dependencies);
                     if (val == JFileChooser.APPROVE_OPTION)
                     {
-                        dependencies = podChooser.getSelected();
+                        dependencies.clear();
+                        dependencies.addAll(podChooser.getSelected());
                         final StringBuilder sb = new StringBuilder();
                         for (final DependencyPair s : dependencies) {
                             if (sb.length() != 0) {
@@ -967,6 +997,12 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             };
             sw.execute();
         }
+        public void setRuntimeArguments(final String var) {
+            runtimeArgumentsField.setText(var);
+        }
+        public String getRuntimeArguments() {
+            return runtimeArgumentsField.getText();
+        }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton dependenciesEditButton;
@@ -983,9 +1019,11 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -993,7 +1031,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField mainMethodField;
-    private javax.swing.JLabel mainMethodLbl1;
+    private javax.swing.JLabel mainMethodLbl2;
     private javax.swing.JButton metaEditButton;
     private javax.swing.JList metaList;
     private javax.swing.JButton nextTabButton;
@@ -1007,6 +1045,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
     private javax.swing.JButton resourceDefaultsButton;
     private javax.swing.JButton resourceEditButton;
     private javax.swing.JTree resourceTree;
+    private javax.swing.JTextField runtimeArgumentsField;
     private javax.swing.JButton sourceDefaultsButton;
     private javax.swing.JButton sourceEditButton;
     private javax.swing.JTree sourceTree;
@@ -1014,11 +1053,10 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
 
         private Set<String> sourceDirs = new HashSet<String>();
         private Set<String> resourceDirs = new HashSet<String>();
-        private SortedSet<DependencyPair> dependencies;
+        private SortedSet<DependencyPair> dependencies = new TreeSet<DependencyPair>();
 	private String dir;
 	private final JFileChooser chooser;
-	//public final static Pattern VALID_NAME = Pattern.compile("[ a-zA-Z0-9_-]+");
         private int currentTab = 0;
         private static final int MIN_TAB = 0;
-        private static final int MAX_TAB = 2;
+        private static final int MAX_TAB = 3;
 }
