@@ -808,6 +808,11 @@ public class FanResolvedType implements Cloneable
 			{	// Not good
 				errNode.getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), errNode);
 			}
+			// Could be something like V?
+			if (this.isNullable() != t.isNullable())
+			{
+				t = t.asNullableContext(this.isNullable());
+			}
 			return t.asStaticContext(false);
 		}
 		// Special case for "This"

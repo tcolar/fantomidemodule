@@ -36,7 +36,12 @@ public class FanResolvedListType extends FanResolvedType
 	@Override
 	public FanResolvedType parameterize(FanResolvedType baseType, AstNode errNode)
 	{
-		return new FanResolvedListType(getScopeNode(),
+		FanResolvedType t = new FanResolvedListType(getScopeNode(),
 				itemType.parameterize(baseType, errNode));
+		if (this.isNullable() != t.isNullable())
+		{
+			t = t.asNullableContext(this.isNullable());
+		}
+		return t;
 	}
 }

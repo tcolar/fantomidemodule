@@ -22,8 +22,10 @@ public class FanResolvedFuncType extends FanResolvedType
 	public FanResolvedFuncType(AstNode scopeNode, List<FanResolvedType> types, FanResolvedType retType)
 	{
 		super(scopeNode, "sys::Func", scopeNode.getRoot().getParserTask().findCachedQualifiedType("sys::Func"));
-		if(retType == null)
+		if (retType == null)
+		{
 			retType = FanResolvedType.makeFromDbType(scopeNode, "sys::Void");
+		}
 		this.retType = retType;
 		this.types = types;
 	}
@@ -42,19 +44,19 @@ public class FanResolvedFuncType extends FanResolvedType
 	public String toTypeSig(boolean fullyQualified)
 	{
 		String sig = "|";
-		boolean first=true;
-		for(FanResolvedType type : types)
+		boolean first = true;
+		for (FanResolvedType type : types)
 		{
-			if( ! first)
+			if (!first)
 			{
-				sig+=",";
+				sig += ",";
 			}
 			first = false;
-			sig+=type.toTypeSig(fullyQualified);
+			sig += type.toTypeSig(fullyQualified);
 		}
-		sig+= "->";
+		sig += "->";
 		sig += retType.toTypeSig(fullyQualified) + "|";
-		sig += isNullable()?"?":"";
+		sig += isNullable() ? "?" : "";
 		return sig;
 	}
 
@@ -71,14 +73,18 @@ public class FanResolvedFuncType extends FanResolvedType
 	@Override
 	public FanResolvedType parameterize(FanResolvedType baseType, AstNode errNode)
 	{
-		List<FanResolvedType> pTypes= new ArrayList<FanResolvedType>(types.size());
-		for(FanResolvedType t : types)
+		List<FanResolvedType> pTypes = new ArrayList<FanResolvedType>(types.size());
+		for (FanResolvedType t : types)
 		{
 			pTypes.add(t.parameterize(baseType, errNode));
 		}
-		return new FanResolvedFuncType(getScopeNode(),
+		FanResolvedType t = new FanResolvedFuncType(getScopeNode(),
 			pTypes,
 			retType.parameterize(baseType, errNode));
+		if (this.isNullable() != t.isNullable())
+		{
+			t = (FanResolvedMapType) t.asNullableContext(this.isNullable());
+		}
+		return t;
 	}
-	
 }

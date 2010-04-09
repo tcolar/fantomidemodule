@@ -1,7 +1,6 @@
 /*
  * Thibaut Colar Jan 8, 2010
  */
-
 package net.colar.netbeans.fan.types;
 
 import net.colar.netbeans.fan.parboiled.AstNode;
@@ -12,6 +11,7 @@ import net.colar.netbeans.fan.parboiled.AstNode;
  */
 public class FanResolvedMapType extends FanResolvedType
 {
+
 	private final FanResolvedType keyType;
 	private final FanResolvedType valType;
 
@@ -35,15 +35,21 @@ public class FanResolvedMapType extends FanResolvedType
 	@Override
 	public String toTypeSig(boolean fullyQualified)
 	{
-		return "["+keyType.toTypeSig(fullyQualified)+":"+valType.toTypeSig(fullyQualified)+"]"+(isNullable()?"?":"");
+		return "[" + keyType.toTypeSig(fullyQualified) + ":" + valType.toTypeSig(fullyQualified) + "]" + (isNullable() ? "?" : "");
 	}
 
 	@Override
 	public FanResolvedType parameterize(FanResolvedType baseType, AstNode errNode)
 	{
-		return new FanResolvedMapType(getScopeNode(),
+		FanResolvedType t = new FanResolvedMapType(getScopeNode(),
 			keyType.parameterize(baseType, errNode),
 			valType.parameterize(baseType, errNode));
-	}
+		// Could be something like V?
+		if (this.isNullable() != t.isNullable())
+		{
+			t = (FanResolvedMapType) t.asNullableContext(this.isNullable());
+		}
+		return t;
 
+	}
 }
