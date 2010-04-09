@@ -914,60 +914,67 @@ public class FanParserTask extends ParserResult
 	private void doClosureCall(AstNode closureNode, FanResolvedType baseType, String slotName, int argIndex)
 	{
 		//TODO: Check that param types matches slot declaration
-		FanResolvedType slotBase = baseType.resolveSlotBaseType(slotName, this);
-		FanSlot slot = FanSlot.findByTypeAndName(slotBase.getQualifiedType(), slotName);
-		if (slot == null)
+		if (closureNode.getKind() == AstKind.AST_CLOSURE)
 		{
-			addError("Can't find closure call slot: " + slotBase.getQualifiedType() + "." + slotName, closureNode);
+			FanResolvedType slotBase = baseType.resolveSlotBaseType(slotName, this);
+			FanSlot slot = FanSlot.findByTypeAndName(slotBase.getQualifiedType(), slotName);
+			if (slot == null)
+			{
+				addError("Can't find closure call slot: " + slotBase.getQualifiedType() + "." + slotName, closureNode);
+			} else
+			{
+				List<FanMethodParam> params = FanMethodParam.findAllForSlot(slot.getId());
+				FanResolvedType func = FanResolvedType.makeFromTypeSig(closureNode, params.get(argIndex).getQualifiedType());
+				if (argIndex >= params.size())
+				{
+					addError("Not enough arguments for method called", closureNode);
+				} else
+				{
+					if (func == null || !(func instanceof FanResolvedFuncType))
+					{
+						addError("Not expecting a function as arg: " + (argIndex + 1), closureNode);
+					} else
+					{
+						// build lits of expected params for doClosure to use for inferrence resolution
+						List<FanResolvedType> infTypes = new ArrayList<FanResolvedType>();
+						if (func instanceof FanResolvedFuncType)
+						{ // Otherwise it's a generic sys::Func -> no inference possible
+							for (FanResolvedType t : ((FanResolvedFuncType) func).getTypes())
+							{
+								// might be a generic type
+								t = t.parameterize(baseType, closureNode);
+								infTypes.add(t);
+							}
+						}
+
+						FanResolvedFuncType closureFunc = doClosureDef(closureNode, infTypes);
+						AstNode closureBlock = FanLexAstUtils.getFirstChild(closureNode, new NodeKindPredicate(AstKind.AST_BLOCK));
+						// introduce the function variables
+						boolean anyVars = false;
+						for (int i = 0; i != closureFunc.getTypes().size(); i++)
+						{
+							String name = closureFunc.getTypeNames().get(i);
+							FanResolvedType type = closureFunc.getTypes().get(i);
+							if (name != null)
+							{
+								closureBlock.addScopeVar(name, VarKind.LOCAL, type, false);
+								anyVars = true;
+							}
+						}
+						if (anyVars == false)
+						{
+							FanResolvedType varType = closureFunc.getTypes().size() > 0 ? closureFunc.getTypes().get(0) : baseType;
+							introduceItVariables(closureBlock, varType);	// parse the block
+						}
+						parseChildren(closureBlock);
+					}
+				}
+			}
 		} else
 		{
-			List<FanMethodParam> params = FanMethodParam.findAllForSlot(slot.getId());
-			FanResolvedType func = null;
-			if (argIndex < params.size())
-			{
-				func = FanResolvedType.makeFromTypeSig(closureNode, params.get(argIndex).getQualifiedType());
-			}
-			if (func == null || !(func instanceof FanResolvedFuncType))
-			{
-				// try implied "with" call, this might be too loose ...
-				slotBase = slotBase.resolveSlotBaseType("with", this);
-				slot = FanSlot.findByTypeAndName("sys::Obj", slotName);
-				func = FanResolvedType.makeFromTypeSig(closureNode, "|sys::This->sys::This|");
-			}
-			// build lits of expected params for doClosure to use for inferrence resolution
-			List<FanResolvedType> infTypes = new ArrayList<FanResolvedType>();
-			if (func instanceof FanResolvedFuncType)
-			{ // Otherwise it's a generic sys::Func -> no inference possible
-				for (FanResolvedType t : ((FanResolvedFuncType) func).getTypes())
-				{
-					// might be a generic type
-					t = t.parameterize(baseType, closureNode);
-					infTypes.add(t);
-				}
-			}
-
-			FanResolvedFuncType closureFunc = doClosureDef(closureNode, infTypes);
-			AstNode closureBlock = closureNode.getKind() == AstKind.AST_CLOSURE
-					? FanLexAstUtils.getFirstChild(closureNode, new NodeKindPredicate(AstKind.AST_BLOCK))
-					: closureNode;
-			// introduce the function variables
-			boolean anyVars = false;
-			for (int i = 0; i != closureFunc.getTypes().size(); i++)
-			{
-				String name = closureFunc.getTypeNames().get(i);
-				FanResolvedType type = closureFunc.getTypes().get(i);
-				if (name != null)
-				{
-					closureBlock.addScopeVar(name, VarKind.LOCAL, type, false);
-					anyVars = true;
-				}
-			}
-			if (anyVars == false)
-			{
-				FanResolvedType varType = closureFunc.getTypes().size() > 0 ? closureFunc.getTypes().get(0) : baseType;
-				introduceItVariables(closureBlock, varType);	// parse the block
-			}
-			parseChildren(closureBlock);
+			//itBlock / ctorBlock
+			introduceItVariables(closureNode, baseType);	// parse the block
+			parseChildren(closureNode);
 		}
 	}
 
