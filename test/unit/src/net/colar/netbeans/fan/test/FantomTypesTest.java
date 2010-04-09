@@ -104,6 +104,8 @@ public class FantomTypesTest extends FantomCSLTest
 		checkExpr("[5:3].each |Str val| { echo(val)}", null, false, false);
 		checkExpr("Actor(ActorPool()) |msg| {echo(msg)}", null, false, false);
 		checkExpr("Actor.make(ActorPool()) |msg| {echo(msg)}", null, false, false);
+		checkExpr("Buf() {capacity=100}", null, false, false);
+		checkExpr("Button(\"meh\") {text=100}", null, false, false);
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));
