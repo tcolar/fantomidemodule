@@ -57,6 +57,7 @@ public class FanCustomizedProperties implements CustomizerProvider
 		if(props!=null)
 		{
                     settingsPanel.setMainClassName(props.getMainMethod());
+                    settingsPanel.setRuntimeArguments(props.getRuntimeArguments());
                 }
                 FanBuild build = new FanBuild(project.getProjectDirectory().getPath());
                 build.parse();
@@ -109,7 +110,6 @@ public class FanCustomizedProperties implements CustomizerProvider
 
 	private class OptionListener extends WindowAdapter implements ActionListener
 	{
-
 		private FanProject project;
 
 		OptionListener(FanProject project)
@@ -128,6 +128,7 @@ public class FanCustomizedProperties implements CustomizerProvider
                                 if(props != null)
                                 {
                                     props.setMainMethod(settingsPanel.getMainClassName());
+                                    props.setRuntimeArguments(settingsPanel.getRuntimeArguments());
                                     props.save();
                                 }
                                 final String template = props.getBuildFileTemplate();
@@ -151,14 +152,5 @@ public class FanCustomizedProperties implements CustomizerProvider
                     sw.execute();
                 }
 
-		@Override
-                public void windowClosed(WindowEvent e)
-		{
-		}
-
-                @Override
-		public void windowClosing(WindowEvent e)
-		{
-		}
 	}
 }
