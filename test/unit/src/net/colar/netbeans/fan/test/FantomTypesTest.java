@@ -51,8 +51,6 @@ public class FantomTypesTest extends FantomCSLTest
 		addUsingsToNode(node, testUsings);
 		addTypeSlotsToNode(node, task, testSlots);
 
-				checkExpr("Month.mar.name", null, false, false);
-
 		// Testing type signature stuff
 		FanResolvedType t = FanResolvedType.makeFromTypeSig(node, "sys::Str");
 		JOTTester.checkIf("Type sig 1", t.getQualifiedType().equals("sys::Str") && !t.isNullable(), t.toString());
@@ -99,12 +97,15 @@ public class FantomTypesTest extends FantomCSLTest
 		// maps
 		t = FanResolvedType.makeFromTypeSig(node, "[sys::Str : sys::Str]");
 		check(t, "[sys::Str:sys::Str]", false, false);
+		t = FanResolvedType.makeFromTypeSig(node, "sys::Str : sys::Str[]");
+		check(t, "[sys::Str:sys::Str[]]", false, false);
 		t = FanResolvedType.makeFromTypeSig(node, "[Str : Str]");
 		check(t, "[sys::Str:sys::Str]", false, false);
 		t = FanResolvedType.makeFromTypeSig(node, "Str:Str");
 		check(t, "[sys::Str:sys::Str]", false, false);
 		t = FanResolvedType.makeFromTypeSig(node, "Str:[Str:Int]");
 		check(t, "[sys::Str:[sys::Str:sys::Int]]", false, false);
+		checkExpr("[\"a\":[\"a\"]].keys.sort", null, false, false);
 
 		//functions:
 		t = FanResolvedType.makeFromTypeSig(node, "|->|");

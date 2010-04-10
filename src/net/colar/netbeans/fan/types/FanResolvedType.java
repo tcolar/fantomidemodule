@@ -218,7 +218,7 @@ public class FanResolvedType implements Cloneable
 		}
 
 		if (baseType == null || !baseType.isResolved()
-			|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
+				|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
 		{
 			return FanResolvedType.makeUnresolved(null);
 		}
@@ -259,7 +259,7 @@ public class FanResolvedType implements Cloneable
 			qt = enteredType.substring(5);
 		}
 		return qt.length() == 1
-			&& Character.toUpperCase(qt.charAt(0)) == qt.charAt(0);
+				&& Character.toUpperCase(qt.charAt(0)) == qt.charAt(0);
 	}
 
 	/**
@@ -447,12 +447,7 @@ public class FanResolvedType implements Cloneable
 			sig = sig.substring(0, sig.length() - 1);
 			nullable = true;
 		}
-		if (sig.endsWith("[]"))
-		{
-			sig = sig.substring(0, sig.length() - 2);
-			FanResolvedType listType = makeFromTypeSig(scopeNode, sig);
-			type = new FanResolvedListType(scopeNode, listType);
-		} else if (sig.startsWith("[") && sig.endsWith("]"))
+		if (sig.startsWith("[") && sig.endsWith("]"))
 		{// Full map
 			sig = sig.substring(1, sig.length() - 1);
 			int index = findMapSeparatorIndex(sig);
@@ -504,6 +499,11 @@ public class FanResolvedType implements Cloneable
 				FanResolvedType keyType = makeFromTypeSig(scopeNode, sig.substring(0, index).trim());
 				FanResolvedType valType = makeFromTypeSig(scopeNode, sig.substring(index + 1).trim());
 				type = new FanResolvedMapType(scopeNode, keyType, valType);
+			} else if (sig.endsWith("[]"))
+			{
+				sig = sig.substring(0, sig.length() - 2);
+				FanResolvedType listType = makeFromTypeSig(scopeNode, sig);
+				type = new FanResolvedListType(scopeNode, listType);
 			} else
 			{
 				// true simple type like Int or Sys::Int
@@ -650,7 +650,7 @@ public class FanResolvedType implements Cloneable
 			}
 			// TODO: might not work for generics
 			if (t.getDbType().getQualifiedName().equals(baseType.getDbType().getQualifiedName())
-				&& t.getClass().getName().equals(baseType.getClass().getName()))
+					&& t.getClass().getName().equals(baseType.getClass().getName()))
 			{
 				return true;
 			}

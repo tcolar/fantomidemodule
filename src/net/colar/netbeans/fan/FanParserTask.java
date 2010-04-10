@@ -1166,7 +1166,7 @@ public class FanParserTask extends ParserResult
 	private FanResolvedType doIndexExpr(AstNode exprNode, FanResolvedType type)
 	{
 		FanResolvedType baseType = type;
-		parseVars(exprNode, type);
+		parseVars(exprNode, null);
 		AstNode range = FanLexAstUtils.getFirstChildRecursive(exprNode, new NodeKindPredicate(AstKind.AST_EXPR_RANGE));
 		// It's kinda twisted, but the expr will have a range ast node either way
 		// however in the case of a "real" range it has 2 children expr (otherwise just 1 expr)

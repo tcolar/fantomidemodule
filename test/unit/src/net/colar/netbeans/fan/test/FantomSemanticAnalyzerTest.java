@@ -19,6 +19,7 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 {
 	File failedListFile=null;
 	final String[] badFiles = {
+		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/ClassPath.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Token.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Tokenizer.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/util/CallResolver.fan",
@@ -50,7 +51,6 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		"/home/thibautc/fantom-1.0.52/src/testSys/fan/ClosureTest.fan",
 		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/JavaType.fan",
 		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/JavaReflect.fan",
-		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/ClassPath.fan",
 	};
 
 	public void cslTest() throws Throwable
