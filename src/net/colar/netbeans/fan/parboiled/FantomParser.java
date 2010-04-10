@@ -174,7 +174,7 @@ public class FantomParser extends BaseParser<AstNode>
 	//------------------- Slot Def ---------------------------------------------
 	public Rule enumValDefs()
 	{
-		return sequence(sequence(enumValDef(), zeroOrMore(sequence(SP_COMMA, enumValDef())), ast.newNode(AstKind.AST_ENUM_DEFS)), eos());
+		return sequence(sequence(enumValDef(), zeroOrMore(sequence(SP_COMMA, enumValDef()))), ast.newNode(AstKind.AST_ENUM_DEFS), eos());
 	}
 
 	public Rule enumValDef()
@@ -381,11 +381,12 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule switch_()
 	{
-		return enforcedSequence(KW_SWITCH, PAR_L, expr(), PAR_R,
+		// Note: unlike java, fan as a scope for each 'case'
+		return sequence(enforcedSequence(KW_SWITCH, PAR_L, expr(), PAR_R,
 			OPT_LF(), BRACKET_L, OPT_LF(),
-			zeroOrMore(enforcedSequence(KW_CASE, expr(), SP_COL, zeroOrMore(firstOf(stmt(), LF())))),
-			optional(enforcedSequence(KW_DEFAULT, SP_COL, zeroOrMore(firstOf(stmt(), LF())))),
-			OPT_LF(), BRACKET_R);
+			zeroOrMore(enforcedSequence(KW_CASE, expr(), SP_COL, sequence(zeroOrMore(firstOf(stmt(), LF())), ast.newScopeNode(AstKind.AST_SWITCH_CASE)))),
+			optional(enforcedSequence(KW_DEFAULT, SP_COL, sequence(zeroOrMore(firstOf(stmt(), LF())), ast.newScopeNode(AstKind.AST_SWITCH_CASE)))),
+			OPT_LF(), BRACKET_R), ast.newScopeNode(AstKind.AST_SWITCH));
 	}
 
 	// ----------- Expressions -------------------------------------------------

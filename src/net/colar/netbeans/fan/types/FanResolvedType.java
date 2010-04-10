@@ -238,11 +238,6 @@ public class FanResolvedType implements Cloneable
 			}
 		} else
 		{
-			if (baseType.getDbType().isEnum())
-			{
-				// TODO: Index enums values
-				return baseType;
-			}
 			// Fan slots
 			for (FanSlot slot : FanSlot.getAllSlotsForType(baseType.getDbType().getQualifiedName(), true, task))
 			{

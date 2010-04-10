@@ -19,11 +19,9 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 {
 	File failedListFile=null;
 	final String[] badFiles = {
-	"/home/thibautc/fantom-1.0.52/src/testCompiler/fan/FacetTest.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Token.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Tokenizer.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/util/CallResolver.fan",
-		"/home/thibautc/fantom-1.0.52/src/compiler/fan/fcode/FCodePrinter.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/fcode/Fanp.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/steps/CheckErrors.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/steps/ResolveImports.fan",
@@ -38,7 +36,6 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/Runner.fan",
 		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/Dump.fan",
 		"/home/thibautc/fantom-1.0.52/src/sys/dotnet/build.fan",
-		"/home/thibautc/fantom-1.0.52/src/fwt/fan/Enums.fan",
 		"/home/thibautc/fantom-1.0.52/src/flux/fluxText/fan/TextEditor.fan",
 		"/home/thibautc/fantom-1.0.52/src/flux/fluxText/fan/Parser.fan",
 		"/home/thibautc/fantom-1.0.52/src/flux/flux/fan/View.fan",
@@ -51,7 +48,6 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		"/home/thibautc/fantom-1.0.52/src/testSys/fan/RangeTest.fan",
 		"/home/thibautc/fantom-1.0.52/src/testSys/fan/RegexTest.fan",
 		"/home/thibautc/fantom-1.0.52/src/testSys/fan/ClosureTest.fan",
-		"/home/thibautc/fantom-1.0.52/src/testSys/fan/FacetsTest.fan",
 		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/JavaType.fan",
 		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/JavaReflect.fan",
 		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/ClassPath.fan",

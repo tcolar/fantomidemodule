@@ -106,6 +106,8 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 	public void parseSlots(FanParserTask task)
 	{
 		// Also "cache" inherited slots, for faster var lookup later
+		// TODO: there is no need looking up the slots declared here
+		// we should only lookup the inherited ones
 		List<FanSlot> slots = FanSlot.getAllSlotsForType(qName, true, task);
 		for (FanSlot slot : slots)
 		{
@@ -248,7 +250,11 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 		{
 			// implied facet mixin inheritance(nothing in there right now)
 			inheritedItems.add(FanResolvedType.makeFromDbType(node, "sys::Facet"));
-
+		}
+		if (kind == VarKind.TYPE_ENUM)
+		{
+			// implied facet mixin inheritance(nothing in there right now)
+			inheritedItems.add(FanResolvedType.makeFromDbType(node, "sys::Enum"));
 		}
 		if (inheritance != null)
 		{

@@ -161,7 +161,7 @@ public class FanSlot extends JOTModel
 	}
 
 	@SuppressWarnings("unchecked")
-        public static Vector<FanSlot> findAllForType(long type)
+	public static Vector<FanSlot> findAllForType(long type)
 	{
 		try
 		{
@@ -266,7 +266,7 @@ public class FanSlot extends JOTModel
 	 */
 	public static List<FanSlot> getAllSlotsForType(String fanType, List<String> doneTypes, boolean includeImpliedTypes, FanParserTask task)
 	{
-		if(task!=null && task.getTypeSlotCache().containsKey(fanType))
+		if (task != null && task.getTypeSlotCache().containsKey(fanType))
 		{
 			return task.getTypeSlotCache().get(fanType);
 		}
@@ -276,17 +276,22 @@ public class FanSlot extends JOTModel
 		{
 			return new ArrayList<FanSlot>();
 		}
-		
+
 		doneTypes.add(fanType);
-		FanType dbType=null;
-		if(task!=null)
+		FanType dbType = null;
+		if (task != null)
+		{
 			dbType = task.findCachedQualifiedType(fanType);
-		else
+		} else
+		{
 			dbType = FanType.findByQualifiedName(fanType);
+		}
 		if (dbType == null)
 		{
-			if(task!=null)
+			if (task != null)
+			{
 				task.getTypeSlotCache().put(fanType, new Vector<FanSlot>(0));
+			}
 			return new Vector<FanSlot>(0);
 		}
 		Vector<FanSlot> slots = FanSlot.findAllForType(dbType.getId());
@@ -318,9 +323,13 @@ public class FanSlot extends JOTModel
 		if (includeImpliedTypes)
 		{
 			// Add implicit super types
+			if (dbType.isMixin() && !doneTypes.contains("sys::Mixin"))
+			{
+				slots.addAll(getAllSlotsForType("sys::Mixin", false, task));
+			}
 			// for enum, add implicit enum (this will add Obj as well)
 			if (dbType.isEnum() && !doneTypes.contains("sys::Enum"))
-			{			
+			{
 				slots.addAll(getAllSlotsForType("sys::Enum", false, task));
 			}
 			// and everybody get the Obj slots. (Todo: mixins too? -> apparently yes)
@@ -329,8 +338,10 @@ public class FanSlot extends JOTModel
 				slots.addAll(getAllSlotsForType("sys::Obj", false, task));
 			}
 		}
-		if(task!=null)
+		if (task != null)
+		{
 			task.getTypeSlotCache().put(fanType, slots);
+		}
 		return slots;
 	}
 
@@ -340,9 +351,8 @@ public class FanSlot extends JOTModel
 		try
 		{
 			JOTSQLCondition cond = new JOTSQLCondition("slotId", JOTSQLCondition.IS_EQUAL, id);
-			return (Vector<FanMethodParam>)JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond).orderBy("PARAM_INDEX").find().getAllResults();
-		}
-		catch(Exception e)
+			return (Vector<FanMethodParam>) JOTQueryBuilder.selectQuery(null, FanMethodParam.class).where(cond).orderBy("PARAM_INDEX").find().getAllResults();
+		} catch (Exception e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -353,6 +363,4 @@ public class FanSlot extends JOTModel
 	{
 		return "FanSlot: " + id + " : " + getName() + "(" + getReturnedType() + ")";
 	}
-
-
 }

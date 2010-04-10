@@ -51,6 +51,8 @@ public class FantomTypesTest extends FantomCSLTest
 		addUsingsToNode(node, testUsings);
 		addTypeSlotsToNode(node, task, testSlots);
 
+				checkExpr("Month.mar.name", null, false, false);
+
 		// Testing type signature stuff
 		FanResolvedType t = FanResolvedType.makeFromTypeSig(node, "sys::Str");
 		JOTTester.checkIf("Type sig 1", t.getQualifiedType().equals("sys::Str") && !t.isNullable(), t.toString());
@@ -140,6 +142,7 @@ public class FantomTypesTest extends FantomCSLTest
 		checkExpr("Month.vals", null, false, false);
 		checkExpr("Month.fromStr(\"abc)\"", null, false, false);
 		checkExpr("Month.mar", null, false, false);
+		checkExpr("Month.mar.name", null, false, false);
 		// Facet
 		checkExpr("Transient.defVal", null, false, false);
 
