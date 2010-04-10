@@ -166,6 +166,7 @@ public class FanResolvedType implements Cloneable
 		FanResolvedType slotBaseType = resolveSlotBaseType(slotName, task);
 		if (slotBaseType.isResolved())
 		{
+			//TODO: this does not seem to work for java.
 			if (baseType.getDbType().isJava())
 			{
 				List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(slotBaseType.getQualifiedType());
