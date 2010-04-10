@@ -34,9 +34,11 @@ public class FanJavaClassLoader extends URLClassLoader
 		try
 		{
 			String sep = File.separator;
-			File extDir = new File(Env.cur().homeDir().osPath(), "lib" + sep + "java" + sep + "ext");
+			File stdDir = new File(Env.cur().homeDir().osPath(), "lib" + sep + "java");
+			File extDir = new File(stdDir, "ext");
 			File platDir = new File(extDir, Env.cur().platform());
 			List<URL> acc = new ArrayList<URL>();
+			addExtJars(acc, stdDir);
 			addExtJars(acc, extDir);
 			addExtJars(acc, platDir);
 			return acc.toArray(new URL[acc.size()]);
