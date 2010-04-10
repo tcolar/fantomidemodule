@@ -163,21 +163,22 @@ public class FanResolvedType implements Cloneable
 	{
 		FanResolvedType baseType = this;
 
-		FanResolvedType slotBaseType = resolveSlotBaseType(slotName, task);
-		if (slotBaseType.isResolved())
+		if (baseType.getDbType().isJava())
 		{
-			//TODO: this does not seem to work for java.
-			if (baseType.getDbType().isJava())
+			List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(getQualifiedType());
+			for (Member member : members)
 			{
-				List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(slotBaseType.getQualifiedType());
-				for (Member member : members)
+				if (member.getName().equalsIgnoreCase(slotName))
 				{
-					if (member.getName().equalsIgnoreCase(slotName))
-					{
-						return makeFromTypeSig(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
-					}
+					//TODO: that's not working right for a java type
+					// either fix here or have makeFromTypeSig allow java types
+					return makeFromTypeSig(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
 				}
-			} else
+			}
+		} else
+		{
+			FanResolvedType slotBaseType = resolveSlotBaseType(slotName, task);
+			if (slotBaseType.isResolved())
 			{
 				FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), slotName);
 				if (slot == null)
@@ -225,18 +226,7 @@ public class FanResolvedType implements Cloneable
 		}
 		if (baseType.getDbType().isJava())
 		{
-			// java slots
-			List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(baseType.getDbType().getQualifiedName());
-			// Returning the first match .. because java has overloading this could be wrong
-			// However I assume overloaded methods return the same type (If it doesn't too bad, it's ugly code anyway :) )
-			for (Member member : members)
-			{
-				if (member.getName().equalsIgnoreCase(slotName))
-				{
-					FanType slotBaseType = FanType.findByQualifiedName(member.getClass().getName());
-					return makeFromTypeSig(scopeNode, slotBaseType.getQualifiedName());
-				}
-			}
+			return baseType;
 		} else
 		{
 			// Fan slots

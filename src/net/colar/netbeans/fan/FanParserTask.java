@@ -439,6 +439,7 @@ public class FanParserTask extends ParserResult
 					}
 
 					doClosureCall(node, type, "with", 0);
+					type=type.asStaticContext(false);
 					break;
 				case AST_CALL:
 					type = doCall(node, type, null);
@@ -628,7 +629,7 @@ public class FanParserTask extends ParserResult
 					addError("Unresolved Java Item: " + qname, usingNode);
 				} else
 				{
-					addUsing(name, qname, usingNode);
+					addUsingToNode(name, qname, usingNode);
 				}
 			} else
 			{
@@ -641,7 +642,7 @@ public class FanParserTask extends ParserResult
 					Vector<FanType> items = FanType.findPodTypes(name, "");
 					for (FanType t : items)
 					{
-						addUsing(t.getSimpleName(), t.getQualifiedName(), usingNode);
+						addUsingToNode(t.getSimpleName(), t.getQualifiedName(), usingNode);
 					}
 				}
 			}
@@ -660,7 +661,7 @@ public class FanParserTask extends ParserResult
 				}
 
 				//Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
-				addUsing(name, type, usingNode);
+				addUsingToNode(name, type, usingNode);
 			} else
 			{
 				// Adding all the types of a Pod
@@ -676,14 +677,14 @@ public class FanParserTask extends ParserResult
 					Vector<FanType> items = FanType.findPodTypes(name, "");
 					for (FanType t : items)
 					{
-						addUsing(t.getSimpleName(), t.getQualifiedName(), usingNode);
+						addUsingToNode(t.getSimpleName(), t.getQualifiedName(), usingNode);
 					}
 				}
 			}
 		}
 	}
 
-	private void addUsing(String name, String qType, AstNode node)
+	public static void addUsingToNode(String name, String qType, AstNode node)
 	{
 		AstNode scopeNode = FanLexAstUtils.getScopeNode(node);
 		if (scopeNode == null)
@@ -912,7 +913,7 @@ public class FanParserTask extends ParserResult
 		{
 			type = type.parameterize(baseType, node);
 		}
-		return type;
+		return type.asStaticContext(false);
 	}
 
 	private void doClosureCall(AstNode closureNode, FanResolvedType baseType, String slotName, int argIndex)

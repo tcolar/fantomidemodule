@@ -35,7 +35,7 @@ public class FantomTypesTest extends FantomCSLTest
 	static String[] testUsings =
 	{
 		"web::Weblet", "fwt::Button", "fwt::Widget", 
-		"web::WebUtil", "java.lang::Runtime"
+		"web::WebUtil", "java.lang.Runtime"
 	};
 	// will put slots from those types in scope as well (as inherited)
 	static String[] testSlots =
@@ -51,6 +51,8 @@ public class FantomTypesTest extends FantomCSLTest
 		DummyAstRootNode node = new DummyAstRootNode(task);
 		addUsingsToNode(node, testUsings);
 		addTypeSlotsToNode(node, task, testSlots);
+
+			checkExpr("Runtime.getRuntime().gc", null, false, false);
 
 		// Testing type signature stuff
 		FanResolvedType t = FanResolvedType.makeFromTypeSig(node, "sys::Str");
@@ -253,8 +255,14 @@ public class FantomTypesTest extends FantomCSLTest
 	{
 		for (String using : usings)
 		{
-			String shortName = using.substring(using.indexOf("::") + 2);
-			node.addScopeVar(shortName, VarKind.IMPORT, FanResolvedType.makeFromDbType(node, using), false);
+			String name=null;
+			if(using.indexOf(":")>=0)
+				name = using.substring(using.indexOf("::") + 2);
+			else
+			{
+				name = using.substring(using.lastIndexOf(".")+1);
+			}
+			FanParserTask.addUsingToNode(name, using, node);
 		}
 	}
 
