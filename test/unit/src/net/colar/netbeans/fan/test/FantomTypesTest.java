@@ -34,7 +34,8 @@ public class FantomTypesTest extends FantomCSLTest
 
 	static String[] testUsings =
 	{
-		"web::Weblet", "fwt::Button", "fwt::Widget", "web::WebUtil"
+		"web::Weblet", "fwt::Button", "fwt::Widget", 
+		"web::WebUtil", "java.lang::Runtime"
 	};
 	// will put slots from those types in scope as well (as inherited)
 	static String[] testSlots =
@@ -146,6 +147,9 @@ public class FantomTypesTest extends FantomCSLTest
 		checkExpr("Month.mar.name", null, false, false);
 		// Facet
 		checkExpr("Transient.defVal", null, false, false);
+
+		// java
+		checkExpr("Runtime.getRuntime().gc", null, false, false);
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));
