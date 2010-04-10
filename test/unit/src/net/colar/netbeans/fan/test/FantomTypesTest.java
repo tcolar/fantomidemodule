@@ -140,6 +140,8 @@ public class FantomTypesTest extends FantomCSLTest
 		checkExpr("Month.vals", null, false, false);
 		checkExpr("Month.fromStr(\"abc)\"", null, false, false);
 		checkExpr("Month.mar", null, false, false);
+		// Facet
+		checkExpr("Transient.defVal", null, false, false);
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));
