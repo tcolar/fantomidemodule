@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.test;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import net.jot.prefs.JOTPropertiesPreferences;
@@ -21,6 +22,16 @@ import org.openide.filesystems.FileUtil;
  */
 public class NBTestUtilities
 {
+
+	public static Snapshot textToSnapshot(String text, String mimeType) throws Exception
+	{
+		BaseDocument doc = new BaseDocument(true, mimeType);
+		StringReader reader=new StringReader(text);
+		doc.read(reader, 0);
+		Source source = Source.create(doc);
+		Snapshot snap = source.createSnapshot();
+		return snap;
+	}
 
 	public static Snapshot fileToSnapshot(File f)
 	{

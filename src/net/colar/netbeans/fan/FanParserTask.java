@@ -86,9 +86,13 @@ public class FanParserTask extends ParserResult
 	{
 		super(snapshot);
 		invalidated = false;
-		sourceName = snapshot == null ? null : snapshot.getSource().getFileObject().getName();
-		sourceFile = snapshot == null ? null : FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
-		pod = snapshot == null ? null : FanUtilities.getPodForPath(sourceFile.getPath());
+		sourceName = (snapshot == null || snapshot.getSource().getFileObject()==null)
+			? null
+			: snapshot.getSource().getFileObject().getName();
+		sourceFile = (snapshot == null || snapshot.getSource().getFileObject()==null)
+			? null
+			: FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
+		pod = sourceFile == null ? null : FanUtilities.getPodForPath(sourceFile.getPath());
 		parser = Parboiled.createParser(FantomParser.class, this);
 	}
 

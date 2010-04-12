@@ -17,48 +17,50 @@ import org.netbeans.modules.parsing.api.Snapshot;
  */
 public class FantomSemanticAnalyzerTest extends FantomCSLTest
 {
-	File failedListFile=null;
-	final String[] badFiles = {
-                "/home/thibautc/fantom-1.0.52/src/compilerJava/fan/JavaType.fan",
-				"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/ClassPath.fan",
-                "/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Token.fan",
-                "/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Tokenizer.fan",
-                "/home/thibautc/fantom-1.0.52/src/compiler/fan/util/CallResolver.fan",
-                "/home/thibautc/fantom-1.0.52/src/compiler/fan/fcode/Fanp.fan",
-                "/home/thibautc/fantom-1.0.52/src/compiler/fan/steps/CheckErrors.fan",
-                "/home/thibautc/fantom-1.0.52/src/fandoc/fan/FandocParser.fan",
-                "/home/thibautc/fantom-1.0.52/src/fandoc/fan/DocModel.fan",
-                "/home/thibautc/fantom-1.0.52/src/util/test/JsonTest.fan",
-                "/home/thibautc/fantom-1.0.52/src/docCompiler/fan/html/PodDocGenerator.fan",
-                "/home/thibautc/fantom-1.0.52/src/docCompiler/fan/html/FandocToHtmlGenerator.fan",
-                "/home/thibautc/fantom-1.0.52/src/compilerJs/fan/ast/JsMethod.fan",
-                "/home/thibautc/fantom-1.0.52/src/compilerJs/fan/ast/JsPod.fan",
-                "/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/TestRunner.fan",
-                "/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/Runner.fan",
-                "/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/Dump.fan",
-                "/home/thibautc/fantom-1.0.52/src/flux/fluxText/fan/TextEditor.fan",
-                "/home/thibautc/fantom-1.0.52/src/flux/fluxText/fan/Parser.fan",
-                "/home/thibautc/fantom-1.0.52/src/flux/flux/fan/View.fan",
-                "/home/thibautc/fantom-1.0.52/src/json/test/JsonTestCase.fan",
-                "/home/thibautc/fantom-1.0.52/src/json/test/SimpleJsonTest.fan",
-                "/home/thibautc/fantom-1.0.52/src/json/test/BrowserTest.fan",
-                "/home/thibautc/fantom-1.0.52/src/testSys/fan/ExprTest.fan",
-                "/home/thibautc/fantom-1.0.52/src/testSys/fan/ProcessTest.fan",
-                "/home/thibautc/fantom-1.0.52/src/testSys/fan/RangeTest.fan",
-                "/home/thibautc/fantom-1.0.52/src/testSys/fan/RegexTest.fan",
-                "/home/thibautc/fantom-1.0.52/src/testSys/fan/ClosureTest.fan",
+
+	File failedListFile = null;
+	final String[] badFiles =
+	{
+		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/JavaType.fan",
+		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/ClassPath.fan",
+		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Token.fan",
+		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Tokenizer.fan",
+		"/home/thibautc/fantom-1.0.52/src/compiler/fan/util/CallResolver.fan",
+		"/home/thibautc/fantom-1.0.52/src/compiler/fan/fcode/Fanp.fan",
+		"/home/thibautc/fantom-1.0.52/src/compiler/fan/steps/CheckErrors.fan",
+		"/home/thibautc/fantom-1.0.52/src/fandoc/fan/FandocParser.fan",
+		"/home/thibautc/fantom-1.0.52/src/fandoc/fan/DocModel.fan",
+		"/home/thibautc/fantom-1.0.52/src/util/test/JsonTest.fan",
+		"/home/thibautc/fantom-1.0.52/src/docCompiler/fan/html/PodDocGenerator.fan",
+		"/home/thibautc/fantom-1.0.52/src/docCompiler/fan/html/FandocToHtmlGenerator.fan",
+		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/ast/JsMethod.fan",
+		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/ast/JsPod.fan",
+		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/TestRunner.fan",
+		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/Runner.fan",
+		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/Dump.fan",
+		"/home/thibautc/fantom-1.0.52/src/flux/fluxText/fan/TextEditor.fan",
+		"/home/thibautc/fantom-1.0.52/src/flux/fluxText/fan/Parser.fan",
+		"/home/thibautc/fantom-1.0.52/src/flux/flux/fan/View.fan",
+		"/home/thibautc/fantom-1.0.52/src/json/test/JsonTestCase.fan",
+		"/home/thibautc/fantom-1.0.52/src/json/test/SimpleJsonTest.fan",
+		"/home/thibautc/fantom-1.0.52/src/json/test/BrowserTest.fan",
+		"/home/thibautc/fantom-1.0.52/src/testSys/fan/ExprTest.fan",
+		"/home/thibautc/fantom-1.0.52/src/testSys/fan/ProcessTest.fan",
+		"/home/thibautc/fantom-1.0.52/src/testSys/fan/RangeTest.fan",
+		"/home/thibautc/fantom-1.0.52/src/testSys/fan/RegexTest.fan",
+		"/home/thibautc/fantom-1.0.52/src/testSys/fan/ClosureTest.fan",
 	};
 
 	public void cslTest() throws Throwable
 	{
 		// Outputs the names of the failed files into a text file, ina  format that makes it easy to use in a java string array
-		failedListFile = new File (prefs.getString("test.home")+File.separator+"failed.txt");
+		failedListFile = new File(prefs.getString("test.home") + File.separator + "failed.txt");
 		failedListFile.delete();
-		
+
 		//String fanHome = prefs.getString("fantom.home");
 		//testAllFanFilesUnder(fanHome + "/src/");
 
-		for(String file : badFiles)
+		for (String file : badFiles)
 		{
 			testFile(new File(file));
 		}
@@ -80,7 +82,12 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		{
 			Snapshot snap = NBTestUtilities.fileToSnapshot(f);
 			task = new FanParserTask(snap);
-			analyze(task);
+			boolean hasErr = analyze(task);
+			if (hasErr)
+			{
+				documentFailedFile(task.getSourceFile().getPath());
+			}
+
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -92,7 +99,7 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		}
 	}
 
-	public void analyze(FanParserTask task) throws Exception
+	public static boolean analyze(FanParserTask task) throws Exception
 	{
 		task.parse();
 		task.parseGlobalScope();
@@ -113,11 +120,8 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 				}
 			}
 		}
-		if (hasErr)
-		{
-			documentFailedFile(task.getSourceFile().getPath());
-		}
 		JOTTester.checkIf("Semantic errors in " + task.getSourceFile().getPath(), !hasErr);
+		return hasErr;
 	}
 
 	public static void main(String[] args)
@@ -134,7 +138,7 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 	private void documentFailedFile(String path) throws Exception
 	{
 		FileOutputStream fis = new FileOutputStream(failedListFile, true);
-		String txt = "\t\t\""+path+"\",\n";
+		String txt = "\t\t\"" + path + "\",\n";
 		fis.write(txt.getBytes());
 		fis.close();
 	}
