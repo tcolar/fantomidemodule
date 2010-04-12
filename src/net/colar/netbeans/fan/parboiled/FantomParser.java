@@ -384,8 +384,8 @@ public class FantomParser extends BaseParser<AstNode>
 		// Note: unlike java, fan as a scope for each 'case'
 		return sequence(enforcedSequence(KW_SWITCH, PAR_L, expr(), PAR_R,
 			OPT_LF(), BRACKET_L, OPT_LF(),
-			zeroOrMore(enforcedSequence(KW_CASE, expr(), SP_COL, sequence(zeroOrMore(firstOf(stmt(), LF())), ast.newScopeNode(AstKind.AST_SWITCH_CASE)))),
-			optional(enforcedSequence(KW_DEFAULT, SP_COL, sequence(zeroOrMore(firstOf(stmt(), LF())), ast.newScopeNode(AstKind.AST_SWITCH_CASE)))),
+			zeroOrMore(enforcedSequence(sequence(KW_CASE, setNoSimpleMap(true), expr(), setNoSimpleMap(false), SP_COL, zeroOrMore(stmt())), ast.newScopeNode(AstKind.AST_SWITCH_CASE))),
+			optional(enforcedSequence(sequence(KW_DEFAULT, SP_COL, zeroOrMore(stmt())), ast.newScopeNode(AstKind.AST_SWITCH_CASE))),
 			OPT_LF(), BRACKET_R), ast.newScopeNode(AstKind.AST_SWITCH));
 	}
 

@@ -13,7 +13,6 @@ import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
-import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedListType;
 import net.colar.netbeans.fan.types.FanResolvedNullType;
@@ -161,7 +160,9 @@ public class FantomTypesTest extends FantomCSLTest
 		FanResolvedType.forcedThisType = "sys::TimeoutErr";
 		checkExpr("Err.super.toStr)", null, false, false);
 		FanResolvedType.forcedThisType = null;
-		checkExpr("Obj.trap?.toStr", null, false, false);
+		checkExpr("Obj.trap?.toStr", null, true, false);
+		checkExpr("Obj.trap?.toStr?.toStr", null, true, false);
+		checkExpr("500ms.ticks.abs", null, false, false);
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));

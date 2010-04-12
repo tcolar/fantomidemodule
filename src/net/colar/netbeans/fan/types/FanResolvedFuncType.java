@@ -83,7 +83,7 @@ public class FanResolvedFuncType extends FanResolvedType
 			retType.parameterize(baseType, errNode));
 		if (this.isNullable() != t.isNullable())
 		{
-			t = (FanResolvedMapType) t.asNullableContext(this.isNullable());
+			t = (FanResolvedFuncType) t.asNullableContext(this.isNullable());
 		}
 		return t;
 	}

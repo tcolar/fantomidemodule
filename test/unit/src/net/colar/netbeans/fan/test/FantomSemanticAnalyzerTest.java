@@ -21,12 +21,9 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 	File failedListFile = null;
 	final String[] badFiles =
 	{
-		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/JavaType.fan",
-		"/home/thibautc/fantom-1.0.52/src/compilerJava/fan/ClassPath.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Token.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Tokenizer.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/util/CallResolver.fan",
-		"/home/thibautc/fantom-1.0.52/src/compiler/fan/fcode/Fanp.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/steps/CheckErrors.fan",
 		"/home/thibautc/fantom-1.0.52/src/fandoc/fan/FandocParser.fan",
 		"/home/thibautc/fantom-1.0.52/src/fandoc/fan/DocModel.fan",
