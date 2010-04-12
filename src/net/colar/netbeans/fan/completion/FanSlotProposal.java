@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Vector;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.FanIndexer;
@@ -55,8 +56,6 @@ public class FanSlotProposal extends FanCompletionProposal
 				this.kind = ElementKind.CONSTRUCTOR;
 			}
 			String args = "";
-			html = name + "(";
-			prefix = name + "(";
 			rHtml = FanType.getShortName(slot.getReturnedType());
 			if (rHtml.equals("sys::Void"))
 			{
@@ -64,8 +63,16 @@ public class FanSlotProposal extends FanCompletionProposal
 			}
 			Vector<FanMethodParam> params = slot.getAllParameters();
 			//Param[] params = (Param[]) slot.m.params().asArray(Param.class);
-			for (FanMethodParam p : params)
+                        FanMethodParam p = null;
+			for (Iterator<FanMethodParam> j = params.iterator(); j.hasNext(); )
 			{
+                                p = j.next();
+                                boolean b = p.qualifiedType.indexOf("|") != -1;
+                                if (args.length() == 0)
+                                {
+                                    html = name + (b ? "|" : "(");
+                                    prefix = name + (b ? "|" : "(");
+                                }
 				if (args.length() > 0)
 				{
 					args += " ,";
@@ -73,19 +80,24 @@ public class FanSlotProposal extends FanCompletionProposal
 				String nm = p.getName();
 				if (p.hasDefault())
 				{
-					nm = "<font color='#662222'><i>" + p.getName() + "</i></font>";
+					nm = "<font color='#662222'><i>" + nm + "</i></font>";
 				} else
 				{
-					nm = "<font color='#AA2222'>" + p.getName() + "</font>";
-					// only list non-defaulted parameters by default
-					if (!prefix.endsWith("("))
-					{
-						prefix += ", ";
-					}
-					prefix += p.getName();
-				}
+					nm = "<font color='#AA2222'>" + nm + "</font>";
+                                }
+                                // only list non-defaulted parameters by default
+                                if (!prefix.endsWith("(") && !prefix.endsWith("|"))
+                                {
+                                        prefix += ", ";
+                                }
+				
 				String typeName = FanType.getShortName(p.getQualifiedType());
+                                int idxOf = typeName.indexOf("->");
+                                if (idxOf != -1) {
+                                    typeName = typeName.substring(0, idxOf);
+                                }
 				args += typeName + " " + nm;
+                                prefix += typeName + " " + p.getName();
 			}
 
 			// remove optional parenthesis when no parameters
@@ -94,9 +106,9 @@ public class FanSlotProposal extends FanCompletionProposal
 				prefix = prefix.substring(0, prefix.length() - 1);
 			} else
 			{
-				prefix += ")";
+				prefix += (p.qualifiedType.indexOf("|") != -1 ? "| {}" : ")");
 			}
-			html += args + ")";
+			html += args + (p.qualifiedType.indexOf("|") != -1 ? "| {}" : ")");
 		} else
 		{
 			FanUtilities.GENERIC_LOGGER.error("Unknown Slot type: " +slot.slotKind);
