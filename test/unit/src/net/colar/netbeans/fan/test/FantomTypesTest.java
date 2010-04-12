@@ -52,8 +52,12 @@ public class FantomTypesTest extends FantomCSLTest
 		addUsingsToNode(node, testUsings);
 		addTypeSlotsToNode(node, task, testSlots);
 
-			checkExpr("Runtime.getRuntime().gc", null, false, false);
-
+		//checkExpr("Regex<|(a*)(a+)|>.matcher(\"aaaa\")", null, false, false);
+		//checkExpr("buildTest { it.x=\"x\" },    [\"x\",\"\"])", null, false, false);
+		//checkExpr("verify(0..1  == 0..1)", null, false,false);
+		checkExpr("Process().in", null, true,false);
+		checkExpr("Obj.super.hash",null,false,false);
+		
 		// Testing type signature stuff
 		FanResolvedType t = FanResolvedType.makeFromTypeSig(node, "sys::Str");
 		JOTTester.checkIf("Type sig 1", t.getQualifiedType().equals("sys::Str") && !t.isNullable(), t.toString());

@@ -12,6 +12,8 @@ import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
+import net.colar.netbeans.fan.indexer.FanJarsIndexer;
+import net.colar.netbeans.fan.indexer.FanJavaClassLoader;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
@@ -162,7 +164,10 @@ public class FanResolvedType implements Cloneable
 	public FanResolvedType resolveSlotType(String slotName, FanParserTask task)
 	{
 		FanResolvedType baseType = this;
-
+		if (!isResolved() || (baseType instanceof FanUnknownType))
+		{
+			return new FanUnknownType(scopeNode, slotName);
+		}
 		if (baseType.getDbType().isJava())
 		{
 			List<Member> members = FanIndexerFactory.getJavaIndexer().findTypeSlots(getQualifiedType());
@@ -170,9 +175,9 @@ public class FanResolvedType implements Cloneable
 			{
 				if (member.getName().equalsIgnoreCase(slotName))
 				{
-					//TODO: that's not working right for a java type
-					// either fix here or have makeFromTypeSig allow java types
-					return makeFromTypeSig(baseType.scopeNode, FanIndexerFactory.getJavaIndexer().getReturnType(member));
+					// Not dealing with it for now, because it might be tricky
+					// java generics, automatic conversion to fantom and what not
+					return new FanUnknownType(scopeNode, slotName);
 				}
 			}
 		} else
