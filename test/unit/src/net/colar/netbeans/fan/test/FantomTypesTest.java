@@ -55,8 +55,6 @@ public class FantomTypesTest extends FantomCSLTest
 		//checkExpr("Regex<|(a*)(a+)|>.matcher(\"aaaa\")", null, false, false);
 		//checkExpr("buildTest { it.x=\"x\" },    [\"x\",\"\"])", null, false, false);
 		//checkExpr("verify(0..1  == 0..1)", null, false,false);
-		checkExpr("Process().in", null, true,false);
-		checkExpr("Obj.super.hash",null,false,false);
 		
 		// Testing type signature stuff
 		FanResolvedType t = FanResolvedType.makeFromTypeSig(node, "sys::Str");
@@ -156,6 +154,14 @@ public class FantomTypesTest extends FantomCSLTest
 
 		// java
 		checkExpr("Runtime.getRuntime().gc", null, false, false);
+
+		// others
+		checkExpr("Process().in", null, true,false);
+		checkExpr("Obj.super.hash",null,false,false);
+		FanResolvedType.forcedThisType = "sys::TimeoutErr";
+		checkExpr("Err.super.toStr)", null, false, false);
+		FanResolvedType.forcedThisType = null;
+		checkExpr("Obj.trap?.toStr", null, false, false);
 
 		// Testing isCompatible()
 		JOTTester.checkIf("Compatibility of Enum vs Obj", mkt("sys::Enum", node).isTypeCompatible(mkt("sys::Obj", node)));

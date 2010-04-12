@@ -890,6 +890,11 @@ public class FanParserTask extends ParserResult
 			type = type.parameterize(baseType, node);
 			type = type.asStaticContext(false); // result of call never staticContext
 
+			// The result of a null check call is always a nullable.
+			if(op.startsWith("?"))
+			{
+				type=type.asNullableContext(true);
+			}
 		}
 
 		// parse args

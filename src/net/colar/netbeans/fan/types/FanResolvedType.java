@@ -12,8 +12,6 @@ import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
-import net.colar.netbeans.fan.indexer.FanJarsIndexer;
-import net.colar.netbeans.fan.indexer.FanJavaClassLoader;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.indexer.model.FanTypeInheritance;
@@ -180,6 +178,14 @@ public class FanResolvedType implements Cloneable
 					return new FanUnknownType(scopeNode, slotName);
 				}
 			}
+			// Even java types, implicitely inherit from sys::Obj
+			FanSlot slot = FanSlot.findByTypeAndName("sys::Obj", slotName);
+			if (slot == null)
+			{
+				return FanResolvedType.makeUnresolved(baseType.scopeNode);
+			}
+			FanResolvedType t = makeFromTypeSig(baseType.scopeNode, slot.returnedType);
+			return t;
 		} else
 		{
 			FanResolvedType slotBaseType = resolveSlotBaseType(slotName, task);
@@ -225,7 +231,7 @@ public class FanResolvedType implements Cloneable
 		}
 
 		if (baseType == null || !baseType.isResolved()
-				|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
+			|| baseType.dbType.getQualifiedName().equals("sys::Void")) // Void extends from object ... but not callable
 		{
 			return FanResolvedType.makeUnresolved(null);
 		}
@@ -255,7 +261,7 @@ public class FanResolvedType implements Cloneable
 			qt = enteredType.substring(5);
 		}
 		return qt.length() == 1
-				&& Character.toUpperCase(qt.charAt(0)) == qt.charAt(0);
+			&& Character.toUpperCase(qt.charAt(0)) == qt.charAt(0);
 	}
 
 	/**
@@ -646,9 +652,17 @@ public class FanResolvedType implements Cloneable
 			}
 			// TODO: might not work for generics
 			if (t.getDbType().getQualifiedName().equals(baseType.getDbType().getQualifiedName())
-					&& t.getClass().getName().equals(baseType.getClass().getName()))
+				&& t.getClass().getName().equals(baseType.getClass().getName()))
 			{
 				return true;
+			}
+			// check inheritance too
+			for (FanTypeInheritance inh : FanTypeInheritance.findAllForMainType(null, t.getQualifiedType()))
+			{
+				if (inh.getInheritedType().equals(baseType.getDbType().getQualifiedName()))
+				{
+					return true;
+				}
 			}
 			t = t.getParentType();
 		}
