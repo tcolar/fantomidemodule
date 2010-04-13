@@ -68,10 +68,10 @@ public class FantomPartialFileParserTest extends FantomCSLTest
 			task = new FanParserTask(snap);
 			task.parse();
 			task.parseGlobalScope();
-			System.err.println(StringUtils.join(task.getDiagnostics(), "---\n"));
-			JOTTester.checkIf("Errors during partial file analysis", task.getDiagnostics().isEmpty());
 			task.parseLocalScopes();
-			// parse eroors are ok, we just don't want exceptions
+			// todo : check for exception error
+			//JOTTester.checkIf("Errors during partial file analysis", task.getDiagnostics().isEmpty());
+			// parse errors are ok, we just don't want exceptions
 			if (task.getDiagnostics().isEmpty())
 			{
 				// IDE only does semantic analysis if there where no parsing errors
