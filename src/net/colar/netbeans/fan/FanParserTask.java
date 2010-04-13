@@ -64,7 +64,7 @@ public class FanParserTask extends ParserResult
 {
 
 	boolean invalidated = false;
-	public boolean dumpTree = false; // debug
+	public boolean dumpTree = true; // debug
 	List<Error> errors = new Vector<Error>(); // -> use parsingResult.errors ?
 	// full path of the source file
 	private final FileObject sourceFile;
@@ -506,6 +506,9 @@ public class FanParserTask extends ParserResult
 				case AST_TYPE_LITTERAL: // 'Type#' or '#slot' or 'Type#slot'
 					type = doTypeLitteral(node, type);
 					break;
+				case AST_ENUM_DEFS:
+					// already done during slot parsing, so just skipping now
+					type = null;
 				case DUMMY_ROOT_NODE:
 					// have dummy_root_node (for testing) carry it's child type
 					AstNode dummyChild = node.getChildren().get(0);
@@ -531,7 +534,7 @@ public class FanParserTask extends ParserResult
 
 			FanUtilities.GENERIC_LOGGER.info(">Unresolved node");
 			//FanLexAstUtils.dumpTree(node, 0);
-			FanLexAstUtils.dumpTree(astRoot, 0);
+			//FanLexAstUtils.dumpTree(astRoot, 0);
 			FanUtilities.GENERIC_LOGGER.info("<Unresolved node");
 		}
 	}
