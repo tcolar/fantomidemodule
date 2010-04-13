@@ -64,7 +64,7 @@ public class FanParserTask extends ParserResult
 {
 
 	boolean invalidated = false;
-	public boolean dumpTree = true; // debug
+	public boolean dumpTree = false; // debug
 	List<Error> errors = new Vector<Error>(); // -> use parsingResult.errors ?
 	// full path of the source file
 	private final FileObject sourceFile;
