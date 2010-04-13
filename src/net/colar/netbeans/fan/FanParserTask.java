@@ -797,16 +797,16 @@ public class FanParserTask extends ParserResult
 			FanResolvedType baseType = type != null ? type : FanResolvedType.resolveItType(node);
 			// when a itBlock follows a call, it's actually a sort of closure call (with block)
 			AstNode child = children.get(i);
-			if (child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_CALL_EXPR)
+			if (/*child.getKind() == AstKind.AST_CALL || */child.getKind() == AstKind.AST_CALL_EXPR)
 			{
 				if (i + 1 < children.size())
 				{
 					AstNode nextChild = children.get(i + 1);
 					if (nextChild.getKind() == AstKind.AST_IT_BLOCK)
 					{
-						AstNode callChild = child.getKind() == AstKind.AST_CALL
+						AstNode callChild = /*child.getKind() == AstKind.AST_CALL
 							? child
-							: FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_CALL)); // call expr
+							: */FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_CALL)); // call expr
 						// parse the whole thing as a closure call
 						type = doCall(callChild, type, nextChild);
 						// skip next child since we juts did it
@@ -917,6 +917,7 @@ public class FanParserTask extends ParserResult
 			type = type.asStaticContext(false); // result of call never staticContext
 
 			// The result of a null check call is always a nullable.
+			// Note call like doc?.do comes as doc? . do
 			if (op.startsWith("?"))
 			{
 				type = type.asNullableContext(true);

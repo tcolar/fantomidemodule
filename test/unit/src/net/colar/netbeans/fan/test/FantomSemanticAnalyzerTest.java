@@ -21,6 +21,7 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 	File failedListFile = null;
 	final String[] badFiles =
 	{
+		"/home/thibautc/fantom-1.0.52/src/docCompiler/fan/html/FandocToHtmlGenerator.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Token.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Tokenizer.fan",
 		"/home/thibautc/fantom-1.0.52/src/compiler/fan/util/CallResolver.fan",
@@ -29,7 +30,6 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		"/home/thibautc/fantom-1.0.52/src/fandoc/fan/DocModel.fan",
 		"/home/thibautc/fantom-1.0.52/src/util/test/JsonTest.fan",
 		"/home/thibautc/fantom-1.0.52/src/docCompiler/fan/html/PodDocGenerator.fan",
-		"/home/thibautc/fantom-1.0.52/src/docCompiler/fan/html/FandocToHtmlGenerator.fan",
 		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/ast/JsMethod.fan",
 		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/ast/JsPod.fan",
 		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/TestRunner.fan",

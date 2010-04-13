@@ -537,7 +537,7 @@ public class FantomParser extends BaseParser<AstNode>
 				firstOf(
 					sequence(sequence(OP_POUND, optional(id())), ast.newNode(AstKind.AST_TYPE_LITTERAL)), // type/slot litteral
 					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_CALL)), // named super
-					sequence(DOT, idExpr()), // static call
+					sequence(sequence(DOT, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR)), // static call
 					sequence(PAR_L, expr(), PAR_R), // simple ?? (ctor call)
 					ctorBlock() // ctor block
 				)));
@@ -828,11 +828,12 @@ public class FantomParser extends BaseParser<AstNode>
 				sequence(id(), optional(sequence(noSpace(), SP_COLCOL, noSpace(), id())))
 				),
 			// Look for optional map/list/nullable items
-			optional(sequence(noSpace(), SP_QMARK)), //nullable
+			// Note: ? folowed by a dot is nor part of the type (null check call)
+			optional(sequence(noSpace(), SP_QMARK, testNot(DOT))), //nullable
 			zeroOrMore(sequence(noSpace(),SQ_BRACKET_L, SQ_BRACKET_R)),//list(s)
 			// Do not allow simple maps within left side of expressions ... this causes issues with ":"
 			optional(sequence(testNot(noSimpleMap), SP_COL, type())),//simple map Int:Str
-			optional(sequence(noSpace(), SP_QMARK)) // nullable list/map
+			optional(sequence(noSpace(), SP_QMARK, testNot(DOT))) // nullable list/map
 			);
 	}
 
@@ -842,8 +843,8 @@ public class FantomParser extends BaseParser<AstNode>
 		return sequence(nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(),
 			optional(
 			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(optional(sequence(noSpace(),SP_QMARK)), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(sequence(noSpace(),SP_QMARK))); // nullable
+			sequence(optional(sequence(noSpace(),SP_QMARK, testNot(DOT))), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			optional(sequence(noSpace(),SP_QMARK, testNot(DOT)))); // nullable
 	}
  
 	// all types except simple map
@@ -853,8 +854,8 @@ public class FantomParser extends BaseParser<AstNode>
 			firstOf(funcType(), mapType(), simpleType()),
 			optional(
 			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(optional(sequence(noSpace(),SP_QMARK)), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(sequence(noSpace(),SP_QMARK))); // nullable
+			sequence(optional(sequence(noSpace(),SP_QMARK, testNot(DOT))), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			optional(sequence(noSpace(),SP_QMARK, testNot(DOT)))); // nullable
 	}
  
 	public Rule simpleType()
