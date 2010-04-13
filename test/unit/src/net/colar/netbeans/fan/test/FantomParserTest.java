@@ -11,7 +11,6 @@ import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
-import net.jot.testing.JOTTestable;
 import net.jot.testing.JOTTester;
 import org.parboiled.Parboiled;
 import org.parboiled.RecoveringParseRunner;
@@ -26,6 +25,7 @@ import org.parboiled.support.ParsingResult;
  */
 public class FantomParserTest extends FantomCSLTest
 {
+
 	public void cslTest() throws Throwable
 	{
 		FantomParser parser = Parboiled.createParser(FantomParser.class, (FanParserTask) null);
@@ -35,14 +35,14 @@ public class FantomParserTest extends FantomCSLTest
 		boolean singleTest = false;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
-		boolean fantomFilesTest = true; // parse fantom distro files
-		boolean fantomFilesLexerTest = true; // parse fantom distro files (lexer rules)
+		boolean fantomFilesTest = false; // parse fantom distro files
+		boolean fantomFilesLexerTest = false; // parse fantom distro files (lexer rules)
 
 		if (singleTest)
 		{
 			try
 			{
-				testFile(fanHome+"/examples/fwt/demo.fan",false);
+				testFile(fanHome + "/src/compiler/fan/parser/Tokenizer.fan", false);
 				//result = parse(parser, parser.ifExprBody(), "3 : 5");
 				//testNodeName("Ternary expr", result, "ifExprBody", "3");
 				//result = parse(parser, parser.localDef(), "Int i := a>b ? 3 : 5");
@@ -145,9 +145,9 @@ public class FantomParserTest extends FantomCSLTest
 			testNodeName("ID", result, "id");
 			// types
 			result = parse(parser, parser.formal(), "ab_FG09__");
-			testNodeName("TypeAndOrId", result, "typeAndOrId");
+			testNodeName("TypeAndOrId", result, "formal");
 			result = parse(parser, parser.formal(), "ab_FG09__ ab_FG09__");
-			testNodeName("TypeAndOrId 2", result, "typeAndOrId", "ab_FG09__ ab_FG09__");
+			testNodeName("TypeAndOrId 2", result, "formal", "ab_FG09__ ab_FG09__");
 			result = parse(parser, parser.simpleType(), "myThingy");
 			testNodeName("SimpleType", result, "simpleType");
 			result = parse(parser, parser.simpleType(), "Email::email");
@@ -314,6 +314,18 @@ public class FantomParserTest extends FantomCSLTest
 			result = parse(parser, parser.block(), "{i=5;k=7\n\nj=6}");
 			testNodeName("Block3", result, "block", "{i=5;k=7\n\nj=6}");
 
+			result = parse(parser, parser.switch_(), "switch(x){case 5: dothis;dothat\ncase '1':\nnada\ndefault:dothat()}");
+			testNodeName("Switch1", result, "switch_", "switch(x){case 5: dothis;dothat\ncase '1':\nnada\ndefault:dothat()}");
+			result = parse(parser, parser.switch_(), "switch(x){default:dothat()}");
+			testNodeName("Switch2", result, "switch_", "switch(x){default:dothat()}");
+			result = parse(parser, parser.try_(), "try{dothat}\ncatch(Err e){doThis}");
+			testNodeName("Try1", result, "try_", "try{dothat}\ncatch(Err e){doThis}");
+			result = parse(parser, parser.try_(), "try{dothat}\ncatch{doThis}catch(Err e){doThat}finally{}");
+			testNodeName("Try2", result, "try_", "try{dothat}\ncatch{doThis}catch(Err e){doThat}finally{}");
+			result = parse(parser, parser.try_(), "try{dothat}\nfinally{dothat()}");
+			testNodeName("Try3", result, "try_", "try{dothat}\nfinally{dothat()}");
+
+
 			// Slot Def
 			result = parse(parser, parser.fieldAccessor(), "{get{i=23}}");
 			testNodeName("FieldAccesor1", result, "fieldAccessor", "{get{i=23}}");
@@ -466,8 +478,11 @@ public class FantomParserTest extends FantomCSLTest
 		}
 		JOTTester.checkIf(label + " - parsing success", !result.hasErrors());
 		JOTTester.checkIf(label + " - root not null", result.parseTreeRoot != null);
-		JOTTester.checkIf(label + " - check name(" + nodeName + ")", result.parseTreeRoot.getLabel().equalsIgnoreCase(nodeName), result.parseTreeRoot.getLabel());
-		if (value != null)
+		if (result.parseTreeRoot != null)
+		{
+			JOTTester.checkIf(label + " - check name(" + nodeName + ")", result.parseTreeRoot.getLabel().equalsIgnoreCase(nodeName), result.parseTreeRoot.getLabel());
+		}
+		if (value != null && result.parseTreeRoot != null)
 		{
 			String txt = ParseTreeUtils.getNodeText(result.parseTreeRoot, result.inputBuffer);
 			JOTTester.checkIf(label + " - check value", txt.equals(value), "'" + value + "' VS '" + txt + "'");

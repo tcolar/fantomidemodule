@@ -291,7 +291,7 @@ public class AstNode
 		if(kind == AstKind.AST_EXPR_LIT_BASE &&
 				parseNode.getLabel().equalsIgnoreCase(FantomLexerTokens.TokenName.STRS.name()))
 			isNumber = true;
-		if(isNumber || kind==AstKind.AST_ID || kind==AstKind.AST_TYPE)
+		if(isNumber || kind==AstKind.AST_ID || kind==AstKind.AST_TYPE || kind==AstKind.AST_ENUM_NAME)
 		{
 			if(relevantText.indexOf("/*")>-1)
 				relevantText=relevantText.substring(0,relevantText.indexOf("/*"));

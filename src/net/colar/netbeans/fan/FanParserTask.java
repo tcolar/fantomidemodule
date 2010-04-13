@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
+import net.colar.netbeans.fan.indexer.model.FanDummySlot;
 import net.colar.netbeans.fan.indexer.model.FanMethodParam;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
@@ -31,7 +32,6 @@ import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.scope.FanMethodScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedFuncType;
-import net.colar.netbeans.fan.types.FanResolvedGenericType;
 import net.colar.netbeans.fan.types.FanResolvedListType;
 import net.colar.netbeans.fan.types.FanResolvedMapType;
 import net.colar.netbeans.fan.types.FanResolvedNullType;
@@ -507,8 +507,20 @@ public class FanParserTask extends ParserResult
 					type = doTypeLitteral(node, type);
 					break;
 				case AST_ENUM_DEFS:
-					// already done during slot parsing, so just skipping now
-					type = null;
+					// create a "field" var for each enum value and add it to the TypeDef scope
+					/*List<AstNode> enumVals = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ENUM_NAME));
+					for(AstNode enm : enumVals)
+					{
+						String enumName=enm.getNodeText(true);
+						FanResolvedType enmType=FanResolvedType.resolveThisType(node);
+						FanDummySlot val = new FanDummySlot(enumName, enmType.getQualifiedType(), VarKind.FIELD.value());
+						val.setIsStatic(true);
+						val.setIsConst(true);
+						FanAstScopeVarBase valVar = new FanLocalScopeVar(node, enmType, val, val.getName());
+						AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
+						typeNode.addScopeVar(valVar, true);
+					}*/
+					break;
 				case DUMMY_ROOT_NODE:
 					// have dummy_root_node (for testing) carry it's child type
 					AstNode dummyChild = node.getChildren().get(0);

@@ -3,7 +3,6 @@
  */
 package net.colar.netbeans.fan.scope;
 
-import java.util.Hashtable;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.types.FanResolvedGenericType;
@@ -22,8 +21,10 @@ public class FanLocalScopeVar extends FanAstScopeVar
 	private static FanResolvedType getNonGenericType(FanResolvedType type)
 	{
 		//Loval vars can't be generic
-		if(type instanceof FanResolvedGenericType)
-			type = ((FanResolvedGenericType)type).getPhysicalType();
+		if (type instanceof FanResolvedGenericType)
+		{
+			type = ((FanResolvedGenericType) type).getPhysicalType();
+		}
 		return type;
 	}
 
@@ -37,7 +38,7 @@ public class FanLocalScopeVar extends FanAstScopeVar
 	public FanLocalScopeVar(AstNode node, VarKind kind, String name, FanResolvedType type)
 	{
 		super(node, kind, name, getNonGenericType(type));
-		type=type.asStaticContext(false);
+		type = type.asStaticContext(false);
 	}
 
 	private static FanResolvedType getSlotType(AstNode node, FanResolvedType baseType, FanSlot slot)
@@ -65,11 +66,52 @@ public class FanLocalScopeVar extends FanAstScopeVar
 		{
 			this.kind = VarKind.CTOR;
 		}
+
+		if (slot.isAbstract)
+		{
+			addModifiers("abstract");
+		}
+		if (slot.isConst)
+		{
+			addModifiers("const");
+		}
+		if (slot.isNative)
+		{
+			addModifiers("native");
+		}
+		if (slot.isOverride)
+		{
+			addModifiers("override");
+		}
+		if (slot.isStatic)
+		{
+			addModifiers("static");
+		}
+		if (slot.isVirtual)
+		{
+			addModifiers("virtual");
+		}
+		if (slot.isPrivate())
+		{
+			addModifiers("private");
+		}
+		if (slot.isInternal())
+		{
+			addModifiers("internal");
+		}
+		if (slot.isProtected())
+		{
+			addModifiers("protected");
+		}
+		if (slot.isPublic())
+		{
+			addModifiers("public");
+		}
+
 	}
 
 	public FanSlot getSlot()
 	{
 		return slot;
 	}
-
 }
