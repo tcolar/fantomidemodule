@@ -10,6 +10,7 @@ import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.jot.testing.JOTTester;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.parboiled.common.StringUtils;
 
 /**
  * Try to give some random partial file through the parser and see that it doesn't explode
@@ -67,6 +68,8 @@ public class FantomPartialFileParserTest extends FantomCSLTest
 			task = new FanParserTask(snap);
 			task.parse();
 			task.parseGlobalScope();
+			System.err.println(StringUtils.join(task.getDiagnostics(), "---\n"));
+			JOTTester.checkIf("Errors during partial file analysis", task.getDiagnostics().isEmpty());
 			task.parseLocalScopes();
 			// parse eroors are ok, we just don't want exceptions
 			if (task.getDiagnostics().isEmpty())
