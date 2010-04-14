@@ -7,14 +7,14 @@ package net.colar.netbeans.fan.project;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import net.jot.web.views.JOTLightweightView;
 import net.colar.netbeans.fan.templates.TemplateUtils;
 import net.colar.netbeans.fan.templates.TemplateView;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import net.colar.netbeans.fan.FanUtilities;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 
 /**
@@ -27,8 +27,8 @@ public class FanBuild {
     }
     public boolean parse() {
         String folder = projectFolder;
-        if (!folder.endsWith("/")) {
-            folder += "/";
+        if (!folder.endsWith(File.separator)) {
+            folder += File.separator;
         }
         final File buildFan = new File(folder, "build.fan");
         if (buildFan.exists())
@@ -160,21 +160,20 @@ public class FanBuild {
         }
         return false;
     }
-    public void create(String template) {
+    public void create(String templateURI) {
         try {
             String folder = projectFolder;
-            if (!folder.endsWith("/")) {
-                folder += "/";
+            if (!folder.endsWith(File.separator)) {
+                folder += File.separator;
             }
-            final File f = new File(template);
-            final FileObject buildTemplate = FileUtil.toFileObject(f);
+            final FileObject buildTemplate = URLMapper.findFileObject(URI.create(templateURI).toURL());
             final JOTLightweightView view = new TemplateView(buildTemplate, getPodName());
             view.addVariable("desc", getPodDescription());
             view.addVariable("version", getPodVersion());
             view.addVariable("dependencies", getDependencies());
             view.addVariable("srcDirs", getSourceDirs());
             view.addVariable("resDirs", getResourceDirs());
-            view.addVariable("outDir", getOutputDirectory());
+            view.addVariable("outDir", getOutputDirectory().replaceAll(File.separator, "/"));
             view.addVariable("indexes", getIndex());
             view.addVariable("metas", getMeta());
             view.addVariable("docSrc", Boolean.toString(getDocSrc()));
@@ -187,20 +186,7 @@ public class FanBuild {
             final FileObject license = FanUtilities.getRelativeFileObject(buildTemplate, "../../Licenses/FanDefaultLicense.txt");
             view.addVariable("license", license.asText());
             String buildText = buildTemplate.asText();
-            // Take out the empty lines from the build.fan file, which can happen
-            // when some of the params don't have values.
-            Pattern p = Pattern.compile("^.*\\[\\]$", Pattern.MULTILINE);
-            Matcher m = p.matcher(buildText);
-            buildText = m.replaceAll("");
-            p = Pattern.compile("^.*= $", Pattern.MULTILINE);
-            m = p.matcher(buildText);
-            buildText = m.replaceAll("");
-            p = Pattern.compile("^.*= \"\"$", Pattern.MULTILINE);
-            m = p.matcher(buildText);
-            buildText = m.replaceAll("");
-            p = Pattern.compile("^.*= Version.fromStr\\(\"\"\\)$", Pattern.MULTILINE);
-            m = p.matcher(buildText);
-            buildText = m.replaceAll("");
+
             // create build.fan
             TemplateUtils.createFromTemplate(view, buildText, buildFile);
         } catch (IOException ex) {
