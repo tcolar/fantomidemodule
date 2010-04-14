@@ -531,7 +531,7 @@ public class FantomParser extends BaseParser<AstNode>
 		return firstOf(
 				enforcedSequence(sequence(OP_POUND, id()), ast.newNode(AstKind.AST_TYPE_LITTERAL)), // slot litteral (without type)
 				closure(),
-				dsl(), // DSL
+				sequence(dsl(), ast.newNode(AstKind.AST_DSL)), // DSL
 				// Optimized by grouping all the items that start with "type" (since looking for type if resource intensive)
 				sequence(type(), ast.newNode(AstKind.AST_ID),
 				firstOf(
@@ -556,7 +556,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule dsl()
 	{
 		//TODO: unclosed DSL ?
-		return sequence(simpleType(),
+		return sequence(simpleType(), ast.newNode(AstKind.AST_TYPE),
 			enforcedSequence(DSL_OPEN, OPT_LF(), zeroOrMore(sequence(testNot(DSL_CLOSE), any())), OPT_LF(), DSL_CLOSE)).label(TokenName.DSL.name());
 	}
 

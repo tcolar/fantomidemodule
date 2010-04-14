@@ -512,6 +512,11 @@ public class FanParserTask extends ParserResult
 				case AST_ENUM_DEFS:
 					// already dealt with in type/slot parsing
 					break;
+				case AST_DSL:
+					AstNode dslType = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_TYPE));
+					parseVars(dslType, null);
+					type = dslType.getType();
+					break;
 				case DUMMY_ROOT_NODE:
 					// have dummy_root_node (for testing) carry it's child type
 					AstNode dummyChild = node.getChildren().get(0);
