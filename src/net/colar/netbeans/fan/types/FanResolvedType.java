@@ -782,7 +782,8 @@ public class FanResolvedType implements Cloneable
 			int col = getAsTypedType().indexOf("::");
 			String n = getAsTypedType().substring(col + 2);
 			FanResolvedType t = makeUnresolved(null);
-			if (n.equals("L") && baseType instanceof FanResolvedListType)
+
+			if (n.equals("L") && (baseType instanceof FanResolvedListType))
 			{	// list type
 				t = baseType;
 			} else if (n.equals("V") && baseType instanceof FanResolvedListType)
@@ -800,13 +801,31 @@ public class FanResolvedType implements Cloneable
 			} else if (n.equals("R") && baseType instanceof FanResolvedFuncType)
 			{	// function return value
 				t = ((FanResolvedFuncType) baseType).getRetType();
-			} else if (n.equals("R") && baseType.getQualifiedType().equals("sys::Func"))
-			{
-				t = baseType;
 			} else if (baseType instanceof FanResolvedFuncType)
 			{	// function value (should be A-H)
 				t = parameterizeFuncParam(((FanResolvedFuncType) baseType), n);
-			} else
+			} else if(n.equals("L") && baseType.getQualifiedType().equals("sys::List"))
+			{
+				return makeFromTypeSig(errNode, "sys::Obj?[]");
+			} else if(n.equals("V") && baseType.getQualifiedType().equals("sys::List"))
+			{
+				return makeFromTypeSig(errNode, "sys::Obj?");
+			} else if(n.equals("M") && baseType.getQualifiedType().equals("sys::Map"))
+			{
+				return makeFromTypeSig(errNode, "[sys::Obj?:sys::Obj?]");
+			} else if(n.equals("V") && baseType.getQualifiedType().equals("sys::Map"))
+			{
+				return makeFromTypeSig(errNode, "sys::Obj?");
+			}
+			else if(n.equals("K") && baseType.getQualifiedType().equals("sys::Map"))
+			{
+				return makeFromTypeSig(errNode, "sys::Obj?");
+			}
+			else if (baseType.getQualifiedType().equals("sys::Func"))
+			{
+				return makeFromTypeSig(errNode, "sys::Obj?");
+			}
+			else
 			{	// Not good
 				errNode.getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), errNode);
 			}

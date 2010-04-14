@@ -24,11 +24,8 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		"/src/compiler/fan/steps/CheckErrors.fan", // ternary value assignment
 		"/src/compilerJs/fan/runner/TestRunner.fan", //javax.script
 		"/src/compilerJs/fan/runner/Runner.fan", // javax.script
-		"/src/compilerJs/fan/runner/Dump.fan", // ?? closuref ormnal indexing ?
+		"/src/compilerJs/fan/runner/Dump.fan", // ?? closure formal indexing ?
 		"/src/flux/fluxText/fan/TextEditor.fan", // it/this ?
-		"/src/json/test/JsonTestCase.fan", // generic list
-		"/src/json/test/SimpleJsonTest.fan", // generic list
-		"/src/json/test/BrowserTest.fan", // generic list
 		"/src/testSys/fan/ProcessTest.fan", // closure implicit "it" var
 		"/src/testSys/fan/RangeTest.fan", // Range like 0..1 
 		"/src/testSys/fan/ClosureTest.fan", // closure 'it' on local function call
