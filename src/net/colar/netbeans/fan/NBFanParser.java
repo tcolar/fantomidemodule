@@ -35,8 +35,6 @@ public class NBFanParser extends Parser
 		boolean isIndexing = taskClass.startsWith("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater");
 
 		String path = snapshot.getSource().getFileObject().getPath();
-		// We don't allow NB parser to run on fantom sources (we index those ourselved from binaries)
-		// allow other fantom distro files to be however (such as examples)
 		if (FanIndexer.isAllowedIndexing(snapshot.getSource().getFileObject()))
 		{
 			parse(snapshot, isIndexing);
