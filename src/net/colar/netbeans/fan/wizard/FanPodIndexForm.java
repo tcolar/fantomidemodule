@@ -18,6 +18,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -37,6 +38,15 @@ public class FanPodIndexForm extends javax.swing.JDialog {
         keyTextField.setText("");
         valueTextField.setText("");
         setVisible(false);
+        
+        addButton.setToolTipText(NbBundle.getMessage(FanPodIndexForm.class, "FanPodIndexForm.addButton.tooltip"));
+        cancelButton.setToolTipText(NbBundle.getMessage(FanPodIndexForm.class, "FanPodIndexForm.cancelButton.tooltip"));
+        deleteButton.setToolTipText(NbBundle.getMessage(FanPodIndexForm.class, "FanPodIndexForm.deleteButton.tooltip"));
+        finishButton.setToolTipText(NbBundle.getMessage(FanPodIndexForm.class, "FanPodIndexForm.finishButton.tooltip"));
+        indexList.setToolTipText(NbBundle.getMessage(FanPodIndexForm.class, "FanPodIndexForm.indexList.tooltip"));
+        keyTextField.setToolTipText(NbBundle.getMessage(FanPodIndexForm.class, "FanPodIndexForm.keyTextField.tooltip"));
+        valueTextField.setToolTipText(NbBundle.getMessage(FanPodIndexForm.class, "FanPodIndexForm.valueTextField.tooltip"));
+
     }
     public int showDialog(SortedSet<String>indices) {
         setValues(indices);
@@ -137,12 +147,12 @@ public class FanPodIndexForm extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(40, 40, 40)
                 .addComponent(cancelButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
                 .addComponent(finishButton)
-                .addGap(46, 46, 46))
+                .addGap(53, 53, 53))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,12 +166,12 @@ public class FanPodIndexForm extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(deleteButton)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cancelButton)
-                    .addComponent(finishButton))
-                .addGap(69, 69, 69))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(finishButton)
+                    .addComponent(cancelButton))
+                .addContainerGap())
         );
 
         pack();

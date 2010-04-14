@@ -26,7 +26,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 import java.awt.*;
-import net.colar.netbeans.fan.utils.DependencyPair;
+import java.util.HashMap;
+import java.util.Map;
+import org.openide.util.NbBundle;
+
 
 /**
  *
@@ -43,7 +46,7 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
         super(parent, title, true);
         initComponents();
     }
-    public int showDialog(final File[] directories, final SortedSet<DependencyPair> selected)
+    public int showDialog(final File[] directories, final Map<String,String> selected)
         throws HeadlessException {
         addWindowListener(new WindowAdapter() {
             @Override
@@ -52,7 +55,7 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
             }
         });
         returnValue = ERROR_OPTION;
-        selected.addAll(selected);
+        this.selected.putAll(selected);
         localInit(directories);
 
         setVisible(true);
@@ -63,6 +66,8 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
     private void localInit(final File[] directories) {
         systemPodList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         userPodList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        systemPodList.setModel(new DefaultListModel());
+        userPodList.setModel(new DefaultListModel());
 
         // Do a directory
         initDependencyList(systemPodList, directories[0]);
@@ -75,8 +80,13 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
         // currently selected pods
         systemPodList.addListSelectionListener(new OurListSelectionListener());
         userPodList.addListSelectionListener(new OurListSelectionListener());
-        this.setVisible(false);
 
+        cancelButton.setToolTipText(NbBundle.getMessage(FanPodDependencyPanel.class,"FanPodDependencyPanel.cancelButton.tooltip"));
+        dependenciesField.setToolTipText(NbBundle.getMessage(FanPodDependencyPanel.class,"FanPodDependencyPanel.dependenciesField.tooltip"));
+        finishButton.setToolTipText(NbBundle.getMessage(FanPodDependencyPanel.class,"FanPodDependencyPanel.finishButton.tooltip"));
+        systemPodList.setToolTipText(NbBundle.getMessage(FanPodDependencyPanel.class,"FanPodDependencyPanel.systemPodList.tooltip"));
+        userPodList.setToolTipText(NbBundle.getMessage(FanPodDependencyPanel.class,"FanPodDependencyPanel.userPodList.tooltip"));
+        this.setVisible(false);
     }
 
     /** This method is called from within the constructor to
@@ -105,14 +115,14 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
         jLabel2.setText(org.openide.util.NbBundle.getMessage(FanPodDependencyPanel.class, "FanPodDependencyPanel.jLabel2.text")); // NOI18N
 
         systemPodList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Item 1", " " };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
         jScrollPane1.setViewportView(systemPodList);
 
         userPodList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Item 1", " " };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
@@ -145,17 +155,17 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(dependenciesField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                     .add(layout.createSequentialGroup()
-                        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 181, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                         .add(18, 18, 18)
-                        .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE))
+                        .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
                     .add(layout.createSequentialGroup()
                         .add(jLabel1)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 177, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 120, Short.MAX_VALUE)
                         .add(jLabel2))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                        .add(cancelButton)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 273, Short.MAX_VALUE)
-                        .add(finishButton)))
+                        .add(cancelButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(273, 273, 273)
+                        .add(finishButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -169,9 +179,9 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(dependenciesField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(finishButton)
                     .add(cancelButton)))
@@ -190,42 +200,44 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
         setVisible(false);
     }//GEN-LAST:event_finishButtonActionPerformed
     private void initDependencyList(final javax.swing.JList list, final File rootDir) {
-        final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
-            @Override
-            public Integer doInBackground() {
-                final DefaultListModel model = (DefaultListModel) list.getModel();
-                model.clear();
-                if (rootDir != null && rootDir.exists() && rootDir.isDirectory() ) {
-                    final File[] files = rootDir.listFiles(new FilenameFilter() {
-                        @Override
-                        public boolean accept(File file, String name) {
-                            final int offset = name.lastIndexOf('.');
-                            if (offset == -1) {
-                                return false;
-                            }
-                            final String extension = name.substring(offset);
-                            if (".pod".equalsIgnoreCase(extension)) {
-                                return true;
-                            }
-                            return false;
-                        }
-                    });
-                    if (null != files) {
-                        for (int i = 0; i < files.length; i++) {
-                            final String s = getPodShortDescription(files[i]);
-                            model.add(i,s);
-                            final String[] pair = s.split(" ");
-                            final DependencyPair d = new DependencyPair(pair[0], pair[1]);
-                            if (selected.contains(d)) {
-                                list.setSelectedIndex(i);
-                            }
-                        }
+        final SortedSet<String> set = new TreeSet<String>();
+        if (rootDir != null && rootDir.exists() && rootDir.isDirectory() ) {
+            final File[] files = rootDir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File file, String name) {
+                    final int offset = name.lastIndexOf('.');
+                    if (offset == -1) {
+                        return false;
                     }
+                    final String extension = name.substring(offset);
+                    if (".pod".equalsIgnoreCase(extension)) {
+                        return true;
+                    }
+                    return false;
                 }
-                return 0;
+            });
+            if (null != files) {
+                for (int i = 0; i < files.length; i++) {
+                    final String s = getPodShortDescription(files[i]);
+                    set.add(s);
+                }
             }
-        };
-        sw.execute();
+        }
+        else {
+            set.add("(empty)");
+        }
+        final DefaultListModel model = (DefaultListModel) list.getModel();
+        model.clear();
+        int i = 0;
+        for (final String str : set) {
+            model.add(i,str);
+            final String[] pair = str.split(" ");
+
+            if (selected.containsKey(pair[0])) {
+                list.setSelectedIndex(i);
+            }
+            i++;
+        }
     }
     class OurListSelectionListener implements ListSelectionListener {
         @Override
@@ -240,8 +252,7 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
                         for (int j = 0; j < selections.length; j++) {
                             final String s = selections[j].toString();
                             final String[] pair = s.split(" ");
-                            final DependencyPair d = new DependencyPair(pair[0], pair[1]);
-                            selected.add(d);
+                            selected.put(pair[0], pair[1]);
                         }
                     }
                     FanPodDependencyPanel.this.selectedToTextField();
@@ -256,14 +267,15 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
             @Override
             public Integer doInBackground() {
                 final StringBuilder sb = new StringBuilder();
-                for (final DependencyPair str : selected) {
+
+                for (final Map.Entry<String,String> entry : selected.entrySet()) {
                     if (sb.length() != 0) {
                         sb.append(", ");
                     }
                     sb.append("\"");
-                    sb.append(str.getPodName());
+                    sb.append(entry.getKey());
                     sb.append(' ');
-                    sb.append(str.getVersion());
+                    sb.append(entry.getValue());
                     sb.append("\"");
                 }
                 dependenciesField.setText(sb.toString());
@@ -272,9 +284,9 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
         };
         sw.execute();
     }
-    public SortedSet<DependencyPair> getSelected() {
-        final SortedSet<DependencyPair> s = new TreeSet<DependencyPair>();
-        s.addAll(selected);
+    public Map<String,String> getSelected() {
+        final Map<String,String> s = new HashMap<String,String>();
+        s.putAll(selected);
         return s;
     }
     public String getPodShortDescription(File f) {
@@ -336,7 +348,7 @@ public class FanPodDependencyPanel extends javax.swing.JDialog {
     private javax.swing.JList userPodList;
     // End of variables declaration//GEN-END:variables
 
-    private final SortedSet<DependencyPair> selected = new TreeSet<DependencyPair>();
+    private final Map<String,String> selected = new HashMap<String,String>();
     public static final int CANCEL_OPTION = 1;
     public static final int APPROVE_OPTION = 0;
     public static final int ERROR_OPTION = -1;
