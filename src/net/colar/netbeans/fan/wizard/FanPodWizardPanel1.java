@@ -129,10 +129,6 @@ public class FanPodWizardPanel1 implements WizardDescriptor.Panel
         {
             return getPanel().getPodVersion();
         }
-	public boolean getCreateBuildFile()
-	{
-            return getPanel().getCreateBuildFile();
-	}
 	public String getMainClassName()
 	{
             return getPanel().getMainClassName();

@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.HashSet;
 import javax.swing.SwingWorker;
 import javax.swing.JOptionPane;
+import org.openide.util.NbBundle;
 /**
  *
  * @author bheadley
@@ -66,9 +67,18 @@ public class FanPodSourcesPanel extends javax.swing.JDialog {
         sourceTreeModel = new DefaultTreeModel(addNodes(null,rootDirectory));
         sourceTree.setModel(sourceTreeModel);
         populateTextField();
+
+        cancelButton.setToolTipText(NbBundle.getMessage(FanPodSourcesPanel.class, "FanPodSourcesPanel.cancelButton.tooltip"));
+        createDirButton.setToolTipText(NbBundle.getMessage(FanPodSourcesPanel.class, "FanPodSourcesPanel.createDirButton.tooltip"));
+        deleteDirButton.setToolTipText(NbBundle.getMessage(FanPodSourcesPanel.class, "FanPodSourcesPanel.deleteDirButton.tooltip"));
+        excludeButton.setToolTipText(NbBundle.getMessage(FanPodSourcesPanel.class, "FanPodSourcesPanel.excludeButton.tooltip"));
+        finishButton.setToolTipText(NbBundle.getMessage(FanPodSourcesPanel.class, "FanPodSourcesPanel.finishButton.tooltip"));
+        selectButton.setToolTipText(NbBundle.getMessage(FanPodSourcesPanel.class, "FanPodSourcesPanel.selectButton.tooltip"));
+        sourceField.setToolTipText(NbBundle.getMessage(FanPodSourcesPanel.class, "FanPodSourcesPanel.sourceField.tooltip"));
+        sourceTree.setToolTipText(NbBundle.getMessage(FanPodSourcesPanel.class, "FanPodSourcesPanel.sourceTree.tooltip"));
     }
     private DefaultMutableTreeNode addNodes(DefaultMutableTreeNode curTop, File dir) {
-        final String curPath = dir.getPath();
+        final String curPath = dir.getPath().replaceAll(File.pathSeparator, "/");
         final DefaultMutableTreeNode curDir = new DefaultMutableTreeNode(curPath);
         if (curTop != null) { // should only be null at root
             curTop.add(curDir);
@@ -85,7 +95,7 @@ public class FanPodSourcesPanel extends javax.swing.JDialog {
                 newPath = thisObject;
             }
             else {
-                newPath = curPath + File.separator + thisObject;
+                newPath = curPath + "/" + thisObject;
             }
             final File f = new File(newPath);
             if ((f).isDirectory()) {
@@ -95,12 +105,13 @@ public class FanPodSourcesPanel extends javax.swing.JDialog {
         return curDir;
     }
     private void populateTextField() {
-        final String root = rootDirectory.getPath();
+        final String root = rootDirectory.getPath().replaceAll(File.pathSeparator, "/");
         final StringBuilder sb = new StringBuilder();
         for (String str : selected) {
+            str = str.replaceAll(File.pathSeparator, "/");
             str = str.replaceAll(root, "");
             if (str.startsWith("/")) {
-                str = str.substring(1);
+                str = str.substring("/".length());
             }
             if (!str.endsWith("/")) {
                 str += "/";
@@ -235,8 +246,13 @@ public class FanPodSourcesPanel extends javax.swing.JDialog {
         final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
             public Integer doInBackground() {
                 final DefaultMutableTreeNode node = (DefaultMutableTreeNode)sourceTree.getSelectionPath().getLastPathComponent();
-                selected.add((String)node.getUserObject());
-                populateTextField();
+                if (rootDirectory.getPath().replaceAll(File.pathSeparator, "/").equals((String)node.getUserObject())) {
+                    JOptionPane.showMessageDialog(FanPodSourcesPanel.this,
+                            "You cannot select the project's root directory!");
+                } else {
+                    selected.add((String)node.getUserObject());
+                    populateTextField();
+                }
                 return 0;
             }
         };
@@ -247,8 +263,13 @@ public class FanPodSourcesPanel extends javax.swing.JDialog {
         final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
             public Integer doInBackground() {
                 final DefaultMutableTreeNode node = (DefaultMutableTreeNode)sourceTree.getSelectionPath().getLastPathComponent();
-                selected.remove((String)node.getUserObject());
-                populateTextField();
+                if (rootDirectory.getPath().replaceAll(File.pathSeparator, "/").equals((String)node.getUserObject())) {
+                    JOptionPane.showMessageDialog(FanPodSourcesPanel.this,
+                            "You cannot exclude the project's root directory!");
+                } else {
+                    selected.remove((String)node.getUserObject());
+                    populateTextField();
+                }
                 return 0;
             }
         };
@@ -263,16 +284,18 @@ public class FanPodSourcesPanel extends javax.swing.JDialog {
     private void createDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createDirButtonActionPerformed
         final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
             public Integer doInBackground() {
+                String curDir = rootDirectory.getPath();
                 if (sourceTree.getSelectionPath() != null) {
                     final DefaultMutableTreeNode node = (DefaultMutableTreeNode)sourceTree.getSelectionPath().getLastPathComponent();
-                    final String curDir = (String) node.getUserObject();
-                    final String newDir = JOptionPane.showInputDialog(FanPodSourcesPanel.this, "Enter directory to create", curDir + File.separator);
-                    if (newDir != null || !"".equals(newDir) || !curDir.equals(newDir)) {
-                        final File f = new File(newDir);
-                        f.mkdirs();
-                        selected.add(newDir);
-                        localInit();
-                    }
+                    curDir = (String) node.getUserObject();
+                }
+                String newDir = JOptionPane.showInputDialog(FanPodSourcesPanel.this, "Enter directory to create", curDir + "/");
+                if (newDir != null || !"".equals(newDir) || !curDir.equals(newDir)) {
+                    final File f = new File(newDir);
+                    f.mkdirs();
+                    newDir = newDir.replaceAll(curDir, "");
+                    selected.add(newDir);
+                    localInit();
                 }
                 return 0;
             }
@@ -289,28 +312,39 @@ public class FanPodSourcesPanel extends javax.swing.JDialog {
                             (DefaultMutableTreeNode) (currentSelection.getLastPathComponent());
 
                     final String directory = (String)currentNode.getUserObject();
-                    final Object[] options = {"No", "Yes"};
-                    final int n = JOptionPane.showOptionDialog(
-                                FanPodSourcesPanel.this,
-                                "Delete directory: \n" + directory + "?",
-                                "Please Confirm",
-                                JOptionPane.YES_NO_CANCEL_OPTION,
-                                JOptionPane.QUESTION_MESSAGE,
-                                null,
-                                options,
-                                options[0]);
-                    if (n == 1) {
-                        final File f = new File(directory);
-                        if (!f.delete()) {
-                            JOptionPane.showMessageDialog(FanPodSourcesPanel.this,
-                                    "Directory is not empty!");
-                            return 0;
-                        }
-                        else if (selected.contains(directory)) {
-                            selected.remove(directory);
-                        }
-                        localInit();
+                    if (rootDirectory.getPath().replaceAll(File.pathSeparator, "/").equals(directory)) {
+                        JOptionPane.showMessageDialog(FanPodSourcesPanel.this,
+                                "You cannot delete the project's root directory!");
                     }
+                    else {
+                        final Object[] options = {"No", "Yes"};
+                        final int n = JOptionPane.showOptionDialog(
+                                    FanPodSourcesPanel.this,
+                                    "Delete directory: \n" + directory + "?",
+                                    "Please Confirm",
+                                    JOptionPane.YES_NO_CANCEL_OPTION,
+                                    JOptionPane.QUESTION_MESSAGE,
+                                    null,
+                                    options,
+                                    options[0]);
+                        if (n == 1) {
+                            final File f = new File(directory);
+                            if (!f.delete()) {
+                                JOptionPane.showMessageDialog(
+                                        FanPodSourcesPanel.this,
+                                        "Directory is not empty!");
+                                return 0;
+                            }
+                            else if (selected.contains(directory)) {
+                                selected.remove(directory);
+                            }
+                            localInit();
+                        }
+                    }
+                }
+                else {
+                    JOptionPane.showMessageDialog(FanPodSourcesPanel.this,
+                        "Select a directory in the tree to remove it");
                 }
                 return 0;
             }

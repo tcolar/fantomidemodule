@@ -15,17 +15,19 @@ import java.util.SortedSet;
 import java.util.Set;
 import java.util.HashSet;
 
-import net.colar.netbeans.fan.utils.DependencyPair;
 import net.colar.netbeans.fan.platform.FanPlatform;
 
 import java.awt.Window;
 import java.awt.Dialog;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.DefaultListModel;
 import javax.swing.tree.*;
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 import javax.swing.SwingUtilities;
+import org.openide.util.NbBundle;
 
 /**
  * Main UI panel for project/pod properties
@@ -41,12 +43,35 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             this.dir = dir;
 
             initComponents();
-            chooser = new JFileChooser();
-            chooser.setMultiSelectionEnabled(false);
-            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            chooser.setApproveButtonText("Select");
+            localInit();
 	}
-
+        private void localInit() {
+                dependenciesTable.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.dependenciesTable.tooltip"));
+                docApiCheckBox.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.docApiCheckBox.tooltip"));
+                docSrcCheckBox.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.docSrcCheckBox.tooltip"));
+                metaEditButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.metaEditButton.tooltip"));
+                indexEditButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.indexEditButton.tooltip"));
+                indexList.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.indexList.tooltip"));
+                mainMethodField.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.mainMethodField.tooltip"));
+                metaList.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.metaList.tooltip"));
+                podNameField.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.podNameField.tooltip"));
+                outDirButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outDirButton.tooltip"));
+                outputDirectoryEditButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outputDirectoryEditButton.tooltip"));
+                outputDirectoryField.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outputDirectoryField.tooltip"));
+                podDescriptionField.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.podDescriptionField.tooltip"));
+                podVersionField.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.podVersionField.tooltip"));
+                resDirsButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.resDirsButton.tooltip"));
+                resourceDefaultsButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.resourceDefaultsButton.tooltip"));
+                resourceEditButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.resourceEditButton.tooltip"));
+                resourceTree.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.resourceTree.tooltip"));
+                sourceDefaultsButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.sourceDefaultsButton.tooltip"));
+                sourceEditButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.sourceEditButton.tooltip"));
+                sourceTree.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.sourceTree.tooltip"));
+                dependenciesEditButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.dependenciesEditButton.tooltip"));
+                nextTabButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.nextTabButton.tooltip"));
+                prevTabButton.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.prevTabButton.tooltip"));
+                runtimeArgumentsField.setToolTipText(NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.runtimeArgumentsField.tooltip"));
+        }
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -67,6 +92,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         podDescriptionField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         podVersionField = new javax.swing.JTextField();
+        outDirButton = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         sourceTree = new javax.swing.JTree();
@@ -80,6 +106,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         jLabel2 = new javax.swing.JLabel();
         docApiCheckBox = new javax.swing.JCheckBox();
         docSrcCheckBox = new javax.swing.JCheckBox();
+        resDirsButton = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -124,6 +151,13 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
 
         podVersionField.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.podVersionField.text")); // NOI18N
 
+        outDirButton.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.outDirButton.text")); // NOI18N
+        outDirButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outDirButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -134,16 +168,17 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     .add(jLabel4)
                     .add(jLabel5)
                     .add(jLabel6)
-                    .add(outputDirectoryLabel1))
+                    .add(outputDirectoryLabel1)
+                    .add(outDirButton))
                 .add(40, 40, 40)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 318, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 31, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                         .add(outputDirectoryEditButton))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, podNameField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, podDescriptionField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
-                    .add(podVersionField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, podNameField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, podDescriptionField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                    .add(podVersionField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -162,11 +197,13 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     .add(jLabel6)
                     .add(podVersionField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(18, 18, 18)
+                .add(outDirButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(outputDirectoryLabel1)
                     .add(outputDirectoryField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(outputDirectoryLabel1)
                     .add(outputDirectoryEditButton))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -211,6 +248,13 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
 
         docSrcCheckBox.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.docSrcCheckBox.text")); // NOI18N
 
+        resDirsButton.setText(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.resDirsButton.text")); // NOI18N
+        resDirsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resDirsButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -218,22 +262,24 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             .add(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel1)
-                    .add(jLabel2))
+                    .add(resDirsButton)
+                    .add(jLabel2)
+                    .add(jLabel1))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(docApiCheckBox)
+                        .add(46, 46, 46)
+                        .add(docSrcCheckBox))
+                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))
                 .add(18, 18, 18)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(docSrcCheckBox)
-                    .add(docApiCheckBox)
-                    .add(jPanel2Layout.createSequentialGroup()
-                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(resourceDefaultsButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(resourceEditButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                            .add(sourceDefaultsButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, sourceEditButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE))))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, resourceDefaultsButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, resourceEditButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                        .add(sourceDefaultsButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(sourceEditButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -242,26 +288,34 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                 .addContainerGap()
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 67, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel1)
-                    .add(jPanel2Layout.createSequentialGroup()
-                        .add(sourceEditButton)
-                        .add(18, 18, 18)
-                        .add(sourceDefaultsButton)))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                    .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                        .add(jPanel2Layout.createSequentialGroup()
+                            .add(jLabel1)
+                            .add(69, 69, 69))
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel2Layout.createSequentialGroup()
+                            .add(sourceEditButton)
+                            .add(18, 18, 18)
+                            .add(sourceDefaultsButton)
+                            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED))))
+                .add(12, 12, 12)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .add(resDirsButton)
+                        .add(28, 28, 28)
+                        .add(jLabel2)
+                        .add(29, 29, 29))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .add(resourceEditButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 40, Short.MAX_VALUE)
+                        .add(resourceDefaultsButton))
                     .add(jPanel2Layout.createSequentialGroup()
-                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 68, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jPanel2Layout.createSequentialGroup()
-                                .add(resourceEditButton)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .add(resourceDefaultsButton)))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(docApiCheckBox)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(docSrcCheckBox))
-                    .add(jLabel2))
-                .add(19, 19, 19))
+                        .add(26, 26, 26)
+                        .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 68, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(docApiCheckBox)
+                    .add(docSrcCheckBox))
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FanProjectPropertiesPanel.class, "FanProjectPropertiesPanel.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -337,9 +391,9 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                         .add(jLabel8, 0, 0, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)))
                 .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jScrollPane5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
+                    .add(jScrollPane5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(metaEditButton)
@@ -389,8 +443,8 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     .add(jLabel9))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(mainMethodField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
-                    .add(runtimeArgumentsField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
+                    .add(mainMethodField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                    .add(runtimeArgumentsField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -432,9 +486,9 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                         .add(prevTabButton)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 419, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 480, Short.MAX_VALUE)
                         .add(nextTabButton))
-                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE))
+                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -452,10 +506,20 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         private void outputDirectoryEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputDirectoryEditButtonActionPerformed
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 public Integer doInBackground() {
+                    final String l = dir;
+                    final File p = new File(l);
+                    if (!p.exists()) {
+                        p.mkdirs();
+                    }
+                    final JFileChooser chooser = new JFileChooser();
+                    chooser.setMultiSelectionEnabled(false);
+                    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    chooser.setApproveButtonText("Select");
                     int val = chooser.showDialog(FanProjectPropertiesPanel.this, "Select");
                     if (val == JFileChooser.APPROVE_OPTION)
                     {
                         String s = chooser.getSelectedFile().getPath();
+                        s.replaceAll(File.pathSeparator, "/");
                         if (!s.endsWith("/")) {
                             s += "/";
                         }
@@ -466,6 +530,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                         if (!f.exists()) {
                             f.mkdirs();
                         }
+                        s = s.replace(l, "");
                         outputDirectoryField.setText(s);
                     }
                     return 0;
@@ -509,7 +574,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     final String outDir = FanProjectPropertiesPanel.this.getOutputDirectory().replaceAll("`", "");
                     final File f = new File(outDir);
                     final File[] directories = new File[] {
-                        new File(FanPlatform.getInstance().buildLibraryPath()),
+                        new File(FanPlatform.getInstance().buildSysPodPath()),
                         new File((f.exists() && f.isAbsolute()) ? outDir : dir + "/" + outDir )
                     };
 
@@ -526,15 +591,15 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                     if (val == JFileChooser.APPROVE_OPTION)
                     {
                         dependencies.clear();
-                        dependencies.addAll(podChooser.getSelected());
+                        dependencies.putAll(podChooser.getSelected());
                         final StringBuilder sb = new StringBuilder();
-                        for (final DependencyPair s : dependencies) {
+                        for (final Map.Entry<String,String> s : dependencies.entrySet()) {
                             if (sb.length() != 0) {
                                 sb.append(", ");
                             }
-                            sb.append(s.getPodName());
+                            sb.append(s.getKey());
                             sb.append(' ');
-                            sb.append(s.getVersion());
+                            sb.append(s.getValue());
                         }
                         setDependencies(sb.toString());
                     }
@@ -601,6 +666,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         private void sourceEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourceEditButtonActionPerformed
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 public Integer doInBackground() {
+                    String l = dir.replaceAll(File.pathSeparator, "/");
                     final java.awt.Window window = SwingUtilities.getWindowAncestor(FanProjectPropertiesPanel.this);
                     final FanPodSourcesPanel podChooser;
                     if (window instanceof java.awt.Frame) {
@@ -616,6 +682,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                         sourceDirs.addAll(podChooser.getSelected());
                         final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(dir);
                         for (String s : sourceDirs) {
+                            s = s.replaceAll(l, "");
                             rootNode.add(new DefaultMutableTreeNode(s));
                         }
                         sourceTree.setModel(new DefaultTreeModel(rootNode));
@@ -630,18 +697,19 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 public Integer doInBackground() {
                     sourceDirs.clear();
-                    final String s = dir;
+                    final String l = dir.replaceAll(File.pathSeparator, "/");
                     final String[] dirs = { "fan/", "test/" };
-                    for (int i = 0; i < dirs.length; i++) {
-                        final String dir = s + File.separator + dirs[i];
-                        final File f = new File(dir);
+                    for (String d : dirs) {
+                        d = l + "/" + d;
+                        final File f = new File(d);
                         if (!f.exists()) {
                             f.mkdirs();
                         }
-                        sourceDirs.add(dir);
+                        sourceDirs.add(d);
                     }
                     final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(dir);
-                    for (final String str : sourceDirs) {
+                    for (String str : sourceDirs) {
+                        str = str.replaceAll(l, "");
                         rootNode.add(new DefaultMutableTreeNode(str));
                     }
                     sourceTree.setModel(new DefaultTreeModel(rootNode));
@@ -654,6 +722,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         private void resourceEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resourceEditButtonActionPerformed
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 public Integer doInBackground() {
+                    final String l = dir.replaceAll(File.pathSeparator, "/");
                     final java.awt.Window window = SwingUtilities.getWindowAncestor(FanProjectPropertiesPanel.this);
                     final FanPodSourcesPanel podChooser;
                     if (window instanceof java.awt.Frame) {
@@ -669,6 +738,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                         resourceDirs.addAll(podChooser.getSelected());
                         final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(dir);
                         for (String s : resourceDirs) {
+                            s = s.replaceAll(l, "");
                             rootNode.add(new DefaultMutableTreeNode(s));
                         }
                         resourceTree.setModel(new DefaultTreeModel(rootNode));
@@ -683,18 +753,19 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 public Integer doInBackground() {
                     sourceDirs.clear();
-                    final String s = dir;
+                    final String l = dir.replaceAll(File.pathSeparator, "/");
                     final String[] dirs = { "res/" };
-                    for (int i = 0; i < dirs.length; i++) {
-                        final String dir = s + File.separator + dirs[i];
-                        final File f = new File(dir);
+                    for (String d : dirs) {
+                        d = l + "/" + d;
+                        final File f = new File(d);
                         if (!f.exists()) {
                             f.mkdirs();
                         }
-                        resourceDirs.add(dir);
+                        resourceDirs.add(d);
                     }
                     final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(dir);
-                    for (final String str : resourceDirs) {
+                    for (String str : resourceDirs) {
+                        str = str.replaceAll(l, "");
                         rootNode.add(new DefaultMutableTreeNode(str));
                     }
                     resourceTree.setModel(new DefaultTreeModel(rootNode));
@@ -704,8 +775,25 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             sw.execute();
         }//GEN-LAST:event_resourceDefaultsButtonActionPerformed
 
+        private void resDirsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resDirsButtonActionPerformed
+            boolean b = resDirsButton.isSelected();
+            resourceDirs.clear();
+            resourceTree.setEnabled(b);
+            resourceEditButton.setEnabled(b);
+            resourceDefaultsButton.setEnabled(b);
+
+        }//GEN-LAST:event_resDirsButtonActionPerformed
+
+        private void outDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outDirButtonActionPerformed
+            boolean b = outDirButton.isSelected();
+            outputDirectoryField.setText("");
+            outputDirectoryField.setEnabled(b);
+            outputDirectoryEditButton.setEnabled(b);
+        }//GEN-LAST:event_outDirButtonActionPerformed
+
         private void initTree(final javax.swing.JTree tree, final String path, final Set<String> set) {
             final DefaultMutableTreeNode node = new DefaultMutableTreeNode(path);
+            node.add(new DefaultMutableTreeNode("(empty)"));
             tree.setModel(new DefaultTreeModel(node));
             set.clear();
         }
@@ -748,7 +836,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             sw.execute();
         }
         public String getOutputDirectory() {
-            String s = outputDirectoryField.getText();
+            String s = outputDirectoryField.getText().replaceAll(File.pathSeparator, "/");
             if (!s.endsWith("/")) {
                 s += "/";
             }
@@ -764,7 +852,12 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         public void setOutputDirectory(final String val) {
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 public Integer doInBackground() {
-                    outputDirectoryField.setText(val.replaceAll("`",""));
+                    String s = val.replaceAll(File.pathSeparator, "/");
+                    s = s.replaceAll("`","");
+                    boolean b = !"".equals(s);
+                    outDirButton.setSelected(b);
+                    outputDirectoryField.setEnabled(b);
+                    outputDirectoryField.setText(s);
                     return 0;
                 }
             };
@@ -772,14 +865,14 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         }
         public String getDependencies() {
             final StringBuilder sb = new StringBuilder();
-            for (final DependencyPair pair : dependencies) {
+            for (final Map.Entry<String,String> pair : dependencies.entrySet()) {
                 if (sb.length() != 0) {
                     sb.append(", ");
                 }
                 sb.append("\"");
-                sb.append(pair.getPodName());
+                sb.append(pair.getKey());
                 sb.append(" ");
-                sb.append(pair.getVersion());
+                sb.append(pair.getValue());
                 sb.append("\"");
             }
             return sb.toString();
@@ -801,7 +894,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
                         final String[] line = deps[i].trim().split(" ");
                         if (line.length == 2) {
                             tm.addRow(new Object[]{line[0], line[1]});
-                            dependencies.add(new DependencyPair(line[0], line[1]));
+                            dependencies.put(line[0], line[1]);
                         }
                     }
                     return 0;
@@ -919,11 +1012,12 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         }
         public String getSourceDirs() {
             final StringBuilder sb = new StringBuilder();
-            final String rootDir = dir;
+            final String rootDir = dir.replaceAll(File.pathSeparator, "/");
             for (String s : sourceDirs) {
                 s = s.replaceAll(rootDir, "");
+                s = s.replaceAll(File.pathSeparator, "/");
                 if (s.startsWith("/")) {
-                    s = s.substring(1);
+                    s = s.substring("/".length());
                 }
                 if (!s.endsWith("/")) {
                     s += "/";
@@ -940,18 +1034,18 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         public void setSourceDirs(final String s) {
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 public Integer doInBackground() {
-                    final String p = s.replaceAll("`", "");
-                    String rootDir = dir;
+                    String p = s.replaceAll("`", "");
+                    p = p.replaceAll(File.pathSeparator, "/");
                     final String[] elems = p.split(",");
-                    if (!rootDir.endsWith("/")) {
-                        rootDir += "/";
-                    }
                     sourceDirs.clear();
                     for (int i = 0; i < elems.length; i++) {
-                        final String str = rootDir + elems[i].trim();
+                        String str =  elems[i].trim();
+                        if (!str.endsWith("/")) {
+                            str += "/";
+                        }
                         sourceDirs.add(str);
                     }
-                    initTree(sourceTree, rootDir, sourceDirs);
+                    initTree(sourceTree, dir, sourceDirs);
                     return 0;
                 }
             };
@@ -962,8 +1056,9 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
             final String rootDir = dir;
             for (String s : resourceDirs) {
                 s = s.replaceAll(rootDir, "");
+                s = s.replace(File.pathSeparator, "/");
                 if (s.startsWith("/")) {
-                    s = s.substring(1);
+                    s = s.substring("/".length());
                 }
                 if (!s.endsWith("/")) {
                     s += "/";
@@ -980,18 +1075,23 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
         public void setResourceDirs(final String s) {
             final SwingWorker<Integer,Integer> sw = new SwingWorker<Integer,Integer>() {
                 public Integer doInBackground() {
-                    final String p = s.replaceAll("`", "");
-                    String rootDir = dir;
+                    String p = s.replaceAll("`", "");
+                    p = p.replace(File.pathSeparator, "/");
                     final String[] elems = p.split(",");
-                    if (!rootDir.endsWith("/")) {
-                        rootDir += "/";
-                    }
                     resourceDirs.clear();
                     for (int i = 0; i < elems.length; i++) {
-                        final String str = rootDir + elems[i].trim();
+                        String str = elems[i].trim();
+                        if (!str.endsWith("/")) {
+                            str += "/";
+                        }
                         resourceDirs.add(str);
                     }
-                    initTree(resourceTree, rootDir, resourceDirs);
+                    boolean b = resourceDirs.size() != 0;
+                    resDirsButton.setSelected(b);
+                    resourceDefaultsButton.setEnabled(b);
+                    resourceEditButton.setEnabled(b);
+                    resourceTree.setEnabled(b);
+                    initTree(resourceTree, dir, resourceDirs);
                     return 0;
                 }
             };
@@ -1035,6 +1135,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
     private javax.swing.JButton metaEditButton;
     private javax.swing.JList metaList;
     private javax.swing.JButton nextTabButton;
+    private javax.swing.JCheckBox outDirButton;
     private javax.swing.JButton outputDirectoryEditButton;
     private javax.swing.JTextField outputDirectoryField;
     private javax.swing.JLabel outputDirectoryLabel1;
@@ -1042,6 +1143,7 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
     private javax.swing.JTextField podNameField;
     private javax.swing.JTextField podVersionField;
     private javax.swing.JButton prevTabButton;
+    private javax.swing.JCheckBox resDirsButton;
     private javax.swing.JButton resourceDefaultsButton;
     private javax.swing.JButton resourceEditButton;
     private javax.swing.JTree resourceTree;
@@ -1053,9 +1155,9 @@ public class FanProjectPropertiesPanel extends javax.swing.JPanel
 
         private Set<String> sourceDirs = new HashSet<String>();
         private Set<String> resourceDirs = new HashSet<String>();
-        private SortedSet<DependencyPair> dependencies = new TreeSet<DependencyPair>();
+        private Map<String,String> dependencies = new HashMap<String,String>();
 	private String dir;
-	private final JFileChooser chooser;
+	//private final JFileChooser chooser;
         private int currentTab = 0;
         private static final int MIN_TAB = 0;
         private static final int MAX_TAB = 3;
