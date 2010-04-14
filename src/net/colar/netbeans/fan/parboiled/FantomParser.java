@@ -6,8 +6,8 @@ package net.colar.netbeans.fan.parboiled;
 import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
-import org.parboiled.support.Leaf;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
+import org.parboiled.annotations.SuppressSubnodes;
 
 /**
  * Parboiled parser for the Fantom Language
@@ -17,7 +17,7 @@ import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
  * Grammar spec:
  * http://fantom.org/doc/docLang/Grammar.html
  *
- * Test Suite: net.colar.netbeans.fan.test.FantomParserTest
+ * Test Suite: net.colar.netbeans.fan.Test.FantomParserTest
  *
  * Note: ast.newNode() calls create ast nodes, using the last node matched (LAST_NODE())
  *		 ast.newScopeNode(), does the same for items that should introduce a scope.
@@ -49,48 +49,48 @@ public class FantomParser extends BaseParser<AstNode>
 	// ------------ Comp Unit --------------------------------------------------
 	public Rule compilationUnit()
 	{
-		return sequence(
+		return Sequence(
 			OPT_LF(),
-			sequence(
+			Sequence(
 			// Missing from grammar: Optional unix env line
-			optional(unixLine()),
-			zeroOrMore(firstOf(using(), incUsing())),
-			zeroOrMore(typeDef()),
+			Optional(unixLine()),
+			ZeroOrMore(FirstOf(using(), incUsing())),
+			ZeroOrMore(typeDef()),
 			OPT_LF(),
-			zeroOrMore(doc()) // allow for extra docs at end of file (if last type commented out)
+			ZeroOrMore(doc()) // allow for extra docs at end of file (if last type commented out)
 			// Create comp. unit AST node (root node)
 			), ast.newRootNode(AstKind.AST_COMP_UNIT, parserTask),
 			OPT_LF(),
-			eoi());
+			Eoi());
 	}
 
 	public Rule unixLine()
 	{
-		return sequence("#!", zeroOrMore(sequence(testNot("\n"), any())), "\n").label(TokenName.UNIXLINE.name());
+		return Sequence("#!", ZeroOrMore(Sequence(TestNot("\n"), Any())), "\n").label(TokenName.UNIXLINE.name());
 	}
 
 	public Rule using()
 	{
-		return sequence(OPT_LF(), sequence(
+		return Sequence(OPT_LF(), Sequence(
 			KW_USING,
-			optional(ffi()),
-			sequence(id(),
-			zeroOrMore(sequence(DOT, id())),
-			optional(sequence(SP_COLCOL, id()))), ast.newNode(AstKind.AST_ID),
-			optional(usingAs()),
+			Optional(ffi()),
+			Sequence(id(),
+			ZeroOrMore(Sequence(DOT, id())),
+			Optional(Sequence(SP_COLCOL, id()))), ast.newNode(AstKind.AST_ID),
+			Optional(usingAs()),
 			eos()), ast.newNode(AstKind.AST_USING), OPT_LF());
 	}
 
 	// Incomplete using - to allow for completion
 	public Rule incUsing()
 	{
-		return sequence(OPT_LF(), sequence(
+		return Sequence(OPT_LF(), Sequence(
 			KW_USING,
-			optional(ffi()),
-			sequence(optional(id()), // Not optional, but we want a valid ast for completion if missing
-			zeroOrMore(sequence(DOT, optional(id()))),// not enforced to allow completion
-			optional(sequence(SP_COLCOL, optional(id())))), ast.newNode(AstKind.AST_ID),// not enforced to allow completion
-			optional(sequence(sequence(KW_AS, optional(id())), ast.newNode(AstKind.AST_USING_AS))),
+			Optional(ffi()),
+			Sequence(Optional(id()), // Not Optional, but we want a valid ast for completion if missing
+			ZeroOrMore(Sequence(DOT, Optional(id()))),// not enforced to allow completion
+			Optional(Sequence(SP_COLCOL, Optional(id())))), ast.newNode(AstKind.AST_ID),// not enforced to allow completion
+			Optional(Sequence(Sequence(KW_AS, Optional(id())), ast.newNode(AstKind.AST_USING_AS))),
 			eos()), ast.newNode(AstKind.AST_INC_USING), OPT_LF());
 	}
 
@@ -101,49 +101,49 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule usingAs()
 	{
-		return sequence(KW_AS, id(), ast.newNode(AstKind.AST_USING_AS));
+		return Sequence(KW_AS, id(), ast.newNode(AstKind.AST_USING_AS));
 	}
 
 	public Rule staticBlock()
 	{
-		return sequence(KW_STATIC, OPT_LF(), enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R), ast.newScopeNode(AstKind.AST_BLOCK), OPT_LF());
+		return Sequence(KW_STATIC, OPT_LF(), enforcedSequence(BRACKET_L, ZeroOrMore(stmt()), OPT_LF(), BRACKET_R), ast.newScopeNode(AstKind.AST_BLOCK), OPT_LF());
 	}
 
 	// ------------- Type def --------------------------------------------------
 	public Rule typeDef()
 	{
 		// grouped together classdef, enumDef, mixinDef & facetDef as they are grammatically very similar (optimized)
-		return sequence(
+		return Sequence(
 			setInEnum(false),
 			OPT_LF(),
-			sequence(
-			optional(doc()),
-			zeroOrMore(facet()),
-			optional(protection()),
+			Sequence(
+			Optional(doc()),
+			ZeroOrMore(facet()),
+			Optional(protection()),
 			enforcedSequence(
-			firstOf(
+			FirstOf(
 			// Some fantom code has protection after modifiers, so allowing that
-			sequence(sequence(zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_FINAL, KW_CONST), ast.newNode(AstKind.AST_MODIFIER))), optional(protection()), KW_CLASS), ast.newNode(AstKind.AST_CLASS)), // standard class
+			Sequence(Sequence(ZeroOrMore(Sequence(FirstOf(KW_ABSTRACT, KW_FINAL, KW_CONST), ast.newNode(AstKind.AST_MODIFIER))), Optional(protection()), KW_CLASS), ast.newNode(AstKind.AST_CLASS)), // standard class
 			enforcedSequence(ENUM, KW_CLASS, setInEnum(true), ast.newNode(AstKind.AST_ENUM)), // enum class
 			enforcedSequence(FACET, KW_CLASS, ast.newNode(AstKind.AST_FACET)), // facet class
-			sequence(sequence(optional(sequence(KW_CONST, ast.newNode(AstKind.AST_MODIFIER))), KW_MIXIN), ast.newNode(AstKind.AST_MIXIN)) // mixin
+			Sequence(Sequence(Optional(Sequence(KW_CONST, ast.newNode(AstKind.AST_MODIFIER))), KW_MIXIN), ast.newNode(AstKind.AST_MIXIN)) // mixin
 			),
 			id(), ast.newNode(AstKind.AST_ID), 
-			optional(inheritance()),
+			Optional(inheritance()),
 			OPT_LF(),
-			sequence(
+			Sequence(
 			BRACKET_L,
 			OPT_LF(),
-			optional(sequence(test(inEnum),optional(enumValDefs()))), // only valid for enums, but simplifying
+			Optional(Sequence(Test(inEnum),Optional(enumValDefs()))), // only valid for enums, but simplifying
 			// Static block missing from Fan grammar
-			zeroOrMore(firstOf(staticBlock(), slotDef())),
+			ZeroOrMore(FirstOf(staticBlock(), slotDef())),
 			BRACKET_R), ast.newNode(AstKind.AST_BLOCK))),
 			ast.newScopeNode(AstKind.AST_TYPE_DEF), OPT_LF());
 	}
 
 	public Rule protection()
 	{
-		return sequence(firstOf(KW_PUBLIC, KW_PROTECTED, KW_INTERNAL, KW_PRIVATE), ast.newNode(AstKind.AST_MODIFIER));
+		return Sequence(FirstOf(KW_PUBLIC, KW_PROTECTED, KW_INTERNAL, KW_PRIVATE), ast.newNode(AstKind.AST_MODIFIER));
 	}
 
 	public Rule inheritance()
@@ -154,7 +154,7 @@ public class FantomParser extends BaseParser<AstNode>
 	// ------------- Facets ----------------------------------------------------
 	public Rule facet()
 	{
-		return enforcedSequence(AT, simpleType(), optional(facetVals()), OPT_LF());
+		return enforcedSequence(AT, simpleType(), Optional(facetVals()), OPT_LF());
 	}
 
 	public Rule facetVals()
@@ -162,7 +162,7 @@ public class FantomParser extends BaseParser<AstNode>
 		return enforcedSequence(
 			BRACKET_L,
 			facetVal(),
-			zeroOrMore(sequence(eos(), facetVal())),
+			ZeroOrMore(Sequence(eos(), facetVal())),
 			BRACKET_R);
 	}
 
@@ -174,25 +174,25 @@ public class FantomParser extends BaseParser<AstNode>
 	//------------------- Slot Def ---------------------------------------------
 	public Rule enumValDefs()
 	{
-		return sequence(sequence(enumValDef(), zeroOrMore(sequence(SP_COMMA, enumValDef()))), ast.newNode(AstKind.AST_ENUM_DEFS), eos());
+		return Sequence(Sequence(enumValDef(), ZeroOrMore(Sequence(SP_COMMA, enumValDef()))), ast.newNode(AstKind.AST_ENUM_DEFS), eos());
 	}
 
 	public Rule enumValDef()
 	{
 		// Fantom grammar is missing "doc"
-		return sequence(OPT_LF(), optional(doc()), id(), ast.newNode(AstKind.AST_ENUM_NAME), optional(enforcedSequence(PAR_L, optional(args()), PAR_R)));
+		return Sequence(OPT_LF(), Optional(doc()), id(), ast.newNode(AstKind.AST_ENUM_NAME), Optional(enforcedSequence(PAR_L, Optional(args()), PAR_R)));
 	}
 
 	public Rule slotDef()
 	{
 		// Rewrote this to "unify" slots common parts (for better performance)
-		return sequence(
+		return Sequence(
 			OPT_LF(),
-			sequence(
-			optional(doc()),// common to all slots
-			zeroOrMore(facet()),// common to all slots
-			optional(protection()),// common to all slots
-			firstOf(
+			Sequence(
+			Optional(doc()),// common to all slots
+			ZeroOrMore(facet()),// common to all slots
+			Optional(protection()),// common to all slots
+			FirstOf(
 				ctorDef(), // look for 'new'
 				methodDef(), // look for params : '('
 				fieldDef())), // others
@@ -202,89 +202,89 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule fieldDef()
 	{
-		return sequence(sequence(
-			zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
+		return Sequence(Sequence(
+			ZeroOrMore(Sequence(FirstOf(KW_ABSTRACT, KW_CONST, KW_FINAL, KW_STATIC,
 			KW_NATIVE, KW_OVERRIDE, KW_READONLY, KW_VIRTUAL), ast.newNode(AstKind.AST_MODIFIER))),
 			// Some fantom code has protection after modifiers, so allowing that
-			optional(protection()),
+			Optional(protection()),
 			/*typeAndOrId(), // Type required for fields(no infered) (Grammar does not say so)*/
 			type(),  ast.newNode(AstKind.AST_TYPE),
 			id(), ast.newNode(AstKind.AST_ID),
 			setFieldInit(true),
-			optional(enforcedSequence(AS_INIT, OPT_LF(), expr())),
-			optional(fieldAccessor()),
+			Optional(enforcedSequence(AS_INIT, OPT_LF(), expr())),
+			Optional(fieldAccessor()),
 			setFieldInit(false)), ast.newNode(AstKind.AST_FIELD_DEF),
 			eos());
 	}
 
 	public Rule methodDef()
 	{
-		return sequence(enforcedSequence(
-				sequence(
+		return Sequence(enforcedSequence(
+				Sequence(
 				// Fan grammar misses 'final'
-				zeroOrMore(sequence(firstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
+				ZeroOrMore(Sequence(FirstOf(KW_ABSTRACT, KW_NATIVE, KW_ONCE, KW_STATIC,
 				KW_OVERRIDE, KW_VIRTUAL, KW_FINAL), ast.newNode(AstKind.AST_MODIFIER))),
 				// Some fantom code has protection after modifiers, so allowing that
-				optional(protection()),
+				Optional(protection()),
 				type(), ast.newNode(AstKind.AST_TYPE),
 				id(), ast.newNode(AstKind.AST_ID),
 				PAR_L),
-			optional(params()),
+			Optional(params()),
 			PAR_R,
 			methodBody()), ast.newNode(AstKind.AST_METHOD_DEF)); // nees own scope because of params
 	}
 
 	public Rule ctorDef()
 	{
-		return sequence(enforcedSequence(KW_NEW,
+		return Sequence(enforcedSequence(KW_NEW,
 			id(), ast.newNode(AstKind.AST_ID),
 			PAR_L, 
-			optional(params()),
+			Optional(params()),
 			PAR_R,
-			optional( // ctorChain
+			Optional( // ctorChain
 			// Fantom  Grammar page is missing the ':'
-			enforcedSequence(sequence(OPT_LF(), SP_COL),
-			firstOf(
-			enforcedSequence(KW_THIS, DOT, id(), enforcedSequence(PAR_L, optional(args()), PAR_R)),
-			enforcedSequence(KW_SUPER, optional(enforcedSequence(DOT, id())), enforcedSequence(PAR_L, optional(args()), PAR_R))))),
+			enforcedSequence(Sequence(OPT_LF(), SP_COL),
+			FirstOf(
+			enforcedSequence(KW_THIS, DOT, id(), enforcedSequence(PAR_L, Optional(args()), PAR_R)),
+			enforcedSequence(KW_SUPER, Optional(enforcedSequence(DOT, id())), enforcedSequence(PAR_L, Optional(args()), PAR_R))))),
 			methodBody()), ast.newNode(AstKind.AST_CTOR_DEF));
 	}
 
 	public Rule methodBody()
 	{
-		return sequence(firstOf(
-			enforcedSequence(sequence(OPT_LF(), BRACKET_L), zeroOrMore(stmt()), OPT_LF(), BRACKET_R),
+		return Sequence(FirstOf(
+			enforcedSequence(Sequence(OPT_LF(), BRACKET_L), ZeroOrMore(stmt()), OPT_LF(), BRACKET_R),
 			eos()), ast.newScopeNode(AstKind.AST_BLOCK), OPT_LF()); // method with no body
 	}
 
 	public Rule params()
 	{
-		return sequence(param(), zeroOrMore(enforcedSequence(SP_COMMA, params())));
+		return Sequence(param(), ZeroOrMore(enforcedSequence(SP_COMMA, params())));
 	}
 
 	public Rule param()
 	{
-		return sequence(OPT_LF(), 
-			sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID), optional(enforcedSequence(AS_INIT, expr()))),
+		return Sequence(OPT_LF(),
+			Sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID), Optional(enforcedSequence(AS_INIT, expr()))),
 			ast.newNode(AstKind.AST_PARAM),
 			OPT_LF());
 	}
 
 	public Rule fieldAccessor()
 	{
-		return sequence(OPT_LF(),
+		return Sequence(OPT_LF(),
 			enforcedSequence(
 			BRACKET_L,
-			optional(sequence(OPT_LF(), enforcedSequence(GET, firstOf(block(), eos())))),
-			optional(sequence(OPT_LF(), optional(protection()), enforcedSequence(SET, firstOf(block(), eos())))),
+			Optional(Sequence(OPT_LF(), enforcedSequence(GET, FirstOf(block(), eos())))),
+			Optional(Sequence(OPT_LF(), Optional(protection()), enforcedSequence(SET, FirstOf(block(), eos())))),
 			BRACKET_R), ast.newNode(AstKind.AST_FIELD_ACCESSOR)); // do not consume trailing LF, since fieldDef looks for EOS
 	}
 
 	public Rule args()
 	{
-		return sequence(expr(), ast.newNode(AstKind.AST_ARG),
-			zeroOrMore(
-				sequence(OPT_LF(),
+		return Sequence(expr(), ast.newNode(AstKind.AST_ARG),
+			ZeroOrMore(
+				Sequence(OPT_LF(),
 				enforcedSequence(SP_COMMA, OPT_LF(), expr(), ast.newNode(AstKind.AST_ARG)))),
 			OPT_LF());
 	}
@@ -292,20 +292,20 @@ public class FantomParser extends BaseParser<AstNode>
 	// ------------ Statements -------------------------------------------------
 	public Rule block()
 	{
-		return sequence(OPT_LF(), firstOf(
-			enforcedSequence(BRACKET_L, zeroOrMore(stmt()), OPT_LF(), BRACKET_R),
+		return Sequence(OPT_LF(), FirstOf(
+			enforcedSequence(BRACKET_L, ZeroOrMore(stmt()), OPT_LF(), BRACKET_R),
 			stmt() // single statement
 			), ast.newScopeNode(AstKind.AST_BLOCK), OPT_LF());
 	}
 
 	public Rule stmt()
 	{
-		return sequence(testNot(BRACKET_R), OPT_LF(),
-			firstOf(
-			sequence(KW_BREAK, eos()),
-			sequence(KW_CONTINUE, eos()),
-			sequence(KW_RETURN, sequence(optional(expr()), eos())),
-			sequence(KW_THROW, expr(), eos()),
+		return Sequence(TestNot(BRACKET_R), OPT_LF(),
+			FirstOf(
+			Sequence(KW_BREAK, eos()),
+			Sequence(KW_CONTINUE, eos()),
+			Sequence(KW_RETURN, Sequence(Optional(expr()), eos())),
+			Sequence(KW_THROW, expr(), eos()),
 			if_(),
 			for_(),
 			switch_(),
@@ -313,19 +313,19 @@ public class FantomParser extends BaseParser<AstNode>
 			try_(),
 			// check local var definition as it's faster to parse ':='
 			localDef(),
-			// otherwise expression (optional Comma for itAdd expression)
-			// using firstOf, because "," in this case can be considered an end of statement
-			sequence(expr(), firstOf(sequence(SP_COMMA, optional(eos())), eos()))),
+			// otherwise expression (Optional Comma for itAdd expression)
+			// using FirstOf, because "," in this case can be considered an end of statement
+			Sequence(expr(), FirstOf(Sequence(SP_COMMA, Optional(eos())), eos()))),
 			OPT_LF());
 	}
 
 	public Rule for_()
 	{
-		return sequence(enforcedSequence(KW_FOR, PAR_L,
+		return Sequence(enforcedSequence(KW_FOR, PAR_L,
 			// LocalDef consumes the SEMI as part of loking for EOS, so rewrote to deal with this
-			firstOf(SP_SEMI, firstOf(localDef(), sequence(expr(), SP_SEMI))),
-			firstOf(SP_SEMI, sequence(expr(), SP_SEMI)),
-			optional(expr()),
+			FirstOf(SP_SEMI, FirstOf(localDef(), Sequence(expr(), SP_SEMI))),
+			FirstOf(SP_SEMI, Sequence(expr(), SP_SEMI)),
+			Optional(expr()),
 			PAR_R,
 			block()), ast.newScopeNode(AstKind.AST_FOR_LOOP)); // introducing a scopr for the loop var
 	}
@@ -334,7 +334,7 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		// using condExpr rather than expr
 		return enforcedSequence(KW_IF, PAR_L, condOrExpr(), PAR_R, block(),
-			optional(enforcedSequence(KW_ELSE, block())));
+			Optional(enforcedSequence(KW_ELSE, block())));
 	}
 
 	public Rule while_()
@@ -347,12 +347,12 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		// slight change from the grammar to match either:
 		// 'Int j', 'j:=27', 'Int j:=27'
-		return sequence(
-			firstOf(
+		return Sequence(
+			FirstOf(
 			// fan parser says if it's start with "id :=" or "Type, id", then it gotta be a localDef (enforce)
 			enforcedSequence(typeAndId(), AS_INIT, OPT_LF(), expr()),
 			// same if it starts with "id :="
-			enforcedSequence(sequence(id(), ast.newNode(AstKind.AST_ID), AS_INIT), OPT_LF(), expr()),
+			enforcedSequence(Sequence(id(), ast.newNode(AstKind.AST_ID), AS_INIT), OPT_LF(), expr()),
 			// var def with no value
 			typeAndId()),
 			ast.newNode(AstKind.AST_LOCAL_DEF),
@@ -361,19 +361,19 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule typeAndId()
 	{
-		return sequence(sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID)), ast.newNode(AstKind.AST_TYPE_AND_ID));
+		return Sequence(Sequence(type(), ast.newNode(AstKind.AST_TYPE), id(), ast.newNode(AstKind.AST_ID)), ast.newNode(AstKind.AST_TYPE_AND_ID));
 	}
 
 	public Rule try_()
 	{
-		return enforcedSequence(KW_TRY, block(), zeroOrMore(catch_()),
-			optional(sequence(KW_FINALLY, block())));
+		return enforcedSequence(KW_TRY, block(), ZeroOrMore(catch_()),
+			Optional(Sequence(KW_FINALLY, block())));
 	}
 
 	public Rule catch_()
 	{
-		return sequence(enforcedSequence(KW_CATCH,
-				optional(enforcedSequence(PAR_L, type(),
+		return Sequence(enforcedSequence(KW_CATCH,
+				Optional(enforcedSequence(PAR_L, type(),
 				ast.newNode(AstKind.AST_TYPE), id(),
 				ast.newNode(AstKind.AST_ID), PAR_R)), block()),
 			ast.newNode(AstKind.AST_CATCH_BLOCK));
@@ -382,12 +382,12 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule switch_()
 	{
 		// Note: unlike java, fan as a scope for each 'case'
-		return sequence(enforcedSequence(KW_SWITCH, PAR_L, expr(), PAR_R,
+		return Sequence(enforcedSequence(KW_SWITCH, PAR_L, expr(), PAR_R,
 			OPT_LF(), BRACKET_L, OPT_LF(),
-			zeroOrMore(enforcedSequence(sequence(
-			oneOrMore(sequence(KW_CASE, setNoSimpleMap(true), expr(), setNoSimpleMap(false), SP_COL, OPT_LF())),
-			zeroOrMore(sequence(stmt(), OPT_LF()))), ast.newScopeNode(AstKind.AST_SWITCH_CASE))),
-			optional(enforcedSequence(sequence(KW_DEFAULT, SP_COL, zeroOrMore(sequence(stmt(),OPT_LF()))),
+			ZeroOrMore(enforcedSequence(Sequence(
+			OneOrMore(Sequence(KW_CASE, setNoSimpleMap(true), expr(), setNoSimpleMap(false), SP_COL, OPT_LF())),
+			ZeroOrMore(Sequence(stmt(), OPT_LF()))), ast.newScopeNode(AstKind.AST_SWITCH_CASE))),
+			Optional(enforcedSequence(Sequence(KW_DEFAULT, SP_COL, ZeroOrMore(Sequence(stmt(),OPT_LF()))),
 			ast.newScopeNode(AstKind.AST_SWITCH_CASE))),
 			OPT_LF(), BRACKET_R), ast.newScopeNode(AstKind.AST_SWITCH));
 	}
@@ -395,65 +395,65 @@ public class FantomParser extends BaseParser<AstNode>
 	// ----------- Expressions -------------------------------------------------
 	public Rule expr()
 	{
-		return sequence(assignExpr(), ast.newNode(AstKind.AST_EXPR));
+		return Sequence(assignExpr(), ast.newNode(AstKind.AST_EXPR));
 	}
 
 	public Rule assignExpr()
 	{
 		// check '=' first as is most common
 		// moved localDef to statement since it can't be on the right hand side
-		return sequence(ifExpr(), optional(enforcedSequence(firstOf(AS_EQUAL, AS_OPS), OPT_LF(), assignExpr(), ast.newNode(AstKind.AST_EXPR_ASSIGN))));
+		return Sequence(ifExpr(), Optional(enforcedSequence(FirstOf(AS_EQUAL, AS_OPS), OPT_LF(), assignExpr(), ast.newNode(AstKind.AST_EXPR_ASSIGN))));
 	}
 
 	public Rule ifExpr()
 	{
 		// rewritten (together with ternaryTail, elvisTail) such as we check condOrExpr only once
 		// this makes a gigantic difference in parser speed form original grammar
-		return sequence(condOrExpr(),
-			optional(firstOf(elvisTail(), ternaryTail())));
+		return Sequence(condOrExpr(),
+			Optional(FirstOf(elvisTail(), ternaryTail())));
 	}
 
 	public Rule ternaryTail()
 	{
-		return enforcedSequence(sequence(OPT_LF(), SP_QMARK), OPT_LF(), setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), OPT_LF(), SP_COL, OPT_LF(), ifExprBody());
+		return enforcedSequence(Sequence(OPT_LF(), SP_QMARK), OPT_LF(), setNoSimpleMap(true), ifExprBody(), setNoSimpleMap(false), OPT_LF(), SP_COL, OPT_LF(), ifExprBody());
 	}
 
 	public Rule elvisTail()
 	{
-		return enforcedSequence(sequence(OPT_LF(), OP_ELVIS), OPT_LF(), ifExprBody());
+		return enforcedSequence(Sequence(OPT_LF(), OP_ELVIS), OPT_LF(), ifExprBody());
 	}
 
 	public Rule ifExprBody()
 	{
-		return firstOf(enforcedSequence(KW_THROW, expr()), condOrExpr());
+		return FirstOf(enforcedSequence(KW_THROW, expr()), condOrExpr());
 	}
 
 	public Rule condOrExpr()
 	{
-		return sequence(condAndExpr(), zeroOrMore(enforcedSequence(OP_OR, OPT_LF(), condAndExpr())));
+		return Sequence(condAndExpr(), ZeroOrMore(enforcedSequence(OP_OR, OPT_LF(), condAndExpr())));
 	}
 
 	public Rule condAndExpr()
 	{
-		return sequence(equalityExpr(), zeroOrMore(enforcedSequence(OP_AND, OPT_LF(), equalityExpr())));
+		return Sequence(equalityExpr(), ZeroOrMore(enforcedSequence(OP_AND, OPT_LF(), equalityExpr())));
 	}
 
 	public Rule equalityExpr()
 	{
-		return sequence(relationalExpr(), zeroOrMore(enforcedSequence(CP_EQUALITY, OPT_LF(), relationalExpr())));
+		return Sequence(relationalExpr(), ZeroOrMore(enforcedSequence(CP_EQUALITY, OPT_LF(), relationalExpr())));
 	}
 
 	public Rule relationalExpr()
 	{
 		// Changed (with typeCheckTail, compareTail) to check for rangeExpr only once (way faster)
-		return sequence(rangeExpr(), optional(firstOf(typeCheckTail(), compareTail())));
+		return Sequence(rangeExpr(), Optional(FirstOf(typeCheckTail(), compareTail())));
 	}
 
 	public Rule typeCheckTail()
 	{
 		// changed to required, otherwise consumes all rangeExpr and compare never gets evaled
-		return sequence(enforcedSequence(
-				firstOf(KW_IS, KW_ISNOT, KW_AS),
+		return Sequence(enforcedSequence(
+				FirstOf(KW_IS, KW_ISNOT, KW_AS),
 				type(),
 				ast.newNode(AstKind.AST_TYPE)),
 			ast.newNode(AstKind.AST_EXPR_TYPE_CHECK));
@@ -461,243 +461,243 @@ public class FantomParser extends BaseParser<AstNode>
 
 	public Rule compareTail()
 	{
-		// changed to not be zeroOrMore as there can be only one comparaison check in an expression (no 3< x <5)
-		return /*zeroOrMore(*/enforcedSequence(CP_COMPARATORS, OPT_LF(), rangeExpr())/*)*/;
+		// changed to not be ZeroOrMore as there can be only one comparaison check in an expression (no 3< x <5)
+		return /*ZeroOrMore(*/enforcedSequence(CP_COMPARATORS, OPT_LF(), rangeExpr())/*)*/;
 	}
 
 	public Rule rangeExpr()
 	{
-		// changed to not be zeroOrMore(opt instead) as there can be only one range in an expression (no [1..3..5])
-		return sequence(sequence(addExpr(), ast.newNode(AstKind.AST_EXPR),
-			optional(enforcedSequence(firstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr(), ast.newNode(AstKind.AST_EXPR)))),
+		// changed to not be ZeroOrMore(opt instead) as there can be only one range in an expression (no [1..3..5])
+		return Sequence(Sequence(addExpr(), ast.newNode(AstKind.AST_EXPR),
+			Optional(enforcedSequence(FirstOf(OP_RANGE_EXCL, OP_RANGE), OPT_LF(), addExpr(), ast.newNode(AstKind.AST_EXPR)))),
 				ast.newNode(AstKind.AST_EXPR_RANGE));
 	}
 
 	public Rule addExpr()
 	{
-		return sequence(multExpr(),
+		return Sequence(multExpr(),
 			// checking it's not '+=' or '-=', so we can let assignExpr happen
-			zeroOrMore(enforcedSequence(sequence(firstOf(OP_PLUS, OP_MINUS), testNot(AS_EQUAL)), OPT_LF(), multExpr(), ast.newNode(AstKind.AST_EXPR_ADD))));
+			ZeroOrMore(enforcedSequence(Sequence(FirstOf(OP_PLUS, OP_MINUS), TestNot(AS_EQUAL)), OPT_LF(), multExpr(), ast.newNode(AstKind.AST_EXPR_ADD))));
 	}
 
 	public Rule multExpr()
 	{
-		return sequence(parExpr(),
+		return Sequence(parExpr(),
 			// checking it's not '*=', '/=' or '%=', so we can let assignExpr happen
-			zeroOrMore(enforcedSequence(sequence(firstOf(OP_MULT, OP_DIV, OP_MODULO), testNot(AS_EQUAL)), OPT_LF(), parExpr(), ast.newNode(AstKind.AST_EXPR_MULT))));
+			ZeroOrMore(enforcedSequence(Sequence(FirstOf(OP_MULT, OP_DIV, OP_MODULO), TestNot(AS_EQUAL)), OPT_LF(), parExpr(), ast.newNode(AstKind.AST_EXPR_MULT))));
 	}
 
 	public Rule parExpr()
 	{
-		return firstOf(castExpr(), groupedExpr(), unaryExpr());
+		return FirstOf(castExpr(), groupedExpr(), unaryExpr());
 	}
 
 	public Rule castExpr()
 	{
-		return sequence(sequence(PAR_L, type(), ast.newNode(AstKind.AST_TYPE), PAR_R, parExpr(), ast.newNode(AstKind.AST_EXPR)), ast.newNode(AstKind.AST_EXR_CAST));
+		return Sequence(Sequence(PAR_L, type(), ast.newNode(AstKind.AST_TYPE), PAR_R, parExpr(), ast.newNode(AstKind.AST_EXPR)), ast.newNode(AstKind.AST_EXR_CAST));
 	}
 
 	public Rule groupedExpr()
 	{
-		return sequence(PAR_L, OPT_LF(), expr(), OPT_LF(), PAR_R, zeroOrMore(termChain()));
+		return Sequence(PAR_L, OPT_LF(), expr(), OPT_LF(), PAR_R, ZeroOrMore(termChain()));
 	}
 
 	public Rule unaryExpr()
 	{
 		// grouped with postfixEpr to avoid looking for termExpr twice (very slow parsing !)
-		return firstOf(prefixExpr(), sequence(termExpr(), optional(firstOf(OP_2MINUS, OP_2PLUS))));
+		return FirstOf(prefixExpr(), Sequence(termExpr(), Optional(FirstOf(OP_2MINUS, OP_2PLUS))));
 	}
 
 	public Rule prefixExpr()
 	{
-		return sequence(
-			firstOf(OP_CURRY, OP_BANG, OP_2PLUS, OP_2MINUS, OP_PLUS, OP_MINUS),
+		return Sequence(
+			FirstOf(OP_CURRY, OP_BANG, OP_2PLUS, OP_2MINUS, OP_PLUS, OP_MINUS),
 			parExpr());
 	}
 
 	public Rule termExpr()
 	{
-		return sequence(termBase(), zeroOrMore(termChain()));
+		return Sequence(termBase(), ZeroOrMore(termChain()));
 	}
 
 	public Rule termBase()
 	{
 		// check for ID alone last (and not as part of idExpr) otherwise it would never check literal & typebase !
-		return firstOf(idExprReq(), litteral(), typeBase(), sequence(id(), ast.newNode(AstKind.AST_ID)));
+		return FirstOf(idExprReq(), litteral(), typeBase(), Sequence(id(), ast.newNode(AstKind.AST_ID)));
 	}
 
 	public Rule typeBase()
 	{
-		return firstOf(
-				enforcedSequence(sequence(OP_POUND, id()), ast.newNode(AstKind.AST_TYPE_LITTERAL)), // slot litteral (without type)
+		return FirstOf(
+				enforcedSequence(Sequence(OP_POUND, id()), ast.newNode(AstKind.AST_TYPE_LITTERAL)), // slot litteral (without type)
 				closure(),
-				sequence(dsl(), ast.newNode(AstKind.AST_DSL)), // DSL
+				Sequence(dsl(), ast.newNode(AstKind.AST_DSL)), // DSL
 				// Optimized by grouping all the items that start with "type" (since looking for type if resource intensive)
-				sequence(type(), ast.newNode(AstKind.AST_ID),
-				firstOf(
-					sequence(sequence(OP_POUND, optional(id())), ast.newNode(AstKind.AST_TYPE_LITTERAL)), // type/slot litteral
-					sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_CALL)), // named super
-					sequence(sequence(DOT, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR)), // static call
-					sequence(PAR_L, expr(), PAR_R), // simple ?? (ctor call)
+				Sequence(type(), ast.newNode(AstKind.AST_ID),
+				FirstOf(
+					Sequence(Sequence(OP_POUND, Optional(id())), ast.newNode(AstKind.AST_TYPE_LITTERAL)), // type/slot litteral
+					Sequence(DOT, KW_SUPER, ast.newNode(AstKind.AST_CALL)), // named super
+					Sequence(Sequence(DOT, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR)), // static call
+					Sequence(PAR_L, expr(), PAR_R), // simple ?? (ctor call)
 					ctorBlock() // ctor block
 				)));
 	}
 
 	public Rule ctorBlock()
 	{
-		return sequence(
+		return Sequence(
 			OPT_LF(),
-			enforcedSequence(sequence(BRACKET_L,
+			enforcedSequence(Sequence(BRACKET_L,
 			// Note, don't allow field accesors to be parsed as ctorBlock
-			testNot(sequence(inFieldInit, OPT_LF(), firstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)))),
-			zeroOrMore(stmt()), BRACKET_R), ast.newScopeNode(AstKind.AST_CTOR_BLOCK));
+			TestNot(Sequence(inFieldInit, OPT_LF(), FirstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)))),
+			ZeroOrMore(stmt()), BRACKET_R), ast.newScopeNode(AstKind.AST_CTOR_BLOCK));
 	}
 
 	public Rule dsl()
 	{
 		//TODO: unclosed DSL ?
-		return sequence(simpleType(), ast.newNode(AstKind.AST_TYPE),
-			enforcedSequence(DSL_OPEN, OPT_LF(), zeroOrMore(sequence(testNot(DSL_CLOSE), any())), OPT_LF(), DSL_CLOSE)).label(TokenName.DSL.name());
+		return Sequence(simpleType(), ast.newNode(AstKind.AST_TYPE),
+			enforcedSequence(DSL_OPEN, OPT_LF(), ZeroOrMore(Sequence(TestNot(DSL_CLOSE), Any())), OPT_LF(), DSL_CLOSE)).label(TokenName.DSL.name());
 	}
 
 	public Rule closure()
 	{
-		return sequence(sequence(OPT_LF(), funcType(), OPT_LF(),
-			sequence(enforcedSequence(BRACKET_L, zeroOrMore(stmt()), BRACKET_R), ast.newScopeNode(AstKind.AST_BLOCK))
+		return Sequence(Sequence(OPT_LF(), funcType(), OPT_LF(),
+			Sequence(enforcedSequence(BRACKET_L, ZeroOrMore(stmt()), BRACKET_R), ast.newScopeNode(AstKind.AST_BLOCK))
 			), ast.newNode(AstKind.AST_CLOSURE));
 	}
 
 	public Rule itBlock()
 	{
-		return sequence(
+		return Sequence(
 			OPT_LF(),
-			enforcedSequence(sequence(BRACKET_L,
+			enforcedSequence(Sequence(BRACKET_L,
 			// Note, don't allow field accesors to be parsed as itBlock
-			testNot(sequence(inFieldInit, OPT_LF(), firstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)/*, echo("Skipping itBlock")*/))),
-			zeroOrMore(stmt()), BRACKET_R), ast.newScopeNode(AstKind.AST_IT_BLOCK));
+			TestNot(Sequence(inFieldInit, OPT_LF(), FirstOf(protection(), KW_STATIC, KW_READONLY, GET, SET, GET, SET)/*, echo("Skipping itBlock")*/))),
+			ZeroOrMore(stmt()), BRACKET_R), ast.newScopeNode(AstKind.AST_IT_BLOCK));
 	}
 
 	public Rule termChain()
 	{
-		return sequence(OPT_LF(),
-				firstOf(safeDotCall(), safeDynCall(), dotCall(), dynCall(), indexExpr(),
+		return Sequence(OPT_LF(),
+				FirstOf(safeDotCall(), safeDynCall(), dotCall(), dynCall(), indexExpr(),
 			callOp(), itBlock(), incCall()));
 	}
 
 	public Rule dotCall()
 	{
-		// test not "..", as this would be a range
-		return sequence(enforcedSequence(sequence(DOT, testNot(DOT)), ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
+		// Test not "..", as this would be a range
+		return Sequence(enforcedSequence(Sequence(DOT, TestNot(DOT)), ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
 	}
 
 	public Rule dynCall()
 	{
-		return sequence(enforcedSequence(OP_ARROW, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
+		return Sequence(enforcedSequence(OP_ARROW, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
 	}
 
 	public Rule safeDotCall()
 	{
-		return sequence(enforcedSequence(OP_SAFE_CALL, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
+		return Sequence(enforcedSequence(OP_SAFE_CALL, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
 	}
 
 	public Rule safeDynCall()
 	{
-		return sequence(enforcedSequence(OP_SAFE_DYN_CALL, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
+		return Sequence(enforcedSequence(OP_SAFE_DYN_CALL, ast.newNode(AstKind.LBL_OP), idExpr()), ast.newNode(AstKind.AST_CALL_EXPR));
 	}
 
 	// incomplete dot call, make valid to allow for completion
 	//TODO: this is not shown as an error
 	public Rule incCall()
 	{
-		return sequence(testNot(sequence(DOT, DOT)), // DOT DOT would be a range.
-			firstOf(DOT, OP_SAFE_DYN_CALL), ast.newNode(AstKind.AST_INC_CALL));
+		return Sequence(TestNot(Sequence(DOT, DOT)), // DOT DOT would be a range.
+			FirstOf(DOT, OP_SAFE_DYN_CALL), ast.newNode(AstKind.AST_INC_CALL));
 	}
 
 	public Rule idExpr()
 	{
 		// this can be either a local def(toto.value) or a call(toto.getValue or toto.getValue(<params>)) + opt. closure
-		return firstOf(idExprReq(), 
-				sequence(
-					sequence(id(), ast.newNode(AstKind.AST_ID))
+		return FirstOf(idExprReq(),
+				Sequence(
+					Sequence(id(), ast.newNode(AstKind.AST_ID))
 					,ast.newNode(AstKind.AST_CALL)));
 	}
 
 	public Rule idExprReq()
 	{
 		// Same but without matching ID by itself (this would prevent termbase from checking literals).
-		return firstOf(field(), call());
+		return FirstOf(field(), call());
 	}
 
 	// require '*' otherwise it's just and ID (this would prevent termbase from checking literals)
 	public Rule field()
 	{
-		return sequence(OP_MULT, id(), ast.newNode(AstKind.AST_ID));
+		return Sequence(OP_MULT, id(), ast.newNode(AstKind.AST_ID));
 	}
 
 	// require params or/and closure, otherwise it's just and ID (this would prevent termbase from checking literals)
 	public Rule call()
 	{
-		return sequence(sequence(id(), ast.newNode(AstKind.AST_ID),
-			firstOf(
-			sequence(noSpace(), enforcedSequence(PAR_L, OPT_LF(), optional(args()), PAR_R), optional(closure())), //params & opt. closure
+		return Sequence(Sequence(id(), ast.newNode(AstKind.AST_ID),
+			FirstOf(
+			Sequence(noSpace(), enforcedSequence(PAR_L, OPT_LF(), Optional(args()), PAR_R), Optional(closure())), //params & opt. closure
 			closure())), ast.newNode(AstKind.AST_CALL)); // closure only
 	}
 
 	public Rule indexExpr()
 	{
-		return sequence(noSpace(), SQ_BRACKET_L, expr(), ast.newNode(AstKind.AST_EXPR_INDEX), SQ_BRACKET_R);
+		return Sequence(noSpace(), SQ_BRACKET_L, expr(), ast.newNode(AstKind.AST_EXPR_INDEX), SQ_BRACKET_R);
 	}
 
 	public Rule callOp()
 	{
-		return enforcedSequence(noSpace(), PAR_L, optional(args()), PAR_R, optional(closure()));
+		return enforcedSequence(noSpace(), PAR_L, Optional(args()), PAR_R, Optional(closure()));
 	}
 
 	public Rule litteral()
 	{
-		return firstOf(litteralBase(), list(), map());
+		return FirstOf(litteralBase(), list(), map());
 	}
 
 	public Rule litteralBase()
 	{
-		return sequence(firstOf(KW_NULL, KW_THIS, KW_SUPER, KW_IT, KW_TRUE, KW_FALSE,
+		return Sequence(FirstOf(KW_NULL, KW_THIS, KW_SUPER, KW_IT, KW_TRUE, KW_FALSE,
 			strs(), uri(), number(), char_()), ast.newNode(AstKind.AST_EXPR_LIT_BASE));
 	}
 
 	public Rule list()
 	{
-		return sequence(sequence(
-			optional(sequence(type(), ast.newNode(AstKind.AST_TYPE))), OPT_LF(),
+		return Sequence(Sequence(
+			Optional(Sequence(type(), ast.newNode(AstKind.AST_TYPE))), OPT_LF(),
 			SQ_BRACKET_L, OPT_LF(), listItems(), OPT_LF(), SQ_BRACKET_R), ast.newNode(AstKind.AST_LIST));
 	}
 
 	public Rule listItems()
 	{
-		return firstOf(
+		return FirstOf(
 			SP_COMMA,
 			// allow extra comma
-			sequence(expr(), zeroOrMore(sequence(SP_COMMA, OPT_LF(), expr())), optional(SP_COMMA)));
+			Sequence(expr(), ZeroOrMore(Sequence(SP_COMMA, OPT_LF(), expr())), Optional(SP_COMMA)));
 	}
 
 	public Rule map()
 	{
-		return sequence(sequence(
-			optional(sequence(firstOf(mapType(), simpleMapType()), ast.newNode(AstKind.AST_TYPE))),
+		return Sequence(Sequence(
+			Optional(Sequence(FirstOf(mapType(), simpleMapType()), ast.newNode(AstKind.AST_TYPE))),
 			// Not enforced to allow resolving list of typed maps like [Str:Int][]
-			sequence(SQ_BRACKET_L, OPT_LF(), mapItems(), OPT_LF(), SQ_BRACKET_R)),ast.newNode(AstKind.AST_MAP));
+			Sequence(SQ_BRACKET_L, OPT_LF(), mapItems(), OPT_LF(), SQ_BRACKET_R)),ast.newNode(AstKind.AST_MAP));
 	}
 
 	public Rule mapItems()
 	{
-		return firstOf(SP_COL,//empty map
+		return FirstOf(SP_COL,//empty map
 			// allow extra comma
-			sequence(mapPair(), zeroOrMore(sequence(SP_COMMA, OPT_LF(), mapPair())), optional(SP_COMMA)));
+			Sequence(mapPair(), ZeroOrMore(Sequence(SP_COMMA, OPT_LF(), mapPair())), Optional(SP_COMMA)));
 	}
 
 	public Rule mapPair()
 	{
 		// allowing all expressions is probably more than really needed
-		return sequence(sequence(expr(), enforcedSequence(SP_COL, expr())), ast.newNode(AstKind.AST_MAP_PAIR));
+		return Sequence(Sequence(expr(), enforcedSequence(SP_COL, expr())), ast.newNode(AstKind.AST_MAP_PAIR));
 	}
 
 	public Rule mapItem()
@@ -706,110 +706,110 @@ public class FantomParser extends BaseParser<AstNode>
 	}
 
 	// ------------ Litteral items ---------------------------------------------
-	@Leaf
+	@SuppressSubnodes
 	public Rule strs()
 	{
-		return firstOf(
+		return FirstOf(
 			enforcedSequence("\"\"\"", // triple quoted string, // (not using 3QUOTE terminal, since it could consume empty space inside the string)
-			zeroOrMore(firstOf(
+			ZeroOrMore(FirstOf(
 			unicodeChar(),
 			escapedChar(),
-			sequence(testNot(QUOTES3), any()))), QUOTES3),
+			Sequence(TestNot(QUOTES3), Any()))), QUOTES3),
 			enforcedSequence("\"", // simple string, (not using QUOTE terminal, since it could consume empty space inside the string)
-			zeroOrMore(firstOf(
+			ZeroOrMore(FirstOf(
 			unicodeChar(),
 			escapedChar(),
-			sequence(testNot(QUOTE), any()))), QUOTE)).label(TokenName.STRS.name());
+			Sequence(TestNot(QUOTE), Any()))), QUOTE)).label(TokenName.STRS.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule uri()
 	{
 		return enforcedSequence("`",// (not using TICK terminal, since it could consume empty space inside the string)
-			zeroOrMore(firstOf(
+			ZeroOrMore(FirstOf(
 			unicodeChar(),
-			// missing from Fantom litteral page, special URI escape sequences
-			sequence('\\', firstOf(':','/','#','[',']','@','&','=',';','?')),
+			// missing from Fantom litteral page, special URI escape Sequences
+			Sequence('\\', FirstOf(':','/','#','[',']','@','&','=',';','?')),
 			escapedChar(),
-			sequence(testNot(TICK), any()))),
+			Sequence(TestNot(TICK), Any()))),
 			TICK).label(TokenName.URI.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule char_()
 	{
 		return enforcedSequence('\'',// (not using SINGLE_Q terminal, since it could consume empty space inside the char)
-				firstOf(
+				FirstOf(
 				unicodeChar(),
 				escapedChar(), // standard esapes
-				any()), //all else
+				Any()), //all else
 				SINGLE_Q).label(TokenName.CHAR_.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule escapedChar()
 	{
-		return enforcedSequence('\\', firstOf('b', 'f', 'n', 'r', 't', '"', '\'', '`', '$', '\\'));
+		return enforcedSequence('\\', FirstOf('b', 'f', 'n', 'r', 't', '"', '\'', '`', '$', '\\'));
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule unicodeChar()
 	{
 		return enforcedSequence("\\u", hexDigit(), hexDigit(), hexDigit(), hexDigit());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule hexDigit()
 	{
-		return firstOf(digit(),
-			charRange('a', 'f'),
-			charRange('A', 'F'));
+		return FirstOf(digit(),
+			CharRange('a', 'f'),
+			CharRange('A', 'F'));
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule digit()
 	{
-		return charRange('0', '9');
+		return CharRange('0', '9');
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule number()
 	{
-		return sequence(
-			optional(OP_MINUS),
-			firstOf(
+		return Sequence(
+			Optional(OP_MINUS),
+			FirstOf(
 			// hex number
-			enforcedSequence(firstOf("0x", "0X"), oneOrMore(firstOf("_", hexDigit()))),
+			enforcedSequence(FirstOf("0x", "0X"), OneOrMore(FirstOf("_", hexDigit()))),
 			// decimal
 			// fractional
-			enforcedSequence(fraction(), optional(exponent())),
+			enforcedSequence(fraction(), Optional(exponent())),
 			enforcedSequence(digit(),
-			zeroOrMore(sequence(zeroOrMore("_"), digit())),
-			optional(fraction()),
-			optional(exponent()))),
-			optional(nbType()), OPT_SP).label(TokenName.NUMBER.name());
+			ZeroOrMore(Sequence(ZeroOrMore("_"), digit())),
+			Optional(fraction()),
+			Optional(exponent()))),
+			Optional(nbType()), OPT_SP).label(TokenName.NUMBER.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule fraction()
 	{
 		// not enfored to allow: "3.times ||" constructs as well as ranges 3..5
-		return sequence(DOT, digit(), zeroOrMore(sequence(zeroOrMore("_"), digit())));
+		return Sequence(DOT, digit(), ZeroOrMore(Sequence(ZeroOrMore("_"), digit())));
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule exponent()
 	{
-		return enforcedSequence(charSet("eE"),
-			optional(firstOf(OP_PLUS, OP_MINUS)),
+		return enforcedSequence(CharSet("eE"),
+			Optional(FirstOf(OP_PLUS, OP_MINUS)),
 			digit(),
-			zeroOrMore(sequence(zeroOrMore("_"), digit())));
+			ZeroOrMore(Sequence(ZeroOrMore("_"), digit())));
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule nbType()
 	{
-		return firstOf(
+		return FirstOf(
 			"day", "hr", "min", "sec", "ms", "ns", //durations
 			"f", "F", "D", "d" // float / decimal
 			);
@@ -821,82 +821,82 @@ public class FantomParser extends BaseParser<AstNode>
 	 */
 	public Rule type()
 	{
-		return sequence(
-			firstOf(
+		return Sequence(
+			FirstOf(
 				mapType(),
 				funcType(),
-				sequence(id(), optional(sequence(noSpace(), SP_COLCOL, noSpace(), id())))
+				Sequence(id(), Optional(Sequence(noSpace(), SP_COLCOL, noSpace(), id())))
 				),
-			// Look for optional map/list/nullable items
+			// Look for Optional map/list/nullable items
 			// Note: ? folowed by a dot is nor part of the type (null check call)
-			optional(sequence(noSpace(), SP_QMARK, testNot(DOT))), //nullable
-			zeroOrMore(sequence(noSpace(),SQ_BRACKET_L, SQ_BRACKET_R)),//list(s)
+			Optional(Sequence(noSpace(), SP_QMARK, TestNot(DOT))), //nullable
+			ZeroOrMore(Sequence(noSpace(),SQ_BRACKET_L, SQ_BRACKET_R)),//list(s)
 			// Do not allow simple maps within left side of expressions ... this causes issues with ":"
-			optional(sequence(testNot(noSimpleMap), SP_COL, type())),//simple map Int:Str
-			optional(sequence(noSpace(), SP_QMARK, testNot(DOT))) // nullable list/map
+			Optional(Sequence(TestNot(noSimpleMap), SP_COL, type())),//simple map Int:Str
+			Optional(Sequence(noSpace(), SP_QMARK, TestNot(DOT))) // nullable list/map
 			);
 	}
 
 	public Rule simpleMapType()
 	{
 		// It has to be other nonSimpleMapTypes, otherwise it's left recursive (loops forever)
-		return sequence(nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(),
-			optional(
+		return Sequence(nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(),
+			Optional(
 			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(optional(sequence(noSpace(),SP_QMARK, testNot(DOT))), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(sequence(noSpace(),SP_QMARK, testNot(DOT)))); // nullable
+			Sequence(Optional(Sequence(noSpace(),SP_QMARK, TestNot(DOT))), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			Optional(Sequence(noSpace(),SP_QMARK, TestNot(DOT)))); // nullable
 	}
  
 	// all types except simple map
 	public Rule nonSimpleMapTypes()
 	{
-		return sequence(
-			firstOf(funcType(), mapType(), simpleType()),
-			optional(
+		return Sequence(
+			FirstOf(funcType(), mapType(), simpleType()),
+			Optional(
 			// Not enforcing [] because of problems with maps like this Str:int["":5]
-			sequence(optional(sequence(noSpace(),SP_QMARK, testNot(DOT))), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
-			optional(sequence(noSpace(),SP_QMARK, testNot(DOT)))); // nullable
+			Sequence(Optional(Sequence(noSpace(),SP_QMARK, TestNot(DOT))), SQ_BRACKET_L, SQ_BRACKET_R)), // list of '?[]'
+			Optional(Sequence(noSpace(),SP_QMARK, TestNot(DOT)))); // nullable
 	}
  
 	public Rule simpleType()
 	{
-		return sequence(
+		return Sequence(
 			id(),
-			optional(enforcedSequence(SP_COLCOL, id())));
+			Optional(enforcedSequence(SP_COLCOL, id())));
 	}
 
 	public Rule mapType()
 	{
 		// We use nonSimpleMapTypes here as well, because [Str:Int:Str] would be confusing
 		// not enforced to allow map rule to work ([Int:Str][5,""])
-		return sequence(SQ_BRACKET_L, nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(), SQ_BRACKET_R);
+		return Sequence(SQ_BRACKET_L, nonSimpleMapTypes(), SP_COL, nonSimpleMapTypes(), SQ_BRACKET_R);
 	}
 
 	public Rule funcType()
 	{
-		return sequence(
-			testNot(OP_OR), // '||' that's a logical OR not a function type
+		return Sequence(
+			TestNot(OP_OR), // '||' that's a logical OR not a function type
 			// '|' could be the closing pipe so we can't enforce
-			sequence(SP_PIPE,
-			firstOf(
+			Sequence(SP_PIPE,
+			FirstOf(
 			// First we check for one with no formals |->| or |->Str|
-			enforcedSequence(OP_ARROW, optional(sequence(type(), ast.newNode(AstKind.AST_TYPE)))),
+			enforcedSequence(OP_ARROW, Optional(Sequence(type(), ast.newNode(AstKind.AST_TYPE)))),
 			// Then we check for one with formals |Int i| or maybe full: |Int i -> Str|
-			sequence(formals(), optional(enforcedSequence(OP_ARROW, optional(sequence(type(), ast.newNode(AstKind.AST_TYPE))))))),
+			Sequence(formals(), Optional(enforcedSequence(OP_ARROW, Optional(Sequence(type(), ast.newNode(AstKind.AST_TYPE))))))),
 			SP_PIPE));
 	}
 
 	public Rule formals()
 	{
 		// Allowing funcType within formals | |Int-Str a| -> Str|
-		return sequence(
+		return Sequence(
 			formal(),
-			zeroOrMore(enforcedSequence(SP_COMMA, formal())));
+			ZeroOrMore(enforcedSequence(SP_COMMA, formal())));
 	}
 
 	public Rule typeList()
 	{
-		return sequence(type(), ast.newNode(AstKind.AST_TYPE), zeroOrMore(enforcedSequence(SP_COMMA, type(), ast.newNode(AstKind.AST_TYPE))));
+		return Sequence(type(), ast.newNode(AstKind.AST_TYPE), ZeroOrMore(enforcedSequence(SP_COMMA, type(), ast.newNode(AstKind.AST_TYPE))));
 	}
 
 	public Rule formal()
@@ -904,96 +904,96 @@ public class FantomParser extends BaseParser<AstNode>
 		// Note it can be "type id", "type" or "id"
 		// but parser can't know if it's "type" or "id" so always recognize as type
 		// so would never actually hit id()
-		return sequence(firstOf(
+		return Sequence(FirstOf(
 			typeAndId(),
-			sequence(type(), ast.newNode(AstKind.AST_ID)))
+			Sequence(type(), ast.newNode(AstKind.AST_ID)))
 			/*, id()*/
 			, ast.newNode(AstKind.AST_FORMAL));
 	}
 	// ------------ Misc -------------------------------------------------------
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule id()
 	{
-		return sequence(testNot(keyword()),
-			sequence(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
-			zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9')))),
+		return Sequence(TestNot(keyword()),
+			Sequence(FirstOf(CharRange('A', 'Z'), CharRange('a', 'z'), "_"),
+			ZeroOrMore(FirstOf(CharRange('A', 'Z'), CharRange('a', 'z'), '_', CharRange('0', '9')))),
 			OPT_SP).label(TokenName.ID.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule doc()
 	{
 		// In theory there are no empty lines betwen doc and type ... but that does happen so alowing it
-		return oneOrMore(sequence(OPT_SP, "**", zeroOrMore(sequence(testNot("\n"), any())), OPT_LF())).label(TokenName.DOC.name());
+		return OneOrMore(Sequence(OPT_SP, "**", ZeroOrMore(Sequence(TestNot("\n"), Any())), OPT_LF())).label(TokenName.DOC.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule spacing()
 	{
-		return oneOrMore(firstOf(
+		return OneOrMore(FirstOf(
 			// whitespace (Do NOT eat \n since it can be meaningful)
 			whiteSpace(), comment())).label(TokenName.SPACING.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule whiteSpace()
 	{
-		return oneOrMore(charSet(" \t\u000c")).label(TokenName.WHITESPACE.name());
+		return OneOrMore(CharSet(" \t\u000c")).label(TokenName.WHITESPACE.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule comment()
 	{
-		return firstOf(
+		return FirstOf(
 			// multiline comment
-			sequence("/*", zeroOrMore(sequence(testNot("*/"), any())), "*/"),
+			Sequence("/*", ZeroOrMore(Sequence(TestNot("*/"), Any())), "*/"),
 			// if incomplete multiline comment, then end at end of line
-			sequence("/*", zeroOrMore(sequence(testNot(charSet("\r\n")), any()))),
+			Sequence("/*", ZeroOrMore(Sequence(TestNot(CharSet("\r\n")), Any()))),
 			// single line comment
-			sequence("//", zeroOrMore(sequence(testNot(charSet("\r\n")), any())))).label(TokenName.COMMENT.name());
+			Sequence("//", ZeroOrMore(Sequence(TestNot(CharSet("\r\n")), Any())))).label(TokenName.COMMENT.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule LF()
 	{
-		return sequence(oneOrMore(sequence(OPT_SP, charSet("\n\r"))), OPT_SP).label(TokenName.LF.name());
+		return Sequence(OneOrMore(Sequence(OPT_SP, CharSet("\n\r"))), OPT_SP).label(TokenName.LF.name());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule OPT_LF()
 	{
-		return optional(LF());
+		return Optional(LF());
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule keyword(String string)
 	{
-		// Makes sure not to match things that START with a keyword like "thisisatest"
-		return sequence(string,
-			testNot(firstOf(digit(), charRange('A', 'Z'), charRange('a', 'z'), "_")),
-			optional(spacing())).label(string);
+		// Makes sure not to match things that START with a keyword like "thisisaTest"
+		return Sequence(string,
+			TestNot(FirstOf(digit(), CharRange('A', 'Z'), CharRange('a', 'z'), "_")),
+			Optional(spacing())).label(string);
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule terminal(String string)
 	{
-		return sequence(string, optional(spacing())).label(string);
+		return Sequence(string, Optional(spacing())).label(string);
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule terminal(String string, Rule mustNotFollow)
 	{
-		return sequence(string, testNot(mustNotFollow), optional(spacing())).label(string);
+		return Sequence(string, TestNot(mustNotFollow), Optional(spacing())).label(string);
 	}
 
-	@Leaf
+	@SuppressSubnodes
 	public Rule keyword()
 	{
-		return sequence(
+		return Sequence(
 			// don't bother unless it starts with 'a'-'z'
-			test(charRange('a', 'z')),
-			firstOf(KW_ABSTRACT, KW_AS, KW_ASSERT, KW_BREAK, KW_CATCH, KW_CASE, KW_CLASS,
+			Test(CharRange('a', 'z')),
+			FirstOf(KW_ABSTRACT, KW_AS, KW_ASSERT, KW_BREAK, KW_CATCH, KW_CASE, KW_CLASS,
 			KW_CONST, KW_CONTINUE, KW_DEFAULT, KW_DO, KW_ELSE, KW_FALSE, KW_FINAL,
 			KW_FINALLY, KW_FOR, KW_FOREACH, KW_IF, KW_INTERNAL, KW_IS, KW_ISNOT, KW_IT,
 			KW_MIXIN, KW_NATIVE, KW_NEW, KW_NULL, KW_ONCE, KW_OVERRIDE, KW_PRIVATE,
@@ -1073,9 +1073,9 @@ public class FantomParser extends BaseParser<AstNode>
 	public final Rule OP_MODULO = terminal("%");
 	public final Rule OP_POUND = terminal("#");
 	// comparators
-	public final Rule CP_EQUALITY = firstOf(terminal("==="), terminal("!=="),
+	public final Rule CP_EQUALITY = FirstOf(terminal("==="), terminal("!=="),
 		terminal("=="), terminal("!="));
-	public final Rule CP_COMPARATORS = firstOf(terminal("<=>"), terminal("<="),
+	public final Rule CP_COMPARATORS = FirstOf(terminal("<=>"), terminal("<="),
 		terminal(">="), terminal("<"), terminal(">"));
 	// separators
 	public final Rule SP_PIPE = terminal("|");
@@ -1087,7 +1087,7 @@ public class FantomParser extends BaseParser<AstNode>
 	// assignment
 	public final Rule AS_INIT = terminal(":=");
 	public final Rule AS_EQUAL = terminal("=");
-	public final Rule AS_OPS = firstOf(terminal("*="), terminal("/="),
+	public final Rule AS_OPS = FirstOf(terminal("*="), terminal("/="),
 		terminal("%="), terminal("+="), terminal("-="));
 	// others
 	public final Rule QUOTES3 = terminal("\"\"\"");
@@ -1104,28 +1104,28 @@ public class FantomParser extends BaseParser<AstNode>
 	public final Rule BRACKET_R = terminal("}").label(TokenName.BRACKET_R.name());
 	public final Rule PAR_L = terminal("(").label(TokenName.PAR_L.name());
 	public final Rule PAR_R = terminal(")").label(TokenName.PAR_R.name());
-	// shortcut for optional spacing
-	public final Rule OPT_SP = optional(spacing());
+	// shortcut for Optional spacing
+	public final Rule OPT_SP = Optional(spacing());
 
 	// ----------- Custom action rules -----------------------------------------
 	/**
 	 * Custom action to find an end of statement
 	 * @return
 	 */
-	@Leaf
+	@SuppressSubnodes
 	public Rule eos()
 	{
-		return sequence(OPT_SP, firstOf(
+		return Sequence(OPT_SP, FirstOf(
 			SP_SEMI, // ;
 			LF(), // \n
-			test(BRACKET_R), // '}' is end of statement too, but do NOT consume it !
-			test(eoi()))); // EOI is end of statement too, but do NOT consume it !
+			Test(BRACKET_R), // '}' is end of statement too, but do NOT consume it !
+			Test(Eoi()))); // EOI is end of statement too, but do NOT consume it !
 	}
 
 	/**Pass if not following some whitespace*/
 	public Rule noSpace()
 	{
-		return testNot(toRule(afterSpace()));
+		return TestNot(ToRule(afterSpace()));
 	}
 
 	public boolean afterSpace()
@@ -1152,14 +1152,14 @@ public class FantomParser extends BaseParser<AstNode>
 		return true;
 	}
 	/**
-	 * In Parboiled 0.9.5.0, enforcedSequence was removed, just use sequence now.
+	 * In Parboiled 0.9.5.0, enforcedSequence was removed, just use Sequence now.
 	 * Maybe do a replaceAll later.
 	 * @param rules
 	 * @return
 	 */
 	public Rule enforcedSequence(Object... rules)
 	{
-		return sequence(rules);
+		return Sequence(rules);
 	}
 
 	// Debugging utils
@@ -1191,18 +1191,18 @@ public class FantomParser extends BaseParser<AstNode>
 
 		// ============ Simulate a lexer ===========================================
 	// This should just create tokens for the items we want to highlight(color) in the IDE
-	// It should be able to deal with "anything" and not ever fail if possible.
+	// It should be able to deal with "Anything" and not ever fail if possible.
 	public Rule lexer()
 	{
-		// If any changes made here, keep in sync with lexerTokens list in FantomParserTokens.java
-		return sequence(
-				zeroOrMore(lexerItem()).label("lexerItems"),
-				optional(eoi())); // until end of file
+		// If Any changes made here, keep in sync with lexerTokens list in FantomParserTokens.java
+		return Sequence(
+				ZeroOrMore(lexerItem()).label("lexerItems"),
+				Optional(Eoi())); // until end of file
 	}
 
 	public Rule lexerItem()
 	{
-		return firstOf(
+		return FirstOf(
 				comment(), unixLine(), doc(),
 				strs(), uri(), char_(), dsl(),
 				lexerInit(), lexerComps(), lexerAssign(), lexerOps(), lexerSeps(), // operators/separators
@@ -1211,37 +1211,37 @@ public class FantomParser extends BaseParser<AstNode>
 				whiteSpace(),
 				// "Any" includes "everything else" - items withough highlighting.
 				// "Any" is also is a catchall for other unexpected items (should not happen)
-				any().label(TokenName.UNEXPECTED.name()));
+				Any().label(TokenName.UNEXPECTED.name()));
 	}
 
 	public Rule lexerId()
 	{
 		// same as ID but don't allow space/commennts
-		return sequence(testNot(keyword()),
-				sequence(firstOf(charRange('A', 'Z'), charRange('a', 'z'), "_"),
-				zeroOrMore(firstOf(charRange('A', 'Z'), charRange('a', 'z'), '_', charRange('0', '9'))))).label(TokenName.LEXERID.name());
+		return Sequence(TestNot(keyword()),
+				Sequence(FirstOf(CharRange('A', 'Z'), CharRange('a', 'z'), "_"),
+				ZeroOrMore(FirstOf(CharRange('A', 'Z'), CharRange('a', 'z'), '_', CharRange('0', '9'))))).label(TokenName.LEXERID.name());
 	}
 
 	public Rule lexerOps()
 	{
-		return firstOf(OP_2MINUS, OP_2PLUS, OP_AND, OP_ARROW, AS_INIT, OP_BANG, OP_CURRY, OP_DIV, OP_ELVIS,
+		return FirstOf(OP_2MINUS, OP_2PLUS, OP_AND, OP_ARROW, AS_INIT, OP_BANG, OP_CURRY, OP_DIV, OP_ELVIS,
 				OP_MINUS, OP_MODULO, OP_MULT, OP_OR, OP_PLUS, OP_POUND, OP_RANGE, OP_RANGE_EXCL, OP_SAFE_CALL,
 				OP_SAFE_DYN_CALL).label(TokenName.LEXEROPS.name());
 	}
 
 	public Rule lexerSeps()
 	{
-		return firstOf(SP_COL, SP_COLCOL, SP_COMMA, SP_PIPE, SP_QMARK, SP_SEMI).label(TokenName.LEXERSEPS.name());
+		return FirstOf(SP_COL, SP_COLCOL, SP_COMMA, SP_PIPE, SP_QMARK, SP_SEMI).label(TokenName.LEXERSEPS.name());
 	}
 
 	public Rule lexerComps()
 	{
-		return firstOf(CP_COMPARATORS, CP_EQUALITY).label(TokenName.LEXERCOMPS.name());
+		return FirstOf(CP_COMPARATORS, CP_EQUALITY).label(TokenName.LEXERCOMPS.name());
 	}
 
 	public Rule lexerAssign()
 	{
-		return firstOf(AS_EQUAL, AS_OPS).label(TokenName.LEXERASSIGN.name());
+		return FirstOf(AS_EQUAL, AS_OPS).label(TokenName.LEXERASSIGN.name());
 	}
 
 	public Rule lexerInit()
@@ -1269,6 +1269,6 @@ public class FantomParser extends BaseParser<AstNode>
 	// for unit tsting
 	public Rule testExpr()
 	{
-		return sequence(expr(), ast.newRootNode(AstKind.DUMMY_ROOT_NODE, parserTask));
+		return Sequence(expr(), ast.newRootNode(AstKind.DUMMY_ROOT_NODE, parserTask));
 	}
 }

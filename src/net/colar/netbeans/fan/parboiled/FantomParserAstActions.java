@@ -29,10 +29,10 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 	 */
 	public boolean newNode(AstKind kind)
 	{
-		Node<AstNode> parseNode = LAST_NODE();
-		AstNode node = new AstNode(kind, getPath(), parseNode, LAST_TEXT());
+		Node<AstNode> parseNode = lastNode();
+		AstNode node = new AstNode(kind, getPath(), parseNode, lastText());
 		linkNode(node);
-		SET(node);
+		set(node);
 		//System.out.println(node+" : "+LAST_TEXT());
 		return true;
 	}
@@ -44,11 +44,11 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 	 */
 	public boolean newScopeNode(AstKind kind)
 	{
-		Node<AstNode> parseNode = LAST_NODE();
-		AstNode node = new AstNode(kind, getPath(), parseNode, LAST_TEXT());
+		Node<AstNode> parseNode = lastNode();
+		AstNode node = new AstNode(kind, getPath(), parseNode, lastText());
 		node.setIsScopeNode();
 		linkNode(node);
-		SET(node);
+		set(node);
 		return true;
 	}
 
@@ -59,11 +59,11 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 	 */
 	public boolean newRootNode(AstKind kind, FanParserTask task)
 	{
-		Node<AstNode> parseNode = LAST_NODE();
+		Node<AstNode> parseNode = lastNode();
 		RootNode node = new RootNode(kind, getPath(), parseNode, task);
 		node.setIsScopeNode();
 		linkNode(node);
-		SET(node);
+		set(node);
 		return true;
 	}
 
@@ -94,6 +94,6 @@ public class FantomParserAstActions extends BaseActions<AstNode>
 
 	public String getPath()
 	{
-		return getContext().getPath().toString()+"/"+LAST_NODE().getLabel();
+		return getContext().getPath().toString()+"/"+lastNode().getLabel();
 	}
 }

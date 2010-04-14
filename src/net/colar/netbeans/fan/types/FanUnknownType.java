@@ -10,7 +10,7 @@ import net.colar.netbeans.fan.parboiled.AstNode;
 
 /**
  * Special type that is marked as resolved (ie no warnings)
- * But is not known (no complwtion etc..)
+ * But is not known (no completion etc..)
  * Typically for dynamic calls for example.
  *
  * Maybe also types that are not supported yet.
@@ -20,6 +20,6 @@ public class FanUnknownType extends FanResolvedType
 {
 	public FanUnknownType(AstNode node, String enteredType)
 	{
-		super(node, enteredType, new FanDummyType(enteredType));
+		super(node, enteredType, new FanDummyType(enteredType), false, true);
 	}
 }

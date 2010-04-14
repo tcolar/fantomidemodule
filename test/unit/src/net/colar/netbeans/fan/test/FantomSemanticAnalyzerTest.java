@@ -22,13 +22,18 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 	final String[] badFiles =
 	{
 		"/src/compiler/fan/steps/CheckErrors.fan", // ternary value assignment
-		"/src/compilerJs/fan/runner/TestRunner.fan", //javax.script
-		"/src/compilerJs/fan/runner/Runner.fan", // javax.script
 		"/src/compilerJs/fan/runner/Dump.fan", // ?? closure formal indexing ?
 		"/src/flux/fluxText/fan/TextEditor.fan", // it/this ?
 		"/src/testSys/fan/ProcessTest.fan", // closure implicit "it" var
 		"/src/testSys/fan/RangeTest.fan", // Range like 0..1 
 		"/src/testSys/fan/ClosureTest.fan", // closure 'it' on local function call
+	};
+	
+	final String[] ignoredFiles =
+	{
+		// skip those files (known errors)
+		"/src/compilerJs/fan/runner/TestRunner.fan", // javax.script with java 1.5
+		"/src/compilerJs/fan/runner/Runner.fan" // javax.script with java 1.5
 	};
 
 	public void cslTest() throws Throwable
@@ -38,13 +43,12 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		failedListFile = new File(prefs.getString("test.home") + File.separator + "failed.txt");
 		failedListFile.delete();
 
-		//String fanHome = prefs.getString("fantom.home");
-		//testAllFanFilesUnder(fanHome + "/src/");
+		testAllFanFilesUnder(fanHome + "/src/");
 
-		for (String file : badFiles)
+		/*for (String file : badFiles)
 		{
 			testFile(new File(fanHome, file));
-		}
+		}*/
 	}
 
 	private void testAllFanFilesUnder(String folderPath) throws Exception
@@ -52,7 +56,18 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 		List<File> files = NBTestUtilities.listAllFanFilesUnder(folderPath);
 		for (File f : files)
 		{
-			testFile(f);
+			boolean skip = false;
+			for (String p : ignoredFiles)
+			{
+				if (f.getPath().endsWith(p))
+				{
+					skip = true;
+				}
+			}
+			if (!skip)
+			{
+				testFile(f);
+			}
 		}
 	}
 

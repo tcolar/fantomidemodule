@@ -35,8 +35,8 @@ public class FantomParserTest extends FantomCSLTest
 		boolean singleTest = false;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
-		boolean fantomFilesTest = false; // parse fantom distro files
-		boolean fantomFilesLexerTest = false; // parse fantom distro files (lexer rules)
+		boolean fantomFilesTest = true; // parse fantom distro files
+		boolean fantomFilesLexerTest = true; // parse fantom distro files (lexer rules)
 
 		if (singleTest)
 		{
