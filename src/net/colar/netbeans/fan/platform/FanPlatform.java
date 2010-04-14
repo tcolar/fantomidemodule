@@ -173,7 +173,7 @@ public class FanPlatform
 		fanExec.addCommandArg(classpath);
 
 		//Set lib path
-		String libPath = buildLibraryPath();
+		String libPath = buildExtLibraryPath();
 		fanExec.addCommandArg("-Djava.library.path=" + libPath);
 
 		//Set fan.home 
@@ -195,7 +195,7 @@ public class FanPlatform
 		String[] options = option.split(" ");
 		for (String opt : options)
 		{
-			fanExec.addCommandArg(opt);
+                    fanExec.addCommandArg(opt);
 		}
 
 
@@ -258,7 +258,13 @@ public class FanPlatform
 		return cp;
 	}
 
-	public String buildLibraryPath()
+	public String buildSysPodPath()
+	{
+            String s = File.separator;
+            String libDir = fanHome + "lib" + s + "fan";
+            return libDir;
+        }
+	public String buildExtLibraryPath()
 	{
 		String s = File.separator;
 		String extDir = fanHome + "lib" + s + "java" + s + "ext";
