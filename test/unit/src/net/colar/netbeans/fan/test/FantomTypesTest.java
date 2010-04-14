@@ -51,9 +51,6 @@ public class FantomTypesTest extends FantomCSLTest
 		addUsingsToNode(node, testUsings);
 		addTypeSlotsToNode(node, task, testSlots);
 
-		//checkExpr("Regex<|(a*)(a+)|>.matcher(\"aaaa\")", null, false, false);
-		//checkExpr("buildTest { it.x=\"x\" },    [\"x\",\"\"])", null, false, false);
-		//checkExpr("verify(0..1  == 0..1)", null, false,false);
 		
 		// Testing type signature stuff
 		FanResolvedType t = FanResolvedType.makeFromTypeSig(node, "sys::Str");
@@ -184,6 +181,11 @@ public class FantomTypesTest extends FantomCSLTest
 		t = mkt("web::Weblet", node);
 		p = t.getParentType();
 		JOTTester.checkIf("Mixin parent is Obj", p.getDbType().getQualifiedName().equals("sys::Obj"), p.toString());
+
+		// Still failing items:
+		checkExpr("3>2 ? `gg` : null ", "sys::Uri[]?", true, false); // ternary result
+		checkExpr("Regex<|(a*)(a+)|>", "sys::Regex", false, false); // DSL call
+		checkExpr("Str<|{\"foo\": 1234}|>.in", "sys::InStream", false, false); // DSL too
 	}
 
 	private FanResolvedType mkt(String qType, AstNode node)

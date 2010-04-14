@@ -21,35 +21,24 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 	File failedListFile = null;
 	final String[] badFiles =
 	{
-		"/home/thibautc/fantom-1.0.52/src/docCompiler/fan/html/FandocToHtmlGenerator.fan",
-		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Token.fan",
-		"/home/thibautc/fantom-1.0.52/src/compiler/fan/parser/Tokenizer.fan",
-		"/home/thibautc/fantom-1.0.52/src/compiler/fan/util/CallResolver.fan",
-		"/home/thibautc/fantom-1.0.52/src/compiler/fan/steps/CheckErrors.fan",
-		"/home/thibautc/fantom-1.0.52/src/fandoc/fan/FandocParser.fan",
-		"/home/thibautc/fantom-1.0.52/src/fandoc/fan/DocModel.fan",
-		"/home/thibautc/fantom-1.0.52/src/util/test/JsonTest.fan",
-		"/home/thibautc/fantom-1.0.52/src/docCompiler/fan/html/PodDocGenerator.fan",
-		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/ast/JsMethod.fan",
-		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/ast/JsPod.fan",
-		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/TestRunner.fan",
-		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/Runner.fan",
-		"/home/thibautc/fantom-1.0.52/src/compilerJs/fan/runner/Dump.fan",
-		"/home/thibautc/fantom-1.0.52/src/flux/fluxText/fan/TextEditor.fan",
-		"/home/thibautc/fantom-1.0.52/src/flux/fluxText/fan/Parser.fan",
-		"/home/thibautc/fantom-1.0.52/src/flux/flux/fan/View.fan",
-		"/home/thibautc/fantom-1.0.52/src/json/test/JsonTestCase.fan",
-		"/home/thibautc/fantom-1.0.52/src/json/test/SimpleJsonTest.fan",
-		"/home/thibautc/fantom-1.0.52/src/json/test/BrowserTest.fan",
-		"/home/thibautc/fantom-1.0.52/src/testSys/fan/ExprTest.fan",
-		"/home/thibautc/fantom-1.0.52/src/testSys/fan/ProcessTest.fan",
-		"/home/thibautc/fantom-1.0.52/src/testSys/fan/RangeTest.fan",
-		"/home/thibautc/fantom-1.0.52/src/testSys/fan/RegexTest.fan",
-		"/home/thibautc/fantom-1.0.52/src/testSys/fan/ClosureTest.fan",
+		"/src/compiler/fan/steps/CheckErrors.fan", // ternary value assignment
+		"/src/util/test/JsonTest.fan", // DSL
+		"/src/compilerJs/fan/runner/TestRunner.fan", //javax.script
+		"/src/compilerJs/fan/runner/Runner.fan", // javax.script
+		"/src/compilerJs/fan/runner/Dump.fan", // ?? closuref ormnal indexing ?
+		"/src/flux/fluxText/fan/TextEditor.fan", // it/this ?
+		"/src/json/test/JsonTestCase.fan", // DSL
+		"/src/json/test/SimpleJsonTest.fan", // DSL
+		"/src/json/test/BrowserTest.fan", // DSL
+		"/src/testSys/fan/ProcessTest.fan", // closure implicit "it" var
+		"/src/testSys/fan/RangeTest.fan", // Range like 0..1 
+		"/src/testSys/fan/RegexTest.fan", // DSL
+		"/src/testSys/fan/ClosureTest.fan", // closure 'it' on local function call
 	};
 
 	public void cslTest() throws Throwable
 	{
+		String fanHome = prefs.getString("fantom.home");
 		// Outputs the names of the failed files into a text file, ina  format that makes it easy to use in a java string array
 		failedListFile = new File(prefs.getString("test.home") + File.separator + "failed.txt");
 		failedListFile.delete();
@@ -59,7 +48,7 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 
 		for (String file : badFiles)
 		{
-			testFile(new File(file));
+			testFile(new File(fanHome, file));
 		}
 	}
 
