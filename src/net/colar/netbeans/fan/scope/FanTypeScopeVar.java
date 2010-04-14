@@ -154,7 +154,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 						FanDummySlot val = new FanDummySlot(nm, getQName(), VarKind.FIELD.value());
 						val.setIsStatic(true);
 						val.setIsConst(true);
-						FanAstScopeVarBase valVar = new FanLocalScopeVar(node, getType(), val, val.getName());
+						FanAstScopeVarBase valVar = new FanLocalScopeVar(enumName, getType(), val, val.getName());
 						node.addScopeVar(valVar, true);
 					} else
 					{
@@ -218,6 +218,8 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 					}
 			}
 		}
+		// TODO: need to parse static block as well (init blocks)
+		// TODO: need to parse field initializer blocks as well
 	}
 
 	private boolean hasInheritedClass()

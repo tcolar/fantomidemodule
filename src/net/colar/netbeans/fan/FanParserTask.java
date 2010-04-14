@@ -335,11 +335,13 @@ public class FanParserTask extends ParserResult
 			{
 				for (FanAstScopeVarBase var : node.getLocalScopeVars().values())
 				{
+				    if(var.getKind() == VarKind.CTOR || var.getKind() == VarKind.METHOD
+					    && ! (var instanceof FanLocalScopeVar) ) // those are "generated" - no node to parse
+				    {
 					if (invalidated)
 					{
 						return; // bailing out if task cancelled
 					}
-					// should be slots
 					AstNode bkNode = var.getNode();
 					AstNode blockNode = FanLexAstUtils.getFirstChild(bkNode, new NodeKindPredicate(AstKind.AST_BLOCK));
 					if (blockNode != null)
@@ -352,6 +354,7 @@ public class FanParserTask extends ParserResult
 							return; // task cancelled
 						}
 					}
+				    }
 				}
 			}
 		}
@@ -507,19 +510,7 @@ public class FanParserTask extends ParserResult
 					type = doTypeLitteral(node, type);
 					break;
 				case AST_ENUM_DEFS:
-					// create a "field" var for each enum value and add it to the TypeDef scope
-					/*List<AstNode> enumVals = FanLexAstUtils.getChildren(node, new NodeKindPredicate(AstKind.AST_ENUM_NAME));
-					for(AstNode enm : enumVals)
-					{
-						String enumName=enm.getNodeText(true);
-						FanResolvedType enmType=FanResolvedType.resolveThisType(node);
-						FanDummySlot val = new FanDummySlot(enumName, enmType.getQualifiedType(), VarKind.FIELD.value());
-						val.setIsStatic(true);
-						val.setIsConst(true);
-						FanAstScopeVarBase valVar = new FanLocalScopeVar(node, enmType, val, val.getName());
-						AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
-						typeNode.addScopeVar(valVar, true);
-					}*/
+					// already dealt with in type/slot parsing
 					break;
 				case DUMMY_ROOT_NODE:
 					// have dummy_root_node (for testing) carry it's child type
@@ -797,16 +788,16 @@ public class FanParserTask extends ParserResult
 			FanResolvedType baseType = type != null ? type : FanResolvedType.resolveItType(node);
 			// when a itBlock follows a call, it's actually a sort of closure call (with block)
 			AstNode child = children.get(i);
-			if (/*child.getKind() == AstKind.AST_CALL || */child.getKind() == AstKind.AST_CALL_EXPR)
+			if (child.getKind() == AstKind.AST_CALL || child.getKind() == AstKind.AST_CALL_EXPR)
 			{
 				if (i + 1 < children.size())
 				{
 					AstNode nextChild = children.get(i + 1);
 					if (nextChild.getKind() == AstKind.AST_IT_BLOCK)
 					{
-						AstNode callChild = /*child.getKind() == AstKind.AST_CALL
+						AstNode callChild = child.getKind() == AstKind.AST_CALL
 							? child
-							: */FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_CALL)); // call expr
+							: FanLexAstUtils.getFirstChild(child, new NodeKindPredicate(AstKind.AST_CALL)); // call expr
 						// parse the whole thing as a closure call
 						type = doCall(callChild, type, nextChild);
 						// skip next child since we juts did it
