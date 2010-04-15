@@ -23,7 +23,7 @@ public class FantomLexer extends FantomParser
 	@Override
 	public Rule spacing()
 	{
-		return ToRule(false);
+		return toRule(false);
 	}
 
 }
