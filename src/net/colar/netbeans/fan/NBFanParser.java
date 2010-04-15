@@ -6,13 +6,11 @@ package net.colar.netbeans.fan;
 
 import javax.swing.event.ChangeListener;
 import net.colar.netbeans.fan.indexer.FanIndexer;
-import net.colar.netbeans.fan.platform.FanPlatform;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
-import org.openide.filesystems.FileUtil;
 
 /**
  *

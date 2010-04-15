@@ -110,7 +110,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 			FanParserTask result = (FanParserTask) context.getParserResult();
 			if (result != null)
 			{
-				result.addError("Completion error", e);
+				result.addGlobalError("Completion error "+e, e);
 			}
 		}
 

@@ -81,6 +81,7 @@ public class FanParserTask extends ParserResult
 	private HashMap<String, List<FanSlot>> typeSlotsCache = new HashMap<String, List<FanSlot>>();
 	private FantomParser parser;
 	private boolean localScopeDone;
+	boolean hasGlobalError=false;
 
 	public FanParserTask(Snapshot snapshot)
 	{
@@ -145,11 +146,12 @@ public class FanParserTask extends ParserResult
 		return getSnapshot().getSource().getDocument(true);
 	}
 
-	public void addError(String title, Throwable t)
+	public void addGlobalError(String title, Throwable t)
 	{
 		// "High level error"
 		Error error = DefaultError.createDefaultError(title, title, title, null, 0, 0, true, Severity.ERROR);
 		errors.add(error);
+
 	}
 
 	/**
@@ -224,8 +226,9 @@ public class FanParserTask extends ParserResult
 			}
 		} catch (Exception e)
 		{
-			addError("Parser error", e);
+			addGlobalError("Parser error", e);
 			e.printStackTrace();
+			hasGlobalError=true;
 		}
 
 		FanUtilities.GENERIC_LOGGER.info("Parsing completed in " + (new Date().getTime() - start) + " for : " + sourceName);
@@ -1438,6 +1441,11 @@ public class FanParserTask extends ParserResult
 		{
 			parser.cancel();
 		}
+	}
+
+	public boolean hasGlobalError()
+	{
+		return hasGlobalError;
 	}
 }
 

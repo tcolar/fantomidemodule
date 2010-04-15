@@ -96,6 +96,8 @@ public class FanSlotProposal extends FanCompletionProposal
 				prefix += ")";
 			}
 			html += args + ")";
+			//TODO: if last non defaulted param is a function propose something like
+			// .each {}    or .call |str->int| {}
 		} else
 		{
 			FanUtilities.GENERIC_LOGGER.error("Unknown Slot type: " +slot.slotKind);
