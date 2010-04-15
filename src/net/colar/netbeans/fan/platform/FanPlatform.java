@@ -173,7 +173,7 @@ public class FanPlatform
 		fanExec.addCommandArg(classpath);
 
 		//Set lib path
-		String libPath = buildExtLibraryPath();
+		String libPath = buildLibraryPath();
 		fanExec.addCommandArg("-Djava.library.path=" + libPath);
 
 		//Set fan.home 
@@ -240,8 +240,7 @@ public class FanPlatform
 		{
 			os = "win";
 		}
-
-		extDir += s + os + "-" + ("i386".equals(ARCH) ? "x86" : ("amd64".equals(ARCH) ? "x86_64" : ARCH));
+		extDir += s + os;
 		dir = new File(extDir);
 		if (dir.exists() && dir.isDirectory())
 		{
@@ -258,13 +257,7 @@ public class FanPlatform
 		return cp;
 	}
 
-	public String buildSysPodPath()
-	{
-            String s = File.separator;
-            String libDir = fanHome + "lib" + s + "fan";
-            return libDir;
-        }
-	public String buildExtLibraryPath()
+	private String buildLibraryPath()
 	{
 		String s = File.separator;
 		String extDir = fanHome + "lib" + s + "java" + s + "ext";
@@ -276,7 +269,7 @@ public class FanPlatform
 		{
 			os = "win";
 		}
-		extDir += s + os + "-" + ("i386".equals(ARCH) ? "x86" : ("amd64".equals(ARCH) ? "x86_64" : ARCH));
+		extDir += s + os;
 		return extDir;
 	}
 

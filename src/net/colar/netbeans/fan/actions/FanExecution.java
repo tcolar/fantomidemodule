@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.Future;
+import net.colar.netbeans.fan.FanUtilities;
 import net.jot.logger.JOTLogger;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory;
@@ -33,11 +34,9 @@ public class FanExecution
 {
 	// execution commands
 
-        private String runtimeArguments;
-        private String outputDirectory;
 	private String command;
 	private String workingDirectory;
-	private Vector<String> commandArgs=new Vector<String>();
+	private Vector<String> commandArgs=new Vector();
 	//private String path;
 	private String displayName;
 	private boolean redirect;
@@ -57,12 +56,12 @@ public class FanExecution
 	@Override
 	public String toString()
 	{
-            StringBuilder sb = new StringBuilder("Executing in [").append(workingDirectory).append("] ").append(command).append(" ");
-            for(String arg : commandArgs)
-            {
-                    sb=sb.append(arg).append(" ");
-            }
-            return sb.toString();
+		StringBuilder sb = new StringBuilder("Executing in [").append(workingDirectory).append("] ").append(command).append(" ");
+		for(String arg : commandArgs)
+		{
+			sb=sb.append(arg).append(" ");
+		}
+		return sb.toString();
 	}
 
 	public ExecutionDescriptor toExecutionDescriptor()
@@ -80,65 +79,52 @@ public class FanExecution
 	{
 		try
 		{
-                    ExecutionService service =
-                                    ExecutionService.newService(
-                                    buildProcess(),
-                                    descriptor, displayName);
-                    //io = descriptor.getInputOutput();
-                    // Start Service
-                    JOTLogger.info(this, toString());
-                    return service.run();
+			ExecutionService service =
+					ExecutionService.newService(
+					buildProcess(),
+					descriptor, displayName);
+			//io = descriptor.getInputOutput();
+			// Start Service
+			JOTLogger.info(this, toString());
+			return service.run();
 			//io = InputOutputManager.getInputOutput(displayName, true, path).getInputOutput();
 		} catch (Exception ex)
 		{
-                    Exceptions.printStackTrace(ex);
-                    return null;
+			Exceptions.printStackTrace(ex);
+			return null;
 		}
 
 	}
 
 	public ExternalProcessBuilder buildProcess() throws IOException
 	{
-		ExternalProcessBuilder processBuilder = new ExternalProcessBuilder(command);
+		ExternalProcessBuilder processBuilder =
+				new ExternalProcessBuilder(command);
 		if (workingDirectory == null)
 		{
-                    workingDirectory = new File(System.getProperty("user.home")).getAbsolutePath();
+			workingDirectory = new File(System.getProperty("user.home")).getAbsolutePath();
 		}
-                if (null != outputDirectory && !"".equals(outputDirectory)) {
-                    processBuilder = processBuilder.addEnvironmentVariable("FAN_ENV", "util::PathEnv");
-                    String s = outputDirectory.replaceAll("lib/fan/", "");
-                    processBuilder = processBuilder.addEnvironmentVariable("FAN_ENV_PATH", s);
-                }
 		processBuilder = processBuilder.workingDirectory(new File(workingDirectory));
 		String cmdStr="[";
-		for(int i=0; i < commandArgs.size(); i++)
+		for(int i=0; i!=commandArgs.size(); i++)
 		{
 			String arg=commandArgs.get(i);
 			if (arg != null && arg.trim().length() > 0)
 			{
-                            processBuilder = processBuilder.addArgument(arg);
+				processBuilder = processBuilder.addArgument(arg);
 			}
 			cmdStr+=arg+", ";
 		}
-                if (null != runtimeArguments && !"".equals(runtimeArguments)) {
-                    String[] args = runtimeArguments.split(" ");
-                    for (int i = 0; i < args.length; i++) {
-			if (args[i] != null && args[i].trim().length() > 0)
-			{
-                            processBuilder = processBuilder.addArgument(args[i].trim());
-			}
-			cmdStr+=args[i]+", ";
-                    }
-                }
 		cmdStr+="]";
-                
+
 		processBuilder = processBuilder.redirectErrorStream(redirect);
 		return processBuilder;
 	}
 
 	private ExecutionDescriptor buildDescriptor()
 	{
-            return descriptor;
+
+		return descriptor;
 	}
 
 	public synchronized String getCommand()
@@ -159,14 +145,9 @@ public class FanExecution
 	public synchronized void addCommandArg(String arg)
 	{
 		if(arg!=null && arg.length()>0)
-                    commandArgs.add(arg);
+			commandArgs.add(arg);
 	}
-        public synchronized void setOutputDirectory(String var) {
-            outputDirectory = var;
-        }
-        public synchronized void setRuntimeArguments(String var) {
-            runtimeArguments = var;
-        }
+
 	public synchronized String getWorkingDirectory()
 	{
 		return workingDirectory;
@@ -287,6 +268,7 @@ public class FanExecution
 	{
 		descriptor = descriptor.outProcessorFactory(new ExecutionDescriptor.InputProcessorFactory()
 		{
+
 			public InputProcessor newInputProcessor()
 			{
 				return outProcessor;

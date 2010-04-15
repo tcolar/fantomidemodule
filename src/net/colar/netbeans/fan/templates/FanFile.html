@@ -1,13 +1,12 @@
 ${license}
 //
 // History:
-//   ${date}  ${user}  Creation
+//   ${date} ${user} Creation
 //
 
 **
 ** ${name}
-**
-<jot:if eval="doClass">class ${name}
+**<jot:if eval="doClass">class ${name}
 {
     <jot:if eval="doMain">
     **
@@ -19,23 +18,19 @@ ${license}
     }
     </jot:if>
 }
-</jot:if>
-<jot:if eval="doMixin">
+</jot:if><jot:if eval="doMixin">
 mixin ${name}
 {
     // TODO
 }
-</jot:if>
-<jot:if eval="doEnum">
+</jot:if><jot:if eval="doEnum">
 enum class ${name}
 {
     // TODO
 }
-</jot:if>
-<jot:if eval="doFacet">
+</jot:if><jot:if eval="doFacet">
 facet class ${name}
 {
-    const Str name := ""
-    const Bool autoCreate
+    // TODO
 }
 </jot:if>

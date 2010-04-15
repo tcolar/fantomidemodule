@@ -13,11 +13,12 @@ import java.util.Set;
 import javax.swing.event.ChangeListener;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.project.FanProjectProperties;
-import net.colar.netbeans.fan.project.FanBuild;
 import net.colar.netbeans.fan.templates.TemplateUtils;
 import net.colar.netbeans.fan.templates.TemplateView;
+import net.jot.logger.JOTLogger;
 import net.jot.web.views.JOTLightweightView;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
+import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -45,9 +46,9 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		if (panels == null)
 		{
 			panels = new WizardDescriptor.Panel[]
-                        {
-                            new FanPodWizardPanel1(System.getProperty("user.dir")),
-                        };
+				{
+					new FanPodWizardPanel1(System.getProperty("user.dir")),
+				};
 		}
 		return panels;
 	}
@@ -65,92 +66,87 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 	public Set instantiate() throws IOException
 	{
 		FanPodWizardPanel1 panel = getPanel();
+		String podFolder = panel.getProjectFolder();
+		String podName = panel.getPodName();
+		String podDesc = panel.getPodDesc();
+		boolean createBuildFile = panel.getCreateBuildFile();
+
 		// create project
-                String podFolder = panel.getProjectFolder();
 		File pf = FileUtil.normalizeFile(new File(podFolder));
 		pf.mkdirs();
 		FileObject pfFo = FileUtil.toFileObject(pf);
-                
 		// fan sources folder
 		File fan = FileUtil.normalizeFile(new File(pf, "fan"));
 		fan.mkdirs();
-                FileObject fanFo = FileUtil.toFileObject(fan);
-
+		File test = FileUtil.normalizeFile(new File(pf, "test"));
+		test.mkdirs();
+		//build.fan
+		FileObject fanFo = FileUtil.toFileObject(fan);
+		FileObject testFo = FileUtil.toFileObject(test);
+		FileObject buildFo = null;
 		FileObject buildTemplate = Templates.getTemplate(wizard);
 
 		// Create main class
-                String name = panel.getMainClassName();
-		if (name != null)
+		if (panel.getMainClassName() != null)
 		{
-                    File mainFile = new File(fan, name + ".fan");
-                    JOTLightweightView view = new TemplateView(buildTemplate, name);
-                    view.addVariable("doClass", Boolean.TRUE);
-                    view.addVariable("doMain", Boolean.TRUE);
-                    FileObject license = FanUtilities.getRelativeFileObject(buildTemplate, "../../Licenses/FanDefaultLicense.txt");
-                    view.addVariable("license", license.asText());
-                    FileObject newTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../Fantom/FantomFile");
-                    String templateText = newTemplate.asText();
-                    //open it in editor
-                    TemplateUtils.createFromTemplate(view, templateText, mainFile);
-                    FanUtilities.openFileInEditor(mainFile);
-                    // save main class in props
-                    /*File props = new File(pf.getAbsolutePath() + File.separator + FanProjectProperties.PROJ_PROPS_PATH);
-                    props.getParentFile().mkdirs();
-                    Hashtable<String, String> map = new Hashtable<String, String>();
-                    map.put(FanProjectProperties.MAIN_METHOD, name + ".main");
-                    FanProjectProperties.createFromScratch(map, props);*/
+			String name = panel.getMainClassName();
+			File mainFile = new File(fan, name + ".fan");
+			JOTLightweightView view = new TemplateView(buildTemplate, name);
+			view.addVariable("doClass", Boolean.TRUE);
+			view.addVariable("doMain", Boolean.TRUE);
+			FileObject license = FanUtilities.getRelativeFileObject(buildTemplate, "../../Licenses/FanDefaultLicense.txt");
+			view.addVariable("license", license.asText());
+			FileObject newTemplate = FanUtilities.getRelativeFileObject(buildTemplate, "../../Fantom/FantomFile");
+			String templateText = newTemplate.asText();
+			//open it in editor
+			TemplateUtils.createFromTemplate(view, templateText, mainFile);
+			FanUtilities.openFileInEditor(mainFile);
+			// save main class in props
+			File props = new File(pf.getAbsolutePath() + File.separator + FanProjectProperties.PROJ_PROPS_PATH);
+			props.getParentFile().mkdirs();
+			Hashtable<String, String> map = new Hashtable<String, String>();
+			map.put(FanProjectProperties.MAIN_METHOD, name + ".main");
+			FanProjectProperties.createFromScratch(map, props);
 		}
-                // save main class in props
-                File props = new File(pf.getAbsolutePath() + File.separator + FanProjectProperties.PROJ_PROPS_PATH);
-                props.getParentFile().mkdirs();
-                Hashtable<String, String> map = new Hashtable<String, String>();
-                if (name != null) {
-                    if (!name.endsWith(".main")) {
-                        name += ".main";
-                    }
-                    map.put(FanProjectProperties.MAIN_METHOD, name);
-                }
-                String buildFanTemplateURI = buildTemplate.getURL().toExternalForm();
-                map.put(FanProjectProperties.BUILD_FAN_TEMPLATE, buildFanTemplateURI);
 
-                FanProjectProperties.createFromScratch(map, props);
 
 		// Create the build file LAST, because as soon as that is created,
 		// NB will recognize this as a project, so we want everything(props) to be ready by then
-                FanBuild build = new FanBuild(podFolder);
-                build.setPodName(panel.getPodName());
-                build.setPodDescription(panel.getPodDesc());
-                build.setPodVersion(panel.getPodVersion());
-                build.setDependencies(panel.getDependencies());
-                build.setMeta(panel.getMeta());
-                build.setIndex(panel.getIndex());
-                build.setOutputDirectory(panel.getOutDir());
-                build.setDocSrc(panel.getDocSrc());
-                build.setDocApi(panel.getDocApi());
-                build.setSourceDirs(panel.getSourceDirs());
-                build.setResourceDirs(panel.getResourceDirs());
-                build.create(buildFanTemplateURI);
+		if (createBuildFile)
+		{
+			JOTLightweightView view = new TemplateView(buildTemplate, podName);
 
-                File b = new File(podFolder, "build.fan");
-                FileObject buildFo = null;
-                if (b.exists()) {
-                    buildFo = FileUtil.toFileObject(b);
-                }
+			view.addVariable("desc", podDesc);
+
+			File buildFile = new File(pf, "build.fan");
+
+			buildFo = FileUtil.toFileObject(buildFile);
+
+			FileObject license = FanUtilities.getRelativeFileObject(buildTemplate, "../../Licenses/FanDefaultLicense.txt");
+			view.addVariable("license", license.asText());
+
+			String buildText = buildTemplate.asText();
+
+			// create build.fan
+			TemplateUtils.createFromTemplate(view, buildText, buildFile);
+
+		}
 
 		// Look for nested projects to open as well:
-		LinkedHashSet<FileObject> resultSet = new LinkedHashSet<FileObject>();
+		LinkedHashSet resultSet = new LinkedHashSet();
 		resultSet.add(pfFo);
 		resultSet.add(fanFo);
+		resultSet.add(testFo);
 		if (buildFo != null)
 		{
-                    resultSet.add(buildFo);
+			resultSet.add(buildFo);
 		}
 
 		File parent = pf.getParentFile();
 		// Always open top dir as a project:
 		if (parent != null && parent.exists())
 		{
-                    ProjectChooser.setProjectsFolder(parent);
+			ProjectChooser.setProjectsFolder(parent);
 		}
 
 		return resultSet;

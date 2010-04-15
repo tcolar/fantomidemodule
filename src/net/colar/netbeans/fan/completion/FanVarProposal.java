@@ -4,7 +4,6 @@
 package net.colar.netbeans.fan.completion;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Vector;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.FanIndexer;
@@ -98,22 +97,16 @@ public class FanVarProposal extends FanCompletionProposal
 					this.kind = ElementKind.CONSTRUCTOR;
 				}
 				String args = "";
+				html = name + "(";
+				prefix = name + "(";
 				rHtml = FanType.getShortName(slot.getReturnedType());
 				if (rHtml.equals("sys::Void"))
 				{
 					rHtml = "";
 				}
 				Vector<FanMethodParam> params = slot.getAllParameters();
-                                Iterator<FanMethodParam> i = params.iterator();
-                                FanMethodParam p = null;
-				while (i.hasNext())
+				for (FanMethodParam p : params)
 				{
-                                        p = i.next();
-                                        if (args.length() == 0) {
-                                            boolean b = p.qualifiedType.indexOf("|") != -1;
-                                            html = name + (b ? "|" : "(");
-                                            prefix = name + (b ? "|" : "(");
-                                        }
 					if (args.length() > 0)
 					{
 						args += " ,";
@@ -121,24 +114,19 @@ public class FanVarProposal extends FanCompletionProposal
 					String nm = p.getName();
 					if (p.hasDefault())
 					{
-                                            nm = "<font color='#662222'><i>" + nm + "</i></font>";
+						nm = "<font color='#662222'><i>" + p.getName() + "</i></font>";
 					} else
 					{
-                                            nm = "<font color='#AA2222'>" + nm + "</font>";
-                                        }
-                                        // only list non-defaulted parameters by default
-                                        if (!prefix.endsWith("(")&& !prefix.endsWith("|"))
-                                        {
-                                            prefix += ", ";
-                                        }
-                                        
+						nm = "<font color='#AA2222'>" + p.getName() + "</font>";
+						// only list non-defaulted parameters by default
+						if (!prefix.endsWith("("))
+						{
+							prefix += ", ";
+						}
+						prefix += p.getName();
+					}
 					String typeName = FanType.getShortName(p.getQualifiedType());
-                                        int idxOf = typeName.indexOf("->");
-                                        if (idxOf != -1) {
-                                            typeName = typeName.substring(0, idxOf);
-                                        }
 					args += typeName + " " + nm;
-                                        prefix += typeName + " " + p.getName();
 				}
 
 				// remove optional parenthesis when no parameters
@@ -147,9 +135,9 @@ public class FanVarProposal extends FanCompletionProposal
 					prefix = prefix.substring(0, prefix.length() - 1);
 				} else
 				{
-					prefix += (p.qualifiedType.indexOf("|") != -1 ? "| {}" : ")");
+					prefix += ")";
 				}
-				html += args + (p.qualifiedType.indexOf("|") != -1 ? "| {}" : ")");
+				html += args + ")";
 				handle.setDoc(FanIndexer.getSlotDoc(slot));
 				if (slot.isPrivate())
 				{

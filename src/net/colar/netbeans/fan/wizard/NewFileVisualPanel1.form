@@ -141,13 +141,12 @@
     <Component class="javax.swing.JComboBox" name="customCombo">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="6">
+          <StringArray count="5">
             <StringItem index="0" value="Add Empty Class"/>
             <StringItem index="1" value="Add Class with main method"/>
             <StringItem index="2" value="Add Mixin"/>
             <StringItem index="3" value="Add Enum"/>
-            <StringItem index="4" value="Add Facet"/>
-            <StringItem index="5" value="Leave Empty"/>
+            <StringItem index="4" value="Leave Empty"/>
           </StringArray>
         </Property>
       </Properties>

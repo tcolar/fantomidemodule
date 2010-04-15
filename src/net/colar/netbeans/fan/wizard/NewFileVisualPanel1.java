@@ -81,7 +81,7 @@ public final class NewFileVisualPanel1 extends JPanel
 
         org.openide.awt.Mnemonics.setLocalizedText(customLabel, org.openide.util.NbBundle.getMessage(NewFileVisualPanel1.class, "NewFileVisualPanel1.customLabel.text")); // NOI18N
 
-        customCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Add Empty Class", "Add Class with main method", "Add Mixin", "Add Enum", "Add Facet", "Leave Empty" }));
+        customCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Add Empty Class", "Add Class with main method", "Add Mixin", "Add Enum", "Leave Empty" }));
 
         org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(NewFileVisualPanel1.class, "NewFileVisualPanel1.browseButton.text")); // NOI18N
         browseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -178,7 +178,7 @@ public final class NewFileVisualPanel1 extends JPanel
     {//GEN-HEADEREND:event_extFieldKeyReleased
 		updateFile();
     }//GEN-LAST:event_extFieldKeyReleased
-        @Override
+
 	public boolean isValid()
 	{
 		if (folderField == null)
