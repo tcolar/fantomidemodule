@@ -93,7 +93,7 @@ public class DebugFanPodAction extends FanAction
 			Map<String,Object> map = new HashMap<String,Object>();
 			String sourceRoot = System.getProperty("test.dir.src");
 			URL sourceUrl = new File(sourceRoot).toURI().toURL();
-			String sourceUrlStr = sourceUrl.toString() + "/";
+			String sourceUrlStr = sourceUrl.toString() + File.separator;
 			sourceUrl = new URL(sourceUrlStr);
 			ClassPath cp = ClassPathSupport.createClassPath(new URL[]
 				{

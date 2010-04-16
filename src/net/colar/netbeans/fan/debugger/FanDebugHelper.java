@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.debugger;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import net.colar.netbeans.fan.FanUtilities;
@@ -50,7 +51,7 @@ public class FanDebugHelper
 			bp.setStratum("Fan");
 			bp.setHidden(false);
 			bp.setSourceName(name);
-			bp.setPrintText("[" + pod + "] " + "/" + path);
+			bp.setPrintText("[" + pod + "] " + File.separator + path);
 			/*
 			 * SourcePath is required to match path in jar (LineBreakPointImpl check this)
 			 * so we have no choice but to give that path rather than the 'real' path
@@ -58,7 +59,7 @@ public class FanDebugHelper
 			 * given this 'jar' path.
 			 * The binary path is fan.{podname}.{typename}
 			 */
-			bp.setSourcePath("fan/"+pod + "/" + name);
+			bp.setSourcePath("fan/"+pod + File.separator + name);
 			bp.setPreferredClassName(filter);
 			bp.setSuspend(LineBreakpoint.SUSPEND_ALL);
 			FanUtilities.GENERIC_LOGGER.debug("bp class:" + bp.getPreferredClassName());

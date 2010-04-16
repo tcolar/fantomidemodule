@@ -322,7 +322,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 			{
 				String relPath = path.substring(folder.getPath().length());
 				// TODO: Ugly: I should lookup the java folder from build.fan rather than hardcoded
-				if (relPath.endsWith(".java") && relPath.startsWith("/java/"))
+				if (relPath.endsWith(".java") && relPath.startsWith(File.separator+"java"+File.separator))
 				{
 					// Will have a fantom java path, such as : "fan/MyPod/main.java"
 					relPath = relPath.substring(6);
