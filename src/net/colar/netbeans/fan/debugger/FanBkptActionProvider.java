@@ -13,7 +13,6 @@ import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
-import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
 import org.openide.filesystems.FileObject;
@@ -24,10 +23,10 @@ import org.openide.util.WeakListeners;
  * Breakpoint action provider
  * Handles setting/unsettings breakpoints request from JPDA
  * 
- * Registered through annotation
+ * Registered through annotation - Mot anymore - that only works 1/2 the time !
  * @author thibautc
  */
-@ActionsProvider.Registration()
+//@ActionsProvider.Registration()
 public class FanBkptActionProvider extends ActionsProviderSupport implements PropertyChangeListener
 {
 
@@ -56,7 +55,7 @@ public class FanBkptActionProvider extends ActionsProviderSupport implements Pro
 	{
 		FanUtilities.GENERIC_LOGGER.info("Fan - BkptProvider doaction");
 		FileObject fo = EditorContextDispatcher.getDefault().getCurrentFile();
-		if (fo == null || !fo.getMIMEType().equals(FanLanguage.FAN_MIME_TYPE))
+		if (fo == null /*|| !fo.getMIMEType().equals(FanLanguage.FAN_MIME_TYPE)*/)
 		{
 			return;
 		}

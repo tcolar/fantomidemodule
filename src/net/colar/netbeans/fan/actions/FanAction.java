@@ -211,7 +211,7 @@ public abstract class FanAction
 		{
 			// use "main project", if fan project
 			Project prj = OpenProjects.getDefault().getMainProject();
-			if (FanProject.isProject(prj.getProjectDirectory()))
+			if (prj!=null && FanProject.isProject(prj.getProjectDirectory()))
 			{
 				file = OpenProjects.getDefault().getMainProject().getProjectDirectory();
 			}

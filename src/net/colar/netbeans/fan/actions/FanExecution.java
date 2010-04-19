@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.Future;
-import net.colar.netbeans.fan.FanUtilities;
 import net.jot.logger.JOTLogger;
+import net.jot.utils.JOTUtilities;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory;
 import org.netbeans.api.extexecution.ExecutionDescriptor.LineConvertorFactory;
@@ -23,6 +23,7 @@ import org.netbeans.api.extexecution.ExternalProcessBuilder;
 import org.netbeans.api.extexecution.input.InputProcessor;
 import org.netbeans.api.extexecution.print.LineConvertor;
 import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
 /**
@@ -36,7 +37,7 @@ public class FanExecution
 
 	private String command;
 	private String workingDirectory;
-	private Vector<String> commandArgs=new Vector();
+	private Vector<String> commandArgs = new Vector();
 	//private String path;
 	private String displayName;
 	private boolean redirect;
@@ -57,9 +58,9 @@ public class FanExecution
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder("Executing in [").append(workingDirectory).append("] ").append(command).append(" ");
-		for(String arg : commandArgs)
+		for (String arg : commandArgs)
 		{
-			sb=sb.append(arg).append(" ");
+			sb = sb.append(arg).append(" ");
 		}
 		return sb.toString();
 	}
@@ -80,9 +81,9 @@ public class FanExecution
 		try
 		{
 			ExecutionService service =
-					ExecutionService.newService(
-					buildProcess(),
-					descriptor, displayName);
+				ExecutionService.newService(
+				buildProcess(),
+				descriptor, displayName);
 			//io = descriptor.getInputOutput();
 			// Start Service
 			JOTLogger.info(this, toString());
@@ -99,23 +100,24 @@ public class FanExecution
 	public ExternalProcessBuilder buildProcess() throws IOException
 	{
 		ExternalProcessBuilder processBuilder =
-				new ExternalProcessBuilder(command);
+			new ExternalProcessBuilder(command);
 		if (workingDirectory == null)
 		{
 			workingDirectory = new File(System.getProperty("user.home")).getAbsolutePath();
 		}
-		processBuilder = processBuilder.workingDirectory(new File(workingDirectory));
-		String cmdStr="[";
-		for(int i=0; i!=commandArgs.size(); i++)
+		processBuilder = processBuilder.workingDirectory(FileUtil.normalizeFile(new File(workingDirectory)));
+		for (int i = 0; i != commandArgs.size(); i++)
 		{
-			String arg=commandArgs.get(i);
+			String arg = commandArgs.get(i);
 			if (arg != null && arg.trim().length() > 0)
 			{
+				if (JOTUtilities.isWindowsOS())
+				{
+					arg = arg.replace("\\", "\\\\");
+				}
 				processBuilder = processBuilder.addArgument(arg);
 			}
-			cmdStr+=arg+", ";
 		}
-		cmdStr+="]";
 
 		processBuilder = processBuilder.redirectErrorStream(redirect);
 		return processBuilder;
@@ -144,8 +146,10 @@ public class FanExecution
 
 	public synchronized void addCommandArg(String arg)
 	{
-		if(arg!=null && arg.length()>0)
+		if (arg != null && arg.length() > 0)
+		{
 			commandArgs.add(arg);
+		}
 	}
 
 	public synchronized String getWorkingDirectory()

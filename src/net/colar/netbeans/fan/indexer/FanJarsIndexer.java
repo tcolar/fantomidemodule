@@ -125,7 +125,7 @@ public class FanJarsIndexer implements FileChangeListener
 					String ename = entry.getName();
 					if (ename.toLowerCase().endsWith(".class"))
 					{
-						String cname = ename.substring(0, ename.length() - 6).replaceAll(File.separator, ".");
+						String cname = ename.substring(0, ename.length() - 6).replace("/", ".").replace("\\", ".");
 						// also not bothering with classes matching exclude pattern
 						boolean excluded = false;
 						for (String exclude : excludes.split(";"))

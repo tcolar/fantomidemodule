@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.project.FanProject;
+import net.jot.utils.JOTUtilities;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.GlobalPathRegistryEvent;
@@ -102,6 +103,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 					ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
 					if (cp != null)
 					{
+						//TODO: why does this contain all of fantom sources too ???
 						projectSources.add(cp);
 					}
 				}
@@ -119,9 +121,10 @@ public class FanDebugPathProvider extends SourcePathProvider
 		}
 		// Fan distro sources
 		//TODO: those are already in open projects path ????
-        if ( ! FanPlatform.isConfigured()) {
-            throw new RuntimeException("Fantom SDK not defined");
-        }
+		if (!FanPlatform.isConfigured())
+		{
+			throw new RuntimeException("Fantom SDK not defined");
+		}
 
 		fanSources = FanPlatform.getInstance().getSourceClassPaths();
 
@@ -167,7 +170,8 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getURL(String relativePath, boolean global)
 	{
-		if (relativePath.startsWith(File.separator))
+		System.out.println("Get URL: " + relativePath);
+		if (relativePath.startsWith("/"))
 		{
 			relativePath = relativePath.substring(1);
 		}
@@ -177,10 +181,10 @@ public class FanDebugPathProvider extends SourcePathProvider
 		if (relativePath != null && (relativePath.endsWith(".fan") || relativePath.endsWith(".fwt")))
 		{
 			// This is how the path looks, when coming from JPDA java breakpoint ("fan/myPod/Main.fan)
-			if (relativePath.startsWith("fan"+File.separator) || relativePath.startsWith("fanx"+File.separator))
+			if (relativePath.startsWith("fan" + "/"))
 			{
-				path = relativePath.substring(relativePath.indexOf(File.separator)+1);
-				int index = path.indexOf(File.separator);
+				path = relativePath.substring(relativePath.indexOf("/") + 1);
+				int index = path.indexOf("/");
 				String fanPath = path.substring(index + 1);
 				String pod = path.substring(0, index);
 				path = getURLPath(fanPath, pod, false);
@@ -193,9 +197,10 @@ public class FanDebugPathProvider extends SourcePathProvider
 			{
 				// normal source lookup, we get the path from getUrl()
 				// we will get something like dummy3/fan/Main.fan (the actual path under project root is just fan/Main.fan) as specially crafted in getRelativePath()
-				int index = relativePath.indexOf(File.separator) + 1;
+				// Note: always "/" not "/"
+				int index = relativePath.indexOf("/") + 1;
 				String fanPath = relativePath.substring(index);
-				String pod = relativePath.substring(0, index-1);
+				String pod = relativePath.substring(0, index - 1);
 				// We uwill check agaisnt "pod" to help find the right Source
 				path = getURLPath(fanPath, pod, false);
 				if (path != null)
@@ -206,6 +211,12 @@ public class FanDebugPathProvider extends SourcePathProvider
 		}
 
 		// If not a fan file, or not found in pods, then try "standard" way
+
+		if(relativePath.endsWith(".java") && (relativePath.startsWith("fan/") || relativePath.startsWith("fanx/")))
+		{
+			// TODO: Kinda lame, we should "search" for it, rather than assume in java folder.
+			relativePath = "java/"+relativePath;
+		}
 		path = getURLPath(relativePath, null, global);
 
 		return path;
@@ -222,8 +233,13 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	private String getURLPath(String relativePath, String pod, boolean global)
 	{
+		System.out.println("Get URL Path: " + relativePath);
 		//System.out.println(getClass().getName() + " getUrl :" + relativePath);
 		relativePath = normalize(relativePath);
+		if (JOTUtilities.isWindowsOS())
+		{
+			relativePath = relativePath.replace("/", "\\");
+		}
 
 		// Try to find it.
 		FileObject fo = findResource(projectSources, pod, relativePath);
@@ -253,7 +269,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 		try
 		{
-			//System.out.println(getClass().getName() + " getUrl result:" + fo.getURL().toString());
+			System.out.println(getClass().getName() + " getUrl result:" + fo.getURL().toString());
 			return fo.getURL().toString();
 		} catch (FileStateInvalidException e)
 		{
@@ -289,7 +305,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 	/**
 	 * Returns relative path for given url.
-	 * In theoru that would return just Main.fan for example, but if we do that we won't be able
+	 * In theory that would return just Main.fan for example, but if we do that we won't be able
 	 * to resolve the source path correctly in getUrl()
 	 * So we craft a path such as MyPod/fan/Main.fan instead.
 	 *
@@ -302,6 +318,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 	 */
 	public String getRelativePath(String url, char directorySeparator, boolean includeExtension)
 	{
+		System.out.println("Get relPath: " + url);
 		// 1) url -> FileObject
 		FileObject fo = null;
 		try
@@ -310,27 +327,37 @@ public class FanDebugPathProvider extends SourcePathProvider
 		} catch (MalformedURLException e)
 		{
 			e.printStackTrace();
+			System.out.println("relPath: null - error");
 			return null;
 		}
 
 		String path = fo.getPath();
 		File folder = FanUtilities.getPodFolderForPath(path).getParentFile();
+		System.out.println("fo path:" + path);
 		if (folder != null)
 		{ // Fantom sources
-			// construct an url like MyPod/fan/Main.fan - we will need the pod name in getUrl() to resolve the source location
-			if (path.startsWith(folder.getPath()))
+			String folderPath = folder.getPath();
+			// Not perfect, but good enough for winblows
+			if (JOTUtilities.isWindowsOS())
 			{
-				String relPath = path.substring(folder.getPath().length());
+				folderPath = folderPath.replace("\\", "/");
+			}
+			System.out.println("foder path:" + folderPath);
+			// construct an url like MyPod/fan/Main.fan - we will need the pod name in getUrl() to resolve the source location
+			if (path.startsWith(folderPath))
+			{
+				String relPath = path.substring(folderPath.length());
 				// TODO: Ugly: I should lookup the java folder from build.fan rather than hardcoded
-				if (relPath.endsWith(".java") && relPath.startsWith(File.separator+"java"+File.separator))
+				if (relPath.endsWith(".java") && relPath.startsWith("/" + "java" + "/"))
 				{
 					// Will have a fantom java path, such as : "fan/MyPod/main.java"
 					relPath = relPath.substring(6);
 				}
+				System.out.println("relPath:" + relPath);
 				return relPath;
 			}
 		}
-		
+
 		// Otherwise do a "standard" lookup
 		String relativePath = null;
 		//TODO: globalSources.getResourceName(fo,	directorySeparator,	includeExtension);
@@ -343,11 +370,13 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 		if (cp == null)
 		{
+			System.out.println("relPath: null");
 			return null;
 		}
 
 		relativePath = cp.getResourceName(fo, directorySeparator, includeExtension);
 
+		System.out.println("relPath:" + relativePath);
 		return relativePath;
 	}
 
@@ -385,6 +414,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 			try
 			{
 				String rootURL = fileObject.getURL().toString();
+				System.out.println(rootURL+" VS "+fileObject.getURL());
 				if (url.startsWith(rootURL))
 				{
 					String root = getRoot(fileObject);
@@ -563,17 +593,29 @@ public class FanDebugPathProvider extends SourcePathProvider
 				//System.out.println("---- Looking for " + path + "in " + cp.toString()+ "-> "+fo==null?"null":fo.getPath());
 			} else
 			{
-				//System.out.println("---- Searching all resources for " + path);
-				List<FileObject> fos = cp.findAllResources(path);
+				System.out.println("---- Searching all resources for " + path + "in: " + cp.toString());
+				List<FileObject> fos = new ArrayList<FileObject>();
+				if ((path.endsWith(".fan") || path.endsWith(".fwt")) && path.indexOf("/") == -1)
+				{
+					// for fan files when coming from JPDA, we don't know in which (sub)folder they are(just a file name by itself), so scan all
+					for (FileObject root : cp.getRoots())
+					{
+						findFilesNamedInFolder(fos, root, path);
+					}
+				} else
+				{
+					// standard
+					fos = cp.findAllResources(path);
+				}
 				Iterator<FileObject> it = fos.iterator();
 				while (it.hasNext())
 				{
 					FileObject fob = it.next();
-					FanUtilities.GENERIC_LOGGER.debug("---- Checking " + fob.getPath() + " vs " + pod);
+					System.out.println("---- Checking " + fob.getPath() + " vs " + pod);
 					if (FanUtilities.getPodFolderForPath(fob.getPath()).getName().equals(pod))
 					{
- 						fo = fob;
-						//System.out.println("---- MATCH " + fob.getPath() + " vs " + tail);
+						fo = fob;
+						System.out.println("---- MATCH " + fob.getPath());
 						break;
 					}
 				}
@@ -585,6 +627,29 @@ public class FanDebugPathProvider extends SourcePathProvider
 			}
 		}
 		return fo;
+	}
+
+	/**
+	 * Recursive, populates results
+	 * @param results
+	 * @param folder
+	 * @param fileName
+	 */
+	public void findFilesNamedInFolder(List<FileObject> results, FileObject folder, String fileName)
+	{
+		if (folder.isFolder())
+		{
+			for (FileObject child : folder.getChildren())
+			{
+				if (child.isFolder())
+				{
+					findFilesNamedInFolder(results, child, fileName);
+				} else if (child.getNameExt().equals(fileName))
+				{
+					results.add(child);
+				}
+			}
+		}
 	}
 
 	@Override

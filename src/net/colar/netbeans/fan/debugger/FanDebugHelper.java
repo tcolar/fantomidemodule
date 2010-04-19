@@ -3,7 +3,6 @@
  */
 package net.colar.netbeans.fan.debugger;
 
-import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import net.colar.netbeans.fan.FanUtilities;
@@ -33,11 +32,14 @@ public class FanDebugHelper
 	public static LineBreakpoint createFanBp(String url, int lineNb)
 	{
 		FanUtilities.GENERIC_LOGGER.debug("bp url: " + url);
-		URI uri=null;
+		URI uri = null;
 		try
 		{
 			uri = new URI(url);
-		}catch(Exception e){throw new RuntimeException("Create breakpoint null param ",e);}
+		} catch (Exception e)
+		{
+			throw new RuntimeException("Create breakpoint null param ", e);
+		}
 		Project prj = FileOwnerQuery.getOwner(uri);
 
 		LineBreakpoint bp = LineBreakpoint.create(url, lineNb);
@@ -47,11 +49,15 @@ public class FanDebugHelper
 			String path = getPath(prj.getProjectDirectory(), url);
 			String pod = getPod(prj);
 			String filter = getClassFilter(pod, name);
+			if (name.endsWith(".java"))
+			{
+				filter = name.substring(0, name.length() - 5).replace("/", ".") + "*";
+			}
 
 			bp.setStratum("Fan");
 			bp.setHidden(false);
 			bp.setSourceName(name);
-			bp.setPrintText("[" + pod + "] " + File.separator + path);
+			bp.setPrintText("[" + pod + "] " + "/" + path);
 			/*
 			 * SourcePath is required to match path in jar (LineBreakPointImpl check this)
 			 * so we have no choice but to give that path rather than the 'real' path
@@ -59,7 +65,7 @@ public class FanDebugHelper
 			 * given this 'jar' path.
 			 * The binary path is fan.{podname}.{typename}
 			 */
-			bp.setSourcePath("fan/"+pod + File.separator + name);
+			bp.setSourcePath("fan/" + pod + "/" + name);
 			bp.setPreferredClassName(filter);
 			bp.setSuspend(LineBreakpoint.SUSPEND_ALL);
 			FanUtilities.GENERIC_LOGGER.debug("bp class:" + bp.getPreferredClassName());
@@ -135,9 +141,9 @@ public class FanDebugHelper
 	{
 		if (name.endsWith(".fan") || name.endsWith(".fwt"))
 		{
-			name = name.substring(0, name.lastIndexOf("."));
+			name = "fan." + pod + "." + name.substring(0, name.lastIndexOf(".")) + "*";
 		}
-		return "fan." + pod + "." + name + "*";
+		return name;
 	}
 
 	private static FileObject getUrlFo(String url)

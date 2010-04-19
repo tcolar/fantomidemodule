@@ -160,10 +160,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		{
 			warnIfNecessary();
 		}
-		if (fo.getNameExt().equalsIgnoreCase("sys.pod"))
-		{
-			warnIfNecessary();
-		}
 		if (isPod)
 		{
 			fanPodsToBeIndexed.put(path, new Date().getTime());
