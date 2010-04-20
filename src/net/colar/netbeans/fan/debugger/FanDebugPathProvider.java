@@ -595,7 +595,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 			{
 				System.out.println("---- Searching all resources for " + path + "in: " + cp.toString());
 				List<FileObject> fos = new ArrayList<FileObject>();
-				if ((path.endsWith(".fan") || path.endsWith(".fwt")) && path.indexOf("/") == -1)
+				if ((path.endsWith(".fan") || path.endsWith(".fwt")) && path.indexOf(File.separator) == -1)
 				{
 					// for fan files when coming from JPDA, we don't know in which (sub)folder they are(just a file name by itself), so scan all
 					for (FileObject root : cp.getRoots())

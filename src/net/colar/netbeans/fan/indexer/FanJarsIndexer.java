@@ -712,7 +712,7 @@ public class FanJarsIndexer implements FileChangeListener
 						{
 							FanUtilities.GENERIC_LOGGER.debug("Indexing jar:  " + jar);
 							// listen to changes
-							FileUtil.addFileChangeListener(FanJarsIndexer.this, jar);
+							FileUtil.addFileChangeListener(FanJarsIndexer.this, FileUtil.normalizeFile(jar));
 							// index the pods if not up to date
 							String path = jar.getAbsolutePath();
 							if (FanIndexer.checkIfNeedsReindexing(path, jar.lastModified()))
