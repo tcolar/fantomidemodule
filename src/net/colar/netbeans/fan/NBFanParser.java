@@ -47,7 +47,7 @@ public class NBFanParser extends Parser
 		result = new FanParserTask(snapshot);
 		result.parse();
 		result.parseGlobalScope();
-		if (!isIndexing)
+		if (!isIndexing && result.getRootScope()!=null)
 		{
 			result.parseLocalScopes();
 		}
