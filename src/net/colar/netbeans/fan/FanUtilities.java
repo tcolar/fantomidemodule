@@ -135,6 +135,8 @@ public class FanUtilities
 		{
 			if (new File(folder, "build.fan").exists())
 			{
+				try
+				{
 				File buildFan = new File(folder, "build.fan");
 				fan.sys.File buildFile = new fan.sys.LocalFile(buildFan);
 				FanObj script = (FanObj) Env.cur().compileScript(buildFile).make();
@@ -150,6 +152,8 @@ public class FanUtilities
 					pod = folder.getName();
 					break;
 				}
+				// It is very possible for the file to be unparseable (incompete)
+				}catch(Throwable e){e.printStackTrace();}
 			}
 			folder = folder.getParentFile();
 		}
