@@ -4,11 +4,11 @@
  */
 package net.colar.netbeans.fan;
 
-import fan.sys.Env;
-import fan.sys.FanObj;
-import fan.sys.Uri;
 import java.io.File;
+import java.io.IOException;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.jot.logger.JOTLoggerLocation;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
@@ -24,6 +24,7 @@ public class FanUtilities
 {
 
 	public static final JOTLoggerLocation GENERIC_LOGGER = new JOTLoggerLocation("Generic (FanUtilities)");
+	public final static Pattern POD_NAME_PATTERN = Pattern.compile("podName\\s*=\\s*\"(\\S+)\"");
 
 	/**
 	 * Opens the given file in the editor.
@@ -123,6 +124,10 @@ public class FanUtilities
 
 	/**
 	 * Try to resolve the pod name given a source path
+	 *
+	 * Changed from using fantom script parser, because it always fails on partial files.
+	 * It is very possible for the file to be unparseable (incompete)
+	 *
 	 * @param path
 	 * @return
 	 */
@@ -137,23 +142,19 @@ public class FanUtilities
 			{
 				try
 				{
-				File buildFan = new File(folder, "build.fan");
-				fan.sys.File buildFile = new fan.sys.LocalFile(buildFan);
-				FanObj script = (FanObj) Env.cur().compileScript(buildFile).make();
-				String buildType = script.typeof().base().name();
-				//System.out.println("build type: "+buildType);
-				if(buildType.equals("BuildPod"))
+					File buildFan = new File(folder, "build.fan");
+					String buildText = FileUtil.toFileObject(buildFan).asText();
+					Matcher m = POD_NAME_PATTERN.matcher(buildText);
+					if(m.find())
+					{
+						pod = m.group(1);
+						// found it, break out of loop
+						break;
+					}
+				} catch (IOException e)
 				{
-					pod = (String) script.typeof().field("podName").get(script);
-					break;
+					e.printStackTrace();
 				}
-				else if(buildType.equals("BuildScript"))
-				{
-					pod = folder.getName();
-					break;
-				}
-				// It is very possible for the file to be unparseable (incompete)
-				}catch(Throwable e){e.printStackTrace();}
 			}
 			folder = folder.getParentFile();
 		}
@@ -161,7 +162,7 @@ public class FanUtilities
 		{
 			GENERIC_LOGGER.error("Could not find pod for: " + path);
 			// Must be a script, make-up a "pod" from folder name .. should probably normalize it
-			return "_SCRIPT_"+scriptFolder.getName();
+			return "_SCRIPT_" + scriptFolder.getName();
 		}
 		return pod;
 	}
@@ -169,8 +170,10 @@ public class FanUtilities
 	public static File getPodFolderForPath(String path)
 	{
 		File folder = new File(path);
-		if(folder.isFile())
+		if (folder.isFile())
+		{
 			folder = folder.getParentFile();
+		}
 		while (folder != null)
 		{
 			File f = new File(folder, "build.fan");
@@ -182,5 +185,4 @@ public class FanUtilities
 		}
 		return null;
 	}
-
 }
