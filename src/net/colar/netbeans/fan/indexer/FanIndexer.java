@@ -248,7 +248,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 				Vector<String> addedUsings = new Vector<String>();
 				for (FanAstScopeVarBase var : vars)
 				{
-					if (var.getKind() == FanAstScopeVarBase.VarKind.IMPORT)
+					if (var.getKind() == FanAstScopeVarBase.VarKind.IMPORT || var.getKind() == FanAstScopeVarBase.VarKind.IMPORT_JAVA)
 					{
 						FanResolvedType type = var.getType();
 						String sig = type.getAsTypedType();

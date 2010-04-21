@@ -289,9 +289,11 @@ public class FanParserTask extends ParserResult
 					// So that parseSlots() can later resolve this & super.
 					System.out.print(name);
 					var.parse();
-					if (scopeNode.getAllScopeVars().containsKey(name)
+					Hashtable<String, FanAstScopeVarBase> vars = scopeNode.getAllScopeVars();
+					if (vars.containsKey(name)
 						&& // If we have a "using" with the same name, we take precedence
-						scopeNode.getAllScopeVars().get(name).getKind() != VarKind.IMPORT)
+						vars.get(name).getKind() != VarKind.IMPORT
+						&& vars.get(name).getKind() != VarKind.IMPORT_JAVA)
 					{
 						addError("Duplicated type name", node);
 					} else
@@ -648,7 +650,7 @@ public class FanParserTask extends ParserResult
 					addError("Unresolved Java Item: " + qname, usingNode);
 				} else
 				{
-					addUsingToNode(name, qname, usingNode);
+					addUsingToNode(name, qname, usingNode, VarKind.IMPORT_JAVA);
 				}
 			} else
 			{
@@ -661,7 +663,7 @@ public class FanParserTask extends ParserResult
 					Vector<FanType> items = FanType.findPodTypes(name, "");
 					for (FanType t : items)
 					{
-						addUsingToNode(t.getSimpleName(), t.getQualifiedName(), usingNode);
+						addUsingToNode(t.getSimpleName(), t.getQualifiedName(), usingNode, VarKind.IMPORT_JAVA);
 					}
 				}
 			}
@@ -680,7 +682,7 @@ public class FanParserTask extends ParserResult
 				}
 
 				//Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
-				addUsingToNode(name, type, usingNode);
+				addUsingToNode(name, type, usingNode, VarKind.IMPORT);
 			} else
 			{
 				// Adding all the types of a Pod
@@ -696,14 +698,14 @@ public class FanParserTask extends ParserResult
 					Vector<FanType> items = FanType.findPodTypes(name, "");
 					for (FanType t : items)
 					{
-						addUsingToNode(t.getSimpleName(), t.getQualifiedName(), usingNode);
+						addUsingToNode(t.getSimpleName(), t.getQualifiedName(), usingNode, VarKind.IMPORT);
 					}
 				}
 			}
 		}
 	}
 
-	public static void addUsingToNode(String name, String qType, AstNode node)
+	public static void addUsingToNode(String name, String qType, AstNode node, VarKind importKind)
 	{
 		AstNode scopeNode = FanLexAstUtils.getScopeNode(node);
 		if (scopeNode == null)
@@ -719,7 +721,7 @@ public class FanParserTask extends ParserResult
 		}
 		FanResolvedType rType = FanResolvedType.makeFromDbType(node, qType);
 		rType = rType.asStaticContext(true);
-		scopeNode.addScopeVar(name, FanAstScopeVar.VarKind.IMPORT, rType, true);
+		scopeNode.addScopeVar(name, importKind, rType, true);
 	}
 
 	public ParsingResult<AstNode> getParsingResult()
@@ -871,7 +873,8 @@ public class FanParserTask extends ParserResult
 		String name = callChild.getNodeText(true);
 
 		//if a direct call like doThis(), then search scope for type/slot
-		if (type == null)
+		// or if the type is actulaly the current type we are in (that happens when using 'this.')
+		if (type == null || type.getQualifiedType().equals(FanResolvedType.resolveThisType(node).getQualifiedType()))
 		{
 			baseType = FanResolvedType.resolveItType(callChild);
 			// constructor call or local slot

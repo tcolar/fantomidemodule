@@ -40,8 +40,10 @@ public class FanFieldScopeVar extends FanAstScopeVarBase
 			if (typeNode != null)
 			{
 				typeString = typeNode.getNodeText(true);
-				// slots return type are never staticContext
-				type = FanResolvedType.makeFromTypeSigWithWarning(typeNode);
+				if(typeString!=null && typeString.length()>0)
+				{
+					type = FanResolvedType.makeFromTypeSigWithWarning(typeNode);
+				}
 				if (type == null)
 				{
 					FanUtilities.GENERIC_LOGGER.error(getClass().getName() + " Null type for: " + typeString);

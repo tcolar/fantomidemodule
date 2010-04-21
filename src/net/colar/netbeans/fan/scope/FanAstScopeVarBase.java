@@ -24,7 +24,7 @@ public abstract class FanAstScopeVarBase
 
 	public enum VarKind
 	{
-		IMPORT(1),
+		IMPORT(1), IMPORT_JAVA(2),
 		TYPE_CLASS(11), TYPE_MIXIN(12), TYPE_ENUM(13), TYPE_FACET(14), // fantom types
 		TYPE_JAVA_CLASS(21), TYPE_JAVA_INTERFACE(22), TYPE_JAVA_ENUM(23), TYPE_JAVA_ANNOTATION(24), // fantom types
 		FIELD(31), METHOD(32), CTOR(33), //slots
