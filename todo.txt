@@ -1,33 +1,15 @@
-indexing:
-- search "local types" (in file) first, so it doesn't have to be indexed (yet) to be found, when file as class1 depending on class2
-
 update completion for function types to complete like
 b.call |->| {}    rather than  b.call(f)
-
-At some point change fantom distro indexing to from sources instead of from pods
+Competion of method params
 
 blog about & have ant check for use of javax/swing/GroupLayout and error if it does
 To fix:
 - (select panel/design and in inspector right click root node/properties and chnage to not use java 1.6)
 - (global: tools/options/gui builder)
 
-
-WARN/ASK FOR FANTOM+HOME AT FIRST START, if missing show message not exception.
-
-write unit tests for:
-- indexing: storing/retrieving from the dB diffrent fantom & java types
-- completion proposals
-.. and more
-
-============= TODO Completion ===============================
-- Filter proposals (Don't show innacessible items, private etc...)
-- Do it, super(!= in method VS in type), namedSuper, this completion
-if super. at type level, ovveride methods (fields?)
-
-Indexing:
-	-> also save list of what's being used for quick where-used lookups ?
-	-> and for refactor as well
-	-> whereused table: Document - usedName - location (line# and/or range ?)
+Check assignment types match
+Check method params match
+.....
 
 ============= TODO semantic checks =====================
 Deal with shortcut operators:
