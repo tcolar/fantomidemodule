@@ -228,7 +228,7 @@ public class AstNode
 	public void addScopeVar(FanAstScopeVarBase var, boolean allowDuplicates)
 	{
 		AstNode scopeNode = FanLexAstUtils.getScopeNode(this);
-		if (scopeNode == null)
+		if (scopeNode == null || var.getName() == null)
 		{
 			return;
 		}

@@ -1186,7 +1186,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public void cancel()
 	{
 		System.out.println("cancel called!");
-		cancel=true;
+		//cancel=true;
 	}
 
 		// ============ Simulate a lexer ===========================================

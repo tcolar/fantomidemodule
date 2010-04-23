@@ -208,6 +208,14 @@ public class FanParserTask extends ParserResult
 				System.out.print("Parser task was cancelled.");
 				return;
 			}
+			catch(OutOfMemoryError e)
+			{
+				System.out.print("OOM while parsing !!");
+				e.printStackTrace();
+				parser=null;
+				Runtime.getRuntime().gc();
+				return;
+			}
 			// Copy parboiled parse error into a CSL errrors
 			for (ParseError err : parsingResult.parseErrors)
 			{
@@ -1442,7 +1450,8 @@ public class FanParserTask extends ParserResult
 		System.out.println("Parser cancel called");
 		if (parser != null)
 		{
-			parser.cancel();
+			// TODO: this seem to cause crashes/deadlock
+			//parser.cancel();
 		}
 	}
 

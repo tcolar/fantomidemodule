@@ -275,7 +275,7 @@ public class FantomTypesTest extends FantomCSLTest
 			{
 				name = using.substring(using.lastIndexOf(".")+1);
 			}
-			FanParserTask.addUsingToNode(name, using, node);
+			FanParserTask.addUsingToNode(name, using, node, FanAstScopeVarBase.VarKind.IMPORT);
 		}
 	}
 
