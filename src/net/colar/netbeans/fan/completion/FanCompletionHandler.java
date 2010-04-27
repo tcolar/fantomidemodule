@@ -458,11 +458,14 @@ public class FanCompletionHandler implements CodeCompletionHandler
 		{
 			callNode = FanLexAstUtils.findParentNodeWithin(node, AstKind.AST_INC_CALL, expr);
 		}
+		// protect from NPE
+		if(callNode==null)
+			return;
 		// find the type of the item on the LHS of the call.
 		FanResolvedType type = FanResolvedType.makeUnresolved(node);
 		for (AstNode child : expr.getChildren())
 		{
-			// If we foud the call node, stop here (keep the previosu node type)
+			// If we foud the call node, stop here (keep the previous node type)
 			if (child.getStartLocation().getIndex() == callNode.getStartLocation().getIndex())
 			{
 				break;

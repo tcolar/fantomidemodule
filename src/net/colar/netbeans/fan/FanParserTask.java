@@ -15,10 +15,8 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
-import net.colar.netbeans.fan.indexer.model.FanDummySlot;
 import net.colar.netbeans.fan.indexer.model.FanMethodParam;
 import net.colar.netbeans.fan.indexer.model.FanSlot;
-import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstKind;
@@ -48,6 +46,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.parboiled.Node;
 import org.parboiled.Parboiled;
+import org.parboiled.ParserStatistics;
 import org.parboiled.RecoveringParseRunner;
 import org.parboiled.errors.ErrorUtils;
 import org.parboiled.errors.ParseError;
@@ -95,6 +94,13 @@ public class FanParserTask extends ParserResult
 			: FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
 		pod = sourceFile == null ? null : FanUtilities.getPodForPath(sourceFile.getPath());
 		parser = Parboiled.createParser(FantomParser.class, this);
+		
+				ParserStatistics stat = ParserStatistics.generateFor(parser.compilationUnit());
+				System.out.println("--->Parser stats---");
+				stat.printActionClassInstances();
+				stat.toString();
+				System.out.println("---<Parser stats---");
+
 	}
 
 	@Override
@@ -202,7 +208,15 @@ public class FanParserTask extends ParserResult
 			try
 			{
 				parsingResult = RecoveringParseRunner.run(parser.compilationUnit(), getSnapshot().getText().toString());
-			} catch (IllegalStateException e)
+			} catch(NoSuchFieldError e)
+			{
+				ParserStatistics stats = ParserStatistics.generateFor(parser.compilationUnit());
+				System.out.println("--->Parser stats nsf err---");
+				stats.printActionClassInstances();
+				stats.toString();
+				System.out.println("---<Parser stats---");
+			}
+			catch (IllegalStateException e)
 			{
 				// The task was cancelled, bailing out
 				System.out.print("Parser task was cancelled.");
@@ -212,6 +226,11 @@ public class FanParserTask extends ParserResult
 			{
 				System.out.print("OOM while parsing !!");
 				e.printStackTrace();
+				System.out.println("--->Parser stats OOM---");
+				ParserStatistics stats = ParserStatistics.generateFor(parser.compilationUnit());
+				stats.printActionClassInstances();
+				stats.toString();
+				System.out.println("---<Parser stats---");
 				parser=null;
 				Runtime.getRuntime().gc();
 				return;
@@ -581,7 +600,7 @@ public class FanParserTask extends ParserResult
 			type = FanResolvedType.makeFromTypeSig(astNode, "sys::Int");
 		} else if (lbl.equalsIgnoreCase(TokenName.NUMBER.name()))
 		{
-			char lastChar = txt.charAt(txt.length() - 1);
+			char lastChar = (txt==null || txt.length()==0)?null:txt.charAt(txt.length() - 1);
 			if (txt.toLowerCase().startsWith("0x"))
 			{
 				type = FanResolvedType.makeFromTypeSig(astNode, "sys::Int");
