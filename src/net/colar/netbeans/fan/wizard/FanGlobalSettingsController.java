@@ -17,6 +17,7 @@ import org.openide.util.Lookup;
  * Controller for Fan options panel.
  * @author tcolar
  */
+@OptionsPanelController.SubRegistration(displayName="Fantom Options")
 public class FanGlobalSettingsController extends OptionsPanelController
 {
 

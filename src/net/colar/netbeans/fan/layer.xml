@@ -113,14 +113,6 @@
 		</folder>
 	</folder>
 
-	<folder name="OptionsDialog">
-		<folder name="Advanced">
-			<file name="FanOptions.instance">
-				<attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.wizard.FanGlobalSettings.getInstance"/>
-			</file>
-		</folder>
-	</folder>
-
 	<folder name="Templates">
 		<folder name="Fantom">
 			<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>

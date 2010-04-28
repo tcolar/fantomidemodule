@@ -93,14 +93,7 @@ public class FanParserTask extends ParserResult
 			? null
 			: FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
 		pod = sourceFile == null ? null : FanUtilities.getPodForPath(sourceFile.getPath());
-		parser = Parboiled.createParser(FantomParser.class, this);
-		
-				ParserStatistics stat = ParserStatistics.generateFor(parser.compilationUnit());
-				System.out.println("--->Parser stats---");
-				stat.printActionClassInstances();
-				stat.toString();
-				System.out.println("---<Parser stats---");
-
+		parser = Parboiled.createParser(FantomParser.class, this);		
 	}
 
 	@Override
@@ -208,25 +201,17 @@ public class FanParserTask extends ParserResult
 			try
 			{
 				parsingResult = RecoveringParseRunner.run(parser.compilationUnit(), getSnapshot().getText().toString());
-			} catch(NoSuchFieldError e)
-			{
-				ParserStatistics stats = ParserStatistics.generateFor(parser.compilationUnit());
-				System.out.println("--->Parser stats nsf err---");
-				stats.printActionClassInstances();
-				stats.toString();
-				System.out.println("---<Parser stats---");
-			}
-			catch (IllegalStateException e)
+			}catch (IllegalStateException e)
 			{
 				// The task was cancelled, bailing out
 				System.out.print("Parser task was cancelled.");
 				return;
 			}
-			catch(OutOfMemoryError e)
+			catch(Throwable e)
 			{
-				System.out.print("OOM while parsing !!");
+				System.out.print("Error while parsing !!");
 				e.printStackTrace();
-				System.out.println("--->Parser stats OOM---");
+				System.out.println("--->Parser stats---");
 				ParserStatistics stats = ParserStatistics.generateFor(parser.compilationUnit());
 				stats.printActionClassInstances();
 				stats.toString();
