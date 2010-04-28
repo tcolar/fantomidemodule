@@ -15,23 +15,23 @@ import org.netbeans.api.extexecution.input.InputProcessor;
 public class FanOutputProcessor implements InputProcessor
 {
 
-    StringBuilder builder = new StringBuilder();
+	StringBuilder builder = new StringBuilder();
 
-    public void processInput(char[] input) throws IOException
-    {
-	builder.append(input);
-    }
+	public void processInput(char[] input) throws IOException
+	{
+		builder.append(input);
+	}
 
-    public void reset() throws IOException
-    {
-    }
+	public void reset() throws IOException
+	{
+	}
 
-    public void close() throws IOException
-    {
-    }
+	public void close() throws IOException
+	{
+	}
 
-    public String getData()
-    {
-	return builder.toString();
-    }
+	public String getData()
+	{
+		return builder.toString();
+	}
 }

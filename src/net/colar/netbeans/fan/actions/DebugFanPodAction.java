@@ -43,7 +43,7 @@ public class DebugFanPodAction extends FanAction
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
 		//TODO: only build if files changed
-		Future future = buildPodAction(context);
+		Future future = buildPodAction(context).run();
 		Object result = null;
 		try
 		{

@@ -66,31 +66,31 @@ public abstract class FanAction
 
 	}
 
-	protected Future buildPodAction(Lookup lookup)
+	protected FanExecution buildPodAction(Lookup lookup)
 	{
 		// run default target (build)
 		return buildAction(lookup, "");
 	}
 
-	protected Future cleanPodAction(Lookup lookup)
+	protected FanExecution cleanPodAction(Lookup lookup)
 	{
 		// run default target (build)
 		return buildAction(lookup, "clean");
 	}
 
-	protected Future testPodAction(Lookup lookup)
+	protected FanExecution testPodAction(Lookup lookup)
 	{
 		// run default target (build)
 		return buildAction(lookup, "test");
 	}
 
-	protected Future customBuildAction(Lookup lookup, String buildTarget)
+	protected FanExecution customBuildAction(Lookup lookup, String buildTarget)
 	{
 		// run default target (build)
 		return buildAction(lookup, buildTarget);
 	}
 
-	protected Future runPodAction(Lookup lookup, boolean debug)
+	protected FanExecution runPodAction(Lookup lookup, boolean debug)
 	{
 		FileObject file = findTargetProject(lookup);
 		if (file != null)
@@ -110,7 +110,7 @@ public abstract class FanAction
 			FanPlatform.getInstance().buildFanCall(fanExec, debug);
 			fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 			fanExec.addCommandArg(target);
-			return fanExec.run();
+			return fanExec;
 		}
 		return null;
 	}
@@ -156,7 +156,7 @@ public abstract class FanAction
 	 * @param target
 	 * @return
 	 */
-	private Future buildAction(Lookup lookup, String target/*, String extraParams*/)
+	private FanExecution buildAction(Lookup lookup, String target)
 	{
 		// if default target "", see what user chose in props;
 		if (target.equals(""))
@@ -181,7 +181,7 @@ public abstract class FanAction
 				fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 				fanExec.addCommandArg("build.fan");
 				fanExec.addCommandArg(target);
-				return fanExec.run();
+				return fanExec;
 			}
 		}
 		return null;

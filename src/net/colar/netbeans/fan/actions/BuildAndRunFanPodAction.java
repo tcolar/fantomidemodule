@@ -5,8 +5,9 @@
 
 package net.colar.netbeans.fan.actions;
 
-import java.util.concurrent.Future;
 import net.colar.netbeans.fan.project.FanProject;
+import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
 
@@ -22,6 +23,7 @@ public class BuildAndRunFanPodAction extends FanAction
 	public BuildAndRunFanPodAction(FanProject project)
 	{
 		super(project);
+		
 	}
 
 	@Override
@@ -33,8 +35,19 @@ public class BuildAndRunFanPodAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
+		ExecutionDescriptor descriptor = new ExecutionDescriptor().frontWindow(true).controllable(true).inputVisible(true).showProgress(true).showSuspended(true);
+
+		FanExecutionGroup group = new FanExecutionGroup(buildPodAction(context), runPodAction(context, false));
+
+		ExecutionService service =
+				ExecutionService.newService(
+				group,
+				descriptor, "blah");
+
+		service.run();
 		//TODO: only build if files changed
-		Future future = buildPodAction(context);
+		/*
+		Future future = buildPodAction(context).run();
 		Object result=null;
 		try
 		{
@@ -46,7 +59,7 @@ public class BuildAndRunFanPodAction extends FanAction
 		{
 			if(((Integer)result)==0)
 				runPodAction(context, false);
-		}
+		}*/
 	}
 
 	@Override
