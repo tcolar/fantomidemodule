@@ -37,7 +37,7 @@ public class FanExecution
 
 	private String command;
 	private String workingDirectory;
-	private Vector<String> commandArgs = new Vector();
+	private Vector<String> commandArgs = new Vector<String>();
 	//private String path;
 	private String displayName;
 	private boolean redirect;

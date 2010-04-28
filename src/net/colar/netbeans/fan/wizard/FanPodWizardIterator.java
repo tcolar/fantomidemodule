@@ -133,7 +133,7 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
 		}
 
 		// Look for nested projects to open as well:
-		LinkedHashSet resultSet = new LinkedHashSet();
+		LinkedHashSet<FileObject> resultSet = new LinkedHashSet<FileObject>();
 		resultSet.add(pfFo);
 		resultSet.add(fanFo);
 		resultSet.add(testFo);

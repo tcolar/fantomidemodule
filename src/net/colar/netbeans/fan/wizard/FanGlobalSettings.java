@@ -13,6 +13,7 @@ import org.netbeans.spi.options.OptionsPanelController;
  * AdvancedOption panel provider fro Fan
  * @author tcolar
  */
+// TODO: AdvancedOption is deprecated
 public class FanGlobalSettings extends AdvancedOption
 {
 

@@ -9,8 +9,6 @@
  */
 package net.colar.netbeans.fan.wizard;
 
-import java.awt.event.ActionEvent;
-
 /**
  * Main UI panel for project/pod properties
  * @author thibautc

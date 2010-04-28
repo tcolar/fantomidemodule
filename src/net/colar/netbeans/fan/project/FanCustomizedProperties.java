@@ -28,7 +28,7 @@ public class FanCustomizedProperties implements CustomizerProvider
 	private ProjectCustomizer.CategoryComponentProvider panelProvider;
 	private final FanProject project;
 	private Category[] categories;
-	Map panels = new HashMap();
+	Map<Category, JPanel> panels = new HashMap<Category, JPanel>();
 
 	public FanCustomizedProperties(FanProject project)
 	{
@@ -41,7 +41,7 @@ public class FanCustomizedProperties implements CustomizerProvider
 			"Pod Settings",
 			"Pod Settings",
 			null,
-			null);
+			(Category[])null);
 		// ! panel order used in actionPerformed !
 		categories = new Category[]
 		{
