@@ -120,9 +120,9 @@ public class NBFanLexer implements Lexer<FanTokenID>
 			}
 			Node lexerItems = FanLexAstUtils.getFirstChild(result.parseTreeRoot, new NodeLabelPredicate(TokenName.LEXERITEMS.name()));
 			lexerIterator = lexerItems.getChildren().iterator();
-		} catch (IllegalStateException e)
+		} catch (Throwable e)
 		{
-			System.out.println("Lexer task cancelled");
+			new RuntimeException("Lexer Failed !", e);
 		}
 	}
 
