@@ -1,24 +1,23 @@
 update completion for function types to complete like
 b.call |->| {}    rather than  b.call(f)
-Competion of method params
+Competion of method params (afte parenthesis
+Completion with parameters broken ?
+
+Check assignment types match
+Check method params match
+
+Import proposals(himts) / fixer (CTRL SHFT O)
 
 blog about & have ant check for use of javax/swing/GroupLayout and error if it does
 To fix:
 - (select panel/design and in inspector right click root node/properties and chnage to not use java 1.6)
 - (global: tools/options/gui builder)
 
-Check assignment types match
-Check method params match
-.....
 
 ============= TODO semantic checks =====================
-Deal with shortcut operators:
-http://fantom.org/doc/docLang/Expressions.html#shortcuts
-
 for all check protection: private, internal etc...
 
 Type(class)
--> check name is unique (or marked override)
 -> check if all abstract overidden and marked override execpt if type is abstract
 -> final cant be subclassed
 -> const ????
