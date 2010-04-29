@@ -33,6 +33,7 @@ import org.openide.util.Exceptions;
  */
 public class FanExecution
 {
+	private ExecutionDescriptor descriptor = new ExecutionDescriptor().frontWindow(true).controllable(true).inputVisible(true).showProgress(true).showSuspended(true);
 	// execution commands
 
 	private String command;
@@ -69,8 +70,6 @@ public class FanExecution
 	{
 		return descriptor;
 	}
-	//internal process control
-	private ExecutionDescriptor descriptor = new ExecutionDescriptor().frontWindow(true).controllable(true).inputVisible(true).showProgress(true).showSuspended(true);
 
 	/**
 	 * Execute the process described by this object

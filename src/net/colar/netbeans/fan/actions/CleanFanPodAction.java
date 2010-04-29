@@ -30,7 +30,7 @@ public class CleanFanPodAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		cleanPodAction(context);
+		cleanPodAction(context).run();
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class BuildFanPodAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		buildPodAction(context);
+		buildPodAction(context).run();
 	}
 
 	@Override

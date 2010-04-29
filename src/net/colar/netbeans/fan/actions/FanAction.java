@@ -4,12 +4,15 @@
  */
 package net.colar.netbeans.fan.actions;
 
-import java.util.concurrent.Future;
 import javax.swing.JOptionPane;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.platform.FanPlatform;
+import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.colar.netbeans.fan.project.FanProject;
 import net.colar.netbeans.fan.project.FanProjectProperties;
+import org.netbeans.api.debugger.jpda.DebuggerStartException;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.openide.filesystems.FileObject;
@@ -26,7 +29,9 @@ import org.openide.windows.TopComponent;
 public abstract class FanAction
 {
 
+	public final ExecutionDescriptor descriptor = new ExecutionDescriptor().frontWindow(true).controllable(true).inputVisible(true).showProgress(true).showSuspended(true);
 	private final FanProject project;
+	private FanJpdaThread jpdaThread = null;
 
 	public FanAction(FanProject project)
 	{
@@ -105,51 +110,32 @@ public abstract class FanAction
 				target = podName + "::" + "Main" + "." + "main";
 			}
 			FanExecution fanExec = new FanExecution();
-			fanExec.setDisplayName((debug ? "Debug " : "") + file.getName());
+			fanExec.setDisplayName(getProjectName(lookup));
 			fanExec.setWorkingDirectory(path);
 			FanPlatform.getInstance().buildFanCall(fanExec, debug);
 			fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 			fanExec.addCommandArg(target);
+			if (debug)
+			{
+				if (jpdaThread != null && jpdaThread.isAlive())
+				{
+					jpdaThread.shutdown();
+					jpdaThread.interrupt();
+				}
+				jpdaThread = new FanJpdaThread();
+				jpdaThread.start();
+			}
+
 			return fanExec;
 		}
 		return null;
 	}
 
-	/**
-	 * "OLD" way of calling fan using the fan wrapper script
-	 * @param lookup
-	 * @param target
-	 * @return
-	 */
-	/*private Future buildActionExternal(Lookup lookup, String target)
+	public String getProjectName(Lookup lookup)
 	{
-	// if default target "", see what user chose in props;
-	if (target.equals(""))
-	{
-	String newTarget = FanProjectProperties.getProperties(project).getBuildTarget();
-	if (newTarget != null)
-	{
-	target = newTarget;
+		return findTargetProject(lookup).getName();
 	}
-	}
-	FileObject file = findTargetProject(lookup);
-	if (file != null)
-	{
-	FileObject buildFile = file.getFileObject("build.fan");
-	if (buildFile != null)
-	{
-	String path = FileUtil.toFile(file).getAbsolutePath();
-	FanExecution fanExec = new FanExecution();
-	fanExec.setDisplayName(file.getName());
-	fanExec.setWorkingDirectory(path);
-	fanExec.setCommand(FanPlatform.getInstance().getFanBinaryPath());
-	fanExec.addCommandArg("build.fan");
-	fanExec.addCommandArg(target);
-	return fanExec.run();
-	}
-	}
-	return null;
-	}*/
+
 	/**
 	 * Call the action using internal call to Fan java class (not the wrapper scripts).
 	 * @param lookup
@@ -175,7 +161,7 @@ public abstract class FanAction
 			{
 				String path = FileUtil.toFile(file).getAbsolutePath();
 				FanExecution fanExec = new FanExecution();
-				fanExec.setDisplayName(file.getName());
+				fanExec.setDisplayName(getProjectName(lookup));
 				fanExec.setWorkingDirectory(path);
 				FanPlatform.getInstance().buildFanCall(fanExec);
 				fanExec.addCommandArg(FanPlatform.FAN_CLASS);
@@ -220,7 +206,52 @@ public abstract class FanAction
 			return OpenProjects.getDefault().getMainProject().getProjectDirectory();
 		}
 		// try to fall back to the selected item project folder
-		return file==null?null
+		return file == null ? null
 				: FileUtil.toFileObject(FanUtilities.getPodFolderForPath(file.getPath()));
+	}
+
+	class FanJpdaThread extends Thread implements Runnable
+	{
+
+		private volatile boolean shutdown=false;
+
+		@Override
+		public void run()
+		{
+			// start JPDA
+			FanUtilities.GENERIC_LOGGER.info("Starting JPDA");
+			String portStr = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT, "8000");
+			int port = new Integer(portStr).intValue();
+			try
+			{
+				for (int i = 0; i != 15 && !shutdown; i++)
+				{
+					// TODO: this is kinda ugly - Use JPDASupport instead ??
+					try
+					{
+						JPDADebugger.attach("localhost", port, new Object[0]);
+						// if connected, then we are good
+						return;
+					} catch (DebuggerStartException e)
+					{
+						FanUtilities.GENERIC_LOGGER.debug("Failed connecting to debugger, will try again: " + e);
+						if (i == 14)
+						{
+							FanUtilities.GENERIC_LOGGER.exception("Failed connecting to Debugger", e);
+						}
+					}
+					Thread.yield();
+					Thread.sleep(1000);
+				}
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		private void shutdown()
+		{
+			shutdown = true;
+		}
 	}
 }

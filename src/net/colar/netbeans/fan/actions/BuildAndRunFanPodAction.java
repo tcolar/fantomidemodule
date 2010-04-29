@@ -35,31 +35,17 @@ public class BuildAndRunFanPodAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		ExecutionDescriptor descriptor = new ExecutionDescriptor().frontWindow(true).controllable(true).inputVisible(true).showProgress(true).showSuspended(true);
-
-		FanExecutionGroup group = new FanExecutionGroup(buildPodAction(context), runPodAction(context, false));
+		//TODO: only build if files changed ?
+		FanExecutionGroup group = new FanExecutionGroup(
+				buildPodAction(context),
+				runPodAction(context, false));
 
 		ExecutionService service =
 				ExecutionService.newService(
 				group,
-				descriptor, "blah");
+				descriptor, getProjectName(context));
 
 		service.run();
-		//TODO: only build if files changed
-		/*
-		Future future = buildPodAction(context).run();
-		Object result=null;
-		try
-		{
-			if(future!=null)
-				result=future.get();
-		}catch(Exception e){e.printStackTrace();}
-		// if build didn't fail, then run the pod.
-		if(result!=null)
-		{
-			if(((Integer)result)==0)
-				runPodAction(context, false);
-		}*/
 	}
 
 	@Override

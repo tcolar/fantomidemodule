@@ -31,7 +31,7 @@ public class TestFanPodAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		testPodAction(context);
+		testPodAction(context).run();
 	}
 
 	@Override

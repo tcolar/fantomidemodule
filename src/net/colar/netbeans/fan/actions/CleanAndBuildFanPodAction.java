@@ -31,21 +31,16 @@ public class CleanAndBuildFanPodAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		FanExecutionGroup group = new FanExecutionGroup(cleanPodAction(context), runPodAction(context, false));
-		//group.call();
-		/*Future future = cleanPodAction(context);
-		Object result=null;
-		try
-		{
-			if(future!=null)
-				result=future.get();
-		}catch(Exception e){e.printStackTrace();}
-		// if clean didn't fail, then run the build.
-		if(result!=null)
-		{
-			if(((Integer)result)==0)
-				buildPodAction(context);
-		}*/
+		FanExecutionGroup group = new FanExecutionGroup(
+				cleanPodAction(context),
+				buildPodAction(context));
+
+		ExecutionService service =
+				ExecutionService.newService(
+				group,
+				descriptor, getProjectName(context));
+
+		service.run();
 	}
 
 	@Override

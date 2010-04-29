@@ -3,7 +3,6 @@
  */
 package net.colar.netbeans.fan.actions;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -17,143 +16,248 @@ import java.util.concurrent.Callable;
 import org.netbeans.api.extexecution.ExternalProcessBuilder;
 
 /**
+ * This manages Executing several Execution (ext program calls) as "One"
+ * Main reason for that is that several commands can be executed within one ExternalProcessBuilder
+ * This is important because of the "Rerun" feature of the IDE that reruns the last ExternalProcessBuilder
+ * This allow having actions such as "build & Run" and the like and Rerun them in one click
  *
- * @author thibautc
+ * @author tcolar
  */
-public class FanExecutionGroup extends Thread implements Callable<Process>
+public class FanExecutionGroup implements Callable<Process>
 {
 
 	private List<FanExecution> cmds = new ArrayList<FanExecution>();
-	int exitValue = -1;
-	ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	volatile boolean done = false;
-	PipedInputStream globalInput = new PipedInputStream();
-	PipedOutputStream globalOutput;
 
+	/**
+	 * Pass a list of individual execution commands
+	 * Note: there individual run() method won't be called, instead we will
+	 * call buildProcess() on each an dthen run them together as one process.
+	 * @param cmds
+	 */
 	public FanExecutionGroup(FanExecution... cmds)
 	{
 		this.cmds.addAll(Arrays.asList(cmds));
-		try
-		{
-			globalOutput = new PipedOutputStream(globalInput);
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 
+	/**
+	 * Spawns the call (run the actions)
+	 * Spawns a thread because multiple "run" can be running in parallel
+	 * @return
+	 * @throws Exception
+	 */
 	public Process call() throws Exception
 	{
-		Process p = new FanExecGrpProcess();
-		start();
-		return p;
+		FanExecutionGrpThread thread = new FanExecutionGrpThread();
+		thread.start();
+		return thread.getGroupProcess();
 	}
 
-	@Override
-	public void run()
+	// #########################################################################
+	/**
+	 * Internal class
+	 * This executes the command sets in it's own thread.
+	 */
+	class FanExecutionGrpThread extends Thread
 	{
-		done = false;
-		for (FanExecution cmd : cmds)
+
+		int exitValue = -1;
+		volatile boolean done = false;
+		// Using Piped Streams to append each subprocess output into one common
+		// output for the whole execution group
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		PipedInputStream globalInput = new PipedInputStream();
+		PipedOutputStream globalOutput;
+		// Whole procfess (all commands)
+		Process process = new FanExecGrpProcess();
+		// Currently running subprocess
+		Process curSubprocess = null;
+
+		public FanExecutionGrpThread()
 		{
 			try
 			{
-				bos.write("ddfds\ndsfdfd\n".getBytes());
-				ExternalProcessBuilder processBuilder = cmd.buildProcess();
-				processBuilder.redirectErrorStream(true);
-				Process sub = processBuilder.call();
-				final InputStream processStream = sub.getInputStream();
-				// outputReaderThread thread is reading that.
-				new Thread(
-					new Runnable()
-					{
-						public void run()
-						{
-							int i = 0;
-							try
-							{
-							while((i=processStream.read())!=-1)
-							{
-								globalOutput.write(i);
-								globalOutput.flush();
-							}
-							}catch(Exception e){e.printStackTrace();}
-						}
-					}).start();
-
-				sub.waitFor();
-				//outputReaderThread.flush();
-				Integer result = sub.exitValue();
-				exitValue = result;
-				if (result != 0)
-				{
-					done = true;
-					return;
-				}
+				globalOutput = new PipedOutputStream(globalInput);
 			} catch (Exception e)
 			{
 				e.printStackTrace();
-				done = true;
-				return;
 			}
 		}
-		try
-		{
-			bos.flush();
-			bos.close();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		done = true;
-	}
-
-	class FanExecGrpProcess extends Process
-	{
 
 		@Override
-		public OutputStream getOutputStream()
+		public void run()
 		{
-			// no need
-			return new ByteArrayOutputStream();
-		}
-
-		@Override
-		public InputStream getInputStream()
-		{
-			return globalInput;
-		}
-
-		@Override
-		public InputStream getErrorStream()
-		{
-			// Errors sent int outputstream
-			byte[] b =
+			done = false;
+			for (FanExecution cmd : cmds)
 			{
-			};
-			return new ByteArrayInputStream(b);
-		}
+				try
+				{
+					ExternalProcessBuilder processBuilder = cmd.buildProcess();
+					// We send errorStream into outputStream -> simpler handling
+					processBuilder.redirectErrorStream(true);
+					curSubprocess = processBuilder.call();
+					final InputStream processStream = curSubprocess.getInputStream();
+					/*
+					 * Start Internal thread that reads all the subprocess output
+					 * and append it to the global output stream
+					 */
+					new Thread(
+							new Runnable()
+							{
 
-		@Override
-		public int waitFor() throws InterruptedException
-		{
-			while (!done)
-			{
-				sleep(200);
+								public void run()
+								{
+									int i = 0;
+									try
+									{
+										while ((i = processStream.read()) != -1)
+										{
+											globalOutput.write(i);
+											globalOutput.flush();
+										}
+									} catch (Exception e)
+									{
+										e.printStackTrace();
+									}
+								}
+							}).start();
+					// End internal stream reader thread
+
+					curSubprocess.waitFor();
+					Integer result = curSubprocess.exitValue();
+					exitValue = result;
+					if (result != 0)
+					{
+						// If failed don't continue -> make that an option ?
+						done = true;
+						return;
+					}
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+					done = true;
+					return;
+				}
 			}
-			return exitValue();
+			// Try to close all the streams properly
+			if (bos != null)
+			{
+				try
+				{
+					bos.flush();
+					bos.close();
+				} catch (Exception e)
+				{
+				}
+			}
+			if (globalInput != null)
+			{
+				try
+				{
+					globalInput.close();
+				} catch (Exception e)
+				{
+				}
+			}
+			if (globalOutput != null)
+			{
+				try
+				{
+					globalOutput.close();
+				} catch (Exception e)
+				{
+				}
+			}
+			;
+			done = true;
 		}
 
-		@Override
-		public int exitValue()
+		public Process getGroupProcess()
 		{
-			return exitValue;
+			return process;
 		}
 
-		@Override
-		public void destroy()
+		// #####################################################################
+		/**
+		 * Internal class
+		 * Implements the global "Process"
+		 */
+		class FanExecGrpProcess extends Process
 		{
-			bos = null;
-			//TODO: stop all
+
+			@Override
+			public OutputStream getOutputStream()
+			{
+				// not needed but can't be null
+				return new ByteArrayOutputStream();
+			}
+
+			@Override
+			public InputStream getInputStream()
+			{
+				return globalInput;
+			}
+
+			@Override
+			public InputStream getErrorStream()
+			{
+				// Not needed, Errors are sent int outputstream
+				byte[] b = new byte[0];
+				return new ByteArrayInputStream(b);
+			}
+
+			@Override
+			public int waitFor() throws InterruptedException
+			{
+				while (!done)
+				{
+					sleep(200);
+				}
+				return exitValue();
+			}
+
+			@Override
+			public int exitValue()
+			{
+				return exitValue;
+			}
+
+			@Override
+			public void destroy()
+			{
+				// Stop any current process, this should terminate the process thread
+				if (curSubprocess != null)
+				{
+					curSubprocess.destroy();
+				}
+				// also try cleaning up all streams just in case
+				if (bos != null)
+				{
+					try
+					{
+						bos.close();
+					} catch (Exception e)
+					{
+					}
+				}
+				if (globalInput != null)
+				{
+					try
+					{
+						globalInput.close();
+					} catch (Exception e)
+					{
+					}
+				}
+				if (globalOutput != null)
+				{
+					try
+					{
+						globalOutput.close();
+					} catch (Exception e)
+					{
+					}
+				}
+			}
 		}
 	}
 }
