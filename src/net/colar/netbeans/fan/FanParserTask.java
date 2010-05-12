@@ -91,7 +91,7 @@ public class FanParserTask extends ParserResult
 			: snapshot.getSource().getFileObject().getName();
 		sourceFile = (snapshot == null || snapshot.getSource().getFileObject() == null)
 			? null
-			: FileUtil.toFileObject(new File(snapshot.getSource().getFileObject().getPath()));
+			: FileUtil.toFileObject(FileUtil.normalizeFile(new File(snapshot.getSource().getFileObject().getPath())));
 		pod = sourceFile == null ? null : FanUtilities.getPodForPath(sourceFile.getPath());
 		parser = Parboiled.createParser(FantomParser.class, this);		
 	}

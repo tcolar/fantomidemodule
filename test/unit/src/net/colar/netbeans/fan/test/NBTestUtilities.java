@@ -35,7 +35,7 @@ public class NBTestUtilities
 
 	public static Snapshot fileToSnapshot(File f)
 	{
-		FileObject fo = FileUtil.toFileObject(f);
+		FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(f));
 		BaseDocument doc = GsfUtilities.getDocument(fo, true);
 		Source source = Source.create(doc);
 		Snapshot snap = source.createSnapshot();

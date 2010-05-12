@@ -281,7 +281,7 @@ public class FanPlatform
 			return null;
 		}
 		File f = new File(fanHome);
-		return FileUtil.toFileObject(f);
+		return FileUtil.toFileObject(FileUtil.normalizeFile(f));
 	}
 
 	public FileObject getFanSrcHome()
@@ -292,7 +292,7 @@ public class FanPlatform
 			return null;
 		}
 		File f = new File(fanSrc);
-		return FileUtil.toFileObject(f);
+		return FileUtil.toFileObject(FileUtil.normalizeFile(f));
 	}
 
 	public static void update()

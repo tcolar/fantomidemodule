@@ -33,7 +33,7 @@ public class FanUtilities
 	 */
 	public static void openFileInEditor(File newFile) throws DataObjectNotFoundException
 	{
-		FileObject fob = FileUtil.toFileObject(newFile);
+		FileObject fob = FileUtil.toFileObject(FileUtil.normalizeFile(newFile));
 		openFileInEditor(fob);
 	}
 
@@ -143,7 +143,7 @@ public class FanUtilities
 				try
 				{
 					File buildFan = new File(folder, "build.fan");
-					String buildText = FileUtil.toFileObject(buildFan).asText();
+					String buildText = FileUtil.toFileObject(FileUtil.normalizeFile(buildFan)).asText();
 					Matcher m = POD_NAME_PATTERN.matcher(buildText);
 					if(m.find())
 					{
@@ -179,7 +179,7 @@ public class FanUtilities
 			File f = new File(folder, "build.fan");
 			if (f.exists())
 			{
-				return folder;
+				return FileUtil.normalizeFile(folder);
 			}
 			folder = folder.getParentFile();
 		}

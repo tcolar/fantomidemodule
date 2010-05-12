@@ -526,7 +526,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 	private FileObject getFileObject(String file)
 	{
 		File f = new File(file);
-		FileObject fo = FileUtil.toFileObject(f);
+		FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(f));
 		String path = null;
 		if (fo == null && file.contains("!/"))
 		{

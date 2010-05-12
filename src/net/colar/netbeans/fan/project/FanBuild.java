@@ -182,7 +182,7 @@ public class FanBuild {
             if (buildFile.exists()) {
                 buildFile.delete();
             }
-            final FileObject buildFo = FileUtil.toFileObject(buildFile);
+            final FileObject buildFo = FileUtil.toFileObject(FileUtil.normalizeFile(buildFile));
             final FileObject license = FanUtilities.getRelativeFileObject(buildTemplate, "../../Licenses/FanDefaultLicense.txt");
             view.addVariable("license", license.asText());
             String buildText = buildTemplate.asText();

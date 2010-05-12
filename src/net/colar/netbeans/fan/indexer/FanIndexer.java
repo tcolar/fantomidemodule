@@ -155,7 +155,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			return;
 		boolean isPod = path.toLowerCase().endsWith(".pod");
 
-		FileObject fo = FileUtil.toFileObject(new File(path));
+		FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(new File(path)));
 		if (fo.getNameExt().equalsIgnoreCase("sys.pod"))
 		{
 			warnIfNecessary();
@@ -179,7 +179,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 			return;
 		}
 
-		if (!isAllowedIndexing(FileUtil.toFileObject(new File(path))))
+		if (!isAllowedIndexing(FileUtil.toFileObject(FileUtil.normalizeFile(new File(path)))))
 		{
 			log.info("Skipping: " + path);
 			return;
@@ -190,7 +190,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 		// Get a snaphost of the source
 		File f = new File(path);
 
-		FileObject fo = FileUtil.toFileObject(f);
+		FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(f));
 		Source source = Source.create(fo);
 		Snapshot snapshot = source.createSnapshot();
 		// Parse the snaphot
