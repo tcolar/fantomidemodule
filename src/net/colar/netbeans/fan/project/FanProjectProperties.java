@@ -42,7 +42,7 @@ public class FanProjectProperties
 	{
 		assert project != null;
 		this.project = project;
-		propFile = new File(project.getProjectDirectory() + File.separator + PROJ_PROPS_PATH);
+		propFile = new File(project.getProjectDirectory().getPath() + File.separator + PROJ_PROPS_PATH);
 		load();
 		FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(propFile));
 		fo.addFileChangeListener(new FanPropsListener());
