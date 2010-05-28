@@ -1,3 +1,5 @@
+ping!
+
 update completion for function types to complete like
 b.call |->| {}    rather than  b.call(f)
 Competion of method params (afte parenthesis
