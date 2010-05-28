@@ -212,10 +212,10 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 		// If not a fan file, or not found in pods, then try "standard" way
 
-		if(relativePath.endsWith(".java") && (relativePath.startsWith("fan/") || relativePath.startsWith("fanx/")))
+		if (relativePath.endsWith(".java") && (relativePath.startsWith("fan/") || relativePath.startsWith("fanx/")))
 		{
 			// TODO: Kinda lame, we should "search" for it, rather than assume in java folder.
-			relativePath = "java/"+relativePath;
+			relativePath = "java/" + relativePath;
 		}
 		path = getURLPath(relativePath, null, global);
 
@@ -332,7 +332,11 @@ public class FanDebugPathProvider extends SourcePathProvider
 		}
 
 		String path = fo.getPath();
-		File folder = FanUtilities.getPodFolderForPath(path).getParentFile();
+		File folder = null;
+		if (FanUtilities.getPodFolderForPath(path) != null)
+		{
+			folder = FanUtilities.getPodFolderForPath(path).getParentFile();
+		}
 		System.out.println("fo path:" + path);
 		if (folder != null)
 		{ // Fantom sources
@@ -414,7 +418,7 @@ public class FanDebugPathProvider extends SourcePathProvider
 			try
 			{
 				String rootURL = fileObject.getURL().toString();
-				System.out.println(rootURL+" VS "+fileObject.getURL());
+				System.out.println(rootURL + " VS " + fileObject.getURL());
 				if (url.startsWith(rootURL))
 				{
 					String root = getRoot(fileObject);
