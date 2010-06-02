@@ -31,7 +31,7 @@ import org.parboiled.annotations.SuppressSubnodes;
 public class FantomParser extends BaseParser<AstNode>
 {
 	//Note: Fields in PB parse can NOT be private
-	final FantomParserAstActions ast = new FantomParserAstActions();
+	public FantomParserAstActions ast = new FantomParserAstActions();
 
 	boolean inFieldInit = false; // to help with differentiation of field accesor & itBlock
 	boolean inEnum = false; // so we know whether to allow enumDefs
@@ -1186,7 +1186,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public void cancel()
 	{
 		System.out.println("cancel called!");
-		//cancel=true;
+		cancel=true;
 	}
 
 		// ============ Simulate a lexer ===========================================
@@ -1271,4 +1271,5 @@ public class FantomParser extends BaseParser<AstNode>
 	{
 		return Sequence(expr(), ast.newRootNode(AstKind.DUMMY_ROOT_NODE, parserTask));
 	}
+
 }
