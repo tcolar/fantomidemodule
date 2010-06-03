@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import javax.swing.text.Document;
@@ -26,6 +27,7 @@ import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.CancellableRecoveringParserRunner;
 import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
+import net.colar.netbeans.fan.parboiled.FantomParserAstActions;
 import net.colar.netbeans.fan.parboiled.ParserCancelledError;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
@@ -50,7 +52,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.parboiled.Node;
 import org.parboiled.Parboiled;
-import org.parboiled.ParserStatistics;
+import org.parboiled.common.StringUtils;
 import org.parboiled.errors.ErrorUtils;
 import org.parboiled.errors.ParseError;
 import org.parboiled.support.ParseTreeUtils;
@@ -59,14 +61,14 @@ import org.parboiled.support.ParsingResult;
 /**
  * Parse a fan file and holds the results
  * parse() parses the file
- * parseScope() adds to the tree scope vraiables etc...
+ * parseScope() adds to the tree scope variables etc...
  * @author  tcolar
  */
 public class FanParserTask extends ParserResult
 {
 
   boolean invalidated = false;
-  public boolean dumpTree = false; // debug
+  public boolean dumpTree = true; // debug
   List<Error> errors = new Vector<Error>(); // -> use parsingResult.errors ?
   // full path of the source file
   private final FileObject sourceFile;
@@ -206,6 +208,10 @@ public class FanParserTask extends ParserResult
       {
         cleanup();
         return;
+      } catch (CancellationException e)
+      {
+        cleanup();
+        return;
       } catch (ExecutionException e)
       {
         cleanup();
@@ -222,6 +228,7 @@ public class FanParserTask extends ParserResult
         Runtime.getRuntime().gc();
         return;
       }
+
       // Copy parboiled parse error into a CSL errrors
       for (ParseError err : parsingResult.parseErrors)
       {
@@ -235,8 +242,8 @@ public class FanParserTask extends ParserResult
       if (parsingResult.parseTreeRoot != null)
       {
         astRoot = parsingResult.parseTreeRoot.getValue();
-        // Removed orphaned(backtracked) AST nodes.
-        prune(astRoot, getRootLabel(astRoot));
+        // link ast nodes together
+        FantomParserAstActions.linkNodes(parsingResult.parseTreeRoot, astRoot);
       }
     } catch (Exception e)
     {
@@ -254,11 +261,6 @@ public class FanParserTask extends ParserResult
     if (parsingTask != null)
     {
       parsingTask.cancel(true);
-    }
-    if (parser != null && parser.ast != null && parser.ast.orphanNodes != null)
-    {
-      parser.ast.orphanNodes.clear();
-      parser.ast.orphanNodes = null;
     }
   }
 
@@ -774,34 +776,33 @@ public class FanParserTask extends ParserResult
    */
   public void prune(AstNode node, String rootLabel)
   {
-    List<AstNode> children = node.getChildren();
-    List<AstNode> toBepruned = new ArrayList<AstNode>();
-    for (AstNode child : children)
-    {
-      Node<AstNode> parseNode = child.getParseNode();
-      // If the node is orphaned (no link back to the root), that means it was backtracked out of.
-      String label = "N/A";
-      while (parseNode != null)
-      {
-        label = parseNode.getLabel();
-        parseNode = parseNode.getParent();
-      }
-      if (!rootLabel.equals(label))
-      {
-        toBepruned.add(child);
-      } else
-      {
-        // recurse into children
-        prune(child, rootLabel);
-      }
-    }
-    // Drop the orphaned nodes
-    for (AstNode nd : toBepruned)
-    {
-      children.remove(nd);
-    }
+  List<AstNode> children = node.getChildren();
+  List<AstNode> toBepruned = new ArrayList<AstNode>();
+  for (AstNode child : children)
+  {
+  Node<AstNode> parseNode = child.getParseNode();
+  // If the node is orphaned (no link back to the root), that means it was backtracked out of.
+  String label = "N/A";
+  while (parseNode != null)
+  {
+  label = parseNode.getLabel();
+  parseNode = parseNode.getParent();
   }
-
+  if (!rootLabel.equals(label))
+  {
+  toBepruned.add(child);
+  } else
+  {
+  // recurse into children
+  prune(child, rootLabel);
+  }
+  }
+  // Drop the orphaned nodes
+  for (AstNode nd : toBepruned)
+  {
+  children.remove(nd);
+  }
+  }
   public String getRootLabel(AstNode rootNode)
   {
     Node<AstNode> parseNode = rootNode.getParseNode();
@@ -1473,7 +1474,7 @@ public class FanParserTask extends ParserResult
 
   void cancel()
   {
-    System.out.println("Parser cancel called");
+    //System.out.println("Parser cancel called");
     if (runner != null)
     {
       runner.cancel();
@@ -1486,11 +1487,6 @@ public class FanParserTask extends ParserResult
     {
       // TODO: this seem to cause crashes/deadlock
       parser.cancel();
-      if (parser.ast != null && parser.ast.orphanNodes != null)
-      {
-        parser.ast.orphanNodes.clear();
-        parser.ast = null;
-      }
       parser = null;
     }
   }

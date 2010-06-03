@@ -16,6 +16,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.parboiled.Node;
 import org.parboiled.support.InputBuffer;
 import org.parboiled.support.InputLocation;
+import org.parboiled.trees.GraphNode;
 
 /**
  * This is the AST node, it's linked to it's parent and children AST Node
@@ -24,7 +25,7 @@ import org.parboiled.support.InputLocation;
  * So we can go back and force between parseNode and AstNode easily.
  * @author thibautc
  */
-public class AstNode
+public class AstNode implements GraphNode
 {
 
 	/** Reference to the parse Node, this AST node was created from*/
@@ -47,9 +48,11 @@ public class AstNode
 	private Hashtable<String, FanAstScopeVarBase> scopeVars = null;
 	/**Type of this node (say 'Str' or 'Bool') - used for completion, etc...*/
 	private FanResolvedType type;
+    int id;
 
-	public AstNode(AstKind kind, String path, Node<AstNode> parseNode, String nodeText)
+	public AstNode(int id, AstKind kind, String path, Node<AstNode> parseNode, String nodeText)
 	{
+        this.id=id;
 		this.parseNode = parseNode;
 		this.kind = kind;
 		this.parsePath = path;
@@ -62,7 +65,7 @@ public class AstNode
 	public String toString()
 	{
 		//ParseTreeUtils.getNodeText(parseNode, null)
-		StringBuffer txt = new StringBuffer(kind.toString());
+		StringBuffer txt = new StringBuffer(kind.toString()).append(" ").append(id);
 		txt.append("(");
 		txt.append(type == null ? "" : type);
 		txt.append(") ");
@@ -306,5 +309,8 @@ public class AstNode
 				getStartLocation().getIndex()+endOffset);
 	}
 
-
+    public int getId()
+    {
+      return id;
+    }
 }

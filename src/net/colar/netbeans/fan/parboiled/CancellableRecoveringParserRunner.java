@@ -9,7 +9,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 import org.parboiled.MatchHandler;
 import org.parboiled.MatcherContext;
 import org.parboiled.RecoveringParseRunner;
@@ -22,8 +21,6 @@ import org.parboiled.support.ParsingResult;
  */
 public class CancellableRecoveringParserRunner<V> extends RecoveringParseRunner<V>  implements Callable<ParsingResult>
 {
-  int cpt = 0;
-
   boolean cancelled = false;
 
   public CancellableRecoveringParserRunner(Rule rule, String input)
@@ -73,12 +70,6 @@ public class CancellableRecoveringParserRunner<V> extends RecoveringParseRunner<
         throw new ParserCancelledError();
       }
       boolean b = handler.match(mc);
-
-      cpt++;
-      if(cpt%10000 == 0)
-        System.out.println(mc.getPath().toString()+" : "+cpt);
-
-
 
       return b;
     }

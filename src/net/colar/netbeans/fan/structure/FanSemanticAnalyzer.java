@@ -15,7 +15,6 @@ import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
-import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -24,7 +23,6 @@ import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.parboiled.Node;
-import org.parboiled.google.base.Predicate;
 
 /**
  * The semantic Analyzer looks at the structure(AST tree),
@@ -35,8 +33,6 @@ import org.parboiled.google.base.Predicate;
 public class FanSemanticAnalyzer extends SemanticAnalyzer
 {
 
-	private static final Set<ColoringAttributes> ErrorSet = Collections.singleton(ColoringAttributes.UNDEFINED);
-	private volatile boolean cancelled = false;
 	private Map<OffsetRange, Set<ColoringAttributes>> highlights = null;
 	// not nearly perfect
 	private static final Pattern INTERPOLATION = Pattern.compile("[^\\\\]\\$\\{?[a-zA-Z0-9\\.\\(\\)]*\\}?");
@@ -70,12 +66,6 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 	public Class<? extends Scheduler> getSchedulerClass()
 	{
 		return Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER;
-	}
-
-	@Override
-	public void cancel()
-	{
-		this.cancelled = true;
 	}
 
 	/**
@@ -130,7 +120,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 		Set<ColoringAttributes> newAttributes = EnumSet.copyOf(colorAttributes);
 
 		@SuppressWarnings("unchecked")
-                AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
+        AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
 		if (hasModifier(node, "static"))
 		{
 			newAttributes.add(ColoringAttributes.STATIC);
@@ -190,4 +180,11 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
 			newHighlights.put(range, ColoringAttributes.CUSTOM2_SET);
 		}
 	}
+
+  @Override
+  public void cancel()
+  {
+    //throw new UnsupportedOperationException("Not supported yet.");
+    //TODO
+  }
 }

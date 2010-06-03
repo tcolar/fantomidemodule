@@ -11,6 +11,7 @@ import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FantomParser;
+import net.colar.netbeans.fan.parboiled.FantomParserAstActions;
 import net.jot.testing.JOTTester;
 import org.parboiled.Parboiled;
 import org.parboiled.RecoveringParseRunner;
@@ -18,6 +19,9 @@ import org.parboiled.Rule;
 import org.parboiled.common.StringUtils;
 import org.parboiled.support.ParseTreeUtils;
 import org.parboiled.support.ParsingResult;
+import org.parboiled.support.ToStringFormatter;
+import org.parboiled.trees.GraphNode;
+import org.parboiled.trees.GraphUtils;
 
 /**
  * Test new parboiled based parser
@@ -32,7 +36,7 @@ public class FantomParserTest extends FantomCSLTest
 		ParsingResult<AstNode> result = null;
 		String fanHome = prefs.getString("fantom.home");
 
-		boolean singleTest = false;// Do just the 1 first test
+		boolean singleTest = true;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
 		boolean fantomFilesTest = true; // parse fantom distro files
@@ -42,7 +46,7 @@ public class FantomParserTest extends FantomCSLTest
 		{
 			try
 			{
-				testFile(fanHome + "/src/compiler/fan/parser/Tokenizer.fan", false);
+				testAst("/home/thibautc/NetBeansProjects/fantomutils/netColarDb/fan/DBModel.fan");
 				//result = parse(parser, parser.ifExprBody(), "3 : 5");
 				//testNodeName("Ternary expr", result, "ifExprBody", "3");
 				//result = parse(parser, parser.localDef(), "Int i := a>b ? 3 : 5");
@@ -508,9 +512,10 @@ public class FantomParserTest extends FantomCSLTest
 		}
 
 		AstNode nd = result.parseTreeRoot.getValue();
+        FantomParserAstActions.linkNodes(result.parseTreeRoot, nd);
 		String inc = "";
 		AstNode.printNodeTree(nd, inc, result.inputBuffer);
-		//System.out.println("Abstract Syntax Tree:\n" +
+        //System.out.println("Abstract Syntax Tree:\n" +
 		//            GraphUtils.printTree(result.parseTreeRoot.getValue(), new ToStringFormatter<AstNode>()) + '\n');
 		//System.err.println("Parse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
 	}

@@ -18,7 +18,7 @@ public class RootNode extends AstNode
 
 	public RootNode(AstKind kind, String path, Node<AstNode> parseNode, FanParserTask task)
 	{
-		super(kind, path, parseNode, "ROOT");
+		super(0, kind, path, parseNode, "ROOT");
 		this.task = task;
 	}
 
