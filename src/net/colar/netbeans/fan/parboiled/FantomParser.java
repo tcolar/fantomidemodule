@@ -128,7 +128,7 @@ public class FantomParser extends BaseParser<AstNode>
 			enforcedSequence(FACET, KW_CLASS, ast.newNode(AstKind.AST_FACET)), // facet class
 			Sequence(Sequence(Optional(Sequence(KW_CONST, ast.newNode(AstKind.AST_MODIFIER))), KW_MIXIN), ast.newNode(AstKind.AST_MIXIN)) // mixin
 			),
-			id(), ast.newNode(AstKind.AST_ID),
+			Sequence(id(), ast.newNode(AstKind.AST_ID)),
 			Optional(inheritance()),
 			OPT_LF(),
 			Sequence(
@@ -226,8 +226,8 @@ public class FantomParser extends BaseParser<AstNode>
 				KW_OVERRIDE, KW_VIRTUAL, KW_FINAL), ast.newNode(AstKind.AST_MODIFIER))),
 				// Some fantom code has protection after modifiers, so allowing that
 				Optional(protection()),
-				type(), ast.newNode(AstKind.AST_TYPE),
-				id(), ast.newNode(AstKind.AST_ID),
+				Sequence(type(), ast.newNode(AstKind.AST_TYPE)),
+				Sequence(id(), ast.newNode(AstKind.AST_ID)),
 				PAR_L),
 			Optional(params()),
 			PAR_R,

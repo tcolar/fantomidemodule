@@ -32,6 +32,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
   public boolean newNode(AstKind kind)
   {
     Node<AstNode> parseNode = lastNode();
+    System.out.println("New node:"+id+" "+kind);
     AstNode node = new AstNode(id++, kind, getPath(), parseNode, lastText());
     //linkNode(node);
     set(node);
@@ -47,6 +48,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
   public boolean newScopeNode(AstKind kind)
   {
     Node<AstNode> parseNode = lastNode();
+    System.out.println("New scope node:"+id+" "+kind);
     AstNode node = new AstNode(id++, kind, getPath(), parseNode, lastText());
     node.setIsScopeNode();
     //linkNode(node);
@@ -102,6 +104,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
     for (Node<AstNode> sub : rootNode.getChildren())
     {
       AstNode astNode = sub.getValue();
+      System.out.println("nd: "+astNode);
       if (astNode != null)
       {
         // In parboiled getValue 'bubbles up' the value from teh children, we want to connect the 'actual' value node
@@ -124,6 +127,10 @@ public class FantomParserAstActions extends BaseActions<AstNode>
           astNode.setParent(astRoot);
           linkNodes(sub, astNode);
         }
+      }
+      else
+      {
+        linkNodes(sub, astRoot);
       }
     }
   }

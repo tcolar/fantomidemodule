@@ -244,6 +244,8 @@ public class FanParserTask extends ParserResult
         astRoot = parsingResult.parseTreeRoot.getValue();
         // link ast nodes together
         FantomParserAstActions.linkNodes(parsingResult.parseTreeRoot, astRoot);
+        String parseTreePrintOut = ParseTreeUtils.printNodeTree(parsingResult);
+        System.out.println(parseTreePrintOut);
       }
     } catch (Exception e)
     {
