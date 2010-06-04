@@ -3,8 +3,6 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseActions;
 import org.parboiled.Node;
@@ -32,7 +30,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
   public boolean newNode(AstKind kind)
   {
     Node<AstNode> parseNode = lastNode();
-    System.out.println("New node:"+id+" "+kind);
+    //System.out.println("New node:"+id+" "+kind);
     AstNode node = new AstNode(id++, kind, getPath(), parseNode, lastText());
     //linkNode(node);
     set(node);
@@ -48,7 +46,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
   public boolean newScopeNode(AstKind kind)
   {
     Node<AstNode> parseNode = lastNode();
-    System.out.println("New scope node:"+id+" "+kind);
+    //System.out.println("New scope node:"+id+" "+kind);
     AstNode node = new AstNode(id++, kind, getPath(), parseNode, lastText());
     node.setIsScopeNode();
     //linkNode(node);
@@ -104,7 +102,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
     for (Node<AstNode> sub : rootNode.getChildren())
     {
       AstNode astNode = sub.getValue();
-      System.out.println("nd: "+astNode);
+      //System.out.println("nd: "+astNode);
       if (astNode != null)
       {
         // In parboiled getValue 'bubbles up' the value from teh children, we want to connect the 'actual' value node
@@ -113,7 +111,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
         for(Node<AstNode> baby : sub.getChildren())
         {
           if(baby.getValue()!=null && baby.getValue().getId() == id)
-            skip =true;
+            skip = true;
         }
         // If this is a bubbled up value, just keep going down the tree
         if ( skip )
@@ -127,10 +125,6 @@ public class FantomParserAstActions extends BaseActions<AstNode>
           astNode.setParent(astRoot);
           linkNodes(sub, astNode);
         }
-      }
-      else
-      {
-        linkNodes(sub, astRoot);
       }
     }
   }

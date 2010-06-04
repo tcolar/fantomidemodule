@@ -52,7 +52,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.parboiled.Node;
 import org.parboiled.Parboiled;
-import org.parboiled.common.StringUtils;
 import org.parboiled.errors.ErrorUtils;
 import org.parboiled.errors.ParseError;
 import org.parboiled.support.ParseTreeUtils;
@@ -68,7 +67,7 @@ public class FanParserTask extends ParserResult
 {
 
   boolean invalidated = false;
-  public boolean dumpTree = true; // debug
+  public boolean dumpTree = false; // debug
   List<Error> errors = new Vector<Error>(); // -> use parsingResult.errors ?
   // full path of the source file
   private final FileObject sourceFile;
@@ -244,8 +243,8 @@ public class FanParserTask extends ParserResult
         astRoot = parsingResult.parseTreeRoot.getValue();
         // link ast nodes together
         FantomParserAstActions.linkNodes(parsingResult.parseTreeRoot, astRoot);
-        String parseTreePrintOut = ParseTreeUtils.printNodeTree(parsingResult);
-        System.out.println(parseTreePrintOut);
+        //String parseTreePrintOut = ParseTreeUtils.printNodeTree(parsingResult);
+        //System.out.println(parseTreePrintOut);
       }
     } catch (Exception e)
     {
@@ -432,7 +431,7 @@ public class FanParserTask extends ParserResult
     {
       switch (node.getKind())
       {
-        /*case AST_FIELD_ACCESSOR:
+        /*case   TODO: AST_FIELD_ACCESSOR:
         AstNode fNode = FanLexAstUtils.findParentNode(node, AstKind.AST_FIELD_DEF);
         if (fNode != null)
         {
@@ -577,10 +576,10 @@ public class FanParserTask extends ParserResult
     {
       addError("Could not resolve item -> " + text, node);
 
-      FanUtilities.GENERIC_LOGGER.info(">Unresolved node");
+      //FanUtilities.GENERIC_LOGGER.info(">Unresolved node");
       //FanLexAstUtils.dumpTree(node, 0);
       //FanLexAstUtils.dumpTree(astRoot, 0);
-      FanUtilities.GENERIC_LOGGER.info("<Unresolved node");
+      //FanUtilities.GENERIC_LOGGER.info("<Unresolved node");
     }
   }
 

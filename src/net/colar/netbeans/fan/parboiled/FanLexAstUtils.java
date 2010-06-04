@@ -326,16 +326,22 @@ public class FanLexAstUtils
 
 	public static void dumpTree(AstNode node, int indent)
 	{
-		StringBuffer sb = new StringBuffer(indent);
+      StringBuffer sb = new StringBuffer();
+      getDumpTree(sb, node, indent);
+      FanUtilities.GENERIC_LOGGER.info(sb.toString());
+	}
+
+    private static void getDumpTree(StringBuffer sb, AstNode node, int indent)
+	{
 		for (int i = 0; i < indent; i++)
 		{
 			sb = sb.append("  ");
 		}
-		FanUtilities.GENERIC_LOGGER.info(sb.toString() + node.toString());
+        sb.append(node.toString()).append("\n");
 		indent=indent+1;
 		for (AstNode child : node.getChildren())
 		{
-			dumpTree(child, indent + 1);
+			getDumpTree(sb, child, indent + 1);
 		}
 	}
 }
