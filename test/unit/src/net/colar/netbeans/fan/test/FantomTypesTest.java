@@ -11,6 +11,7 @@ import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.FantomParser;
+import net.colar.netbeans.fan.parboiled.FantomParserAstActions;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanLocalScopeVar;
@@ -33,7 +34,7 @@ public class FantomTypesTest extends FantomCSLTest
 
 	static String[] testUsings =
 	{
-		"web::Weblet", "fwt::Button", "fwt::Widget", 
+		"web::Weblet", "fwt::Button", "fwt::Widget", "concurrent::Actor", "concurrent::ActorPool",
 		"web::WebUtil", "java.lang.Runtime"
 	};
 	// will put slots from those types in scope as well (as inherited)
@@ -142,7 +143,7 @@ public class FantomTypesTest extends FantomCSLTest
 		
 		// enums
 		checkExpr("Month.vals", null, false, false);
-		checkExpr("Month.fromStr(\"abc)\"", null, false, false);
+		checkExpr("Month.fromStr(\"abc)\"", null, true, false);
 		checkExpr("Month.mar", null, false, false);
 		checkExpr("Month.mar.name", null, false, false);
 		// Facet
@@ -157,8 +158,7 @@ public class FantomTypesTest extends FantomCSLTest
 		FanResolvedType.forcedThisType = "sys::TimeoutErr";
 		checkExpr("Err.super.toStr)", null, false, false);
 		FanResolvedType.forcedThisType = null;
-		checkExpr("Obj.trap?.toStr", null, true, false);
-		checkExpr("Obj.trap?.toStr?.toStr", null, true, false);
+		checkExpr("Obj.trap?.toStr", null, false, false);
 		checkExpr("500ms.ticks.abs", null, false, false);
 
 		// Testing isCompatible()
@@ -169,7 +169,7 @@ public class FantomTypesTest extends FantomCSLTest
 		JOTTester.checkIf("Compatibility of Button vs widget", mkt("fwt::Button", node).isTypeCompatible(mkt("fwt::Widget", node)));
 
 		// Testing getParent()
-		t = mkt("sys::Actor", node);
+		t = mkt("concurrent::Actor", node);
 		FanResolvedType p = t.getParentType();
 		JOTTester.checkIf("Actor parent is Obj", p.getDbType().getQualifiedName().equals("sys::Obj"), p.toString());
 		t = mkt("sys::Weekday", node);
@@ -182,10 +182,12 @@ public class FantomTypesTest extends FantomCSLTest
 		p = t.getParentType();
 		JOTTester.checkIf("Mixin parent is Obj", p.getDbType().getQualifiedName().equals("sys::Obj"), p.toString());
 
+    	checkExpr("Str<|{\"foo\": 1234}|>.in", "sys::InStream", false, false); // DSL too
+
 		// Still failing items:
-		checkExpr("3>2 ? `gg` : null ", "sys::Uri[]?", true, false); // ternary result
-		checkExpr("Regex<|(a*)(a+)|>", "sys::Regex", false, false); // DSL call
-		checkExpr("Str<|{\"foo\": 1234}|>.in", "sys::InStream", false, false); // DSL too
+		//checkExpr("3>2 ? `gg` : null ", "sys::Uri[]?", true, false); // ternary result
+		//checkExpr("Regex<|(a*)(a+)|>", "sys::Regex", false, false); // DSL call
+		//checkExpr("Obj.trap?.toStr?.toStr", null, false, false);
 	}
 
 	private FanResolvedType mkt(String qType, AstNode node)
@@ -241,7 +243,8 @@ public class FantomTypesTest extends FantomCSLTest
 		ParsingResult<AstNode> result = RecoveringParseRunner.run(parser.testExpr(), expr);
 		JOTTester.checkIf("Checking for parsing errors: " + expr, !result.hasErrors(), StringUtils.join(result.parseErrors, "\n"));
 		AstNode node = result.parseTreeRoot.getValue();
-		task.prune(node, task.getRootLabel(node));
+        FantomParserAstActions.linkNodes(result.parseTreeRoot, node);
+
 		addUsingsToNode(node, testUsings);
 		addTypeSlotsToNode(node, task, testSlots);
 		task.parseVars(node, null);

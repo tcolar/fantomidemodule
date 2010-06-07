@@ -36,7 +36,7 @@ public class FantomParserTest extends FantomCSLTest
 		ParsingResult<AstNode> result = null;
 		String fanHome = prefs.getString("fantom.home");
 
-		boolean singleTest = true;// Do just the 1 first test
+		boolean singleTest = false;// Do just the 1 first test
 		boolean grammarTest = true; // Do all the grammar tests
 		boolean refFilesTest = false; // parse the reference test files
 		boolean fantomFilesTest = true; // parse fantom distro files
@@ -226,8 +226,8 @@ public class FantomParserTest extends FantomCSLTest
 			testNodeName("Call4", result, "call", "toto(a, b)|->|{i=5}");
 			result = parse(parser, parser.idExpr(), "toto");
 			testNodeName("IdExpr1", result, "idExpr", "toto");//id
-			result = parse(parser, parser.idExpr(), "*toto");
-			testNodeName("IdExpr2", result, "idExpr", "*toto");//field
+			result = parse(parser, parser.idExpr(), "&toto");
+			testNodeName("IdExpr2", result, "idExpr", "&toto");//field
 			result = parse(parser, parser.idExpr(), "blah()");
 			testNodeName("IdExpr3", result, "idExpr", "blah()");//call
 			result = parse(parser, parser.expr(), "toto.blah()");
@@ -345,10 +345,10 @@ public class FantomParserTest extends FantomCSLTest
 			testNodeName("FieldDef4", result, "slotDef", "Int a{get{i=23}\nprivate set{}\n}");
 			result = parse(parser, parser.slotDef(), "Int a:=23{get{i=23}\nprivate set{}\n}");
 			testNodeName("FieldDef5", result, "slotDef", "Int a:=23{get{i=23}\nprivate set{}\n}");
-			result = parse(parser, parser.slotDef(), "override CType? base { get { load; return *base } internal set}");
-			testNodeName("FieldDef6", result, "slotDef", "override CType? base { get { load; return *base } internal set}");
-			result = parse(parser, parser.slotDef(), "**comment\nUri reqUri := ``\n  {\n    set { if (!it.isAbs) throw ArgErr(\"Request URI not absolute: `$it`\"); *reqUri = it }\n  }");
-			testNodeName("FieldDef7", result, "slotDef", "**comment\nUri reqUri := ``\n  {\n    set { if (!it.isAbs) throw ArgErr(\"Request URI not absolute: `$it`\"); *reqUri = it }\n  }");
+			result = parse(parser, parser.slotDef(), "override CType? base { get { load; return &base } internal set}");
+			testNodeName("FieldDef6", result, "slotDef", "override CType? base { get { load; return &base } internal set}");
+			result = parse(parser, parser.slotDef(), "**comment\nUri reqUri := ``\n  {\n    set { if (!it.isAbs) throw ArgErr(\"Request URI not absolute: `$it`\"); &reqUri = it }\n  }");
+			testNodeName("FieldDef7", result, "slotDef", "**comment\nUri reqUri := ``\n  {\n    set { if (!it.isAbs) throw ArgErr(\"Request URI not absolute: `$it`\"); &reqUri = it }\n  }");
 			result = parse(parser, parser.slotDef(), "private static Void doit(Str a, Int b){}");
 			testNodeName("MethodDef1", result, "slotDef", "private static Void doit(Str a, Int b){}");
 			result = parse(parser, parser.slotDef(), "Void doit(Str s){i:=5}");

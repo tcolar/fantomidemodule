@@ -32,7 +32,6 @@ public class FantomParserAstActions extends BaseActions<AstNode>
     Node<AstNode> parseNode = lastNode();
     //System.out.println("New node:"+id+" "+kind);
     AstNode node = new AstNode(id++, kind, getPath(), parseNode, lastText());
-    //linkNode(node);
     set(node);
     //System.out.println(node+" : "+lastText());
     return true;
@@ -49,7 +48,6 @@ public class FantomParserAstActions extends BaseActions<AstNode>
     //System.out.println("New scope node:"+id+" "+kind);
     AstNode node = new AstNode(id++, kind, getPath(), parseNode, lastText());
     node.setIsScopeNode();
-    //linkNode(node);
     set(node);
     return true;
   }
@@ -64,35 +62,10 @@ public class FantomParserAstActions extends BaseActions<AstNode>
     Node<AstNode> parseNode = lastNode();
     RootNode node = new RootNode(kind, getPath(), parseNode, task);
     node.setIsScopeNode();
-    //linkNode(node);
     set(node);
     return true;
   }
 
-  /**
-   * Maintain node links (to parents / children / parsenode)
-   * @param node
-   */
-  /*private void linkNode(AstNode node)
-  {
-  List<AstNode> newOrphans = new ArrayList<AstNode>();
-  for(AstNode nd : orphanNodes)
-  {
-  if (nd.getParsePath().length() > node.getParsePath().length() && nd.getParsePath().startsWith(node.getParsePath()))
-  {
-  //System.out.println("Linking node: "+nd+ " to "+node);
-  nd.setParent(node);
-  node.addChild(nd);
-  }
-  else
-  {
-  //System.out.println("Keeping sibbling node: "+nd);
-  newOrphans.add(nd);
-  }
-  }
-  newOrphans.add(node);
-  orphanNodes = newOrphans;
-  }*/
   public static void linkNodes(Node<AstNode> rootNode, AstNode astRoot)
   {
     if (rootNode == null || astRoot == null)

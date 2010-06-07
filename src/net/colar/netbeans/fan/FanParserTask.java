@@ -775,7 +775,7 @@ public class FanParserTask extends ParserResult
    * This looks for and remove those unwanted nodes.
    * @param node
    */
-  public void prune(AstNode node, String rootLabel)
+  /*public void prune(AstNode node, String rootLabel)
   {
   List<AstNode> children = node.getChildren();
   List<AstNode> toBepruned = new ArrayList<AstNode>();
@@ -814,7 +814,7 @@ public class FanParserTask extends ParserResult
       parseNode = parseNode.getParent();
     }
     return rootLabel;
-  }
+  }*/
 
   @SuppressWarnings("unchecked")
   private FanResolvedType doExpr(AstNode node, FanResolvedType type)
