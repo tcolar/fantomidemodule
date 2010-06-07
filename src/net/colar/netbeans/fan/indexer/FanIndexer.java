@@ -1171,7 +1171,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 					Long l = fanSrcToBeIndexed.get(path);
 					// Hasn't changed in a couple seconds
 					long now = new Date().getTime();
-					if (l.longValue() < now - 2000)
+					if (path!=null && l!=null && l.longValue() < now - 2000)
 					{
 						fanSrcToBeIndexed.remove(path);
 						indexSrc(path);
