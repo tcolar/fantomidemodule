@@ -4,15 +4,15 @@
 package net.colar.netbeans.fan.test;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import net.jot.prefs.JOTPropertiesPreferences;
+import javax.swing.text.StyledDocument;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.modules.csl.spi.GsfUtilities;
+import org.netbeans.modules.csl.api.DataLoadersBridge;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -33,13 +33,17 @@ public class NBTestUtilities
 		return snap;
 	}
 
-	public static Snapshot fileToSnapshot(File f)
+	public static Snapshot fileToSnapshot(File f) throws Exception
 	{
 		FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(f));
-		BaseDocument doc = GsfUtilities.getDocument(fo, true);
-		Source source = Source.create(doc);
+        // throws ClassCastExcpetion in NB 6.9 ??
+		//BaseDocument doc = GsfUtilities.getDocument(fo, true);
+        // so using this intead
+        EditorCookie ec = DataLoadersBridge.getDefault().getCookie(fo, EditorCookie.class);
+        StyledDocument doc = ec.openDocument();
+        Source source = Source.create(doc);
 		Snapshot snap = source.createSnapshot();
-		return snap;
+        return snap;
 	}
 
 	public static List<File> listAllFanFilesUnder(String folderPath) throws Exception
