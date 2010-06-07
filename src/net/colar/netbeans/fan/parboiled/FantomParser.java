@@ -123,7 +123,7 @@ public class FantomParser extends BaseParser<AstNode>
 			enforcedSequence(
 			FirstOf(
 			// Some fantom code has protection after modifiers, so allowing that
-			Sequence(Sequence(ZeroOrMore(Sequence(FirstOf(KW_ABSTRACT, KW_FINAL, KW_CONST), ast.newNode(AstKind.AST_MODIFIER))), Optional(protection()), KW_CLASS), ast.newNode(AstKind.AST_CLASS)), // standard class
+			Sequence(Sequence(ZeroOrMore(Sequence(FirstOf(KW_NATIVE, KW_ABSTRACT, KW_FINAL, KW_CONST), ast.newNode(AstKind.AST_MODIFIER))), Optional(protection()), KW_CLASS), ast.newNode(AstKind.AST_CLASS)), // standard class
 			enforcedSequence(ENUM, KW_CLASS, setInEnum(true), ast.newNode(AstKind.AST_ENUM)), // enum class
 			enforcedSequence(FACET, KW_CLASS, ast.newNode(AstKind.AST_FACET)), // facet class
 			Sequence(Sequence(Optional(Sequence(KW_CONST, ast.newNode(AstKind.AST_MODIFIER))), KW_MIXIN), ast.newNode(AstKind.AST_MIXIN)) // mixin
