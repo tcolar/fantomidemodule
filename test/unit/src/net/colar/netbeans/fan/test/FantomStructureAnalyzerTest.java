@@ -5,6 +5,7 @@ package net.colar.netbeans.fan.test;
 
 import java.io.File;
 import java.util.List;
+import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import net.jot.testing.JOTTester;

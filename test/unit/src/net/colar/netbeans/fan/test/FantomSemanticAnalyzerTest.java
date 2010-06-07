@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
+import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.jot.testing.JOTTester;
@@ -19,6 +20,7 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 {
 
 	File failedListFile = null;
+    // just used for testing fixes on some files I have issues with
 	final String[] badFiles =
 	{
 		"/src/compiler/fan/steps/CheckErrors.fan", // ternary value assignment
@@ -39,7 +41,7 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest
 	public void cslTest() throws Throwable
 	{
 		String fanHome = prefs.getString("fantom.home");
-		// Outputs the names of the failed files into a text file, ina  format that makes it easy to use in a java string array
+		// Outputs the names of the failed files into a text file, in a  format that makes it easy to use in a java string array
 		failedListFile = new File(prefs.getString("test.home") + File.separator + "failed.txt");
 		failedListFile.delete();
 
