@@ -29,6 +29,7 @@ public class CancellableRecoveringParserRunner<V> extends RecoveringParseRunner<
   }
 
   @Override
+  @SuppressWarnings(value = "unchecked")
   protected boolean runRootContext(MatchHandler<V> handler)
   {
     return super.runRootContext(new CancellableHandler(handler));

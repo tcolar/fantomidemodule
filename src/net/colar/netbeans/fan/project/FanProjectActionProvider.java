@@ -6,7 +6,9 @@ package net.colar.netbeans.fan.project;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import net.colar.netbeans.fan.actions.BuildAndRunFanFileAction;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
+import net.colar.netbeans.fan.actions.BuildAndRunFanTestAction;
 import net.colar.netbeans.fan.actions.BuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanAndBuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanFanPodAction;
@@ -15,6 +17,7 @@ import net.colar.netbeans.fan.actions.FanAction;
 import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
+import net.colar.netbeans.fan.actions.RunFanTest;
 import net.colar.netbeans.fan.actions.TestFanPodAction;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.LifecycleManager;
@@ -43,7 +46,10 @@ public class FanProjectActionProvider implements ActionProvider
 			new BuildFanPodAction(project),
 			new CleanFanPodAction(project),
 			new CleanAndBuildFanPodAction(project),
-			new RunFanFile(project, false),
+			new RunFanFile(project),
+			new BuildAndRunFanFileAction(project),
+			new RunFanTest(project),
+			new BuildAndRunFanTestAction(project),
 			new RunFanShellAction(project),
 		};
 		for (FanAction command : commandArray)

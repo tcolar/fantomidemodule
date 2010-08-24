@@ -20,46 +20,24 @@ import org.openide.util.Lookup;
  */
 public class RunFanFile extends FanAction
 {
+	public static final String COMMAND_RUN_FILE = "COMMAND_RUN_FILE";
 
-	protected boolean isTest;
-
-	public RunFanFile(FanProject project, boolean isTest)
+	public RunFanFile(FanProject project)
 	{
 		super(project);
-		this.isTest = isTest;
 	}
 
 	@Override
 	public String getCommandId()
 	{
 		// std run single command
-		return ActionProvider.COMMAND_RUN_SINGLE;
+		return COMMAND_RUN_FILE;
 	}
 
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		Node[] activatedNodes = getSelectedNodes();
-		FileObject file = null;
-		DataObject gdo = activatedNodes[0].getLookup().lookup(DataObject.class);
-		if (gdo != null && gdo.getPrimaryFile() != null)
-		{
-			file = gdo.getPrimaryFile();
-		}
-		if (file != null && file.getMIMEType().equals(FanLanguage.FAN_MIME_TYPE))
-		{
-			String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
-			String script = FileUtil.toFile(file).getAbsolutePath();
-
-			FanExecution fanExec = new FanExecution();
-			fanExec.setDisplayName(file.getName());
-			fanExec.setWorkingDirectory(path);
-			FanPlatform.getInstance().buildFanCall(fanExec);
-			fanExec.addCommandArg(FanPlatform.FAN_CLASS);
-			fanExec.addCommandArg(script);
-
-			fanExec.run();
-		}
+		runFileAction().run();
 	}
 
 	@Override

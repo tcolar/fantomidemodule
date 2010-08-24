@@ -192,6 +192,7 @@ public class FanParserTask extends ParserResult
   /**
    * Parse the file (using parboiled FantomParser)
    */
+  @SuppressWarnings(value = "unchecked")
   public void parse()
   {
     long start = new Date().getTime();

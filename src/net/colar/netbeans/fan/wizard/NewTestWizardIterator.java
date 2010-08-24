@@ -22,10 +22,10 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 /**
- * Iterator for new Fan file wizard
+ * Iterator for new Fan test file wizard
  * @author thibautc
  */
-public final class NewFileWizardIterator implements WizardDescriptor.InstantiatingIterator
+public final class NewTestWizardIterator implements WizardDescriptor.InstantiatingIterator
 {
 
 	private int index;
@@ -43,7 +43,7 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 			String folder = Templates.getTargetFolder(wizard).getPath();
 			panels = new WizardDescriptor.Panel[]
 				{
-					new NewFileWizardPanel1(folder)
+					new NewTestWizardPanel1(folder)
 				};
 			String[] steps = createSteps();
 			for (int i = 0; i < panels.length; i++)
@@ -77,11 +77,10 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 
 	public Set instantiate() throws IOException
 	{
-		NewFileWizardPanel1 panel = getPanel();
+		NewTestWizardPanel1 panel = getPanel();
 		
 		String file = panel.getFile();
 		String name = panel.getName();
-		int combo = panel.getComboChoice();
 
 		File newFile = FileUtil.normalizeFile(new File(file));
 
@@ -89,28 +88,10 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 		File folder = newFile.getParentFile();
 		folder.mkdirs();
 
-
 		//create file
 		FileObject template = Templates.getTemplate(wizard);
 
 		JOTLightweightView view = new TemplateView(template, name);
-
-		switch (combo)
-		{
-			case 0: // class
-				view.addVariable("doClass", Boolean.TRUE);
-				break;
-			case 1: // class with main
-				view.addVariable("doClass", Boolean.TRUE);
-				view.addVariable("doMain", Boolean.TRUE);
-				break;
-			case 2: //mixin
-				view.addVariable("doMixin", Boolean.TRUE);
-				break;
-			case 3:// enum
-				view.addVariable("doEnum", Boolean.TRUE);
-				break;
-		}
 
 		FileObject license = FanUtilities.getRelativeFileObject(template, "../Licenses/FanDefaultLicense.txt");
 		view.addVariable("license", license.asText());
@@ -126,9 +107,9 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 		return Collections.singleton(newFile);
 	}
 
-	public NewFileWizardPanel1 getPanel()
+	public NewTestWizardPanel1 getPanel()
 	{
-		return (NewFileWizardPanel1) panels[0];
+		return (NewTestWizardPanel1) panels[0];
 	}
 
 	public void initialize(WizardDescriptor wizard)

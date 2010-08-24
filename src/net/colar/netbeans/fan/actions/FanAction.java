@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan.actions;
 
 import javax.swing.JOptionPane;
+import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.platform.FanPlatformSettings;
@@ -132,6 +133,26 @@ public abstract class FanAction
 		return null;
 	}
 
+	protected FanExecution testFileAction(Lookup lookup, String testClass)
+	{
+		FileObject file = findTargetProject(lookup);
+		if (file != null)
+		{
+			String podName = file.getName();
+			String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
+			// see if user specified custom main method
+			String target = podName + (testClass == null ? "" : "::" + testClass);
+			FanExecution fanExec = new FanExecution();
+			fanExec.setDisplayName(getProjectName(lookup));
+			fanExec.setWorkingDirectory(path);
+			FanPlatform.getInstance().buildFanCall(fanExec, false);
+			fanExec.addCommandArg(FanPlatform.FANT_CLASS);
+			fanExec.addCommandArg(target);
+			return fanExec;
+		}
+		return null;
+	}
+
 	public String getProjectName(Lookup lookup)
 	{
 		return findTargetProject(lookup).getName();
@@ -170,6 +191,32 @@ public abstract class FanAction
 				fanExec.addCommandArg(target);
 				return fanExec;
 			}
+		}
+		return null;
+	}
+
+	protected FanExecution runFileAction()
+	{
+		Node[] activatedNodes = getSelectedNodes();
+		FileObject file = null;
+		DataObject gdo = activatedNodes[0].getLookup().lookup(DataObject.class);
+		if (gdo != null && gdo.getPrimaryFile() != null)
+		{
+			file = gdo.getPrimaryFile();
+		}
+		if (file != null && file.getMIMEType().equals(FanLanguage.FAN_MIME_TYPE))
+		{
+			String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
+			String script = FileUtil.toFile(file).getAbsolutePath();
+
+			FanExecution fanExec = new FanExecution();
+			fanExec.setDisplayName(file.getName());
+			fanExec.setWorkingDirectory(path);
+			FanPlatform.getInstance().buildFanCall(fanExec);
+			fanExec.addCommandArg(FanPlatform.FAN_CLASS);
+			fanExec.addCommandArg(script);
+
+			return fanExec;
 		}
 		return null;
 	}

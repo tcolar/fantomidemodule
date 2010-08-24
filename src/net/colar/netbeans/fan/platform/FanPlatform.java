@@ -32,6 +32,7 @@ public class FanPlatform
 	private static final String ARCH = System.getProperty("os.arch").toLowerCase();
 	private static FanPlatform instance = new FanPlatform();
 	public final static String FAN_CLASS = "fanx.tools.Fan";
+	public final static String FANT_CLASS = "fanx.tools.Fant";
 	public final static String FAN_SH = "fansh";
 	private String fanHome;
 	private String podsDir;

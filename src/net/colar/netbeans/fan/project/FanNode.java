@@ -10,8 +10,10 @@ import java.util.regex.Pattern;
 import javax.swing.Action;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
 import net.colar.netbeans.fan.actions.DebugFanPodAction;
+import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
+import net.colar.netbeans.fan.actions.RunFanTest;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -34,10 +36,12 @@ public class FanNode extends FilterNode
 {
 
 	public static final Pattern MAIN_METHOD = Pattern.compile("Void\\s+main\\([^)]*\\)\\s*\\{");
+	public static final Pattern TEST_METHOD = Pattern.compile("Void\\s+test\\S*\\([^)]*\\)\\s*\\{");
 	public static final String ATTR_NODE_FILEOBJECT = "NODE_FILEOBJECT";
 	boolean isPod = false;
 	boolean isRoot = false;
 	boolean isRunnable = false;
+	boolean isTesteable = false;
 	private final FileObject file;
 	private String icon;
 	private String desc;
@@ -92,10 +96,8 @@ public class FanNode extends FilterNode
 
 			if (file.getExt().equalsIgnoreCase("fan"))
 			{
-				if (isRunnable(file))
-				{
-					isRunnable = true;
-				}
+				isRunnable = isRunnable(file);
+				isTesteable = isTesteable(file);
 			}
 		}
 		//System.out.println("Node: " + file.getPath() + " " + (isRoot ? "project" : "") + (isPod ? "pod" : "")+(isRunnable ? "runnable" : ""));
@@ -137,7 +139,7 @@ public class FanNode extends FilterNode
 		} else
 		{
 			// Folder actions
-			if (getChildren().getNodesCount() != 0)
+			if (file.isFolder())
 			{
 				putAction(CommonProjectActions.newFileAction());
 				putAction(SystemAction.get(FindAction.class));
@@ -149,7 +151,14 @@ public class FanNode extends FilterNode
 				putAction(SystemAction.get(OpenAction.class));
 				if (isRunnable)
 				{
-					putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Run Fan script", null));
+					putAction(ProjectSensitiveActions.projectCommandAction(RunFanFile.COMMAND_RUN_FILE, "Run script", null));
+					putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Build & Run script", null));
+					putAction(null);
+				}
+				if (isTesteable)
+				{
+					putAction(ProjectSensitiveActions.projectCommandAction(RunFanTest.COMMAND_TEST_FILE, "Run test", null));
+					putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_TEST_SINGLE, "Build & Run test", null));
 					putAction(null);
 				}
 			}
@@ -212,6 +221,19 @@ public class FanNode extends FilterNode
 		{
 			// look for main method
 			result = MAIN_METHOD.matcher(file.asText()).find();
+		} catch (Exception e)
+		{
+		}
+		return result;
+	}
+
+	private boolean isTesteable(FileObject file)
+	{
+		boolean result = false;
+		try
+		{
+			// look for main method
+			result = TEST_METHOD.matcher(file.asText()).find();
 		} catch (Exception e)
 		{
 		}

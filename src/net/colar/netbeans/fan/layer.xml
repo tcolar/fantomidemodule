@@ -125,6 +125,15 @@
 				<attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.NewFileWizardIterator"/>
                 <!--Use this line only if your template makes use of the FreeMarker template language:-->
 			</file>
+			<file name="FantomTest" url="nbresloc:/net/colar/netbeans/fan/templates/FanTest.html">
+				<!--<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>-->
+				<attr name="template" boolvalue="true"/>
+				<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+				<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
+				<attr name="templateWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/templates/FanTestDesc.html"/>
+				<attr name="instantiatingIterator" newvalue="net.colar.netbeans.fan.wizard.NewTestWizardIterator"/>
+                <!--Use this line only if your template makes use of the FreeMarker template language:-->
+			</file>
 		</folder>
 	
 		<folder name="Licenses">
