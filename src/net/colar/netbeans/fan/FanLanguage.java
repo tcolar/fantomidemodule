@@ -21,6 +21,7 @@ import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
+import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
 
 /**
@@ -29,6 +30,7 @@ import org.netbeans.modules.parsing.spi.Parser;
  *
  * @author thibautc
  */
+@LanguageRegistration(mimeType="text/x-fan")
 public class FanLanguage extends DefaultLanguageConfig
 {
 	// Fan mime Type (used all over)
@@ -129,5 +131,4 @@ public class FanLanguage extends DefaultLanguageConfig
 	{
 		return new FanHintsProvider();
 	}
-
 }
