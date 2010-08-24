@@ -90,7 +90,7 @@ public class FanPlatform
 		if (instance.fanHome == null && ! configWarningAlreadyDisplayed)
 		{
 			configWarningAlreadyDisplayed = true;
-			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
+			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options|Misc, Fantom Tab");
 		}
 		return instance!=null && instance.fanHome != null && !"".equals(instance.fanHome);
 	}
@@ -100,7 +100,7 @@ public class FanPlatform
 		// Also show the error each time getInstance() it's called, if not configured
 		if ( ! isConfigured())
 		{
-			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
+			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options|Misc, Fantom Tab");
 		}
 		// throw an exception ?
 		return instance;

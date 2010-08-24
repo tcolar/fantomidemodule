@@ -24,7 +24,6 @@ public class FanUtilities
 {
 
 	public static final JOTLoggerLocation GENERIC_LOGGER = new JOTLoggerLocation("Generic (FanUtilities)");
-	public final static Pattern POD_NAME_PATTERN = Pattern.compile("podName\\s*=\\s*\"(\\S+)\"");
 
 	/**
 	 * Opens the given file in the editor.
@@ -120,51 +119,6 @@ public class FanUtilities
 		File f = new File(fantomHome);
 		f.mkdirs();
 		return f;
-	}
-
-	/**
-	 * Try to resolve the pod name given a source path
-	 *
-	 * Changed from using fantom script parser, because it always fails on partial files.
-	 * It is very possible for the file to be unparseable (incompete)
-	 *
-	 * @param path
-	 * @return
-	 */
-	public static String getPodForPath(String path)
-	{
-		File folder = new File(path).getParentFile();
-		File scriptFolder = folder;
-		String pod = null;
-		while (folder != null)
-		{
-			if (new File(folder, "build.fan").exists())
-			{
-				try
-				{
-					File buildFan = new File(folder, "build.fan");
-					String buildText = FileUtil.toFileObject(FileUtil.normalizeFile(buildFan)).asText();
-					Matcher m = POD_NAME_PATTERN.matcher(buildText);
-					if(m.find())
-					{
-						pod = m.group(1);
-						// found it, break out of loop
-						break;
-					}
-				} catch (IOException e)
-				{
-					e.printStackTrace();
-				}
-			}
-			folder = folder.getParentFile();
-		}
-		if (pod == null)
-		{
-			GENERIC_LOGGER.error("Could not find pod for: " + path);
-			// Must be a script, make-up a "pod" from folder name .. should probably normalize it
-			return "_SCRIPT_" + scriptFolder.getName();
-		}
-		return pod;
 	}
 
 	public static File getPodFolderForPath(String path)

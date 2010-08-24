@@ -30,6 +30,7 @@ import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.FantomParserAstActions;
 import net.colar.netbeans.fan.parboiled.ParserCancelledError;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import net.colar.netbeans.fan.project.FanBuildFileHelper;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
 import net.colar.netbeans.fan.scope.FanLocalScopeVar;
@@ -98,7 +99,7 @@ public class FanParserTask extends ParserResult
     sourceFile = (snapshot == null || snapshot.getSource().getFileObject() == null)
         ? null
         : FileUtil.toFileObject(FileUtil.normalizeFile(new File(snapshot.getSource().getFileObject().getPath())));
-    pod = (sourceFile == null) ? null : FanUtilities.getPodForPath(sourceFile.getPath());
+    pod = (sourceFile == null) ? null : FanBuildFileHelper.getPodForPath(sourceFile.getPath());
     parser = Parboiled.createParser(FantomParser.class, this);
   }
 

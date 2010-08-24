@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.platform.FanPlatformSettings;
+import net.colar.netbeans.fan.project.FanBuildFileHelper;
 import net.colar.netbeans.fan.project.FanProject;
 import net.colar.netbeans.fan.project.FanProjectProperties;
 import org.netbeans.api.debugger.jpda.DebuggerStartException;
@@ -156,7 +157,7 @@ public abstract class FanAction
 		FileObject file = findTargetProject(lookup);
 		if (file != null)
 		{
-			FileObject buildFile = file.getFileObject("build.fan");
+			FileObject buildFile = file.getFileObject(FanBuildFileHelper.BUILD_FILE);
 			if (buildFile != null)
 			{
 				String path = FileUtil.toFile(file).getAbsolutePath();
@@ -165,7 +166,7 @@ public abstract class FanAction
 				fanExec.setWorkingDirectory(path);
 				FanPlatform.getInstance().buildFanCall(fanExec);
 				fanExec.addCommandArg(FanPlatform.FAN_CLASS);
-				fanExec.addCommandArg("build.fan");
+				fanExec.addCommandArg(FanBuildFileHelper.BUILD_FILE);
 				fanExec.addCommandArg(target);
 				return fanExec;
 			}

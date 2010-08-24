@@ -29,7 +29,7 @@ public class FantomParserAstActions extends BaseActions<AstNode>
    */
   public boolean newNode(AstKind kind)
   {
-    Node<AstNode> parseNode = lastNode();
+    Node<AstNode> parseNode = lastNode(); 
     //System.out.println("New node:"+id+" "+kind);
     AstNode node = new AstNode(id++, kind, getPath(), parseNode, lastText());
     set(node);

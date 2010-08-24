@@ -26,6 +26,7 @@ import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import net.colar.netbeans.fan.project.FanBuildFileHelper;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanFieldScopeVar;
 import net.colar.netbeans.fan.scope.FanMethodScopeVar;
@@ -156,7 +157,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
 
 	public String findPod(FileObject file)
 	{
-		return FanUtilities.getPodForPath(file.getPath());
+		return FanBuildFileHelper.getPodForPath(file.getPath());
 	}
 
 	@Override
