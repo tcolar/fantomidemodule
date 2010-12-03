@@ -34,6 +34,10 @@ public class FanPlatform
 	public final static String FAN_CLASS = "fanx.tools.Fan";
 	public final static String FANT_CLASS = "fanx.tools.Fant";
 	public final static String FAN_SH = "fansh";
+        public final static String FAN_TALES_POD_NAME = "tales";
+        public final static String FAN_TALES_CREATE_CMD = "new";
+        public final static String FAN_TALES_RUN_CMD = "run";
+
 	private String fanHome;
 	private String podsDir;
 	private String fanSrc;
@@ -93,7 +97,7 @@ public class FanPlatform
 			configWarningAlreadyDisplayed = true;
 			JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options|Misc, Fantom Tab");
 		}
-		return instance!=null && instance.fanHome != null && !"".equals(instance.fanHome);
+		return instance!=null && instance.fanHome != null;
 	}
 
 	public static FanPlatform getInstance()
@@ -199,7 +203,6 @@ public class FanPlatform
                     fanExec.addCommandArg(opt);
 		}
 
-
 		//OSX only flag needed for SWT (as in fanlaunch)
 		if (IS_MAC)
 		{
@@ -284,6 +287,15 @@ public class FanPlatform
 		File f = new File(fanHome);
 		return FileUtil.toFileObject(FileUtil.normalizeFile(f));
 	}
+
+        public boolean isTalesPresent()
+        {
+            if(!isConfigured())
+                return false;
+            File talesPod = new File(podsDir+File.separator+FAN_TALES_POD_NAME+".pod");
+            return talesPod.exists();
+        }
+
 
 	public FileObject getFanSrcHome()
 	{

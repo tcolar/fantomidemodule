@@ -378,11 +378,12 @@ public class FanJarsIndexer implements FileChangeListener
 			return;
 		}
 
-		String pack = c.getPackage().getName();
-		String qname = c.getName();
-		String name = c.getSimpleName();
 		try
 		{
+                        String pack = c.getPackage().getName();
+                        String qname = c.getName();
+                        String name = c.getSimpleName();
+                        
 			log.info("Indexing class: " + c.getName());
 
 			Vector<FanType> types = FanType.findAllForDoc(null, doc.getId());
@@ -558,7 +559,12 @@ public class FanJarsIndexer implements FileChangeListener
 			{
 				log.exception("Indexing 'rollback' failed for: " + c, e);
 			}
-		} finally
+		} 
+                catch(NoClassDefFoundError ncdf)
+                {
+			log.error("Indexing failed(NCDF) for: " + c);
+                }
+                finally
 		{
 			// cache is dirty.
 			packagesCache.clear();

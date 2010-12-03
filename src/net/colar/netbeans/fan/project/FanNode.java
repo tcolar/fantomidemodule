@@ -14,6 +14,8 @@ import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
 import net.colar.netbeans.fan.actions.RunFanTest;
+import net.colar.netbeans.fan.actions.RunTalesProjectAction;
+import net.colar.netbeans.fan.platform.FanPlatform;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -118,7 +120,13 @@ public class FanNode extends FilterNode
 			// project level actions
 			putAction(CommonProjectActions.newFileAction());
 			putAction(null);
-			putAction(ProjectSensitiveActions.projectCommandAction(BuildAndRunFanPodAction.COMMAND_BUILD_RUN_FAN_POD, "Build & Run Pod", null));
+
+                        if(FanPlatform.getInstance().isTalesPresent())
+                        {
+                            putAction(ProjectSensitiveActions.projectCommandAction(RunTalesProjectAction.COMMAND_RUN_WITH_TALES, "Run with Tales", null));
+                        }
+
+                        putAction(ProjectSensitiveActions.projectCommandAction(BuildAndRunFanPodAction.COMMAND_BUILD_RUN_FAN_POD, "Build & Run Pod", null));
 			putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD, "Build Pod", null));
 			putAction(ProjectSensitiveActions.projectCommandAction(RunFanPodAction.COMMAND_RUN_FAN_POD, "Run Pod", null));
 			putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_CLEAN, "Clean Pod", null));

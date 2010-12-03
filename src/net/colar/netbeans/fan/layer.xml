@@ -152,6 +152,13 @@
 					<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
 					<attr name="template" boolvalue="true"/>
 				</file>
+				<file name="FanTalesProject" url="nbresloc:/net/colar/netbeans/fan/templates/build.html">
+					<attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+					<attr name="instantiatingIterator" methodvalue="net.colar.netbeans.fan.wizard.FanTalesProjectWizardIterator.instance"/>
+					<attr name="instantiatingWizardURL" urlvalue="nbresloc:/net/colar/netbeans/fan/project/NewTalesProjectDescription.html"/>
+					<attr name="SystemFileSystem.icon" urlvalue="nbresloc:/net/colar/netbeans/fan/fan.png"/>
+					<attr name="template" boolvalue="true"/>
+				</file>
 			</folder>
 		</folder>
 	</folder>

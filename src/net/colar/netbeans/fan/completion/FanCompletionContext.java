@@ -140,6 +140,25 @@ public class FanCompletionContext
 			if(FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF) == null)
 				return completionTypes.ROOT_LEVEL;
 
+			// expression completion after a '.' or '?.'
+			//System.out.println("Node :" + node.toString() + " " + node.toStringTree());
+			// Default proposal for ID's (local vars etc..)
+
+                        // do args first because they can "in" a call expression, yet are not part of the call expression
+			if(FanLexAstUtils.findParentNode(node, AstKind.AST_ARG)!=null)
+			{
+				return completionType.ID;
+			}
+                        // do calls
+			AstNode callExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_CALL_EXPR);
+			if(callExpr == null)
+                                callExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_CALL);
+			if(callExpr == null)
+				callExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_INC_CALL);
+			if(callExpr!=null)
+			{
+					return completionType.CALL;
+			}
 			// Default proposal for ID's (local vars etc..)
 			if(FanLexAstUtils.findParentNode(node, AstKind.AST_ID)!=null)
 			{
@@ -149,15 +168,6 @@ public class FanCompletionContext
 			if(FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE)!=null)
 			{
 				return completionType.ID;
-			}
-			// expression completion after a '.' or '?.'
-			//System.out.println("Node :" + node.toString() + " " + node.toStringTree());
-			AstNode callExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_CALL);
-			if(callExpr == null)
-				callExpr=FanLexAstUtils.findParentNode(node, AstKind.AST_INC_CALL);
-			if(callExpr!=null)
-			{
-					return completionType.CALL;
 			}
 		}
 		// restore ts offset

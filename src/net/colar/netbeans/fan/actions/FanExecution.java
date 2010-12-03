@@ -320,4 +320,13 @@ public class FanExecution
 	{
 		return null;
 	}
+
+    public void runAndWaitFor()
+    {
+        Future f = run();
+        while(! f.isDone() || f.isCancelled())
+        {
+            try {Thread.sleep(500);} catch(InterruptedException e){}
+        }
+    }
 }

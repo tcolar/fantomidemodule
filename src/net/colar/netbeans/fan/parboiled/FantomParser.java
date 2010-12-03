@@ -610,7 +610,7 @@ public class FantomParser extends BaseParser<AstNode>
 	public Rule incCall()
 	{
 		return Sequence(TestNot(Sequence(DOT, DOT)), // DOT DOT would be a range.
-			FirstOf(DOT, OP_SAFE_DYN_CALL), ast.newNode(AstKind.AST_INC_CALL));
+			FirstOf(OP_SAFE_DYN_CALL, OP_SAFE_CALL, OP_ARROW, DOT), ast.newNode(AstKind.AST_INC_CALL));
 	}
 
 	public Rule idExpr()

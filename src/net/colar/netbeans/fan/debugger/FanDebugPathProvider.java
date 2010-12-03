@@ -77,7 +77,13 @@ public class FanDebugPathProvider extends SourcePathProvider
 
 	public FanDebugPathProvider(ContextProvider contextProvider)
 	{
-		pcs = new PropertyChangeSupport(this);
+		if (!FanPlatform.isConfigured())
+		{
+                    return;
+			//throw new RuntimeException("Fantom SDK not defined");
+		}
+
+                pcs = new PropertyChangeSupport(this);
 		pathRegistryListener = new PathRegistryListener();
 		GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(WeakListeners.create(GlobalPathRegistryListener.class, pathRegistryListener, GlobalPathRegistry.getDefault()));
 		JavaPlatformManager.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(pathRegistryListener, JavaPlatformManager.getDefault()));
@@ -121,10 +127,6 @@ public class FanDebugPathProvider extends SourcePathProvider
 		}
 		// Fan distro sources
 		//TODO: those are already in open projects path ????
-		if (!FanPlatform.isConfigured())
-		{
-			throw new RuntimeException("Fantom SDK not defined");
-		}
 
 		fanSources = FanPlatform.getInstance().getSourceClassPaths();
 

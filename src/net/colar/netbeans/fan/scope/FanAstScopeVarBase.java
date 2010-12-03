@@ -21,6 +21,8 @@ public abstract class FanAstScopeVarBase
 	protected ArrayList<FanAstScopeVarBase.ModifEnum> modifiers = new ArrayList<FanAstScopeVarBase.ModifEnum>();
 	protected AstNode node;
 	protected VarKind kind;
+        //protected int documentId;
+        //protected int documentOffset;
 
 	public enum VarKind
 	{
@@ -52,6 +54,16 @@ public abstract class FanAstScopeVarBase
 		{
 			return val;
 		}
+
+        public boolean isLocal()
+        {
+            return ! (
+                        val == VarKind.IMPLIED.value() ||
+                        val == VarKind.IMPORT.value() ||
+                        val == VarKind.IMPORT_JAVA.value() ||
+                        val==VarKind.INHERITED.value()
+                    );
+        }
 	}
 
 	// Modifiers

@@ -18,8 +18,10 @@ import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
 import net.colar.netbeans.fan.actions.RunFanTest;
+import net.colar.netbeans.fan.actions.RunTalesProjectAction;
 import net.colar.netbeans.fan.actions.TestFanPodAction;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.LifecycleManager;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
@@ -40,6 +42,7 @@ public class FanProjectActionProvider implements ActionProvider
 		FanAction[] commandArray = new FanAction[]
 		{
 			new RunFanPodAction(project),
+			new RunTalesProjectAction(project),
 			new BuildAndRunFanPodAction(project),
 			new TestFanPodAction(project),
 			new DebugFanPodAction(project),

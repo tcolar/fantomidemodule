@@ -7,6 +7,7 @@ package net.colar.netbeans.fan;
 import java.util.Collections;
 import java.util.Set;
 import net.colar.netbeans.fan.completion.FanCompletionHandler;
+import net.colar.netbeans.fan.handlers.FanDeclarationFinder;
 import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
 import net.colar.netbeans.fan.hints.FanHintsProvider;
 import net.colar.netbeans.fan.structure.FanFormatter;
@@ -15,6 +16,7 @@ import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
+import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.KeystrokeHandler;
@@ -30,105 +32,112 @@ import org.netbeans.modules.parsing.spi.Parser;
  *
  * @author thibautc
  */
-@LanguageRegistration(mimeType="text/x-fan")
+@LanguageRegistration(mimeType = "text/x-fan")
 public class FanLanguage extends DefaultLanguageConfig
 {
-	// Fan mime Type (used all over)
-	public static final String FAN_MIME_TYPE = "text/x-fan";
+    // Fan mime Type (used all over)
 
-	public FanLanguage()
-	{
-		super();
-		FanUtilities.GENERIC_LOGGER.info("Fantom - init FanLanguage");
-	}
+    public static final String FAN_MIME_TYPE = "text/x-fan";
 
-	@Override
-	public String getDisplayName()
-	{
-		return "Fan";
-	}
+    public FanLanguage()
+    {
+        super();
+        FanUtilities.GENERIC_LOGGER.info("Fantom - init FanLanguage");
+    }
 
-	@Override
-	public Language getLexerLanguage()
-	{
-		return FanTokenID.language();
-	}
+    @Override
+    public String getDisplayName()
+    {
+        return "Fan";
+    }
 
-	@Override
-	public String getPreferredExtension()
-	{
-		return "fan";
-	}
+    @Override
+    public Language getLexerLanguage()
+    {
+        return FanTokenID.language();
+    }
 
-	@Override
-	public Parser getParser()
-	{
-		return new NBFanParser();
-	}
+    @Override
+    public String getPreferredExtension()
+    {
+        return "fan";
+    }
 
-	@Override
-	public boolean hasStructureScanner()
-	{
-		return false;
-	}
+    @Override
+    public Parser getParser()
+    {
+        return new NBFanParser();
+    }
 
-	@Override
-	public StructureScanner getStructureScanner()
-	{
-		return new FanStructureAnalyzer();
-	}
+    @Override
+    public boolean hasStructureScanner()
+    {
+        return false;
+    }
 
-	@Override
-	public KeystrokeHandler getKeystrokeHandler()
-	{
-		return new FanKeyStrokeHandler();
-	}
+    @Override
+    public StructureScanner getStructureScanner()
+    {
+        return new FanStructureAnalyzer();
+    }
 
-	@Override
-	public SemanticAnalyzer getSemanticAnalyzer()
-	{
-		return new FanSemanticAnalyzer();
-	}
+    @Override
+    public KeystrokeHandler getKeystrokeHandler()
+    {
+        return new FanKeyStrokeHandler();
+    }
 
-	@Override
-	public Set<String> getBinaryLibraryPathIds()
-	{
-		return Collections.singleton(ClassPath.BOOT);
-	}
+    @Override
+    public SemanticAnalyzer getSemanticAnalyzer()
+    {
+        return new FanSemanticAnalyzer();
+    }
 
-	@Override
-	public Set<String> getSourcePathIds()
-	{
-		return Collections.singleton(ClassPath.SOURCE);
-	}
+    @Override
+    public Set<String> getBinaryLibraryPathIds()
+    {
+        return Collections.singleton(ClassPath.BOOT);
+    }
 
-	@Override
-	public Formatter getFormatter()
-	{
-		return new FanFormatter();
-	}
+    @Override
+    public Set<String> getSourcePathIds()
+    {
+        return Collections.singleton(ClassPath.SOURCE);
+    }
 
-	@Override
-	public CodeCompletionHandler getCompletionHandler()
-	{
- 		return new FanCompletionHandler();
-	}
+    @Override
+    public Formatter getFormatter()
+    {
+        return new FanFormatter();
+    }
 
-	@Override
-	public boolean hasFormatter()
-	{
-		return true;
-	}
+    @Override
+    public CodeCompletionHandler getCompletionHandler()
+    {
+        return new FanCompletionHandler();
+    }
 
-	@Override
-	public boolean hasHintsProvider()
-	{
-		return true;
-	}
+    @Override
+    public boolean hasFormatter()
+    {
+        return true;
+    }
 
-	@Override
-	public HintsProvider getHintsProvider()
-	{
-		return new FanHintsProvider();
-	}
+    @Override
+    public boolean hasHintsProvider()
+    {
+        return true;
+    }
+
+    @Override
+    public HintsProvider getHintsProvider()
+    {
+        return new FanHintsProvider();
+    }
+
+    @Override
+    public DeclarationFinder getDeclarationFinder()
+    {
+        return new FanDeclarationFinder();
+    }
 }
