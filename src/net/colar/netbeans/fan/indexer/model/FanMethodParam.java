@@ -59,7 +59,7 @@ public class FanMethodParam extends JOTModel
 
 	public void setHasDefault(boolean b)
 	{
-		hasDefault=true;
+		hasDefault = b;
 	}
 
 	public boolean hasDefault()
@@ -76,5 +76,10 @@ public class FanMethodParam extends JOTModel
 	{
 		return paramIndex;
 	}
+
+    public boolean isFunctionType()
+    {
+        return getQualifiedType().startsWith("|") && getQualifiedType().startsWith("|");
+    }
 
 }

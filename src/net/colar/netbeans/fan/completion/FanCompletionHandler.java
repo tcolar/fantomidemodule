@@ -279,7 +279,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
      * @param anchor
      * @param prefix
      */
-    private void proposeSlots(FanResolvedType type, ArrayList<CompletionProposal> proposals, int anchor, String prefix)
+    private void proposeSlots(FanResolvedType type, ArrayList<CompletionProposal> proposals, int anchor, String prefix, AstNode node)
     {
         if (type.getDbType().isJava())
         {
@@ -314,7 +314,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
                     boolean isStatic = slot.isStatic() || slot.isCtor();
                     if (type.isStaticContext() == isStatic)
                     {
-                        proposals.add(new FanSlotProposal(slot, anchor - prefix.length()));
+                        proposals.add(new FanSlotProposal(slot, anchor - prefix.length(), node, type));
                         docType = DocTypes.SLOT;
                     }
                 }
@@ -484,7 +484,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
         }
         if (type != null && type.isResolved())
         {
-            proposeSlots(type, proposals, offset, prefix);
+            proposeSlots(type, proposals, offset, prefix, node);
         }
     }
 
@@ -505,7 +505,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
                     FanSlot slot = FanSlot.findByTypeAndName(slotBaseType.getQualifiedType(), fVar.getName());
                     if (slot != null)
                     {
-                        prop = new FanSlotProposal(slot, context.getCaretOffset() - prefix.length());
+                        prop = new FanSlotProposal(slot, context.getCaretOffset() - prefix.length(), node, slotBaseType);
                     }
                 }
                 if (prop == null)
