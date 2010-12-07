@@ -383,7 +383,9 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
 		// Do the insertion and the indent
 		String indentStr = IndentUtils.createIndentString(document, indent);
+                //String str = doc.getText(0, doc.getText().length());
 		doc.insertString(caretOffset, indentStr + insert, null);
+                //str = doc.getText(0, doc.getText().length());
 		caret.setDot(caretOffset);
 		return caretOffset + indentStr.length() + insert.length() + 1 + dotOffset;
 	}
