@@ -43,7 +43,8 @@ public class TemplateUtils
 			pw.print(parsedFile);
 			pw.close();
 			// Tell the IDE to update the project/files view asap as sometimes it seems to lag otherwise
-			FileUtil.refreshFor(destFile);
+                        // Note: refresh the parent folder, otherwise it lags
+			FileUtil.refreshFor(destFile.getParentFile());
 		} catch (Exception e)
 		{
 			new RuntimeException("Failed writing parsed template: " + destFile.getPath(), e);

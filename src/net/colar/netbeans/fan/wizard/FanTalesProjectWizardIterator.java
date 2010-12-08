@@ -92,6 +92,8 @@ public final class FanTalesProjectWizardIterator implements WizardDescriptor.Ins
             ProjectChooser.setProjectsFolder(parent);
         }
 
+        FileUtil.refreshFor(pf);
+
         return resultSet;
     }
 

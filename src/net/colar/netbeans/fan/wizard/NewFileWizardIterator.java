@@ -120,8 +120,8 @@ public final class NewFileWizardIterator implements WizardDescriptor.Instantiati
 		TemplateUtils.createFromTemplate(view, templateText, newFile);
 
 		FanUtilities.openFileInEditor(newFile);
-
-		FileUtil.refreshFor(newFile);
+                // Note: refresh the parent folder, otherwise it lags
+		FileUtil.refreshFor(newFile.getParentFile());
 
 		return Collections.singleton(newFile);
 	}

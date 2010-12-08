@@ -147,6 +147,8 @@ public final class FanPodWizardIterator implements WizardDescriptor.Instantiatin
             ProjectChooser.setProjectsFolder(parent);
         }
 
+        FileUtil.refreshFor(pf);
+
         return resultSet;
     }
 
