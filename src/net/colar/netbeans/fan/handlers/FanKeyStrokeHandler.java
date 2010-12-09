@@ -317,7 +317,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 		}
 
 		// Deal with indentation
-		String NL =/*Character.LINE_SEPARATOR*/ "\n";
+		String NL = "\n";
 		int indentSize = IndentUtils.indentLevelSize(document);
 		Caret caret = target.getCaret();
 		BaseDocument doc = (BaseDocument) document;
@@ -391,7 +391,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 	}
 
 	/**
-	 * Helps finding mathcing opening/closing items (ex: {})
+	 * Helps finding matching opening/closing items (ex: {})
 	 * @param document
 	 * @param caretOffset
 	 * @return

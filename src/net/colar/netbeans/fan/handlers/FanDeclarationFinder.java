@@ -7,13 +7,10 @@ package net.colar.netbeans.fan.handlers;
 //import fanx.util.FileUtil;
 import java.io.File;
 import java.util.Hashtable;
-import java.util.List;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
-import net.colar.netbeans.fan.indexer.model.FanSlot;
-import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
@@ -33,7 +30,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 /**
- *
+ * Helper to find the declaration of a type/slot
  * @author thibautc
  */
 public class FanDeclarationFinder implements DeclarationFinder
