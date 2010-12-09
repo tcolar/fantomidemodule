@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.scope;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import net.colar.netbeans.fan.FanParserErrorKey;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.model.FanDummyParam;
@@ -158,7 +159,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 						node.addScopeVar(valVar, true);
 					} else
 					{
-						node.getRoot().getParserTask().addError("Duplicated Enum value name: " + nm, enumName);
+						node.getRoot().getParserTask().addError(FanParserErrorKey.OTHER, "Duplicated Enum value name: " + nm, enumName);
 					}
 				}
 			}
@@ -209,7 +210,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 							slotVar.addModifiers(modif);
 						} else
 						{
-							node.getRoot().getParserTask().addError("Orphaned modifier in slot.", slot);
+							node.getRoot().getParserTask().addError(FanParserErrorKey.OTHER, "Orphaned modifier in slot.", slot);
 						}
 					}
 					if (slotVar != null) //should be
@@ -268,19 +269,19 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 				String text = node.getNodeText(true);
 				if (!inhType.isResolved())
 				{
-					node.getRoot().getParserTask().addError("Unresolved inherited item : " + child.getNodeText(true), child);
+					node.getRoot().getParserTask().addError(FanParserErrorKey.UNKNOWN_TYPE, "Unresolved inherited item : " + child.getNodeText(true), child);
 				} else
 				{
 					FanType fanType = inhType.getDbType();
 					if (fanType.isFinal())
 					{
 						// this covers enums too
-						node.getRoot().getParserTask().addError("Can't inherit from a final class : " + child.getNodeText(true), child);
+						node.getRoot().getParserTask().addError(FanParserErrorKey.OTHER, "Can't inherit from a final class : " + child.getNodeText(true), child);
 					} else if (fanType.isClass())
 					{
 						if (hasInheritedClass())
 						{
-							node.getRoot().getParserTask().addError("Can only inherit from one class !", inheritance);
+							node.getRoot().getParserTask().addError(FanParserErrorKey.OTHER, "Can only inherit from one class !", inheritance);
 						}
 					}
 				}

@@ -8,6 +8,7 @@ import java.lang.reflect.Member;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
+import net.colar.netbeans.fan.FanParserErrorKey;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.indexer.FanIndexer;
@@ -146,7 +147,7 @@ public class FanResolvedType implements Cloneable
         {
             String type = node.getNodeText(true);
             //TODO: Propose to auto-add using statements (Hints)
-            node.getRoot().getParserTask().addError("Unresolved type: " + type, node);
+            node.getRoot().getParserTask().addError(FanParserErrorKey.UNKNOWN_TYPE, "Unresolved type: " + type, node);
             FanUtilities.GENERIC_LOGGER.info("Could not resolve type: " + (node == null ? "null" : node.toString()));
         }
         return result;
@@ -382,7 +383,7 @@ public class FanResolvedType implements Cloneable
                 {
                     if (var.getKind() == VarKind.TYPE_MIXIN || var.getKind() == VarKind.TYPE_ENUM)
                     {
-                        node.getRoot().getParserTask().addError("Cannot use 'super' within a mixin or enum.", node);
+                        node.getRoot().getParserTask().addError(FanParserErrorKey.OTHER, "Cannot use 'super' within a mixin or enum.", node);
                     } else
                     {
                         return var.getType().getParentType();
@@ -824,7 +825,7 @@ public class FanResolvedType implements Cloneable
                 return makeFromTypeSig(errNode, "sys::Obj?");
             } else
             {	// Not good
-                errNode.getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), errNode);
+                errNode.getRoot().getParserTask().addError(FanParserErrorKey.OTHER, "Invalid Generic type for " + baseType.getQualifiedType(), errNode);
             }
             // Could be something like V?
             if (this.isNullable() != t.isNullable())
@@ -875,10 +876,10 @@ public class FanResolvedType implements Cloneable
 
         if (index == -1)
         {
-            getScopeNode().getRoot().getParserTask().addError("Invalid Generic type for " + baseType.getQualifiedType(), getScopeNode());
+            getScopeNode().getRoot().getParserTask().addError(FanParserErrorKey.OTHER, "Invalid Generic type for " + baseType.getQualifiedType(), getScopeNode());
         } else if (types.size() < index)
         {
-            getScopeNode().getRoot().getParserTask().addError("Generic '" + letter + "', but only " + types.size() + " func params in " + baseType.getQualifiedType(), getScopeNode());
+            getScopeNode().getRoot().getParserTask().addError(FanParserErrorKey.OTHER, "Generic '" + letter + "', but only " + types.size() + " func params in " + baseType.getQualifiedType(), getScopeNode());
         } else
         {
             t = types.get(index);

@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.parboiled;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import net.colar.netbeans.fan.FanParserErrorKey;
 import net.colar.netbeans.fan.scope.FanAstScopeVar;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.VarKind;
@@ -241,7 +242,7 @@ public class AstNode implements GraphNode
         }
         if (!allowDuplicates && scopeNode.getLocalScopeVars().containsKey(var.getName()))
         {
-            getRoot().getParserTask().addError("Duplicated variable in scope: " + (var == null ? "null" : var.getName()), this);
+            getRoot().getParserTask().addError(FanParserErrorKey.DUPLICATED_VAR, "Duplicated variable in scope: " + (var == null ? "null" : var.getName()), this);
         }
         scopeNode.getLocalScopeVars().put(var.getName(), var);
     }

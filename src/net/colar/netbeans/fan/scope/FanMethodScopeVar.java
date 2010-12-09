@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.scope;
 
 import java.util.Hashtable;
 import java.util.List;
+import net.colar.netbeans.fan.FanParserErrorKey;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
@@ -56,7 +57,7 @@ public class FanMethodScopeVar extends FanFieldScopeVar
 					// if no block then it must be an abstract methd, no need to introduce the vars to scope
 				} else
 				{
-					param.getRoot().getParserTask().addError("Duplicated parameter name", id);
+					param.getRoot().getParserTask().addError(FanParserErrorKey.DUPLICATED_PARAM, "Duplicated parameter name", id);
 				}
 			}
 			cpt++;

@@ -374,7 +374,26 @@ public class FanType extends JOTModel
 		}
 	}
 
-	public boolean isClass()
+        /**
+         * Find all types of exact specified type (in any pod).
+         * @param type
+         * @param prefix
+         * @return
+         */
+	@SuppressWarnings("unchecked")
+        public static Vector<FanType> findTypes(String type)
+	{
+		try
+		{
+			JOTSQLCondition cond = new JOTSQLCondition("simpleName", JOTSQLCondition.IS_EQUAL, type);
+			return JOTQueryBuilder.selectQuery(null, FanType.class).where(cond).find().getAllResults();
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+        public boolean isClass()
 	{
 		return getKind() == FanAstScopeVarBase.VarKind.TYPE_CLASS.value()
 				|| getKind() == FanAstScopeVarBase.VarKind.TYPE_JAVA_CLASS.value();

@@ -84,4 +84,5 @@ public class FanTypeProposal extends FanCompletionProposal
 	{
 		return "[" + (pod == null ? "??" : pod) + "]";
 	}
+
 }
