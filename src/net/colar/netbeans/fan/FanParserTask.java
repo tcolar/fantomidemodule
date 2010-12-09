@@ -150,7 +150,7 @@ public class FanParserTask extends ParserResult
   public void addGlobalError(String title, Throwable t)
   {
     // "High level error"
-    Error error = DefaultError.createDefaultError(title, title, title, null, 0, 0, true, Severity.ERROR);
+    Error error = DefaultError.createDefaultError(FanParserErrorKey.GLOBAL_ERROR.name(), title, title, null, 0, 0, true, Severity.ERROR);
     errors.add(error);
 
   }
@@ -174,18 +174,18 @@ public class FanParserTask extends ParserResult
    * @param info
    * @param node
    */
-  public void addError(String info, AstNode node)
+  public void addError(FanParserErrorKey key, String info, AstNode node)
   {
     if (node == null)
     {
       return;
     }
-    String key = "FanParserTask";
+    String k = key.name();
     OffsetRange range = node.getRelevantTextRange();
     int start = range.getStart();
     int end = range.getEnd();
     //System.out.println("Start: "+start+"End:"+end);
-    Error error = DefaultError.createDefaultError(key, info, "Syntax Error", sourceFile, start, end, true, Severity.ERROR);
+    Error error = DefaultError.createDefaultError(k, info, "Syntax Error", sourceFile, start, end, true, Severity.ERROR);
     errors.add(error);
   }
 
@@ -235,7 +235,7 @@ public class FanParserTask extends ParserResult
       {
         // key, displayName, description, file, start, end, lineError?, severity
         String msg = ErrorUtils.printParseError(err, parsingResult.inputBuffer);
-        Error error = DefaultError.createDefaultError(msg, msg, msg,
+        Error error = DefaultError.createDefaultError(FanParserErrorKey.PARSER_ERROR.name(), msg, msg,
             sourceFile, err.getErrorLocation().getIndex(), err.getErrorLocation().getIndex() + err.getErrorCharCount(),
             false, Severity.ERROR);
         errors.add(error);
@@ -291,7 +291,7 @@ public class FanParserTask extends ParserResult
       switch (node.getKind())
       {
         case AST_INC_USING:
-          addError("Incomplete import statement", node);
+          addError(FanParserErrorKey.INC_IMPORT, "Incomplete import statement", node);
           break;
 
         case AST_USING:
@@ -328,7 +328,7 @@ public class FanParserTask extends ParserResult
               vars.get(name).getKind() != VarKind.IMPORT
               && vars.get(name).getKind() != VarKind.IMPORT_JAVA)
           {
-            addError("Duplicated type name", node);
+            addError(FanParserErrorKey.DUPLICATED_VAR, "Duplicated type name", node);
           } else
           {
             scopeNode.getLocalScopeVars().put(name, var);
@@ -481,7 +481,7 @@ public class FanParserTask extends ParserResult
         case AST_CTOR_BLOCK:
           if (type == null)
           {
-            addError("Unexpected constructor block", node);
+            addError(FanParserErrorKey.UNEXPECTED_CTOR, "Unexpected constructor block", node);
           }
 
           doClosureCall(node, type, "with", 0);
@@ -570,13 +570,13 @@ public class FanParserTask extends ParserResult
       // We don't want exception to be propagated to user as an exception (prevents fixing it in IDE)
       // Do mark a global parsing error however
       type = FanResolvedType.makeUnresolved(node);
-      addError("Unexpected Parsing error: " + e.toString(), node);
+      addError(FanParserErrorKey.PARSING_ERR, "Unexpected Parsing error: " + e.toString(), node);
       FanUtilities.GENERIC_LOGGER.exception("Error parsing node: " + text, e);
     }
     node.setType(type);
     if (type != null && !type.isResolved())
     {
-      addError("Could not resolve item -> " + text, node);
+      addError(FanParserErrorKey.UNKNOWN_ITEM, "Could not resolve item -> " + text, node);
 
       //FanUtilities.GENERIC_LOGGER.info(">Unresolved node");
       //FanLexAstUtils.dumpTree(node, 0);
@@ -680,7 +680,7 @@ public class FanParserTask extends ParserResult
 
         if (findCachedQualifiedType(qname) == null)
         {
-          addError("Unresolved Java Item: " + qname, usingNode);
+          addError(FanParserErrorKey.UNRESOLVED_USING, "Unresolved Java Item: " + qname, usingNode);
         } else
         {
           addUsingToNode(name, qname, usingNode, VarKind.IMPORT_JAVA);
@@ -690,7 +690,7 @@ public class FanParserTask extends ParserResult
         // whole package
         if (!FanType.hasPod(name))
         {
-          addError("Unresolved Java package: " + name, usingNode);
+          addError(FanParserErrorKey.UNRESOLVED_USING,"Unresolved Java package: " + name, usingNode);
         } else
         {
           Vector<FanType> items = FanType.findPodTypes(name, "");
@@ -708,10 +708,10 @@ public class FanParserTask extends ParserResult
         String[] data = type.split("::");
         if (!FanType.hasPod(data[0]))
         {
-          addError("Unresolved Pod: " + data[0], usingNode);
+          addError(FanParserErrorKey.UNRESOLVED_USING, "Unresolved Pod: " + data[0], usingNode);
         } else if (findCachedQualifiedType(type) == null)
         {
-          addError("Unresolved Type: " + type, usingNode);
+          addError(FanParserErrorKey.UNRESOLVED_USING, "Unresolved Type: " + type, usingNode);
         }
 
         //Type t = FanPodIndexer.getInstance().getPodType(data[0], data[1]);
@@ -725,7 +725,7 @@ public class FanParserTask extends ParserResult
         }
         if (!FanType.hasPod(name))
         {
-          addError("Unresolved Pod: " + name, usingNode);
+          addError(FanParserErrorKey.UNRESOLVED_USING, "Unresolved Pod: " + name, usingNode);
         } else
         {
           Vector<FanType> items = FanType.findPodTypes(name, "");
@@ -892,7 +892,7 @@ public class FanParserTask extends ParserResult
       if (!type.isStaticContext()
           || !FanResolvedType.resolveThisType(node).isTypeCompatible(type))
       {
-        addError("Invalid named super call", node);
+        addError(FanParserErrorKey.INAVALID_SUPER, "Invalid named super call", node);
         type = FanResolvedType.makeUnresolved(node);
       } else
       {
@@ -943,7 +943,7 @@ public class FanParserTask extends ParserResult
       // If using null check call on non nullable object, show an error, but continue resolution
       if (!type.isNullable() && op.startsWith("?"))
       {
-        addError("Null check call on non-nullable: " + type.toString(), node);
+        addError(FanParserErrorKey.NULL_CHECK, "Null check call on non-nullable: " + type.toString(), node);
       }
 
       type = type.resolveSlotType(name, this);
@@ -999,13 +999,13 @@ public class FanParserTask extends ParserResult
     FanSlot slot = FanSlot.findByTypeAndName(slotBase.getQualifiedType(), slotName);
     if (slot == null)
     {
-      addError("Can't find closure call slot: " + slotBase.getQualifiedType() + "." + slotName, closureNode);
+      addError(FanParserErrorKey.CLOSURE_CALL, "Can't find closure call slot: " + slotBase.getQualifiedType() + "." + slotName, closureNode);
     } else
     {
       List<FanMethodParam> params = slot.getAllParameters();
       if (argIndex > params.size())
       {
-        addError("Too many parameters in closure call.", closureNode);
+        addError(FanParserErrorKey.CLOSURE_CALL, "Too many parameters in closure call.", closureNode);
       } else
       {
         if (argIndex == params.size())
@@ -1099,7 +1099,7 @@ public class FanParserTask extends ParserResult
           FanResolvedType t = pair.getSecond();
           if (t != null && !t.isResolved())
           {
-            addError("Couldn't resolve formal definition: " + child.getNodeText(true), child);
+            addError(FanParserErrorKey.FORMAL_DEF, "Couldn't resolve formal definition: " + child.getNodeText(true), child);
           }
           String name = pair.getFirst();
           formalTypes.add(t);
@@ -1153,7 +1153,7 @@ public class FanParserTask extends ParserResult
         fType = FanResolvedType.makeFromTypeSig(node, "sys::Obj?");
       } else if (index >= inferredTypes.size())
       {
-        addError("More inferred formals than expected.", node);
+        addError(FanParserErrorKey.FORMAL_DEF, "More inferred formals than expected.", node);
         fType = FanResolvedType.makeUnresolved(node);
       } else
       {
@@ -1253,7 +1253,7 @@ public class FanParserTask extends ParserResult
       type = type.resolveSlotType("slice", this);
       if (!type.isResolved())
       {
-        addError("Range expression only valid on types with a 'slice' method." + exprNode.getNodeText(true), exprNode);
+        addError(FanParserErrorKey.RANGE, "Range expression only valid on types with a 'slice' method." + exprNode.getNodeText(true), exprNode);
       }
     } else
     {
@@ -1261,7 +1261,7 @@ public class FanParserTask extends ParserResult
       type = type.resolveSlotType("get", this);
       if (!type.isResolved())
       {
-        addError("Index expression only valid on types with 'get' method-> " + exprNode.getNodeText(true), exprNode);
+        addError(FanParserErrorKey.INDEX, "Index expression only valid on types with 'get' method-> " + exprNode.getNodeText(true), exprNode);
       }
     }
 
