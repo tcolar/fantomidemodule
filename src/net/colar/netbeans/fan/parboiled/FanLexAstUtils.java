@@ -212,7 +212,11 @@ public class FanLexAstUtils
         }
         for (AstNode subNode : parentNode.getChildren())
         {
-            return getFirstChildRecursive(subNode, pred);
+            nd = getFirstChildRecursive(subNode, pred);
+            if (nd != null)
+            {
+                return nd;
+            }
         }
         return null;
     }
