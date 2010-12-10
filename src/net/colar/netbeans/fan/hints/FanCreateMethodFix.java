@@ -14,21 +14,21 @@ import org.openide.windows.WindowManager;
  *
  * @author thibautc
  */
-class FanCreateFieldFix implements HintFix
+class FanCreateMethodFix implements HintFix
 {
 
     private final AstNode node;
-    private final String field;
+    private final String method;
 
-    public FanCreateFieldFix(AstNode node, String field)
+    public FanCreateMethodFix(AstNode node, String method)
     {
         this.node=node;
-        this.field=field;
+        this.method=method;
     }
 
     public String getDescription()
     {
-        return "Create Local Field: " + field;
+        return "Create Local Method: " + method;
     }
 
     public void implement() throws Exception
@@ -39,7 +39,7 @@ class FanCreateFieldFix implements HintFix
             public void run()
             {
                 Frame win = WindowManager.getDefault().getMainWindow();
-                FanAddFieldDialog d = new FanAddFieldDialog(win, node, field);
+                FanAddMethodDialog d = new FanAddMethodDialog(win, node, method);
                 d.setLocationRelativeTo(win);
                 d.pack();
                 d.setVisible(true);

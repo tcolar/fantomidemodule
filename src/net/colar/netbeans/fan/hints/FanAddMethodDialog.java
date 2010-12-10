@@ -4,7 +4,7 @@
  */
 
 /*
- * FanAddFieldDialog.java
+ * FanAddMethodDialog.java
  *
  * Created on 9-Dec-2010, 2:31:34 PM
  */
@@ -17,19 +17,20 @@ import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 
 /**
- *
+ * Dialog for "Add a method" hint fix.
  * @author thibautc
  */
-public class FanAddFieldDialog extends javax.swing.JDialog
+public class FanAddMethodDialog extends javax.swing.JDialog
 {
 
     private final AstNode node;
 
     /** Creates new form FanAddFieldDialog */
-    public FanAddFieldDialog(java.awt.Frame parent, AstNode node, String varName)
+    public FanAddMethodDialog(java.awt.Frame parent, AstNode node, String varName)
     {
         super(parent, true);
         initComponents();
@@ -48,10 +49,10 @@ public class FanAddFieldDialog extends javax.swing.JDialog
 
         nameLbl = new javax.swing.JLabel();
         typeLbl = new javax.swing.JLabel();
-        valueLbl = new javax.swing.JLabel();
+        paramsLbl = new javax.swing.JLabel();
         nameField = new javax.swing.JTextField();
         typeField = new javax.swing.JTextField();
-        valueField = new javax.swing.JTextField();
+        paramsField = new javax.swing.JTextField();
         cancelButton = new javax.swing.JButton();
         submitButton = new javax.swing.JButton();
         modifsField = new javax.swing.JTextField();
@@ -59,40 +60,40 @@ public class FanAddFieldDialog extends javax.swing.JDialog
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        nameLbl.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.nameLbl.text")); // NOI18N
+        nameLbl.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.nameLbl.text")); // NOI18N
 
-        typeLbl.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.typeLbl.text")); // NOI18N
+        typeLbl.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.typeLbl.text")); // NOI18N
 
-        valueLbl.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.valueLbl.text")); // NOI18N
+        paramsLbl.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.paramsLbl.text")); // NOI18N
 
-        nameField.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.nameField.text")); // NOI18N
+        nameField.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.nameField.text")); // NOI18N
 
-        typeField.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.typeField.text")); // NOI18N
+        typeField.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.typeField.text")); // NOI18N
         typeField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 typeFieldActionPerformed(evt);
             }
         });
 
-        valueField.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.valueField.text")); // NOI18N
+        paramsField.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.paramsField.text")); // NOI18N
 
-        cancelButton.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.cancelButton.text")); // NOI18N
+        cancelButton.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        submitButton.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.submitButton.text")); // NOI18N
+        submitButton.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.submitButton.text")); // NOI18N
         submitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitButtonActionPerformed(evt);
             }
         });
 
-        modifsField.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.modifsField.text")); // NOI18N
+        modifsField.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.modifsField.text")); // NOI18N
 
-        modifsLbl.setText(org.openide.util.NbBundle.getMessage(FanAddFieldDialog.class, "FanAddFieldDialog.modifsLbl.text")); // NOI18N
+        modifsLbl.setText(org.openide.util.NbBundle.getMessage(FanAddMethodDialog.class, "FanAddMethodDialog.modifsLbl.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -105,17 +106,17 @@ public class FanAddFieldDialog extends javax.swing.JDialog
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(nameLbl)
                             .addComponent(typeLbl)
-                            .addComponent(valueLbl)
+                            .addComponent(paramsLbl)
                             .addComponent(modifsLbl))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(valueField)
+                            .addComponent(paramsField)
                             .addComponent(typeField, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(nameField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
                             .addComponent(modifsField)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 263, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 275, Short.MAX_VALUE)
                         .addComponent(submitButton)))
                 .addContainerGap())
         );
@@ -132,8 +133,8 @@ public class FanAddFieldDialog extends javax.swing.JDialog
                     .addComponent(typeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(valueLbl)
-                    .addComponent(valueField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(paramsLbl)
+                    .addComponent(paramsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(modifsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -166,39 +167,47 @@ public class FanAddFieldDialog extends javax.swing.JDialog
 
         Document doc = node.getRoot().getParserTask().getDocument();
 
-        AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
-        if (typeNode != null)
+        String str = (modifsField.getText().isEmpty() ? "" : modifsField.getText() + " ")
+                + typeField.getText() + " "
+                + nameField.getText() + "("
+                + paramsField.getText()
+                + ") { IMPLEMENT_ME }";
+
+        AstNode slotNode = FanLexAstUtils.findParentNode(node, AstKind.AST_METHOD_DEF);
+        if (slotNode == null)
         {
-            AstNode fieldNode = FanLexAstUtils.getFirstChildRecursive(typeNode, new NodeKindPredicate(AstKind.AST_FIELD_DEF));
-            String str = (modifsField.getText().isEmpty() ? "" : modifsField.getText() + " ")
-                    + typeField.getText() + " "
-                    + nameField.getText()
-                    + (valueField.getText().isEmpty() ? "" : " := " + valueField.getText());
-
-            try
-            {
-                // If other field present, add just before it
-                if (fieldNode != null)
-                {
-                    // (should always be 1*indentSize)
-                    String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
-                    doc.insertString(fieldNode.getStartLocation().getIndex(), str+"\n"+indentStr, null);
-                    return;
-                }
-
-                // Otherwise add at top of type block (after bracket)
-                AstNode blockNode = FanLexAstUtils.getFirstChildRecursive(typeNode, new NodeKindPredicate(AstKind.AST_BLOCK));
-                if(blockNode != null)
-                {
-                    // ident of line before line with closing bracket (should always be 1*indentSize)
-                    String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
-                    doc.insertString(blockNode.getStartLocation().getIndex()+1, "\n"+indentStr+str, null);
-                }
-            } catch (BadLocationException e)
-            {
-                FanUtilities.GENERIC_LOGGER.exception("BadLocation", e);
-            }
+            slotNode = FanLexAstUtils.findParentNode(node, AstKind.AST_CTOR_DEF);
         }
+
+        try
+        {
+            // if we are in a ctor or method, just create the new method rigth before it
+            if (slotNode != null)
+            {
+                // (should always be 1*indentSize)
+                String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
+                doc.insertString(slotNode.getStartLocation().getIndex(), str + "\n\n" + indentStr, null);
+                return;
+            } else
+            {
+                AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
+                if (typeNode != null)
+                {
+                    // Otherwise add at top of type block (after bracket)
+                    AstNode blockNode = FanLexAstUtils.getFirstChildRecursive(typeNode, new NodeKindPredicate(AstKind.AST_BLOCK));
+                    if (blockNode != null)
+                    {
+                        // should always be 1*indentSize
+                        String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
+                        doc.insertString(blockNode.getStartLocation().getIndex() + 1, "\n" + indentStr + str, null);
+                    }
+                }
+            }
+        } catch (BadLocationException e)
+        {
+            FanUtilities.GENERIC_LOGGER.exception("BadLocation", e);
+        }
+
     }//GEN-LAST:event_submitButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
@@ -206,10 +215,10 @@ public class FanAddFieldDialog extends javax.swing.JDialog
     private javax.swing.JLabel modifsLbl;
     private javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLbl;
+    private javax.swing.JTextField paramsField;
+    private javax.swing.JLabel paramsLbl;
     private javax.swing.JButton submitButton;
     private javax.swing.JTextField typeField;
     private javax.swing.JLabel typeLbl;
-    private javax.swing.JTextField valueField;
-    private javax.swing.JLabel valueLbl;
     // End of variables declaration//GEN-END:variables
 }

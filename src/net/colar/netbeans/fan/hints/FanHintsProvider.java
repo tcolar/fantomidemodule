@@ -184,11 +184,10 @@ public class FanHintsProvider implements HintsProvider
         if(! var.startsWith(".") && var.indexOf("(")==-1)
         {
             fixes.add(new FanCreateFieldFix(node, var));
-            //TODO: propose method creation 
+            fixes.add(new FanCreateMethodFix(node, var));
         }
 
         //TODO: propose creating methods
-        //        - In local file/type
         //        - In remote file/types
 
         Hint hint = new Hint(new FanHintRule(), "", result.getSourceFile(),
