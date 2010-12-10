@@ -11,6 +11,7 @@ import javax.swing.text.BadLocationException;
 import net.colar.netbeans.fan.FanParserErrorKey;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.indexer.model.FanType;
+import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import org.netbeans.modules.csl.api.Error;
@@ -178,21 +179,32 @@ public class FanHintsProvider implements HintsProvider
         {
             return;
         }
-        System.err.println("Var: "+var);
+        System.err.println("Var: " + var);
 
         List<HintFix> fixes = new ArrayList<HintFix>();
-        if(! var.startsWith(".") && var.indexOf("(")==-1)
+        if (!var.startsWith(".") && var.indexOf("(") == -1)
         {
             fixes.add(new FanCreateFieldFix(node, var));
             fixes.add(new FanCreateMethodFix(node, var));
         }
+        /*
+            TODO: try to guess:
+         *      - field type
+         *      - method return type
+         *      - method parameters types/names
+         * 
+            TODO: propose creating field / methods
+                - In remote file/types
 
-        //TODO: propose creating methods
-        //        - In remote file/types
+        AstNode call = FanLexAstUtils.findParentNode(node, AstKind.AST_CALL);
+        AstNode callExpr = FanLexAstUtils.findParentNode(node, AstKind.AST_CALL_EXPR);
+        AstNode assign = FanLexAstUtils.findParentNode(node, AstKind.AST_EXPR_ASSIGN);
+
+         */
 
         Hint hint = new Hint(new FanHintRule(), "", result.getSourceFile(),
                 new OffsetRange(error.getStartPosition(), error.getEndPosition()), fixes, 25);
-        if(! fixes.isEmpty())
+        if (!fixes.isEmpty())
         {
             hints.add(hint);
         }
