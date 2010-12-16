@@ -468,6 +468,12 @@ public class FanParserTask extends ParserResult
           AstNode callNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_CALL));
           parseVars(callNode, type);
           type = callNode.getType();
+          if(type==null || ! type.isResolved())
+          {
+              // we need to exit now, because we already added an error in parseVars (don't want 2)
+              node.setType(type);
+              return;
+          }
           break;
         case AST_CLOSURE:
           // standalone closure -> closure definition
