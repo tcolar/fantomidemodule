@@ -338,7 +338,9 @@ public class FanFormatter implements Formatter
 			// When we're formatting sections, include whitespace on empty lines; this
 			// is used during live code template insertions for example. However, when
 			// wholesale formatting a whole document, leave these lines alone.
-			boolean indentEmptyLines = (startOffset != 0 || endOffset != doc.getLength());
+			boolean indentEmptyLines = (startOffset != 0 || endOffset != doc.getLength()
+                               /* || Utilities.isRowEmpty(doc, startOffset) || Utilities.isRowWhite(doc, startOffset)*/);
+
 
 			boolean includeEnd = endOffset == doc.getLength() || indentOnly;
 
@@ -506,7 +508,7 @@ public class FanFormatter implements Formatter
 					// Check if we are in single stmt
 					if (checkForSignleStmt)
 					{
-						if (id.matches(TokenName.BRACKET_L))
+						if ( ! id.matches(TokenName.BRACKET_L))
 						{
 							singleStmtAdjust = indentSize;
 						}
