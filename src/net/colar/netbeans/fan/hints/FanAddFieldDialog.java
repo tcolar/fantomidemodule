@@ -10,14 +10,25 @@
  */
 package net.colar.netbeans.fan.hints;
 
+import java.io.File;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.NBFanParser;
+import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import net.colar.netbeans.fan.scope.FanTypeScopeVar;
+import net.colar.netbeans.fan.types.FanResolvedType;
+import org.netbeans.modules.csl.api.UiUtils;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.api.Source;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -26,15 +37,19 @@ import org.netbeans.modules.editor.indent.api.IndentUtils;
 public class FanAddFieldDialog extends javax.swing.JDialog
 {
 
-    private final AstNode node;
+    private final FanResolvedType targetType;
 
     /** Creates new form FanAddFieldDialog */
-    public FanAddFieldDialog(java.awt.Frame parent, AstNode node, String varName)
+    public FanAddFieldDialog(java.awt.Frame parent, String varName, FanResolvedType targetType, FanResolvedType assignedFromType)
     {
         super(parent, true);
         initComponents();
         nameField.setText(varName);
-        this.node = node;
+        this.targetType = targetType;
+        if (assignedFromType != null && assignedFromType.isResolved())
+        {
+            typeField.setText(assignedFromType.getDbType().getSimpleName());
+        }
     }
 
     /** This method is called from within the constructor to
@@ -164,41 +179,102 @@ public class FanAddFieldDialog extends javax.swing.JDialog
         setVisible(false);
         dispose();
 
-        Document doc = node.getRoot().getParserTask().getDocument();
-
-        AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
-        if (typeNode != null)
+        Long docId = targetType.getDbType().getSrcDocId();
+        FanDocument doc = FanDocument.findById(docId);
+        if (doc != null)
         {
-            AstNode fieldNode = FanLexAstUtils.getFirstChildRecursive(typeNode, new NodeKindPredicate(AstKind.AST_FIELD_DEF));
-            String str = (modifsField.getText().isEmpty() ? "" : modifsField.getText() + " ")
-                    + typeField.getText() + " "
-                    + nameField.getText()
-                    + (valueField.getText().isEmpty() ? "" : " := " + valueField.getText());
-
+            FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(new File(doc.getPath())));
+            Source source = Source.create(fo);
+            Snapshot snapshot = source.createSnapshot();
+            // Parse the snaphot
+            NBFanParser parser = new NBFanParser();
             try
             {
-                // If other field present, add just before it
-                if (fieldNode != null)
-                {
-                    // (should always be 1*indentSize)
-                    String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
-                    doc.insertString(fieldNode.getStartLocation().getIndex(), str+"\n"+indentStr, null);
-                    return;
-                }
+                parser.parse(snapshot, true);
+            } catch (Throwable e)
+            {
+                return;
+            }
 
-                // Otherwise add at top of type block (after bracket)
-                AstNode blockNode = FanLexAstUtils.getFirstChildRecursive(typeNode, new NodeKindPredicate(AstKind.AST_BLOCK));
-                if(blockNode != null)
+            FanParserTask fanResult = (FanParserTask) parser.getResult();
+            AstNode rootScope = fanResult.getRootScope();
+
+            FanTypeScopeVar typeVar = FanLexAstUtils.findTypeVar(rootScope, targetType.getDbType().getSimpleName());
+            try
+            {
+                if (typeVar != null)
                 {
-                    // ident of line before line with closing bracket (should always be 1*indentSize)
-                    String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
-                    doc.insertString(blockNode.getStartLocation().getIndex()+1, "\n"+indentStr+str, null);
+                    // Otherwise add at top of type block (after bracket)
+                    AstNode blockNode = FanLexAstUtils.getFirstChildRecursive(typeVar.getNode(), new NodeKindPredicate(AstKind.AST_BLOCK));
+                    if (blockNode != null)
+                    {
+
+                        String str = (modifsField.getText().isEmpty() ? "" : modifsField.getText() + " ")
+                                + typeField.getText() + " "
+                                + nameField.getText()
+                                + (valueField.getText().isEmpty() ? "" : " := " + valueField.getText());
+
+
+                        Document baseDoc = source.getDocument(true);
+
+                        AstNode fieldNode = FanLexAstUtils.getFirstChildRecursive(blockNode, new NodeKindPredicate(AstKind.AST_FIELD_DEF));
+                        // (should always be 1*indentSize)
+                        String indentStr = IndentUtils.createIndentString(baseDoc, IndentUtils.indentLevelSize(baseDoc));
+                        // If other field present, add just before it
+
+                        if (fieldNode != null)
+                        {
+                            baseDoc.insertString(fieldNode.getStartLocation().getIndex(), str + "\n" + indentStr, null);
+                            UiUtils.open(fo, fieldNode.getStartLocation().getIndex());
+                            return;
+                        }
+                        // Otherwise add at top of type block (after bracket)
+                        baseDoc.insertString(blockNode.getStartLocation().getIndex() + 1, "\n" + indentStr + str + "\n", null);
+                        // Put the cursor there (open the file if necessary)
+                        UiUtils.open(fo, blockNode.getStartLocation().getIndex() + 1);
+                    }
                 }
             } catch (BadLocationException e)
             {
                 FanUtilities.GENERIC_LOGGER.exception("BadLocation", e);
             }
         }
+
+        /*Document doc = node.getRoot().getParserTask().getDocument();
+
+        AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
+        if (typeNode != null)
+        {
+        AstNode fieldNode = FanLexAstUtils.getFirstChildRecursive(typeNode, new NodeKindPredicate(AstKind.AST_FIELD_DEF));
+        String str = (modifsField.getText().isEmpty() ? "" : modifsField.getText() + " ")
+        + typeField.getText() + " "
+        + nameField.getText()
+        + (valueField.getText().isEmpty() ? "" : " := " + valueField.getText());
+
+        try
+        {
+        // If other field present, add just before it
+        if (fieldNode != null)
+        {
+        // (should always be 1*indentSize)
+        String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
+        doc.insertString(fieldNode.getStartLocation().getIndex(), str+"\n"+indentStr, null);
+        return;
+        }
+
+        // Otherwise add at top of type block (after bracket)
+        AstNode blockNode = FanLexAstUtils.getFirstChildRecursive(typeNode, new NodeKindPredicate(AstKind.AST_BLOCK));
+        if(blockNode != null)
+        {
+        // ident of line before line with closing bracket (should always be 1*indentSize)
+        String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
+        doc.insertString(blockNode.getStartLocation().getIndex()+1, "\n"+indentStr+str, null);
+        }
+        } catch (BadLocationException e)
+        {
+        FanUtilities.GENERIC_LOGGER.exception("BadLocation", e);
+        }
+        }*/
     }//GEN-LAST:event_submitButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

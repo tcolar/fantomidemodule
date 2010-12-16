@@ -10,15 +10,27 @@
  */
 package net.colar.netbeans.fan.hints;
 
+import java.io.File;
+import java.util.HashMap;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.NBFanParser;
+import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
-import org.netbeans.editor.BaseDocument;
+import net.colar.netbeans.fan.scope.FanTypeScopeVar;
+import net.colar.netbeans.fan.types.FanResolvedType;
+import org.netbeans.modules.csl.api.UiUtils;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.api.Source;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObjectNotFoundException;
 
 /**
  * Dialog for "Add a method" hint fix.
@@ -27,15 +39,32 @@ import org.netbeans.modules.editor.indent.api.IndentUtils;
 public class FanAddMethodDialog extends javax.swing.JDialog
 {
 
-    private final AstNode node;
+    private final FanResolvedType targetType;
 
     /** Creates new form FanAddFieldDialog */
-    public FanAddMethodDialog(java.awt.Frame parent, AstNode node, String varName)
+    public FanAddMethodDialog(java.awt.Frame parent, String varName, FanResolvedType targetType, FanResolvedType assignedTo, HashMap<String, FanResolvedType> args)
     {
         super(parent, true);
         initComponents();
         nameField.setText(varName);
-        this.node = node;
+        this.targetType = targetType;
+        if (assignedTo != null && assignedTo.isResolved())
+        {
+            typeField.setText(assignedTo.getDbType().getSimpleName());
+        }
+        if (args != null)
+        {
+            String params = "";
+            for (String key : args.keySet())
+            {
+                if (params.length() > 0)
+                {
+                    params += ", ";
+                }
+                params += args.get(key).getDbType().getSimpleName() + " " + key;
+            }
+            paramsField.setText(params);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -162,52 +191,59 @@ public class FanAddMethodDialog extends javax.swing.JDialog
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_submitButtonActionPerformed
     {//GEN-HEADEREND:event_submitButtonActionPerformed
-        setVisible(false);
-        dispose();
-
-        Document doc = node.getRoot().getParserTask().getDocument();
-
-        String str = (modifsField.getText().isEmpty() ? "" : modifsField.getText() + " ")
-                + typeField.getText() + " "
-                + nameField.getText() + "("
-                + paramsField.getText()
-                + ") { IMPLEMENT_ME }";
-
-        AstNode slotNode = FanLexAstUtils.findParentNode(node, AstKind.AST_METHOD_DEF);
-        if (slotNode == null)
+        Long docId = targetType.getDbType().getSrcDocId();
+        FanDocument doc = FanDocument.findById(docId);
+        if (doc != null)
         {
-            slotNode = FanLexAstUtils.findParentNode(node, AstKind.AST_CTOR_DEF);
-        }
-
-        try
-        {
-            // if we are in a ctor or method, just create the new method rigth before it
-            if (slotNode != null)
+            FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(new File(doc.getPath())));
+            Source source = Source.create(fo);
+            Snapshot snapshot = source.createSnapshot();
+            // Parse the snaphot
+            NBFanParser parser = new NBFanParser();
+            try
             {
-                // (should always be 1*indentSize)
-                String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
-                doc.insertString(slotNode.getStartLocation().getIndex(), str + "\n\n" + indentStr, null);
+                parser.parse(snapshot, true);
+            } catch (Throwable e)
+            {
                 return;
-            } else
+            }
+
+            FanParserTask fanResult = (FanParserTask) parser.getResult();
+            AstNode rootScope = fanResult.getRootScope();
+
+            FanTypeScopeVar typeVar = FanLexAstUtils.findTypeVar(rootScope, targetType.getDbType().getSimpleName());
+            try
             {
-                AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
-                if (typeNode != null)
+                if (typeVar != null)
                 {
                     // Otherwise add at top of type block (after bracket)
-                    AstNode blockNode = FanLexAstUtils.getFirstChildRecursive(typeNode, new NodeKindPredicate(AstKind.AST_BLOCK));
+                    AstNode blockNode = FanLexAstUtils.getFirstChildRecursive(typeVar.getNode(), new NodeKindPredicate(AstKind.AST_BLOCK));
                     if (blockNode != null)
                     {
+
+                        String str = (modifsField.getText().isEmpty() ? "" : modifsField.getText() + " ")
+                                + typeField.getText() + " "
+                                + nameField.getText() + "("
+                                + paramsField.getText()
+                                + ") { IMPLEMENT_ME }";
+
+
+                        Document baseDoc = source.getDocument(true);
                         // should always be 1*indentSize
-                        String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
-                        doc.insertString(blockNode.getStartLocation().getIndex() + 1, "\n" + indentStr + str, null);
+                        String indentStr = IndentUtils.createIndentString(baseDoc, IndentUtils.indentLevelSize(baseDoc));
+                        baseDoc.insertString(blockNode.getStartLocation().getIndex() + 1, "\n" + indentStr + str+"\n", null);
+                        // Put the cursor there (open the file if necessary)
+                        UiUtils.open(fo, blockNode.getStartLocation().getIndex()+1);
                     }
                 }
+            } catch (BadLocationException e)
+            {
+                FanUtilities.GENERIC_LOGGER.exception("BadLocation", e);
             }
-        } catch (BadLocationException e)
-        {
-            FanUtilities.GENERIC_LOGGER.exception("BadLocation", e);
         }
 
+        setVisible(false);
+        dispose();
     }//GEN-LAST:event_submitButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

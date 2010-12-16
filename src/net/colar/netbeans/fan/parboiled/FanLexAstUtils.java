@@ -4,18 +4,32 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Document;
+import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.NBFanParser;
+import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
 import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
+import net.colar.netbeans.fan.scope.FanFieldScopeVar;
+import net.colar.netbeans.fan.scope.FanMethodScopeVar;
+import net.colar.netbeans.fan.scope.FanTypeScopeVar;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.csl.api.DeclarationFinder.DeclarationLocation;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.api.Source;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.parboiled.Node;
 import org.parboiled.google.base.Predicate;
 import org.parboiled.support.InputBuffer;
@@ -366,5 +380,77 @@ public class FanLexAstUtils
             }
         }
         return callNode;
+    }
+
+    public static DeclarationLocation findTypeDeclaration(FanResolvedType t, String slot)
+    {
+        // Find the relevant item in the source
+        Long docId = t.getDbType().getSrcDocId();
+        FanDocument doc = FanDocument.findById(docId);
+        FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(new File(doc.getPath())));
+        Source source = Source.create(fo);
+        Snapshot snapshot = source.createSnapshot();
+        // Parse the snaphot
+        NBFanParser parser = new NBFanParser();
+        try
+        {
+            parser.parse(snapshot, true);
+        } catch (Throwable e)
+        {
+            return null;
+        }
+        FanParserTask fanResult = (FanParserTask) parser.getResult();
+        AstNode rootScope = fanResult.getRootScope();
+
+        FanTypeScopeVar typeVar = findTypeVar(rootScope, t.getDbType().getSimpleName());
+
+        // look for a specific slot
+        if (slot != null)
+        {
+            FanAstScopeVarBase slotVar = findSlot(typeVar, slot);
+            if (slotVar != null)
+            {
+                return new DeclarationLocation(fo, slotVar.getNode().getStartLocation().getIndex());
+            }
+        }
+
+        // if not asked for a slot .. or the slot not found, go to the type
+        if (typeVar != null)
+        {
+            return new DeclarationLocation(fo, typeVar.getNode().getStartLocation().getIndex());
+        }
+
+        // not found
+        return null;
+    }
+
+    public static FanTypeScopeVar findTypeVar(AstNode rootScope, String name)
+    {
+        for (FanAstScopeVarBase var : rootScope.getLocalScopeVars().values())
+        {
+            if (var instanceof FanTypeScopeVar)
+            {
+                if (var.getName().equals(name))
+                {
+                    return (FanTypeScopeVar) var;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static FanAstScopeVarBase findSlot(FanTypeScopeVar type, String slot)
+    {
+        for (FanAstScopeVarBase slotVar : type.getNode().getLocalScopeVars().values())
+        {
+            if (slotVar instanceof FanMethodScopeVar || slotVar instanceof FanFieldScopeVar)
+            {
+                if (slotVar.getName().equals(slot))
+                {
+                    return slotVar;
+                }
+            }
+        }
+        return null;
     }
 }

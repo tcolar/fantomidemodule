@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.hints;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import net.colar.netbeans.fan.FanParserErrorKey;
@@ -14,6 +15,8 @@ import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
+import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
@@ -179,28 +182,71 @@ public class FanHintsProvider implements HintsProvider
         {
             return;
         }
-        System.err.println("Var: " + var);
 
-        List<HintFix> fixes = new ArrayList<HintFix>();
-        if (!var.startsWith(".") && var.indexOf("(") == -1)
-        {
-            fixes.add(new FanCreateFieldFix(node, var));
-            fixes.add(new FanCreateMethodFix(node, var));
-        }
-        /*
-            TODO: try to guess:
-         *      - field type
-         *      - method return type
-         *      - method parameters types/names
-         * 
-            TODO: propose creating field / methods
-                - In remote file/types
+        // Trying to resolve targetType, and variable expected type. return type, params etc...
+        FanResolvedType targetType = null; // null = local
+        HashMap<String, FanResolvedType> args = new HashMap<String, FanResolvedType>();// call args
+        FanResolvedType assignedToType = null; // what it's assigned into
+        FanResolvedType assignedFromType = null; // what it's assigned into
 
         AstNode call = FanLexAstUtils.findParentNode(node, AstKind.AST_CALL);
         AstNode callExpr = FanLexAstUtils.findParentNode(node, AstKind.AST_CALL_EXPR);
         AstNode assign = FanLexAstUtils.findParentNode(node, AstKind.AST_EXPR_ASSIGN);
 
-         */
+        // If it's part of a call. try to figure the target type
+        if (callExpr != null)
+        {
+            FanResolvedType t = FanResolvedType.resolveCallLeftHandSide(node);
+            if (t != null)
+            {
+                targetType = t;
+            }
+        }
+
+        // Look for params
+        if (call != null || callExpr != null)
+        {
+
+            List<AstNode> callArgs = FanLexAstUtils.getChildren(
+                callExpr != null
+                ? FanLexAstUtils.getFirstChildRecursive(callExpr, new NodeKindPredicate(AstKind.AST_CALL))
+                : call, new NodeKindPredicate(AstKind.AST_ARG));
+            for (AstNode arg : callArgs)
+            {
+                args.put(arg.getNodeText(true), arg.getType());
+            }
+        }
+
+        if (assign != null)
+        {
+            assignedToType = assign.getParent().getChildren().get(0).getType();
+            assignedFromType = assign.getParent().getChildren().get(1).getType();
+        }
+
+        // local type
+        if(targetType == null)
+        {
+            AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
+            targetType = typeNode.getType();
+        }
+        // shouldn't happen ... but just in case
+        if(targetType == null)
+            return;
+
+        List<HintFix> fixes = new ArrayList<HintFix>();
+
+        if (args.isEmpty() && var.indexOf("(") == -1)
+        {
+            fixes.add(new FanCreateFieldFix(node, var, targetType, assignedFromType));
+        }
+        
+        String methodName = var;
+        if (methodName.indexOf("(") != -1)
+        {
+            methodName = methodName.substring(0, methodName.indexOf("("));
+        }
+
+        fixes.add(new FanCreateMethodFix(node, methodName, targetType, assignedToType, args));
 
         Hint hint = new Hint(new FanHintRule(), "", result.getSourceFile(),
                 new OffsetRange(error.getStartPosition(), error.getEndPosition()), fixes, 25);

@@ -6,7 +6,9 @@ package net.colar.netbeans.fan.hints;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
+import java.util.HashMap;
 import net.colar.netbeans.fan.parboiled.AstNode;
+import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.modules.csl.api.HintFix;
 import org.openide.windows.WindowManager;
 
@@ -17,18 +19,22 @@ import org.openide.windows.WindowManager;
 class FanCreateMethodFix implements HintFix
 {
 
-    private final AstNode node;
     private final String method;
+    private final FanResolvedType targetType;
+    private final HashMap<String, FanResolvedType> args;
+    private final FanResolvedType assignedTo;
 
-    public FanCreateMethodFix(AstNode node, String method)
+    public FanCreateMethodFix(AstNode node, String method, FanResolvedType targetType, FanResolvedType assignedToType, HashMap<String, FanResolvedType> args)
     {
-        this.node=node;
         this.method=method;
+        this.targetType = targetType;
+        this.assignedTo = assignedToType;
+        this.args = args;
     }
 
     public String getDescription()
     {
-        return "Create Local Method: " + method;
+        return "Create Method: " + method +(targetType==null?"":" in "+targetType.getQualifiedType());
     }
 
     public void implement() throws Exception
@@ -39,7 +45,7 @@ class FanCreateMethodFix implements HintFix
             public void run()
             {
                 Frame win = WindowManager.getDefault().getMainWindow();
-                FanAddMethodDialog d = new FanAddMethodDialog(win, node, method);
+                FanAddMethodDialog d = new FanAddMethodDialog(win, method, targetType, assignedTo, args);
                 d.setLocationRelativeTo(win);
                 d.pack();
                 d.setVisible(true);
