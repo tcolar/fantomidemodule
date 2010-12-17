@@ -49,6 +49,9 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
         execField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        talesLbl = new javax.swing.JLabel();
+        talesField = new javax.swing.JTextField();
+        talesButton = new javax.swing.JButton();
 
         homeLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.homeLabel.text")); // NOI18N
 
@@ -96,16 +99,27 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
         jTextArea1.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.jTextArea1.text")); // NOI18N
         jScrollPane1.setViewportView(jTextArea1);
 
+        talesLbl.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.talesLbl.text")); // NOI18N
+
+        talesField.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.talesField.text")); // NOI18N
+
+        talesButton.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.talesButton.text")); // NOI18N
+        talesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                talesButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+            .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, errorLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                    .add(errorLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                    .add(layout.createSequentialGroup()
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(debugLabel)
                             .add(execLabel)
@@ -113,13 +127,19 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(layout.createSequentialGroup()
-                                .add(homeField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                                .add(homeField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                                 .add(homeBrowse))
                             .add(layout.createSequentialGroup()
                                 .add(debugField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                 .add(20, 20, 20))
-                            .add(execField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE))))
+                            .add(execField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)))
+                    .add(layout.createSequentialGroup()
+                        .add(talesLbl)
+                        .add(30, 30, 30)
+                        .add(talesField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 220, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(talesButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -140,7 +160,12 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
                     .add(execField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 104, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(talesLbl)
+                    .add(talesField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(talesButton))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 63, Short.MAX_VALUE)
                 .add(errorLabel)
                 .addContainerGap())
         );
@@ -171,6 +196,16 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 		controller.changed();
 	}//GEN-LAST:event_execFieldKeyReleased
 
+        private void talesButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_talesButtonActionPerformed
+        {//GEN-HEADEREND:event_talesButtonActionPerformed
+		int val = chooser.showDialog(this, "Select");
+		if (val == JFileChooser.APPROVE_OPTION)
+		{
+			talesField.setText(chooser.getSelectedFile().getPath());
+			controller.changed();
+		}
+        }//GEN-LAST:event_talesButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField debugField;
     private javax.swing.JLabel debugLabel;
@@ -182,6 +217,9 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
     private javax.swing.JLabel homeLabel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JButton talesButton;
+    private javax.swing.JTextField talesField;
+    private javax.swing.JLabel talesLbl;
     // End of variables declaration//GEN-END:variables
 
 	public boolean valid()
@@ -223,6 +261,20 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 	String getFanHome()
 	{
 		return homeField.getText();
+	}
+
+	void setTalesHome(String home)
+	{
+		if (home == null)
+		{
+			home = "";
+		}
+		talesField.setText(home);
+	}
+
+	String getTalesHome()
+	{
+		return talesField.getText();
 	}
 
 	String getDebugPort()

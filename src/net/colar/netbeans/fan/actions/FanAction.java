@@ -122,7 +122,7 @@ public abstract class FanAction
                 target = podName + "::" + "Main" + "." + "main";
             }
             FanExecution fanExec = new FanExecution();
-            fanExec.setDisplayName((tales?"Tales ":"")+getProjectName(lookup));
+            fanExec.setDisplayName((tales ? "Tales " : "") + getProjectName(lookup));
             if (tales)
             {
                 // execute IN project directory
@@ -134,6 +134,16 @@ public abstract class FanAction
             }
 
             FanPlatform.getInstance().buildFanCall(fanExec, debug);
+
+            if (tales)
+            {
+                String talesPath = "NO_TALES_PATH";
+                if (FanPlatform.getInstance().isTalesPresent())
+                {
+                    talesPath = FanPlatform.getInstance().getTalesHome().getPath();
+                }
+                fanExec.addCommandArg("-DFAN_ENV_PATH=" + talesPath);
+            }
 
             fanExec.addCommandArg(FanPlatform.FAN_CLASS);
             if (tales)

@@ -28,6 +28,7 @@ public class FanGlobalSettingsController extends OptionsPanelController
 	public void update()
 	{
 		panel.setFanHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME));
+		panel.setTalesHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_TALES_HOME));
 		panel.setDebugPort(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT,"8000"));
 		panel.setRunOptions(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS,"-Xmx128m"));
 		changed();
@@ -36,8 +37,10 @@ public class FanGlobalSettingsController extends OptionsPanelController
 	public void applyChanges()
 	{
 		String home = panel.getFanHome();
+		String tales = panel.getTalesHome();
 		String debugPort = panel.getDebugPort();
 		String runOptions = panel.getRunOptions();
+		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_TALES_HOME, tales);
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, home);
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_DEBUG_PORT, debugPort);
 		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_RUN_OPTIONS, runOptions);
