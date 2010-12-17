@@ -150,6 +150,7 @@ public abstract class FanAction
             if (tales)
             {
                 fanExec.addCommandArg(FanPlatform.FAN_TALES_POD_NAME);
+                fanExec.addCommandArg(FileUtil.toFile(file).getAbsolutePath());
                 fanExec.addCommandArg(FanPlatform.FAN_TALES_RUN_CMD);
             } else
             {
