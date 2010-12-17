@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.concurrent.Future;
 import javax.swing.event.ChangeListener;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.platform.FanPlatform;
@@ -62,7 +61,17 @@ public final class FanTalesProjectWizardIterator implements WizardDescriptor.Ins
         FanExecution fanExec = new FanExecution();
         fanExec.setDisplayName("Tales " + projectName);
         fanExec.setWorkingDirectory(location);
+
+        String talesPath = "NO_TALES_PATH";
+        if (FanPlatform.getInstance().isTalesPresent())
+        {
+            talesPath = FanPlatform.getInstance().getTalesHome().getPath();
+        }
+        fanExec.addEnvVar("FAN_ENV", "util::PathEnv");
+        fanExec.addEnvVar("FAN_ENV_PATH", talesPath);
+
         FanPlatform.getInstance().buildFanCall(fanExec, false);
+
         fanExec.addCommandArg(FanPlatform.FAN_CLASS);
         fanExec.addCommandArg(FanPlatform.FAN_TALES_POD_NAME);
         fanExec.addCommandArg(FanPlatform.FAN_TALES_CREATE_CMD);
@@ -70,7 +79,7 @@ public final class FanTalesProjectWizardIterator implements WizardDescriptor.Ins
         fanExec.runAndWaitFor();
 
         // Return the prj so that it's open in IDE
-        File pf = FileUtil.normalizeFile(new File(location + File.separator + projectName+ File.separator));
+        File pf = FileUtil.normalizeFile(new File(location + File.separator + projectName + File.separator));
         FileObject pfFo = FileUtil.toFileObject(pf);
         File fan = FileUtil.normalizeFile(new File(pf, "fan"));
         fan.mkdirs();

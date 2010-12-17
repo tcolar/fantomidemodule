@@ -137,9 +137,9 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
                     .add(layout.createSequentialGroup()
                         .add(talesLbl)
                         .add(30, 30, 30)
-                        .add(talesField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 220, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(talesField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(talesButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)))
+                        .add(talesButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

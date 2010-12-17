@@ -142,7 +142,8 @@ public abstract class FanAction
                 {
                     talesPath = FanPlatform.getInstance().getTalesHome().getPath();
                 }
-                fanExec.addCommandArg("-DFAN_ENV_PATH=" + talesPath);
+                fanExec.addEnvVar("FAN_ENV", "util::PathEnv");
+                fanExec.addEnvVar("FAN_ENV_PATH", talesPath);
             }
 
             fanExec.addCommandArg(FanPlatform.FAN_CLASS);
