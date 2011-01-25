@@ -11,6 +11,6 @@ package net.colar.netbeans.fan.utils;
  */
 public class FantomConstants 
 {
-    public static final String COLORING_JAVASCRIPT="Fantom-embedded-js";
-    public static final String COLORING_SQL="Fantom-embedded-sql";
+    public static final String COLORING_JAVASCRIPT="embedded-js";
+    public static final String COLORING_SQL="embedded-sql";
 }

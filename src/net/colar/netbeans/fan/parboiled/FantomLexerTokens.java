@@ -30,22 +30,22 @@ public class FantomLexerTokens
 	private static Hashtable<TokenName, String> getColorIds()
 	{
 		Hashtable<TokenName, String> cats = new Hashtable<TokenName, String>();
-		cats.put(TokenName.COMMENT, "Fantom-comment");
-		cats.put(TokenName.DOC, "Fantom-doc");
-		cats.put(TokenName.UNIXLINE, "Fantom-doc");
-		cats.put(TokenName.DSL, "Fantom-dsl");
-		cats.put(TokenName.NUMBER, "Fantom-number");
-		cats.put(TokenName.CHAR_, "Fantom-character");
-		cats.put(TokenName.KEYWORD, "Fantom-keyword");
-		cats.put(TokenName.LEXEROPS, "Fantom-operator");
-		cats.put(TokenName.LEXERSEPS, "Fantom-separator");
-		cats.put(TokenName.LEXERCOMPS, "Fantom-comparator");
-		cats.put(TokenName.LEXERASSIGN, "Fantom-assignment");
-		cats.put(TokenName.LEXERASSIGN, "Fantom-initialization");
-		cats.put(TokenName.STRS, "Fantom-string");
-		cats.put(TokenName.URI, "Fantom-string");
-		cats.put(TokenName.ERROR, "Fantom-error"); //error token in case of problem with lexer
-		cats.put(TokenName.UNEXPECTED, "Fantom-error"); //should NOT happen
+		cats.put(TokenName.COMMENT, "comment");
+		cats.put(TokenName.DOC, "doc");
+		cats.put(TokenName.UNIXLINE, "doc");
+		cats.put(TokenName.DSL, "dsl");
+		cats.put(TokenName.NUMBER, "number");
+		cats.put(TokenName.CHAR_, "character");
+		cats.put(TokenName.KEYWORD, "keyword");
+		cats.put(TokenName.LEXEROPS, "operator");
+		cats.put(TokenName.LEXERSEPS, "separator");
+		cats.put(TokenName.LEXERCOMPS, "comparator");
+		cats.put(TokenName.LEXERASSIGN, "assignment");
+		cats.put(TokenName.LEXERASSIGN, "initialization");
+		cats.put(TokenName.STRS, "string");
+		cats.put(TokenName.URI, "string");
+		cats.put(TokenName.ERROR, "error"); //error token in case of problem with lexer
+		cats.put(TokenName.UNEXPECTED, "error"); //should NOT happen
 		return cats;
 	}
 

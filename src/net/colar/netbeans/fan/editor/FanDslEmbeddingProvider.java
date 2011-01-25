@@ -4,6 +4,8 @@
  */
 package net.colar.netbeans.fan.editor;
 
+import net.colar.netbeans.fan.FanLanguage;
+import net.colar.netbeans.fan.FanTokenID;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
@@ -32,8 +34,10 @@ public class FanDslEmbeddingProvider extends LanguageProvider
     Language sql;
 
     @Override
-    public Language<?> findLanguage(String string)
+    public Language<?> findLanguage(String mimeType)
     {
+        if (FanLanguage.FAN_MIME_TYPE.equals (mimeType))
+            return FanTokenID.language();
         return null;
     }
 
