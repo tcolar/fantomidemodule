@@ -2,9 +2,6 @@
 <MIME-resolver>
     <file>
 	<ext name="fan"/>
-	<resolver mime="text/x-fan"/>
-    </file>
-    <file>
 	<ext name="fwt"/>
 	<resolver mime="text/x-fan"/>
     </file>
