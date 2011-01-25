@@ -17,10 +17,10 @@ import org.openide.util.Lookup;
  * Controller for Fan options panel.
  * @author tcolar
  */
-@OptionsPanelController.SubRegistration(displayName="Fantom Options")
+@OptionsPanelController.SubRegistration(location="Fantom", id=FanGlobalSettingsController.ID, displayName="Fantom")
 public class FanGlobalSettingsController extends OptionsPanelController
 {
-
+        public static final String ID = "Fantom";
 	private FanGlobalSettingsPanel panel;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	private boolean changed;

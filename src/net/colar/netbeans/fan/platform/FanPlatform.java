@@ -11,9 +11,12 @@ import java.util.Set;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import javax.swing.JOptionPane;
+import net.colar.netbeans.fan.wizard.FanGlobalSettingsController;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -93,22 +96,21 @@ public class FanPlatform
 
     public static boolean isConfigured()
     {
-        // print the first time isConfigured is called
-        if (instance.fanHome == null && !configWarningAlreadyDisplayed)
+        // send to settings the first time isConfigured is called
+        synchronized (FanPlatform.class)
         {
-            configWarningAlreadyDisplayed = true;
-            JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options|Misc, Fantom Tab");
+            if (instance.fanHome == null && !configWarningAlreadyDisplayed)
+            {
+                configWarningAlreadyDisplayed = true;
+                OptionsDisplayer.getDefault().open(FanGlobalSettingsController.ID);
+            }
         }
         return instance != null && instance.fanHome != null;
     }
 
     public static FanPlatform getInstance()
     {
-        // Also show the error each time getInstance() it's called, if not configured
-        if (!isConfigured())
-        {
-            JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options|Misc, Fantom Tab");
-        }
+        isConfigured();
         // throw an exception ?
         return instance;
     }
@@ -303,7 +305,7 @@ public class FanPlatform
 
     public boolean isTalesPresent()
     {
-        return talesHome != null && talesHome.length()>0 && new File(talesHome).exists();
+        return talesHome != null && talesHome.length() > 0 && new File(talesHome).exists();
     }
 
     public FileObject getFanSrcHome()
