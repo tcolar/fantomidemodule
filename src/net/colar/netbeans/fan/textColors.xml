@@ -2,22 +2,24 @@
 
 <fontscolors>
     <!--lexer-->
-    <fontcolor default="keyword" name="keyword"/>
-    <fontcolor default="separator" name="separator"/>
-    <fontcolor default="comment" name="comment"/>
-    <fontcolor default="error" name="error"/>
-    <fontcolor default="number" name="number"/>
-    <fontcolor default="character" name="character"/>
-    <fontcolor foreColor="006f00" name="DOC"/>
-    <fontcolor foreColor="0066ff" name="comparator"/>
-    <fontcolor foreColor="a606fd" name="assignment"/>
-    <fontcolor foreColor="ff0000" name="initialization">
+    <fontcolor default="keyword" name="Fantom-keyword"/>
+    <fontcolor default="separator" name="Fantom-separator"/>
+    <fontcolor default="comment" name="Fantom-comment"/>
+    <fontcolor default="error" name="Fantom-error"/>
+    <fontcolor default="number" name="Fantom-number"/>
+    <fontcolor default="character" name="Fantom-character"/>
+    
+    <!-- custom-->
+    <fontcolor foreColor="006f00" name="Fantom-doc"/>
+    <fontcolor foreColor="0066ff" name="Fantom-comparator"/>
+    <fontcolor foreColor="a606fd" name="Fantom-assignment"/>
+    <fontcolor foreColor="ff0000" name="Fantom-initialization">
 		<font style="bold"/>
 	</fontcolor>
-    <fontcolor foreColor="ff006f" name="DSL">
-	<font style="bold"/>
-    </fontcolor>
-    <fontcolor default="string" name="STR"/>
+    <fontcolor foreColor="726405" name="Fantom-dsl"/>
+    <fontcolor default="string" name="Fantom-string"/>
+    <fontcolor bgColor="e0f9dd" name="Fantom-embedded-js"/>
+    <fontcolor bgColor="dbf9f8" name="Fantom-embedded-sql"/>
 
     <!-- semantic (parser)-->
     <fontcolor name="mod-parameter">

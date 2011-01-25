@@ -13,6 +13,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanUtilities;
+import net.colar.netbeans.fan.utils.FantomConstants;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.FontColorSettings;
@@ -27,19 +28,21 @@ import org.netbeans.spi.editor.highlighting.support.AbstractHighlightsContainer;
 import org.openide.util.WeakListeners;
 
 /**
- * Provided colored background for embedded code (html / javascript)
+ * Provides colored background for embedded code (sql / javascript)
+ * 
  * @author tcolar
  */
 public class FanHighlightsContainer extends AbstractHighlightsContainer implements TokenHierarchyListener
 {
 
     private final AttributeSet javascriptBackground;
+    private final AttributeSet sqlBackground;
     private final Document document;
     private TokenHierarchy<? extends Document> hierarchy = null;
-    private static final String JAVASCRIPT_MIME_TYPE = "text/javascript"; //NOI18N
-    private static final String JAVASCRIPT_BACKGROUND_TOKEN_NAME = "javascript-embedded"; //NOI18N
+    public static final String JAVASCRIPT_MIME_TYPE = "text/javascript"; 
+    public static final String SQL_MIME_TYPE = "text/x-sql";
     private long version = 0;
-    
+
     public FanHighlightsContainer(Document document)
     {
         this.document = document;
@@ -47,16 +50,26 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
         //try load the background from html settings
         FontColorSettings fcs = MimeLookup.getLookup(FanLanguage.FAN_MIME_TYPE).lookup(FontColorSettings.class);
         Color jsBC = null;
-        if (fcs != null)
+        Color sqlBC = null;
+        AttributeSet as = fcs.getTokenFontColors(FantomConstants.COLORING_JAVASCRIPT);
+        if (as != null)
         {
-            jsBC = getColoring(fcs, JAVASCRIPT_BACKGROUND_TOKEN_NAME);
+            jsBC = (Color) as.getAttribute(StyleConstants.Background);
         }
-        
+        AttributeSet asSql = fcs.getTokenFontColors(FantomConstants.COLORING_SQL);
+        if (asSql != null)
+        {
+            sqlBC = (Color) asSql.getAttribute(StyleConstants.Background);
+        }
+
         javascriptBackground = jsBC == null ? SimpleAttributeSet.EMPTY : AttributesUtilities.createImmutable(
                 StyleConstants.Background, jsBC,
                 ATTR_EXTENDS_EOL, Boolean.TRUE);
+        sqlBackground = sqlBC == null ? SimpleAttributeSet.EMPTY : AttributesUtilities.createImmutable(
+                StyleConstants.Background, sqlBC,
+                ATTR_EXTENDS_EOL, Boolean.TRUE);
     }
-    
+
     @Override
     public HighlightsSequence getHighlights(int startOffset, int endOffset)
     {
@@ -72,7 +85,7 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
                         hierarchy.addTokenHierarchyListener(WeakListeners.create(TokenHierarchyListener.class, this, hierarchy));
                     }
                 }
-                
+
                 if (hierarchy != null)
                 {
                     return new Highlights(version, hierarchy, startOffset, endOffset);
@@ -81,25 +94,15 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
             return HighlightsSequence.EMPTY;
         }
     }
-    
+
     public void tokenHierarchyChanged(TokenHierarchyEvent evt)
     {
         fireHighlightsChange(evt.affectedStartOffset(), evt.affectedEndOffset());
     }
-    
-    private static Color getColoring(FontColorSettings fcs, String tokenName)
-    {
-        AttributeSet as = fcs.getTokenFontColors(tokenName);
-        if (as != null)
-        {
-            return (Color) as.getAttribute(StyleConstants.Background);
-        }
-        return null;
-    }
-    
+
     private class Highlights implements HighlightsSequence
     {
-        
+
         private final long version;
         private final TokenHierarchy<? extends Document> scanner;
         private final int startOffsetBoundary;
@@ -110,7 +113,7 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
         private int realEndOffset;
         private AttributeSet attributeSet;
         private boolean finished = false;
-        
+
         private Highlights(long version, TokenHierarchy<? extends Document> scanner, int startOffset, int endOffset)
         {
             this.version = version;
@@ -118,7 +121,7 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
             this.startOffsetBoundary = startOffset;
             this.endOffsetBoundary = endOffset;
         }
-        
+
         private boolean _moveNext()
         {
             if (tokenSequenceList == null)
@@ -127,7 +130,7 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
                 this.startOffset = startOffsetBoundary;
                 this.endOffset = startOffsetBoundary;
                 this.realEndOffset = startOffsetBoundary;
-                
+
                 String mimeType = (String) document.getProperty("mimeType"); //NOI18N
                 Language<?> language = Language.find(mimeType);
                 if (language != null)
@@ -140,7 +143,7 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
                     FanUtilities.GENERIC_LOGGER.info("Language " + mimeType + " obtained from the document mimeType property cannot be found!"); //NOI18N
                 }
             }
-            
+
             if (tokenSequenceList != null)
             {
                 for (TokenSequence tokenSequence : tokenSequenceList)
@@ -150,35 +153,36 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
                     while (tokenSequence.moveNext() && tokenSequence.offset() < endOffsetBoundary)
                     {
                         TokenSequence eTokenSequence = tokenSequence.embedded();
-                        
+
                         if (eTokenSequence == null || !eTokenSequence.moveNext())
                         {
                             continue;
                         }
                         String embeddedMimeType = eTokenSequence.language().mimeType();
-                        if ((JAVASCRIPT_MIME_TYPE).equals(embeddedMimeType))
+                        if ((JAVASCRIPT_MIME_TYPE).equals(embeddedMimeType) || (SQL_MIME_TYPE).equals(embeddedMimeType))
                         {
-                                startOffset = eTokenSequence.offset();
-                                do
-                                {
-                                    endOffset = eTokenSequence.offset() + eTokenSequence.token().length();
-                                } while (eTokenSequence.moveNext());
-                                
-                                realEndOffset = endOffset > realEndOffset ? endOffset : realEndOffset + 1;
-                                
-                                attributeSet = javascriptBackground;
-                                if (attributeSet != null)
-                                {
-                                    return true;
-                                }
+                            boolean isJs = (JAVASCRIPT_MIME_TYPE).equals(embeddedMimeType);
+                            startOffset = eTokenSequence.offset();
+                            do
+                            {
+                                endOffset = eTokenSequence.offset() + eTokenSequence.token().length();
+                            } while (eTokenSequence.moveNext());
+
+                            realEndOffset = endOffset > realEndOffset ? endOffset : realEndOffset + 1;
+
+                            attributeSet = isJs ? javascriptBackground : sqlBackground;
+                            if (attributeSet != null)
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
             }
-            
+
             return false;
         }
-        
+
         @Override
         public boolean moveNext()
         {
@@ -192,11 +196,11 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
                     }
                 }
             }
-            
+
             finished = true;
             return false;
         }
-        
+
         @Override
         public int getStartOffset()
         {
@@ -212,7 +216,7 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
                 }
             }
         }
-        
+
         @Override
         public int getEndOffset()
         {
@@ -228,7 +232,7 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
                 }
             }
         }
-        
+
         @Override
         public AttributeSet getAttributes()
         {
@@ -244,7 +248,7 @@ public class FanHighlightsContainer extends AbstractHighlightsContainer implemen
                 }
             }
         }
-        
+
         private boolean checkVersion()
         {
             return this.version == FanHighlightsContainer.this.version;

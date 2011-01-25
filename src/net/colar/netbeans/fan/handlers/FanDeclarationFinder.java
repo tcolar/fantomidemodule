@@ -80,6 +80,7 @@ public class FanDeclarationFinder implements DeclarationFinder
         return null;
     }
 
+    @SuppressWarnings(value="unchecked")
     public OffsetRange getReferenceSpan(Document doc, int caretOffset)
     {
         Token tk = FanLexAstUtils.getFanTokenAt(doc, caretOffset);

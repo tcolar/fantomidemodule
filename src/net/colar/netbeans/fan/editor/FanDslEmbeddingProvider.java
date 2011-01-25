@@ -13,6 +13,7 @@ import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageProvider;
 import org.openide.util.lookup.ServiceProvider;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.modules.db.sql.lexer.SQLTokenId;
 
 /**
  * Provide syntax highlighting for DSL's (embedded language)
@@ -26,8 +27,9 @@ public class FanDslEmbeddingProvider extends LanguageProvider
     public static final String DSL_OPEN = "<|";
     public static final String DSL_CLOSE = "|>";
     public static final String TALES_DSL_CLIENT_ID = "client";
+    public static final String TALES_DSL_SQL_ID = "sql";
     Language jscript;
-    //Language html = MimeLookup.getLookup("text/html").lookup(Language.class);
+    Language sql;
 
     @Override
     public Language<?> findLanguage(String string)
@@ -36,20 +38,31 @@ public class FanDslEmbeddingProvider extends LanguageProvider
     }
 
     @Override
+    @SuppressWarnings(value="unchecked")
     public LanguageEmbedding<?> findLanguageEmbedding(Token<?> token, LanguagePath lp, InputAttributes ia)
     {
         if (jscript == null)
         {
-            jscript = MimeLookup.getLookup("text/javascript").lookup(Language.class);
+            jscript = MimeLookup.getLookup(FanHighlightsContainer.JAVASCRIPT_MIME_TYPE).lookup(Language.class);
         }
-        if (token != null && token.id() != null && token.text() != null && jscript != null)
+        if (sql == null)
+        {
+            // NOTE: Required adding (non public/friend) SQL editor (specific revision)
+            sql = SQLTokenId.language();//MimeLookup.getLookup(FanHighlightsContainer.SQL_MIME_TYPE).lookup(Language.class);
+        }
+        if (token != null && token.id() != null && token.text() != null)
         {
             if (token.id().name().equalsIgnoreCase(TokenName.DSL.name()))
             {
-                if (token.text().toString().startsWith(TALES_DSL_CLIENT_ID + DSL_OPEN))
+                if (jscript!=null && token.text().toString().startsWith(TALES_DSL_CLIENT_ID + DSL_OPEN))
                 {
                     int start = TALES_DSL_CLIENT_ID.length() + DSL_OPEN.length();
                     return LanguageEmbedding.create(jscript, start, DSL_CLOSE.length());
+                }
+                else if (sql!=null && token.text().toString().startsWith(TALES_DSL_SQL_ID + DSL_OPEN))
+                {
+                    int start = TALES_DSL_SQL_ID.length() + DSL_OPEN.length();
+                    return LanguageEmbedding.create(sql, start, DSL_CLOSE.length());
                 }
             }
         }

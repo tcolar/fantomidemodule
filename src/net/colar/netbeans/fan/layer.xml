@@ -76,6 +76,15 @@
     <folder name="Editors">
         <folder name="text">
             <folder name="x-fan">
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="FontAndColors.xml" url="textColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="net.colar.netbeans.fan.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
                 <file name="language.instance">
                     <attr name="instanceCreate" methodvalue="net.colar.netbeans.fan.FanTokenID.language"/>
                     <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
@@ -92,13 +101,6 @@
                         <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
                         <attr name="position" intvalue="500"/>
                     </file>
-                </folder>
-            </folder>
-        </folder>
-        <folder name="FontsColors">
-            <folder name="NetBeans">
-                <folder name="Defaults">
-                    <file name="coloring.xml" url="textColors.xml"/>
                 </folder>
             </folder>
         </folder>
@@ -209,4 +211,13 @@
             </file>
         </folder>
     </folder>
+    
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-fan" url="FantomExample.fan"/>
+            </folder>
+        </folder>
+    </folder>
+
 </filesystem>
