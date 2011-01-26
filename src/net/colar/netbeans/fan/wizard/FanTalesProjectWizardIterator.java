@@ -70,7 +70,7 @@ public final class FanTalesProjectWizardIterator implements WizardDescriptor.Ins
         fanExec.addEnvVar("FAN_ENV", "util::PathEnv");
         fanExec.addEnvVar("FAN_ENV_PATH", talesPath);
 
-        FanPlatform.getInstance().buildFanCall(fanExec, false);
+        FanPlatform.getInstance().buildFanCall(fanExec, false, FanPlatform.getTalesExtraClasspath());
 
         fanExec.addCommandArg(FanPlatform.FAN_CLASS);
         fanExec.addCommandArg(FanPlatform.FAN_TALES_POD_NAME);

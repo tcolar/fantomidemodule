@@ -29,6 +29,7 @@ public class FanPlatform
 {
 
     private static boolean configWarningAlreadyDisplayed = false;
+
     private Set<ClassPath> sourcePaths = null;
     public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
     public static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac");
@@ -331,4 +332,30 @@ public class FanPlatform
     {
         return podsDir;
     }
+
+    public static String getTalesExtraClasspath()
+    {
+        String cp = "";
+        if (FanPlatform.isConfigured() && FanPlatform.getInstance().isTalesPresent())
+        {
+            String cpSeparator = FanPlatform.IS_WIN ? ";" : ":";
+            String s = File.separator;
+            // add jars in tales_home/jars
+            String jarDir = FanPlatform.getInstance().getTalesHome() + "jars";
+            File dir = new File(jarDir);
+            if (dir.exists() && dir.isDirectory())
+            {
+                File[] jars = dir.listFiles();
+                for (File jar : jars)
+                {
+                    if (jar.isFile() && jar.getName().toLowerCase().endsWith(".jar"))
+                    {
+                        cp += cpSeparator + jarDir + s + jar.getName();
+                    }
+                }
+            }
+        }
+        return cp;
+    }
+
 }

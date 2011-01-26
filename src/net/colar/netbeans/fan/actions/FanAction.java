@@ -124,19 +124,17 @@ public abstract class FanAction
             }
             FanExecution fanExec = new FanExecution();
             fanExec.setDisplayName((tales ? "Tales " : "") + getProjectName(lookup));
-            String extraClasspath = null;
             if (tales)
             {
                 // execute IN project directory
                 fanExec.setWorkingDirectory(FileUtil.toFile(file).getAbsolutePath());
-                extraClasspath = getTalesExtraClasspath();
             } else
             {
                 // execute in parent dir.
                 fanExec.setWorkingDirectory(path);
             }
 
-            FanPlatform.getInstance().buildFanCall(fanExec, debug, extraClasspath);
+            FanPlatform.getInstance().buildFanCall(fanExec, debug, FanPlatform.getTalesExtraClasspath());
 
             if (tales)
             {
@@ -298,31 +296,6 @@ public abstract class FanAction
         // try to fall back to the selected item project folder
         return file == null ? null
                 : FileUtil.toFileObject(FanUtilities.getPodFolderForPath(file.getPath()));
-    }
-
-    private String getTalesExtraClasspath()
-    {
-        String cp = "";
-        if (FanPlatform.getInstance().isTalesPresent())
-        {
-            String cpSeparator = FanPlatform.IS_WIN ? ";" : ":";
-            String s = File.separator;
-            // add jars in tales_home/jars
-            String jarDir = FanPlatform.getInstance().getTalesHome() + "jars";
-            File dir = new File(jarDir);
-            if (dir.exists() && dir.isDirectory())
-            {
-                File[] jars = dir.listFiles();
-                for (File jar : jars)
-                {
-                    if (jar.isFile() && jar.getName().toLowerCase().endsWith(".jar"))
-                    {
-                        cp += cpSeparator + jarDir + s + jar.getName();
-                    }
-                }
-            }
-        }
-        return cp;
     }
 
     class FanJpdaThread extends Thread implements Runnable
