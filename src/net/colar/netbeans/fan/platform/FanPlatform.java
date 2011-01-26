@@ -30,8 +30,8 @@ public class FanPlatform
 
     private static boolean configWarningAlreadyDisplayed = false;
     private Set<ClassPath> sourcePaths = null;
-    private static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
-    private static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac");
+    public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
+    public static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac");
     private static final String ARCH = System.getProperty("os.arch").toLowerCase();
     private static FanPlatform instance = new FanPlatform();
     public final static String FAN_CLASS = "fanx.tools.Fan";
@@ -159,7 +159,7 @@ public class FanPlatform
      */
     public void buildFanCall(FanExecution fanExec)
     {
-        buildFanCall(fanExec, false);
+        buildFanCall(fanExec, false, null);
     }
 
     /**
@@ -168,7 +168,7 @@ public class FanPlatform
      * @param fanExec
      * @param debugPort (-1 = no debugger)
      */
-    public void buildFanCall(FanExecution fanExec, boolean enableDebug)
+    public void buildFanCall(FanExecution fanExec, boolean enableDebug, String extraClasspath)
     {
         // We will be spawning a new java VM
         String separator = System.getProperty("file.separator");
@@ -177,7 +177,7 @@ public class FanPlatform
 
         // classpath
         //String classpath = System.getProperty("java.class.path");
-        String classpath = buildFanClasspath();
+        String classpath = buildFanClasspath(extraClasspath);
         fanExec.addCommandArg("-cp");
         fanExec.addCommandArg(classpath);
 
@@ -218,7 +218,7 @@ public class FanPlatform
      * Builds fan std classpath (jars)
      * @return
      */
-    private String buildFanClasspath()
+    private String buildFanClasspath(String extraClasspath)
     {
         String cp = "";
         String cpSeparator = IS_WIN ? ";" : ":";
@@ -261,7 +261,8 @@ public class FanPlatform
                 }
             }
         }
-
+        if(extraClasspath != null)
+            cp +=cpSeparator + extraClasspath;
         return cp;
     }
 
