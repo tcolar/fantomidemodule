@@ -27,7 +27,6 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import net.colar.netbeans.fan.FanParserTask;
-import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.NBFanParser;
 //import net.colar.netbeans.fan.ast.FanAstField;
 //import net.colar.netbeans.fan.ast.FanAstMethod;
@@ -51,6 +50,8 @@ import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.builders.JOTQueryBuilder;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.spi.Parser.Result;
@@ -65,6 +66,7 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Cancellable;
 //import org.netbeans.modules.java.source.indexing.JavaBinaryIndexer;
 
 /**
@@ -123,7 +125,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
         {
             mainIndexer.waitFor();
         }
-
     }
 
     public FanJarsIndexer getJarsIndexer()
@@ -1137,6 +1138,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
         @Override
         public void run()
         {
+
             while (!shutdown)
             {
                 try
@@ -1146,38 +1148,63 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
                 } catch (Exception e)
                 {
                 }
-                // to be deleted
-                Enumeration<String> tbd = toBeDeleted.keys();
-                {
-                    while (tbd.hasMoreElements())
-                    {
-                        if (shutdown)
-                        {
-                            return;
-                        }
-                        String path = tbd.nextElement();
 
-                        FanDocument doc = FanDocument.findByPath(path);
-                        try
+                if (!toBeDeleted.isEmpty() || !fanPodsToBeIndexed.isEmpty() || !fanSrcToBeIndexed.isEmpty())
+                {
+                    // Will show a progress bar if it takes more than 5 sec
+                    ProgressHandle progressHandle = ProgressHandleFactory.createHandle("Fantom indexing", (Cancellable) null);
+                    progressHandle.setInitialDelay(5000);
+                    progressHandle.start();
+                    Enumeration<String> tbd = toBeDeleted.keys();
+                    // to be deleted
+                    {
+                        while (tbd.hasMoreElements())
                         {
-                            if (doc != null)
+                            if (shutdown)
                             {
-                                doc.delete();
+                                return;
                             }
-                        } catch (Exception e)
-                        {
-                            log.exception("Error deleting doc", e);
+                            String path = tbd.nextElement();
+
+                            FanDocument doc = FanDocument.findByPath(path);
+                            try
+                            {
+                                if (doc != null)
+                                {
+                                    doc.delete();
+                                }
+                            } catch (Exception e)
+                            {
+                                log.exception("Error deleting doc", e);
+                            }
                         }
                     }
-                }
-                // always do binaries first
-                do
-                {
-                    // Usig keys() since it uses a "snapshot"
-                    // no concurrentmodif error
-                    // also nextElement() should be safe since we only remove elements from within here
-                    // elems can be added outside ... but that should be fine.
-                    Enumeration<String> it = fanPodsToBeIndexed.keys();
+                    // always do binaries first
+                    do
+                    {
+                        // Usig keys() since it uses a "snapshot"
+                        // no concurrentmodif error
+                        // also nextElement() should be safe since we only remove elements from within here
+                        // elems can be added outside ... but that should be fine.
+                        Enumeration<String> it = fanPodsToBeIndexed.keys();
+                        while (it.hasMoreElements())
+                        {
+                            if (shutdown)
+                            {
+                                return;
+                            }
+                            String path = it.nextElement();
+                            Long l = fanPodsToBeIndexed.get(path);
+                            long now = new Date().getTime();
+                            if (l != null && l.longValue() < now - 1000)
+                            {
+                                fanPodsToBeIndexed.remove(path);
+                                indexPod(path);
+                            }
+                        }
+                    } while (!fanPodsToBeIndexed.isEmpty());
+                    // then do the sources
+                    Enumeration<String> it = fanSrcToBeIndexed.keys();
                     while (it.hasMoreElements())
                     {
                         if (shutdown)
@@ -1185,32 +1212,16 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
                             return;
                         }
                         String path = it.nextElement();
-                        Long l = fanPodsToBeIndexed.get(path);
+                        Long l = fanSrcToBeIndexed.get(path);
+                        // Hasn't changed in a couple seconds
                         long now = new Date().getTime();
-                        if (l != null && l.longValue() < now - 1000)
+                        if (path != null && l != null && l.longValue() < now - 2000)
                         {
-                            fanPodsToBeIndexed.remove(path);
-                            indexPod(path);
+                            fanSrcToBeIndexed.remove(path);
+                            indexSrc(path);
                         }
                     }
-                } while (!fanPodsToBeIndexed.isEmpty());
-                // then do the sources
-                Enumeration<String> it = fanSrcToBeIndexed.keys();
-                while (it.hasMoreElements())
-                {
-                    if (shutdown)
-                    {
-                        return;
-                    }
-                    String path = it.nextElement();
-                    Long l = fanSrcToBeIndexed.get(path);
-                    // Hasn't changed in a couple seconds
-                    long now = new Date().getTime();
-                    if (path != null && l != null && l.longValue() < now - 2000)
-                    {
-                        fanSrcToBeIndexed.remove(path);
-                        indexSrc(path);
-                    }
+                    progressHandle.finish();
                 }
             }
         }
@@ -1271,14 +1282,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
 
     public static boolean isAllowedIndexing(FileObject srcFile)
     {
-        /*if ( ! FanPlatform.getInstance(false).isConfigured())
-        {
-        return true;
-        }
-        
-        boolean skip = FileUtil.isParentOf(FanPlatform.getInstance().getFanSrcHome(), srcFile);
-        
-        return ! skip;*/
         return true;
     }
 }
