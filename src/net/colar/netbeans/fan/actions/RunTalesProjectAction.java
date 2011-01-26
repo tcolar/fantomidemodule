@@ -5,7 +5,11 @@
 
 package net.colar.netbeans.fan.actions;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import net.colar.netbeans.fan.project.FanProject;
+import org.netbeans.modules.extbrowser.ExtWebBrowser;
+import org.openide.awt.HtmlBrowser;
 import org.openide.util.Lookup;
 
 /**
@@ -31,6 +35,15 @@ public class RunTalesProjectAction extends FanAction
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
 		runTalesProject(context, false).run();
+                ExtWebBrowser browser = new ExtWebBrowser();
+                try
+                {
+                    Thread.sleep(2000);
+                    HtmlBrowser.Impl impl = browser.createHtmlBrowserImpl();
+                    impl.setURL(new URL("http://127.0.0.1:8000/"));
+                }
+                catch(MalformedURLException e){}
+                catch(InterruptedException e){}
 	}
 
 	@Override
