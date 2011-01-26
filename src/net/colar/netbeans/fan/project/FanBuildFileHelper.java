@@ -67,7 +67,7 @@ public class FanBuildFileHelper
                     }
                     catch(Throwable t) 
                     {
-                        FanUtilities.GENERIC_LOGGER.exception("Failed to parse build script: "+buildFan.getAbsolutePath(), t);
+                        //FanUtilities.GENERIC_LOGGER.exception("Failed to parse build script: "+buildFan.getAbsolutePath(), t);
                         // might fail if script is incomplete or otherwise invalid
                     }
                     
