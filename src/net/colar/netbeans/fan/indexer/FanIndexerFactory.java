@@ -20,7 +20,7 @@ public class FanIndexerFactory extends CustomIndexerFactory
 {
 
 	public static final String NAME = "FanIndexer";
-	public static final int VERSION = 3;
+	public static final int VERSION = 4;
 	private static FanIndexer indexer = new FanIndexer();
 
 	public static FanJarsIndexer getJavaIndexer()
