@@ -854,6 +854,26 @@ public class FanParserTask extends ParserResult
           }
         }
       }
+      // Other special case of closure called on local method  like "method{....}"
+      // get misunderstood as a constructor block
+      FanResolvedType thisType = FanResolvedType.resolveThisType(node);
+      boolean isSlot = child.getKind() == AstKind.AST_ID &&
+              thisType.resolveSlotType(child.getNodeText(true), this).isResolved();
+      if(isSlot)
+      {
+        if (i + 1 < children.size())
+        {
+          AstNode nextChild = children.get(i + 1);
+          if (nextChild.getKind() == AstKind.AST_CTOR_BLOCK)
+          {
+            // parse the whole thing as a closure call
+            type = doCall(node, thisType, nextChild);
+            // skip next child since we juts did it
+            i++;
+            continue;
+          }
+        }
+      }
 
       // Normal procedure
       parseVars(child, type);
