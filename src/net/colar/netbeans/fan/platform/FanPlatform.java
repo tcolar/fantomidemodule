@@ -341,7 +341,7 @@ public class FanPlatform
             String cpSeparator = FanPlatform.IS_WIN ? ";" : ":";
             String s = File.separator;
             // add jars in tales_home/jars
-            String jarDir = FanPlatform.getInstance().getTalesHome() + "jars";
+            String jarDir = FanPlatform.getInstance().getTalesHome().getPath() + s + "jars";
             File dir = new File(jarDir);
             if (dir.exists() && dir.isDirectory())
             {
