@@ -10,7 +10,7 @@ import net.colar.netbeans.fan.completion.FanCompletionHandler;
 import net.colar.netbeans.fan.handlers.FanDeclarationFinder;
 import net.colar.netbeans.fan.handlers.FanKeyStrokeHandler;
 import net.colar.netbeans.fan.hints.FanHintsProvider;
-import net.colar.netbeans.fan.structure.FanFormatter;
+import net.colar.netbeans.fan.editor.FanFormatter;
 import net.colar.netbeans.fan.structure.FanSemanticAnalyzer;
 import net.colar.netbeans.fan.structure.FanStructureAnalyzer;
 import org.netbeans.api.java.classpath.ClassPath;

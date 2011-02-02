@@ -1,7 +1,7 @@
 /*
  * Thibaut Colar Aug 6, 2009
  */
-package net.colar.netbeans.fan.structure;
+package net.colar.netbeans.fan.editor;
 
 import java.util.ArrayList;
 import java.util.List;
