@@ -185,7 +185,7 @@ public class FanTypeScopeVar extends FanAstScopeVarBase
 					for (AstNode child : slot.getChildren())
 					{
 						@SuppressWarnings("unchecked")
-						String slotName = FanLexAstUtils.getFirstChildText(child, new NodeKindPredicate(AstKind.AST_ID));
+						String slotName = FanLexAstUtils.getFirstChildText(child, new NodeKindPredicate(AstKind.AST_ID), false);
 						switch (child.getKind())
 						{
 							// could be multiple modifiers, but only one of either field, ctor, method

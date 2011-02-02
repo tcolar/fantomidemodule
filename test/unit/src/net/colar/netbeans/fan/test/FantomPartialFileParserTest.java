@@ -45,7 +45,7 @@ public class FantomPartialFileParserTest extends FantomCSLTest
 					text = text.substring(0, rand2) + text.substring(rand2 + 1);
 				} else if (var == 1)
 				{
-					// remove random size hunk
+					// mess up the text - like cut/paste
 					text = mangleText(text);
 				} else
 				{
@@ -76,7 +76,7 @@ public class FantomPartialFileParserTest extends FantomCSLTest
 				FanSemanticAnalyzer analyzer = new FanSemanticAnalyzer();
 				analyzer.run(task, null);
 			}
-			// we don't care if analyzer finds errors, we just don't want it to crash
+			// we don't care if analyzer finds errors, we just don't want it to crash / hang
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -97,7 +97,7 @@ public class FantomPartialFileParserTest extends FantomCSLTest
 	}
 
 	/**
-	 * Just make a "hole" in the text ... so we get incomplete code as it would be as a user is typing.
+	 * Just remove/add to the the text ... so we get broken code as it would be as a user is typing/pasting.
 	 * @param text
 	 * @return
 	 */

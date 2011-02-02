@@ -13,7 +13,6 @@ import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.colar.netbeans.fan.test.mock.MockLookup;
 import net.jot.prefs.JOTPropertiesPreferences;
 import net.jot.testing.JOTTestable;
-import org.netbeans.junit.internal.MemoryPreferencesFactory;
 
 /**
  * Base class for CSL tests, which require a minimal Netbeans "Env" to be available

@@ -375,7 +375,7 @@ public class FanResolvedType implements Cloneable
         AstNode typeNode = FanLexAstUtils.findParentNode(node, AstKind.AST_TYPE_DEF);
         if (typeNode != null)
         {
-            String name = FanLexAstUtils.getFirstChildText(typeNode, new NodeKindPredicate(AstKind.AST_ID));
+            String name = FanLexAstUtils.getFirstChildText(typeNode, new NodeKindPredicate(AstKind.AST_ID), false);
             if (name != null)
             {
                 FanAstScopeVarBase var = node.getRoot().getLocalScopeVars().get(name);

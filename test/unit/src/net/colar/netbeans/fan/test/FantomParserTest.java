@@ -19,9 +19,6 @@ import org.parboiled.Rule;
 import org.parboiled.common.StringUtils;
 import org.parboiled.support.ParseTreeUtils;
 import org.parboiled.support.ParsingResult;
-import org.parboiled.support.ToStringFormatter;
-import org.parboiled.trees.GraphNode;
-import org.parboiled.trees.GraphUtils;
 
 /**
  * Test new parboiled based parser

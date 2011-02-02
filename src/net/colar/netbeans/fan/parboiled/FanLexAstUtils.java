@@ -267,9 +267,9 @@ public class FanLexAstUtils
         return nodes;
     }
 
-    public static String getFirstChildText(AstNode parentNode, Predicate<AstNode> pred)
+    public static String getFirstChildText(AstNode parentNode, Predicate<AstNode> pred, boolean recursive)
     {
-        AstNode node = getFirstChild(parentNode, pred);
+        AstNode node = recursive ? getFirstChildRecursive(parentNode, pred) : getFirstChild(parentNode, pred);
         return node == null ? null : node.getNodeText(true);
     }
 

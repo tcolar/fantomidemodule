@@ -311,7 +311,7 @@ public class FanParserTask extends ParserResult
       switch (node.getKind())
       {
         case AST_TYPE_DEF:
-          String name = FanLexAstUtils.getFirstChildText(node, new NodeKindPredicate(AstKind.AST_ID));
+          String name = FanLexAstUtils.getFirstChildText(node, new NodeKindPredicate(AstKind.AST_ID), false);
           if (name == null)
           {
             break;
@@ -667,9 +667,9 @@ public class FanParserTask extends ParserResult
   @SuppressWarnings("unchecked")
   private void addUsing(AstNode usingNode)
   {
-    String type = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_ID));
-    String as = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_USING_AS));
-    String ffi = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_USING_FFI));
+    String type = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_ID), false);
+    String as = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_USING_AS), true);
+    String ffi = FanLexAstUtils.getFirstChildText(usingNode, new NodeKindPredicate(AstKind.AST_USING_FFI), true);
 
     String name = as != null ? as : type;
     if (name.indexOf("::") > -1)
