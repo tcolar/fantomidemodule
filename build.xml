@@ -9,16 +9,16 @@
 	<property name="prjDir" location="."/>
 	<property name="classpath" value="build/classes;NetBeansProjects/fantomidemodule/lib"/>
 
-	<property name="all_jars_path" value="${nbplatform.active.dir}/ide12/modules/"/>
+	<property name="all_jars_path" value="${nbplatform.active.dir}/ide/modules/"/>
 
 	<path id="project.class.path">
-		<fileset dir="${nbplatform.active.dir}/ide12/modules/" includes="*.jar"/>
-		<fileset dir="${nbplatform.active.dir}/platform11/modules/" includes="*.jar"/>
-		<fileset dir="${nbplatform.active.dir}/java3/modules/" includes="*.jar"/>
-		<fileset dir="${nbplatform.active.dir}/java3/modules/ext/" includes="*.jar"/>
-		<fileset dir="${nbplatform.active.dir}/platform11/modules/ext/" includes="*.jar"/>
-		<fileset dir="${nbplatform.active.dir}/platform11/lib/" includes="*.jar"/>
-		<fileset dir="${nbplatform.active.dir}/platform11/core/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/ide/modules/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/platform/modules/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/java/modules/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/java/modules/ext/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/platform/modules/ext/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/platform/lib/" includes="*.jar"/>
+		<fileset dir="${nbplatform.active.dir}/platform/core/" includes="*.jar"/>
 		<fileset dir="lib" includes="*.jar"/>
 		<pathelement path="${classpath}"/>
 		<pathelement path="/tmp/fantom/classes"/>
@@ -43,7 +43,8 @@
 			<fileset dir="test/unit/data"/>
 		</copy>
 		<java classname="net.jot.testing.JOTTester" classpathref="project.class.path" dir="/tmp/fantom/">
-			<jvmarg value="${profiler.info.jvmargs.agent}"/>
+			<jvmarg value="-Xmx600m"/>
+			<jvmarg value="-XX:MaxPermSize=350M"/>
 			<!-- First arg(required) is to your classes (to be tested) folder -->
 			<arg value="classes"/>
 			<arg value="-includePackages=net.colar.netbeans.fan.test.*" />

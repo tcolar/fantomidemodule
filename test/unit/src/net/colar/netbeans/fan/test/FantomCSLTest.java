@@ -32,9 +32,9 @@ public abstract class FantomCSLTest implements JOTTestable
 		prefs.loadFrom(is);
 
 		// Set netbeans props
-		System.setProperty("netbeans.full.hack", "true"); // NOI18N
-		System.setProperty("java.util.prefs.PreferencesFactory",
-			MemoryPreferencesFactory.class.getName());//NOI18N
+		System.setProperty("netbeans.full.hack", "true");
+		/*System.setProperty("java.util.prefs.PreferencesFactory",
+			MemoryPreferencesFactory.class.getName());//NOI18N*/
 		Preferences.userRoot().sync();
 		// Addd the required trampoline impl.
 		MockLookup.setInstances(new MockTrampoline());
