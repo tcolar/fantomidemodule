@@ -1171,6 +1171,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
                             {
                                 if (doc != null)
                                 {
+                                    progressHandle.progress("De-Indexing: "+path);
                                     doc.delete();
                                 }
                             } catch (Exception e)
@@ -1199,6 +1200,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
                             if (l != null && l.longValue() < now - 1000)
                             {
                                 fanPodsToBeIndexed.remove(path);
+                                progressHandle.progress("Indexing Pod: "+path);
                                 indexPod(path);
                             }
                         }
@@ -1218,6 +1220,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
                         if (path != null && l != null && l.longValue() < now - 2000)
                         {
                             fanSrcToBeIndexed.remove(path);
+                            progressHandle.progress("Indexing: "+path);
                             indexSrc(path);
                         }
                     }

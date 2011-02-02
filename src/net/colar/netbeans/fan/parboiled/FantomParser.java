@@ -920,7 +920,7 @@ public class FantomParser extends BaseParser<AstNode>
     @SuppressSubnodes
     public Rule doc()
     {
-        // In theory there are no empty lines betwen doc and type ... but that does happen so alowing it
+        // In theory there are no empty lines betwen doc and type ... but that does happen so allowing it
         return OneOrMore(Sequence(OPT_SP, "**", ZeroOrMore(Sequence(TestNot("\n"), Any())), OPT_LF())).label(TokenName.DOC.name());
     }
 

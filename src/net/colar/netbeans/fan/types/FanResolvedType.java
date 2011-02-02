@@ -40,6 +40,17 @@ public class FanResolvedType implements Cloneable
 
     public static String forcedThisType = null;
 
+    public boolean isSameAsThisType(AstNode node)
+    {
+        String fqdn = getQualifiedType();
+        FanResolvedType thisType = FanResolvedType.resolveThisType(node);
+        if(fqdn != null && thisType != null && thisType.getQualifiedType() != null)
+        {
+            return(fqdn.equals(thisType.getQualifiedType()));
+        }
+        return false;
+    }
+
     public enum TypeKind
     {
 

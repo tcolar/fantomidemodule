@@ -4,7 +4,9 @@
 package net.colar.netbeans.fan.project;
 
 import fan.sys.Env;
+import fan.sys.Field;
 import fan.sys.LocalFile;
+import fan.sys.Type;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -61,9 +63,17 @@ public class FanBuildFileHelper
                     // Try asking fantom to compile the script and give the name                    
                     try
                     {
-                        String name = Env.cur().compileScript(fanFile).pod().name();
-                        if(name!=null && name.length()>0)
-                            return name;
+                        Type type = Env.cur().compileScript(fanFile).pod().type("Build");
+                        if(type != null)
+                        {
+                            Field field = type.field("podName");
+                            if(field!=null)
+                            {
+                                String name = field.get(type.make()).toString();
+                                if(name!=null && name.length()>0)
+                                    return name;
+                            }
+                        }
                     }
                     catch(Throwable t) 
                     {
@@ -71,6 +81,7 @@ public class FanBuildFileHelper
                         // might fail if script is incomplete or otherwise invalid
                     }
                     
+                    // TODO: Decided what to do with buildscripts ????
                     
                     String buildText = FileUtil.toFileObject(FileUtil.normalizeFile(buildFan)).asText();
                     Matcher m = POD_NAME_PATTERN.matcher(buildText);

@@ -5,10 +5,7 @@
 package net.colar.netbeans.fan;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.jot.logger.JOTLoggerLocation;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;

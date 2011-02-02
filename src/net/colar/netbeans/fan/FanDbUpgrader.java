@@ -15,7 +15,7 @@ import net.jot.persistance.JOTDBUpgrader;
 public class FanDbUpgrader extends JOTDBUpgrader
 {
 
-	private int VERSION = 4;
+	private int VERSION = 5;
 
 	@Override
 	public void upgradeDb(String dbName, int fromVersion) throws Exception

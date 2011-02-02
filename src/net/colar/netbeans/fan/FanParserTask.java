@@ -931,8 +931,8 @@ public class FanParserTask extends ParserResult
     String name = callChild.getNodeText(true);
 
     //if a direct call like doThis(), then search scope for type/slot
-    // or if the type is actulaly the current type we are in (that happens when using 'this.')
-    if (type == null || type.getQualifiedType().equals(FanResolvedType.resolveThisType(node).getQualifiedType()))
+    // or if the type is actualy the current type we are in (that happens when using 'this.')
+    if (type == null || type.isSameAsThisType(node))
     {
       baseType = FanResolvedType.resolveItType(callChild);
       // constructor call or local slot
