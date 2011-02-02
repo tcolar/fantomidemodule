@@ -13,6 +13,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.FanTokenID;
+import net.colar.netbeans.fan.editor.FantomIndentUtils;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
 import org.netbeans.api.lexer.Token;
@@ -215,7 +216,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
     {
         // deal with fixing identation for special cases (switch, if etc...)
         BaseDocument doc = (BaseDocument) document;
-        int indentSize = IndentUtils.indentLevelSize(document);
+        int indentSize = FantomIndentUtils.getIndentSize(document);
         int lineBegin = Utilities.getRowStart(doc, caretOffset);
         int lineEnd = Utilities.getRowEnd(doc, caretOffset);
         String line = doc.getText(lineBegin, lineEnd - lineBegin);
@@ -325,7 +326,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
 
         // Deal with indentation
         String NL = "\n";
-        int indentSize = IndentUtils.indentLevelSize(document);
+        int indentSize = FantomIndentUtils.getIndentSize(document);
         Caret caret = target.getCaret();
         BaseDocument doc = (BaseDocument) document;
 
@@ -355,7 +356,7 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
         int indent = 0;
         if (lineBegin > 0)
         {
-            indent = IndentUtils.lineIndent(document, lineBegin);
+            indent = IndentUtils.lineIndent(document, lineBegin) / FantomIndentUtils.getIndentSize(document);
         }
 
         int dotOffset = 0;
@@ -373,23 +374,22 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
             {
                 if (lineTail.trim().startsWith("}"))
                 {
-                    String extraIndent = IndentUtils.createIndentString(document, indent);
+                    String extraIndent = FantomIndentUtils.createIndentString(document, indent);
                     insert = NL + extraIndent;
-                    // TODO: this probably not good if using spaces instead of tabs ??
                     dotOffset = -(1 + extraIndent.length());
                 }
 
-                indent += indentSize;
+                indent ++;
             } else
             {
                 // increase indent of next line for special patterns, see getSpecialIndentSize()
-                indent += indentSize * getSpecialIndentSize(lineHead);
+                indent += getSpecialIndentSize(lineHead);
             }
 
         }
 
         // Do the insertion and the indent
-        String indentStr = IndentUtils.createIndentString(document, indent);
+        String indentStr = FantomIndentUtils.createIndentString(document, indent);
         //String str = doc.getText(0, doc.getText().length());
         doc.insertString(caretOffset, indentStr + insert, null);
         //str = doc.getText(0, doc.getText().length());
@@ -519,4 +519,5 @@ public class FanKeyStrokeHandler implements KeystrokeHandler
         }
         return 0;
     }
+
 }

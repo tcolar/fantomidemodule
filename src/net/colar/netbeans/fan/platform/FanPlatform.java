@@ -11,7 +11,7 @@ import java.util.Set;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import javax.swing.JOptionPane;
-import net.colar.netbeans.fan.wizard.FanGlobalSettingsController;
+import net.colar.netbeans.fan.wizard.FanMainSettingsController;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.options.OptionsDisplayer;
@@ -103,7 +103,7 @@ public class FanPlatform
             if (instance.fanHome == null && !configWarningAlreadyDisplayed)
             {
                 configWarningAlreadyDisplayed = true;
-                OptionsDisplayer.getDefault().open(FanGlobalSettingsController.ID);
+                OptionsDisplayer.getDefault().open(FanMainSettingsController.ID);
             }
         }
         return instance != null && instance.fanHome != null;

@@ -13,14 +13,14 @@ import net.colar.netbeans.fan.platform.FanPlatform;
  *
  * @author thibautc
  */
-public class FanGlobalSettingsPanel extends javax.swing.JPanel
+public class FanMainSettingsPanel extends javax.swing.JPanel
 {
 
 	private final JFileChooser chooser;
-	private final FanGlobalSettingsController controller;
+	private final FanMainSettingsController controller;
 
 	/** Creates new form FanGlobalSettingsPanel */
-	public FanGlobalSettingsPanel(FanGlobalSettingsController ctrl)
+	public FanMainSettingsPanel(FanMainSettingsController ctrl)
 	{
 		controller = ctrl;
 		initComponents();
@@ -53,16 +53,16 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
         talesField = new javax.swing.JTextField();
         talesButton = new javax.swing.JButton();
 
-        homeLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.homeLabel.text")); // NOI18N
+        homeLabel.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.homeLabel.text")); // NOI18N
 
-        homeBrowse.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.homeBrowse.text")); // NOI18N
+        homeBrowse.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.homeBrowse.text")); // NOI18N
         homeBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 homeBrowseActionPerformed(evt);
             }
         });
 
-        homeField.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.homeField.text")); // NOI18N
+        homeField.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.homeField.text")); // NOI18N
         homeField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 homeFieldKeyReleased(evt);
@@ -71,20 +71,20 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 
         errorLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
-        errorLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.errorLabel.text")); // NOI18N
+        errorLabel.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.errorLabel.text")); // NOI18N
 
-        debugLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.debugLabel.text")); // NOI18N
+        debugLabel.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.debugLabel.text")); // NOI18N
 
-        debugField.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.debugField.text")); // NOI18N
+        debugField.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.debugField.text")); // NOI18N
         debugField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 debugFieldKeyReleased(evt);
             }
         });
 
-        execLabel.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.execLabel.text")); // NOI18N
+        execLabel.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.execLabel.text")); // NOI18N
 
-        execField.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.execField.text")); // NOI18N
+        execField.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.execField.text")); // NOI18N
         execField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 execFieldKeyReleased(evt);
@@ -96,14 +96,14 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
         jTextArea1.setForeground(new java.awt.Color(194, 135, 27));
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(2);
-        jTextArea1.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.jTextArea1.text")); // NOI18N
+        jTextArea1.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.jTextArea1.text")); // NOI18N
         jScrollPane1.setViewportView(jTextArea1);
 
-        talesLbl.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.talesLbl.text")); // NOI18N
+        talesLbl.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.talesLbl.text")); // NOI18N
 
-        talesField.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.talesField.text")); // NOI18N
+        talesField.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.talesField.text")); // NOI18N
 
-        talesButton.setText(org.openide.util.NbBundle.getMessage(FanGlobalSettingsPanel.class, "FanGlobalSettingsPanel.talesButton.text")); // NOI18N
+        talesButton.setText(org.openide.util.NbBundle.getMessage(FanMainSettingsPanel.class, "FanMainSettingsPanel.talesButton.text")); // NOI18N
         talesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 talesButtonActionPerformed(evt);
@@ -117,8 +117,8 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
-                    .add(errorLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+                    .add(errorLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
                     .add(layout.createSequentialGroup()
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(debugLabel)
@@ -133,11 +133,11 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
                             .add(layout.createSequentialGroup()
                                 .add(debugField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                 .add(20, 20, 20))
-                            .add(execField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)))
+                            .add(execField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)))
                     .add(layout.createSequentialGroup()
                         .add(talesLbl)
                         .add(30, 30, 30)
-                        .add(talesField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                        .add(talesField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                         .add(talesButton)))
                 .addContainerGap())
@@ -296,4 +296,5 @@ public class FanGlobalSettingsPanel extends javax.swing.JPanel
 	{
 		execField.setText(options);
 	}
+
 }

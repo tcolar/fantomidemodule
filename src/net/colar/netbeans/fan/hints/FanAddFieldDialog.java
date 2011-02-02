@@ -16,6 +16,7 @@ import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.NBFanParser;
+import net.colar.netbeans.fan.editor.FantomIndentUtils;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
@@ -24,7 +25,6 @@ import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.modules.csl.api.UiUtils;
-import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.filesystems.FileObject;
@@ -219,7 +219,7 @@ public class FanAddFieldDialog extends javax.swing.JDialog
 
                         AstNode fieldNode = FanLexAstUtils.getFirstChildRecursive(blockNode, new NodeKindPredicate(AstKind.AST_FIELD_DEF));
                         // (should always be 1*indentSize)
-                        String indentStr = IndentUtils.createIndentString(baseDoc, IndentUtils.indentLevelSize(baseDoc));
+                        String indentStr = FantomIndentUtils.createIndentString(baseDoc, FantomIndentUtils.getIndentSize(baseDoc));
                         // If other field present, add just before it
 
                         if (fieldNode != null)
@@ -257,7 +257,7 @@ public class FanAddFieldDialog extends javax.swing.JDialog
         if (fieldNode != null)
         {
         // (should always be 1*indentSize)
-        String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
+        String indentStr = FantomIndentUtils.createIndentString(baseDoc, FantomIndentUtils.getIndentSize(baseDoc));;
         doc.insertString(fieldNode.getStartLocation().getIndex(), str+"\n"+indentStr, null);
         return;
         }
@@ -267,7 +267,7 @@ public class FanAddFieldDialog extends javax.swing.JDialog
         if(blockNode != null)
         {
         // ident of line before line with closing bracket (should always be 1*indentSize)
-        String indentStr = IndentUtils.createIndentString(doc, IndentUtils.indentLevelSize(doc));
+        String indentStr = FantomIndentUtils.createIndentString(baseDoc, FantomIndentUtils.getIndentSize(baseDoc));
         doc.insertString(blockNode.getStartLocation().getIndex()+1, "\n"+indentStr+str, null);
         }
         } catch (BadLocationException e)

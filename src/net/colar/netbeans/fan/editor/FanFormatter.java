@@ -52,7 +52,7 @@ public class FanFormatter implements Formatter
 
 	public int indentSize()
 	{
-		return 2; // Fan convention
+		return FantomIndentUtils.getIndentSize(null); // Fan convention
 	}
 
 	public int hangingIndentSize()

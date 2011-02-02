@@ -17,6 +17,7 @@ import javax.swing.text.Document;
 import net.colar.netbeans.fan.FanParserTask;
 import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.NBFanParser;
+import net.colar.netbeans.fan.editor.FantomIndentUtils;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
@@ -25,12 +26,10 @@ import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.modules.csl.api.UiUtils;
-import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataObjectNotFoundException;
 
 /**
  * Dialog for "Add a method" hint fix.
@@ -230,7 +229,7 @@ public class FanAddMethodDialog extends javax.swing.JDialog
 
                         Document baseDoc = source.getDocument(true);
                         // should always be 1*indentSize
-                        String indentStr = IndentUtils.createIndentString(baseDoc, IndentUtils.indentLevelSize(baseDoc));
+                        String indentStr = FantomIndentUtils.createIndentString(baseDoc, FantomIndentUtils.getIndentSize(baseDoc));
                         baseDoc.insertString(blockNode.getStartLocation().getIndex() + 1, "\n" + indentStr + str+"\n", null);
                         // Put the cursor there (open the file if necessary)
                         UiUtils.open(fo, blockNode.getStartLocation().getIndex()+1);

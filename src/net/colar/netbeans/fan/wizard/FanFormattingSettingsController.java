@@ -17,33 +17,27 @@ import org.openide.util.Lookup;
  * Controller for Fan options panel.
  * @author tcolar
  */
-@OptionsPanelController.SubRegistration(location="Fantom", id=FanGlobalSettingsController.ID, displayName="Fantom")
-public class FanGlobalSettingsController extends OptionsPanelController
+@OptionsPanelController.SubRegistration(location="Fantom", id=FanFormattingSettingsController.ID, displayName="Formatting")
+public class FanFormattingSettingsController extends OptionsPanelController
 {
-        public static final String ID = "Fantom";
-	private FanGlobalSettingsPanel panel;
+        public static final String ID = "Formatting";
+	private FanFormattingSettingsPanel panel;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	private boolean changed;
 
 	public void update()
 	{
-		panel.setFanHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME));
-		panel.setTalesHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_TALES_HOME));
-		panel.setDebugPort(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT,"8000"));
-		panel.setRunOptions(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS,"-Xmx128m"));
+		panel.setIdentSize(new Integer(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FMT_IDENT_SIZE, "2")));
+		//panel.setExpandTabs(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FMT_TABS_TO_SPACES, true).equalsIgnoreCase("true"));
 		changed();
 	}
 
 	public void applyChanges()
 	{
-		String home = panel.getFanHome();
-		String tales = panel.getTalesHome();
-		String debugPort = panel.getDebugPort();
-		String runOptions = panel.getRunOptions();
-		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_TALES_HOME, tales);
-		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, home);
-		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_DEBUG_PORT, debugPort);
-		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_RUN_OPTIONS, runOptions);
+		int indentSize = panel.getIndentSize();
+		//boolean expandTabs = panel.getExpandTabs();
+		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FMT_IDENT_SIZE, ""+indentSize);
+		//FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FMT_TABS_TO_SPACES, (expandTabs?"true":"false");
 		// reread the plaform settings
 		FanPlatform.update();
 		changed = false;
@@ -84,11 +78,11 @@ public class FanGlobalSettingsController extends OptionsPanelController
 		pcs.removePropertyChangeListener(l);
 	}
 
-	private FanGlobalSettingsPanel getPanel()
+	private FanFormattingSettingsPanel getPanel()
 	{
 		if (panel == null)
 		{
-			panel = new FanGlobalSettingsPanel(this);
+			panel = new FanFormattingSettingsPanel(this);
 		}
 		return panel;
 	}
