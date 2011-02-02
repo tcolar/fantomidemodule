@@ -94,7 +94,7 @@ public class FanBuildFileHelper
                     {
                         // backup plan if that failed
                         pod = folder.getName();
-                        break;
+                        //break;  -> no, try see if there is another bbuild.fan higher up.
                     }
                 } catch (IOException e)
                 {
