@@ -161,7 +161,6 @@ public class FantomParser extends BaseParser<AstNode>
     {
         return enforcedSequence(
                 BRACKET_L,
-                facetVal(),
                 ZeroOrMore(Sequence(eos(), facetVal())),
                 BRACKET_R);
     }
