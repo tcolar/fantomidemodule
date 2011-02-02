@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 package net.colar.netbeans.fan.indexer;
-
+ 
 import fan.sys.Buf;
 import fan.sys.FanObj;
 import fan.sys.Pod;
