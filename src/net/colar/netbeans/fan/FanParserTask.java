@@ -1275,11 +1275,11 @@ public class FanParserTask extends ParserResult
     // however in the case of a "real" range it has 2 children expr (otherwise just 1 expr)
     if (range != null && range.getChildren().size() == 2)
     {
-      // in case of a range, it's a call to slice()
-      type = type.resolveSlotType("slice", this);
+      // in case of a range, it's a call to getRange()
+      type = type.resolveSlotType("getRange", this);
       if (!type.isResolved())
       {
-        addError(FanParserErrorKey.RANGE, "Range expression only valid on types with a 'slice' method." + exprNode.getNodeText(true), exprNode);
+        addError(FanParserErrorKey.RANGE, "Range expression only valid on types with a 'getRange' method." + exprNode.getNodeText(true), exprNode);
       }
     } else
     {
@@ -1387,7 +1387,7 @@ public class FanParserTask extends ParserResult
     } else
     {
       // a range like "mystring"[0..5]
-      type = type.resolveSlotType("slice", this);
+      type = type.resolveSlotType("getRange", this);
     }
     return type;
   }
