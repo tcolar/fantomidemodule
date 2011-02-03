@@ -1224,7 +1224,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
                             if (l != null && l.longValue() < now - 1000)
                             {
                                 fanPodsToBeIndexed.remove(path);
-                                progressHandle.progress("Indexing Pod: " + path);
+                                progressHandle.progress("Indexing: " + path);
                                 indexPod(path);
                             }
                         }

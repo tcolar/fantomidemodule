@@ -30,12 +30,15 @@ import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.builders.JOTQueryBuilder;
 import net.jot.prefs.JOTPreferences;
 import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Cancellable;
 
 /**
  * Index for Java classes.
@@ -95,10 +98,12 @@ public class FanJarsIndexer implements FileChangeListener
 
 	private void indexJar(String j)
 	{
+                
 		if (j.endsWith("rt.jar"))
 		{
 			FanIndexerFactory.getIndexer().warnIfNecessary();
 		}
+
 		log.info("Indexing jar: " + j);
 		if (j.toLowerCase().endsWith(".jar"))
 		{
@@ -703,6 +708,12 @@ public class FanJarsIndexer implements FileChangeListener
 			done = false;
 			try
 			{
+                            if( ! getJarPaths().isEmpty())
+                            {
+                                ProgressHandle progressHandle = ProgressHandleFactory.createHandle("Fantom java indexing", (Cancellable) null);
+                                progressHandle.setInitialDelay(5000);
+                                progressHandle.start();
+
 				for (URL url : getJarPaths())
 				{
 					if (shutdown)
@@ -710,6 +721,7 @@ public class FanJarsIndexer implements FileChangeListener
 						break;
 					}
 					String file = url.getFile();
+                                        progressHandle.progress("Indexing: "+file);
 					if (file.toLowerCase().endsWith(".jar"))
 					{
 						// boot clasppath lists sme jars that do not necerally exists (optional)
@@ -729,6 +741,8 @@ public class FanJarsIndexer implements FileChangeListener
 					}
 					yield();
 				}
+                                progressHandle.finish();
+                            }
 			} catch (Throwable t)
 			{
 				log.exception("Pod indexing thread error", t);
