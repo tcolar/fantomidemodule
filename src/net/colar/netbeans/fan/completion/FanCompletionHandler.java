@@ -238,7 +238,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
         }
         for (String name : names)
         {
-            if (name.toLowerCase().startsWith(prefix))
+            if (name.toLowerCase().startsWith(prefix) && !name.startsWith("__"))
             {
                 proposals.add(new FanImportProposal(name, anchor - prefix.length(), false));
                 docType = DocTypes.POD;
