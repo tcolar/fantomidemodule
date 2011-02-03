@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 package net.colar.netbeans.fan.indexer;
- 
+
 import fan.sys.Buf;
 import fan.sys.FanObj;
 import fan.sys.Pod;
@@ -26,7 +26,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.regex.Pattern;
+import net.colar.netbeans.fan.FanDbUpgrader;
 import net.colar.netbeans.fan.FanParserTask;
+import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.NBFanParser;
 //import net.colar.netbeans.fan.ast.FanAstField;
 //import net.colar.netbeans.fan.ast.FanAstMethod;
@@ -50,6 +52,7 @@ import net.colar.netbeans.fan.types.FanResolvedType;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.builders.JOTQueryBuilder;
+import net.jot.prefs.JOTPreferences;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -74,14 +77,12 @@ import org.openide.util.Cancellable;
  * This class does all the Index updates(write)
  * Use FanIndexQyery to search it.
  *
- * Index all the documents:
- * fan/fwt sources
- * fantom distro pods/libs
- * jdk libs ?
  * @author tcolar
  */
 public class FanIndexer extends CustomIndexer implements FileChangeListener
 {
+    // Can bump -up when we want to force a full-reindexing after fixes/chnages.
+    private static Integer VERSION = 1;
 
     public static final String UNRESOLVED_TYPE = "!!UNRESOLVED!!";
     private final static Pattern CLOSURECLASS = Pattern.compile(".*?\\$\\d+\\z");
@@ -101,6 +102,29 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
         super();
         indexerThread = new FanIndexerThread();
         indexerThread.start();
+    }
+
+    /**
+     * Take action if indexer version changed
+     */
+    public static void upgrade()
+    {
+        int curVersion = JOTPreferences.getInstance().getDefaultedInt("nb.fantom.prefs.indexer.version", 0);
+
+        if (curVersion != FanIndexer.VERSION)
+        {
+            try
+            {
+                // for now we just wipe-out the whole H2 DB
+                FanDbUpgrader.deleteTables("default");
+            } catch (Exception e)
+            {
+                FanUtilities.GENERIC_LOGGER.exception("Error deleting DB files.", e);
+            }
+        }
+
+        JOTPreferences.getInstance().setString("nb.fantom.prefs.indexer.version", "" + FanIndexer.VERSION);
+        JOTPreferences.getInstance().save();
     }
 
     synchronized void warnIfNecessary()
@@ -1171,7 +1195,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
                             {
                                 if (doc != null)
                                 {
-                                    progressHandle.progress("De-Indexing: "+path);
+                                    progressHandle.progress("De-Indexing: " + path);
                                     doc.delete();
                                 }
                             } catch (Exception e)
@@ -1200,7 +1224,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
                             if (l != null && l.longValue() < now - 1000)
                             {
                                 fanPodsToBeIndexed.remove(path);
-                                progressHandle.progress("Indexing Pod: "+path);
+                                progressHandle.progress("Indexing Pod: " + path);
                                 indexPod(path);
                             }
                         }
@@ -1220,7 +1244,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener
                         if (path != null && l != null && l.longValue() < now - 2000)
                         {
                             fanSrcToBeIndexed.remove(path);
-                            progressHandle.progress("Indexing: "+path);
+                            progressHandle.progress("Indexing: " + path);
                             indexSrc(path);
                         }
                     }
