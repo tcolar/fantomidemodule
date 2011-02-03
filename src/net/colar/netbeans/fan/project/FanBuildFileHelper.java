@@ -81,8 +81,7 @@ public class FanBuildFileHelper
                         // might fail if script is incomplete or otherwise invalid
                     }
                     
-                    // TODO: Decided what to do with buildscripts ????
-                    
+                    // TODO: Decided what to do with buildscripts                    
                     String buildText = FileUtil.toFileObject(FileUtil.normalizeFile(buildFan)).asText();
                     Matcher m = POD_NAME_PATTERN.matcher(buildText);
                     if (m.find())
