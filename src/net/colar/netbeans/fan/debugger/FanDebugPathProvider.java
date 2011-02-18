@@ -53,7 +53,7 @@ import org.openide.util.WeakListeners;
  */
 public class FanDebugPathProvider extends SourcePathProvider
 {
-
+    
     private static final Pattern thisDirectoryPattern = Pattern.compile("(/|\\A)\\./");
     private static final Pattern parentDirectoryPattern = Pattern.compile("(/|\\A)([^/]+?)/\\.\\./");
     // open prjs
@@ -69,12 +69,12 @@ public class FanDebugPathProvider extends SourcePathProvider
     private PathRegistryListener pathRegistryListener;
     private String[] sourceRoots;
     private String[] originalRoots;
-
+    
     public FanDebugPathProvider()
     {
         pcs = new PropertyChangeSupport(this);
     }
-
+    
     public FanDebugPathProvider(ContextProvider contextProvider)
     {
         if (!FanPlatform.isConfigured())
@@ -82,7 +82,7 @@ public class FanDebugPathProvider extends SourcePathProvider
             return;
             //throw new RuntimeException("Fantom SDK not defined");
         }
-
+        
         pcs = new PropertyChangeSupport(this);
         pathRegistryListener = new PathRegistryListener();
         GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(WeakListeners.create(GlobalPathRegistryListener.class, pathRegistryListener, GlobalPathRegistry.getDefault()));
@@ -103,7 +103,7 @@ public class FanDebugPathProvider extends SourcePathProvider
                 {
                     sgs = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
                 }
-
+                
                 for (SourceGroup sg : sgs)
                 {
                     ClassPath cp = ClassPath.getClassPath(sg.getRootFolder(), ClassPath.SOURCE);
@@ -177,7 +177,7 @@ public class FanDebugPathProvider extends SourcePathProvider
         {
             relativePath = relativePath.substring(1);
         }
-
+        
         FanUtilities.GENERIC_LOGGER.debug("+++ Initial path: " + relativePath);
         String path = null;
         if (relativePath != null && (relativePath.endsWith(".fan") || relativePath.endsWith(".fwt")))
@@ -194,7 +194,7 @@ public class FanDebugPathProvider extends SourcePathProvider
                 {
                     return path;
                 }
-
+                
             } else
             {
                 // normal source lookup, we get the path from getUrl()
@@ -220,7 +220,7 @@ public class FanDebugPathProvider extends SourcePathProvider
             relativePath = "java/" + relativePath;
         }
         path = getURLPath(relativePath, null, global);
-
+        
         return path;
     }
 
@@ -262,13 +262,13 @@ public class FanDebugPathProvider extends SourcePathProvider
         {
             fo = findResource(globalSources, null, relativePath);
         }
-
+        
         if (fo == null)
         {
             FanUtilities.GENERIC_LOGGER.debug(getClass().getName() + " Url not found for " + relativePath);
             return null;
         }
-
+        
         try
         {
             System.out.println(getClass().getName() + " getUrl result:" + fo.getURL().toString());
@@ -277,7 +277,7 @@ public class FanDebugPathProvider extends SourcePathProvider
         {
             return null;
         }
-
+        
     }
 
     /**
@@ -332,7 +332,7 @@ public class FanDebugPathProvider extends SourcePathProvider
             System.out.println("relPath: null - error");
             return null;
         }
-
+        
         String path = fo.getPath();
         File folder = null;
         if (FanUtilities.getPodFolderForPath(path) != null)
@@ -373,15 +373,15 @@ public class FanDebugPathProvider extends SourcePathProvider
         {
             cp = ClassPath.getClassPath(fo, ClassPath.COMPILE);
         }
-
+        
         if (cp == null)
         {
             System.out.println("relPath: null");
             return null;
         }
-
+        
         relativePath = cp.getResourceName(fo, directorySeparator, includeExtension);
-
+        
         System.out.println("relPath:" + relativePath);
         return relativePath;
     }
@@ -404,7 +404,7 @@ public class FanDebugPathProvider extends SourcePathProvider
         {
             fo = null;
         }
-
+        
         FileObject[] roots = null;
         if (fo != null)
         {
@@ -413,7 +413,7 @@ public class FanDebugPathProvider extends SourcePathProvider
             {
                 roots = cp.getRoots();
             }
-
+            
         }
         if (roots != null)
         {
@@ -430,7 +430,7 @@ public class FanDebugPathProvider extends SourcePathProvider
                         {
                             return root;
                         }
-
+                        
                     }
                 } catch (FileStateInvalidException ex)
                 {
@@ -480,7 +480,7 @@ public class FanDebugPathProvider extends SourcePathProvider
             m =
                     thisDirectoryPattern.matcher(path);
         }
-
+        
         for (Matcher m = parentDirectoryPattern.matcher(path); m.find();)
         {
             if (!m.group(2).equals(".."))
@@ -489,7 +489,7 @@ public class FanDebugPathProvider extends SourcePathProvider
                 m =
                         parentDirectoryPattern.matcher(path);
             }
-
+            
         }
         return path;
     }
@@ -510,12 +510,12 @@ public class FanDebugPathProvider extends SourcePathProvider
                 {
                     path = "!/" + fileObject.getPath();
                 }
-
+                
             } else
             {
                 f = FileUtil.toFile(fileObject);
             }
-
+            
         } catch (FileStateInvalidException ex)
         {
         }
@@ -526,7 +526,7 @@ public class FanDebugPathProvider extends SourcePathProvider
         {
             return null;
         }
-
+        
     }
 
     /**
@@ -547,7 +547,7 @@ public class FanDebugPathProvider extends SourcePathProvider
             path =
                     file.substring(index + "!/".length());
         }
-
+        
         if (fo != null && FileUtil.isArchiveFile(fo))
         {
             fo = FileUtil.getArchiveRoot(fo);
@@ -555,11 +555,11 @@ public class FanDebugPathProvider extends SourcePathProvider
             {
                 fo = fo.getFileObject(path);
             }
-
+            
         }
         return fo;
     }
-
+    
     private void dump(Set<ClassPath> cps)
     {
         for (ClassPath cp : cps)
@@ -571,14 +571,14 @@ public class FanDebugPathProvider extends SourcePathProvider
             }
         }
     }
-
+    
     private Set<FileObject> findAllResources(String path)
     {
         Set<FileObject> fos = new HashSet<FileObject>();
         findAllResources(fos, globalSources, path);
         return fos;
     }
-
+    
     private void findAllResources(Set<FileObject> fos, Set<ClassPath> cps, String path)
     {
         for (ClassPath cp : cps)
@@ -590,7 +590,7 @@ public class FanDebugPathProvider extends SourcePathProvider
             }
         }
     }
-
+    
     private FileObject findResource(Set<ClassPath> classPaths, String pod, String path)
     {
         FileObject fo = null;
@@ -628,7 +628,7 @@ public class FanDebugPathProvider extends SourcePathProvider
                         break;
                     }
                 }
-
+                
             }
             if (fo != null)
             {
@@ -660,13 +660,13 @@ public class FanDebugPathProvider extends SourcePathProvider
             }
         }
     }
-
+    
     @Override
     public String[] getSourceRoots()
     {
         return sourceRoots;
     }
-
+    
     @Override
     public void setSourceRoots(String[] sourceRoots)
     {
@@ -680,13 +680,13 @@ public class FanDebugPathProvider extends SourcePathProvider
         }
         this.sourceRoots = roots.toArray(new String[roots.size()]);
     }
-
+    
     @Override
     public String[] getOriginalSourceRoots()
     {
         return originalRoots;
     }
-
+    
     private void updateRoots()
     {
         Set<FileObject> roots = new HashSet<FileObject>();
@@ -712,21 +712,28 @@ public class FanDebugPathProvider extends SourcePathProvider
         }*/
         synchronized (FanDebugHelper.class)
         {
-            sourceRoots = new String[roots.size()];
-            int i = 0;
+            //sourceRoots = new String[roots.size()];
+            List items = new ArrayList<String>();
             for (FileObject root : roots)
             {
                 String rt = root.getPath();
-                sourceRoots[i] = rt;
-                i++;
+                if (rt != null && rt.length() > 0)
+                {
+                    rt = normalize(rt);
+                    if (new File(rt).exists())
+                    {
+                        items.add(normalize(rt));                        
+                    }
+                }
             }
+            sourceRoots = (String[]) items.toArray();
         }
         //System.out.println(getClass().getName() + " Update roots: " + sourceRoots.length);
     }
-
+    
     private class PathRegistryListener implements GlobalPathRegistryListener, PropertyChangeListener
     {
-
+        
         public void pathsAdded(GlobalPathRegistryEvent event)
         {
             boolean changed = false;
@@ -744,7 +751,7 @@ public class FanDebugPathProvider extends SourcePathProvider
                 updateRoots();
             }
         }
-
+        
         public void pathsRemoved(GlobalPathRegistryEvent event)
         {
             boolean changed = false;
@@ -762,7 +769,7 @@ public class FanDebugPathProvider extends SourcePathProvider
                 updateRoots();
             }
         }
-
+        
         public void propertyChange(PropertyChangeEvent evt)
         {
             // JDK sources changed
@@ -784,10 +791,10 @@ public class FanDebugPathProvider extends SourcePathProvider
             }
         }
     }
-
+    
     private static final class FileObjectComparator implements Comparator<FileObject>
     {
-
+        
         public int compare(FileObject fo1, FileObject fo2)
         {
             String r1 = getRoot(fo1);
