@@ -94,7 +94,7 @@ public class FanLogicalView implements LogicalViewProvider
     /**
      * Find the subNode within the node that matches the path (relative path)
      * Note: recursive
-     * @param path
+     * @param node
      * @param path
      * @return 
      */
