@@ -9,6 +9,7 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 import javax.swing.Action;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
+import net.colar.netbeans.fan.actions.CopyPathAction;
 import net.colar.netbeans.fan.actions.DebugFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
@@ -178,6 +179,8 @@ public class FanNode extends FilterNode
             putAction(SystemAction.get(RenameAction.class));
         }
 
+        putAction(ProjectSensitiveActions.projectCommandAction(CopyPathAction.COMMAND_COPY_PATH, "Copy Path to Clipboard", null));
+        putAction(null);
         // add OTHER standard actions
         putAction(null);
         putAction(SystemAction.get(ToolsAction.class));

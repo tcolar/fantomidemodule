@@ -12,6 +12,7 @@ import net.colar.netbeans.fan.actions.BuildAndRunFanTestAction;
 import net.colar.netbeans.fan.actions.BuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanAndBuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanFanPodAction;
+import net.colar.netbeans.fan.actions.CopyPathAction;
 import net.colar.netbeans.fan.actions.DebugFanPodAction;
 import net.colar.netbeans.fan.actions.FanAction;
 import net.colar.netbeans.fan.actions.RunFanFile;
@@ -54,6 +55,7 @@ public class FanProjectActionProvider implements ActionProvider
 			new RunFanTest(project),
 			new BuildAndRunFanTestAction(project),
 			new RunFanShellAction(project),
+                        new CopyPathAction(project),
 		};
 		for (FanAction command : commandArray)
 		{
