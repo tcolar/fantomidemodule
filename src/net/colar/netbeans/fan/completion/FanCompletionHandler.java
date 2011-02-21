@@ -380,7 +380,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
         proposals.addAll(props);*/
     }
 
-    // TODO: setup nice icons(package/class etc..) in importproposals
     @SuppressWarnings("unchecked")
     private void proposeUsing(ArrayList<CompletionProposal> proposals, CodeCompletionContext context, AstNode node)
     {
@@ -389,7 +388,7 @@ public class FanCompletionHandler implements CodeCompletionHandler
             return; // no completion after "as"
         }
         FanParserTask result = (FanParserTask) context.getParserResult();
-        Document doc = result.getSnapshot().getSource().getDocument(true);
+        //Document doc = result.getSnapshot().getSource().getDocument(true);
         AstNode curNode = FanLexAstUtils.findParentNode(node, AstKind.AST_USING);
         int anchor = context.getCaretOffset();
         if (curNode == null)
@@ -401,8 +400,8 @@ public class FanCompletionHandler implements CodeCompletionHandler
             return;
         }
         AstNode idNode = FanLexAstUtils.getFirstChild(curNode, new NodeKindPredicate(AstKind.AST_ID));
-        AstNode ffi = FanLexAstUtils.getFirstChild(curNode, new NodeKindPredicate(AstKind.AST_USING_FFI));
-        AstNode as = FanLexAstUtils.getFirstChild(curNode, new NodeKindPredicate(AstKind.AST_USING_AS));
+        AstNode ffi = FanLexAstUtils.getFirstChildRecursive(curNode, new NodeKindPredicate(AstKind.AST_USING_FFI));
+        //AstNode as = FanLexAstUtils.getFirstChildRecursive(curNode, new NodeKindPredicate(AstKind.AST_USING_AS));
         String id = "";
         if (idNode != null)
         {
