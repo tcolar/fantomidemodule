@@ -132,7 +132,7 @@ public class FanProject implements Project, ProjectInformation
         {
             FanClassPathProvider cpProvider = lkp.lookup(FanClassPathProvider.class);
             GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, cpProvider.getProjectClassPaths(ClassPath.SOURCE));
-        }
+        }        
     }
 
     /**
@@ -181,6 +181,6 @@ public class FanProject implements Project, ProjectInformation
         public String[] getPrivilegedTemplates()
         {
             return PRIVILEGED_NAMES;
-        }
+        }        
     }
 }
