@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
@@ -16,10 +16,11 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="errorLabel" alignment="0" pref="424" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="customLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="nameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -28,8 +29,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="fileField" alignment="1" pref="299" max="32767" attributes="0"/>
-                          <Component id="customCombo" alignment="0" pref="299" max="32767" attributes="0"/>
+                          <Component id="fileField" alignment="1" pref="307" max="32767" attributes="0"/>
+                          <Component id="customCombo" alignment="0" pref="307" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="folderField" alignment="0" pref="216" max="32767" attributes="0"/>
@@ -43,7 +44,6 @@
                           </Group>
                       </Group>
                   </Group>
-                  <Component id="errorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -74,8 +74,8 @@
                   <Component id="customLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="customCombo" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="113" max="32767" attributes="0"/>
-              <Component id="errorLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="96" max="32767" attributes="0"/>
+              <Component id="errorLabel" min="-2" pref="17" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -163,6 +163,9 @@
     </Component>
     <Component class="javax.swing.JLabel" name="errorLabel">
       <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="ff" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="net/colar/netbeans/fan/wizard/Bundle.properties" key="NewFileVisualPanel1.errorLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>

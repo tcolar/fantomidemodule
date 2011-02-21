@@ -52,13 +52,7 @@ public class NewFileWizardPanel1 implements WizardDescriptor.Panel
 
     public boolean isValid()
     {
-	// If it is always OK to press Next or Finish, then:
-	return true;
-	// If it depends on some condition (form filled out...), then:
-	// return someCondition();
-	// and when this condition changes (last form field filled in...) then:
-	// fireChangeEvent();
-	// and uncomment the complicated stuff below.
+	return getPanel().isValid();
     }
     private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
 
