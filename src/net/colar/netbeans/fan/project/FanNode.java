@@ -11,6 +11,7 @@ import javax.swing.Action;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
 import net.colar.netbeans.fan.actions.CopyPathAction;
 import net.colar.netbeans.fan.actions.DebugFanPodAction;
+import net.colar.netbeans.fan.actions.DebugTalesProjectAction;
 import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
@@ -125,6 +126,7 @@ public class FanNode extends FilterNode
             if (FanPlatform.getInstance().isTalesPresent())
             {
                 putAction(ProjectSensitiveActions.projectCommandAction(RunTalesProjectAction.COMMAND_RUN_WITH_TALES, "Run with Tales", null));
+                putAction(ProjectSensitiveActions.projectCommandAction(DebugTalesProjectAction.COMMAND_DEBUG_WITH_TALES, "Debug with Tales", null));
             }
 
             putAction(ProjectSensitiveActions.projectCommandAction(BuildAndRunFanPodAction.COMMAND_BUILD_RUN_FAN_POD, "Build & Run Pod", null));

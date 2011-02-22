@@ -21,6 +21,7 @@ public class RunTalesProjectAction extends FanAction
 {
         public static final String COMMAND_RUN_WITH_TALES = "COMMAND_RUN_WITH_TALES";
         private static Future<Integer> handle;
+        boolean debug = false;
 
 	public RunTalesProjectAction(FanProject project)
 	{
@@ -36,7 +37,7 @@ public class RunTalesProjectAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		handle = runTalesProject(context, false).run();
+		handle = runTalesProject(context, debug).run();
                 ExtWebBrowser browser = new ExtWebBrowser();
                 try
                 {

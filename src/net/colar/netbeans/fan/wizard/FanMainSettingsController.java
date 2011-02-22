@@ -29,7 +29,7 @@ public class FanMainSettingsController extends OptionsPanelController
 	{
 		panel.setFanHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME));
 		panel.setTalesHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_TALES_HOME));
-		panel.setDebugPort(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT,"8000"));
+		panel.setDebugPort(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT,"8008"));
 		panel.setRunOptions(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS,"-Xmx128m"));
 		changed();
 	}

@@ -216,6 +216,7 @@ public abstract class FanAction
             }
         }
         FileObject file = findTargetProject(lookup);
+        boolean tales = FanPlatform.getInstance().isTalesPresent();
         if (file != null)
         {
             FileObject buildFile = file.getFileObject(FanBuildFileHelper.BUILD_FILE);
@@ -225,7 +226,13 @@ public abstract class FanAction
                 FanExecution fanExec = new FanExecution();
                 fanExec.setDisplayName(getProjectName(lookup));
                 fanExec.setWorkingDirectory(path);
-                FanPlatform.getInstance().buildFanCall(fanExec);
+                FanPlatform.getInstance().buildFanCall(fanExec, false, FanPlatform.getTalesExtraClasspath());
+                if (tales)
+                {
+                    String talesPath = FanPlatform.getInstance().getTalesHome().getPath();
+                    fanExec.addEnvVar("FAN_ENV", "util::PathEnv");
+                    fanExec.addEnvVar("FAN_ENV_PATH", talesPath);
+                }
                 fanExec.addCommandArg(FanPlatform.FAN_CLASS);
                 fanExec.addCommandArg(FanBuildFileHelper.BUILD_FILE);
                 fanExec.addCommandArg(target);
@@ -308,7 +315,7 @@ public abstract class FanAction
         {
             // start JPDA
             FanUtilities.GENERIC_LOGGER.info("Starting JPDA");
-            String portStr = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT, "8000");
+            String portStr = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT, "8008");
             int port = new Integer(portStr).intValue();
             try
             {

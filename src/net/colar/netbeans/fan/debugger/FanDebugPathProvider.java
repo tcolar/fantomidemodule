@@ -713,7 +713,7 @@ public class FanDebugPathProvider extends SourcePathProvider
         synchronized (FanDebugHelper.class)
         {
             //sourceRoots = new String[roots.size()];
-            List items = new ArrayList<String>();
+            List<String> items = new ArrayList<String>();
             for (FileObject root : roots)
             {
                 String rt = root.getPath();
@@ -726,7 +726,7 @@ public class FanDebugPathProvider extends SourcePathProvider
                     }
                 }
             }
-            sourceRoots = (String[]) items.toArray();
+            sourceRoots = items.toArray(new String[0]);
         }
         //System.out.println(getClass().getName() + " Update roots: " + sourceRoots.length);
     }

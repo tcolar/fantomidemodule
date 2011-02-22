@@ -14,6 +14,7 @@ import net.colar.netbeans.fan.actions.CleanAndBuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanFanPodAction;
 import net.colar.netbeans.fan.actions.CopyPathAction;
 import net.colar.netbeans.fan.actions.DebugFanPodAction;
+import net.colar.netbeans.fan.actions.DebugTalesProjectAction;
 import net.colar.netbeans.fan.actions.FanAction;
 import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
@@ -22,7 +23,6 @@ import net.colar.netbeans.fan.actions.RunFanTest;
 import net.colar.netbeans.fan.actions.RunTalesProjectAction;
 import net.colar.netbeans.fan.actions.TestFanPodAction;
 import org.netbeans.spi.project.ActionProvider;
-import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.LifecycleManager;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
@@ -44,6 +44,7 @@ public class FanProjectActionProvider implements ActionProvider
 		{
 			new RunFanPodAction(project),
 			new RunTalesProjectAction(project),
+			new DebugTalesProjectAction(project),
 			new BuildAndRunFanPodAction(project),
 			new TestFanPodAction(project),
 			new DebugFanPodAction(project),
