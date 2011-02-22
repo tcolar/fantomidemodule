@@ -64,6 +64,7 @@ public class NBFanParser extends Parser
 		return result;
 	}
 
+    // TODO: This is now deprecated -> remove/replace
 	@Override
 	public void cancel()
 	{
