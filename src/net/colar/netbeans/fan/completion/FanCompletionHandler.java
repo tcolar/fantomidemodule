@@ -190,12 +190,6 @@ public class FanCompletionHandler implements CodeCompletionHandler
     }
 
     @Override
-    public Set<String> getApplicableTemplates(ParserResult result, int arg1, int arg2)
-    {
-        return Collections.emptySet();
-    }
-
-    @Override
     public ParameterInfo parameters(ParserResult result, int arg1, CompletionProposal proposal)
     {
         return ParameterInfo.NONE;
@@ -515,4 +509,17 @@ public class FanCompletionHandler implements CodeCompletionHandler
             }
         }
     }
+    
+    /**
+     * New NB 7.0beta 2 Completion Handler abstract method (changed method signature)
+     * @param dcmnt
+     * @param i
+     * @param i1
+     * @return 
+     */
+    public Set<String> getApplicableTemplates(Document dcmnt, int i, int i1) 
+    {
+        return Collections.emptySet();
+    }
+
 }
