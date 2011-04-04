@@ -15,7 +15,7 @@ import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageProvider;
 import org.openide.util.lookup.ServiceProvider;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.modules.db.sql.lexer.SQLTokenId;
+//import org.netbeans.modules.db.sql.lexer.SQLTokenId;
 
 /**
  * Provide syntax highlighting for DSL's (embedded language)
@@ -52,7 +52,8 @@ public class FanDslEmbeddingProvider extends LanguageProvider
         if (sql == null)
         {
             // NOTE: Required adding (non public/friend) SQL editor (specific revision)
-            sql = SQLTokenId.language();//MimeLookup.getLookup(FanHighlightsContainer.SQL_MIME_TYPE).lookup(Language.class);
+            sql = /*SQLTokenId.language();*/
+						MimeLookup.getLookup(FanHighlightsContainer.SQL_MIME_TYPE).lookup(Language.class);
         }
         if (token != null && token.id() != null && token.text() != null)
         {
