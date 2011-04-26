@@ -45,7 +45,7 @@ public class BuildAndRunFanPodAction extends FanAction
 				group,
 				descriptor, getProjectName(context));
 
-		service.run();
+		showTalesBrowser(service.run());
 	}
 
 	@Override

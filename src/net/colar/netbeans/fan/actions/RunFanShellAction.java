@@ -34,7 +34,7 @@ public class RunFanShellAction extends FanAction
 		FanExecution fanExec = new FanExecution();
 		fanExec.setDisplayName("Fantom Shell (fansh)");
 
-		FanPlatform.getInstance().buildFanCall(fanExec);
+		FanPlatform.getInstance().buildFanCall(null, fanExec);
 		fanExec.addCommandArg(FanPlatform.FAN_CLASS);
 		fanExec.addCommandArg(FanPlatform.FAN_SH);
 

@@ -5,6 +5,7 @@
 
 package net.colar.netbeans.fan.actions;
 
+import java.util.concurrent.Future;
 import net.colar.netbeans.fan.project.FanProject;
 import org.openide.util.Lookup;
 
@@ -30,7 +31,8 @@ public class RunFanPodAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		runPodAction(context, false).run();
+		Future<Integer> f = runPodAction(context, false).run();
+    showTalesBrowser(f);
 	}
 
 	@Override
@@ -38,4 +40,5 @@ public class RunFanPodAction extends FanAction
 	{
 		return true;
 	}
+
 }
