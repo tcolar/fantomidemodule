@@ -24,11 +24,11 @@ import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.indexer.model.FanType;
+import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.jot.logger.JOTLoggerLocation;
 import net.jot.persistance.JOTSQLCondition;
 import net.jot.persistance.builders.JOTQueryBuilder;
-import net.jot.prefs.JOTPreferences;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -63,7 +63,8 @@ public class FanJarsIndexer implements FileChangeListener
 	// In memory caches
 	private List<String> packagesCache = new ArrayList<String>();
 	private Hashtable<String, Class> classesCache = new Hashtable<String, Class>();
-	String excludes = JOTPreferences.getInstance().getDefaultedString("fantomide.java.indexer.excludes", "sun.;com.sun.;javax.;org.xml.;org.omg.;org.w3c.;org.xml.;org.eclipse.swt.");
+	String excludes = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_INDEXER_EXCLUDES, 
+          "sun.;com.sun.;com.apple.;javax.faces.;javax.jms.;javax.ejb.;javax.mail.;javax.net.;javax.xml.;javax.rmi.;javax.swing.;java.awt.;org.xml.;org.omg.;org.w3c.;org.xml.;org.eclipse.swt.");
 
 	public FanJarsIndexer()
 	{
@@ -289,6 +290,11 @@ public class FanJarsIndexer implements FileChangeListener
 		}
 	}
 
+  public void setExcludes(String str)
+  {
+    excludes = str;
+  }
+  
 	public void fileRenamed(FileRenameEvent fre)
 	{
 		// TODO: not sure if that's good
