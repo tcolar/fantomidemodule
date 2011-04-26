@@ -7,39 +7,32 @@ package net.colar.netbeans.fan.wizard;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
-import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
 /**
- * Controller for Fan options panel.
+ * Controller for Fan options panel - Indexer
  * @author tcolar
  */
-@OptionsPanelController.SubRegistration(location="Fantom", id=FanFormattingSettingsController.ID, displayName="Formatting")
-public class FanFormattingSettingsController extends OptionsPanelController
+@OptionsPanelController.SubRegistration(location="Fantom", id=FanIndexerSettingsController.ID, displayName="Indexer")
+public class FanIndexerSettingsController extends OptionsPanelController
 {
-  public static final String ID = "Formatting";
-	private FanFormattingSettingsPanel panel;
+  public static final String ID = "Indexer";
+	private FanIndexerSettingsPanel panel;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	private boolean changed;
 
 	public void update()
 	{
-		panel.setIdentSize(new Integer(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FMT_IDENT_SIZE, "2")));
-		//panel.setExpandTabs(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FMT_TABS_TO_SPACES, true).equalsIgnoreCase("true"));
 		changed();
 	}
 
 	public void applyChanges()
 	{
-		int indentSize = panel.getIndentSize();
-		//boolean expandTabs = panel.getExpandTabs();
-		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FMT_IDENT_SIZE, ""+indentSize);
-		//FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FMT_TABS_TO_SPACES, (expandTabs?"true":"false");
-		// reread the plaform settings
-		FanPlatform.update();
+    FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_INDEXER_EXCLUDES,
+    panel.getExcludes());
 		changed = false;
 	}
 
@@ -50,7 +43,7 @@ public class FanFormattingSettingsController extends OptionsPanelController
 
 	public boolean isValid()
 	{
-		return getPanel().valid();
+		return true;
 	}
 
 	public boolean isChanged()
@@ -78,11 +71,11 @@ public class FanFormattingSettingsController extends OptionsPanelController
 		pcs.removePropertyChangeListener(l);
 	}
 
-	private FanFormattingSettingsPanel getPanel()
+	private FanIndexerSettingsPanel getPanel()
 	{
 		if (panel == null)
 		{
-			panel = new FanFormattingSettingsPanel(this);
+			panel = new FanIndexerSettingsPanel(this);
 		}
 		return panel;
 	}

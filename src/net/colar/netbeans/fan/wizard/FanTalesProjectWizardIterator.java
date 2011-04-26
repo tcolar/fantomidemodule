@@ -5,6 +5,7 @@
 package net.colar.netbeans.fan.wizard;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
@@ -12,6 +13,8 @@ import java.util.Set;
 import javax.swing.event.ChangeListener;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.platform.FanPlatform;
+import net.colar.netbeans.fan.project.FanProject;
+import net.colar.netbeans.fan.project.FanProjectProperties;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -70,7 +73,7 @@ public final class FanTalesProjectWizardIterator implements WizardDescriptor.Ins
         fanExec.addEnvVar("FAN_ENV", "util::PathEnv");
         fanExec.addEnvVar("FAN_ENV_PATH", talesPath);
 
-        FanPlatform.getInstance().buildFanCall(fanExec, false, FanPlatform.getTalesExtraClasspath());
+        FanPlatform.getInstance().buildFanCall(null, fanExec, false, FanPlatform.getTalesExtraClasspath());
 
         fanExec.addCommandArg(FanPlatform.FAN_CLASS);
         fanExec.addCommandArg(FanPlatform.FAN_TALES_POD_NAME);
@@ -104,6 +107,13 @@ public final class FanTalesProjectWizardIterator implements WizardDescriptor.Ins
 
         FileUtil.refreshFor(pf);
 
+        File prjDir = FileUtil.normalizeFile(new File(pf, "nbproject"));
+        File prjFile = FileUtil.normalizeFile(new File(prjDir, "project.properties"));  
+        prjDir.mkdirs();
+        FileWriter writer = new FileWriter(prjFile);
+        writer.append(FanProjectProperties.IS_TALES_PRJ+"=true\n");
+        writer.close();
+        
         return resultSet;
     }
 

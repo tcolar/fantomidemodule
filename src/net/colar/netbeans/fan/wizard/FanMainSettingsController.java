@@ -20,7 +20,7 @@ import org.openide.util.Lookup;
 @OptionsPanelController.SubRegistration(location="Fantom", id=FanMainSettingsController.ID, displayName="General")
 public class FanMainSettingsController extends OptionsPanelController
 {
-        public static final String ID = "Fantom";
+  public static final String ID = "Fantom";
 	private FanMainSettingsPanel panel;
 	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	private boolean changed;
@@ -30,7 +30,6 @@ public class FanMainSettingsController extends OptionsPanelController
 		panel.setFanHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME));
 		panel.setTalesHome(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_TALES_HOME));
 		panel.setDebugPort(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT,"8008"));
-		panel.setRunOptions(FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS,"-Xmx128m"));
 		changed();
 	}
 
