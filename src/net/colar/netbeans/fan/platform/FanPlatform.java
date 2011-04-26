@@ -11,12 +11,13 @@ import java.util.Set;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import javax.swing.JOptionPane;
+import net.colar.netbeans.fan.project.FanProject;
+import net.colar.netbeans.fan.project.FanProjectProperties;
 import net.colar.netbeans.fan.wizard.FanMainSettingsController;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -158,9 +159,9 @@ public class FanPlatform
      * Same as buildFanCall(fanExec, -1);
      * @param fanExec
      */
-    public void buildFanCall(FanExecution fanExec)
+    public void buildFanCall(FanProject project, FanExecution fanExec)
     {
-        buildFanCall(fanExec, false, null);
+        buildFanCall(project, fanExec, false, null);
     }
 
     /**
@@ -169,7 +170,7 @@ public class FanPlatform
      * @param fanExec
      * @param debugPort (-1 = no debugger)
      */
-    public void buildFanCall(FanExecution fanExec, boolean enableDebug, String extraClasspath)
+    public void buildFanCall(FanProject project, FanExecution fanExec, boolean enableDebug, String extraClasspath)
     {
         // We will be spawning a new java VM
         String separator = System.getProperty("file.separator");
@@ -200,7 +201,7 @@ public class FanPlatform
             fanExec.addCommandArg("-Dfan.debug=true");
         }
 
-        // custom options
+        // global options
         String option = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx128m");
         String[] options = option.split(" ");
         for (String opt : options)
@@ -208,6 +209,18 @@ public class FanPlatform
             fanExec.addCommandArg(opt);
         }
 
+        // project JVM options
+        if(project!=null)
+        {
+          FanProjectProperties props = project.getLookup().lookup(FanProjectProperties.class);
+          String jvmOption = props.getJvmArgs();
+          String[] jvmOptions = jvmOption.split(" ");
+          for (String opt : jvmOptions)
+          {
+            fanExec.addCommandArg(opt);
+          }
+        }
+        
         //OSX only flag needed for SWT (as in fanlaunch)
         if (IS_MAC)
         {

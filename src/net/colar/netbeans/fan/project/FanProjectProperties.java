@@ -33,9 +33,16 @@ public class FanProjectProperties
 	public static final String PRIVATE_PROPS_PATH = "nbproject/private/private.properties";
 	public static final String MAIN_METHOD = "pod.main.method";
 	public static final String BUILD_TARGET = "build.target";
+	public static final String IS_TALES_PRJ= "is.tales.project";
+	public static final String RUN_ARGS = "run.args";
+	public static final String JVM_ARGS = "jvm.args";
 	private final FanProject project;
 	private volatile String mainMethod;
 	private volatile String buildTarget;
+	private volatile String args;
+	private volatile String jvmArgs;
+  private volatile boolean isTalesProject;
+
 	private File propFile = null;
 
 	public FanProjectProperties(FanProject project)
@@ -99,6 +106,15 @@ public class FanProjectProperties
 		{
 			projectProperties.put(BUILD_TARGET, buildTarget);
 		}
+		if (args != null)
+		{
+			projectProperties.put(RUN_ARGS, args);
+		}
+		if (jvmArgs != null)
+		{
+			projectProperties.put(JVM_ARGS, jvmArgs);
+		}
+		projectProperties.put(IS_TALES_PRJ, isTalesProject ? "true" : "false");
 		dest.getParentFile().mkdirs();
 		FileOutputStream fos = new FileOutputStream(dest);
 		projectProperties.store(fos, "Fantom Project Properties");
@@ -126,6 +142,9 @@ public class FanProjectProperties
 			props.load(fis);
 			mainMethod = props.getProperty(MAIN_METHOD, DEFAULT_MAIN_METHOD);
 			buildTarget = props.getProperty(BUILD_TARGET, DEFAULT_BUILD_TARGET);
+			args = props.getProperty(RUN_ARGS, "");
+			jvmArgs = props.getProperty(JVM_ARGS, "");
+			isTalesProject = props.getProperty(IS_TALES_PRJ, "false").equalsIgnoreCase("true");
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -175,6 +194,30 @@ public class FanProjectProperties
 		//FanProjectProperties curProps=project.getLookup().lookup(FanProjectProperties.class);
 
 	}
+
+  public String getArgs() {
+    return args;
+  }
+
+  public void setArgs(String args) {
+    this.args = args;
+  }
+
+  public boolean isIsTalesProject() {
+    return isTalesProject;
+  }
+
+  public void setIsTalesProject(boolean isTalesProject) {
+    this.isTalesProject = isTalesProject;
+  }
+
+  public String getJvmArgs() {
+    return jvmArgs;
+  }
+
+  public void setJvmArgs(String jvmArgs) {
+    this.jvmArgs = jvmArgs;
+  }
 
 	// listener for props file changes
 	private class FanPropsListener implements FileChangeListener
