@@ -42,11 +42,11 @@ public class FanDbUpgrader extends JOTDBUpgrader
                     JOTLogger.info(FanDbUpgrader.class, "Deleting DB file: "+f.getAbsolutePath());
                     f.delete();
                 }
-                else if(f.isDirectory() && f.getName().equals(dbName))
+                /*else if(f.isDirectory() && f.getName().equals(dbName))
                 {
                   JOTUtilities.deleteFolderContent(f);
                   f.delete();
-                }
+                }*/
             }
         }
     }
