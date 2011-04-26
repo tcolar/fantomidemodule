@@ -4,5 +4,3 @@ jot.db.properties_files=db.properties
 jot.db.create_missing_tables=true
 jot.logger.folder.windows=c:\\
 jot.logger.folder.others=/tmp
-# Ecluding those from java indexing for faster indexing.
-fantomide.java.indexer.excludes=sun.;com.sun.;javax.;org.xml.;org.omg.;org.w3c.;org.xml.;org.eclipse.swt.;java.awt.;

@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import net.colar.netbeans.fan.actions.FanAction;
 import net.colar.netbeans.fan.indexer.FanIndexer;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.platform.FanPlatform;
@@ -16,7 +17,6 @@ import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTPersistanceManager;
 import net.jot.prefs.JOTPreferences;
 import org.openide.modules.ModuleInstall;
-import net.colar.netbeans.fan.actions.RunTalesProjectAction;
 
 /**
  * Module startup/shutdown hooks.
@@ -98,7 +98,7 @@ public class FanModuleInstall extends ModuleInstall
         System.out.println("Shutting down Fantom plugin.");
         try
         {
-            RunTalesProjectAction.shutdown();
+            FanAction.shutdownTales();
             FanIndexer.shutdown();
             Thread.sleep(250);
             JOTPersistanceManager.getInstance().destroy();

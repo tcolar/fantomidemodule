@@ -7,6 +7,7 @@ package net.colar.netbeans.fan;
 import java.io.File;
 import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTDBUpgrader;
+import net.jot.utils.JOTUtilities;
 
 /**
  * Handles DB upgrades
@@ -15,7 +16,7 @@ import net.jot.persistance.JOTDBUpgrader;
 public class FanDbUpgrader extends JOTDBUpgrader
 {
     // Change  when DB tables are chnage(incompatible) or want to force deletin of all tables
-    private int VERSION = 5;
+    private int VERSION = 6;
 
     @Override
     public void upgradeDb(String dbName, int fromVersion) throws Exception
@@ -24,6 +25,7 @@ public class FanDbUpgrader extends JOTDBUpgrader
         if (fromVersion != VERSION)
         {
             JOTLogger.info(this, "Indexer database version changed! - Deleting current index");
+            deleteTables(dbName);
         }
     }
 
@@ -37,7 +39,13 @@ public class FanDbUpgrader extends JOTDBUpgrader
             {
                 if (f.isFile() && f.getName().startsWith(dbName))
                 {
+                    JOTLogger.info(FanDbUpgrader.class, "Deleting DB file: "+f.getAbsolutePath());
                     f.delete();
+                }
+                else if(f.isDirectory() && f.getName().equals(dbName))
+                {
+                  JOTUtilities.deleteFolderContent(f);
+                  f.delete();
                 }
             }
         }
