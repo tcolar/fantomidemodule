@@ -73,22 +73,18 @@ public abstract class FanAction {
   }
 
   protected FanExecution buildPodAction(Lookup lookup) {
-    // run default target (build)
     return buildAction(lookup, "");
   }
 
   protected FanExecution cleanPodAction(Lookup lookup) {
-    // run default target (build)
     return buildAction(lookup, "clean");
   }
 
   protected FanExecution testPodAction(Lookup lookup) {
-    // run default target (build)
-    return buildAction(lookup, "test");
+    return buildAction(lookup, "build test");
   }
 
   protected FanExecution customBuildAction(Lookup lookup, String buildTarget) {
-    // run default target (build)
     return buildAction(lookup, buildTarget);
   }
 

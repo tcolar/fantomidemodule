@@ -24,7 +24,7 @@ public class BuildAndRunFanTestAction extends FanAction
 	@Override
 	public String getCommandId()
 	{
-		return ActionProvider.COMMAND_TEST_SINGLE;
+		return ActionProvider.COMMAND_TEST;
 	}
 
 	@Override

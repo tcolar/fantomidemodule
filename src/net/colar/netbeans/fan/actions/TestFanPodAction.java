@@ -5,8 +5,8 @@
 
 package net.colar.netbeans.fan.actions;
 
-import java.util.concurrent.Future;
 import net.colar.netbeans.fan.project.FanProject;
+import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
 
@@ -31,7 +31,17 @@ public class TestFanPodAction extends FanAction
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
 	{
-		testPodAction(context).run();
+    //TODO: only build if files changed ?
+		FanExecutionGroup group = new FanExecutionGroup(
+				buildPodAction(context),
+				testPodAction(context));
+
+		ExecutionService service =
+				ExecutionService.newService(
+				group,
+				descriptor, getProjectName(context));
+
+		service.run();
 	}
 
 	@Override
