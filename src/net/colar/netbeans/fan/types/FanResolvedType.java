@@ -520,8 +520,8 @@ public class FanResolvedType implements Cloneable
                 type = new FanResolvedListType(scopeNode, listType);
             } else
             {
-                // true simple type like Int or Sys::Int
-                type = resolveInScope(scopeNode, sig);
+              // true simple type like Int or Sys::Int
+              type = resolveInScope(scopeNode, sig);
             }
         }
 
@@ -548,7 +548,12 @@ public class FanResolvedType implements Cloneable
         //System.out.println("Make from local type: "+enteredType);
         boolean toStatic = false;
         FanType type = null;
-        if (enteredType.indexOf("::") != -1 && !isGenericType(enteredType))
+        if(enteredType.startsWith("[java]"))
+        {
+          String s = enteredType.substring(6).trim().replace("::", ".");   
+          type = scopeNode.getRoot().getParserTask().findCachedQualifiedType(s);
+        }
+        else if (enteredType.indexOf("::") != -1 && !isGenericType(enteredType))
         {	// Qualified type
             type = scopeNode.getRoot().getParserTask().findCachedQualifiedType(enteredType);
             toStatic = true;
