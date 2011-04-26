@@ -1,1 +1,4 @@
 see todo
+
+netbeans signing key:
+keytool -genkey -storepass **** -alias FanIde -validity 3600 -keystore keystore/fanide.ks
