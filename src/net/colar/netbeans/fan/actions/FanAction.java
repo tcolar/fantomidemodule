@@ -171,7 +171,7 @@ public abstract class FanAction {
         FileObject file = findTargetProject(lookup);
         if (file != null) {
             String podName = file.getName();
-            String path = FileUtil.toFile(file.getParent()).getAbsolutePath();
+            String path = FileUtil.toFile(file).getAbsolutePath();
             // see if user specified custom main method
             String target = podName + (testClass == null ? "" : "::" + testClass);
             FanExecution fanExec = new FanExecution();

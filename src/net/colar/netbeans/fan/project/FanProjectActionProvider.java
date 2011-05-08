@@ -9,6 +9,7 @@ import java.util.Set;
 import net.colar.netbeans.fan.actions.BuildAndRunFanClassAction;
 import net.colar.netbeans.fan.actions.BuildAndRunFanFileAction;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
+import net.colar.netbeans.fan.actions.BuildAndRunFanTestAction;
 import net.colar.netbeans.fan.actions.BuildAndTestPodAction;
 import net.colar.netbeans.fan.actions.BuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanAndBuildFanPodAction;
@@ -49,8 +50,9 @@ public class FanProjectActionProvider implements ActionProvider
 			new BuildFanPodAction(project),
 			new CleanFanPodAction(project),
 			new CleanAndBuildFanPodAction(project),
-			new RunFanTest(project),
 			new BuildAndTestPodAction(project),
+			new RunFanTest(project),
+			new BuildAndRunFanTestAction(project),
             new RunFanClass(project),
             new BuildAndRunFanClassAction(project),
 			new RunFanShellAction(project),
