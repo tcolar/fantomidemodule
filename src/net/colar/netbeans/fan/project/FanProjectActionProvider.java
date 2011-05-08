@@ -6,6 +6,7 @@ package net.colar.netbeans.fan.project;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import net.colar.netbeans.fan.actions.BuildAndRunFanClassAction;
 import net.colar.netbeans.fan.actions.BuildAndRunFanFileAction;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
 import net.colar.netbeans.fan.actions.BuildAndTestPodAction;
@@ -15,6 +16,7 @@ import net.colar.netbeans.fan.actions.CleanFanPodAction;
 import net.colar.netbeans.fan.actions.CopyPathAction;
 import net.colar.netbeans.fan.actions.DebugFanPodAction;
 import net.colar.netbeans.fan.actions.FanAction;
+import net.colar.netbeans.fan.actions.RunFanClass;
 import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
@@ -47,12 +49,14 @@ public class FanProjectActionProvider implements ActionProvider
 			new BuildFanPodAction(project),
 			new CleanFanPodAction(project),
 			new CleanAndBuildFanPodAction(project),
-			new RunFanFile(project),
-			new BuildAndRunFanFileAction(project),
 			new RunFanTest(project),
 			new BuildAndTestPodAction(project),
+            new RunFanClass(project),
+            new BuildAndRunFanClassAction(project),
 			new RunFanShellAction(project),
-                        new CopyPathAction(project),
+            new CopyPathAction(project),
+			new RunFanFile(project),
+			new BuildAndRunFanFileAction(project),
 		};
 		for (FanAction command : commandArray)
 		{

@@ -6,19 +6,20 @@ package net.colar.netbeans.fan.actions;
 
 import net.colar.netbeans.fan.FanLanguage;
 import net.colar.netbeans.fan.project.FanProject;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 
 /**
- * Run a single fan file (.fan, .fwt)
+ * Run a single class
  * @author tcolar
  */
-public class RunFanFile extends FanAction
+public class RunFanClass extends FanAction
 {
-    public static final String COMMAND_RUN_FAN_SCRIPT = "COMMAND_RUN_FAN_SCRIPT";
+    public static String COMMAND_RUN_FAN_CLASS = "COMMAND_RUN_FAN_CLASS";
 
-	public RunFanFile(FanProject project)
+    public RunFanClass(FanProject project)
 	{
 		super(project);
 	}
@@ -26,14 +27,13 @@ public class RunFanFile extends FanAction
 	@Override
 	public String getCommandId()
 	{
-		// std run single command
-		return COMMAND_RUN_FAN_SCRIPT;
+		return COMMAND_RUN_FAN_CLASS;
 	}
 
 	@Override
 	public void invokeAction(Lookup context) throws IllegalArgumentException
-	{
-		runFileAction().run();
+	{        
+        runClassAction().run();
 	}
 
 	@Override
@@ -52,4 +52,5 @@ public class RunFanFile extends FanAction
 		}
 		return results;
 	}
+
 }

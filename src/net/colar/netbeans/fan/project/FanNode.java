@@ -8,9 +8,11 @@ import java.awt.Image;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import javax.swing.Action;
+import net.colar.netbeans.fan.actions.BuildAndRunFanFileAction;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
 import net.colar.netbeans.fan.actions.CopyPathAction;
 import net.colar.netbeans.fan.actions.DebugFanPodAction;
+import net.colar.netbeans.fan.actions.RunFanClass;
 import net.colar.netbeans.fan.actions.RunFanFile;
 import net.colar.netbeans.fan.actions.RunFanPodAction;
 import net.colar.netbeans.fan.actions.RunFanShellAction;
@@ -36,7 +38,7 @@ import org.openide.util.lookup.ProxyLookup;
 public class FanNode extends FilterNode
 {
 
-    public static final Pattern MAIN_METHOD = Pattern.compile("Void\\s+main\\([^)]*\\)\\s*\\{");
+    public static final Pattern MAIN_METHOD = Pattern.compile("\\s+main\\([^)]*\\)\\s*\\{");
     public static final Pattern TEST_METHOD = Pattern.compile("Void\\s+test\\S*\\([^)]*\\)\\s*\\{");
     public static final String ATTR_NODE_FILEOBJECT = "NODE_FILEOBJECT";
     boolean isPod = false;
@@ -151,12 +153,14 @@ public class FanNode extends FilterNode
             // item actions
             {
                 putAction(SystemAction.get(OpenAction.class));
-                if (isRunnable)
-                {
-                    putAction(ProjectSensitiveActions.projectCommandAction(RunFanFile.COMMAND_RUN_FILE, "Run script", null));
-                    putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Build & Run script", null));
+                //if (isRunnable)
+                //{
+                    putAction(ProjectSensitiveActions.projectCommandAction(RunFanClass.COMMAND_RUN_FAN_CLASS, "Run class", null));
+                    putAction(ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN_SINGLE, "Build & Run class", null));
+                    putAction(ProjectSensitiveActions.projectCommandAction(RunFanFile.COMMAND_RUN_FAN_SCRIPT, "Run as script", null));
+                    putAction(ProjectSensitiveActions.projectCommandAction(BuildAndRunFanFileAction.COMMAND_BUILD_RUN_FAN_SCRIPT, "Build & Run as script", null));
                     putAction(null);
-                }
+                //}
                 if (isTesteable)
                 {
                     putAction(ProjectSensitiveActions.projectCommandAction(RunFanTest.COMMAND_TEST_FILE, "Run test", null));
@@ -236,7 +240,7 @@ public class FanNode extends FilterNode
         boolean result = false;
         try
         {
-            // look for main method
+            // look for test method
             result = TEST_METHOD.matcher(file.asText()).find();
         } catch (Exception e)
         {

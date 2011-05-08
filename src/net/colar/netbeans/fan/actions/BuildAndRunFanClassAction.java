@@ -11,14 +11,12 @@ import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
 
 /**
- * Run a file/script
+ * Build & Run a Class
  * @author tcolar
  */
-public class BuildAndRunFanFileAction extends FanAction
+public class BuildAndRunFanClassAction extends FanAction
 {
-    public static final String COMMAND_BUILD_RUN_FAN_SCRIPT = "COMMAND_BUILD_RUN_FAN_SCRIPT";
-
-	public BuildAndRunFanFileAction(FanProject project)
+	public BuildAndRunFanClassAction(FanProject project)
 	{
 		super(project);		
 	}
@@ -26,7 +24,7 @@ public class BuildAndRunFanFileAction extends FanAction
 	@Override
 	public String getCommandId()
 	{
-		return COMMAND_BUILD_RUN_FAN_SCRIPT;
+		return ActionProvider.COMMAND_RUN_SINGLE;
 	}
 
 	@Override
@@ -35,7 +33,7 @@ public class BuildAndRunFanFileAction extends FanAction
 		//TODO: only build if files changed ?
 		FanExecutionGroup group = new FanExecutionGroup(
 				buildPodAction(context),
-				runFileAction());
+				runClassAction());
 
 		ExecutionService service =
 				ExecutionService.newService(
