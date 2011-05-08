@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import net.colar.netbeans.fan.actions.BuildAndRunFanFileAction;
 import net.colar.netbeans.fan.actions.BuildAndRunFanPodAction;
-import net.colar.netbeans.fan.actions.BuildAndRunFanTestAction;
+import net.colar.netbeans.fan.actions.BuildAndTestPodAction;
 import net.colar.netbeans.fan.actions.BuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanAndBuildFanPodAction;
 import net.colar.netbeans.fan.actions.CleanFanPodAction;
@@ -50,7 +50,7 @@ public class FanProjectActionProvider implements ActionProvider
 			new RunFanFile(project),
 			new BuildAndRunFanFileAction(project),
 			new RunFanTest(project),
-			new BuildAndRunFanTestAction(project),
+			new BuildAndTestPodAction(project),
 			new RunFanShellAction(project),
                         new CopyPathAction(project),
 		};

@@ -81,7 +81,7 @@ public abstract class FanAction {
   }
 
   protected FanExecution testPodAction(Lookup lookup) {
-    return buildAction(lookup, "build test");
+    return buildAction(lookup, "test");
   }
 
   protected FanExecution customBuildAction(Lookup lookup, String buildTarget) {

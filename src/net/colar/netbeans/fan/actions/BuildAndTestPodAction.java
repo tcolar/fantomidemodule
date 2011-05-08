@@ -14,9 +14,9 @@ import org.openide.util.Lookup;
  *
  * @author tcolar
  */
-public class BuildAndRunFanTestAction extends FanAction
+public class BuildAndTestPodAction extends FanAction
 {
-	public BuildAndRunFanTestAction(FanProject project)
+	public BuildAndTestPodAction(FanProject project)
 	{
 		super(project);		
 	}
@@ -33,7 +33,7 @@ public class BuildAndRunFanTestAction extends FanAction
 		//TODO: only build if files changed ?
 		FanExecutionGroup group = new FanExecutionGroup(
 				buildPodAction(context),
-				testFileAction(context, RunFanTest.getFileName(context, getSelectedNodes())));
+				testPodAction(context));
 
 		ExecutionService service =
 				ExecutionService.newService(
