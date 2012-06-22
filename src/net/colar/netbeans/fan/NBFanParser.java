@@ -14,76 +14,65 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 
 /**
  *
- * Parser impl.
- * Bridges NB parser with parboiled parser
- * Base of a parsing job results
+ * Parser impl. Bridges NB parser with parboiled parser Base of a parsing job
+ * results
+ *
  * @author tcolar
  */
-public class NBFanParser extends Parser
-{
+public class NBFanParser extends Parser {
 
-	FanParserTask result;
+    FanParserTask result;
 
-	@Override
-	public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException
-	{
-		// TODO: maybe I can make my own RespositoryUpdaterImpl that does nothing
-		//  instead of this ugly class name check hack.
-		String taskClass = task.getClass().getName();
-		boolean isIndexing = taskClass.startsWith("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater");
+    @Override
+    public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
+        // TODO: maybe I can make my own RespositoryUpdaterImpl that does nothing
+        //  instead of this ugly class name check hack.
+        String taskClass = task.getClass().getName();
+        boolean isIndexing = taskClass.startsWith("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater");
 
-		String path = snapshot.getSource().getFileObject().getPath();
-		if (FanIndexer.isAllowedIndexing(snapshot.getSource().getFileObject()))
-		{
-			parse(snapshot, isIndexing);
-		} else
-		{
-			FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: " + path);
-		}
-	}
+        String path = snapshot.getSource().getFileObject().getPath();
+        if (FanIndexer.isAllowedIndexing(snapshot.getSource().getFileObject())) {
+            parse(snapshot, isIndexing);
+        } else {
+            FanUtilities.GENERIC_LOGGER.info("Ignoring request to parse Fantom distro source file: " + path);
+        }
+    }
 
-	public void parse(Snapshot snapshot, boolean isIndexing)
-	{
-		result = new FanParserTask(snapshot);
-		result.parse();
-		result.parseGlobalScope();
-		if (!isIndexing && result.getRootScope()!=null)
-		{
-			result.parseLocalScopes();
-		}
-	}
+    public void parse(Snapshot snapshot, boolean isIndexing) {
+        System.out.println("> indexing of "+snapshot.getSource().getFileObject().getPath());
+        result = new FanParserTask(snapshot);
+        result.parse(isIndexing, 60);
+        result.parseGlobalScope();
+        if (!isIndexing) {
+            result.parseLocalScopes();
+        }
+    }
 
-	@Override
-	public Result getResult(Task task) throws ParseException
-	{
-		return getResult();
-	}
+    @Override
+    public Result getResult(Task task) throws ParseException {
+        return getResult();
+    }
 
-	public Result getResult()
-	{
-		return result;
-	}
+    public Result getResult() {
+        return result;
+    }
 
     // TODO: This is now deprecated -> remove/replace
-	@Override
-	public void cancel()
-	{
-		if (result != null)
-		{
-			result.cancel();
-		}
-		//throw new UnsupportedOperationException("Not supported yet.");
-	}
+    @Override
+    public void cancel() {
+        if (result != null) {
+            result.cancel();
+        }
+        //throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	@Override
-	public void addChangeListener(ChangeListener changeListener)
-	{
-		//throw new UnsupportedOperationException("Not supported yet.");
-	}
+    @Override
+    public void addChangeListener(ChangeListener changeListener) {
+        //throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	@Override
-	public void removeChangeListener(ChangeListener changeListener)
-	{
-		//throw new UnsupportedOperationException("Not supported yet.");
-	}
+    @Override
+    public void removeChangeListener(ChangeListener changeListener) {
+        //throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

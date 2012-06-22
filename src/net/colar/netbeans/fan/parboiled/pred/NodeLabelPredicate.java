@@ -5,7 +5,7 @@ package net.colar.netbeans.fan.parboiled.pred;
 
 import net.colar.netbeans.fan.parboiled.AstNode;
 import org.parboiled.Node;
-import org.parboiled.google.base.Predicate;
+import org.parboiled.common.Predicate;
 
 /**
  *

@@ -5,71 +5,76 @@ package net.colar.netbeans.fan.test;
 
 import net.colar.netbeans.fan.test.mock.MockTrampoline;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.prefs.Preferences;
 import net.colar.netbeans.fan.FanModuleInstall;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
+import net.colar.netbeans.fan.parboiled.AstNode;
+import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.platform.FanPlatform;
 import net.colar.netbeans.fan.platform.FanPlatformSettings;
 import net.colar.netbeans.fan.test.mock.MockLookup;
 import net.jot.prefs.JOTPropertiesPreferences;
 import net.jot.testing.JOTTestable;
+import org.parboiled.Rule;
+import org.parboiled.parserunners.RecoveringParseRunner;
+import org.parboiled.support.ParsingResult;
 
 /**
- * Base class for CSL tests, which require a minimal Netbeans "Env" to be available
- * Also craetes the platform and update the Type indexes.
+ * Base class for CSL tests, which require a minimal Netbeans "Env" to be
+ * available Also creates the platform and update the Type indexes.
+ *
  * @author thibautc
  */
-public abstract class FantomCSLTest implements JOTTestable
-{
+public abstract class FantomCSLTest implements JOTTestable {
 
-	public JOTPropertiesPreferences prefs;
+    public JOTPropertiesPreferences prefs = new JOTPropertiesPreferences();
+    private final boolean startIndexer;
 
-	public void jotTest() throws Throwable
-	{
-		prefs = new JOTPropertiesPreferences();
-		InputStream is = getClass().getResourceAsStream("test.properties");
-		prefs.loadFrom(is);
+    public FantomCSLTest() {
+        this(true);
+    }
 
-		// Set netbeans props
-		System.setProperty("netbeans.full.hack", "true");
-		/*System.setProperty("java.util.prefs.PreferencesFactory",
-			MemoryPreferencesFactory.class.getName());//NOI18N*/
-		Preferences.userRoot().sync();
-		// Addd the required trampoline impl.
-		MockLookup.setInstances(new MockTrampoline());
+    public FantomCSLTest(boolean startIndexer) {
+        this.startIndexer = startIndexer;
+    }
 
-		// Setup the test Platform
-		System.setProperty("netbeans.user", prefs.getString("test.home")); // the user it will run in, should probably use some netbeans prop instaed
-		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_FAN_HOME, prefs.getString("fantom.home"));
-		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_DEBUG_PORT, "8080");
-		FanPlatformSettings.getInstance().put(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx256m");
-		FanPlatform.updateFromSettings();
+    public void jotTest() throws Throwable {
+        FanModuleInstall mi = NBTestUtilities.initNb(startIndexer,prefs);
 
-		// Initialize the module (JavaOnTracks startup hooks)
-		FanModuleInstall mi = new FanModuleInstall();
-		// Note: this will run the indexer (might take a while the first time)
-		mi.restored();
+        if(startIndexer)
+        {
+            // wait for indexer to be done
+            FanIndexerFactory.getIndexer().waitForEmptyFantomQueue();
+        }
+        
+        try {
+            // Run the user test
+            cslTest();
+        } catch (Throwable t) {
+            throw (t);
+        } finally {
+            // try to always shutdown properly
+            mi.closing();
+        }
+    }
 
-		// wait for indexer to be done
-		FanIndexerFactory.getIndexer().waitForEmptyFantomQueue();
+    /**
+     * Implement and fill with your test code
+     *
+     * @throws Throwable
+     */
+    public abstract void cslTest() throws Throwable;
 
-		try
-		{
-			// Run the user test
-			cslTest();
-		} catch (Throwable t)
-		{
-			throw (t);
-		} finally
-		{
-			// try to always shutdown properly
-			mi.closing();
-		}
-	}
-
-	/**
-	 * Implement and fill with your test code
-	 * @throws Throwable
-	 */
-	public abstract void cslTest() throws Throwable;
+    public ParsingResult<AstNode> parse(FantomParser parser, Rule rule, String input) {
+        long start = new Date().getTime();
+        ParsingResult<AstNode> result = new RecoveringParseRunner<AstNode>(rule).run(input);
+        long time = new Date().getTime() - start;
+        //System.err.println("Parsing in " + (new Date().getTime() - start) + "ms");
+        if (time > 100) {
+            System.err.println("Long parsing : " + (new Date().getTime() - start) + "ms, for:\n" + input);
+        }
+        //System.out.println(ParseTreeUtils.printNodeTree(result));
+        return result;
+    }
 }

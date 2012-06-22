@@ -230,9 +230,9 @@ public class FanAddMethodDialog extends javax.swing.JDialog
                         Document baseDoc = source.getDocument(true);
                         // should always be 1*indentSize
                         String indentStr = FantomIndentUtils.createIndentString(baseDoc, FantomIndentUtils.getIndentSize(baseDoc));
-                        baseDoc.insertString(blockNode.getStartLocation().getIndex() + 1, "\n" + indentStr + str+"\n", null);
+                        baseDoc.insertString(blockNode.getStartIndex() + 1, "\n" + indentStr + str+"\n", null);
                         // Put the cursor there (open the file if necessary)
-                        UiUtils.open(fo, blockNode.getStartLocation().getIndex()+1);
+                        UiUtils.open(fo, blockNode.getStartIndex()+1);
                     }
                 }
             } catch (BadLocationException e)

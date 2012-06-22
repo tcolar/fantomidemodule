@@ -14,6 +14,7 @@ import net.colar.netbeans.fan.FanUtilities;
 import net.colar.netbeans.fan.NBFanParser;
 import net.colar.netbeans.fan.indexer.model.FanDocument;
 import net.colar.netbeans.fan.parboiled.FantomLexerTokens.TokenName;
+import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.parboiled.pred.NodeLabelPredicate;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
 import net.colar.netbeans.fan.scope.FanFieldScopeVar;
@@ -31,8 +32,8 @@ import org.netbeans.modules.parsing.api.Source;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.parboiled.Node;
-import org.parboiled.google.base.Predicate;
-import org.parboiled.support.InputBuffer;
+import org.parboiled.buffers.InputBuffer;
+import org.parboiled.common.Predicate;
 
 /**
  * Utilities for lexer / parser / ast trees
@@ -180,7 +181,7 @@ public class FanLexAstUtils
 
     public static OffsetRange getNodeRange(AstNode node)
     {
-        return new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
+        return new OffsetRange(node.getStartIndex(), node.getEndIndex());
     }
 
     public static AstNode getScopeNode(AstNode node)
@@ -275,14 +276,14 @@ public class FanLexAstUtils
 
     public static String getNodeText(Node<AstNode> node, InputBuffer inputBuffer)
     {
-        int start = node.getStartLocation().getIndex();
-        int end = node.getEndLocation().getIndex();
+        int start = node.getStartIndex();
+        int end = node.getEndIndex();
         return inputBuffer.extract(start, end);
     }
 
     public static OffsetRange getNodeRange(Node<AstNode> node)
     {
-        return new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
+        return new OffsetRange(node.getStartIndex(), node.getEndIndex());
     }
 
     @SuppressWarnings("unchecked")
@@ -304,8 +305,8 @@ public class FanLexAstUtils
     public static AstNode findASTNodeAt(AstNode node, int offset)
     {
         if (node != null
-                && offset >= node.getStartLocation().getIndex()
-                && offset <= node.getEndLocation().getIndex())
+                && offset >= node.getStartIndex()
+                && offset <= node.getEndIndex())
         {
             for (AstNode child : node.getChildren())
             {
@@ -348,7 +349,7 @@ public class FanLexAstUtils
 
     public static void dumpTree(AstNode node, int indent)
     {
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer("Tree Dump: \n");
         getDumpTree(sb, node, indent);
         FanUtilities.GENERIC_LOGGER.info(sb.toString());
     }
@@ -410,14 +411,14 @@ public class FanLexAstUtils
             FanAstScopeVarBase slotVar = findSlot(typeVar, slot);
             if (slotVar != null)
             {
-                return new DeclarationLocation(fo, slotVar.getNode().getStartLocation().getIndex());
+                return new DeclarationLocation(fo, slotVar.getNode().getStartIndex());
             }
         }
 
         // if not asked for a slot .. or the slot not found, go to the type
         if (typeVar != null)
         {
-            return new DeclarationLocation(fo, typeVar.getNode().getStartLocation().getIndex());
+            return new DeclarationLocation(fo, typeVar.getNode().getStartIndex());
         }
 
         // not found
@@ -453,4 +454,5 @@ public class FanLexAstUtils
         }
         return null;
     }
+
 }

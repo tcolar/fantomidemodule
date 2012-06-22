@@ -218,11 +218,6 @@ public class FanTalesProjectPanel1 extends javax.swing.JPanel
         String dir = folder.getText();
         String err = "";
 
-        if(! FanPlatform.getInstance().isTalesPresent())
-        {
-            err="Tales framework is not installed!";
-        }
-
         if (loc == null || loc.length() < 1)
         {
             err = "Please choose a location.";

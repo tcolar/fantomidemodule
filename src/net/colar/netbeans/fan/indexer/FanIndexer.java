@@ -84,7 +84,7 @@ import org.openide.util.Cancellable;
 public class FanIndexer extends CustomIndexer implements FileChangeListener {
   // Can bump -up when we want to force a full-reindexing after fixes/chnages.
 
-  private static Integer VERSION = 1;
+  private static Integer VERSION = 2;
   public static final String UNRESOLVED_TYPE = "!!UNRESOLVED!!";
   private final static Pattern CLOSURECLASS = Pattern.compile(".*?\\$\\d+\\z");
   static JOTLoggerLocation log = new JOTLoggerLocation(FanIndexer.class);
@@ -189,8 +189,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener {
     }
   }
 
-  // TODO: It would be MUCH faster to just parse what we need (types/slots)
-  // Might need a separte ANTLR grammar though.
   private void indexSrc(String path) {
     if (!FanPlatform.isConfigured()) {
       log.info("Platform not ready to index: " + path);
@@ -484,27 +482,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener {
         String path = pod.getAbsolutePath();
         if (checkIfNeedsReindexing(path, pod.lastModified())) {
           requestIndexing(path);
-        }
-      }
-      if (FanPlatform.getInstance().isTalesPresent()) {
-        FileObject talesHome = FanPlatform.getInstance().getTalesHome();
-        FileObject talesLibs = talesHome.getFileObject("lib").getFileObject("fan");
-        File talesLibsDir = FileUtil.toFile(talesLibs);
-        // listen to changes in pod folder
-        try {
-          FileUtil.addRecursiveListener(this, talesLibsDir);
-        } catch (IllegalArgumentException e) {/*already listening*/
-
-        }
-
-        // index the pods if not up to date
-        File[] talesPods = talesLibsDir.listFiles();
-
-        for (File pod : talesPods) {
-          String path = pod.getAbsolutePath();
-          if (checkIfNeedsReindexing(path, pod.lastModified())) {
-            requestIndexing(path);
-          }
         }
       }
     } catch (Throwable t) {
@@ -823,7 +800,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener {
       } else {
         if (child.hasExt("fan") || child.hasExt("fwt")) {
           if (FanIndexer.checkIfNeedsReindexing(child.getPath(), child.lastModified().getTime())) {
-            log.info("ReIndexing: " + root);
+            log.info("ReIndexing: " + root.getPath());
             nb++;
             requestIndexing(child.getPath());
           }
@@ -1113,6 +1090,12 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener {
   }
 
   public static boolean isAllowedIndexing(FileObject srcFile) {
+    FileObject fanHome = FanPlatform.getInstance().getFanHome();
+    if(fanHome.getPath().equals(srcFile.getPath()) ||
+        FileUtil.isParentOf(fanHome, srcFile))
+    {
+        return false;
+    }
     return true;
   }
 }

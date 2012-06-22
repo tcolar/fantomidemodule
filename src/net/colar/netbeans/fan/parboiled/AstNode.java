@@ -3,6 +3,7 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
+import fan.sys.Range;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -14,9 +15,10 @@ import net.colar.netbeans.fan.scope.FanLocalScopeVar;
 import net.colar.netbeans.fan.scope.FanTypeScopeVar;
 import net.colar.netbeans.fan.types.FanResolvedType;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.parboiled.Context;
 import org.parboiled.Node;
-import org.parboiled.support.InputBuffer;
-import org.parboiled.support.InputLocation;
+import org.parboiled.buffers.InputBuffer;
+import org.parboiled.support.IndexRange;
 import org.parboiled.trees.GraphNode;
 
 /**
@@ -26,11 +28,11 @@ import org.parboiled.trees.GraphNode;
  * So we can go back and forth between parseNode and AstNode easily.
  * @author thibautc
  */
-public class AstNode implements GraphNode
+public class AstNode implements GraphNode<AstNode>
 {
 
     /** Reference to the parse Node, this AST node was created from*/
-    private final Node<AstNode> parseNode;
+    //private final Node<AstNode> parseNode;
     /** ParseNode path*/
     private final String parsePath;
     /** kind of this AST Node*/
@@ -49,15 +51,27 @@ public class AstNode implements GraphNode
     private Hashtable<String, FanAstScopeVarBase> scopeVars = null;
     /**Type of this node (say 'Str' or 'Bool') - used for completion, etc...*/
     private FanResolvedType type;
+    // Where the macthing text is locate in the input
+    private final IndexRange textRange;
+    // label
+    private String label;
     int id;
 
-    public AstNode(int id, AstKind kind, String path, Node<AstNode> parseNode, String nodeText)
+    public AstNode(int id, AstKind kind, Context context)
     {
+        this(id, kind, context.getMatcher().getLabel(), context.getPath().toString(), 
+                context.getMatchRange(), context.getMatch());
+    }
+
+    public AstNode(int id, AstKind kind, String label, String path, IndexRange textRange, String nodeText)
+    {
+        //System.out.println("new node: "+id+ " "+path+" / "+kind);
         this.id = id;
-        this.parseNode = parseNode;
         this.kind = kind;
         this.parsePath = path;
         this.text = nodeText;
+        this.textRange = textRange;
+        this.label = label;
         // start unresolved, but ParserTask will fill it in.
         this.type = FanResolvedType.makeUnresolved(this);
     }
@@ -72,7 +86,7 @@ public class AstNode implements GraphNode
         txt.append(") ");
         if (text.indexOf("\n") >= 0)
         {
-            txt.append(text.substring(0, text.indexOf("\n")));
+            txt.append(text.substring(0, text.indexOf("\n"))).append("...");
         } else
         {
             txt.append("'").append(text).append("'");
@@ -97,17 +111,17 @@ public class AstNode implements GraphNode
 
     public String getLabel()
     {
-        return parseNode.getLabel();
+        return label;
     }
 
-    public InputLocation getStartLocation()
+    public int getStartIndex()
     {
-        return parseNode.getStartLocation();
+        return textRange.start;
     }
 
-    public InputLocation getEndLocation()
+    public int getEndIndex()
     {
-        return parseNode.getEndLocation();
+        return textRange.end;
     }
 
     public AstNode getParent()
@@ -125,6 +139,11 @@ public class AstNode implements GraphNode
         children.add(nd);
     }
 
+    void addChildAt(AstNode nd, int index)
+    {
+        children.add(index, nd);
+    }
+    
     void removeChild(AstNode nd)
     {
         children.remove(nd);
@@ -150,11 +169,6 @@ public class AstNode implements GraphNode
     public AstKind getKind()
     {
         return kind;
-    }
-
-    public Node<AstNode> getParseNode()
-    {
-        return parseNode;
     }
 
     public void setIsScopeNode()
@@ -286,6 +300,14 @@ public class AstNode implements GraphNode
         return type;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public IndexRange getTextRange() {
+        return textRange;
+    }
+    
     public OffsetRange getRelevantTextRange()
     {
         if (relevantText == null)
@@ -301,7 +323,7 @@ public class AstNode implements GraphNode
         relevantText = text;
         boolean isNumber = false;
         if (kind == AstKind.AST_EXPR_LIT_BASE
-                && parseNode.getLabel().equalsIgnoreCase(FantomLexerTokens.TokenName.STRS.name()))
+                && getLabel().equalsIgnoreCase(FantomLexerTokens.TokenName.STRS.name()))
         {
             isNumber = true;
         }
@@ -320,12 +342,17 @@ public class AstNode implements GraphNode
         int startOffset = relevantText.length() > 0 ? text.indexOf(relevantText.charAt(0)) : 0;
         int endOffset = startOffset + relevantText.length();
         relevantTextRange = new OffsetRange(
-                getStartLocation().getIndex() + startOffset,
-                getStartLocation().getIndex() + endOffset);
+                getStartIndex() + startOffset,
+                getStartIndex() + endOffset);
     }
 
     public int getId()
     {
         return id;
+    }
+
+    public void setLabel(String label) 
+    {
+        this.label = label;
     }
 }

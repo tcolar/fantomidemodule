@@ -15,6 +15,7 @@ import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;
+import net.colar.netbeans.fan.scope.FanAstScopeVarBase.ModifEnum;
 import net.colar.netbeans.fan.scope.FanFieldScopeVar;
 import net.colar.netbeans.fan.scope.FanMethodScopeVar;
 import net.colar.netbeans.fan.scope.FanScopeMethodParam;
@@ -26,6 +27,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.parboiled.buffers.InputBuffer;
 
 /**
  * StructureScanner impl.
@@ -165,9 +167,13 @@ public class FanStructureAnalyzer implements StructureScanner
 
 	@Override
 	public Map<String, List<OffsetRange>> folds(ParserResult result)
-	{  // Note: only seem to be called if no errors in the file
+	{  
 		Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
-		addFolds(folds, ((FanParserTask)result).getAstTree());
+                FanParserTask task = (FanParserTask)result;
+                if(task.getAstTree() != null)
+                {
+                    addFolds(folds, task.getAstTree(), task.getParsingResult().inputBuffer);
+                }
 		return folds;
 	}
 
@@ -180,23 +186,23 @@ public class FanStructureAnalyzer implements StructureScanner
 	{
 		for (FanAstScopeVarBase.ModifEnum modif : modifs)
 		{
-			if (modif == modif.STATIC)
+			if (modif == ModifEnum.STATIC)
 			{
 				item.addModifier(Modifier.STATIC);
-			} else if (modif == modif.PRIVATE)
+			} else if (modif == ModifEnum.PRIVATE)
 			{
 				item.addModifier(Modifier.PRIVATE);
-			} else if (modif == modif.PUBLIC)
+			} else if (modif == ModifEnum.PUBLIC)
 			{
 				item.addModifier(Modifier.PUBLIC);
-			} else if (modif == modif.PROTECTED)
+			} else if (modif == ModifEnum.PROTECTED)
 			{
 				item.addModifier(Modifier.PROTECTED);
 			}
 		}
 	}
 
-	private void addFolds(Map<String, List<OffsetRange>> folds, AstNode node)
+	private void addFolds(Map<String, List<OffsetRange>> folds, AstNode node, InputBuffer buffer)
 	{
 		if (node != null)
 		{
@@ -218,12 +224,12 @@ public class FanStructureAnalyzer implements StructureScanner
 
 			if (foldable)
 			{
-				int start = node.getStartLocation().getRow();
-				int end = node.getEndLocation().getRow();
+				int startLine = buffer.getPosition(node.getStartIndex()).line;
+				int endLine = buffer.getPosition(node.getEndIndex()).line;
 				// don't add unless at least 2 line long
-				if (start<end)
+				if (startLine < endLine)
 				{
-					OffsetRange range = new OffsetRange(node.getStartLocation().getIndex(), node.getEndLocation().getIndex());
+					OffsetRange range = new OffsetRange(node.getStartIndex(), node.getEndIndex());
 					List<OffsetRange> fold = folds.get(type);
 					if (fold == null)
 					{
@@ -236,7 +242,7 @@ public class FanStructureAnalyzer implements StructureScanner
 			// recurse into children
 			for (AstNode subNode : node.getChildren())
 			{
-				addFolds(folds, subNode);
+				addFolds(folds, subNode, buffer);
 			}
 		}
 	}

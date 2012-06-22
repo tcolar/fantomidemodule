@@ -45,7 +45,7 @@ public class FanAddUsingFix implements HintFix
         AstNode node= FanLexAstUtils.getFirstChildRecursive(root, new NodeKindPredicate(AstKind.AST_USING));
         if(node != null)
         {
-            insertIndex = node.getStartLocation().getIndex();
+            insertIndex = node.getStartIndex();
             ctx.doc.insertString(insertIndex, "using "+using+"\n", null);
             return;
         }
@@ -53,7 +53,7 @@ public class FanAddUsingFix implements HintFix
         // no existing using, then add before first typedef
         node = FanLexAstUtils.getFirstChildRecursive(root, new NodeKindPredicate(AstKind.AST_TYPE_DEF));
         if(node!=null)
-            insertIndex = node.getStartLocation().getIndex();
+            insertIndex = node.getStartIndex();
 
         ctx.doc.insertString(insertIndex, "using "+using+"\n\n", null);
     }

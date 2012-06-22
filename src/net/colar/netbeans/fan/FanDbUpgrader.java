@@ -7,7 +7,6 @@ package net.colar.netbeans.fan;
 import java.io.File;
 import net.jot.logger.JOTLogger;
 import net.jot.persistance.JOTDBUpgrader;
-import net.jot.utils.JOTUtilities;
 
 /**
  * Handles DB upgrades
@@ -16,7 +15,7 @@ import net.jot.utils.JOTUtilities;
 public class FanDbUpgrader extends JOTDBUpgrader
 {
     // Change  when DB tables are chnage(incompatible) or want to force deletin of all tables
-    private int VERSION = 6;
+    private int VERSION = 7;
 
     @Override
     public void upgradeDb(String dbName, int fromVersion) throws Exception

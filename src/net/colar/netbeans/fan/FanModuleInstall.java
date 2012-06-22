@@ -28,7 +28,18 @@ public class FanModuleInstall extends ModuleInstall
 
     public static final String PROP_PREF_FILE_VERSION = "nb.fantom.prefs.version";
     public static final int PREF_VERSION = 2;
+    private final boolean startIndexer;
 
+    public FanModuleInstall()
+    {
+        this(true);
+    }
+
+    public FanModuleInstall(boolean startIndexer)
+    {
+        this.startIndexer = startIndexer;
+    }
+    
     /**
      * Startup
      */
@@ -65,7 +76,7 @@ public class FanModuleInstall extends ModuleInstall
         }
 
         //start indexer
-        if (FanPlatform.isConfigured())
+        if (startIndexer && FanPlatform.isConfigured())
         {
             // run in a thread, so that startup continues
             new Thread()

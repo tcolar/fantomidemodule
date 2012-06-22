@@ -125,21 +125,11 @@ public abstract class FanAction {
                 fanExec.setWorkingDirectory(path);
             }
 
-            FanPlatform.getInstance().buildFanCall(project, fanExec, debug, FanPlatform.getTalesExtraClasspath());
-
-            if (tales) {
-                String talesPath = "NO_TALES_PATH";
-                if (FanPlatform.getInstance().isTalesPresent()) {
-                    talesPath = FanPlatform.getInstance().getTalesHome().getPath();
-                }
-                fanExec.addEnvVar("FAN_ENV", "util::PathEnv");
-                fanExec.addEnvVar("FAN_ENV_PATH", talesPath);
-            }
+            FanPlatform.getInstance().buildFanCall(project, fanExec, debug, "");
 
             fanExec.addCommandArg(FanPlatform.FAN_CLASS);
             if (tales) {
                 fanExec.addCommandArg(FanPlatform.FAN_TALES_POD_NAME);
-                fanExec.addCommandArg(FileUtil.toFile(file).getAbsolutePath());
                 fanExec.addCommandArg(FanPlatform.FAN_TALES_RUN_CMD);
             } else {
                 fanExec.addCommandArg(target);
@@ -205,7 +195,7 @@ public abstract class FanAction {
         }
         FileObject file = findTargetProject(lookup);
         FanProjectProperties props = project.getLookup().lookup(FanProjectProperties.class);
-        boolean tales = FanPlatform.getInstance().isTalesPresent() && props.isIsTalesProject();
+        boolean tales = props.isIsTalesProject();
         if (file != null) {
             FileObject buildFile = file.getFileObject(FanBuildFileHelper.BUILD_FILE);
             if (buildFile != null) {
@@ -213,12 +203,7 @@ public abstract class FanAction {
                 FanExecution fanExec = new FanExecution();
                 fanExec.setDisplayName(getProjectName(lookup));
                 fanExec.setWorkingDirectory(path);
-                FanPlatform.getInstance().buildFanCall(project, fanExec, false, FanPlatform.getTalesExtraClasspath());
-                if (tales) {
-                    String talesPath = FanPlatform.getInstance().getTalesHome().getPath();
-                    fanExec.addEnvVar("FAN_ENV", "util::PathEnv");
-                    fanExec.addEnvVar("FAN_ENV_PATH", talesPath);
-                }
+                FanPlatform.getInstance().buildFanCall(project, fanExec, false, "");
                 fanExec.addCommandArg(FanPlatform.FAN_CLASS);
                 fanExec.addCommandArg(FanBuildFileHelper.BUILD_FILE);
                 fanExec.addCommandArg(target);

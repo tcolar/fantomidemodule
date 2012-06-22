@@ -24,66 +24,57 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.parboiled.Node;
 
 /**
- * The semantic Analyzer looks at the structure(AST tree),
- * and uses this to highlight source items,
- * display semantic errors and so on.
+ * The semantic Analyzer looks at the structure(AST tree), and uses this to
+ * highlight source items, display semantic errors and so on.
+ *
  * @author thibautc
  */
-public class FanSemanticAnalyzer extends SemanticAnalyzer
-{
+public class FanSemanticAnalyzer extends SemanticAnalyzer {
 
     private Map<OffsetRange, Set<ColoringAttributes>> highlights = null;
     // not nearly perfect
     private static final Pattern INTERPOLATION = Pattern.compile("[^\\\\]\\$\\{?[a-zA-Z0-9\\.\\(\\)]*\\}?");
 
     @Override
-    public Map getHighlights()
-    {
+    public Map getHighlights() {
         return highlights;
     }
 
     @Override
-    public void run(Result result, SchedulerEvent event)
-    {
+    public void run(Result result, SchedulerEvent event) {
         FanParserTask res = (FanParserTask) result;
 
         Map<OffsetRange, Set<ColoringAttributes>> newHighlights = new HashMap<OffsetRange, Set<ColoringAttributes>>();
-        if (res.getParseNodeTree() != null)
-        {
+        if (res.getParseNodeTree() != null) {
             scanTree(res, res.getAstTree(), newHighlights);
             highlights = newHighlights.size() == 0 ? null : newHighlights;
         }
     }
 
     @Override
-    public int getPriority()
-    {
+    public int getPriority() {
         return 0;
     }
 
     @Override
-    public Class<? extends Scheduler> getSchedulerClass()
-    {
+    public Class<? extends Scheduler> getSchedulerClass() {
         return Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER;
     }
 
     /**
      * Run though AST tree and highlight relevant items
+     *
      * @param ast
      * @param newHighlights
      */
-    private void scanTree(FanParserTask result, AstNode node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights)
-    {
+    private void scanTree(FanParserTask result, AstNode node, Map<OffsetRange, Set<ColoringAttributes>> newHighlights) {
         //System.out.println("Node Lbl: "+node.getLabel()+" "+TokenName.STRS.name());
-        if (node != null)
-        {
-            switch (node.getKind())
-            {
+        if (node != null) {
+            switch (node.getKind()) {
                 case AST_EXPR_LIT_BASE:
                     if (node.getType().isResolved()
-                            && node.getType().getQualifiedType().equalsIgnoreCase("sys::Str"))
-                    {
-                        addStrHighlights(result, newHighlights, node.getParseNode());
+                            && node.getType().getQualifiedType().equalsIgnoreCase("sys::Str")) {
+                        addStrHighlights(result, newHighlights, node);
                     }
                     break;
                 case AST_TYPE_DEF:
@@ -106,53 +97,43 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
             }
         }
 
-        // recurse into subnodes
-        for (AstNode subNode : node.getChildren())
-        {
-            scanTree(result, subNode, newHighlights);
+        if (node != null) {
+            // recurse into subnodes
+            for (AstNode subNode : node.getChildren()) {
+                scanTree(result, subNode, newHighlights);
+            }
         }
     }
 
-    private void addIdToHighlights(FanParserTask result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, AstNode node, EnumSet<ColoringAttributes> colorAttributes)
-    {
+    private void addIdToHighlights(FanParserTask result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, AstNode node, EnumSet<ColoringAttributes> colorAttributes) {
         // We can't mess the enumset, so work of a copy (slower though)
         Set<ColoringAttributes> newAttributes = EnumSet.copyOf(colorAttributes);
         @SuppressWarnings("unchecked")
         AstNode idNode = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_ID));
-        if (hasModifier(node, "static"))
-        {
+        if (hasModifier(node, "static")) {
             newAttributes.add(ColoringAttributes.STATIC);
-        } else if (hasModifier(node, "override"))
-        {
+        } else if (hasModifier(node, "override")) {
             newAttributes.add(ColoringAttributes.CUSTOM1);
         }
 
         addToHighlights(result, newHighlights, idNode, newAttributes);
     }
 
-    private void addToHighlights(FanParserTask result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, AstNode node, Set<ColoringAttributes> colorAttributes)
-    {
-        if (node != null)
-        {
+    private void addToHighlights(FanParserTask result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, AstNode node, Set<ColoringAttributes> colorAttributes) {
+        if (node != null) {
             OffsetRange range = node.getRelevantTextRange();
-            if (range != null)
-            {
+            if (range != null) {
                 newHighlights.put(range, colorAttributes);
             }
         }
 
     }
 
-    private static boolean hasModifier(AstNode node, String modifier)
-    {
-        if (node != null)
-        {
-            for (AstNode subNode : node.getChildren())
-            {
-                if (subNode.getKind() == AstKind.AST_MODIFIER)
-                {
-                    if (subNode.getNodeText(true).contains(modifier))
-                    {
+    private static boolean hasModifier(AstNode node, String modifier) {
+        if (node != null) {
+            for (AstNode subNode : node.getChildren()) {
+                if (subNode.getKind() == AstKind.AST_MODIFIER) {
+                    if (subNode.getNodeText(true).contains(modifier)) {
                         return true;
                     }
                 }
@@ -164,14 +145,12 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
     /**
      * Highlight interpolated variables in Strings
      */
-    private void addStrHighlights(FanParserTask result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, Node<AstNode> node)
-    {
-        OffsetRange strRange = FanLexAstUtils.getNodeRange(node);
-        String str = FanLexAstUtils.getNodeText(node, result.getParsingResult().inputBuffer);
+    private void addStrHighlights(FanParserTask result, Map<OffsetRange, Set<ColoringAttributes>> newHighlights, AstNode node) {
+        OffsetRange strRange = node.getRelevantTextRange();
+        String str = node.getNodeText(true);
         //System.out.println("interpolation : " + str);
         Matcher matcher = INTERPOLATION.matcher(str);
-        while (matcher.find())
-        {
+        while (matcher.find()) {
             int start = strRange.getStart() + matcher.start();
             int end = strRange.getStart() + matcher.end();
             OffsetRange range = new OffsetRange(start, end);
@@ -180,8 +159,7 @@ public class FanSemanticAnalyzer extends SemanticAnalyzer
     }
 
     @Override
-    public void cancel()
-    {
+    public void cancel() {
         //throw new UnsupportedOperationException("Not supported yet.");
         //TODO
     }

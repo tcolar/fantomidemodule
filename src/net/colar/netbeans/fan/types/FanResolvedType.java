@@ -921,7 +921,7 @@ public class FanResolvedType implements Cloneable
         for (AstNode child : expr.getChildren())
         {
             // If we foud the call node, stop here (keep the previous node type)
-            if (child.getStartLocation().getIndex() >= callNode.getStartLocation().getIndex())
+            if (child.getStartIndex() >= callNode.getStartIndex())
             {
                 break;
             }

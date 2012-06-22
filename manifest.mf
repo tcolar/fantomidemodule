@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: net.colar.netbeans.fan/1
 OpenIDE-Module-Layer: net/colar/netbeans/fan/layer.xml
 OpenIDE-Module-Localizing-Bundle: net/colar/netbeans/fan/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.7.6
+OpenIDE-Module-Specification-Version: 1.7.8
 OpenIDE-Module-Install: net/colar/netbeans/fan/FanModuleInstall.class

@@ -3,107 +3,112 @@
  */
 package net.colar.netbeans.fan.parboiled;
 
+import java.util.List;
 import net.colar.netbeans.fan.FanParserTask;
 import org.parboiled.BaseActions;
+import org.parboiled.ContextAware;
 import org.parboiled.Node;
+import org.parboiled.matchers.Matcher;
+import org.parboiled.support.ValueStack;
 
 /**
  * Utility actions for creating Parser AST nodes.
+ *
  * @author thibautc
  */
-public class FantomParserAstActions extends BaseActions<AstNode>
-{
+public class FantomParserAstActions extends BaseActions<AstNode> implements ContextAware<AstNode> {
 
-  int id = 1;
+    int id = 1;
 
-  /**
-   * Store temp. orphaned(no parent) node while the AST is being built (bottom-up)
-   */
-  //public List<AstNode> orphanNodes = new ArrayList<AstNode>();
-  /**
-   * Utility to create a new AST Node from the last parsed Node (LAT_NODE())
-   * The new ASTNode gets set as the Value() of the parseNode (set())
-   * The new Node gets properly linked with it's parent/children Nodes automatically
-   * @param name
-   * @return
-   */
-  public boolean newNode(AstKind kind)
-  {
-    Node<AstNode> parseNode = lastNode(); 
-    //System.out.println("New node:"+id+" "+kind);
-    AstNode node = new AstNode(id++, kind, getPath(), parseNode, lastText());
-    set(node);
-    //System.out.println(node+" : "+lastText());
-    return true;
-  }
-
-  /**
-   * Create a node that defines a scope (holds scope vars)
-   * @param kind
-   * @return
-   */
-  public boolean newScopeNode(AstKind kind)
-  {
-    Node<AstNode> parseNode = lastNode();
-    //System.out.println("New scope node:"+id+" "+kind);
-    AstNode node = new AstNode(id++, kind, getPath(), parseNode, lastText());
-    node.setIsScopeNode();
-    set(node);
-    return true;
-  }
-
-  /**
-   * Create the root node
-   * @param kind
-   * @return
-   */
-  public boolean newRootNode(AstKind kind, FanParserTask task)
-  {
-    Node<AstNode> parseNode = lastNode();
-    RootNode node = new RootNode(kind, getPath(), parseNode, task);
-    node.setIsScopeNode();
-    set(node);
-    return true;
-  }
-
-  public static void linkNodes(Node<AstNode> rootNode, AstNode astRoot)
-  {
-    if (rootNode == null || astRoot == null)
-    {
-      return;
+    /**
+     * Store temp. orphaned(no parent) node while the AST is being built
+     * (bottom-up)
+     */
+    //public List<AstNode> orphanNodes = new ArrayList<AstNode>();
+    /**
+     * Utility to create a new AST Node from the last parsed Node The new
+     * ASTNode gets set as the Value() of the parseNode (set()) The new Node
+     * gets properly linked with it's parent/children Nodes automatically
+     *
+     * @param name
+     * @return
+     */
+    public boolean litNode(AstKind kind) {
+        AstNode node = new AstNode(id++, kind, getContext());
+        if (getContext().getSubNodes().size() > 0) {
+            Node<AstNode> nodes = getContext().getSubNodes().get(0); //firstoff
+            if (nodes.getChildren().size() > 0) {
+                node.setLabel(nodes.getChildren().get(0).getLabel());
+            }
+        }
+        push(node);
+        return true;
     }
-    for (Node<AstNode> sub : rootNode.getChildren())
-    {
-      AstNode astNode = sub.getValue();
-      //System.out.println("nd: "+astNode);
-      if (astNode != null)
-      {
-        // In parboiled getValue 'bubbles up' the value from teh children, we want to connect the 'actual' value node
-        boolean skip = false;
-        int id = astNode.getId();
-        for(Node<AstNode> baby : sub.getChildren())
-        {
-          if(baby.getValue()!=null && baby.getValue().getId() == id)
-            skip = true;
-        }
-        // If this is a bubbled up value, just keep going down the tree
-        if ( skip )
-        {
-          linkNodes(sub, astRoot);
-        }
-        else
-        {
-          // Otherwise link the AST child & parent together
-          astRoot.addChild(astNode);
-          astNode.setParent(astRoot);
-          linkNodes(sub, astNode);
-        }
-      }
-    }
-  }
 
-  public String getPath()
-  {
-    return getContext().getPath().toString() + "/" + lastNode().getLabel();
-  }
+    public boolean newNode(AstKind kind) {
+        AstNode node = new AstNode(id++, kind, getContext());
+        push(node);
+        return true;
+    }
+
+    /**
+     * Create a node that defines a scope (holds scope vars)
+     *
+     * @param kind
+     * @return
+     */
+    public boolean newScopeNode(AstKind kind) {
+        AstNode node = new AstNode(id++, kind, getContext());
+        node.setIsScopeNode();
+        push(node);
+        return true;
+    }
+
+    /**
+     * Create the root node
+     *
+     * @param kind
+     * @return
+     */
+    public boolean newRootNode(AstKind kind, FanParserTask task) {
+        AstNode node = new RootNode(kind, getContext(), task);
+        push(node);
+        return true;
+    }
+
+    public static void linkNodes(ValueStack<AstNode> stack) {
+        AstNode prev = null;
+        while (!stack.isEmpty()) {
+            AstNode node = stack.pop();
+            if (prev != null) {
+                AstNode parent = prev;
+                while (!(node.getStartIndex() <= parent.getEndIndex()
+                        && node.getStartIndex() >= parent.getStartIndex())) {
+                    parent = parent.getParent();
+                }
+                //System.out.println("Tying "+node+" to parent: "+parent);
+                int index = -1;
+                List<AstNode> children = parent.getChildren();
+                if( ! children.isEmpty())
+                {
+                    for(int i=0; i!=children.size(); i++)
+                    {
+                        if(node.getStartIndex() > children.get(i).getStartIndex())
+                        {
+                            index = i;
+                            break;
+                        }
+                    }
+                }
+                parent.addChildAt(node, index+1);
+                node.setParent(parent);
+            }
+            prev = node;
+        }
+
+    }
+
+    public String getPath() {
+        return getContext().getPath().toString() + "/" + "??";
+    }
 }

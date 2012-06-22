@@ -22,15 +22,13 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 /**
- * Provides acces to "plaform" settings
- * For exampel FAN_HOME etc...
+ * Provides acces to "plaform" settings For exampel FAN_HOME etc...
+ *
  * @author thibautc
  */
-public class FanPlatform
-{
+public class FanPlatform {
 
     private static boolean configWarningAlreadyDisplayed = false;
-
     private Set<ClassPath> sourcePaths = null;
     public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().indexOf("windows") != -1;
     public static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac");
@@ -47,18 +45,14 @@ public class FanPlatform
     private String fanSrc;
     private String talesHome;
 
-    private FanPlatform()
-    {
+    private FanPlatform() {
         readSettings();
     }
 
-    private void readSettings()
-    {
+    private void readSettings() {
         fanHome = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_FAN_HOME);
-        if (fanHome != null)
-        {
-            if (!fanHome.endsWith(File.separator))
-            {
+        if (fanHome != null) {
+            if (!fanHome.endsWith(File.separator)) {
                 fanHome += File.separator;
             }
             //fanBin = fanHome + "bin" + File.separator + (IS_WIN ? "fan.exe" : "fan");
@@ -66,7 +60,7 @@ public class FanPlatform
             fanSrc = fanHome + "src" + File.separator;
             podsDir = fanHome + "lib" + File.separator + "fan" + File.separator;
 
-            // Set fan.home property, so we casn use Fan code later
+            // Set fan.home property, so we can use Fan code later
             System.setProperty("fan.home", fanHome);
             // boot fan env - sometimes throws an exception !
             Sys.boot();
@@ -77,18 +71,14 @@ public class FanPlatform
         sourcePaths = null;
     }
 
-    public static void updateFromSettings()
-    {
+    public static void updateFromSettings() {
         instance.readSettings();
     }
 
-    public static boolean checkFanHome(String path)
-    {
-        if (path != null && !"".equals(path))
-        {
+    public static boolean checkFanHome(String path) {
+        if (path != null && !"".equals(path)) {
             File f = new File(path);
-            if (f.exists() && f.isDirectory())
-            {
+            if (f.exists() && f.isDirectory()) {
                 File exe = new File(path + File.separator + "bin", "fan");
                 return exe.exists() && exe.isFile();
             }
@@ -96,13 +86,10 @@ public class FanPlatform
         return false;
     }
 
-    public static boolean isConfigured()
-    {
+    public static boolean isConfigured() {
         // send to settings the first time isConfigured is called
-        synchronized (FanPlatform.class)
-        {
-            if (instance.fanHome == null && !configWarningAlreadyDisplayed)
-            {
+        synchronized (FanPlatform.class) {
+            if (instance.fanHome == null && !configWarningAlreadyDisplayed) {
                 configWarningAlreadyDisplayed = true;
                 OptionsDisplayer.getDefault().open(FanMainSettingsController.ID);
             }
@@ -110,46 +97,41 @@ public class FanPlatform
         return instance != null && instance.fanHome != null;
     }
 
-    public static FanPlatform getInstance()
-    {
+    public static FanPlatform getInstance() {
         isConfigured();
         // throw an exception ?
         return instance;
     }
 
-    public String getFanSrcPath()
-    {
+    public String getFanSrcPath() {
         return fanSrc;
     }
 
     /**
      * Add Fan Source items (pods src)
+     *
      * @return
      */
-    public synchronized Set<ClassPath> getSourceClassPaths()
-    {
+    public synchronized Set<ClassPath> getSourceClassPaths() {
         // Do it only once.
-        if (sourcePaths == null && fanSrc != null)
-        {
+        if (sourcePaths == null && fanSrc != null) {
             sourcePaths = new HashSet<ClassPath>();
             File f = new File(fanSrc);
-            File[] files = f.listFiles();
-            for (File file : files)
-            {
-                if (file.isDirectory() && new File(file, "build.fan").exists())
-                {
-                    addFolder(file);
+            if (f.exists()) {
+                File[] files = f.listFiles();
+                for (File file : files) {
+                    if (file.isDirectory() && new File(file, "build.fan").exists()) {
+                        addFolder(file);
+                    }
                 }
             }
-            GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, sourcePaths.toArray(new ClassPath[sourcePaths.size()]));
+            //GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, sourcePaths.toArray(new ClassPath[sourcePaths.size()]));
         }
         return sourcePaths;
     }
 
-    private void addFolder(File folder)
-    {
-        if (folder.exists() && folder.isDirectory())
-        {
+    private void addFolder(File folder) {
+        if (folder.exists() && folder.isDirectory()) {
             ClassPath jcp = ClassPathSupport.createClassPath(folder.getAbsolutePath());
             sourcePaths.add(jcp);
         }
@@ -157,21 +139,21 @@ public class FanPlatform
 
     /**
      * Same as buildFanCall(fanExec, -1);
+     *
      * @param fanExec
      */
-    public void buildFanCall(FanProject project, FanExecution fanExec)
-    {
+    public void buildFanCall(FanProject project, FanExecution fanExec) {
         buildFanCall(project, fanExec, false, null);
     }
 
     /**
      * Updated the FanExecution object such as the fanlaunch shell script would
      * IE: set classpath, library path etc ....
+     *
      * @param fanExec
      * @param debugPort (-1 = no debugger)
      */
-    public void buildFanCall(FanProject project, FanExecution fanExec, boolean enableDebug, String extraClasspath)
-    {
+    public void buildFanCall(FanProject project, FanExecution fanExec, boolean enableDebug, String extraClasspath) {
         // We will be spawning a new java VM
         String separator = System.getProperty("file.separator");
         String path = System.getProperty("java.home") + separator + "bin" + separator + "java";
@@ -191,8 +173,7 @@ public class FanPlatform
         fanExec.addCommandArg("-Dfan.home=" + fanHome);
 
         //Enable debugger
-        if (enableDebug)
-        {
+        if (enableDebug) {
             String debugPort = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_DEBUG_PORT, "8008");
             // java debugger
             fanExec.addCommandArg("-Xdebug");
@@ -204,36 +185,32 @@ public class FanPlatform
         // global options
         String option = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_RUN_OPTIONS, "-Xmx128m");
         String[] options = option.split(" ");
-        for (String opt : options)
-        {
+        for (String opt : options) {
             fanExec.addCommandArg(opt);
         }
 
         // project JVM options
-        if(project!=null)
-        {
-          FanProjectProperties props = project.getLookup().lookup(FanProjectProperties.class);
-          String jvmOption = props.getJvmArgs();
-          String[] jvmOptions = jvmOption.split(" ");
-          for (String opt : jvmOptions)
-          {
-            fanExec.addCommandArg(opt);
-          }
+        if (project != null) {
+            FanProjectProperties props = project.getLookup().lookup(FanProjectProperties.class);
+            String jvmOption = props.getJvmArgs();
+            String[] jvmOptions = jvmOption.split(" ");
+            for (String opt : jvmOptions) {
+                fanExec.addCommandArg(opt);
+            }
         }
-        
+
         //OSX only flag needed for SWT (as in fanlaunch)
-        if (IS_MAC)
-        {
+        if (IS_MAC) {
             fanExec.addCommandArg("-XstartOnFirstThread");
         }
     }
 
     /**
      * Builds fan std classpath (jars)
+     *
      * @return
      */
-    private String buildFanClasspath(String extraClasspath)
-    {
+    private String buildFanClasspath(String extraClasspath) {
         String cp = "";
         String cpSeparator = IS_WIN ? ";" : ":";
         String s = File.separator;
@@ -242,64 +219,52 @@ public class FanPlatform
         // add jars in lib/java/ext
         String extDir = fanHome + "lib" + s + "java" + s + "ext";
         File dir = new File(extDir);
-        if (dir.exists() && dir.isDirectory())
-        {
+        if (dir.exists() && dir.isDirectory()) {
             File[] jars = dir.listFiles();
-            for (File jar : jars)
-            {
-                if (jar.isFile() && jar.getName().toLowerCase().endsWith(".jar"))
-                {
+            for (File jar : jars) {
+                if (jar.isFile() && jar.getName().toLowerCase().endsWith(".jar")) {
                     cp += cpSeparator + extDir + s + jar.getName();
                 }
             }
         }
         // add jars file in lib/java/ext/{os}
         String os = "linux";
-        if (IS_MAC)
-        {
+        if (IS_MAC) {
             os = "mac";
-        } else if (IS_WIN)
-        {
+        } else if (IS_WIN) {
             os = "win";
         }
         extDir += s + os;
         dir = new File(extDir);
-        if (dir.exists() && dir.isDirectory())
-        {
+        if (dir.exists() && dir.isDirectory()) {
             File[] jars = dir.listFiles();
-            for (File jar : jars)
-            {
-                if (jar.isFile() && jar.getName().toLowerCase().endsWith(".jar"))
-                {
+            for (File jar : jars) {
+                if (jar.isFile() && jar.getName().toLowerCase().endsWith(".jar")) {
                     cp += cpSeparator + extDir + s + jar.getName();
                 }
             }
         }
-        if(extraClasspath != null)
-            cp +=cpSeparator + extraClasspath;
+        if (extraClasspath != null) {
+            cp += cpSeparator + extraClasspath;
+        }
         return cp;
     }
 
-    private String buildLibraryPath()
-    {
+    private String buildLibraryPath() {
         String s = File.separator;
         String extDir = fanHome + "lib" + s + "java" + s + "ext";
         String os = "linux";
-        if (IS_MAC)
-        {
+        if (IS_MAC) {
             os = "mac";
-        } else if (IS_WIN)
-        {
+        } else if (IS_WIN) {
             os = "win";
         }
         extDir += s + os;
         return extDir;
     }
 
-    public FileObject getFanHome()
-    {
-        if ("".equals(fanHome) || fanHome == null)
-        {
+    public FileObject getFanHome() {
+        if ("".equals(fanHome) || fanHome == null) {
             JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Options/Misc - Fantom Tab");
             return null;
         }
@@ -307,26 +272,8 @@ public class FanPlatform
         return FileUtil.toFileObject(FileUtil.normalizeFile(f));
     }
 
-    public FileObject getTalesHome()
-    {
-        if ("".equals(talesHome) || talesHome == null)
-        {
-            JOptionPane.showMessageDialog(null, "Tales path is not defined\nDefine in Options/Misc - Fantom Tab");
-            return null;
-        }
-        File f = new File(talesHome);
-        return FileUtil.toFileObject(FileUtil.normalizeFile(f));
-    }
-
-    public boolean isTalesPresent()
-    {
-        return talesHome != null && talesHome.length() > 0 && new File(talesHome).exists();
-    }
-
-    public FileObject getFanSrcHome()
-    {
-        if ("".equals(fanHome) || fanHome == null)
-        {
+    public FileObject getFanSrcHome() {
+        if ("".equals(fanHome) || fanHome == null) {
             JOptionPane.showMessageDialog(null, "Fantom SDK path is not defined\nDefine in Tools|Options, Fantom Tab");
             return null;
         }
@@ -334,41 +281,13 @@ public class FanPlatform
         return FileUtil.toFileObject(FileUtil.normalizeFile(f));
     }
 
-    public static void update()
-    {
+    public static void update() {
         // called when FAN_HOME is changed/updated.
         updateFromSettings();
         FanIndexerFactory.getIndexer().indexAll(true);
     }
 
-    public String getPodsDir()
-    {
+    public String getPodsDir() {
         return podsDir;
     }
-
-    public static String getTalesExtraClasspath()
-    {
-        String cp = "";
-        if (FanPlatform.isConfigured() && FanPlatform.getInstance().isTalesPresent())
-        {
-            String cpSeparator = FanPlatform.IS_WIN ? ";" : ":";
-            String s = File.separator;
-            // add jars in tales_home/jars
-            String jarDir = FanPlatform.getInstance().getTalesHome().getPath() + s + "jars";
-            File dir = new File(jarDir);
-            if (dir.exists() && dir.isDirectory())
-            {
-                File[] jars = dir.listFiles();
-                for (File jar : jars)
-                {
-                    if (jar.isFile() && jar.getName().toLowerCase().endsWith(".jar"))
-                    {
-                        cp += cpSeparator + jarDir + s + jar.getName();
-                    }
-                }
-            }
-        }
-        return cp;
-    }
-
 }

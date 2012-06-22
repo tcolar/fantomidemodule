@@ -224,14 +224,14 @@ public class FanAddFieldDialog extends javax.swing.JDialog
 
                         if (fieldNode != null)
                         {
-                            baseDoc.insertString(fieldNode.getStartLocation().getIndex(), str + "\n" + indentStr, null);
-                            UiUtils.open(fo, fieldNode.getStartLocation().getIndex());
+                            baseDoc.insertString(fieldNode.getStartIndex(), str + "\n" + indentStr, null);
+                            UiUtils.open(fo, fieldNode.getStartIndex());
                             return;
                         }
                         // Otherwise add at top of type block (after bracket)
-                        baseDoc.insertString(blockNode.getStartLocation().getIndex() + 1, "\n" + indentStr + str + "\n", null);
+                        baseDoc.insertString(blockNode.getStartIndex() + 1, "\n" + indentStr + str + "\n", null);
                         // Put the cursor there (open the file if necessary)
-                        UiUtils.open(fo, blockNode.getStartLocation().getIndex() + 1);
+                        UiUtils.open(fo, blockNode.getStartIndex() + 1);
                     }
                 }
             } catch (BadLocationException e)

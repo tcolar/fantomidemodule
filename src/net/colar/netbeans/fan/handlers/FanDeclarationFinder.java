@@ -32,7 +32,7 @@ public class FanDeclarationFinder implements DeclarationFinder
         FanParserTask task = (FanParserTask) result;
         AstNode rootNode = task.getAstTree();
         AstNode curNode = FanLexAstUtils.findASTNodeAt(rootNode, caretOffset);
-        String text = FanLexAstUtils.getNodeText(curNode.getParseNode(), task.getParsingResult().inputBuffer).trim();
+        String text = curNode.getText().trim();
 
         AstNode scopeNode = FanLexAstUtils.getScopeNode(curNode);
 
@@ -46,7 +46,7 @@ public class FanDeclarationFinder implements DeclarationFinder
             {
                 AstNode nd = var.getType().getScopeNode();
                 FileObject fo = task.getSourceFile();
-                return new DeclarationLocation(fo, nd.getStartLocation().getIndex());
+                return new DeclarationLocation(fo, nd.getStartIndex());
             }
         }
 

@@ -65,15 +65,7 @@ public final class FanTalesProjectWizardIterator implements WizardDescriptor.Ins
         fanExec.setDisplayName("Tales " + projectName);
         fanExec.setWorkingDirectory(location);
 
-        String talesPath = "NO_TALES_PATH";
-        if (FanPlatform.getInstance().isTalesPresent())
-        {
-            talesPath = FanPlatform.getInstance().getTalesHome().getPath();
-        }
-        fanExec.addEnvVar("FAN_ENV", "util::PathEnv");
-        fanExec.addEnvVar("FAN_ENV_PATH", talesPath);
-
-        FanPlatform.getInstance().buildFanCall(null, fanExec, false, FanPlatform.getTalesExtraClasspath());
+        FanPlatform.getInstance().buildFanCall(null, fanExec, false, "");
 
         fanExec.addCommandArg(FanPlatform.FAN_CLASS);
         fanExec.addCommandArg(FanPlatform.FAN_TALES_POD_NAME);
