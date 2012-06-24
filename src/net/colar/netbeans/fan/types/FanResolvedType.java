@@ -471,7 +471,7 @@ public class FanResolvedType implements Cloneable
                 FanResolvedType valType = makeFromTypeSig(scopeNode, sig.substring(index + 1).trim());
                 type = new FanResolvedMapType(scopeNode, keyType, valType);
             }
-        } else if (sig.startsWith("|") && sig.endsWith("|"))
+        } else if (sig.length()>1 && sig.startsWith("|") && sig.endsWith("|"))
         {
             Vector<FanResolvedType> types = new Vector<FanResolvedType>();
             sig = sig.substring(1, sig.length() - 1);

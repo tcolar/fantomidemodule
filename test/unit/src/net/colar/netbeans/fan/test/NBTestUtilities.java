@@ -110,7 +110,7 @@ public class NBTestUtilities {
      */
     static void warmupParser() {
         try {
-            new FanParserTask(textToSnapshot("class Dummy{Void dummyMethod(){a := 23.abs}}", "text/fan")).parse(true, 2);
+            new FanParserTask(textToSnapshot("class Dummy{Void dummyMethod(){a := 23.abs}}", "text/fan")).parse(true, 2000);
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }

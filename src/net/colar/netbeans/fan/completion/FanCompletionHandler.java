@@ -25,7 +25,6 @@ import net.colar.netbeans.fan.indexer.model.FanType;
 import net.colar.netbeans.fan.parboiled.AstKind;
 import net.colar.netbeans.fan.parboiled.AstNode;
 import net.colar.netbeans.fan.parboiled.FanLexAstUtils;
-import net.colar.netbeans.fan.parboiled.FantomParser;
 import net.colar.netbeans.fan.parboiled.pred.NodeKindPredicate;
 import net.colar.netbeans.fan.project.FanBuildFileHelper;
 import net.colar.netbeans.fan.scope.FanAstScopeVarBase;

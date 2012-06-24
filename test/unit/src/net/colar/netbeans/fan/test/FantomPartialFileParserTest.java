@@ -65,7 +65,7 @@ public class FantomPartialFileParserTest extends FantomCSLTest
 		try
 		{
 			task = new FanParserTask(snap);
-			task.parse(false, 60);
+			task.parse(false, 2000);
 			task.parseGlobalScope();
 			task.parseLocalScopes();
 			JOTTester.checkIf("Parser errors ?", ! task.hasGlobalError());

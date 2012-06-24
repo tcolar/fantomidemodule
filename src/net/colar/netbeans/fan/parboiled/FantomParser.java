@@ -40,7 +40,6 @@ public class FantomParser extends FantomLexer
     boolean noSimpleMap = false; // to disallow ambigous simpleMaps in certain situations (within another map, ternaryExpr)
     /**Parse task that kicked in this parser*/
     final FanParserTask parserTask;
-    public boolean cancel;
     public boolean quickScan = false; // allows for top level ony parsing (slot defs)
 
     public FantomParser(FanParserTask parserTask)
@@ -343,6 +342,10 @@ public class FantomParser extends FantomLexer
     // ------------ Statements -------------------------------------------------
     public Rule block()
     {
+        if(cancel)
+        {
+            throw new RuntimeException("Parser cancelled");
+        }
         return Sequence(OPT_LF(), FirstOf(
                 Sequence(BRACKET_L, ZeroOrMore(stmt()), OPT_LF(), BRACKET_R),
                 stmt() // single statement
@@ -351,6 +354,9 @@ public class FantomParser extends FantomLexer
 
     public Rule stmt()
     {
+        if(cancel){
+            throw new RuntimeException("Parser cancelled");
+        }
         return Sequence(TestNot(BRACKET_R), OPT_LF(),
                 FirstOf(
                 Sequence(KW_BREAK, eos()),
@@ -702,6 +708,9 @@ public class FantomParser extends FantomLexer
 
     public Rule litteralBase()
     {
+        if(cancel){
+            throw new RuntimeException("Parser cancelled!");
+        }
         return Sequence(FirstOf(KW_NULL.label("null"), KW_THIS.label("this"), KW_SUPER.label("super"), 
                 KW_IT.label("it"), KW_TRUE.label("true"), KW_FALSE.label("false"),
                 strs(), uri(), number(), char_())
@@ -926,12 +935,6 @@ public class FantomParser extends FantomLexer
     {
         System.out.println(getContext().getPath());
         return true;
-    }
-
-    public void cancel()
-    {
-        System.out.println("cancel called!");
-        cancel = true;
     }
 
     // for unit tsting

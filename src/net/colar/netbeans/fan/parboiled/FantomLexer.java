@@ -15,6 +15,8 @@ import org.parboiled.annotations.SuppressSubnodes;
 @BuildParseTree
 public class FantomLexer extends BaseParser<AstNode> {
 
+    public boolean cancel;
+    
     // ============ Simulate a lexer ===========================================
     // This should just create tokens for the items we want to highlight(color) in the IDE
     // It should be able to deal with "Anything" and not ever fail if possible.
@@ -108,6 +110,10 @@ public class FantomLexer extends BaseParser<AstNode> {
     @SuppressSubnodes
     public Rule whiteSpace()
     {
+        // checking this somewhere that is likely to be called a lot
+        if(cancel){
+            throw new RuntimeException("Parser cancelled!");
+        }
         return OneOrMore(AnyOf(" \t\u000c")).label(FantomLexerTokens.TokenName.WHITESPACE.name());
     }
     
@@ -386,4 +392,15 @@ public class FantomLexer extends BaseParser<AstNode> {
     
     // shortcut for Optional spacing
     public final Rule OPT_SP = Optional(spacing());
+    
+    /**
+     * Trying to cancel a running parser
+     */
+    public void cancel()
+    {
+        System.out.println("cancelling parser!");
+        cancel = true;
+    }
+
+
 }

@@ -85,7 +85,7 @@ public class ParserTestingUi extends JFrame implements ActionListener{
                 long start = new Date().getTime();
                 FanParserTask result = new FanParserTask(snapshot);
                 long start2 = new Date().getTime();
-                result.parse(true, 10);
+                result.parse(true, 10000);
                 long start3 = new Date().getTime();
                 if(!result.getDiagnostics().isEmpty())
                 {

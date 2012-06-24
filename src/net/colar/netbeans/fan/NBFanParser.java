@@ -39,13 +39,14 @@ public class NBFanParser extends Parser {
     }
 
     public void parse(Snapshot snapshot, boolean isIndexing) {
-        System.out.println("> indexing of "+snapshot.getSource().getFileObject().getPath());
+        System.out.println("> Parsing of "+snapshot.getSource().getFileObject().getPath());
         result = new FanParserTask(snapshot);
-        result.parse(isIndexing, 60);
+        result.parse(isIndexing, 2000);
         result.parseGlobalScope();
         if (!isIndexing) {
             result.parseLocalScopes();
         }
+        System.out.println("< Parsing of "+snapshot.getSource().getFileObject().getPath());
     }
 
     @Override

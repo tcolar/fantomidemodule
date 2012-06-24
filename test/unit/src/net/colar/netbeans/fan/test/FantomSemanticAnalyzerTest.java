@@ -82,7 +82,7 @@ public class FantomSemanticAnalyzerTest extends FantomCSLTest {
     }
 
     public static boolean analyze(FanParserTask task) throws Exception {
-        task.parse(false, 30);
+        task.parse(false, 2000);
         task.parseGlobalScope();
         task.parseLocalScopes();
         FanSemanticAnalyzer analyzer = new FanSemanticAnalyzer();

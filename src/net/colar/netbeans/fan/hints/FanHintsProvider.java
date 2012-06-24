@@ -109,7 +109,7 @@ public class FanHintsProvider implements HintsProvider
                 break;
                  */
                 default:
-                    System.err.println("Unknown key: " + key.name());
+                    //System.err.println("Unknown key: " + key.name());
             }
         }
 

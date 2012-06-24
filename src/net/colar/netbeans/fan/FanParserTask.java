@@ -52,6 +52,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.parboiled.Context;
 import org.parboiled.Node;
 import org.parboiled.Parboiled;
 import org.parboiled.errors.ErrorUtils;
@@ -144,9 +145,9 @@ public class FanParserTask extends ParserResult {
 
     public void addGlobalError(String title, Throwable t) {
         // "High level error"
+        t.printStackTrace();
         Error error = DefaultError.createDefaultError(FanParserErrorKey.GLOBAL_ERROR.name(), title, title, null, 0, 0, true, Severity.ERROR);
         errors.add(error);
-
     }
 
     /**
@@ -185,7 +186,7 @@ public class FanParserTask extends ParserResult {
      * Parse the file (using parboiled FantomParser)
      */
     @SuppressWarnings(value = "unchecked")
-    public void parse(boolean quickScan, int secondsTimeout) {
+    public void parse(boolean quickScan, int msTimeout) {
         long start = new Date().getTime();
         System.out.println("Starting parsing of: " + sourceName);
 
@@ -194,24 +195,25 @@ public class FanParserTask extends ParserResult {
             try {
                 runner = new CancellableRecoveringParserRunner<ParsingResult>(parser.compilationUnit(), getSnapshot().getText().toString());
                 parsingTask = runner.start();
-                parsingResult = parsingTask.get(secondsTimeout, TimeUnit.SECONDS);
+                parsingResult = parsingTask.get(msTimeout, TimeUnit.MILLISECONDS);
             } catch (ParserCancelledError e) {
+                addGlobalError("Parsing was cancelled " + e, e);
                 cleanup();
                 return;
             } catch (CancellationException e) {
+                addGlobalError("Parsing was cacdelled. " + e, e);
                 cleanup();
                 return;
             } catch (ExecutionException e) {
-                //System.out.print("Error while parsing !!");
-                //e.printStackTrace();
+                addGlobalError("Parsing execution failed " + e, e);
                 cleanup();
                 return;
             } catch (InterruptedException e) {
+                addGlobalError("Parsing task was interrupted " + e, e);
                 cleanup();
                 return;
             } catch (Throwable e) {
-                //System.out.print("Error while parsing !!");
-                //e.printStackTrace();
+                addGlobalError("Parsing error " + e, e);
                 cleanup();
                 Runtime.getRuntime().gc();
                 return;
@@ -242,9 +244,28 @@ public class FanParserTask extends ParserResult {
     }
 
     private void cleanup() {
+        if (parser != null) {
+            boolean died = false;
+            try {
+                parser.cancel();
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                died = true;
+                System.err.println("Parser was cancelled properly : "+e);
+            }
+            if ( ! died) {
+                Context<AstNode> ctx = parser.getContext();
+                System.err.println("Hum, parser still running, could be a runaway CPU hog!");
+                System.err.println("Current path: " + ctx.getPath());
+                System.err.println("Position: " + ctx.getPosition());
+                System.err.println("Level: " + ctx.getLevel());
+                System.err.println("InRecovery: " + ctx.inErrorRecovery()+", InPred: "+ctx.inErrorRecovery()+", NodeSupressed:"+ctx.isNodeSuppressed());
+            }
+        }
         if (parsingTask != null) {
             parsingTask.cancel(true);
         }
+        parser = null;
     }
 
     /**
@@ -394,8 +415,7 @@ public class FanParserTask extends ParserResult {
                  * NodeKindPredicate(AstKind.AST_TYPE)); // introduce "it" to
                  * scope FanAstScopeVarBase itVar = new FanLocalScopeVar(node,
                  * VarKind.IMPLIED, "it", fieldType.getType());
-                 * node.addScopeVar(itVar, true); } parseChildren(node);
-        break;
+                 * node.addScopeVar(itVar, true); } parseChildren(node); break;
                  */
                 case AST_EXPR_INDEX:
                     AstNode indexEpr = FanLexAstUtils.getFirstChild(node, new NodeKindPredicate(AstKind.AST_EXPR));
@@ -700,8 +720,7 @@ public class FanParserTask extends ParserResult {
      * { children.remove(nd); } } public String getRootLabel(AstNode rootNode) {
      * Node<AstNode> parseNode = rootNode.getParseNode(); String rootLabel =
      * "n/a"; while (parseNode != null) { rootLabel = parseNode.getLabel();
-     * parseNode = parseNode.getParent(); } return rootLabel;
-  }
+     * parseNode = parseNode.getParent(); } return rootLabel; }
      */
     @SuppressWarnings("unchecked")
     private FanResolvedType doExpr(AstNode node, FanResolvedType type) {
@@ -1018,7 +1037,7 @@ public class FanParserTask extends ParserResult {
             }
         }
 
-        return new GenericPair<String, FanResolvedType> (formalName == null ? null : formalName.getNodeText(true), fType);
+        return new GenericPair<String, FanResolvedType>(formalName == null ? null : formalName.getNodeText(true), fType);
     }
 
     /**

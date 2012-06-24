@@ -31,7 +31,7 @@ public class FantomProblemFinder extends FantomCSLTest {
             FanParserTask result = new FanParserTask(snapshot);
             try {
 
-                result.parse(true, 2);
+                result.parse(true, 1000);
                 if(result.getAstTree() == null )
                     throw new Exception("Null AST");
                 result.parseGlobalScope();

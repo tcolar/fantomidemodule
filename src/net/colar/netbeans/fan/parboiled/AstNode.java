@@ -34,7 +34,7 @@ public class AstNode implements GraphNode<AstNode>
     /** Reference to the parse Node, this AST node was created from*/
     //private final Node<AstNode> parseNode;
     /** ParseNode path*/
-    private final String parsePath;
+    //private final String parsePath;
     /** kind of this AST Node*/
     private final AstKind kind;
     /** Node text */
@@ -68,7 +68,7 @@ public class AstNode implements GraphNode<AstNode>
         //System.out.println("new node: "+id+ " "+path+" / "+kind);
         this.id = id;
         this.kind = kind;
-        this.parsePath = path;
+//        this.parsePath = path;
         this.text = nodeText;
         this.textRange = textRange;
         this.label = label;
@@ -104,10 +104,10 @@ public class AstNode implements GraphNode<AstNode>
         return txt.toString();
     }
 
-    public String getParsePath()
+    /*public String getParsePath()
     {
         return parsePath;
-    }
+    }*/
 
     public String getLabel()
     {
