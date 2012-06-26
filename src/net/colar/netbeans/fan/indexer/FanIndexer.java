@@ -791,7 +791,6 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener {
     if (!isAllowedIndexing(root)) {
       return nb;
     }
-
     FileObject[] children = root.getChildren();
     for (FileObject child : children) {
       if (child.isFolder()) {
@@ -1066,7 +1065,7 @@ public class FanIndexer extends CustomIndexer implements FileChangeListener {
       // we want to wait for pods, since we want them done first (there might be pods without sources)
       indexFantomPods(false);
       // then index from source
-      indexSrcFolder(FanPlatform.getInstance().getFanSrcHome(), 0);
+      //indexSrcFolder(FanPlatform.getInstance().getFanSrcHome(), 0);
 
       long now = new Date().getTime();
       log.info("Fantom Pod Parsing completed in " + (now - then) + " ms.");

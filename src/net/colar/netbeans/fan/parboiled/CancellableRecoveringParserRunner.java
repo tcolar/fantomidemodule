@@ -21,9 +21,9 @@ public class CancellableRecoveringParserRunner<V> extends RecoveringParseRunner<
 {
   private final String input;
 
-  public CancellableRecoveringParserRunner(Rule rule, String input)
+  public CancellableRecoveringParserRunner(Rule rule, String input, long timeout)
   {
-    super(rule);
+    super(rule, timeout);
     this.input = input;
   }
 

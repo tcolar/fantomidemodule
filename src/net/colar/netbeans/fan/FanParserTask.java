@@ -13,10 +13,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import javax.swing.text.Document;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import net.colar.netbeans.fan.indexer.model.FanMethodParam;
@@ -193,15 +190,20 @@ public class FanParserTask extends ParserResult {
         parser.setQuickScan(quickScan);
         try {
             try {
-                runner = new CancellableRecoveringParserRunner<ParsingResult>(parser.compilationUnit(), getSnapshot().getText().toString());
+                runner = new CancellableRecoveringParserRunner<ParsingResult>(parser.compilationUnit(), 
+                        getSnapshot().getText().toString(),
+                        msTimeout);
                 parsingTask = runner.start();
                 parsingResult = parsingTask.get(msTimeout, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException e){
+                addGlobalError("Parsing of this file took too long and timed out.", e);     
+                return;
             } catch (ParserCancelledError e) {
                 addGlobalError("Parsing was cancelled " + e, e);
                 cleanup();
                 return;
             } catch (CancellationException e) {
-                addGlobalError("Parsing was cacdelled. " + e, e);
+                addGlobalError("Parsing was cancelled. " + e, e);
                 cleanup();
                 return;
             } catch (ExecutionException e) {

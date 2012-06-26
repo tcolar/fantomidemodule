@@ -12,98 +12,83 @@ import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.openide.filesystems.FileObject;
 
 /**
- * Indexer Factory impl.
- * Registered through layer.xml
+ * Indexer Factory impl. Registered through layer.xml
+ *
  * @author thibautc
  */
-public class FanIndexerFactory extends CustomIndexerFactory
-{
+public class FanIndexerFactory extends CustomIndexerFactory {
 
-	public static final String NAME = "FanIndexer";
-	public static final int VERSION = 4;
-	private static FanIndexer indexer = new FanIndexer();
+    public static final String NAME = "FanIndexer";
+    public static final int VERSION = 4;
+    private static FanIndexer indexer = new FanIndexer();
 
-	public static FanJarsIndexer getJavaIndexer()
-	{
-		return indexer.getJarsIndexer();
-	}
+    public static FanJarsIndexer getJavaIndexer() {
+        return indexer.getJarsIndexer();
+    }
 
-	public FanIndexerFactory()
-	{
-		FanUtilities.GENERIC_LOGGER.info("Fantom - Inited indexer Factory");
-	}
+    public FanIndexerFactory() {
+        FanUtilities.GENERIC_LOGGER.info("Fantom - Inited indexer Factory");
+    }
 
-	public static FanIndexer getIndexer()
-	{
-		return indexer;
-	}
+    public static FanIndexer getIndexer() {
+        return indexer;
+    }
 
-	@Override
-	public CustomIndexer createIndexer()
-	{
-		return indexer;
-	}
+    @Override
+    public CustomIndexer createIndexer() {
+        return indexer;
+    }
 
-	@Override
-	public boolean supportsEmbeddedIndexers()
-	{
-		return false;
-	}
+    @Override
+    public boolean supportsEmbeddedIndexers() {
+        return false;
+    }
 
-	@Override
-	public String getIndexerName()
-	{
-		return NAME;
-	}
+    @Override
+    public String getIndexerName() {
+        return NAME;
+    }
 
-	@Override
-	public int getIndexVersion()
-	{
-		return VERSION;
-	}
+    @Override
+    public int getIndexVersion() {
+        return VERSION;
+    }
 
-	@Override
-	public void filesDeleted(Iterable<? extends Indexable> itrbl, Context cntxt)
-	{
-		for (Indexable idx : itrbl)
-		{
-			String path = idx.getURL().getPath();
-			JOTLogger.debug(this, "File deleted: " + path);
-			indexer.requestDelete(path);
-		}
-	}
+    @Override
+    public void filesDeleted(Iterable<? extends Indexable> itrbl, Context cntxt) {
+        for (Indexable idx : itrbl) {
+            String path = idx.getURL().getPath();
+            JOTLogger.debug(this, "File deleted: " + path);
+            indexer.requestDelete(path);
+        }
+    }
 
-	@Override
-	public void filesDirty(Iterable<? extends Indexable> itrbl, Context cntxt)
-	{
-		// requestIndexing
-		indexer.index(itrbl, cntxt);
-	}
+    @Override
+    public void filesDirty(Iterable<? extends Indexable> itrbl, Context cntxt) {
+        // requestIndexing
+        indexer.index(itrbl, cntxt);
+    }
 
-	/**
-	 * recursive
-	 * @param root
-	 * @param nb
-	 * @return
-	 */
-	public int scanFolder(FileObject root, int nb)
-	{
-		return indexer.indexSrcFolder(root, nb);
-	}
+    /**
+     * recursive
+     *
+     * @param root
+     * @param nb
+     * @return
+     */
+    public int scanFolder(FileObject root, int nb) {
+        return indexer.indexSrcFolder(root, nb);
+    }
 
-	@Override
-	public void scanFinished(Context cntxt)
-	{
-	}
+    @Override
+    public void scanFinished(Context cntxt) {
+    }
 
-	@Override
-	public boolean scanStarted(Context context)
-	{
-		FileObject root = context.getRoot();
-		scanFolder(root, 0);
-		// what does the return mean ?
-		return true;
-	}
+    @Override
+    public boolean scanStarted(Context context) {
+        FileObject root = context.getRoot();
+        scanFolder(root, 0);
+        // what does the return mean ?
+        return true;
+    }
 }
-
-

@@ -1,6 +1,3 @@
-/*
- * Thibaut Colar Feb 5, 2010
- */
 package net.colar.netbeans.fan.parboiled;
 
 import net.colar.netbeans.fan.FanParserTask;
@@ -77,6 +74,7 @@ public class FantomParser extends FantomLexer
     {
         return Sequence(
                 OPT_LF(),
+                OPT_SP(),
                 Sequence(
                 // Missing from grammar: Optional unix env line
                 Optional(unixLine()),

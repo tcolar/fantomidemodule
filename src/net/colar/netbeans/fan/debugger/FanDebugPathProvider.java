@@ -126,8 +126,6 @@ public class FanDebugPathProvider extends SourcePathProvider
             }
         }
         // Fan distro sources
-        //TODO: those are already in open projects path ????
-
         fanSources = FanPlatform.getInstance().getSourceClassPaths();
 
         // update roots list

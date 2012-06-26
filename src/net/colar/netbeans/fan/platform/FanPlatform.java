@@ -8,6 +8,8 @@ import fan.sys.Sys;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import net.colar.netbeans.fan.actions.FanExecution;
 import net.colar.netbeans.fan.indexer.FanIndexerFactory;
 import javax.swing.JOptionPane;
@@ -15,7 +17,6 @@ import net.colar.netbeans.fan.project.FanProject;
 import net.colar.netbeans.fan.project.FanProjectProperties;
 import net.colar.netbeans.fan.wizard.FanMainSettingsController;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -43,7 +44,6 @@ public class FanPlatform {
     private String fanHome;
     private String podsDir;
     private String fanSrc;
-    private String talesHome;
 
     private FanPlatform() {
         readSettings();
@@ -65,8 +65,6 @@ public class FanPlatform {
             // boot fan env - sometimes throws an exception !
             Sys.boot();
         }
-        // tales
-        talesHome = FanPlatformSettings.getInstance().get(FanPlatformSettings.PREF_TALES_HOME);
         // force updating paths
         sourcePaths = null;
     }
@@ -91,7 +89,14 @@ public class FanPlatform {
         synchronized (FanPlatform.class) {
             if (instance.fanHome == null && !configWarningAlreadyDisplayed) {
                 configWarningAlreadyDisplayed = true;
-                OptionsDisplayer.getDefault().open(FanMainSettingsController.ID);
+                Runnable task = new Runnable() {
+
+                    public void run() {
+                        // Open after a delay or it tends to appear behind the main window
+                        OptionsDisplayer.getDefault().open(FanMainSettingsController.ID);
+                    }
+                };
+                Executors.newSingleThreadScheduledExecutor().schedule(task, 15, TimeUnit.SECONDS);
             }
         }
         return instance != null && instance.fanHome != null;

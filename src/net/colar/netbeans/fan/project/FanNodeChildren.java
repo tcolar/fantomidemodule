@@ -32,11 +32,10 @@ public class FanNodeChildren extends FilterNode.Children
     protected Node[] createNodes(Node object)
     {
 	Node origChild = object;
-	DataObject dob = origChild.getLookup().lookup(DataObject.class);
+	FileObject fob = origChild.getLookup().lookup(FileObject.class);
 
-	if (dob != null)
+	if (fob != null)
 	{
-	    FileObject fob = dob.getPrimaryFile();
 	    Node[] nds = new Node[1];
 	    Children children=FilterNode.Children.LEAF;
 	    if(fob.isFolder())
