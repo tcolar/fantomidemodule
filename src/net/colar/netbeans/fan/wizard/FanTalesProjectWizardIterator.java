@@ -69,7 +69,6 @@ public final class FanTalesProjectWizardIterator implements WizardDescriptor.Ins
 
         fanExec.addCommandArg(FanPlatform.FAN_CLASS);
         fanExec.addCommandArg(FanPlatform.FAN_TALES_POD_NAME);
-        fanExec.addCommandArg(location);
         fanExec.addCommandArg(FanPlatform.FAN_TALES_CREATE_CMD);
         fanExec.addCommandArg(projectName);
         fanExec.runAndWaitFor();
