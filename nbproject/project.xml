@@ -43,6 +43,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.core.multiview</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.29.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.core.output2</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>
@@ -346,12 +355,12 @@
             </test-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/sys.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/sys.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/parboiled-core-1.0.2.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/parboiled-core-1.0.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/sys.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/sys.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/asm-all-3.3.1.jar</runtime-relative-path>

@@ -1,26 +1,21 @@
 /*
- * Thibaut Colar Feb 19, 2010
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
-package net.colar.netbeans.fan.parboiled;
+package net.colar.netbeans.axon.parboiled;
 
 import java.util.Hashtable;
 import net.colar.netbeans.fan.FanTokenID;
-import net.colar.netbeans.fan.FanUtilities;
 
 /**
- * Parboiled parser does not really provide a lexer, so we simulate one using
- * the parser. This creates the tokens important to the lexer (syntax
- * highlighting)
  *
- * @author thibautc
+ * @author tcolar
  */
-public class FantomLexerTokens {
-    // Lexer label names ... we want all tokens provided by the lexer() rule of the parser to be listed here
-
+public class AxonLexerTokens {
     public enum TokenName {
 
-        COMMENT, UNIXLINE, DOC, LEXEROPS, LEXERSEPS, LEXERASSIGN, LEXERINIT, LEXERCOMPS, LEXERITEMS,
-        STRS, URI, CHAR_, KEYWORD, ID, LEXERID, NUMBER, WHITESPACE, SPACING, LF, DSL, ANY, ERROR, UNEXPECTED,
+        COMMENT, LEXEROPS, LEXERSEPS, LEXERASSIGN, LEXERINIT, LEXERCOMPS, LEXERITEMS,
+        STRS, URI, CHAR_, KEYWORD, ID, LEXERID, NUMBER, WHITESPACE, SPACING, LF, ANY, ERROR, UNEXPECTED,
         //Items we use a lot in the lexer
         SQ_BRACKET_L, SQ_BRACKET_R, BRACKET_L, BRACKET_R, PAR_L, PAR_R, DOT, AT, DSL_OPEN, DSL_CLOSE
     }
@@ -28,18 +23,15 @@ public class FantomLexerTokens {
     private static Hashtable<Integer, FanTokenID> tokens = new Hashtable<Integer, FanTokenID>();
     private static Hashtable<String, Integer> tokenIdByName = new Hashtable<String, Integer>();
 
-    // Map Token lables with Netbeans color entries (textColors.xml)
+    // Map Token labels with Netbeans color entries (textColors.xml)
     private static Hashtable<TokenName, String> getColorIds() {
         Hashtable<TokenName, String> cats = new Hashtable<TokenName, String>();
         cats.put(TokenName.COMMENT, "comment");
-        cats.put(TokenName.DOC, "doc");
-        cats.put(TokenName.UNIXLINE, "doc");
-        cats.put(TokenName.DSL, "dsl");
         cats.put(TokenName.NUMBER, "number");
         cats.put(TokenName.CHAR_, "character");
         cats.put(TokenName.KEYWORD, "keyword");
         cats.put(TokenName.LEXEROPS, "operator");
-        cats.put(TokenName.LEXERSEPS, "separator");
+        cats.put(TokenName.LEXERSEPS, "sepaxon");
         cats.put(TokenName.LEXERCOMPS, "comparator");
         cats.put(TokenName.LEXERASSIGN, "assignment");
         cats.put(TokenName.LEXERINIT, "initialization");
@@ -58,12 +50,10 @@ public class FantomLexerTokens {
      */
     public static FanTokenID getTokenByName(String name) {
         if (name == null) {
-            FanUtilities.GENERIC_LOGGER.info("FantomparserToken: Null token passed");
             return getTokenByName(TokenName.ERROR);
         }
         Integer id = tokenIdByName.get(name.toUpperCase());
         if (id == null) {
-            FanUtilities.GENERIC_LOGGER.info("FantomparserToken: No such token: " + name);
             return getTokenByName(TokenName.ERROR);
         }
         return tokens.get(id);
@@ -80,7 +70,7 @@ public class FantomLexerTokens {
      */
     public static Hashtable<Integer, FanTokenID> getTokens() {
         if (tokens.isEmpty()) {
-            synchronized (FantomLexer.class) {
+            synchronized (AxonLexer.class) {
                 if (tokens.isEmpty()) {
                     tokens = new Hashtable<Integer, FanTokenID>();
                     Hashtable<TokenName, String> colorIds = getColorIds();

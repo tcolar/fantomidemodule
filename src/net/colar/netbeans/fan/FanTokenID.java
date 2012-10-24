@@ -58,7 +58,7 @@ public class FanTokenID implements TokenId
 	}
 
 	/**
-	 * Check wether this token is of the TokenName sort (ny ID)
+	 * Check whether this token is of the TokenName sort (ny ID)
 	 * @param name
 	 * @return
 	 */
@@ -100,5 +100,12 @@ public class FanTokenID implements TokenId
 	public static Language<FanTokenID> language()
 	{
 		return language;
+	}
+        
+        private static final Language<FanTokenID> axon = new AxonLanguageHierarchy().language();
+        
+	public static Language<FanTokenID> axonlanguage()
+	{
+		return axon;
 	}
 }

@@ -139,43 +139,25 @@ public class FanProject implements Project, ProjectInformation
      * Inner class for recommended templates
      * Proposed on right click / new
      */
-    private static final class RecommendedTemplatesImpl implements RecommendedTemplates, PrivilegedTemplates
+    private static final class RecommendedTemplatesImpl implements PrivilegedTemplates
     {
 
         RecommendedTemplatesImpl()
         {
         }
-        // List of primarily supported templates
-        private static final String[] TYPES = new String[]
-        {
-            "Fantom File",
-            "Fantom Test",
-            "Folder",
-            "HTML File",
-            "CSS File",
-            "JavaScript File",
-            "XML File",
-            "SQL File",
-            "Java class",
-        };
+        
         private static final String[] PRIVILEGED_NAMES = new String[]
         {
             "Templates/Fantom/FantomFile",
             "Templates/Fantom/FantomTest",
-            "Templates/Other/Folder",
             "Templates/Other/html.html",
             "Templates/Other/CascadeStyleSheet.css",
             "Templates/Other/javascript.js",
             "Templates/Other/xhtml.xhtml",
             "Templates/Other/SQLTemplate.sql",
             "Templates/Classes/Class.java",
+            "Templates/Axon/AxonTemplate.axon",
         };
-
-        @Override
-        public String[] getRecommendedTypes()
-        {
-            return TYPES;
-        }
 
         @Override
         public String[] getPrivilegedTemplates()

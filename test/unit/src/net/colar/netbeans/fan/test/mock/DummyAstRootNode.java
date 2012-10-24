@@ -18,7 +18,7 @@ import org.parboiled.support.IndexRange;
 public class DummyAstRootNode extends RootNode {
 
     public DummyAstRootNode(FanParserTask task) {
-        super(AstKind.DUMMY_NODE, new IndexRange(0, 0), "ROOT", null);
+        super(AstKind.DUMMY_NODE, new IndexRange(0, 0), "ROOT", task);
         setIsScopeNode();
     }
 

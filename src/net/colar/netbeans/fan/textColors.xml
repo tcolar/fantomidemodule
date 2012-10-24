@@ -10,12 +10,13 @@
     <fontcolor default="character" name="character"/>
     
     <!-- custom-->
+    <fontcolor foreColor="308014" name="sepaxon"/>
     <fontcolor foreColor="006f00" name="doc"/>
     <fontcolor foreColor="0066ff" name="comparator"/>
     <fontcolor foreColor="a606fd" name="assignment"/>
     <fontcolor foreColor="ff0000" name="initialization">
-		<font style="bold"/>
-	</fontcolor>
+        <font style="bold"/>
+    </fontcolor>
     <fontcolor foreColor="726405" name="dsl"/>
     <fontcolor default="string" name="string"/>
     <fontcolor bgColor="e0f9dd" name="embedded-js"/>
@@ -23,29 +24,29 @@
 
     <!-- semantic (parser)-->
     <fontcolor name="mod-parameter">
-	<font style="bold"/>
+        <font style="bold"/>
     </fontcolor>
     <fontcolor name="mod-method" underline="000000">
-    	<font style="bold"/>
+        <font style="bold"/>
     </fontcolor>
     <fontcolor name="mod-global" underline="000000"/>
     <fontcolor name="mod-constructor" foreColor="550000" underline="550000">
-	<font style="bold"/>
+        <font style="bold"/>
     </fontcolor>
     <fontcolor name="mod-class" underline="000000">
-	<font style="bold"/>
+        <font style="bold"/>
     </fontcolor>
     <fontcolor name="mod-static">
-	<font style="italic"/>
+        <font style="italic"/>
     </fontcolor>
     <!-- custom1 is for 'override' -->
     <fontcolor name="mod-custom1" foreColor="550055"/>
-	<!-- custom2 is string interpolation vars -->
+    <!-- custom2 is string interpolation vars -->
     <fontcolor name="mod-custom2">
-		<font style="bold"/>
+        <font style="bold"/>
     </fontcolor>
     <!-- not used yet-->
     <fontcolor name="mod-deprecated" strikeThrough="404040"/>
     <fontcolor name="mod-unused" waveUnderlined="999999"/>
     <fontcolor name="mod-field" foreColor="005500"/>
- </fontscolors>
+</fontscolors>

@@ -186,6 +186,16 @@ public class FantomTypesTest extends FantomCSLTest {
         //checkExpr("3>2 ? `gg` : null ", "sys::Uri[]?", true, false); // ternary result
         //checkExpr("Regex<|(a*)(a+)|>", "sys::Regex", false, false); // DSL call
         //checkExpr("Obj.trap?.toStr?.toStr", null, false, false);
+        
+        // Resolving slots 
+        t = FanResolvedType.makeFromTypeSig(node, "Actor");
+        FanResolvedType t2 = t.resolveSlotType("pool", task);
+        check(t2, "concurrent::ActorPool", false, true);
+        // static slot
+        t2 = t.resolveSlotType("locals", task);
+        check(t2, "[sys::Str:sys::Obj?]", false, false);
+        
+        
         System.out.println("done");
     }
 

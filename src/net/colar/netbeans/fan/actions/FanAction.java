@@ -297,7 +297,7 @@ public abstract class FanAction {
                 for (int i = 0; i != 15 && !shutdown; i++) {
                     // TODO: this is kinda ugly - Use JPDASupport instead ??
                     try {
-                        JPDADebugger.attach("localhost", port, new Object[0]);
+                        JPDADebugger debugger = JPDADebugger.attach("localhost", port, new Object[0]);
                         // if connected, then we are good
                         return;
                     } catch (DebuggerStartException e) {

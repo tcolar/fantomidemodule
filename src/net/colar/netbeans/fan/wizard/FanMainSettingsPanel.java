@@ -88,8 +88,8 @@ public class FanMainSettingsPanel extends javax.swing.JPanel
             }
         });
 
-        jTextArea1.setColumns(20);
         jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
         jTextArea1.setForeground(new java.awt.Color(194, 135, 27));
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(2);
@@ -244,5 +244,5 @@ public class FanMainSettingsPanel extends javax.swing.JPanel
 	{
 		execField.setText(options);
 	}
-
+        
 }
